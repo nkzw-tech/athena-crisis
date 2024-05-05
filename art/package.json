@@ -1,0 +1,18 @@
+{
+  "name": "@deities/art",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena Crisis Art.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@emotion/css": "^11.11.2",
+    "@nkzw/palette-swap": "^2.1.2"
+  }
+}

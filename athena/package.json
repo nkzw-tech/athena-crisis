@@ -1,0 +1,22 @@
+{
+  "name": "@deities/athena",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena, goddess of wisdom, courage and war strategy.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/hephaestus": "workspace:*",
+    "@nkzw/immutable-map": "^1.2.2",
+    "array-shuffle": "^3.0.0",
+    "fastpriorityqueue": "^0.7.5",
+    "skmeans": "^0.11.3"
+  },
+  "devDependencies": {
+    "@types/skmeans": "^0.11.7"
+  }
+}

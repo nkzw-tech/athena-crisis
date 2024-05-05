@@ -1,0 +1,17 @@
+{
+  "name": "@deities/hermes",
+  "version": "0.0.1",
+  "private": true,
+  "description": "God of boundaries, travel, trade, communication, language, writing, cunning and thieves.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*"
+  }
+}

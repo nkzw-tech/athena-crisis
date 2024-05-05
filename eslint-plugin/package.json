@@ -1,0 +1,12 @@
+{
+  "name": "@deities/eslint-plugin",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena Crisis eslint plugins.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "main": "./index.js"
+}

@@ -1,0 +1,22 @@
+diff --git a/dist/router.cjs.js b/dist/router.cjs.js
+index 7c5abbb2f2c314912921298c6101e1fe0e0bebbf..4c0c94b3e9675a6bdeb95fb27364aa73a320a281 100644
+--- a/dist/router.cjs.js
++++ b/dist/router.cjs.js
+@@ -3562,7 +3562,7 @@ function createStaticHandler(routes, opts) {
+       let results = await callDataStrategy("action", request, [actionMatch], matches, isRouteRequest, requestContext, unstable_dataStrategy);
+       result = results[0];
+       if (request.signal.aborted) {
+-        throwStaticHandlerAbortedError(request, isRouteRequest, future);
++        //throwStaticHandlerAbortedError(request, isRouteRequest, future);
+       }
+     }
+     if (isRedirectResult(result)) {
+@@ -3677,7 +3677,7 @@ function createStaticHandler(routes, opts) {
+     }
+     let results = await callDataStrategy("loader", request, matchesToLoad, matches, isRouteRequest, requestContext, unstable_dataStrategy);
+     if (request.signal.aborted) {
+-      throwStaticHandlerAbortedError(request, isRouteRequest, future);
++      //throwStaticHandlerAbortedError(request, isRouteRequest, future);
+     }
+ 
+     // Process and commit output from loaders

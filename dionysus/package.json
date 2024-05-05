@@ -1,0 +1,17 @@
+{
+  "name": "@deities/dionysus",
+  "version": "0.0.1",
+  "description": "Dionysus, god of wine, fruitfulness, parties, festivals, madness, chaos, drunkenness, vegetation, ecstasy, and the theater.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@nkzw/immutable-map": "^1.2.2"
+  }
+}

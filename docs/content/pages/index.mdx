@@ -1,0 +1,26 @@
+---
+layout: landing
+---
+
+import { lazy } from 'react';
+import { HomePage } from 'vocs/components';
+import ClientComponent from '../playground/ClientComponent.tsx';
+
+<HomePage.Root>
+  <img alt="Athena Crisis logo" src="./athena-crisis.svg" />
+  <HomePage.Tagline>Open Source Docs & Playground</HomePage.Tagline>
+  <HomePage.Description>
+    Athena Crisis is a modern retro turn-based strategy game.
+  </HomePage.Description>
+  <HomePage.Buttons>
+    <HomePage.Button href="/getting-started" variant="accent">
+      Getting Started
+    </HomePage.Button>
+    <HomePage.Button href="https://github.com/nkzw-tech/athena-crisis">
+      GitHub
+    </HomePage.Button>
+  </HomePage.Buttons>
+  <ClientComponent
+    module={lazy(() => import('../playground/PlaygroundDemoGame.tsx'))}
+  />
+</HomePage.Root>

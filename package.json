@@ -1,0 +1,118 @@
+{
+  "name": "@deities/athena-crisis",
+  "version": "0.0.2",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "scripts": {
+    "analyze": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./artemis/scripts/analyze.tsx",
+    "build-assets:force": "rm -rf node_modules **/node_modules && pnpm enable-canvas && pnpm install && pnpm dev:setup && pnpm build-assets && pnpm disable-canvas",
+    "build-assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
+    "build:client": "rm -rf ./dist/ares && pnpm fbt && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
+    "build:demo": "export IS_DEMO=1 && rm -rf ./dist/ares-demo && pnpm fbt && pnpm vite build --outDir ../dist/ares-demo -c ./ares/vite.config.ts ./ares/",
+    "build:docker-server": "RELEASE_ID=$(git rev-parse --short HEAD) docker buildx build --load -f Dockerfile --platform=linux/amd64 --tag athena-crisis --build-arg RELEASE_ID=$RELEASE_ID .",
+    "build:offline": "rm -rf ./dist/offline && pnpm vite build --outDir ../dist/offline -c ./offline/vite.config.ts ./offline",
+    "build:server": "./build-server",
+    "build:splash": "rm -rf ./dist/deimos && pnpm vite build --outDir ../dist/deimos -c ./deimos/vite.config.ts ./deimos/ && pnpm build:docs",
+    "build:docs": "cd docs && pnpm build --outDir ../../dist/deimos/open-source",
+    "build:steam-i18n": "rm -rf ./dist/steami18n && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./ares/scripts/translateStorepage.js",
+    "codegen": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./codegen/generate-all.tsx",
+    "dev": "cd docs && pnpm dev",
+    "dev:setup": "pnpm prisma generate && pnpm relay && pnpm codegen && pnpm fbt",
+    "dev:update-deps": "rm -rf pnpm-lock.yaml node_modules/ **/node_modules && pnpm dev:setup",
+    "disable-canvas": "jq '.pnpm.neverBuiltDependencies = [\"canvas\"]' package.json > package-canvas.json && mv package-canvas.json package.json && git restore pnpm-lock.yaml",
+    "enable-canvas": "jq 'del(.pnpm.neverBuiltDependencies)' package.json > package-canvas.json && mv package-canvas.json package.json && canvasKey=$(yq e '.packages | keys' pnpm-lock.yaml | grep 'canvas@2\\.' | head -n 1 | sed 's/- //') && yq e \".packages[\\\"$canvasKey\\\"].requiresBuild = true\" -i pnpm-lock.yaml && yq e 'del(.neverBuiltDependencies)' -i pnpm-lock.yaml",
+    "fbt": "cd ares && if [ -d src ]; then pnpm fbt; else exit 0; fi",
+    "format": "prettier --write .",
+    "i18n:download": "crowdin download && (cd ares && pnpm fbt:translate)",
+    "i18n:upload": "(cd ares && pnpm fbt:manifest && pnpm fbt:collect) && crowdin upload sources",
+    "lint:format": "prettier --cache --check .",
+    "lint": "eslint --cache .",
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || true",
+    "prisma": "cd artemis && pnpm prisma",
+    "relay": "cd ares && if [ -d src ]; then pnpm relay-compiler; else exit 0; fi",
+    "test:ci": "pnpm npm-run-all --parallel tsc:check lint lint:format vitest:run-ci",
+    "test": "npm-run-all --parallel tsc:check lint lint:format relay vitest:run",
+    "tsc:check": "tsc",
+    "vitest:run-ci": "vitest run",
+    "vitest:run": "CPUS=$(if uname -s | grep -q Darwin; then sysctl -n hw.ncpu; else nproc --all; fi); export VITEST_MAX_THREADS=$(($CPUS - 2)); export VITEST_MIN_THREADS=$(($CPUS - 2)); vitest run"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "artemis/",
+      "apollo/",
+      "athena/",
+      "dionysus/",
+      "hephaestus/",
+      "hermes/",
+      "i18n/"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-typescript": "^7.24.1",
+    "@deities/eslint-plugin": "workspace:*",
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@nkzw/eslint-config": "^1.15.0",
+    "@styled/typescript-styled-plugin": "^1.0.1",
+    "@swc/core": "^1.5.5",
+    "@types/fbt": "^1.0.5",
+    "@types/node": "^20.12.11",
+    "@vitejs/plugin-react": "^4.2.1",
+    "babel-plugin-fbt": "^1.0.0",
+    "babel-plugin-fbt-import": "^0.1.0",
+    "babel-plugin-fbt-runtime": "^1.0.0",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "nodemon": "^3.1.0",
+    "npm-run-all2": "^6.1.2",
+    "prettier": "4.0.0-alpha.8",
+    "prettier-plugin-packagejson": "^2.5.0",
+    "react-refresh": "^0.14.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.1"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowAny": [
+        "@aws-sdk/client-sso-oidc",
+        "react",
+        "react-dom",
+        "utf-8-validate"
+      ],
+      "ignoreMissing": [
+        "@fbtjs/default-collection-transform"
+      ]
+    },
+    "neverBuiltDependencies": [
+      "canvas"
+    ],
+    "updateConfig": {
+      "ignoreDependencies": [
+        "eslint"
+      ]
+    },
+    "overrides": {
+      "rollup@^2.0.0": "^4.16.4"
+    },
+    "patchedDependencies": {
+      "@remix-run/router@1.16.1": "patches/@remix-run__router@1.16.1.patch",
+      "eslint-plugin-import@2.29.1": "patches/eslint-plugin-import@2.29.1.patch",
+      "fbt@1.0.2": "patches/fbt@1.0.2.patch",
+      "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
+      "howler@2.2.4": "patches/howler@2.2.4.patch",
+      "p-limit@5.0.0": "patches/p-limit@5.0.0.patch",
+      "resend@3.2.0": "patches/resend@3.2.0.patch"
+    }
+  }
+}

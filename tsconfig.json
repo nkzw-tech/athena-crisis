@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "plugins": [
+      {
+        "lint": {
+          "unknownProperties": "error"
+        },
+        "name": "typescript-styled-plugin"
+      }
+    ],
+    "resolveJsonModule": true,
+    "resolvePackageJsonExports": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2017"
+  },
+  "exclude": [
+    "dist/",
+    "electron/forge.config.cjs",
+    "node_modules",
+    "scripts/fixtures/"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "electron/**.js",
+    "electron/**.cjs",
+    "scripts/setup.js"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "esnext",
+      "isolatedModules": false
+    },
+    "files": true,
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc"
+  }
+}

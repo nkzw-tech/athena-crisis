@@ -1,0 +1,26 @@
+diff --git a/lib/substituteTokens.js b/lib/substituteTokens.js
+index 144db1d6553417bb9ec67f537c40c0c4cc4f0067..c90d1c5631b56a6e5ce4cd5af287b4447a55b98b 100644
+--- a/lib/substituteTokens.js
++++ b/lib/substituteTokens.js
+@@ -66,12 +66,6 @@ function substituteTokens(template, args, errorListener) {
+   var objectPieces = [];
+   var argNames = [];
+   var stringPieces = template.replace(parameterRegexp, function (_match, parameter, punctuation) {
+-    if (!hasOwnProperty.call(args, parameter)) {
+-      var _errorListener$onMiss;
+-
+-      errorListener === null || errorListener === void 0 ? void 0 : (_errorListener$onMiss = errorListener.onMissingParameterError) === null || _errorListener$onMiss === void 0 ? void 0 : _errorListener$onMiss.call(errorListener, Object.keys(args), parameter);
+-    }
+-
+     var argument = args[parameter];
+ 
+     if (argument != null && typeof argument === 'object') {
+@@ -80,7 +74,7 @@ function substituteTokens(template, args, errorListener) {
+ 
+       return '\x17' + punctuation;
+     } else if (argument == null) {
+-      return '';
++      return '{' + parameter + '}' + punctuation;
+     }
+ 
+     return String(argument) + (0, _IntlPunctuation.dedupeStops)(String(argument), punctuation);

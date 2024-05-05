@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Athena Crisis</title>
+    <meta
+      name="viewport"
+      content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#f2f2f2"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#121212"
+    />
+    <meta content="/keyart.jpg" key="og-image" property="og:image" />
+    <meta
+      content="A modern retro turn-based strategy game."
+      key="description"
+      name="description"
+    />
+    <meta
+      content="https://app.athenacrisis.com"
+      key="og-url"
+      property="og:url"
+    />
+    <meta content="Athena Crisis" key="og-title" property="og:title" />
+    <meta
+      content="A modern retro turn-based strategy game."
+      key="og-description"
+      property="og:description"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="preload"
+      href="/fonts/AthenaNova.woff2"
+      as="font"
+      crossorigin
+      type="font/woff2"
+    />
+    <style type="text/css">
+      @font-face {
+        font-display: swap;
+        font-family: Athena;
+        src: url('/fonts/AthenaNova.woff2');
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: fill-available;
+      }
+
+      body {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        background: #48b0d6;
+        color: #111;
+        font-family: Athena, ui-sans-serif, system-ui, sans-serif;
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 1em;
+        margin: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: pan-x pan-y;
+        user-select: none;
+      }
+
+      img#keyart {
+        width: 100%;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      div#box {
+        backdrop-filter: blur(4px);
+        background-color: rgba(255, 255, 255, 0.8);
+        clip-path: polygon(
+          0 4px,
+          4px 4px,
+          4px 0,
+          calc(100% - 4px) 0,
+          calc(100% - 4px) 4px,
+          100% 4px,
+          100% calc(100% - 4px),
+          calc(100% - 4px) calc(100% - 4px),
+          calc(100% - 4px) 100%,
+          4px 100%,
+          4px calc(100% - 4px),
+          0 calc(100% - 4px)
+        );
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        left: 100px;
+        line-height: 1.4em;
+        min-height: 32px;
+        padding: 16px;
+        position: absolute;
+        text-wrap: balance;
+        top: 50px;
+        width: 400px;
+      }
+
+      div#box {
+        animation: pulse 1.5s infinite;
+      }
+
+      a {
+        color: #3999d4;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background"></div>
+    <div id="app"></div>
+    <img src="/keyart.jpg" id="keyart" />
+    <div id="box">
+      <p>
+        Athena Crisis requires an active Internet connection. Please connect to
+        play.
+      </p>
+      <a>Try again</a>
+    </div>
+    <script type="text/javascript">
+      let timer;
+      const reload = () => window.$__AC__.reload();
+      const setTimer = () => {
+        timer = setTimeout(() => {
+          if (navigator.onLine) {
+            reload();
+            timer = null;
+          } else {
+            setTimer();
+          }
+        }, 1000);
+      };
+
+      document.getElementById('box').addEventListener('click', reload);
+
+      window.addEventListener('offline', () => {
+        clearTimeout(timer);
+        timer = null;
+      });
+
+      window.addEventListener('online', () => {
+        if (navigator.onLine && !timer) {
+          setTimer();
+        }
+      });
+
+      if (navigator.onLine) {
+        setTimer();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "@deities/hera",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Queen of the gods, and goddess of women, marriage, childbirth, heirs, kings, and empires.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/art": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/dionysus": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@deities/hermes": "workspace:*",
+    "@deities/i18n": "workspace:*",
+    "@deities/ui": "workspace:*",
+    "@emotion/css": "^11.11.2",
+    "@iconify-icons/pixelarticons": "^1.2.5",
+    "@nkzw/immutable-map": "^1.2.2",
+    "@nkzw/use-relative-time": "^1.1.0",
+    "array-shuffle": "^3.0.0",
+    "fbt": "^1.0.2",
+    "framer-motion": "^11.1.9",
+    "react": "19.0.0-canary-fd0da3eef-20240404",
+    "react-dom": "19.0.0-canary-fd0da3eef-20240404",
+    "react-fps": "^1.0.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0"
+  }
+}

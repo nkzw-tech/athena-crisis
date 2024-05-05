@@ -1,0 +1,14 @@
+diff --git a/lib/rules/no-extraneous-dependencies.js b/lib/rules/no-extraneous-dependencies.js
+index cbe024a71f039ea78ecea4cd0e176082da6e7450..93304a028c3cf4630cffe121ade16bcbe1343b1b 100644
+--- a/lib/rules/no-extraneous-dependencies.js
++++ b/lib/rules/no-extraneous-dependencies.js
+@@ -212,6 +212,9 @@ function reportIfMissing(context, deps, depsOptions, node, name) {
+   // test the real name from the resolved package.json
+   // if not aliased imports (alias/react for example), importPackageName can be misinterpreted
+   var realPackageName = getModuleRealName(resolved);
++  if (realPackageName?.startsWith('prisma-client-')) {
++    return;
++  }
+   if (realPackageName && realPackageName !== importPackageName) {
+     declarationStatus = checkDependencyDeclaration(deps, realPackageName, declarationStatus);
+ 

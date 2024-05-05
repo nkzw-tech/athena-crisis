@@ -1,0 +1,35 @@
+{
+  "name": "@deities/docs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena Crisis Open Source Docs & Playground",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "scripts": {
+    "build": "vocs build",
+    "dev": "vocs dev --port 3003",
+    "preview": "vocs preview"
+  },
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/art": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hera": "workspace:*",
+    "@deities/hermes": "workspace:*",
+    "@deities/ui": "workspace:*",
+    "@emotion/babel-plugin": "^11.11.0",
+    "@emotion/css": "^11.11.2",
+    "@types/react": "^18.3.1",
+    "dunkel-theme": "^1.7.1",
+    "fbt": "^1.0.2",
+    "framer-motion": "^11.1.9",
+    "licht-theme": "^1.7.1",
+    "react": "19.0.0-canary-fd0da3eef-20240404",
+    "react-dom": "19.0.0-canary-fd0da3eef-20240404",
+    "vocs": "1.0.0-alpha.51"
+  }
+}

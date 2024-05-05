@@ -1,0 +1,102 @@
+diff --git a/dist/index.js b/dist/index.js
+index e45da951f2c6da6542374eb2d3197e35406d25f3..bf94515a3fe7378a07bed1f94cc490d196f07fb3 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -132,7 +132,6 @@ var Audiences = class {
+ };
+ 
+ // src/batch/batch.ts
+-var import_render = require("@react-email/render");
+ var Batch = class {
+   constructor(resend) {
+     this.resend = resend;
+@@ -144,12 +143,6 @@ var Batch = class {
+   }
+   create(_0) {
+     return __async(this, arguments, function* (payload, options = {}) {
+-      for (const email of payload) {
+-        if (email.react) {
+-          email.html = yield (0, import_render.renderAsync)(email.react);
+-          delete email.react;
+-        }
+-      }
+       const data = yield this.resend.post(
+         "/emails/batch",
+         payload,
+@@ -279,7 +272,6 @@ var Domains = class {
+ };
+ 
+ // src/emails/emails.ts
+-var import_render2 = require("@react-email/render");
+ var Emails = class {
+   constructor(resend) {
+     this.resend = resend;
+@@ -291,10 +283,6 @@ var Emails = class {
+   }
+   create(_0) {
+     return __async(this, arguments, function* (payload, options = {}) {
+-      if (payload.react) {
+-        payload.html = yield (0, import_render2.renderAsync)(payload.react);
+-        delete payload.react;
+-      }
+       const data = yield this.resend.post(
+         "/emails",
+         payload,
+diff --git a/dist/index.mjs b/dist/index.mjs
+index dd278120d215bc40245c64e9db73f141f67e7200..086b73a5ee0e0691ea06b7e5da8b994e2694f43c 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -109,7 +109,6 @@ var Audiences = class {
+ };
+ 
+ // src/batch/batch.ts
+-import { renderAsync } from "@react-email/render";
+ var Batch = class {
+   constructor(resend) {
+     this.resend = resend;
+@@ -121,12 +120,6 @@ var Batch = class {
+   }
+   create(_0) {
+     return __async(this, arguments, function* (payload, options = {}) {
+-      for (const email of payload) {
+-        if (email.react) {
+-          email.html = yield renderAsync(email.react);
+-          delete email.react;
+-        }
+-      }
+       const data = yield this.resend.post(
+         "/emails/batch",
+         payload,
+@@ -256,7 +249,6 @@ var Domains = class {
+ };
+ 
+ // src/emails/emails.ts
+-import { renderAsync as renderAsync2 } from "@react-email/render";
+ var Emails = class {
+   constructor(resend) {
+     this.resend = resend;
+@@ -268,10 +260,6 @@ var Emails = class {
+   }
+   create(_0) {
+     return __async(this, arguments, function* (payload, options = {}) {
+-      if (payload.react) {
+-        payload.html = yield renderAsync2(payload.react);
+-        delete payload.react;
+-      }
+       const data = yield this.resend.post(
+         "/emails",
+         payload,
+diff --git a/package.json b/package.json
+index 2c4ca81a55f89eedfac84a17ded04017cfe148a2..9391c9a7bd0bd2643539318b08fe5e27313d150f 100644
+--- a/package.json
++++ b/package.json
+@@ -43,9 +43,6 @@
+     "url": "https://github.com/resendlabs/resend-node/issues"
+   },
+   "homepage": "https://github.com/resendlabs/resend-node#readme",
+-  "dependencies": {
+-    "@react-email/render": "0.0.12"
+-  },
+   "devDependencies": {
+     "@types/jest": "29.5.12",
+     "@types/node": "18.19.15",

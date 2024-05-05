@@ -1,0 +1,32 @@
+{
+  "name": "@deities/ui",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena Crisis Design System",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@emotion/css": "^11.11.2",
+    "@iconify-icons/pixelarticons": "^1.2.5",
+    "@nkzw/joymap": "^3.0.0",
+    "fbt": "^1.0.2",
+    "framer-motion": "^11.1.9",
+    "howler": "^2.2.4",
+    "react": "19.0.0-canary-fd0da3eef-20240404",
+    "react-dom": "19.0.0-canary-fd0da3eef-20240404",
+    "react-router-dom": "^6.23.1",
+    "use-long-press": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.11",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0"
+  }
+}

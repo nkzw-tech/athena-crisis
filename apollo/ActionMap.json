@@ -1,0 +1,175 @@
+[
+  [
+    "Move",
+    [0, ["type", "from", "to", "complete", "fuel", "completed", "path"]]
+  ],
+  [
+    "AttackUnit",
+    [
+      1,
+      [
+        "type",
+        "from",
+        "to",
+        "hasCounterAttack",
+        "playerA",
+        "playerB",
+        "unitA",
+        "unitB",
+        "chargeA",
+        "chargeB"
+      ]
+    ]
+  ],
+  [
+    "AttackBuilding",
+    [
+      2,
+      [
+        "type",
+        "from",
+        "to",
+        "hasCounterAttack",
+        "playerA",
+        "building",
+        "playerC",
+        "unitA",
+        "unitC",
+        "chargeA",
+        "chargeB",
+        "chargeC"
+      ]
+    ]
+  ],
+  ["Capture", [3, ["type", "from", "building", "player"]]],
+  ["Supply", [4, ["type", "from", "player"]]],
+  [
+    "CreateUnit",
+    [5, ["type", "from", "id", "to", "unit", "free", "skipBehaviorRotation"]]
+  ],
+  ["DropUnit", [6, ["type", "from", "index", "to"]]],
+  ["CreateBuilding", [7, ["type", "from", "id", "building"]]],
+  ["Fold", [8, ["type", "from"]]],
+  ["Unfold", [9, ["type", "from"]]],
+  ["CompleteUnit", [10, ["type", "from"]]],
+  [
+    "EndTurn",
+    [
+      11,
+      [
+        "type",
+        "current",
+        "funds",
+        "player",
+        "next",
+        "round",
+        "rotatePlayers",
+        "supply",
+        "miss"
+      ]
+    ]
+  ],
+  ["Message", [12, ["type", "message", "player"]]],
+  ["AttackUnitGameOver", [13, ["type", "fromPlayer", "toPlayer"]]],
+  ["BeginTurnGameOver", [14, ["type"]]],
+  ["CaptureGameOver", [15, ["type", "fromPlayer", "toPlayer"]]],
+  ["GameEnd", [16, ["type", "condition", "conditionId", "toPlayer"]]],
+  ["HiddenMove", [17, ["type", "path", "completed", "fuel", "unit"]]],
+  [
+    "HiddenSourceAttackUnit",
+    [
+      18,
+      [
+        "type",
+        "direction",
+        "hasCounterAttack",
+        "playerB",
+        "to",
+        "unitB",
+        "weapon",
+        "chargeB",
+        "newPlayerB"
+      ]
+    ]
+  ],
+  [
+    "HiddenTargetAttackUnit",
+    [
+      19,
+      [
+        "type",
+        "direction",
+        "from",
+        "hasCounterAttack",
+        "playerA",
+        "unitA",
+        "weapon",
+        "chargeA",
+        "newPlayerA"
+      ]
+    ]
+  ],
+  [
+    "HiddenSourceAttackBuilding",
+    [
+      20,
+      [
+        "type",
+        "direction",
+        "hasCounterAttack",
+        "to",
+        "building",
+        "playerC",
+        "unitC",
+        "weapon",
+        "chargeB",
+        "chargeC"
+      ]
+    ]
+  ],
+  [
+    "HiddenTargetAttackBuilding",
+    [
+      21,
+      [
+        "type",
+        "direction",
+        "from",
+        "hasCounterAttack",
+        "playerA",
+        "to",
+        "unitA",
+        "weapon",
+        "chargeA",
+        "newPlayerA"
+      ]
+    ]
+  ],
+  ["HiddenDestroyedBuilding", [22, ["type", "to"]]],
+  ["HiddenFundAdjustment", [23, ["type", "funds"]]],
+  ["ToggleLightning", [24, ["type", "from", "to", "player"]]],
+  ["CompleteBuilding", [25, ["type", "from"]]],
+  ["Spawn", [26, ["type", "units", "teams"]]],
+  ["Heal", [27, ["type", "from", "to"]]],
+  ["MoveUnit", [28, ["type", "from"]]],
+  ["Sabotage", [29, ["type", "from", "to"]]],
+  [
+    "CharacterMessage",
+    [30, ["type", "message", "player", "unitId", "variant"]]
+  ],
+  ["CreateTracks", [31, ["type", "from"]]],
+  ["SpawnEffect", [32, ["type", "units", "player", "teams"]]],
+  [
+    "CharacterMessageEffect",
+    [33, ["type", "message", "player", "unitId", "variant"]]
+  ],
+  ["Start", [34, ["type"]]],
+  ["SetViewer", [35, ["type"]]],
+  ["BeginGame", [36, ["type"]]],
+  ["Rescue", [37, ["type", "from", "to", "player"]]],
+  ["ReceiveReward", [38, ["type", "player", "reward"]]],
+  ["BuySkill", [39, ["type", "from", "skill", "player"]]],
+  ["ActivatePower", [40, ["type", "skill"]]],
+  ["PreviousTurnGameOver", [41, ["type", "fromPlayer"]]],
+  ["SecretDiscovered", [42, ["type", "condition"]]]
+]

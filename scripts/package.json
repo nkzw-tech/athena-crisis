@@ -1,0 +1,23 @@
+{
+  "name": "@deities/scripts",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Athena Crisis scripts.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "devDependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/art": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@deities/hermes": "workspace:*",
+    "@types/glob": "^8.1.0",
+    "canvas": "^2.11.2",
+    "chalk": "^5.3.0",
+    "glob": "10.3.14"
+  }
+}

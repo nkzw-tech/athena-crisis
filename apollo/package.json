@@ -1,0 +1,17 @@
+{
+  "name": "@deities/apollo",
+  "version": "0.0.1",
+  "description": "Apollo, god of oracles, healing, archery, music and arts, sunlight, knowledge, herds and flocks, and protection of the young.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
+    "@nkzw/immutable-map": "^1.2.2",
+    "array-shuffle": "^3.0.0"
+  }
+}
