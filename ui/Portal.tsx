@@ -1,9 +1,15 @@
 import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+let defaultContainer = document.body;
+
+export function setDefaultPortalContainer(container: HTMLElement) {
+  defaultContainer = container;
+}
+
 export default function Portal({
   children,
-  container = document.body,
+  container = defaultContainer,
 }: {
   children: ReactNode;
   container?: HTMLElement;

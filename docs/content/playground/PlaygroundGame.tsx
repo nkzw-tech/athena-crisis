@@ -6,15 +6,11 @@ import useClientGame from '@deities/hera/hooks/useClientGame.tsx';
 import useClientGameAction from '@deities/hera/hooks/useClientGameAction.tsx';
 import GameActions from '@deities/hera/ui/GameActions.tsx';
 import MapInfo from '@deities/hera/ui/MapInfo.tsx';
-import setupGamePad from '@deities/ui/controls/setupGamePad.tsx';
-import setupKeyboard from '@deities/ui/controls/setupKeyboard.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 prepareSprites();
-setupGamePad();
-setupKeyboard();
 
 const startAction = {
   type: 'Start',

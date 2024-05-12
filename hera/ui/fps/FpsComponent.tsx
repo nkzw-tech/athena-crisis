@@ -17,6 +17,7 @@ export default function Fps() {
 
 const style = css`
   bottom: 10px;
+  font-family: Athena, ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
   height: 12px;
   left: 0;

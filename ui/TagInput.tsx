@@ -77,16 +77,18 @@ const inputStyle = css`
 `;
 
 const resetStyle = css`
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  margin: -3px 0 0 4px;
-  padding: 2px;
-  width: 100%;
-
-  &:focus {
+  html body & {
+    background: transparent;
+    border: none;
     box-shadow: none;
+    display: inline-block;
+    margin: -3px 0 0 4px;
+    padding: 2px;
+    width: 100%;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 `;
 

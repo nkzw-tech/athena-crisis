@@ -1,0 +1,83 @@
+# AI Deep Dive
+
+The first Athena Crisis AI, [`DionysusAlpha`](https://github.com/nkzw-tech/athena-crisis/blob/main/dionysus/DionysusAlpha.tsx), was written from scratch to understand how to build a heuristics based AI for a turn-based strategy game. Instead of building a new AI from scratch, it was extended to handle almost all of the mechanics in Athena Crisis. The AI is roughly as good as an intermediate player at most types of maps, but map design has a significant impact on its performance.
+
+## Architecture
+
+- The [`BaseAI`](https://github.com/nkzw-tech/athena-crisis/blob/main/dionysus/BaseAI.tsx) class abstracts away interactions with game state such as executing actions and handling game over states.
+- [`DionysusAlpha`](https://github.com/nkzw-tech/athena-crisis/blob/main/dionysus/DionysusAlpha.tsx) is stateless and does not plan ahead. After each action that it executes, it looks at the game state as if it's a completly different game, and makes decisions based on that. This is not fast or memory efficient, but makes the implementation less error-prone and easier to understand since any mutation to the game state can completely change the AI's possible options. For example, defeating a unit on a bridge may unblock a path that allows other units to act.
+- [`skmeans`](https://github.com/solzimer/skmeans) is used for clustering locations on a map to identify targets.
+
+The AI executes actions in a loop until it exhausts all possible actions for all units. After each action, it starts from scratch. For example, after the AI finishes capturing a building, it will try to activate a power, finish capturing another building, […], attack, move or end its turn. Once the action generator returns `null`, the AI will yield to the next player or AI. Here is what that looks like in the code:
+
+```tsx
+class DionysusAlpha extends BaseAI {
+  protected action(map: MapData): MapData | null {
+    return (
+      this.activatePower(map) ||
+      this.finishCapture(map) ||
+      this.finishRescue(map) ||
+      this.toggleLightning(map) ||
+      this.rescue(map) ||
+      this.attack(map) ||
+      this.capture(map) ||
+      this.fold(map) ||
+      this.createBuilding(map) ||
+      this.move(map) ||
+      this.unfold(map) ||
+      this.buySkills(map) ||
+      this.createUnit(map) ||
+      this.endTurn(map)
+    );
+  }
+  …
+}
+```
+
+:::info[Note]
+There are some optimizations when it comes to attacking other units where the AI will actually execute all attack actions before moving on to other actions. It will also mark that it can no longer execute any attacks to avoid some computations. This is purely for performance reasons.
+:::
+
+## Possible improvements
+
+There are many ways the AI's ability, performance and memory consumption could be improved:
+
+### Making the AI Smarter
+
+- Almost every heuristic and assumption the AI makes could be improved upon.
+- Instead of taking one move at a time, the AI could plan its entire turn in advance and then execute on it.
+- The AI could simulate various actions to determine the best outcome and only return the most promising list of actions. This works because `MapData` is immutable and the AI can simulate actions without changing the game state.
+
+### Making the AI faster and more memory efficient
+
+- Intelligent caching could be implemented to avoid recalculating the same information multiple times.
+- [`getAvailableUnitActions`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/lib/getAvailableUnitActions.tsx) could likely be used to more intelligently determine the available actions for each unit.
+- Various algorithms could likely be improved to reduce memory usage, especially around wasteful allocations that get discarded immediately.
+
+## Creating a new AI
+
+- Pick a good name, create a new file in the [`dionysus`](https://github.com/nkzw-tech/athena-crisis/blob/main/dionysus/DionysusAlpha.tsx) top-level folder.
+- Define a new class that extends `BaseAI`.
+- Add the class to the [`AIRegistry`](https://github.com/nkzw-tech/athena-crisis/blob/main/dionysus/AIRegistry.tsx), pick any unused number as an id for your AI.
+- Implement the `action` function that returns either a `MapData` instance or `null`.
+- Call `this.execute(…)` (or `this.executeMove()` for executing a move, considering fog) to record actions.
+
+We suggest starting with basic behaviors like ending the turn, attacking and capturing. Here are some of the behaviors you need to consider when implementing an AI:
+
+- The AI needs to understand all types of maps, terrain, and units.
+- The optimal set of units need to be created at each turn.
+- An AI should know when it's time to push and when it's time to defend.
+- Units that are out of ammo or almost out of supplies need to be resupplied. They may need to retreat, or a decision can be made to block the opponent's path.
+- The AI needs to make reasonable decisions when deciding which buildings to create (House, Repair Shop, Factory, etc.).
+- Naval transport units need to understand which islands to travel to and how to transport units from one island to another.
+- The AI must never crash or produce illegal game states.
+
+Check out [`AIBehavior.test.tsx`](https://github.com/nkzw-tech/athena-crisis/blob/main/tests/__tests__/AIBehavior.test.tsx) to get an idea for the type of behaviors an AI needs to handle.
+
+:::info[Note]
+AI specific helpers can be found in [`dionysus/lib`](https://github.com/nkzw-tech/athena-crisis/tree/main/dionysus/lib). If you are building an AI from scratch, feel free to add more helpers, extract existing functionality from `DionysusAlpha` and submit them as a Pull Request separately.
+:::
+
+### How to test your AI
+
+The [Map Editor](/playground/map-editor) can be used to set up scenarios and try different AI behaviors. You can choose your AI for one of the players in a dropdown in the "Setup" (shortcut: `t`) panel. Then set up a scenario in the editor, jump into a playtest and end your turn to see the AI behavior.

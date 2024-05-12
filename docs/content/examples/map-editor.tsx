@@ -16,15 +16,17 @@ const viewer = {
 
 export default function MapEditorExample() {
   return (
-    <MapEditor
-      animationSpeed={null}
-      confirmActionStyle="touch"
-      createMap={() => {}}
-      fogStyle="soft"
-      setHasChanges={() => {}}
-      tiltStyle="on"
-      updateMap={() => {}}
-      user={viewer}
-    />
+    <div style={{ width: '150%' }}>
+      <MapEditor
+        animationSpeed={null}
+        confirmActionStyle="touch"
+        createMap={() => {}}
+        fogStyle="soft"
+        setHasChanges={() => {}}
+        tiltStyle="on"
+        updateMap={() => {}}
+        user={viewer}
+      />
+    </div>
   );
 }

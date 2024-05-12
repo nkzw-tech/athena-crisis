@@ -21,7 +21,7 @@ class MapData {
 }
 ```
 
-Each map in the game is a grid defined by `size`. `map` is an Array of tile ids (In-game they are referred to as "fields"), with `modifiers` being the corresponding Array to identify the specific sprite variant for rendering. For example, if a tile in a specific location is a Street, with Street tiles above and below, but not to the right and left, the modifier will store information that it should render a vertical Street sprite. `map` is critical for gameplay and behaviors, but `modifiers` is only used for rendering. Modifiers are only stored on each map to avoid recalculating them frequently. In tests, you can use `withModifiers(map)` to generate the correct modifiers automatically.
+Each map in the game is a grid defined by `size`. `map` is an Array of [`TileInfo`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/info/Tile.tsx) ids (In-game they are referred to as "fields"), with `modifiers` being the corresponding Array to identify the specific sprite variant for rendering. For example, if a tile in a specific location is a Street, with Street tiles above and below, but not to the right and left, the modifier will store information that it should render a vertical Street sprite. `map` is critical for gameplay and behaviors, but `modifiers` is only used for rendering. Modifiers are only stored on each map to avoid recalculating them frequently. In tests, you can use `withModifiers(map)` to generate the correct modifiers automatically.
 
 :::info[Note]
 In Athena Crisis, the look of a tile on the screen depends on its adjacent tiles. There is always only one way to render a tile based on its neighbors. The map editor first checks if a tile can be placed via [`canPlaceTile`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/lib/canPlaceTile.tsx), and then recalculates the modifiers for the field and its neighbors via [`getModifier`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/lib/getModifier.tsx).
@@ -119,6 +119,18 @@ const newMap = map.copy({ units });
 
 That's it! After a mutation to map state it can be shared with other players, like for example when an action is taken on the server or the state can be stored in a database using `JSON.stringify(newMap)`. In the next section we'll discuss the formalized approach to update game state via [Actions](/core-concepts/actions).
 
+## Buildings & Units
+
+We already learned about [`TileInfo`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/info/Tile.tsx) above. There are corresponding definitions for [`BuildingInfo`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/info/Building.tsx) and [`UnitInfo`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/info/Unit.tsx). Instances of these classes (also in the same files) contain all the necessary configuration and sprite information for buildings and units such as health, cost, or the assets to render.
+
+Maps contain instances of [`Building`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/map/Building.tsx) and [`Unit`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/map/Unit.tsx). They are immutable like `MapData`, and similarly have query and mutation functions:
+
+```tsx
+Jeep.create(player1).load(Flamethrower.create(player1).transport()); // A Jeep loaded with a Flamethrower.
+
+Factory.create(player2).canBuildUnits(); // true
+```
+
 :::info[Note]
 Many data structures in Athena Crisis are technically mutable as they are basic JavaScript Arrays, Sets or Maps. This is usually for performance reasons. Their immutability is enforced via TypeScript types.
-:::
+:::import Tiles from '@deities/hera/Tiles.tsx';

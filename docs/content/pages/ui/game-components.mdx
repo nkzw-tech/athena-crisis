@@ -1,0 +1,43 @@
+import { lazy } from 'react';
+import ClientComponent from '../../playground/ClientComponent.tsx';
+
+# Game Components
+
+The Athena Crisis renderer was written for fun in JavaScript and CSS from scratch without experience in building game engines. It then ended up being a real game. _Oops._ Anyway, it's been fun to push web technologies to the max and optimize every detail, so let's explore some of the core components!
+
+Most of the UI and game rendering can be found in the [`hera`](https://github.com/nkzw-tech/athena-crisis/tree/main/hera) top level folder. Athena Crisis renders almost the entire game using just plain React, DOM and CSS. Only the map tiles, fog and decorations are using a `canvas` Element. Even then, all three are rendered using different `canvas` elements that are laid on top of each other. The entry point to render a map is the [`Map`](https://github.com/nkzw-tech/athena-crisis/tree/main/hera/Map.tsx) component.
+
+## Tiles, Fog and Decorations
+
+Building a renderer with basic web technologies makes it easier to study how to build a game. It's not the most efficient approach, but it's a great way to learn. All the "static content" is rendered using `<canvas>` through these components:
+
+- [`Tiles`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/Tiles.tsx) for rendering tiles.
+- [`Decorators`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/Decorators.tsx) for decorations.
+- [`Fog`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/Fog.tsx) for fog that overlays the map and blends into everything.
+
+_If you are a fan of web development, check out how the fog layer is implemented._
+
+## Units & Buildings
+
+Units and Buildings are interactable entities. Both are making use of somewhat complex CSS like `mask-image`, `filter` and `transform` and are therefore slightly harder to replicate when building a game engine and renderer from scratch. In a way, CSS was used as if it was a shader language. Their implementation can be found here:
+
+- [`Unit`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/Unit.tsx)
+- [`Building`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/Building.tsx)
+
+Here are some examples of units as they are rendered on a map in the game. You can click them to show the [`GameDialog`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/ui/GameDialog.tsx) as it is rendered in the game when right-clicking or long-pressing a field:
+
+<ClientComponent
+  module={lazy(() => import('../../examples/entities-example.tsx'))}
+/>
+
+## Portraits
+
+Portraits are rendered using the [`Portrait`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/character/Portrait.tsx) component:
+
+```tsx
+// [!include ~/examples/portraits-example.tsx:portraits]
+```
+
+<ClientComponent
+  module={lazy(() => import('../../examples/portraits-example.tsx'))}
+/>

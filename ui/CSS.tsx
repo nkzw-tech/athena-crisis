@@ -5,123 +5,9 @@ import { applyVar, initializeCSSVariables } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import pixelBorder from './pixelBorder.tsx';
 
-initializeCSSVariables();
-
-injectGlobal(`
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  div.background {
-    filter: invert(1);
-  }
-}
-
-html.dark div.background {
-  filter: invert(1);
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  height: 100vh;
-  height: -webkit-fill-available;
-  height: fill-available;
-}
-
-body {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  background: ${applyVar('background-color')};
-  color: ${applyVar('text-color')};
-  font-family: Athena, ui-sans-serif, system-ui, sans-serif;
-  font-size: 20px;
-  font-weight: normal;
-  line-height: 1em;
-  margin: 0;
-  overscroll-behavior: none;
-  touch-action: pan-x pan-y;
-  user-select: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
-html[lang="ja_JP"] body, .locale-ja_JP {
-  font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
-
-  & button,
-  & input,
-  & select,
-  & textarea {
-    font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
-  }
-}
-
-html[lang="uk_UA"] body, html[lang="ru_RU"] body, .locale-uk_UA, .locale-ru_RU {
-  font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
-
-  & button,
-  & input,
-  & select,
-  & textarea {
-    font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
-  }
-}
-
-html[lang="ko_KR"] body, .locale-ko_KR {
-  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-
-  & button,
-  & input,
-  & select,
-  & textarea {
-    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-  }
-}
-
-html[lang="zh_CN"] body, .locale-zh_CN {
-  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-
-  & button,
-  & input,
-  & select,
-  & textarea {
-    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-  }
-}
-
-body .all-fonts {
-  font-family: Athena, PressStart2P, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
-}
-
+const scope = `
 svg {
   vertical-align: middle;
-}
-
-@media (orientation: portrait) {
-  body {
-    margin-top: env(safe-area-inset-top);
-  }
-}
-
-div.background, div.background-absolute {
-  background-image: url('${Background}');
-  bottom: 0;
-  image-rendering: pixelated;
-  left: -144px;
-  overflow: hidden;
-  pointer-events: none;
-  position: fixed;
-  right: -144px;
-  top: -144px;
-  transform: ${applyVar('perspective-transform')};
-  zoom: ${applyVar('scale')};
-}
-
-div.background-absolute {
-  position: absolute;
 }
 
 table {
@@ -317,4 +203,135 @@ p {
   margin: 0;
   user-select: text;
 }
-`);
+`;
+
+const global = `
+* {
+  box-sizing: border-box;
+}
+
+html.dark div.background {
+  filter: invert(1);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: fill-available;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  background: ${applyVar('background-color')};
+  color: ${applyVar('text-color')};
+  font-family: Athena, ui-sans-serif, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 1em;
+  margin: 0;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html[lang="ja_JP"] body, .locale-ja_JP {
+  font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
+
+  & button,
+  & input,
+  & select,
+  & textarea {
+    font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+html[lang="uk_UA"] body, html[lang="ru_RU"] body, .locale-uk_UA, .locale-ru_RU {
+  font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
+
+  & button,
+  & input,
+  & select,
+  & textarea {
+    font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+html[lang="ko_KR"] body, .locale-ko_KR {
+  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+
+  & button,
+  & input,
+  & select,
+  & textarea {
+    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+html[lang="zh_CN"] body, .locale-zh_CN {
+  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+
+  & button,
+  & input,
+  & select,
+  & textarea {
+    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+body .all-fonts {
+  font-family: Athena, PressStart2P, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (orientation: portrait) {
+  body {
+    margin-top: env(safe-area-inset-top);
+  }
+}
+
+div.background, div.background-absolute {
+  background-image: url('${Background}');
+  bottom: 0;
+  image-rendering: pixelated;
+  left: -144px;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  right: -144px;
+  top: -144px;
+  transform: ${applyVar('perspective-transform')};
+  zoom: ${applyVar('scale')};
+}
+
+div.background-absolute {
+  position: absolute;
+}
+
+@media (prefers-color-scheme: dark) {
+  div.background {
+    filter: invert(1);
+  }
+}
+
+${scope}
+`;
+
+let initialized = false;
+export default function initializeCSS() {
+  if (initialized) {
+    return;
+  }
+
+  initialized = true;
+  initializeCSSVariables();
+  injectGlobal(global);
+}
+
+export function getScopedCSSDefinitions() {
+  return scope;
+}

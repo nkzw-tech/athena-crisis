@@ -73,14 +73,31 @@ export default defineConfig({
           link: '/core-concepts/actions',
           text: 'Actions ',
         },
+        {
+          link: '/core-concepts/ai',
+          text: 'AI Deep Dive',
+        },
       ],
       text: 'Core Concepts',
     },
     {
       items: [
         {
+          link: '/ui/game-components',
+          text: 'Game Components',
+        },
+      ],
+      text: 'UI Components',
+    },
+    {
+      items: [
+        {
           link: '/playground/map-editor',
           text: 'Map Editor',
+        },
+        {
+          link: '/playground/ai',
+          text: 'AI',
         },
       ],
       text: 'Playground',

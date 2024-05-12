@@ -1,1 +1,167 @@
+import Image from '../../playground/Image.tsx';
+
 # Actions
+
+In the [Map Data](/core-concepts/map-data) section we learned about the core map data structure of Athena Crisis and how to query and update game state. In this section we'll discuss the formalized approach to update game state via _Actions_.
+
+Actions are the primary way to update game state. While game state might be mutated before a game starts or after it ends via code, players can only interact with the game via actions. Actions can be a move, attack, create unit or other game events. You can find the full list of actions that can be executed by users or scripts in [`Action.tsx`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/Action.tsx). Each Action produces an ActionResponse, which can be found in [`ActionResponse.tsx`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/ActionResponse.tsx). ActionResponses will then be applied to the game state to update it, and animated if they are shown to a player.
+
+**Here is a diagram of the action flow:**
+
+<Image alt="Actions" src="/actions.png" />
+
+## Defining a new Action
+
+Adding new actions is straightforward and TypeScript guides you through the process. First, add a new Action type to `Action.tsx`:
+
+```tsx
+type SleepAction = Readonly<{
+  type: 'Sleep';
+  from: Vector;
+}>;
+```
+
+You'll also need to add it to the `Action` type in the same file:
+
+```tsx
+export type Action =
+  | ActivatePowerAction
+  | ……
+  | SleepAction;
+```
+
+If you are adding a new type of `ActionResponse`, you'll need to do the same in `ActionResponse.tsx`:
+
+```tsx
+export type SleepActionResponse = Readonly<{
+  type: 'Sleep';
+  from: Vector;
+}>;
+```
+
+You'll also need to add it to the `Action` type in the same file:
+
+```tsx
+export type ActionResponse =
+  | ActivatePowerActionResponse
+  | ……
+  | SleepActionResponse;
+```
+
+After this, run `pnpm codegen` to generate all the encoded actions (for storage or network transmission), and the corresponding formatters for use in snapshot tests.
+
+## Implementing an Action
+
+After a new Action is defined, you can run TypeScript via `pnpm tsc` and it will guide you through each call site where the new action needs to be handled. This is a great way to get an overview of the whole system. Let's build a new "Sleep" action that puts a unit to sleep. In our case, it won't have any functionality, but could be made visible to the player with an animation. First, add the new Action in [`Action.tsx`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/Action.tsx):
+
+```tsx
+function sleep(map: MapData, { from }: SleepAction) {
+  const unit = map.units.get(from);
+  return unit && map.isCurrentPlayer(unit) && !unit.isSleeping()
+    ? ({ from, type: 'Sleep' } as const)
+    : null;
+}
+```
+
+Actions only return an `ActionResponse` if the action is valid. They do not mutate the game state, which happens via [`applyActionResponse`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/actions/applyActionResponse.tsx) by processing the `ActionResponse` and returning a new `MapData` object:
+
+```tsx
+switch (type) {
+  …
+  case 'Sleep': {
+    const { from } = actionResponse;
+    const unit = map.units.get(from);
+    return unit
+      ? map.copy({ units: map.units.set(from, unit.sleep().complete()) })
+      : map;
+  }
+}
+```
+
+Next, TypeScript will tell us that we need to handle the visibility of the new ActionResponse in fog. Fog in Athena Crisis works by removing all information from each player that is not visible to them. When an Action is executed, it calls [`computeVisibleActions`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/lib/computeVisibleActions.tsx) on the ActionResponse once for each player. The Action we created is fairly minimal, so we only need to handle one case: Show the action if the source field (`from`) is visible to the player, or drop it if it isn't:
+
+```tsx
+const VisibleActionModifiers = {
+  …
+  Sleep: { Source: true },
+}
+```
+
+There are more complex cases where it is harder to know if an action should be visible or hidden from that player, such as when a unit is moving or attacking, and the action affects more than just one field. `computeVisibleActions` can handle each case individually, and it can either return the same ActionResponse, drop it, return a modified version or even return multiple new ActionResponses. For example, a unit can be created from one Building but deployed on another field. The process looks like this:
+
+```tsx
+CreateUnit: {
+  Both: true,
+  Source: true,
+  Target: (
+    { from, to, unit }: CreateUnitActionResponse,
+    _: MapData,
+    activeMap: MapData,
+  ): HiddenMoveActionResponse => ({
+    path: [from, to],
+    type: 'HiddenMove',
+    unit,
+  }),
+}
+```
+
+If both fields or just the source are visible, the action is shown to the player unmodified. However, if only the target field is visible, the response is replaced with a `HiddenMove` ActionResponse. The player who is viewing the game won't be able to tell if the unit was just created or moved from another field in fog.
+
+For convenience, we'll also add an [`ActionMutator`](https://github.com/nkzw-tech/athena-crisis/blob/main/apollo/action-mutators/ActionMutators.tsx). These are simple functions to avoid repetition when executing actions against game state, like is often the case in tests.
+
+```
+export const SleepAction = (from: Vector) =>
+  ({
+    from,
+    type: 'Sleep',
+  }) as const;
+```
+
+Now, if you are writing a test to simulate some game actions, you can use the mutator like this:
+
+```tsx
+const response = executeGameActions(map, [
+  MoveAction(from, to),
+  SleepAction(to),
+  EndTurnAction(),
+]);
+```
+
+TypeScript may point you to a few more utility functions that need handling for your action, but once you are done we can move on to the UI layer.
+
+## Actions in the UI
+
+We are now ready to make our first change to the Athena Crisis game client. Most of the client code can be found in [`hera`](https://github.com/nkzw-tech/athena-crisis/tree/main/hera).
+
+For our new action, we need to first implement the handler for what happens when another player or the AI execute this action. This code lives in [`processActionResponse`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/action-response/processActionResponse.tsx) which is a wrapper around `applyActionResponse` to animate game state and apply the ActionResponse at the right time. The client side Sleep Action could look something like this:
+
+```tsx
+export function sleepAction(
+  { optimisticAction, update }: Actions,
+  state: State,
+): Promise<State> {
+  const { map, selectedPosition, vision } = state;
+  if (selectedPosition) {
+    return update({
+      map: applyActionResponse(
+        map,
+        vision,
+        optimisticAction(state, SleepUnitAction(selectedPosition)),
+      ),
+      position: selectedPosition,
+      ...resetBehavior(),
+    });
+  }
+  return null;
+}
+```
+
+Finally, we need to allow the player to execute the Sleep Action for a unit in the game. We could consider adding a button to the [`Menu`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/behavior/Menu.tsx) behavior that works similarly to other buttons and executes the action against the game state when clicked. We can reuse the same `sleepAction` that we defined above for the user initiated action as well.
+
+After following the above steps, Athena Crisis should now have a new "Sleep" feature for units!
+
+## Optimistic Updates
+
+In the above example we called `optimisticAction(state, SleepUnitAction(from))` to update the game state on the client optimistically. Due to the elegance of immutable data structures and the Athena Crisis architecture, we can apply an Action on the client while sending the same action to the server at the same time, executing it, and sending the (visible) ActionResponse to each other player.
+
+The architecture of the game ensures that the server always has the final say on the game state, and the client will be updated with the server's response. This is a powerful feature that allows the game to feel responsive and smooth, even on slow connections, and it also allows hiding secrets like hidden win conditions from players.

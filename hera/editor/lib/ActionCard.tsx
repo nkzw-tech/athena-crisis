@@ -433,14 +433,16 @@ const headlineStyle = css`
 `;
 
 const textareaStyle = css`
-  background: none;
-  box-shadow: none;
-  line-height: 1.4em;
-  margin: 0;
-  padding: 0;
-
-  &:focus {
+  html body & {
+    background: none;
     box-shadow: none;
+    line-height: 1.4em;
+    margin: 0;
+    padding: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 `;
 

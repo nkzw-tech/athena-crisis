@@ -72,7 +72,7 @@ export default abstract class BaseAI {
   protected executeMove(
     map: MapData,
     action: MoveAction,
-  ): [MapData | null, boolean] {
+  ): [map: MapData | null, blocked: boolean] {
     const currentMap = this.execute(map, action);
     const state = this.gameState.at(-1);
 

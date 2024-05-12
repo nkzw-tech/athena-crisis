@@ -3,7 +3,7 @@ import { Flamethrower, Infantry } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import Button from '@deities/ui/Button.tsx';
+import InlineLink from '@deities/ui/InlineLink.tsx';
 import { Fragment, useState } from 'react';
 import PlaygroundGame from '../playground/PlaygroundGame.tsx';
 
@@ -41,7 +41,7 @@ export default function ExampleMap() {
   return (
     <Fragment key={render}>
       <PlaygroundGame map={mapB} />
-      <Button onClick={() => rerender(render + 1)}>Reset</Button>
+      <InlineLink onClick={() => rerender(render + 1)}>Reset State</InlineLink>
     </Fragment>
   );
 }

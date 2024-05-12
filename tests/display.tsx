@@ -8,8 +8,8 @@ import {
 import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
-import '@deities/ui/CSS.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
+import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx, injectGlobal } from '@emotion/css';
 import React, { useEffect, useMemo } from 'react';
@@ -22,6 +22,8 @@ declare global {
   // eslint-disable-next-line no-var
   var renderMap: (url: string) => void;
 }
+
+initializeCSS();
 
 // Playwright does not like audio.
 AudioPlayer.pause();

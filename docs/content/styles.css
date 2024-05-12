@@ -1,0 +1,42 @@
+@font-face {
+  font-display: swap;
+  font-family: Athena;
+  src: url('/fonts/AthenaNova.woff2');
+}
+
+:root {
+  --vocs-space_56: var(--vocs-space_24);
+}
+
+html,
+body {
+  tab-size: 2;
+}
+
+#app {
+  position: relative;
+}
+
+.LogoLink {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+div.vocs_HomePage_description {
+  text-wrap: balance;
+}
+
+div.vocs_DocsLayout_gutterTop {
+  backdrop-filter: blur(2px);
+}
+
+div.vocs_HomePage {
+  padding-top: 0;
+}
+
+div[data-layout='minimal'] div#vocs-content,
+div[data-layout='minimal'] article.vocs_Content {
+  max-width: initial;
+}

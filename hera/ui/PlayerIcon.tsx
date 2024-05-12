@@ -35,9 +35,8 @@ export default function PlayerIcon({
   onClick?: () => void;
   selected?: boolean;
 }) {
-  const Component = onClick ? 'a' : 'span';
   return (
-    <Component
+    <div
       className={cx(
         style,
         selected && highlightStyle,
@@ -53,7 +52,7 @@ export default function PlayerIcon({
       }}
     >
       {playerIconText(id)}
-    </Component>
+    </div>
   );
 }
 
