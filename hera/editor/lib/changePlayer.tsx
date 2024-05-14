@@ -25,6 +25,7 @@ export default async function changePlayer(
     userId,
     existingPlayer?.teamId || id,
     0,
+    undefined,
     existingPlayer?.skills || new Set(),
     new Set(),
     existingPlayer?.charge || 0,

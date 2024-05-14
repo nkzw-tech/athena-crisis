@@ -26,7 +26,6 @@ import {
 } from '../map/Configuration.tsx';
 import Entity from '../map/Entity.tsx';
 import Player, {
-  hasAI,
   PlaceholderPlayer,
   PlayerID,
   toPlayerID,
@@ -391,7 +390,7 @@ export default function validateMap(
               toPlayerID(id),
               id,
               0,
-              hasAI(player) && player.ai != null && AIRegistry.has(player.ai)
+              player.ai != null && AIRegistry.has(player.ai)
                 ? player.ai
                 : undefined,
               player.skills,

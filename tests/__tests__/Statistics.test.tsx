@@ -148,7 +148,18 @@ test('collects statistics when attacking buildings', async () => {
         ImmutableMap([
           [
             3,
-            new HumanPlayer(3, '3', 3, 300, new Set(), new Set(), 0, null, 0),
+            new HumanPlayer(
+              3,
+              '3',
+              3,
+              300,
+              undefined,
+              new Set(),
+              new Set(),
+              0,
+              null,
+              0,
+            ),
           ],
         ]),
       ),

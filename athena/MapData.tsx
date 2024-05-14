@@ -70,6 +70,7 @@ const nullPlayer = new HumanPlayer(
   '-1',
   0,
   0,
+  undefined,
   new Set(),
   new Set(),
   0,

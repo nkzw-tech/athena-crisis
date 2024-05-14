@@ -110,7 +110,18 @@ test('lose the game, but continue when missing two turns in a row with multiple 
         ImmutableMap([
           [
             3,
-            new HumanPlayer(3, '3', 3, 300, new Set(), new Set(), 0, null, 0),
+            new HumanPlayer(
+              3,
+              '3',
+              3,
+              300,
+              undefined,
+              new Set(),
+              new Set(),
+              0,
+              null,
+              0,
+            ),
           ],
         ]),
       ),

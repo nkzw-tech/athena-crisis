@@ -1,3 +1,4 @@
+import { AIRegistryT } from '@deities/apollo/actions/executeGameAction.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import Player, { isBot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -14,6 +15,7 @@ import Android from '@iconify-icons/pixelarticons/android.js';
 import { ReactNode, useCallback, useState } from 'react';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { CharacterImage } from '../character/PortraitPicker.tsx';
+import AISelector from './AISelector.tsx';
 import PlayerIcon from './PlayerIcon.tsx';
 import PlayerPosition from './PlayerPosition.tsx';
 import { SkillIcon, SkillSelector } from './SkillDialog.tsx';
@@ -31,6 +33,7 @@ type UserLike =
 
 export default function PlayerSelector({
   activePlayer,
+  aiRegistry,
   availableSkills,
   children,
   hasSkills,
@@ -39,6 +42,7 @@ export default function PlayerSelector({
   map,
   onClick,
   onSelect,
+  onSelectAI,
   onSelectSkill,
   onSelectSkills,
   selectedPlayer,
@@ -47,6 +51,7 @@ export default function PlayerSelector({
   viewerPlayerID,
 }: {
   activePlayer?: PlayerID | null;
+  aiRegistry?: AIRegistryT | null;
   availableSkills?: ReadonlySet<Skill> | null;
   children?: ReactNode;
   hasSkills: boolean;
@@ -55,6 +60,7 @@ export default function PlayerSelector({
   map: MapData;
   onClick?: ((player: PlayerID) => void) | null;
   onSelect?: ((player: PlayerID) => void) | null;
+  onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?:
     | ((player: PlayerID, slot: number, skill: Skill | null) => void)
@@ -78,6 +84,7 @@ export default function PlayerSelector({
         .filter(({ id }) => id > 0)
         .map((player: Player) => (
           <PlayerItem
+            aiRegistry={aiRegistry}
             availableSkills={availableSkills}
             blocklistedSkills={map.config.blocklistedSkills}
             hasSkills={hasSkills}
@@ -88,6 +95,7 @@ export default function PlayerSelector({
             locked={!!locked}
             onClick={onClick ? () => onClick(player.id) : undefined}
             onSelect={onSelect ? () => onSelect(player.id) : undefined}
+            onSelectAI={onSelectAI}
             onSelectSkill={onSelectSkill}
             onSelectSkills={onSelectSkills}
             player={player}
@@ -222,6 +230,7 @@ const PlayerSkillSelectors = ({
 };
 
 const PlayerItem = ({
+  aiRegistry,
   availableSkills,
   blocklistedSkills,
   hasSkills,
@@ -231,6 +240,7 @@ const PlayerItem = ({
   locked,
   onClick,
   onSelect,
+  onSelectAI,
   onSelectSkill,
   onSelectSkills,
   player,
@@ -238,6 +248,7 @@ const PlayerItem = ({
   user,
   viewerPlayerID,
 }: {
+  aiRegistry?: AIRegistryT | null;
   availableSkills?: ReadonlySet<Skill> | null;
   blocklistedSkills?: ReadonlySet<Skill>;
   hasSkills: boolean;
@@ -247,6 +258,7 @@ const PlayerItem = ({
   locked: boolean;
   onClick?: () => void;
   onSelect?: () => void;
+  onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?:
     | ((player: PlayerID, slot: number, skill: Skill | null) => void)
@@ -317,6 +329,13 @@ const PlayerItem = ({
             </div>
           )
         ) : null}
+        {aiRegistry && (
+          <AISelector
+            currentAI={player.ai != null ? player.ai : undefined}
+            registry={aiRegistry}
+            setAI={(id) => onSelectAI?.(player.id, id)}
+          />
+        )}
       </Stack>
     );
   }

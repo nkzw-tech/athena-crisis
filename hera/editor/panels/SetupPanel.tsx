@@ -3,6 +3,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { DefaultMapSkillSlots } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -12,6 +13,11 @@ import { State } from '../../Types.tsx';
 import PlayerSelector from '../../ui/PlayerSelector.tsx';
 import TeamSelector from '../../ui/TeamSelector.tsx';
 import { SetMapFunction } from '../Types.tsx';
+
+const aiRegistry =
+  process.env.NODE_ENV === 'development'
+    ? AIRegistry
+    : new Map([...AIRegistry].filter(([, { published }]) => published));
 
 export default function MapEditorSetupPanel({
   setMap,
@@ -47,6 +53,19 @@ export default function MapEditorSetupPanel({
     [mapWithPlayers],
   );
 
+  const onSelectAI = useCallback(
+    (playerID: PlayerID, ai: number) => {
+      const player = map.getPlayer(playerID);
+      setMap(
+        'teams',
+        map.copy({
+          teams: updatePlayer(map.teams, player.copy({ ai })),
+        }),
+      );
+    },
+    [map, setMap],
+  );
+
   const onSelectSkills = useCallback(
     (playerID: PlayerID, slot: number, skill: Skill | null) => {
       const player = map.getPlayer(playerID);
@@ -80,10 +99,12 @@ export default function MapEditorSetupPanel({
         placeholders
       />
       <PlayerSelector
+        aiRegistry={aiRegistry.size > 1 ? aiRegistry : null}
         availableSkills={Skills}
         hasSkills
         map={mapWithPlayers}
         onSelect={null}
+        onSelectAI={onSelectAI}
         onSelectSkills={onSelectSkills}
         skillSlots={DefaultMapSkillSlots}
         users={placeholderUsers}

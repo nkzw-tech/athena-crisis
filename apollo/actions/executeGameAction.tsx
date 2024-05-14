@@ -1,4 +1,3 @@
-import { hasAI } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { Action, execute, MutateActionResponseFn } from '../Action.tsx';
@@ -19,6 +18,7 @@ export type AIRegistryEntry = Readonly<{
     new (effects: Effects): AIType;
   };
   name: string;
+  published: boolean;
 }>;
 
 export type AIRegistryT = ReadonlyMap<number, AIRegistryEntry>;
@@ -38,9 +38,7 @@ export function executeAIAction(
     activeMap.getCurrentPlayer().isBot()
   ) {
     const player = activeMap.getCurrentPlayer();
-    const AIClass = ((hasAI(player) &&
-      player.ai != null &&
-      AIRegistry.get(player.ai)) ||
+    const AIClass = ((player.ai != null && AIRegistry.get(player.ai)) ||
       AIRegistry.get(0))!.class;
 
     const ai = new AIClass(effects);

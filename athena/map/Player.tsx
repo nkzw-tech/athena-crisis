@@ -26,6 +26,7 @@ export const DynamicPlayerIDs = new Set([
 
 type BasePlainPlayerType = Readonly<{
   activeSkills: ReadonlyArray<Skill>;
+  ai: number | undefined;
   charge: number | undefined;
   funds: number;
   id: PlayerID;
@@ -41,7 +42,6 @@ export type PlainPlayerType = BasePlainPlayerType &
 
 type PlainBotType = BasePlainPlayerType &
   Readonly<{
-    ai?: number;
     name: string;
   }>;
 
@@ -66,6 +66,7 @@ export default abstract class Player {
     public readonly id: PlayerID,
     public readonly teamId: PlayerID,
     public readonly funds: number,
+    public readonly ai: number | undefined,
     public readonly skills: ReadonlySet<Skill>,
     public readonly activeSkills: ReadonlySet<Skill>,
     public readonly charge: number,
@@ -159,6 +160,7 @@ export default abstract class Player {
 
   abstract copy(_: {
     activeSkills?: ReadonlySet<Skill>;
+    ai?: number;
     charge?: number;
     funds?: number;
     id?: PlayerID;
@@ -177,10 +179,10 @@ export class PlaceholderPlayer extends Player {
     id: PlayerID,
     teamId: PlayerID,
     funds: number,
-    public readonly ai: number | undefined,
+    ai: number | undefined,
     skills: ReadonlySet<Skill>,
   ) {
-    super(id, teamId, funds, skills, new Set(), 0, null, 0);
+    super(id, teamId, funds, ai, skills, new Set(), 0, null, 0);
   }
 
   copy({
@@ -231,14 +233,14 @@ export class Bot extends Player {
     public readonly name: string,
     teamId: PlayerID,
     funds: number,
-    public readonly ai: number | undefined,
+    ai: number | undefined,
     skills: ReadonlySet<Skill>,
     activeSkills: ReadonlySet<Skill>,
     charge: number,
     stats: PlayerStatistics | null,
     misses: number,
   ) {
-    super(id, teamId, funds, skills, activeSkills, charge, stats, misses);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
   }
 
   copy({
@@ -320,17 +322,19 @@ export class HumanPlayer extends Player {
     public readonly userId: string,
     teamId: PlayerID,
     funds: number,
+    ai: number | undefined,
     skills: ReadonlySet<Skill>,
     activeSkills: ReadonlySet<Skill>,
     charge: number,
     stats: PlayerStatistics | null,
     misses: number,
   ) {
-    super(id, teamId, funds, skills, activeSkills, charge, stats, misses);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
   }
 
   copy({
     activeSkills,
+    ai,
     charge,
     funds,
     id,
@@ -341,6 +345,7 @@ export class HumanPlayer extends Player {
     userId,
   }: {
     activeSkills?: ReadonlySet<Skill>;
+    ai?: number;
     charge?: number;
     funds?: number;
     id?: PlayerID;
@@ -355,6 +360,7 @@ export class HumanPlayer extends Player {
       userId ?? this.userId,
       teamId ?? this.teamId,
       funds ?? this.funds,
+      ai ?? this.ai,
       skills ?? this.skills,
       activeSkills ?? this.activeSkills,
       charge ?? this.charge,
@@ -364,10 +370,20 @@ export class HumanPlayer extends Player {
   }
 
   toJSON(): PlainPlayerType {
-    const { activeSkills, charge, funds, id, misses, skills, stats, userId } =
-      this;
+    const {
+      activeSkills,
+      ai,
+      charge,
+      funds,
+      id,
+      misses,
+      skills,
+      stats,
+      userId,
+    } = this;
     return {
       activeSkills: [...activeSkills],
+      ai,
       charge,
       funds,
       id,
@@ -386,6 +402,7 @@ export class HumanPlayer extends Player {
           userId,
           player.teamId,
           player.funds,
+          player.ai,
           player.skills,
           player.activeSkills,
           player.charge,
@@ -507,8 +524,4 @@ export function isHumanPlayer(player: Player): player is HumanPlayer {
 }
 export function isBot(player: Player): player is Bot {
   return player.isBot();
-}
-
-export function hasAI(player: Player): player is Bot | PlaceholderPlayer {
-  return isBot(player) || player.isPlaceholder();
 }

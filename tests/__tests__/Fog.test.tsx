@@ -103,6 +103,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
               'User-6',
               3,
               500,
+              undefined,
               new Set(),
               new Set(),
               0,

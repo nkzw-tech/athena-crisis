@@ -23,7 +23,18 @@ test('ensures the configuration for buildings and the units they can create is c
           ...building
             .create(1)
             .getBuildableUnits(
-              new HumanPlayer(1, '1', 1, 0, new Set(), new Set(), 0, null, 0),
+              new HumanPlayer(
+                1,
+                '1',
+                1,
+                0,
+                undefined,
+                new Set(),
+                new Set(),
+                0,
+                null,
+                0,
+              ),
             ),
         ]
           .map((unit) => unit.name)
@@ -94,6 +105,7 @@ test('units can be added to buildings via skills', () => {
     '1',
     1,
     0,
+    undefined,
     new Set(),
     new Set(),
     0,
@@ -105,6 +117,7 @@ test('units can be added to buildings via skills', () => {
     '1',
     1,
     0,
+    undefined,
     new Set([Skill.BuyUnitCannon]),
     new Set(),
     0,
@@ -135,6 +148,7 @@ test('units can be added to the Bar via skills', () => {
     '1',
     1,
     0,
+    undefined,
     new Set(),
     new Set(),
     0,
@@ -146,6 +160,7 @@ test('units can be added to the Bar via skills', () => {
     '1',
     1,
     0,
+    undefined,
     new Set([Skill.BuyUnitBazookaBear]),
     new Set(),
     0,

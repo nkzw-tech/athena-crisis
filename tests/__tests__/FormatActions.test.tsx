@@ -242,6 +242,6 @@ test('format spawn actions', () => {
       { colors: false },
     ),
   ).toMatchInlineSnapshot(
-    `"Spawn { units: [2,1 → Pioneer { id: 1, health: 100, player: 1, fuel: 40 }, 1,2 → Pioneer { id: 1, health: 100, player: 1, fuel: 40 }, 5,4 → Pioneer { id: 1, health: 100, player: 2, fuel: 40 }, 4,5 → Pioneer { id: 1, health: 100, player: 2, fuel: 40 }], teams: [ { id: 1, name: '', players: [ { activeSkills: [], charge: 0, funds: 10000, id: 1, misses: 0, skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0 ], userId: '1' } ] }, { id: 2, name: '', players: [ { activeSkills: [], charge: 0, funds: 10000, id: 2, misses: 0, skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0 ], userId: '2' } ] } ] }"`,
+    `"Spawn { units: [2,1 → Pioneer { id: 1, health: 100, player: 1, fuel: 40 }, 1,2 → Pioneer { id: 1, health: 100, player: 1, fuel: 40 }, 5,4 → Pioneer { id: 1, health: 100, player: 2, fuel: 40 }, 4,5 → Pioneer { id: 1, health: 100, player: 2, fuel: 40 }], teams: [ { id: 1, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 10000, id: 1, misses: 0, skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0 ], userId: '1' } ] }, { id: 2, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 10000, id: 2, misses: 0, skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0 ], userId: '2' } ] } ] }"`,
   );
 });

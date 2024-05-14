@@ -53,6 +53,7 @@ export function decodePlayers(
               player.userId,
               teamId,
               player.funds,
+              player.ai,
               skills,
               activeSkills,
               player.charge || 0,
