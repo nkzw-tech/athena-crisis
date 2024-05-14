@@ -65,13 +65,20 @@ export function decodePlayers(
                 player.name,
                 teamId,
                 player.funds,
+                player.ai,
                 skills,
                 activeSkills,
                 player.charge || 0,
                 decodePlayerStatistics(player.stats),
                 player.misses || 0,
               )
-            : new PlaceholderPlayer(playerID, teamId, player.funds, skills),
+            : new PlaceholderPlayer(
+                playerID,
+                teamId,
+                player.funds,
+                player.ai,
+                skills,
+              ),
       );
     }),
   );

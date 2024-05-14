@@ -1,5 +1,6 @@
 import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
+import AIRegistry from '../../dionysus/AIRegistry.tsx';
 import {
   Behavior,
   getBuildingInfo,
@@ -25,6 +26,7 @@ import {
 } from '../map/Configuration.tsx';
 import Entity from '../map/Entity.tsx';
 import Player, {
+  hasAI,
   PlaceholderPlayer,
   PlayerID,
   toPlayerID,
@@ -376,25 +378,28 @@ export default function validateMap(
   }
 
   const teams = ImmutableMap(
-    active.map(
-      (id) =>
-        [
+    active.map((id) => {
+      const player = map.getPlayer(id);
+      return [
+        id,
+        new Team(
           id,
-          new Team(
-            id,
-            '',
-            ImmutableMap<PlayerID, Player>().set(
+          '',
+          ImmutableMap<PlayerID, Player>().set(
+            toPlayerID(id),
+            new PlaceholderPlayer(
               toPlayerID(id),
-              new PlaceholderPlayer(
-                toPlayerID(id),
-                id,
-                0,
-                map.getPlayer(id).skills,
-              ),
+              id,
+              0,
+              hasAI(player) && player.ai != null && AIRegistry.has(player.ai)
+                ? player.ai
+                : undefined,
+              player.skills,
             ),
           ),
-        ] as const,
-    ),
+        ),
+      ] as const;
+    }),
   );
 
   const newMap = map.copy({

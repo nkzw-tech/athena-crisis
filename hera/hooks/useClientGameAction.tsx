@@ -10,7 +10,7 @@ import dropLabelsFromGameState from '@deities/apollo/lib/dropLabelsFromGameState
 import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/WinConditions.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, {
   ClientGame,
@@ -52,7 +52,7 @@ export default function useClientGameAction(
             vision,
             game.effects,
             action,
-            DionysusAlpha,
+            AIRegistry,
             mutateAction,
           ) || [null, null, null];
       } catch (error) {

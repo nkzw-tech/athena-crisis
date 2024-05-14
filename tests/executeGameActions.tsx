@@ -9,7 +9,7 @@ import {
   GameState,
 } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 
 export default function executeGameActions(
@@ -47,7 +47,7 @@ export default function executeGameActions(
         currentMap.createVisionObject(currentMap.getCurrentPlayer()),
         newEffects || new Map(),
         action,
-        DionysusAlpha,
+        AIRegistry,
         mutateAction,
       );
     if (!actionResponse || !activeMap || !currentGameState) {

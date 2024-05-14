@@ -41,11 +41,13 @@ export type PlainPlayerType = BasePlainPlayerType &
 
 type PlainBotType = BasePlainPlayerType &
   Readonly<{
+    ai?: number;
     name: string;
   }>;
 
 type PlaceholderPlayerType = Readonly<{
   activeSkills?: undefined;
+  ai?: number;
   funds: number;
   id: PlayerID;
   skills?: ReadonlyArray<Skill>;
@@ -175,17 +177,20 @@ export class PlaceholderPlayer extends Player {
     id: PlayerID,
     teamId: PlayerID,
     funds: number,
+    public readonly ai: number | undefined,
     skills: ReadonlySet<Skill>,
   ) {
     super(id, teamId, funds, skills, new Set(), 0, null, 0);
   }
 
   copy({
+    ai,
     funds,
     id,
     skills,
     teamId,
   }: {
+    ai?: number | undefined;
     funds?: number;
     id?: PlayerID;
     skills?: ReadonlySet<Skill>;
@@ -195,13 +200,14 @@ export class PlaceholderPlayer extends Player {
       id ?? this.id,
       teamId ?? this.teamId,
       funds ?? this.funds,
+      ai ?? this.ai,
       skills ?? this.skills,
     ) as this;
   }
 
   toJSON(): PlaceholderPlayerType {
-    const { funds, id, skills } = this;
-    return { funds, id, skills: [...skills] };
+    const { ai, funds, id, skills } = this;
+    return { ai, funds, id, skills: [...skills] };
   }
 
   static from(player: Player): PlaceholderPlayer {
@@ -211,6 +217,7 @@ export class PlaceholderPlayer extends Player {
           player.id,
           player.teamId,
           player.funds,
+          player.isBot() ? player.ai : undefined,
           player.skills,
         );
   }
@@ -224,6 +231,7 @@ export class Bot extends Player {
     public readonly name: string,
     teamId: PlayerID,
     funds: number,
+    public readonly ai: number | undefined,
     skills: ReadonlySet<Skill>,
     activeSkills: ReadonlySet<Skill>,
     charge: number,
@@ -235,6 +243,7 @@ export class Bot extends Player {
 
   copy({
     activeSkills,
+    ai,
     charge,
     funds,
     id,
@@ -245,6 +254,7 @@ export class Bot extends Player {
     teamId,
   }: {
     activeSkills?: ReadonlySet<Skill>;
+    ai?: number | undefined;
     charge?: number;
     funds?: number;
     id?: PlayerID;
@@ -259,6 +269,7 @@ export class Bot extends Player {
       name ?? this.name,
       teamId ?? this.teamId,
       funds ?? this.funds,
+      ai ?? this.ai,
       skills ?? this.skills,
       activeSkills ?? this.activeSkills,
       charge ?? this.charge,
@@ -268,10 +279,11 @@ export class Bot extends Player {
   }
 
   toJSON(): PlainBotType {
-    const { activeSkills, charge, funds, id, misses, name, skills, stats } =
+    const { activeSkills, ai, charge, funds, id, misses, name, skills, stats } =
       this;
     return {
       activeSkills: [...activeSkills],
+      ai,
       charge,
       funds,
       id,
@@ -290,6 +302,7 @@ export class Bot extends Player {
           name,
           player.teamId,
           player.funds,
+          player.isPlaceholder() ? player.ai : undefined,
           player.skills,
           player.activeSkills,
           player.charge,
@@ -494,4 +507,8 @@ export function isHumanPlayer(player: Player): player is HumanPlayer {
 }
 export function isBot(player: Player): player is Bot {
   return player.isBot();
+}
+
+export function hasAI(player: Player): player is Bot | PlaceholderPlayer {
+  return isBot(player) || player.isPlaceholder();
 }

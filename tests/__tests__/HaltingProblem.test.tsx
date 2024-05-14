@@ -21,7 +21,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import chalk from 'chalk';
 import { expect, test } from 'vitest';
 import { printGameState } from '../printGameState.tsx';
@@ -48,7 +48,7 @@ const play = async (map: MapData) => {
       map.createVisionObject(player1),
       new Map(),
       EndTurnAction(),
-      DionysusAlpha,
+      AIRegistry,
     );
 
     if (!gameState?.length) {

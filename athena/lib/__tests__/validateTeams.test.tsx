@@ -73,6 +73,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 1,
                 "skills": [],
@@ -87,6 +88,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 2,
                 "skills": [],
@@ -101,6 +103,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 3,
                 "skills": [],
@@ -115,6 +118,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 4,
                 "skills": [],
@@ -153,6 +157,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 1,
                 "skills": [],
@@ -167,6 +172,7 @@ test('validates teams', () => {
             "name": "",
             "players": [
               {
+                "ai": undefined,
                 "funds": 0,
                 "id": 2,
                 "skills": [],

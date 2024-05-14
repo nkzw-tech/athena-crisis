@@ -11,7 +11,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -165,7 +165,7 @@ test('AI will hop between islands if necessary', async () => {
       map.createVisionObject(player1),
       new Map(),
       EndTurnAction(),
-      DionysusAlpha,
+      AIRegistry,
     )[2];
 
   const gameState = execute(map);

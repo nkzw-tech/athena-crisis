@@ -1615,7 +1615,21 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
             3,
             '',
             ImmutableMap([
-              [3, new Bot(3, 'Bot', 3, 300, new Set(), new Set(), 0, null, 0)],
+              [
+                3,
+                new Bot(
+                  3,
+                  'Bot',
+                  3,
+                  300,
+                  undefined,
+                  new Set(),
+                  new Set(),
+                  0,
+                  null,
+                  0,
+                ),
+              ],
             ]),
           ),
         ],

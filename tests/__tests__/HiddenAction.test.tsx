@@ -17,7 +17,7 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -258,7 +258,7 @@ test('do not attempt attacking a building via long-range', async () => {
       newMap.createVisionObject(player1),
       new Map(),
       EndTurnAction(),
-      DionysusAlpha,
+      AIRegistry,
     );
   }).not.toThrow();
 });

@@ -40,7 +40,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
 
@@ -83,7 +83,7 @@ test('attempt to attack new units when they are revealed after a move', async ()
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -115,7 +115,7 @@ test('attempt to attack new units when they are revealed after creating a unit',
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -143,7 +143,7 @@ test('attempt to attack new units when they are revealed after unfolding', async
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -169,7 +169,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(
@@ -188,7 +188,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
     currentMap.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
@@ -210,7 +210,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
     thirdMap.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(thirdGameState)).toMatchInlineSnapshot(
@@ -240,7 +240,7 @@ test('A unit with `stay` behavior will never move, but it might attack, build or
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   if (!gameState) {
@@ -276,7 +276,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -321,7 +321,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -335,7 +335,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
@@ -367,7 +367,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', () =
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -392,7 +392,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', () =
     currentMap.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
@@ -424,7 +424,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -437,7 +437,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   // The AI tries to build the strongest unit (likely 'Mammoth') which requires rails, but there are none.
@@ -463,7 +463,7 @@ test('AI will not attack if the damage is too low', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -478,7 +478,7 @@ test('AI will not attack if the damage is too low', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
@@ -508,7 +508,7 @@ test('AI will prefer to rescue over capture', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -523,7 +523,7 @@ test('AI will prefer to rescue over capture', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
@@ -550,7 +550,7 @@ test('AI is able to sabotage other units', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -577,7 +577,7 @@ test('AI will prefer attacks over sabotage against weaker units', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -602,7 +602,7 @@ test('AI does not crash when moving away from a unit which it can no longer see 
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -644,7 +644,7 @@ test('AI keeps attacking even if one unit gets blocked', async () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -715,7 +715,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     mapWithOpponentShips.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -728,7 +728,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     mapWithoutOpponentShips.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
@@ -741,7 +741,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     mapWithAIShips.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
@@ -756,7 +756,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     mapWithShips.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
@@ -785,7 +785,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
@@ -838,7 +838,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`

@@ -5,7 +5,7 @@ import { Forest } from '@deities/athena/info/Tile.tsx';
 import { AntiAir, APU, Infantry } from '@deities/athena/info/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import DionysusAlpha from '@deities/dionysus/DionysusAlpha.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
 
@@ -88,7 +88,7 @@ test('units will hide in hidden fields in fog', async () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
@@ -102,7 +102,7 @@ test('units will hide in hidden fields in fog', async () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
@@ -147,7 +147,7 @@ test('does not hide in hidden fields too far from the target', async () => {
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),
-    DionysusAlpha,
+    AIRegistry,
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`

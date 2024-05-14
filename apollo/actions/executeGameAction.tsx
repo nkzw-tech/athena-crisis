@@ -1,3 +1,4 @@
+import { hasAI } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { Action, execute, MutateActionResponseFn } from '../Action.tsx';
@@ -7,19 +8,24 @@ import applyConditions from '../lib/applyConditions.tsx';
 import gameHasEnded from '../lib/gameHasEnded.tsx';
 import { GameState } from '../Types.tsx';
 
-type AIClass = {
-  new (effects: Effects): AIType;
-};
-
 type AIType = {
   act(map: MapData): MapData | null;
   retrieveEffects(): Effects;
   retrieveGameState(): GameState;
 };
 
+export type AIRegistryEntry = Readonly<{
+  class: {
+    new (effects: Effects): AIType;
+  };
+  name: string;
+}>;
+
+export type AIRegistryT = ReadonlyMap<number, AIRegistryEntry>;
+
 export function executeAIAction(
   activeMap: MapData | null,
-  AIClass: AIClass,
+  AIRegistry: AIRegistryT,
   effects: Effects,
   gameState: GameState = [],
 ): [GameState, Effects] {
@@ -31,6 +37,12 @@ export function executeAIAction(
     activeMap.active.length > 1 &&
     activeMap.getCurrentPlayer().isBot()
   ) {
+    const player = activeMap.getCurrentPlayer();
+    const AIClass = ((hasAI(player) &&
+      player.ai != null &&
+      AIRegistry.get(player.ai)) ||
+      AIRegistry.get(0))!.class;
+
     const ai = new AIClass(effects);
     while (activeMap) {
       activeMap = ai.act(activeMap);
@@ -72,7 +84,7 @@ export default function executeGameAction(
   vision: VisionT,
   effects: Effects,
   action: Action,
-  AIClass: AIClass | null,
+  AIRegistry: AIRegistryT | null,
   mutateAction?: MutateActionResponseFn,
 ): [ActionResponse, MapData, GameState, Effects] | [null, null, null, null] {
   const actionResult = execute(map, vision, action, mutateAction);
@@ -91,7 +103,7 @@ export default function executeGameAction(
     activeMap = gameState.at(-1)![1];
   }
   const shouldInvokeAI = !!(
-    AIClass &&
+    AIRegistry &&
     !gameHasEnded(gameState) &&
     (gameState.at(-1)?.[1] || activeMap).getCurrentPlayer().isBot()
   );
@@ -99,7 +111,7 @@ export default function executeGameAction(
     actionResponse,
     activeMap,
     ...((shouldInvokeAI &&
-      executeAIAction(activeMap, AIClass, newEffects, gameState)) || [
+      executeAIAction(activeMap, AIRegistry, newEffects, gameState)) || [
       gameState,
       newEffects,
     ]),

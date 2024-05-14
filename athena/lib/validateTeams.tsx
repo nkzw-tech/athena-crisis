@@ -67,6 +67,7 @@ export default function validateTeams(
                         id,
                         teamId,
                         0,
+                        undefined,
                         validateSkills(
                           { skillSlots: DefaultMapSkillSlots, skills: Skills },
                           map.getPlayer(id).skills,
