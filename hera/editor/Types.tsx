@@ -68,22 +68,24 @@ export type SetMapFunction = (
 ) => void;
 
 type MapSaveType = 'New' | 'Update' | 'Disk' | 'Export';
-type MapCreateVariables = Readonly<{
+export type MapCreateVariables = Readonly<{
   effects: Effects;
   map: MapData;
   mapName: string;
   tags: ReadonlyArray<string>;
 }>;
 
+export type MapUpdateVariables = MapCreateVariables &
+  Readonly<{
+    id: string;
+  }>;
+
 export type MapCreateFunction = (
   variables: MapCreateVariables,
   setSaveState: (state: MapEditorSaveState) => void,
 ) => void;
 export type MapUpdateFunction = (
-  variables: MapCreateVariables &
-    Readonly<{
-      id: string;
-    }>,
+  variables: MapUpdateVariables,
   type: MapSaveType,
   setSaveState: (state: MapEditorSaveState) => void,
 ) => void;
