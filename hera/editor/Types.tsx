@@ -38,7 +38,7 @@ type UndoKey =
 
 export type UndoEntry = readonly [UndoKey, MapData];
 export type UndoStack = ReadonlyArray<UndoEntry>;
-export type SymmetricDrawingMode =
+export type DrawingMode =
   | 'regular'
   | 'horizontal'
   | 'vertical'
@@ -47,6 +47,7 @@ export type SymmetricDrawingMode =
 
 export type EditorState = Readonly<{
   condition?: readonly [WinConditionsWithVectors, number];
+  drawingMode: DrawingMode;
   effects: Effects;
   isDrawing: boolean;
   isErasing: boolean;
@@ -62,7 +63,6 @@ export type EditorState = Readonly<{
     tile?: number;
     unit?: Unit;
   }>;
-  symmetricDrawingMode: SymmetricDrawingMode;
   undoStack: UndoStack;
   undoStackIndex: number | null;
 }>;

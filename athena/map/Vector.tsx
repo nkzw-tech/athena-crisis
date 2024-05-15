@@ -1,5 +1,5 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import { SymmetricDrawingMode } from '../../hera/editor/Types.tsx';
+import { DrawingMode } from '../../hera/editor/Types.tsx';
 import { SizeVector } from '../MapData.tsx';
 import vec from './vec.tsx';
 
@@ -108,10 +108,7 @@ export default abstract class Vector {
 
   mirror(
     mapSize: SizeVector,
-    mirrorType: Extract<
-      SymmetricDrawingMode,
-      'horizontal' | 'vertical' | 'diagonal'
-    >,
+    mirrorType: Extract<DrawingMode, 'horizontal' | 'vertical' | 'diagonal'>,
   ) {
     if (mirrorType === 'horizontal') {
       return vec(mapSize.width - this.x + 1, this.y);

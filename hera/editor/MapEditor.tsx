@@ -134,6 +134,7 @@ const getEditorBaseState = (
     effects = new Map([...effects, ['Start', startScenario]]);
   }
   return {
+    drawingMode: 'regular',
     effects,
     isDrawing: false,
     isErasing: false,
@@ -143,7 +144,6 @@ const getEditorBaseState = (
     selected: {
       tile: Plain.id,
     },
-    symmetricDrawingMode: 'regular',
     undoStack: [['initial', map]],
     undoStackIndex: null,
   };

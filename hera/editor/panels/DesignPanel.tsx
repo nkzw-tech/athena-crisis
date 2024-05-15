@@ -258,12 +258,12 @@ export default function DesignPanel({
       <Stack gap={24} vertical verticalPadding>
         <Box center gap={32}>
           {/* TODO(dkratz): Remove text and add selected state to buttons */}
-          {editor.symmetricDrawingMode}
+          {editor.drawingMode}
           {/* TODO: Styling */}
           <InlineLink
             className={cx(fillStyle, ellipsis)}
             onClick={() => {
-              setEditorState({ symmetricDrawingMode: 'regular' });
+              setEditorState({ drawingMode: 'regular' });
             }}
           >
             <Icon height={32} icon={Supply} width={32} />
@@ -271,7 +271,7 @@ export default function DesignPanel({
           <InlineLink
             className={cx(fillStyle, ellipsis)}
             onClick={() => {
-              setEditorState({ symmetricDrawingMode: 'horizontal' });
+              setEditorState({ drawingMode: 'horizontal' });
             }}
           >
             <Icon height={32} icon={Supply} width={32} />
@@ -279,7 +279,7 @@ export default function DesignPanel({
           <InlineLink
             className={cx(fillStyle, ellipsis)}
             onClick={() => {
-              setEditorState({ symmetricDrawingMode: 'vertical' });
+              setEditorState({ drawingMode: 'vertical' });
             }}
           >
             <Icon height={32} icon={Supply} width={32} />
@@ -287,7 +287,7 @@ export default function DesignPanel({
           <InlineLink
             className={cx(fillStyle, ellipsis)}
             onClick={() => {
-              setEditorState({ symmetricDrawingMode: 'horizontal-vertical' });
+              setEditorState({ drawingMode: 'horizontal-vertical' });
             }}
           >
             <Icon height={32} icon={Supply} width={32} />
@@ -295,7 +295,7 @@ export default function DesignPanel({
           <InlineLink
             className={cx(fillStyle, ellipsis)}
             onClick={() => {
-              setEditorState({ symmetricDrawingMode: 'diagonal' });
+              setEditorState({ drawingMode: 'diagonal' });
             }}
           >
             <Icon height={32} icon={Supply} width={32} />

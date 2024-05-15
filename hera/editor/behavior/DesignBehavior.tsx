@@ -48,7 +48,7 @@ import {
 } from '../../Types.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
-import getSymmetricDrawingModePositions from '../lib/getSymmetricDrawingModePositions.tsx';
+import getSymmetricPositions from '../lib/getSymmetricPositions.tsx';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
 import { EditorState } from '../Types.tsx';
 
@@ -165,11 +165,7 @@ export default class DesignBehavior {
     if (editor?.isDrawing && editor.selected) {
       const vectors = [
         vector,
-        ...getSymmetricDrawingModePositions(
-          vector,
-          editor.symmetricDrawingMode,
-          state.map.size,
-        ),
+        ...getSymmetricPositions(vector, editor.drawingMode, state.map.size),
       ];
       return this.putMultiple(vectors, state, actions, editor);
     }

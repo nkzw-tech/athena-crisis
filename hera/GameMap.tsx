@@ -1732,9 +1732,9 @@ export default class GameMap extends Component<Props, State> {
                     // TODO: adjust
                     color="red"
                     defaultCursorPosition={position}
+                    drawingMode={editor?.drawingMode}
                     mapSize={map.size}
                     size={tileSize}
-                    symmetricDrawingMode={editor?.symmetricDrawingMode}
                     zIndex={zIndex}
                   />
                 </>

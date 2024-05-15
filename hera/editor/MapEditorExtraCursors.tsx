@@ -2,30 +2,26 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import { ComponentProps, memo } from 'react';
 import Cursor from '../Cursor.tsx';
-import getSymmetricDrawingModePositions from './lib/getSymmetricDrawingModePositions.tsx';
-import { SymmetricDrawingMode } from './Types.tsx';
+import getSymmetricPositions from './lib/getSymmetricPositions.tsx';
+import { DrawingMode } from './Types.tsx';
 
 export default memo(function MapEditorExtraCursors({
   defaultCursorPosition,
+  drawingMode,
   mapSize,
-  symmetricDrawingMode,
   ...props
 }: {
   defaultCursorPosition: Vector | null;
+  drawingMode: DrawingMode | undefined;
   mapSize: SizeVector;
-  symmetricDrawingMode: SymmetricDrawingMode | undefined;
 } & Omit<ComponentProps<typeof Cursor>, 'position'>) {
-  if (
-    !defaultCursorPosition ||
-    !symmetricDrawingMode ||
-    symmetricDrawingMode === 'regular'
-  ) {
+  if (!defaultCursorPosition || !drawingMode || drawingMode === 'regular') {
     return null;
   }
 
-  const vectors = getSymmetricDrawingModePositions(
+  const vectors = getSymmetricPositions(
     defaultCursorPosition,
-    symmetricDrawingMode,
+    drawingMode,
     mapSize,
   );
 
