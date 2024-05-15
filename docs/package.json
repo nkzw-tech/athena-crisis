@@ -23,13 +23,13 @@
     "@deities/ui": "workspace:*",
     "@emotion/babel-plugin": "^11.11.0",
     "@emotion/css": "^11.11.2",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.2",
     "dunkel-theme": "^1.7.1",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.1.9",
+    "framer-motion": "^11.2.0",
     "licht-theme": "^1.7.1",
     "react": "19.0.0-canary-fd0da3eef-20240404",
     "react-dom": "19.0.0-canary-fd0da3eef-20240404",
-    "vocs": "1.0.0-alpha.51"
+    "vocs": "1.0.0-alpha.52"
   }
 }

@@ -10,8 +10,8 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.574.0",
-    "@aws-sdk/s3-request-presigner": "^3.574.0",
+    "@aws-sdk/client-s3": "^3.576.0",
+    "@aws-sdk/s3-request-presigner": "^3.576.0",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/dionysus": "workspace:*",
@@ -27,7 +27,7 @@
     "@pothos/plugin-directives": "^3.10.2",
     "@pothos/plugin-prisma": "^3.65.1",
     "@pothos/plugin-relay": "^3.46.0",
-    "@prisma/client": "^5.13.0",
+    "@prisma/client": "^5.14.0",
     "@quixo3/prisma-session-store": "^3.1.13",
     "@types/express-session": "^1.18.0",
     "body-parser": "^1.20.2",
@@ -53,8 +53,8 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-sso-oidc": "^3.574.0",
-    "@aws-sdk/client-sts": "^3.574.0",
+    "@aws-sdk/client-sso-oidc": "^3.576.0",
+    "@aws-sdk/client-sts": "^3.576.0",
     "@rollup/plugin-replace": "^5.0.5",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
@@ -65,9 +65,9 @@
     "@types/passport-local": "^1.0.38",
     "@types/ua-parser-js": "^0.7.39",
     "@types/web-push": "^3.6.3",
-    "glob": "10.3.14",
+    "glob": "10.3.15",
     "p-limit": "^5.0.0",
-    "prisma": "^5.13.0",
+    "prisma": "^5.14.0",
     "prisma-json-types-generator": "^3.0.4",
     "terminal-link": "^3.0.0"
   },
