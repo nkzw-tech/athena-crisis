@@ -243,7 +243,6 @@ export default class DesignBehavior {
     actions: Actions,
     editor: EditorState,
   ): StateLike | null {
-    // TODO(dkratz): remove multiple vectors
     let result: StateLike | null = null;
     for (const vector of vectors) {
       // TODO(dkratz): Rotate player IDs for buildings and units.

@@ -21,5 +21,6 @@ export default function getSymmetricDrawingModePositions(
     }
   }
 
+  // TODO(dkratz): remove multiple vectors
   return vectors;
 }
