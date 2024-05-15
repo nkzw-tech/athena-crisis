@@ -1,11 +1,11 @@
 import Vector from '@deities/athena/map/Vector.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
-import { ComponentProps } from 'react';
+import { ComponentProps, memo } from 'react';
 import Cursor from '../Cursor.tsx';
 import getSymmetricDrawingModePositions from './lib/getSymmetricDrawingModePositions.tsx';
 import { SymmetricDrawingMode } from './Types.tsx';
 
-export default function MapEditorExtraCursors({
+export default memo(function MapEditorExtraCursors({
   defaultCursorPosition,
   mapSize,
   symmetricDrawingMode,
@@ -36,4 +36,4 @@ export default function MapEditorExtraCursors({
   return vectors.map((vector) => (
     <Cursor key={vector.toString()} {...props} position={vector} />
   ));
-}
+});
