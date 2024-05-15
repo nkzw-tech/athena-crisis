@@ -1728,15 +1728,17 @@ export default class GameMap extends Component<Props, State> {
                     size={tileSize}
                     zIndex={zIndex - 4}
                   />
-                  <MapEditorExtraCursors
-                    // TODO: adjust
-                    color="red"
-                    defaultCursorPosition={position}
-                    drawingMode={editor?.drawingMode}
-                    mapSize={map.size}
-                    size={tileSize}
-                    zIndex={zIndex}
-                  />
+                  {editor?.mode === 'design' && (
+                    <MapEditorExtraCursors
+                      // TODO: adjust
+                      color="red"
+                      defaultCursorPosition={position}
+                      drawingMode={editor?.drawingMode}
+                      mapSize={map.size}
+                      size={tileSize}
+                      zIndex={zIndex}
+                    />
+                  )}
                 </>
               )}
 
