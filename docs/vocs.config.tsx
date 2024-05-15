@@ -3,7 +3,7 @@ import babelPluginEmotion from '@emotion/babel-plugin';
 import react from '@vitejs/plugin-react';
 import React from 'react';
 import { defineConfig } from 'vocs';
-import babelFbtPlugins from '../infra/babelFbtPlugins.tsx';
+import babelPlugins from '../infra/babelPlugins.tsx';
 import resolver from '../infra/resolver.tsx';
 
 const Licht = JSON.parse(
@@ -148,7 +148,7 @@ export default defineConfig({
     plugins: [
       react({
         babel: {
-          plugins: [...babelFbtPlugins, babelPluginEmotion],
+          plugins: [...babelPlugins, babelPluginEmotion],
         },
       }),
     ],

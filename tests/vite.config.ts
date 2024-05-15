@@ -1,6 +1,6 @@
 import babelPluginEmotion from '@emotion/babel-plugin';
 import react from '@vitejs/plugin-react';
-import babelFbtPlugins from '../infra/babelFbtPlugins.tsx';
+import babelPlugins from '../infra/babelPlugins.tsx';
 import resolver from '../infra/resolver.tsx';
 
 const root = process.cwd();
@@ -12,7 +12,7 @@ export default {
   plugins: [
     react({
       babel: {
-        plugins: [...babelFbtPlugins, babelPluginEmotion],
+        plugins: [...babelPlugins, babelPluginEmotion],
       },
     }),
   ],

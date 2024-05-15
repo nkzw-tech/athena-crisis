@@ -31,8 +31,8 @@
     "fbt": "^1.0.2",
     "jest-image-snapshot": "^6.4.0",
     "playwright": "^1.44.0",
-    "react": "19.0.0-canary-fd0da3eef-20240404",
-    "react-dom": "19.0.0-canary-fd0da3eef-20240404",
+    "react": "19.0.0-rc-915b914b3a-20240515",
+    "react-dom": "19.0.0-rc-915b914b3a-20240515",
     "react-error-boundary": "^4.0.13",
     "strip-ansi": "^7.1.0",
     "term-img": "^6.0.0"

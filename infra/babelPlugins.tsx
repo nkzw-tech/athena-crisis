@@ -10,7 +10,7 @@ const enumManifest = (() => {
     return require('../ares/.enum_manifest.json');
   } catch {
     if (!isOpenSource()) {
-      throw new Error('babelFbtPlugins: Missing enum manifest.');
+      throw new Error('babelPlugins: Missing enum manifest.');
     }
   }
   return {};

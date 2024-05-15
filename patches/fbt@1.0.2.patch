@@ -1,5 +1,31 @@
+diff --git a/dist/fbt.js b/dist/fbt.js
+index 271853b2299af4bb36869c100a9b374de0157571..87bd30760621336790bab2d7de61cd915e6c6d61 100644
+--- a/dist/fbt.js
++++ b/dist/fbt.js
+@@ -487,7 +487,7 @@ module.exports = FbtQTOverrides;
+  * @noformat
+  * @nogrep
+  */
+-var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol["for"] && Symbol["for"]('react.element') || 0xeac7;
++var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol["for"] && Symbol["for"]('react.transitional.element') || 0xeac7;
+ var canDefineProperty = false;
+ 
+ if (true) {
+diff --git a/lib/FbtReactUtil.js b/lib/FbtReactUtil.js
+index becb60e893478abf6b5edf1baa176c69b009d33f..74eb840877e41b28b90c9e7785621f4534f3bb1a 100644
+--- a/lib/FbtReactUtil.js
++++ b/lib/FbtReactUtil.js
+@@ -16,7 +16,7 @@
+  * @noformat
+  * @nogrep
+  */
+-var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol["for"] && Symbol["for"]('react.element') || 0xeac7;
++var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol["for"] && Symbol["for"]('react.transitional.element') || 0xeac7;
+ var canDefineProperty = false;
+ 
+ if (process.env.NODE_ENV !== "production") {
 diff --git a/lib/substituteTokens.js b/lib/substituteTokens.js
-index 144db1d6553417bb9ec67f537c40c0c4cc4f0067..c90d1c5631b56a6e5ce4cd5af287b4447a55b98b 100644
+index 144db1d6553417bb9ec67f537c40c0c4cc4f0067..95e6cca7bb4e87598c467420ce81d6a6d29536cf 100644
 --- a/lib/substituteTokens.js
 +++ b/lib/substituteTokens.js
 @@ -66,12 +66,6 @@ function substituteTokens(template, args, errorListener) {
