@@ -8,6 +8,7 @@ import {
 } from '@deities/hera/editor/Types.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import { useEffect, useState } from 'react';
+import toSlug from '../../../hephaestus/toSlug.tsx';
 
 const viewer = {
   access: 'User',
@@ -22,13 +23,25 @@ const viewer = {
   username: 'demo-maxima',
 } as const;
 
+const toMapObject = (data: string | null): MapObject | null => {
+  if (!data) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+};
+
 export default function MapEditorExample() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
   const [mapObject, setMapObject] = useState<MapObject | null>(
     // Load map object from url if present
-    JSON.parse(params.get('map') ?? ''),
+    toMapObject(params.get('map')),
   );
 
   const handleMapUpdate = (
@@ -44,11 +57,9 @@ export default function MapEditorExample() {
         username: viewer.username,
       },
       effects: JSON.stringify(encodeEffects(variables.effects)),
-      // TODO: Generate id?
       id: 'id' in variables ? variables.id : '',
       name: variables.mapName,
-      // TODO: Generate slug
-      slug: '',
+      slug: toSlug(variables.mapName),
       state: JSON.stringify(variables.map.toJSON()),
       tags: variables.tags,
     };
