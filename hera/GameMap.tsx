@@ -62,6 +62,7 @@ import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
 import NullBehavior from './behavior/NullBehavior.tsx';
 import Cursor from './Cursor.tsx';
+import MapEditorExtraCursors from './editor/MapEditorExtraCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
 import animateSupply from './lib/animateSupply.tsx';
@@ -1721,12 +1722,24 @@ export default class GameMap extends Component<Props, State> {
             {(propsShowCursor || propsShowCursor == null) &&
               showCursor &&
               !replayState.isReplaying && (
-                <Cursor
-                  position={position}
-                  size={tileSize}
-                  zIndex={zIndex - 4}
-                />
+                <>
+                  <Cursor
+                    position={position}
+                    size={tileSize}
+                    zIndex={zIndex - 4}
+                  />
+                  <MapEditorExtraCursors
+                    // TODO: adjust
+                    color="red"
+                    defaultCursorPosition={position}
+                    mapSize={map.size}
+                    size={tileSize}
+                    symmetricDrawingMode={editor?.symmetricDrawingMode}
+                    zIndex={zIndex}
+                  />
+                </>
               )}
+
             <MapAnimations
               actions={this._actions}
               animationComplete={this._animationComplete}
