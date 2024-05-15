@@ -162,7 +162,24 @@ export default class DesignBehavior {
     subVector?: Vector,
   ): StateLike | null {
     if (editor?.isDrawing && editor.selected) {
-      return this.put(vector, state, actions, editor);
+      const vectors = [vector];
+
+      if (editor.symmetricDrawingMode !== 'regular') {
+        if (editor.symmetricDrawingMode === 'horizontal-vertical') {
+          vectors.push(
+            vector.mirror(state.map.size, 'horizontal'),
+            vector.mirror(state.map.size, 'vertical'),
+            vector
+              .mirror(state.map.size, 'vertical')
+              .mirror(state.map.size, 'horizontal'),
+          );
+        } else {
+          vectors.push(
+            vector.mirror(state.map.size, editor.symmetricDrawingMode),
+          );
+        }
+      }
+      return this.putMultiple(vectors, state, actions, editor);
     }
 
     const { animations, map } = state;
@@ -226,6 +243,30 @@ export default class DesignBehavior {
             },
     });
     return null;
+  }
+
+  private putMultiple(
+    vectors: Vector[],
+    state: State,
+    actions: Actions,
+    editor: EditorState,
+  ): StateLike | null {
+    // TODO(dkratz): remove multiple vectors
+    let result: StateLike | null = null;
+    for (const vector of vectors) {
+      // TODO(dkratz): Rotate player IDs for buildings and units.
+      const tempResult = this.put(
+        vector,
+        { ...state, ...result },
+        actions,
+        editor,
+      );
+      result = {
+        ...(result ?? {}),
+        ...tempResult,
+      };
+    }
+    return result;
   }
 
   private put(

@@ -143,6 +143,7 @@ const getEditorBaseState = (
     selected: {
       tile: Plain.id,
     },
+    symmetricDrawingMode: 'regular',
     undoStack: [['initial', map]],
     undoStackIndex: null,
   };

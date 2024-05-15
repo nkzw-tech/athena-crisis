@@ -25,6 +25,7 @@ import Box from '@deities/ui/Box.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import Supply from '@deities/ui/icons/Supply.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -255,6 +256,51 @@ export default function DesignPanel({
   return (
     <Tick animationConfig={AnimationConfig}>
       <Stack gap={24} vertical verticalPadding>
+        <Box center gap={32}>
+          {/* TODO(dkratz): Remove text and add selected state to buttons */}
+          {editor.symmetricDrawingMode}
+          {/* TODO: Styling */}
+          <InlineLink
+            className={cx(fillStyle, ellipsis)}
+            onClick={() => {
+              setEditorState({ symmetricDrawingMode: 'regular' });
+            }}
+          >
+            <Icon height={32} icon={Supply} width={32} />
+          </InlineLink>{' '}
+          <InlineLink
+            className={cx(fillStyle, ellipsis)}
+            onClick={() => {
+              setEditorState({ symmetricDrawingMode: 'horizontal' });
+            }}
+          >
+            <Icon height={32} icon={Supply} width={32} />
+          </InlineLink>{' '}
+          <InlineLink
+            className={cx(fillStyle, ellipsis)}
+            onClick={() => {
+              setEditorState({ symmetricDrawingMode: 'vertical' });
+            }}
+          >
+            <Icon height={32} icon={Supply} width={32} />
+          </InlineLink>{' '}
+          <InlineLink
+            className={cx(fillStyle, ellipsis)}
+            onClick={() => {
+              setEditorState({ symmetricDrawingMode: 'horizontal-vertical' });
+            }}
+          >
+            <Icon height={32} icon={Supply} width={32} />
+          </InlineLink>{' '}
+          <InlineLink
+            className={cx(fillStyle, ellipsis)}
+            onClick={() => {
+              setEditorState({ symmetricDrawingMode: 'diagonal' });
+            }}
+          >
+            <Icon height={32} icon={Supply} width={32} />
+          </InlineLink>
+        </Box>
         <Box gap={32} ref={setRef}>
           <InlineTileList
             biome={biome}
