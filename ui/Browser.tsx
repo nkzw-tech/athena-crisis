@@ -7,15 +7,17 @@ const maybeWindow =
   typeof window === 'undefined'
     ? {
         HTMLElement: false,
-        navigator: { userAgent: '' },
+        navigator: { maxTouchPoints: 0, userAgent: '' },
         safari: null,
       }
     : window;
 
-export const isIPhone = /iphone/i.test(maybeWindow.navigator.userAgent);
+const navigator = maybeWindow.navigator;
+
+export const isIPhone = /iphone/i.test(navigator.userAgent);
 
 export const isIOS =
-  !!maybeWindow.navigator.userAgent.match(/i(?:pad|phone)/i) ||
+  !!navigator.userAgent.match(/i(?:pad|phone)/i) ||
   (/(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent) &&
     navigator.maxTouchPoints > 0);
 
