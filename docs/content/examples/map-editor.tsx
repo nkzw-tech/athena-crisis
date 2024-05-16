@@ -29,28 +29,40 @@ const decodeMapObject = (data: string | null): MapObject | null => {
   }
 
   try {
-    const json = JSON.parse(data);
+    const maybeMapObject: MapObject | null = JSON.parse(data);
+    const maybeCreator = maybeMapObject?.creator || null;
     const mapObject: MapObject = {
       campaigns: {
         edges: [],
       },
-      creator: {
-        displayName:
-          typeof json.creator.displayName === 'string'
-            ? json.creator.displayName
-            : viewer.displayName,
-        id: typeof json.creator.id === 'string' ? json.creator.id : viewer.id,
-        username:
-          typeof json.creator.username === 'string'
-            ? json.creator.username
-            : viewer.username,
-      },
-      effects: typeof json.effects === 'string' ? json.effects : '',
-      id: typeof json.id === 'string' ? json.id : '',
-      name: typeof json.name === 'string' ? json.name : '',
-      slug: typeof json.slug === 'string' ? json.slug : '',
-      state: typeof json.state === 'string' ? json.state : '',
-      tags: Array.isArray(json.tags) ? json.tags : [],
+      creator: maybeCreator
+        ? {
+            displayName:
+              typeof maybeCreator.displayName === 'string'
+                ? maybeCreator.displayName
+                : viewer.displayName,
+            id:
+              typeof maybeCreator.id === 'string' ? maybeCreator.id : viewer.id,
+            username:
+              typeof maybeCreator.username === 'string'
+                ? maybeCreator.username
+                : viewer.username,
+          }
+        : viewer,
+      effects:
+        typeof maybeMapObject?.effects === 'string'
+          ? maybeMapObject.effects
+          : '',
+      id: typeof maybeMapObject?.id === 'string' ? maybeMapObject.id : '',
+      name: typeof maybeMapObject?.name === 'string' ? maybeMapObject.name : '',
+      slug: typeof maybeMapObject?.slug === 'string' ? maybeMapObject.slug : '',
+      state:
+        typeof maybeMapObject?.state === 'string' ? maybeMapObject.state : '',
+      tags:
+        Array.isArray(maybeMapObject?.tags) &&
+        maybeMapObject.tags.every((tag) => typeof tag === 'string')
+          ? maybeMapObject.tags
+          : [],
     };
     return mapObject;
   } catch {
@@ -68,7 +80,7 @@ export default function MapEditorExample() {
 
   const handleMapUpdate = useCallback(
     (variables: MapCreateVariables | MapUpdateVariables) => {
-      const mapObject = {
+      setMapObject({
         campaigns: {
           edges: [],
         },
@@ -83,8 +95,7 @@ export default function MapEditorExample() {
         slug: toSlug(variables.mapName),
         state: JSON.stringify(variables.map.toJSON()),
         tags: variables.tags,
-      };
-      setMapObject(mapObject);
+      });
     },
     [],
   );
