@@ -21,6 +21,5 @@ export default function getSymmetricPositions(
     }
   }
 
-  // TODO(dkratz): remove multiple vectors
-  return vectors;
+  return vectors.filter((v) => !vector.equals(v));
 }
