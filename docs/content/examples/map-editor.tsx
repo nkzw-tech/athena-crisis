@@ -90,7 +90,6 @@ export default function MapEditorExample() {
   );
 
   useEffect(() => {
-    // Sync map object to url
     const params = new URLSearchParams(window.location.search);
     params.sort();
     const search = params.toString();
