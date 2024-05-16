@@ -23,13 +23,36 @@ const viewer = {
   username: 'demo-maxima',
 } as const;
 
-const toMapObject = (data: string | null): MapObject | null => {
+const decodeMapObject = (data: string | null): MapObject | null => {
   if (!data) {
     return null;
   }
 
   try {
-    return JSON.parse(data);
+    const json = JSON.parse(data);
+    const mapObject: MapObject = {
+      campaigns: {
+        edges: [],
+      },
+      creator: {
+        displayName:
+          typeof json.creator.displayName === 'string'
+            ? json.creator.displayName
+            : viewer.displayName,
+        id: typeof json.creator.id === 'string' ? json.creator.id : viewer.id,
+        username:
+          typeof json.creator.username === 'string'
+            ? json.creator.username
+            : viewer.username,
+      },
+      effects: typeof json.effects === 'string' ? json.effects : '',
+      id: typeof json.id === 'string' ? json.id : '',
+      name: typeof json.name === 'string' ? json.name : '',
+      slug: typeof json.slug === 'string' ? json.slug : '',
+      state: typeof json.state === 'string' ? json.state : '',
+      tags: Array.isArray(json.tags) ? json.tags : [],
+    };
+    return mapObject;
   } catch {
     return null;
   }
@@ -40,7 +63,7 @@ export default function MapEditorExample() {
   const params = new URLSearchParams(location.search);
 
   const [mapObject, setMapObject] = useState<MapObject | null>(() =>
-    toMapObject(params.get('map')),
+    decodeMapObject(params.get('map')),
   );
 
   const handleMapUpdate = useCallback(
