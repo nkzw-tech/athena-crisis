@@ -8,7 +8,7 @@ import {
   MapUpdateVariables,
 } from '@deities/hera/editor/Types.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const viewer = {
   access: 'User',
@@ -39,32 +39,32 @@ export default function MapEditorExample() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  const [mapObject, setMapObject] = useState<MapObject | null>(
-    // Load map object from url if present
+  const [mapObject, setMapObject] = useState<MapObject | null>(() =>
     toMapObject(params.get('map')),
   );
 
-  const handleMapUpdate = (
-    variables: MapCreateVariables | MapUpdateVariables,
-  ) => {
-    const mapObject = {
-      campaigns: {
-        edges: [],
-      },
-      creator: {
-        displayName: viewer.displayName,
-        id: viewer.id,
-        username: viewer.username,
-      },
-      effects: JSON.stringify(encodeEffects(variables.effects)),
-      id: 'id' in variables ? variables.id : '',
-      name: variables.mapName,
-      slug: toSlug(variables.mapName),
-      state: JSON.stringify(variables.map.toJSON()),
-      tags: variables.tags,
-    };
-    setMapObject(mapObject);
-  };
+  const handleMapUpdate = useCallback(
+    (variables: MapCreateVariables | MapUpdateVariables) => {
+      const mapObject = {
+        campaigns: {
+          edges: [],
+        },
+        creator: {
+          displayName: viewer.displayName,
+          id: viewer.id,
+          username: viewer.username,
+        },
+        effects: JSON.stringify(encodeEffects(variables.effects)),
+        id: 'id' in variables ? variables.id : '',
+        name: variables.mapName,
+        slug: toSlug(variables.mapName),
+        state: JSON.stringify(variables.map.toJSON()),
+        tags: variables.tags,
+      };
+      setMapObject(mapObject);
+    },
+    [],
+  );
 
   useEffect(() => {
     // Sync map object to url
