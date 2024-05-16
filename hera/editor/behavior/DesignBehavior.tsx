@@ -49,7 +49,7 @@ import {
 } from '../../Types.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
-import getSymmetricPositions from '../lib/getSymmetricPositions.tsx';
+import getSymmetricPositions from '../lib/getSymmetricPositions.ts';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
 import { EditorState } from '../Types.tsx';
 
