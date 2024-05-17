@@ -1,6 +1,4 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import { DrawingMode } from '../../hera/editor/Types.tsx';
-import { SizeVector } from '../MapData.tsx';
 import vec from './vec.tsx';
 
 export type VectorLike = Readonly<{
@@ -104,22 +102,6 @@ export default abstract class Vector {
 
   hashCode(): string | number {
     return szudzik(this.x + 1, this.y + 1);
-  }
-
-  mirror(
-    mapSize: SizeVector,
-    mirrorType: Extract<DrawingMode, 'horizontal' | 'vertical' | 'diagonal'>,
-  ) {
-    if (mirrorType === 'horizontal') {
-      return vec(mapSize.width - this.x + 1, this.y);
-    }
-    if (mirrorType === 'vertical') {
-      return vec(this.x, mapSize.height - this.y + 1);
-    }
-    if (mirrorType === 'diagonal') {
-      return vec(mapSize.width - this.x + 1, mapSize.height - this.y + 1);
-    }
-    return this;
   }
 
   valueOf() {

@@ -1,6 +1,7 @@
 import Vector from '@deities/athena/map/Vector.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import { DrawingMode } from '../Types.tsx';
+import { mirrorVector } from './mirrorVector.ts';
 
 export default function getSymmetricPositions(
   vector: Vector,
@@ -12,12 +13,16 @@ export default function getSymmetricPositions(
   if (drawingMode !== 'regular') {
     if (drawingMode === 'horizontal-vertical') {
       vectors.push(
-        vector.mirror(mapSize, 'horizontal'),
-        vector.mirror(mapSize, 'vertical'),
-        vector.mirror(mapSize, 'vertical').mirror(mapSize, 'horizontal'),
+        mirrorVector(vector, mapSize, 'horizontal'),
+        mirrorVector(vector, mapSize, 'vertical'),
+        mirrorVector(
+          mirrorVector(vector, mapSize, 'horizontal'),
+          mapSize,
+          'vertical',
+        ),
       );
     } else {
-      vectors.push(vector.mirror(mapSize, drawingMode));
+      vectors.push(mirrorVector(vector, mapSize, drawingMode));
     }
   }
 
