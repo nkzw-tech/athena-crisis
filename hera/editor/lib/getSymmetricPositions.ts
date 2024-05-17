@@ -4,7 +4,7 @@ import { DrawingMode } from '../Types.tsx';
 import { mirrorVector } from './mirrorVector.ts';
 
 export default function getSymmetricPositions(
-  vector: Vector,
+  origin: Vector,
   drawingMode: DrawingMode,
   mapSize: SizeVector,
 ) {
@@ -13,18 +13,18 @@ export default function getSymmetricPositions(
   if (drawingMode !== 'regular') {
     if (drawingMode === 'horizontal-vertical') {
       vectors.push(
-        mirrorVector(vector, mapSize, 'horizontal'),
-        mirrorVector(vector, mapSize, 'vertical'),
+        mirrorVector(origin, mapSize, 'horizontal'),
+        mirrorVector(origin, mapSize, 'vertical'),
         mirrorVector(
-          mirrorVector(vector, mapSize, 'horizontal'),
+          mirrorVector(origin, mapSize, 'horizontal'),
           mapSize,
           'vertical',
         ),
       );
     } else {
-      vectors.push(mirrorVector(vector, mapSize, drawingMode));
+      vectors.push(mirrorVector(origin, mapSize, drawingMode));
     }
   }
 
-  return vectors.filter((v) => !vector.equals(v));
+  return vectors.filter((vector) => !origin.equals(v));
 }
