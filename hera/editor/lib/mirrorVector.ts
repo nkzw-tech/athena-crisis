@@ -5,17 +5,18 @@ import { DrawingMode } from '../Types.tsx';
 
 export function mirrorVector(
   vector: Vector,
-  mapSize: SizeVector,
+  { height, width }: SizeVector,
   mirrorType: Extract<DrawingMode, 'horizontal' | 'vertical' | 'diagonal'>,
 ) {
+  const { x, y } = vector;
   if (mirrorType === 'horizontal') {
-    return vec(mapSize.width - vector.x + 1, vector.y);
+    return vec(width - x + 1, y);
   }
   if (mirrorType === 'vertical') {
-    return vec(vector.x, mapSize.height - vector.y + 1);
+    return vec(x, height - y + 1);
   }
   if (mirrorType === 'diagonal') {
-    return vec(mapSize.width - vector.x + 1, mapSize.height - vector.y + 1);
+    return vec(width - x + 1, height - y + 1);
   }
   return vector;
 }
