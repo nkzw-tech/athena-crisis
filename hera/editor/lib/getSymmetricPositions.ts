@@ -8,7 +8,7 @@ export default function getSymmetricPositions(
   drawingMode: DrawingMode,
   mapSize: SizeVector,
 ) {
-  const vectors: Vector[] = [];
+  const vectors: Array<Vector> = [];
 
   if (drawingMode !== 'regular') {
     if (drawingMode === 'horizontal-vertical') {

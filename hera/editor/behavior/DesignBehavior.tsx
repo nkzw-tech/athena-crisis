@@ -235,7 +235,7 @@ export default class DesignBehavior {
   }
 
   private putMultiple(
-    vectors: Vector[],
+    vectors: Array<Vector>,
     state: State,
     actions: Actions,
     editor: EditorState,
