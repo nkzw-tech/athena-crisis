@@ -26,5 +26,5 @@ export default function getSymmetricPositions(
     }
   }
 
-  return vectors.filter((vector) => !origin.equals(v));
+  return vectors.filter((vector) => !origin.equals(vector));
 }
