@@ -1,18 +1,18 @@
-import { Action, execute } from "@deities/apollo/Action.tsx";
-import { ActionResponse } from "@deities/apollo/ActionResponse.tsx";
-import getActionResponseVectors from "@deities/apollo/lib/getActionResponseVectors.tsx";
-import updateVisibleEntities from "@deities/apollo/lib/updateVisibleEntities.tsx";
+import { Action, execute } from '@deities/apollo/Action.tsx';
+import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
+import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import {
   GameActionResponse,
   GameActionResponses,
-} from "@deities/apollo/Types.tsx";
-import dropLabels from "@deities/athena/lib/dropLabels.tsx";
-import getAverageVector from "@deities/athena/lib/getAverageVector.tsx";
-import getDecoratorsAtField from "@deities/athena/lib/getDecoratorsAtField.tsx";
-import getFirstHumanPlayer from "@deities/athena/lib/getFirstHumanPlayer.tsx";
-import getUnitsByPositions from "@deities/athena/lib/getUnitsByPositions.tsx";
-import isPvP from "@deities/athena/lib/isPvP.tsx";
-import updatePlayers from "@deities/athena/lib/updatePlayers.tsx";
+} from '@deities/apollo/Types.tsx';
+import dropLabels from '@deities/athena/lib/dropLabels.tsx';
+import getAverageVector from '@deities/athena/lib/getAverageVector.tsx';
+import getDecoratorsAtField from '@deities/athena/lib/getDecoratorsAtField.tsx';
+import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
+import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
+import isPvP from '@deities/athena/lib/isPvP.tsx';
+import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
   DoubleSize,
@@ -21,60 +21,60 @@ import {
   MaxSize,
   SlowAnimationConfig,
   TileSize,
-} from "@deities/athena/map/Configuration.tsx";
-import { PlayerID, toPlayerID } from "@deities/athena/map/Player.tsx";
-import vec from "@deities/athena/map/vec.tsx";
+} from '@deities/athena/map/Configuration.tsx';
+import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
+import vec from '@deities/athena/map/vec.tsx';
 import Vector, {
   sortByVectorKey,
   VectorLike,
-} from "@deities/athena/map/Vector.tsx";
-import type MapData from "@deities/athena/MapData.tsx";
-import { RadiusItem } from "@deities/athena/Radius.tsx";
-import { winConditionHasVectors } from "@deities/athena/WinConditions.tsx";
-import dateNow from "@deities/hephaestus/dateNow.tsx";
-import parseInteger from "@deities/hephaestus/parseInteger.tsx";
-import AudioPlayer from "@deities/ui/AudioPlayer.tsx";
-import { isIOS } from "@deities/ui/Browser.tsx";
-import Input, { NavigationDirection } from "@deities/ui/controls/Input.tsx";
-import { rumbleEffect } from "@deities/ui/controls/setupGamePad.tsx";
-import throttle from "@deities/ui/controls/throttle.tsx";
-import cssVar, { applyVar, CSSVariables } from "@deities/ui/cssVar.tsx";
-import { ScrollRestore } from "@deities/ui/hooks/useScrollRestore.tsx";
-import Icon from "@deities/ui/Icon.tsx";
-import Heart from "@deities/ui/icons/Heart.tsx";
-import Magic from "@deities/ui/icons/Magic.tsx";
-import scrollToCenter from "@deities/ui/lib/scrollToCenter.tsx";
-import { ScrollContainerClassName } from "@deities/ui/ScrollContainer.tsx";
-import Stack from "@deities/ui/Stack.tsx";
-import { css, cx, keyframes } from "@emotion/css";
-import ImmutableMap from "@nkzw/immutable-map";
-import { AnimatePresence } from "framer-motion";
+} from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import { RadiusItem } from '@deities/athena/Radius.tsx';
+import { winConditionHasVectors } from '@deities/athena/WinConditions.tsx';
+import dateNow from '@deities/hephaestus/dateNow.tsx';
+import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
+import { isIOS } from '@deities/ui/Browser.tsx';
+import Input, { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
+import throttle from '@deities/ui/controls/throttle.tsx';
+import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import { ScrollRestore } from '@deities/ui/hooks/useScrollRestore.tsx';
+import Icon from '@deities/ui/Icon.tsx';
+import Heart from '@deities/ui/icons/Heart.tsx';
+import Magic from '@deities/ui/icons/Magic.tsx';
+import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
+import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
+import Stack from '@deities/ui/Stack.tsx';
+import { css, cx, keyframes } from '@emotion/css';
+import ImmutableMap from '@nkzw/immutable-map';
+import { AnimatePresence } from 'framer-motion';
 import React, {
   Component,
   createRef,
   MutableRefObject,
   PointerEvent as ReactPointerEvent,
-} from "react";
-import processActionResponses from "./action-response/processActionResponse.tsx";
-import getHealthColor from "./behavior/attack/getHealthColor.tsx";
-import BaseBehavior from "./behavior/Base.tsx";
-import { resetBehavior, setBaseClass } from "./behavior/Behavior.tsx";
-import MenuBehavior from "./behavior/Menu.tsx";
-import NullBehavior from "./behavior/NullBehavior.tsx";
-import Cursor from "./Cursor.tsx";
-import MapEditorExtraCursors from "./editor/MapEditorMirrorCursors.tsx";
-import { EditorState } from "./editor/Types.tsx";
-import addEndTurnAnimations from "./lib/addEndTurnAnimations.tsx";
-import animateSupply from "./lib/animateSupply.tsx";
-import isInView from "./lib/isInView.tsx";
-import maskClassName, { MaskPointerClassName } from "./lib/maskClassName.tsx";
-import sleep from "./lib/sleep.tsx";
-import throwActionError from "./lib/throwActionError.tsx";
-import MapComponent from "./Map.tsx";
-import { Animation, Animations, MapAnimations } from "./MapAnimations.tsx";
-import Mask from "./Mask.tsx";
-import MaskWithSubtiles from "./MaskWithSubtiles.tsx";
-import Radius, { RadiusType } from "./Radius.tsx";
+} from 'react';
+import processActionResponses from './action-response/processActionResponse.tsx';
+import getHealthColor from './behavior/attack/getHealthColor.tsx';
+import BaseBehavior from './behavior/Base.tsx';
+import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
+import MenuBehavior from './behavior/Menu.tsx';
+import NullBehavior from './behavior/NullBehavior.tsx';
+import Cursor from './Cursor.tsx';
+import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
+import { EditorState } from './editor/Types.tsx';
+import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
+import animateSupply from './lib/animateSupply.tsx';
+import isInView from './lib/isInView.tsx';
+import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
+import sleep from './lib/sleep.tsx';
+import throwActionError from './lib/throwActionError.tsx';
+import MapComponent from './Map.tsx';
+import { Animation, Animations, MapAnimations } from './MapAnimations.tsx';
+import Mask from './Mask.tsx';
+import MaskWithSubtiles from './MaskWithSubtiles.tsx';
+import Radius, { RadiusType } from './Radius.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
@@ -88,10 +88,10 @@ import {
   StateLike,
   TimerID,
   TimerState,
-} from "./Types.tsx";
-import FlashFlyout from "./ui/FlashFlyout.tsx";
-import { FlyoutItem } from "./ui/Flyout.tsx";
-import GameDialog from "./ui/GameDialog.tsx";
+} from './Types.tsx';
+import FlashFlyout from './ui/FlashFlyout.tsx';
+import { FlyoutItem } from './ui/Flyout.tsx';
+import GameDialog from './ui/GameDialog.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -115,10 +115,10 @@ const getLayer: GetLayerFunction = (y, type) =>
   baseZIndex + y * layerOffset + layerOffsets[type];
 
 const hasShake = (animations: Animations) =>
-  animations.some(({ type }) => type === "shake");
+  animations.some(({ type }) => type === 'shake');
 
 const spectatorCodeToPlayerID = (spectatorCode: string) => {
-  const maybePlayerID = parseInteger(spectatorCode.split("-")[0]);
+  const maybePlayerID = parseInteger(spectatorCode.split('-')[0]);
   return maybePlayerID ? toPlayerID(maybePlayerID) : null;
 };
 
@@ -135,12 +135,12 @@ const getVision = (
   );
 
 const showNamedPositionsForBehavior = new Set([
-  "base",
-  "design",
-  "entity",
-  "move",
-  "null",
-  "vector",
+  'base',
+  'design',
+  'entity',
+  'move',
+  'null',
+  'vector',
 ]);
 
 const getWinConditionRadius = (
@@ -193,7 +193,7 @@ const getInitialState = (props: Props) => {
   const isEditor = !!editor;
   const currentViewer = map.getPlayerByUserId(currentUserId)?.id || null;
   const behavior: MapBehavior | null =
-    lastActionResponse?.type === "GameEnd"
+    lastActionResponse?.type === 'GameEnd'
       ? new NullBehavior()
       : baseBehavior === null
         ? null
@@ -246,7 +246,7 @@ const getInitialState = (props: Props) => {
     unitSize,
     vision: getVision(map, currentViewer, spectatorCodes),
     winConditionRadius: getWinConditionRadius(map, isEditor),
-    zIndex: getLayer(map.size.height + 1, "top") + 10,
+    zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
   return {
     ...newState,
@@ -256,7 +256,7 @@ const getInitialState = (props: Props) => {
 
 const getScale = (scale: number | undefined, element: HTMLElement) =>
   scale ||
-  parseInteger(getComputedStyle(element).getPropertyValue(cssVar("scale"))) ||
+  parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale'))) ||
   2;
 
 type NativeTimeout = ReturnType<typeof setTimeout> | null;
@@ -264,7 +264,7 @@ type NativeTimeout = ReturnType<typeof setTimeout> | null;
 export default class GameMap extends Component<Props, State> {
   static defaultProps = {
     buildingSize: TileSize,
-    confirmActionStyle: "touch",
+    confirmActionStyle: 'touch',
     scroll: true,
     showCursor: true,
     tileSize: TileSize,
@@ -329,7 +329,7 @@ export default class GameMap extends Component<Props, State> {
 
   static getDerivedStateFromProps(props: Props, state: State) {
     let newState: State | null = null;
-    if ("behavior" in props && props.behavior !== state.initialBehaviorClass) {
+    if ('behavior' in props && props.behavior !== state.initialBehaviorClass) {
       const BehaviorClass = props.behavior;
       const behavior = BehaviorClass ? new BehaviorClass() : null;
       newState = {
@@ -344,14 +344,14 @@ export default class GameMap extends Component<Props, State> {
       };
     }
 
-    if ("scale" in props) {
+    if ('scale' in props) {
       newState = {
         ...(newState || state),
         inlineUI: getInlineUIState(state.map, state.tileSize, props.scale),
       };
     }
 
-    if ("paused" in props && props.paused !== state.paused) {
+    if ('paused' in props && props.paused !== state.paused) {
       newState = {
         ...(newState || state),
         paused: !!props.paused,
@@ -391,14 +391,14 @@ export default class GameMap extends Component<Props, State> {
     }
 
     this._actionQueue = Promise.resolve().then(async () => {
-      if (!paused && !editor && onAction && behavior?.type === "base") {
+      if (!paused && !editor && onAction && behavior?.type === 'base') {
         if (!lastActionResponse) {
           await this._update(resetBehavior(NullBehavior));
           await this.processGameActionResponse(
-            await onAction({ type: "Start" }),
+            await onAction({ type: 'Start' }),
           );
-        } else if (lastActionResponse.type === "EndTurn") {
-          await sleep(this._scheduleTimer, animationConfig, "long");
+        } else if (lastActionResponse.type === 'EndTurn') {
+          await sleep(this._scheduleTimer, animationConfig, 'long');
           const { funds, id: player } = map.getCurrentPlayer();
           await new Promise<void>((resolve) =>
             this._update({
@@ -408,7 +408,7 @@ export default class GameMap extends Component<Props, State> {
                   current: { funds, player },
                   next: { funds, player },
                   round: map.round,
-                  type: "EndTurn",
+                  type: 'EndTurn',
                 },
                 this.state,
                 (state) => {
@@ -427,10 +427,10 @@ export default class GameMap extends Component<Props, State> {
     });
 
     this._controlListeners = [
-      Input.register("navigate", this._disablePointer, "menu"),
-      Input.register("navigate", this._navigate),
-      Input.register("point", this._enablePointer),
-      Input.register("accept", async () => {
+      Input.register('navigate', this._disablePointer, 'menu'),
+      Input.register('navigate', this._navigate),
+      Input.register('point', this._enablePointer),
+      Input.register('accept', async () => {
         const { editor } = this.props;
         const { position, selectedPosition } = this.state;
         const vector = position || selectedPosition;
@@ -455,29 +455,29 @@ export default class GameMap extends Component<Props, State> {
         }
       }),
       Input.register(
-        "cancel",
+        'cancel',
         (event) =>
           this._cancel(
             this.state.position,
             undefined,
             event.detail?.isEscape || false,
           ),
-        "dialog",
+        'dialog',
       ),
     ];
 
     if (!this.props.editor) {
       this._controlListeners.push(
-        Input.register("tertiary", this._fastForward),
-        Input.register("tertiary:released", this._releaseFastForward),
-        Input.register("slow", () => {
+        Input.register('tertiary', this._fastForward),
+        Input.register('tertiary:released', this._releaseFastForward),
+        Input.register('slow', () => {
           if (this.state.animationConfig !== SlowAnimationConfig) {
             this.setState({
               animationConfig: SlowAnimationConfig,
             });
           }
         }),
-        Input.register("slow:released", () => {
+        Input.register('slow:released', () => {
           if (this.state.animationConfig === SlowAnimationConfig) {
             const isHumanPlayer = this.state.map
               .getCurrentPlayer()
@@ -490,11 +490,11 @@ export default class GameMap extends Component<Props, State> {
       );
     }
 
-    document.addEventListener("pointermove", this._pointerMove);
-    document.addEventListener("mousedown", this._mouseDown);
-    document.addEventListener("mouseup", this._mouseUp);
-    window.addEventListener("resize", this._resize);
-    events?.addEventListener("action", this._processRemoteActionResponse);
+    document.addEventListener('pointermove', this._pointerMove);
+    document.addEventListener('mousedown', this._mouseDown);
+    document.addEventListener('mouseup', this._mouseUp);
+    window.addEventListener('resize', this._resize);
+    events?.addEventListener('action', this._processRemoteActionResponse);
   }
 
   override componentDidUpdate(previousProps: Props) {
@@ -505,11 +505,11 @@ export default class GameMap extends Component<Props, State> {
     if (previousProps.events !== events) {
       if (previousProps.events) {
         previousProps.events.removeEventListener(
-          "action",
+          'action',
           this._processRemoteActionResponse,
         );
       }
-      events?.addEventListener("action", this._processRemoteActionResponse);
+      events?.addEventListener('action', this._processRemoteActionResponse);
     }
   }
 
@@ -523,11 +523,11 @@ export default class GameMap extends Component<Props, State> {
       remove();
     }
 
-    document.removeEventListener("pointermove", this._pointerMove);
-    document.removeEventListener("mousedown", this._mouseDown);
-    document.removeEventListener("mouseup", this._mouseUp);
-    window.removeEventListener("resize", this._resize);
-    events?.removeEventListener("action", this._processRemoteActionResponse);
+    document.removeEventListener('pointermove', this._pointerMove);
+    document.removeEventListener('mousedown', this._mouseDown);
+    document.removeEventListener('mouseup', this._mouseUp);
+    window.removeEventListener('resize', this._resize);
+    events?.removeEventListener('action', this._processRemoteActionResponse);
 
     behavior?.deactivate?.();
   }
@@ -541,7 +541,7 @@ export default class GameMap extends Component<Props, State> {
 
   private _reset = () => {
     const { behavior, position, radius } = this.state;
-    if (position && behavior?.type !== "attackRadius" && !radius?.locked) {
+    if (position && behavior?.type !== 'attackRadius' && !radius?.locked) {
       behavior?.clearTimers?.();
       this.setState({
         position: null,
@@ -553,7 +553,7 @@ export default class GameMap extends Component<Props, State> {
   private _endGame = async () => {
     const { endGame } = this.props;
     if (endGame) {
-      endGame("Lose");
+      endGame('Lose');
       this._update(resetBehavior(NullBehavior));
     }
   };
@@ -562,7 +562,7 @@ export default class GameMap extends Component<Props, State> {
     if (this._pointerEnabled) {
       this._pointerEnabled = false;
       this._maskRef.current?.classList.remove(MaskPointerClassName);
-      this._wrapperRef.current?.classList.add("pointerNone");
+      this._wrapperRef.current?.classList.add('pointerNone');
     }
   };
 
@@ -570,7 +570,7 @@ export default class GameMap extends Component<Props, State> {
     if (!this._pointerEnabled) {
       this._pointerEnabled = true;
       this._maskRef.current?.classList.add(MaskPointerClassName);
-      this._wrapperRef.current?.classList.remove("pointerNone");
+      this._wrapperRef.current?.classList.remove('pointerNone');
     }
   };
 
@@ -601,7 +601,7 @@ export default class GameMap extends Component<Props, State> {
         selectedPosition ||
         previousPosition ||
         (lastActionResponse &&
-          lastActionResponse.type !== "EndTurn" &&
+          lastActionResponse.type !== 'EndTurn' &&
           getActionResponseVectors(map, lastActionResponse).at(-1)) ||
         vec(Math.floor(map.size.width / 2), Math.floor(map.size.height / 2));
       const vector = vec(origin.x + direction.x, origin.y + direction.y);
@@ -613,10 +613,10 @@ export default class GameMap extends Component<Props, State> {
   private _enter = (
     vector: Vector,
     subVector?: Vector,
-    type: MapEnterType = "synthetic",
+    type: MapEnterType = 'synthetic',
   ) => {
     if (
-      type === "pointer" &&
+      type === 'pointer' &&
       (!this._pointerEnabled || this._pointerLock.current)
     ) {
       this._lastEnteredPosition = vector;
@@ -658,8 +658,8 @@ export default class GameMap extends Component<Props, State> {
   private _shouldConfirmAction() {
     const { confirmActionStyle } = this.props;
     return (
-      confirmActionStyle === "always" ||
-      (confirmActionStyle === "touch" && !!this._isTouch.current)
+      confirmActionStyle === 'always' ||
+      (confirmActionStyle === 'touch' && !!this._isTouch.current)
     );
   }
 
@@ -693,14 +693,14 @@ export default class GameMap extends Component<Props, State> {
               (selectedPosition &&
                 !actualState.selectedPosition?.equals(selectedPosition)))
           ) {
-            AudioPlayer.playSound("UI/Accept");
-            rumbleEffect("accept");
+            AudioPlayer.playSound('UI/Accept');
+            rumbleEffect('accept');
           } else if (
             hasBehaviorChange &&
             !selectedPosition &&
             actualState.selectedPosition
           ) {
-            AudioPlayer.playSound("UI/Cancel");
+            AudioPlayer.playSound('UI/Cancel');
           }
 
           return newState;
@@ -726,7 +726,7 @@ export default class GameMap extends Component<Props, State> {
         state.gameInfoState ||
         newState.behavior?.type !== state.behavior?.type
       ) {
-        AudioPlayer.playSound("UI/Cancel");
+        AudioPlayer.playSound('UI/Cancel');
       }
 
       if (state.gameInfoState) {
@@ -740,7 +740,7 @@ export default class GameMap extends Component<Props, State> {
         vector
       ) {
         requestAnimationFrame(() =>
-          this._showFieldInfo(vector, transformOrigin || "center center"),
+          this._showFieldInfo(vector, transformOrigin || 'center center'),
         );
         return null;
       }
@@ -759,7 +759,7 @@ export default class GameMap extends Component<Props, State> {
       }
       this.setState(
         (actualState: State) => {
-          if (typeof newState === "function") {
+          if (typeof newState === 'function') {
             newState = newState(actualState);
           }
           if (!newState) {
@@ -861,7 +861,7 @@ export default class GameMap extends Component<Props, State> {
       const { currentViewer } = state;
       const player = map.getCurrentPlayer();
       throw new Error(
-        `Action: Cannot issue actions while processing remote actions. Current Viewer: '${currentViewer}'\nCurrent Player: '${player.id} (${player.isHumanPlayer() ? "human" : "bot"})'\nAction: '${JSON.stringify(action)}'`,
+        `Action: Cannot issue actions while processing remote actions. Current Viewer: '${currentViewer}'\nCurrent Player: '${player.id} (${player.isHumanPlayer() ? 'human' : 'bot'})'\nAction: '${JSON.stringify(action)}'`,
       );
     }
 
@@ -898,13 +898,13 @@ export default class GameMap extends Component<Props, State> {
     const timeout = newTimeout !== undefined ? newTimeout : state.timeout;
     if (self) {
       const { actionResponse } = self;
-      if (actionResponse.type === "Start") {
+      if (actionResponse.type === 'Start') {
         state = await this._processActionResponses([self]);
         if (others?.length) {
           // Keep the map disabled until other actions are executed.
           state = await this._update(resetBehavior(NullBehavior));
         }
-      } else if (actionResponse.type === "EndTurn") {
+      } else if (actionResponse.type === 'EndTurn') {
         const { map } = this.state;
         const { current, next, supply } = actionResponse;
 
@@ -955,7 +955,7 @@ export default class GameMap extends Component<Props, State> {
         state = await this._update((state) => ({
           // Ensure that attack action buttons are shown if attackable units
           // are now in range.
-          ...(state.behavior?.type === "menu"
+          ...(state.behavior?.type === 'menu'
             ? { behavior: new MenuBehavior() }
             : null),
           map: updateVisibleEntities(state.map, state.vision, self),
@@ -980,7 +980,7 @@ export default class GameMap extends Component<Props, State> {
     if (others?.length) {
       // If there are self and other actions at the same time, wait before processing the other actions.
       if (self) {
-        await sleep(this._scheduleTimer, this.state.animationConfig, "long");
+        await sleep(this._scheduleTimer, this.state.animationConfig, 'long');
       }
 
       state = await this._processActionResponses(others);
@@ -1050,8 +1050,8 @@ export default class GameMap extends Component<Props, State> {
           const lastActionResponse = gameActionResponses.at(-1)!.actionResponse;
           const currentPlayer = this.state.map.getCurrentPlayer();
           const isLive =
-            lastActionResponse.type !== "GameEnd" &&
-            (lastActionResponse.type !== "EndTurn" ||
+            lastActionResponse.type !== 'GameEnd' &&
+            (lastActionResponse.type !== 'EndTurn' ||
               lastActionResponse.next.player !== currentViewer) &&
             currentViewer !== currentPlayer.id;
 
@@ -1062,7 +1062,7 @@ export default class GameMap extends Component<Props, State> {
                 ? this.state.animationConfig
                 : this._animationConfigs[currentPlayer.isHumanPlayer() ? 1 : 0],
               behavior:
-                lastActionResponse.type === "GameEnd"
+                lastActionResponse.type === 'GameEnd'
                   ? new NullBehavior()
                   : behavior
                     ? new behavior()
@@ -1090,7 +1090,7 @@ export default class GameMap extends Component<Props, State> {
                 map: this.state.map,
               };
               this.props.events?.dispatchEvent(
-                new CustomEvent("actionsProcessed", {
+                new CustomEvent('actionsProcessed', {
                   detail,
                 }),
               );
@@ -1178,7 +1178,7 @@ export default class GameMap extends Component<Props, State> {
       );
     }
 
-    if ("onComplete" in animation && animation.onComplete) {
+    if ('onComplete' in animation && animation.onComplete) {
       const onComplete = animation.onComplete;
       this._update((state) => {
         const animations = state.animations.delete(position);
@@ -1362,7 +1362,7 @@ export default class GameMap extends Component<Props, State> {
     this.setState((state) => ({
       gameInfoState: {
         ...gameInfoState,
-        ...(gameInfoState.type === "game-info"
+        ...(gameInfoState.type === 'game-info'
           ? { panels: this.props.gameInfoPanels }
           : null),
       },
@@ -1371,7 +1371,7 @@ export default class GameMap extends Component<Props, State> {
       position: null,
       previousPosition: state.position,
       radius:
-        state.behavior?.type === "base" &&
+        state.behavior?.type === 'base' &&
         state.radius?.type === RadiusType.Attack
           ? null
           : state.radius,
@@ -1379,7 +1379,7 @@ export default class GameMap extends Component<Props, State> {
 
   private _showFieldInfo = (vector: Vector, origin: string) => {
     const { behavior, lastActionResponse, map, vision } = this.state;
-    if (behavior?.type === "null" && lastActionResponse?.type !== "GameEnd") {
+    if (behavior?.type === 'null' && lastActionResponse?.type !== 'GameEnd') {
       return;
     }
 
@@ -1387,10 +1387,10 @@ export default class GameMap extends Component<Props, State> {
     const building = vector && map.buildings.get(vector);
     const tile = vector && map.getTileInfo(vector);
     if (unit || building || tile) {
-      if (behavior?.type === "base") {
+      if (behavior?.type === 'base') {
         behavior.clearTimers?.();
       }
-      AudioPlayer.playSound("UI/LongPress");
+      AudioPlayer.playSound('UI/LongPress');
       this._showGameInfo({
         biome: map.config.biome,
         building: vision.isVisible(map, vector)
@@ -1400,7 +1400,7 @@ export default class GameMap extends Component<Props, State> {
         modifierField: map.modifiers[map.getTileIndex(vector)],
         origin,
         tile,
-        type: "map-info",
+        type: 'map-info',
         unit: vision.isVisible(map, vector) ? unit : null,
         vector,
       });
@@ -1415,12 +1415,12 @@ export default class GameMap extends Component<Props, State> {
 
   private _hideGameInfo = () =>
     new Promise<void>((resolve) => {
-      AudioPlayer.playSound("UI/Cancel");
+      AudioPlayer.playSound('UI/Cancel');
       this.setState(this._resetGameInfoState(), resolve);
     });
 
   private _pointerDown = (event: ReactPointerEvent) => {
-    this._isTouch.current = event.pointerType === "touch";
+    this._isTouch.current = event.pointerType === 'touch';
   };
 
   private _pointerMove = (event: PointerEvent) => {
@@ -1432,7 +1432,7 @@ export default class GameMap extends Component<Props, State> {
 
     const element = this._maskRef.current;
     if (
-      event.pointerType === "touch" ||
+      event.pointerType === 'touch' ||
       !element ||
       (event.target as HTMLElement)?.parentNode !== element
     ) {
@@ -1474,7 +1474,7 @@ export default class GameMap extends Component<Props, State> {
     this._releasePointerLock = setTimeout(() => {
       this._pointerLock.current = false;
     }, 100);
-    document.removeEventListener("mouseleave", this._clearPanState);
+    document.removeEventListener('mouseleave', this._clearPanState);
   };
 
   private _mouseDown = (event: MouseEvent) => {
@@ -1484,7 +1484,7 @@ export default class GameMap extends Component<Props, State> {
       distance: 0,
       initial: true,
     };
-    document.addEventListener("mouseleave", this._clearPanState);
+    document.addEventListener('mouseleave', this._clearPanState);
 
     const { editor } = this.props;
     if (
@@ -1564,11 +1564,11 @@ export default class GameMap extends Component<Props, State> {
       )
     ) {
       element.scrollIntoView({
-        behavior: "smooth",
-        block: direction?.x && !direction.y ? "nearest" : "center",
-        inline: direction?.y && !direction.x ? "nearest" : "center",
+        behavior: 'smooth',
+        block: direction?.x && !direction.y ? 'nearest' : 'center',
+        inline: direction?.y && !direction.x ? 'nearest' : 'center',
       });
-      return sleep(this._scheduleTimer, this.state.animationConfig, "long");
+      return sleep(this._scheduleTimer, this.state.animationConfig, 'long');
     }
   };
 
@@ -1612,17 +1612,17 @@ export default class GameMap extends Component<Props, State> {
     } = this;
     const { height, width } = map.size;
 
-    const isFloating = this.props.style === "floating";
+    const isFloating = this.props.style === 'floating';
     const StateComponent = behavior?.component;
     return (
       <div
         className={cx(className, style)}
-        style={scale ? { [cssVar("scale")]: scale } : undefined}
+        style={scale ? { [cssVar('scale')]: scale } : undefined}
       >
         <div
           style={{
             margin: tilted
-              ? margin === "minimal"
+              ? margin === 'minimal'
                 ? `${tileSize * 2}px auto ${tileSize * 4}px`
                 : `${tileSize * 8}px ${tileSize * 7 * Math.floor(map.size.height / 4)}px ${
                     isFloating
@@ -1649,16 +1649,16 @@ export default class GameMap extends Component<Props, State> {
             onMouseLeave={this._reset}
             onPointerDown={this._pointerDown}
             style={{
-              [cssVar("perspective-height")]: Math.max(
+              [cssVar('perspective-height')]: Math.max(
                 0,
                 map.size.height - MaxSize / 2,
               ),
-              [cssVar("animation-duration")]:
+              [cssVar('animation-duration')]:
                 `${animationConfig.AnimationDuration}ms`,
 
               height: tileSize * height,
               width: tileSize * width,
-              zoom: applyVar("scale"),
+              zoom: applyVar('scale'),
             }}
           >
             <MapComponent
@@ -1677,14 +1677,14 @@ export default class GameMap extends Component<Props, State> {
               selectedBuilding={selectedBuilding}
               selectedPosition={selectedPosition}
               selectedUnit={selectedUnit}
-              style={isFloating ? "floating" : "none"}
+              style={isFloating ? 'floating' : 'none'}
               tileSize={tileSize}
               vision={vision}
             />
             {winConditionRadius?.map((radius, index) => (
               <Radius
                 currentViewer={currentViewer}
-                getLayer={() => getLayer(0, "building")}
+                getLayer={() => getLayer(0, 'building')}
                 key={index}
                 map={map}
                 radius={radius}
@@ -1713,7 +1713,7 @@ export default class GameMap extends Component<Props, State> {
                 selectedPosition={selectedPosition}
                 // Do not pass the selected unit if we are showing the radius for dropping a transported unit.
                 selectedUnit={
-                  behavior?.type === "dropUnit" ? null : selectedUnit
+                  behavior?.type === 'dropUnit' ? null : selectedUnit
                 }
                 size={tileSize}
                 vision={vision}
@@ -1728,7 +1728,7 @@ export default class GameMap extends Component<Props, State> {
                     size={tileSize}
                     zIndex={zIndex - 4}
                   />
-                  {editor?.mode === "design" && (
+                  {editor?.mode === 'design' && (
                     <MapEditorExtraCursors
                       // TODO: adjust color
                       color="red"
@@ -1787,7 +1787,7 @@ export default class GameMap extends Component<Props, State> {
                         unit?.hasName() && (
                           <FlashFlyout
                             align={
-                              unit.health < MaxHealth ? "top" : "top-lower"
+                              unit.health < MaxHealth ? 'top' : 'top-lower'
                             }
                             animationConfig={animationConfig}
                             items={[
@@ -1804,7 +1804,7 @@ export default class GameMap extends Component<Props, State> {
                                       style={{
                                         color:
                                           getHealthColor(unit.health) ||
-                                          applyVar("text-color"),
+                                          applyVar('text-color'),
                                       }}
                                     >
                                       {unit.health}
@@ -1853,19 +1853,19 @@ export default class GameMap extends Component<Props, State> {
 
 GameMap.contextType = ScrollRestore;
 
-const vars = new CSSVariables<"transform">("m");
+const vars = new CSSVariables<'transform'>('m');
 const style = css`
   position: relative;
 `;
 
 const mapStyle = css`
-  ${vars.set("transform", "none")}
+  ${vars.set('transform', 'none')}
 
   -webkit-user-drag: none;
   image-rendering: pixelated;
   position: relative;
 
-  transform: ${vars.apply("transform")};
+  transform: ${vars.apply('transform')};
 
   * {
     animation-play-state: running;
@@ -1873,9 +1873,9 @@ const mapStyle = css`
 `;
 
 const tiltedStyle = css`
-  ${vars.set("transform", applyVar("perspective-transform"))}
+  ${vars.set('transform', applyVar('perspective-transform'))}
 
-  box-shadow: ${applyVar("border-color-light")} 0 8px 10px;
+  box-shadow: ${applyVar('border-color-light')} 0 8px 10px;
 `;
 
 const pausedStyle = css`
@@ -1894,23 +1894,23 @@ const pointerStyle = css`
 const explosionAnimation = css`
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  animation-delay: calc(${applyVar("animation-duration")} / 4);
-  animation-duration: ${applyVar("animation-duration")};
+  animation-delay: calc(${applyVar('animation-duration')} / 4);
+  animation-duration: ${applyVar('animation-duration')};
   animation-name: ${keyframes`
     0% {
-      transform: ${vars.apply("transform")} translate3d(0, 0, 0);
+      transform: ${vars.apply('transform')} translate3d(0, 0, 0);
     }
     25% {
-      transform: ${vars.apply("transform")} translate3d(0, 2.5px, 0);
+      transform: ${vars.apply('transform')} translate3d(0, 2.5px, 0);
     }
     50% {
-      transform: ${vars.apply("transform")} translate3d(0, -2.5px, 0);
+      transform: ${vars.apply('transform')} translate3d(0, -2.5px, 0);
     }
     75% {
-      transform: ${vars.apply("transform")} translate3d(-1.3px, 0, 0);
+      transform: ${vars.apply('transform')} translate3d(-1.3px, 0, 0);
     }
     100% {
-      transform: ${vars.apply("transform")} translate3d(1.3px, 0, 0);
+      transform: ${vars.apply('transform')} translate3d(1.3px, 0, 0);
     }
   `};
 `;
