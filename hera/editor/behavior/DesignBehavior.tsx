@@ -242,7 +242,8 @@ export default class DesignBehavior {
   ): StateLike | null {
     let result: StateLike | null = null;
     const players = Array.from(
-      new Set([...state.map.active, ...PlayerIDs]),
+      // `PlayerIDs` starts with `0`, which we don't want to include here.
+      new Set([...state.map.active, ...PlayerIDs.slice(1)]),
     ).slice(0, vectors.length);
     vectors.forEach((vector, index) => {
       const currentPlayerIndex = players.indexOf(
