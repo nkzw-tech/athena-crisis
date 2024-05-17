@@ -1,10 +1,10 @@
-import { ActionResponse } from '../ActionResponse.tsx';
+import { ActionResponse } from "../ActionResponse.tsx";
 
 export default function gameHasEnded(
-  gameState: ReadonlyArray<readonly [ActionResponse, ...unknown[]]> | null,
+  gameState: ReadonlyArray<readonly [ActionResponse, ...Array<unknown>]> | null,
 ) {
   return !!(
     gameState?.length &&
-    gameState.some(([actionResponse]) => actionResponse.type === 'GameEnd')
+    gameState.some(([actionResponse]) => actionResponse.type === "GameEnd")
   );
 }

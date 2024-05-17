@@ -1,18 +1,21 @@
-import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import { injectGlobal } from '@emotion/css';
-import paletteSwap, { HEX } from '@nkzw/palette-swap';
-import Variants from 'athena-crisis:asset-variants';
-import BiomeVariants from './BiomeVariants.tsx';
+import { SpriteVariant } from "@deities/athena/info/SpriteVariants.tsx";
+import { Biome } from "@deities/athena/map/Biome.tsx";
+import { injectGlobal } from "@emotion/css";
+import paletteSwap, { HEX } from "@nkzw/palette-swap";
+import Variants from "athena-crisis:asset-variants";
+import BiomeVariants from "./BiomeVariants.tsx";
 import VariantConfiguration, {
   SpriteVariantConfiguration,
-} from './VariantConfiguration.tsx';
+} from "./VariantConfiguration.tsx";
 
 type Resource = Readonly<[name: string, url: string]>;
 type Resources = ReadonlyArray<Resource>;
 type PaletteSwapFn = typeof paletteSwap;
 type PaletteSwapParameters = Parameters<PaletteSwapFn>;
-type DropFirstInTuple<T extends unknown[]> = T extends [unknown, ...infer Rest]
+type DropFirstInTuple<T extends Array<unknown>> = T extends [
+  unknown,
+  ...infer Rest,
+]
   ? Rest
   : never;
 type MaybePaletteSwapParameters = [
@@ -27,10 +30,10 @@ type Canvas = ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V>
 type CanvasToURLFn = (canvas: Canvas, name: string) => Promise<string>;
 
 const SHOULD_SWAP =
-  process.env.NODE_ENV !== 'production' || process.env.IS_DEMO;
+  process.env.NODE_ENV !== "production" || process.env.IS_DEMO;
 
-export const AssetDomain = 'https://art.athenacrisis.com';
-export const AssetVersion = 'v10';
+export const AssetDomain = "https://art.athenacrisis.com";
+export const AssetVersion = "v10";
 
 // Keep remote images in memory forever.
 const imageCache = [];
@@ -64,11 +67,11 @@ const _canvasToURL = (canvas: Canvas) =>
   new Promise<string>((resolve, reject) =>
     (canvas as unknown as HTMLCanvasElement).toBlob((blob) => {
       if (!blob) {
-        reject('Oops.');
+        reject("Oops.");
         return;
       }
       resolve(URL.createObjectURL(blob));
-    }, 'image/png'),
+    }, "image/png"),
   );
 
 const imageIsDefined = (
@@ -189,7 +192,7 @@ const _prepareSprites = async (
       .map(
         ([name, url]) => `.Sprite-${name} { background-image: url('${url}'); }`,
       )
-      .join('\n'),
+      .join("\n"),
   );
   portraitsPrepared = true;
   spritesPrepared = true;
@@ -200,7 +203,7 @@ export async function preparePortraits() {
   return (
     preparePromise ||
     _prepareSprites(
-      new Map([['Portraits', VariantConfiguration.get('Portraits')!]]),
+      new Map([["Portraits", VariantConfiguration.get("Portraits")!]]),
       _canvasToURL,
       false,
     ).then((sprites) => {
@@ -243,7 +246,7 @@ export function hasSpriteURL(
     );
   }
 
-  return sprites.has(`${sprite}-${variant}${biome ? `-${biome}` : ''}`);
+  return sprites.has(`${sprite}-${variant}${biome ? `-${biome}` : ""}`);
 }
 
 export function spriteURL(sprite: SpriteVariant, variant: number) {
