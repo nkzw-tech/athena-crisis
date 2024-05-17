@@ -11,7 +11,7 @@ export default function updateUndoStack(
   { setEditorState }: { setEditorState: SetEditorStateFunction },
   { undoStack, undoStackIndex }: EditorState,
   entry: UndoEntry,
-  id: string | undefined,
+  id?: string,
 ) {
   const lastKey = undoStack.at(
     undoStackIndex != null ? undoStackIndex : -1,
@@ -33,7 +33,8 @@ export default function updateUndoStack(
     undoStackIndex: null,
   });
 
-  const stack = undoStack.map(([key, value]) => [key, value.toJSON()]);
-
-  Storage.setItem(UNDO_STACK_KEY(id), JSON.stringify(stack));
+  if (id) {
+    const stack = undoStack.map(([key, value]) => [key, value.toJSON()]);
+    Storage.setItem(UNDO_STACK_KEY(id), JSON.stringify(stack));
+  }
 }
