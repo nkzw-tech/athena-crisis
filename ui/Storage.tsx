@@ -14,6 +14,10 @@ export default {
     return localStorage.getItem(`${namespace}${key}`);
   },
 
+  removeItem(key: string) {
+    return localStorage.removeItem(`${namespace}${key}`);
+  },
+
   setItem(key: string, value: string) {
     if (value === null) {
       localStorage.removeItem(`${namespace}${key}`);
