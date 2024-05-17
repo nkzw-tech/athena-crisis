@@ -1,11 +1,11 @@
 import Vector from '@deities/athena/map/Vector.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
-import { ComponentProps, memo } from 'react';
+import { ComponentProps } from 'react';
 import Cursor from '../Cursor.tsx';
 import getSymmetricPositions from './lib/getSymmetricPositions.ts';
 import { DrawingMode } from './Types.tsx';
 
-export default memo(function MapEditorMirrorCursors({
+export default function MapEditorMirrorCursors({
   defaultCursorPosition,
   drawingMode,
   mapSize,
@@ -32,4 +32,4 @@ export default memo(function MapEditorMirrorCursors({
   return vectors.map((vector) => (
     <Cursor key={vector.toString()} {...props} position={vector} />
   ));
-});
+}
