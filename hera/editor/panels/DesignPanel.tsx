@@ -358,12 +358,13 @@ export default function DesignPanel({
         </Stack>
         <Box className={drawingModeContainerStyle}>
           {/* TODO: Styling */}
-          <Stack start vertical>
+          <Stack gap={16} start vertical>
             <InlineLink
               className={cx(fillStyle, ellipsis)}
               onClick={() => {
                 setEditorState({ drawingMode: 'regular' });
               }}
+              selected={editor.drawingMode === 'regular'}
             >
               <Icon height={32} icon={Supply} width={32} />
             </InlineLink>
@@ -372,6 +373,7 @@ export default function DesignPanel({
               onClick={() => {
                 setEditorState({ drawingMode: 'horizontal' });
               }}
+              selected={editor.drawingMode === 'horizontal'}
             >
               <Icon height={32} icon={Supply} width={32} />
             </InlineLink>
@@ -380,6 +382,7 @@ export default function DesignPanel({
               onClick={() => {
                 setEditorState({ drawingMode: 'vertical' });
               }}
+              selected={editor.drawingMode === 'vertical'}
             >
               <Icon height={32} icon={Supply} width={32} />
             </InlineLink>
@@ -388,6 +391,7 @@ export default function DesignPanel({
               onClick={() => {
                 setEditorState({ drawingMode: 'horizontal-vertical' });
               }}
+              selected={editor.drawingMode === 'horizontal-vertical'}
             >
               <Icon height={32} icon={Supply} width={32} />
             </InlineLink>
@@ -396,6 +400,7 @@ export default function DesignPanel({
               onClick={() => {
                 setEditorState({ drawingMode: 'diagonal' });
               }}
+              selected={editor.drawingMode === 'diagonal'}
             >
               <Icon height={32} icon={Supply} width={32} />
             </InlineLink>
