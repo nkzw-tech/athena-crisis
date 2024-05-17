@@ -1,7 +1,7 @@
 import { ActionResponse } from '../ActionResponse.tsx';
 
 export default function gameHasEnded(
-  gameState: ReadonlyArray<readonly [ActionResponse, ...Array<unknown>]> | null,
+  gameState: ReadonlyArray<readonly [ActionResponse, ...unknown[]]> | null,
 ) {
   return !!(
     gameState?.length &&

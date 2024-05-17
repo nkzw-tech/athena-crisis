@@ -12,10 +12,7 @@ type Resource = Readonly<[name: string, url: string]>;
 type Resources = ReadonlyArray<Resource>;
 type PaletteSwapFn = typeof paletteSwap;
 type PaletteSwapParameters = Parameters<PaletteSwapFn>;
-type DropFirstInTuple<T extends Array<unknown>> = T extends [
-  unknown,
-  ...infer Rest,
-]
+type DropFirstInTuple<T extends unknown[]> = T extends [unknown, ...infer Rest]
   ? Rest
   : never;
 type MaybePaletteSwapParameters = [

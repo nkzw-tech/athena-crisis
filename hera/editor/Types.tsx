@@ -38,16 +38,9 @@ type UndoKey =
 
 export type UndoEntry = readonly [UndoKey, MapData];
 export type UndoStack = ReadonlyArray<UndoEntry>;
-export type DrawingMode =
-  | 'regular'
-  | 'horizontal'
-  | 'vertical'
-  | 'horizontal-vertical'
-  | 'diagonal';
 
 export type EditorState = Readonly<{
   condition?: readonly [WinConditionsWithVectors, number];
-  drawingMode: DrawingMode;
   effects: Effects;
   isDrawing: boolean;
   isErasing: boolean;
