@@ -240,7 +240,7 @@ export default class DesignBehavior {
     actions: Actions,
     editor: EditorState,
   ): StateLike | null {
-    let result: StateLike | null = null;
+    let newState: StateLike | null = null;
     const players = Array.from(
       // `PlayerIDs` starts with `0`, which we don't want to include here.
       new Set([...state.map.active, ...PlayerIDs.slice(1)]),
@@ -255,19 +255,19 @@ export default class DesignBehavior {
             players.length
         ];
 
-      const tempResult = this.put(
+      const tempState = this.put(
         vector,
-        { ...state, ...result },
+        { ...state, ...newState },
         actions,
         editor,
         playerId,
       );
-      result = {
-        ...result,
-        ...tempResult,
+      newState = {
+        ...newState,
+        ...tempState,
       };
     });
-    return result;
+    return newState;
   }
 
   private put(
