@@ -263,7 +263,7 @@ export default class DesignBehavior {
         playerId,
       );
       result = {
-        ...(result ?? {}),
+        ...result,
         ...tempResult,
       };
     });
