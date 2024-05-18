@@ -48,6 +48,14 @@ module.exports = {
   plugins: ['@deities'],
   rules: {
     '@typescript-eslint/array-type': [2, { default: 'generic' }],
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        disallowTypeAnnotations: false,
+        fixStyle: 'separate-type-imports',
+        prefer: 'type-imports',
+      },
+    ],
     '@typescript-eslint/no-restricted-imports': [
       2,
       {
