@@ -128,6 +128,7 @@ export default function MapEditorExample() {
         confirmActionStyle="touch"
         createMap={handleMapUpdate}
         fogStyle="soft"
+        inset={100}
         mapObject={mapObject}
         setHasChanges={() => {}}
         tiltStyle="on"

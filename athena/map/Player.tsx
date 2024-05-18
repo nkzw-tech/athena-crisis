@@ -133,6 +133,10 @@ export default abstract class Player {
           0,
           this.stats.destroyedUnits + (stats.destroyedUnits || 0),
         ),
+        fundsPerTurn: Math.max(
+          0,
+          this.stats.fundsPerTurn + (stats.fundsPerTurn || 0),
+        ),
         lostBuildings: Math.max(
           0,
           this.stats.lostBuildings + (stats.lostBuildings || 0),

@@ -710,6 +710,7 @@ function endTurn(map: MapData) {
   const funds = calculateFunds(map, next);
   const round = map.round + (map.isEndOfRound() ? 1 : 0);
   next = next.modifyFunds(funds);
+  next = next.modifyStatistic('fundsPerTurn', funds);
   return {
     current: { funds: currentPlayer.funds, player: currentPlayer.id },
     next: { funds: next.funds, player: next.id },

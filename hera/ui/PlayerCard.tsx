@@ -27,9 +27,12 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
+import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
+import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
+import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -288,6 +291,54 @@ export default memo(function PlayerCard({
                     null
                   );
                 })}
+              {wide &&
+                [
+                  [
+                    'fundsPerTurn',
+                    player.stats.fundsPerTurn,
+                    <Icon
+                      className={playerStatsAfterIconStyle}
+                      icon={Reload}
+                      key={0}
+                    />,
+                  ] as const,
+                  [
+                    'netUnits',
+                    Math.max(
+                      player.stats.createdUnits - player.stats.lostUnits,
+                      0,
+                    ),
+                    null,
+                  ] as const,
+                  [
+                    'netBuildings',
+                    Math.max(
+                      player.stats.createdBuildings -
+                        player.stats.lostBuildings,
+                      0,
+                    ),
+                    null,
+                  ] as const,
+                ].map(([key, value, after]) => {
+                  const icon =
+                    key === 'fundsPerTurn'
+                      ? Coin
+                      : key === 'netUnits'
+                        ? HumanHandsdown
+                        : Buildings;
+                  return (
+                    <Stack
+                      className={cx(playerStatsStyle, nowrapStyle)}
+                      key={key}
+                    >
+                      <span>
+                        <Icon className={playerStatsIconStyle} icon={icon} />
+                      </span>
+                      <span>{value}</span>
+                      <span>{after}</span>
+                    </Stack>
+                  );
+                })}
             </Stack>
           </Stack>
           {player.skills.size ? (
@@ -428,4 +479,16 @@ const skillStyle = css`
 
 const fundStyle = css`
   margin-top: -1px;
+`;
+
+const playerStatsStyle = css`
+  margin-top: -1px;
+`;
+
+const playerStatsIconStyle = css`
+  margin: 3px 4px 0 0;
+`;
+
+const playerStatsAfterIconStyle = css`
+  margin: 3px 0 0 2px;
 `;
