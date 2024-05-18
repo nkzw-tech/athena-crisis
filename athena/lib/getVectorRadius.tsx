@@ -1,6 +1,6 @@
 import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function getVectorRadius(
   map: MapData,

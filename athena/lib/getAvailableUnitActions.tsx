@@ -1,10 +1,10 @@
 import { filterBuildings } from '../info/Building.tsx';
 import { Ability } from '../info/Unit.tsx';
-import Unit from '../map/Unit.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
-import { RadiusItem } from '../Radius.tsx';
-import { VisionT } from '../Vision.tsx';
+import type Unit from '../map/Unit.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
+import type { RadiusItem } from '../Radius.tsx';
+import type { VisionT } from '../Vision.tsx';
 import canBuild from './canBuild.tsx';
 import canPlaceRailTrack from './canPlaceRailTrack.tsx';
 import getAttackableEntitiesInRange from './getAttackableEntitiesInRange.tsx';

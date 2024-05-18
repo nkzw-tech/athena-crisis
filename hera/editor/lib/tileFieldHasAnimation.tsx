@@ -1,4 +1,5 @@
-import { getTile, getTileInfo, TileField } from '@deities/athena/info/Tile.tsx';
+import type { TileField } from '@deities/athena/info/Tile.tsx';
+import { getTile, getTileInfo } from '@deities/athena/info/Tile.tsx';
 
 export default function tileFieldHasAnimation(field: TileField) {
   const tile0 = getTile(field, 0);

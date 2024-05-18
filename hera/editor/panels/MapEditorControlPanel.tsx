@@ -1,6 +1,7 @@
-import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
-import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import type { Effect, Scenario } from '@deities/apollo/Effects.tsx';
+import type { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import type { SizeVector } from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -9,7 +10,8 @@ import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import useMedia from '@deities/ui/hooks/useMedia.tsx';
-import usePress, { UsePressProps } from '@deities/ui/hooks/usePress.tsx';
+import type { UsePressProps } from '@deities/ui/hooks/usePress.tsx';
+import usePress from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink, { KeyboardShortcut } from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -19,9 +21,9 @@ import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import { fbt } from 'fbt';
 import { useCallback, useRef } from 'react';
 import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
-import { StateWithActions } from '../../Types.tsx';
-import {
+import type { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import type { StateWithActions } from '../../Types.tsx';
+import type {
   EditorState,
   MapObject,
   PreviousMapEditorState,

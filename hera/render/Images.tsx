@@ -1,4 +1,4 @@
-import { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
+import type { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
 
 const AttackAmphibiousSprite =
   'https://art.athenacrisis.com/v10/assets/AttackAmphibious.png';

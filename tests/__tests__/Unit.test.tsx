@@ -17,9 +17,9 @@ import {
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';

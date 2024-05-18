@@ -1,4 +1,5 @@
 import { Airbase, Shelter } from '@deities/athena/info/Building.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
 import {
   Airfield,
   Campsite,
@@ -7,15 +8,14 @@ import {
   RenderType,
   StormCloud,
   StormCloudLightningConnectors,
-  TileInfo,
   TileTypes,
 } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import getBuildingSpritePosition from '../lib/getBuildingSpritePosition.tsx';
 
 export type TileSet = {

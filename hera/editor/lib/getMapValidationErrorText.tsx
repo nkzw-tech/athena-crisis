@@ -1,4 +1,4 @@
-import { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
+import type { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
 import { fbt } from 'fbt';
 
 export default function getValidationErrorText(error?: ErrorReason) {

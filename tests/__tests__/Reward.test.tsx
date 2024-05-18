@@ -1,6 +1,6 @@
 import { CaptureAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { Effect, Effects } from '@deities/apollo/Effects.tsx';
+import type { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { Barracks } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';

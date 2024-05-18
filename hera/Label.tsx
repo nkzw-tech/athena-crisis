@@ -1,5 +1,6 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding } from '@deities/athena/map/Entity.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import sprite from './lib/sprite.tsx';

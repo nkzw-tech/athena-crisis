@@ -1,22 +1,19 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import type { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import usePress from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
-import React, {
-  memo,
-  MutableRefObject,
-  RefObject,
-  useCallback,
-  useMemo,
-} from 'react';
+import type { MutableRefObject, RefObject } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import toTransformOrigin from './lib/toTransformOrigin.tsx';
-import { RadiusInfo, RadiusType } from './Radius.tsx';
-import { MapEnterType } from './Types.tsx';
+import type { RadiusInfo } from './Radius.tsx';
+import { RadiusType } from './Radius.tsx';
+import type { MapEnterType } from './Types.tsx';
 
 enum Priority {
   High = 2,

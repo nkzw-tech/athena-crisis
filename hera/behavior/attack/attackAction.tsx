@@ -2,10 +2,11 @@ import {
   AttackBuildingAction,
   AttackUnitAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding } from '@deities/athena/map/Entity.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import clientAttackAction from './clientAttackAction.tsx';
 
 export default async function attackAction(

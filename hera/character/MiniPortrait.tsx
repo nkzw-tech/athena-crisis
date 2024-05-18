@@ -1,15 +1,14 @@
 import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import Player, {
-  isHumanPlayer,
-  PlayerID,
-} from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import { isHumanPlayer } from '@deities/athena/map/Player.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css } from '@emotion/css';
-import { UserLike } from '../hooks/useUserMap.tsx';
+import type { UserLike } from '../hooks/useUserMap.tsx';
 import Portrait from './Portrait.tsx';
 
 export default function MiniPortrait({

@@ -1,12 +1,13 @@
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useEffect } from 'react';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
-import { EditorState, SetEditorStateFunction } from '../Types.tsx';
+import type { EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 export default function EditorPlayerSelector({
   actions,

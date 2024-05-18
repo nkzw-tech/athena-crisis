@@ -1,14 +1,14 @@
-import { BuildingHeight } from '@deities/athena/info/Building.tsx';
+import type { BuildingHeight } from '@deities/athena/info/Building.tsx';
 import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { css, cx } from '@emotion/css';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Decorators from '../Decorators.tsx';
 import Tick from '../Tick.tsx';
 import TileDecorators from '../TileDecorators.tsx';

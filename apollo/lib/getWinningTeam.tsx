@@ -1,6 +1,6 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { GameEndActionResponse } from '../GameOver.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { GameEndActionResponse } from '../GameOver.tsx';
 
 export default function getWinningTeam(
   map: MapData,

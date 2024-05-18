@@ -1,10 +1,10 @@
-import { Effect } from '@deities/apollo/Effects.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { Effect } from '@deities/apollo/Effects.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { memo } from 'react';
 import ActionCard from '../editor/lib/ActionCard.tsx';
-import { FactionNames } from '../Types.tsx';
+import type { FactionNames } from '../Types.tsx';
 
 export default memo(function StartDialogue({
   currentPlayer,

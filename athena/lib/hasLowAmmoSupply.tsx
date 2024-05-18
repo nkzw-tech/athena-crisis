@@ -1,4 +1,4 @@
-import Unit from '../map/Unit.tsx';
+import type Unit from '../map/Unit.tsx';
 
 export default function hasLowAmmoSupply(
   unit: Unit,

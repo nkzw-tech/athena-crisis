@@ -1,16 +1,18 @@
-import { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import {
+import type { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type {
   AttackSpriteWithVariants,
   WeaponAnimation,
 } from '@deities/athena/info/Unit.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { AttackSprites } from 'athena-crisis:images';
-import React, { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import React from 'react';
 import attackSpriteHasVariants from '../lib/attackSpriteHasVariants.tsx';
-import Animation, { AnimationDirection, AnimationProps } from './Animation.tsx';
+import type { AnimationDirection, AnimationProps } from './Animation.tsx';
+import Animation from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
 const actualDirections: Record<AnimationDirection, AnimationDirection> = {

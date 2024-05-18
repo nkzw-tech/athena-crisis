@@ -1,5 +1,5 @@
-import { CharacterMessageEffectAction } from '@deities/apollo/Action.tsx';
-import { Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
+import type { CharacterMessageEffectAction } from '@deities/apollo/Action.tsx';
+import type { Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
 
 export default function getAllEffectCharacters(
   effects: Effects | null,

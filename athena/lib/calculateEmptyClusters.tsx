@@ -1,4 +1,4 @@
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import calculateClusters from './calculateClusters.tsx';
 
 export default function calculateEmptyClusters(map: MapData) {

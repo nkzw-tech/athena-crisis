@@ -1,4 +1,4 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import { useEffect, useRef } from 'react';
 import useNavigate from '../hooks/useNavigate.tsx';
 

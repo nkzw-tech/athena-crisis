@@ -1,11 +1,12 @@
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit, { DryUnit } from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import { AttackDirection } from './attack-direction/getAttackDirection.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { DryUnit } from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type { AttackDirection } from './attack-direction/getAttackDirection.tsx';
 
 export type HiddenMoveActionResponse = Readonly<{
   completed?: boolean;

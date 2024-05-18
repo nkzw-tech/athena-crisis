@@ -1,13 +1,9 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import {
-  decodeEffects,
-  Effects,
-  encodeEffects,
-  Scenario,
-} from '@deities/apollo/Effects.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { Effects, Scenario } from '@deities/apollo/Effects.tsx';
+import { decodeEffects, encodeEffects } from '@deities/apollo/Effects.tsx';
 import getColorName from '@deities/apollo/lib/getColorName.tsx';
 import nameGenerator from '@deities/apollo/lib/nameGenerator.tsx';
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import {
   generateBuildings,
@@ -18,7 +14,8 @@ import {
 import { Bush } from '@deities/athena/info/Decorator.tsx';
 import { getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
-import resizeMap, { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import type { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import resizeMap from '@deities/athena/lib/resizeMap.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
@@ -26,13 +23,14 @@ import validateMap from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
-import { Bot, HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
-import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import type { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -53,8 +51,8 @@ import { css, cx } from '@emotion/css';
 import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
 import { fbt } from 'fbt';
 import { AnimatePresence } from 'framer-motion';
+import type { ReactNode } from 'react';
 import React, {
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -65,15 +63,14 @@ import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { getDrawerPaddingStyle } from '../bottom-drawer/BottomDrawer.tsx';
 import GameMap from '../GameMap.tsx';
-import useAnimationSpeed, {
-  AnimationSpeed,
-} from '../hooks/useAnimationSpeed.tsx';
+import type { AnimationSpeed } from '../hooks/useAnimationSpeed.tsx';
+import useAnimationSpeed from '../hooks/useAnimationSpeed.tsx';
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
-import { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
+import type { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
 import botToUser from '../lib/botToUser.tsx';
 import { hasNotableAnimation } from '../MapAnimations.tsx';
-import { Actions, State, StateLike } from '../Types.tsx';
+import type { Actions, State, StateLike } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
 import GameActions from '../ui/GameActions.tsx';
 import maybeFade from '../ui/lib/maybeFade.tsx';
@@ -93,7 +90,7 @@ import updateUndoStack from './lib/updateUndoStack.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
 import ResizeHandle from './ResizeHandle.tsx';
-import {
+import type {
   EditorMode,
   EditorState,
   MapCreateFunction,

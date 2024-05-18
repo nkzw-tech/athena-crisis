@@ -1,6 +1,6 @@
 import { HealAmount, MaxHealth } from '../map/Configuration.tsx';
-import Player from '../map/Player.tsx';
-import Unit from '../map/Unit.tsx';
+import type Player from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
 import getUnitValue from './getUnitValue.tsx';
 
 export default function getHealCost(unit: Unit, player: Player) {

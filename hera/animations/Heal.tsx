@@ -1,7 +1,8 @@
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
-import Animation, { AnimationProps } from './Animation.tsx';
+import type { AnimationProps } from './Animation.tsx';
+import Animation from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
 const spriteSize = 36;

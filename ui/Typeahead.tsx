@@ -1,17 +1,13 @@
 // Thanks Tomo
 import { css, cx } from '@emotion/css';
-import {
+import type {
   ChangeEvent,
   FocusEvent,
   KeyboardEvent,
   MutableRefObject,
   ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
 } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BoxStyle } from './Box.tsx';
 import clipBorder from './clipBorder.tsx';
 import useDirectionalNavigation from './controls/useDirectionalNavigation.tsx';

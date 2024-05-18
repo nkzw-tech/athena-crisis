@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
-import { InputHTMLAttributes, memo } from 'react';
+import type { InputHTMLAttributes } from 'react';
+import { memo } from 'react';
 import { applyVar } from './cssVar.tsx';
 import pixelBorder from './pixelBorder.tsx';
 

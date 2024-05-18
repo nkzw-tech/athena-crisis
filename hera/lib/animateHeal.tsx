@@ -1,9 +1,9 @@
 import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
-import { State, StateLike, StateToStateLike } from '../Types.tsx';
+import type { State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import getUnitDirection from './getUnitDirection.tsx';
 

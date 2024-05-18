@@ -1,9 +1,10 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
-import { applyEffects, Effects } from '../Effects.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
+import type { Effects } from '../Effects.tsx';
+import { applyEffects } from '../Effects.tsx';
 import { checkGameOverConditions } from '../GameOver.tsx';
-import { GameState, GameStateWithEffects } from '../Types.tsx';
+import type { GameState, GameStateWithEffects } from '../Types.tsx';
 
 const getLosingPlayer = (gameState: GameState): PlayerID | null => {
   for (const [actionResponse, map] of gameState) {

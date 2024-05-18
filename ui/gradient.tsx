@@ -1,4 +1,5 @@
-import getColor, { BaseColor } from './getColor.tsx';
+import type { BaseColor } from './getColor.tsx';
+import getColor from './getColor.tsx';
 
 export default function gradient(
   color: BaseColor | ReadonlyArray<BaseColor> | undefined,

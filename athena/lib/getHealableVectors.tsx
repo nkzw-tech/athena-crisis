@@ -1,7 +1,7 @@
 import { Ability } from '../info/Unit.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function getHealableVectors(map: MapData, position: Vector) {
   const unitA = map.units.get(position);

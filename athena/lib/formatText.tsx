@@ -1,5 +1,6 @@
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import { getUnitInfo, UnitInfo } from '../info/Unit.tsx';
+import type { UnitInfo } from '../info/Unit.tsx';
+import { getUnitInfo } from '../info/Unit.tsx';
 
 export default function formatText(
   text: string,

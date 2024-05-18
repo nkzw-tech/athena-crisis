@@ -1,7 +1,9 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
-import { HTMLAttributes, memo } from 'react';
-import Stack, { StackProps } from './Stack.tsx';
+import type { HTMLAttributes } from 'react';
+import { memo } from 'react';
+import type { StackProps } from './Stack.tsx';
+import Stack from './Stack.tsx';
 
 export default memo(function Container({
   className,

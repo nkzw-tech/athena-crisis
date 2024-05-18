@@ -7,11 +7,11 @@ import {
   MaxHealth,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import { css } from '@emotion/css';
@@ -19,11 +19,12 @@ import { fbt } from 'fbt';
 import { useCallback, useMemo } from 'react';
 import BuildingTile from '../../Building.tsx';
 import Tick from '../../Tick.tsx';
-import { Actions, State } from '../../Types.tsx';
-import { Fbt } from '../../types/Fbt.tsx';
+import type { Actions, State } from '../../Types.tsx';
+import type { Fbt } from '../../types/Fbt.tsx';
 import EntityPickerFlyout from '../../ui/EntityPickerFlyout.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
-import { FlyoutColor, FlyoutItem } from '../../ui/Flyout.tsx';
+import type { FlyoutColor } from '../../ui/Flyout.tsx';
+import { FlyoutItem } from '../../ui/Flyout.tsx';
 import UnitTile from '../../Unit.tsx';
 import getAttackableEntities from './getAttackableEntities.tsx';
 import getDamageColor from './getDamageColor.tsx';

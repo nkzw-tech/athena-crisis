@@ -2,8 +2,8 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from '@babel/parser';
-import { NodePath } from '@babel/traverse';
-import { JSXIdentifier } from '@babel/types';
+import type { NodePath } from '@babel/traverse';
+import type { JSXIdentifier } from '@babel/types';
 import chalk from 'chalk';
 import { format } from 'prettier';
 import isOpenSource from '../infra/isOpenSource.tsx';

@@ -1,4 +1,4 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { formatActionResponse } from '@deities/apollo/FormatActions.tsx';
 import chalk from 'chalk';
 import terminalImage from 'term-img';

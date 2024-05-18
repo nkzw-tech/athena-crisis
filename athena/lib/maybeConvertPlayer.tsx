@@ -1,5 +1,5 @@
 import { Zombie } from '../info/Unit.tsx';
-import Unit from '../map/Unit.tsx';
+import type Unit from '../map/Unit.tsx';
 
 export default function maybeConvertPlayer(
   unit: Unit,

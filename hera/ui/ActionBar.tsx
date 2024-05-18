@@ -2,7 +2,7 @@ import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 
 export default function ActionBar({
   visible = true,

@@ -1,8 +1,8 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

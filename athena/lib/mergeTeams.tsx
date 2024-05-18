@@ -1,5 +1,5 @@
-import { Teams } from '../map/Team.tsx';
-import MapData from '../MapData.tsx';
+import type { Teams } from '../map/Team.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function mergeTeams(map: MapData, newTeams: Teams | undefined) {
   let { teams } = map;

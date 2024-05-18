@@ -1,16 +1,17 @@
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
-import { PlayerID, PlayerIDSet } from '@deities/athena/map/Player.tsx';
-import Unit, { TransportedUnit } from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import type { PlayerID, PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import type { TransportedUnit } from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
 import {
   onlyHasDefaultWinCondition,
-  WinCondition,
   WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 
 const destructiveActions = new Set([
   'AttackUnit',

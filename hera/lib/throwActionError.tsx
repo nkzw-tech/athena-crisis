@@ -1,4 +1,4 @@
-import { Action } from '@deities/apollo/Action.tsx';
+import type { Action } from '@deities/apollo/Action.tsx';
 
 export default function throwActionError(action: Action): never {
   throw new Error(

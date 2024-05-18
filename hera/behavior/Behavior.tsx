@@ -1,5 +1,5 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import {
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type {
   Actions,
   MapBehavior,
   MapBehaviorConstructor,

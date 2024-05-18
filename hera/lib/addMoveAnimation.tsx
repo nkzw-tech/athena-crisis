@@ -1,5 +1,5 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Animations, MoveAnimation } from '../MapAnimations.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Animations, MoveAnimation } from '../MapAnimations.tsx';
 
 export default function addMoveAnimation(
   animations: Animations,

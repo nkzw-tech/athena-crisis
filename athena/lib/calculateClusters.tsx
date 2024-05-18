@@ -1,6 +1,6 @@
 import skmeans from 'skmeans';
-import Vector from '../map/Vector.tsx';
-import { SizeVector } from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { SizeVector } from '../MapData.tsx';
 import vec from './../map/vec.tsx';
 
 const getClusterCount = (size: SizeVector, max: number) =>

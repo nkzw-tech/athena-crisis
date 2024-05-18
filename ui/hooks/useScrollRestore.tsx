@@ -1,11 +1,5 @@
-import {
-  createContext,
-  MutableRefObject,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react';
+import type { MutableRefObject, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PageTransitionDuration } from '../PageTransition.tsx';
 

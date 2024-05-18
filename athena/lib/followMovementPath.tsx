@@ -1,6 +1,6 @@
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
-import { VisionT } from '../Vision.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
+import type { VisionT } from '../Vision.tsx';
 
 export default function followMovementPath(
   map: MapData,

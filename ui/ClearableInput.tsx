@@ -1,11 +1,6 @@
 import { css, cx } from '@emotion/css';
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  memo,
-  MouseEvent,
-  useRef,
-} from 'react';
+import type { DetailedHTMLProps, InputHTMLAttributes, MouseEvent } from 'react';
+import { memo, useRef } from 'react';
 
 export default memo(function ClearableInput({
   className,

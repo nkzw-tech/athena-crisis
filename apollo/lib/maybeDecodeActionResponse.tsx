@@ -1,7 +1,5 @@
-import {
-  decodeActionResponse,
-  EncodedActionResponse,
-} from '../EncodedActions.tsx';
+import type { EncodedActionResponse } from '../EncodedActions.tsx';
+import { decodeActionResponse } from '../EncodedActions.tsx';
 
 export default function maybeDecodeActionResponse(
   lastAction: string | EncodedActionResponse | null | undefined,

@@ -1,17 +1,16 @@
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
-import {
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
-import {
+import type {
   ActionResponse,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
@@ -22,7 +21,7 @@ import checkWinConditions, {
   shouldCheckDefaultWinConditions,
 } from './lib/checkWinCondition.tsx';
 import { processRewards } from './lib/processRewards.tsx';
-import { GameState, MutableGameState } from './Types.tsx';
+import type { GameState, MutableGameState } from './Types.tsx';
 
 export type AttackUnitGameOverActionResponse = Readonly<{
   fromPlayer: PlayerID;

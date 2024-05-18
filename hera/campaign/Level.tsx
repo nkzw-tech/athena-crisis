@@ -1,16 +1,17 @@
-import { Scenario } from '@deities/apollo/Effects.tsx';
+import type { Scenario } from '@deities/apollo/Effects.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
-import {
+import type {
   ClientLevelID,
   Level as LevelT,
   PlainLevel,
@@ -25,7 +26,8 @@ import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import TagList from '@deities/ui/TagList.tsx';
-import Typeahead, { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import type { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import Typeahead from '@deities/ui/Typeahead.tsx';
 import { css, cx } from '@emotion/css';
 import ArrowLeftBox from '@iconify-icons/pixelarticons/arrow-left-box.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
@@ -34,7 +36,8 @@ import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import EmptyDialogueIcon from '@iconify-icons/pixelarticons/message.js';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
-import { memo, MouseEvent, useCallback, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import Portrait from '../character/Portrait.tsx';
 import ActionCard from '../editor/lib/ActionCard.tsx';
 import EffectSelector from '../editor/selectors/EffectSelector.tsx';
@@ -44,7 +47,7 @@ import MapComponent from '../Map.tsx';
 import WinConditionTitle from '../win-conditions/WinConditionTitle.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
-import {
+import type {
   CampaignEditorSaveState,
   CampaignEditorSetMapFunction,
   MapNode,

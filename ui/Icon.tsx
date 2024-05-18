@@ -1,5 +1,6 @@
 import { cx } from '@emotion/css';
-import { memo, SVGAttributes } from 'react';
+import type { SVGAttributes } from 'react';
+import { memo } from 'react';
 import { SquareButtonStyle } from './Button.tsx';
 
 export type SVGIcon = Readonly<{

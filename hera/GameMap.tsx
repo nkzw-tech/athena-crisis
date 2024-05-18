@@ -1,8 +1,9 @@
-import { Action, execute } from '@deities/apollo/Action.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { Action } from '@deities/apollo/Action.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import {
+import type {
   GameActionResponse,
   GameActionResponses,
 } from '@deities/apollo/Types.tsx';
@@ -22,12 +23,12 @@ import {
   SlowAnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { toPlayerID } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector, {
-  sortByVectorKey,
-  VectorLike,
-} from '@deities/athena/map/Vector.tsx';
+import type { VectorLike } from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { winConditionHasVectors } from '@deities/athena/WinConditions.tsx';
@@ -35,7 +36,8 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
-import Input, { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import type { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import Input from '@deities/ui/controls/Input.tsx';
 import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -49,12 +51,11 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import React, {
-  Component,
-  createRef,
+import type {
   MutableRefObject,
   PointerEvent as ReactPointerEvent,
 } from 'react';
+import React, { Component, createRef } from 'react';
 import processActionResponses from './action-response/processActionResponse.tsx';
 import getHealthColor from './behavior/attack/getHealthColor.tsx';
 import BaseBehavior from './behavior/Base.tsx';
@@ -62,7 +63,7 @@ import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
 import NullBehavior from './behavior/NullBehavior.tsx';
 import Cursor from './Cursor.tsx';
-import { EditorState } from './editor/Types.tsx';
+import type { EditorState } from './editor/Types.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
 import animateSupply from './lib/animateSupply.tsx';
 import isInView from './lib/isInView.tsx';
@@ -70,11 +71,12 @@ import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
 import throwActionError from './lib/throwActionError.tsx';
 import MapComponent from './Map.tsx';
-import { Animation, Animations, MapAnimations } from './MapAnimations.tsx';
+import type { Animation, Animations } from './MapAnimations.tsx';
+import { MapAnimations } from './MapAnimations.tsx';
 import Mask from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
 import Radius, { RadiusType } from './Radius.tsx';
-import {
+import type {
   Actions,
   ActionsProcessedEventDetail,
   AnimationConfigs,

@@ -1,6 +1,6 @@
-import { TileInfo } from '../info/Tile.tsx';
-import { Biome } from '../map/Biome.tsx';
-import MapData from '../MapData.tsx';
+import type { TileInfo } from '../info/Tile.tsx';
+import type { Biome } from '../map/Biome.tsx';
+import type MapData from '../MapData.tsx';
 import writeTile from '../mutation/writeTile.tsx';
 import getBiomeStyle from './getBiomeStyle.tsx';
 import { verifyMap } from './verifyTiles.tsx';

@@ -1,19 +1,18 @@
-import {
-  AnimationConfig,
-  Charge,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
 import { isIPhone } from '@deities/ui/Browser.tsx';
-import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import type { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
-import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
-import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
+import type { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import usePress from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import DropUnit from '@deities/ui/icons/DropUnit.tsx';
@@ -36,11 +35,12 @@ import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
 import Load from '@iconify-icons/pixelarticons/login.js';
 import { motion } from 'framer-motion';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
-import { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
+import type { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Tick from '../Tick.tsx';
-import { Actions } from '../Types.tsx';
+import type { Actions } from '../Types.tsx';
 import getClientCoordinates from './lib/getClientCoordinates.tsx';
 
 export default function ActionWheel({

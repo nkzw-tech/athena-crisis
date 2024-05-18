@@ -1,17 +1,18 @@
-import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { getHealUnitTypes } from '@deities/athena/info/Skill.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import upgradeUnits from '../../lib/upgradeUnits.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

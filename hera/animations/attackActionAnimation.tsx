@@ -1,9 +1,9 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { AttackStance, Weapon } from '@deities/athena/info/Unit.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type { AttackStance, Weapon } from '@deities/athena/info/Unit.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
-import { Actions, State } from '../Types.tsx';
+import type { Actions, State } from '../Types.tsx';
 
 export default function attackActionAnimation(
   { update }: Actions,

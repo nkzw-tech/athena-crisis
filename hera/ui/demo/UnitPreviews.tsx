@@ -6,7 +6,7 @@ import {
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import randomEntry from '@deities/hephaestus/randomEntry.tsx';
@@ -15,11 +15,12 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import arrayShuffle from 'array-shuffle';
-import { MouseEvent, useCallback, useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
 import Tick from '../../Tick.tsx';
-import { MapInfoState } from '../../Types.tsx';
+import type { MapInfoState } from '../../Types.tsx';
 import UnitTile from '../../Unit.tsx';
 import GameDialog from '../GameDialog.tsx';
 

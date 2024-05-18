@@ -10,7 +10,8 @@ import {
   Sniper,
   Truck,
 } from '../../info/Unit.tsx';
-import Unit, { TransportedUnit } from '../../map/Unit.tsx';
+import type { TransportedUnit } from '../../map/Unit.tsx';
+import type Unit from '../../map/Unit.tsx';
 import vec from '../../map/vec.tsx';
 import MapData from '../../MapData.tsx';
 import assignUnitNames from '../assignUnitNames.tsx';

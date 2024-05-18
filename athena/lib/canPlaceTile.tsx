@@ -1,3 +1,4 @@
+import type { MaybeTileID, TileInfo } from '../info/Tile.tsx';
 import {
   Beach,
   DeepSea,
@@ -6,7 +7,6 @@ import {
   Island,
   isSea,
   Lightning,
-  MaybeTileID,
   Pier,
   Pipe,
   PoisonSwamp,
@@ -15,13 +15,12 @@ import {
   Sea,
   ShipyardConstructionSite,
   StormCloud,
-  TileInfo,
   TileTypes,
   Trench,
   Weeds,
 } from '../info/Tile.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import getBiomeStyle from './getBiomeStyle.tsx';
 import getModifier, { getWaterfallModifier } from './getModifier.tsx';
 import { Modifier } from './Modifier.tsx';

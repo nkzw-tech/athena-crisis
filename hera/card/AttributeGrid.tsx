@@ -3,7 +3,7 @@ import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export default function AttributeGrid({
   children,

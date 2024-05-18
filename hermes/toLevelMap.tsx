@@ -1,4 +1,4 @@
-import { LevelEntry, PlainLevel } from './Types.tsx';
+import type { LevelEntry, PlainLevel } from './Types.tsx';
 
 export default function toLevelMap<T>(levels?: ReadonlyArray<LevelEntry<T>>) {
   if (!levels) {

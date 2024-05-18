@@ -9,7 +9,7 @@ import { fbt } from 'fbt';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
-import { State, StateLike, StateWithActions } from '../Types.tsx';
+import type { State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, {
   ActionWheelFunds,
   LargeActionButton,

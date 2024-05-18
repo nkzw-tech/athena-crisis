@@ -1,9 +1,5 @@
-import {
-  BuildingInfo,
-  House,
-  MinFunds,
-  RepairShop,
-} from '@deities/athena/info/Building.tsx';
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
+import { House, MinFunds, RepairShop } from '@deities/athena/info/Building.tsx';
 
 const averageBuildingWeight =
   ((House.configuration.funds + RepairShop.configuration.funds) /

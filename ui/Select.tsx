@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Box from './Box.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';

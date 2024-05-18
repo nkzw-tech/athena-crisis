@@ -1,4 +1,4 @@
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import type { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import {
   MaxSize,
   MinSize,
@@ -8,13 +8,8 @@ import { SizeVector } from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
-import {
-  MouseEvent as ReactMouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Size = Readonly<{ x: number; y: number }>;
 

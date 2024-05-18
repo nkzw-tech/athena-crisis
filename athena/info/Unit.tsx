@@ -1,15 +1,18 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import formatText from '../lib/formatText.tsx';
-import { AIBehavior } from '../map/AIBehavior.tsx';
+import type { AIBehavior } from '../map/AIBehavior.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
-import Entity, { EntityType } from '../map/Entity.tsx';
-import Player, { PlayerID } from '../map/Player.tsx';
+import type Entity from '../map/Entity.tsx';
+import { EntityType } from '../map/Entity.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import type Unit from '../map/Unit.tsx';
-import { ID } from '../MapData.tsx';
-import { AttackSprite } from './AttackSprite.tsx';
-import { MovementType, MovementTypes } from './MovementType.tsx';
-import { SoundName } from './Music.tsx';
+import type { ID } from '../MapData.tsx';
+import type { AttackSprite } from './AttackSprite.tsx';
+import type { MovementType } from './MovementType.tsx';
+import { MovementTypes } from './MovementType.tsx';
+import type { SoundName } from './Music.tsx';
 import {
   getUnitCost,
   getUnitRadius,
@@ -17,7 +20,7 @@ import {
   hasUnlockedUnit,
   Skill,
 } from './Skill.tsx';
-import { SpriteVariant } from './SpriteVariants.tsx';
+import type { SpriteVariant } from './SpriteVariants.tsx';
 import type { TileInfo } from './Tile.tsx';
 import UnitID from './UnitID.tsx';
 

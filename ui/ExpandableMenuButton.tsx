@@ -1,13 +1,8 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
-import {
-  ComponentProps,
-  ReactNode,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import type { ComponentProps, ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
 import Stack from './Stack.tsx';

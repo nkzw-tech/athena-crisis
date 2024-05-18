@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import chalk from 'chalk';
-import { ViteDevServer as _ViteDevServer, createServer } from 'vite';
+import type { ViteDevServer as _ViteDevServer } from 'vite';
+import { createServer } from 'vite';
 
 export default async function startServer({
   name,

@@ -1,4 +1,5 @@
-import { TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
+import type { TileType } from '@deities/athena/info/Tile.tsx';
+import { TileTypes } from '@deities/athena/info/Tile.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { fbt } from 'fbt';
 

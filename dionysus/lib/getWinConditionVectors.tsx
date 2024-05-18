@@ -1,6 +1,6 @@
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { winConditionHasVectors } from '@deities/athena/WinConditions.tsx';
 
 export default function getWinConditionVectors(map: MapData, unit: Unit) {

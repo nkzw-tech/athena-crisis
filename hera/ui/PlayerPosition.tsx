@@ -1,4 +1,5 @@
-import getColor, { Color } from '@deities/ui/getColor.tsx';
+import type { Color } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import { InlineLinkColor } from '@deities/ui/InlineLink.tsx';
 
 export default function PlayerPosition({

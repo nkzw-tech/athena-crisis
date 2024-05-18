@@ -1,5 +1,5 @@
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 
 export type PlainAttackDirection = 0 | 1 | 2 | 3;
 

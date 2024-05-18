@@ -1,8 +1,8 @@
-import { CreateUnitActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { CreateUnitActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
-import { Actions, State, StateLike } from '../../Types.tsx';
+import type { Actions, State, StateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

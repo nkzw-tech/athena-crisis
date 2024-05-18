@@ -1,6 +1,7 @@
-import { Barracks, BuildingInfo } from '@deities/athena/info/Building.tsx';
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
+import { Barracks } from '@deities/athena/info/Building.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 
 const hqOffset = 9;
 

@@ -1,5 +1,5 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';

@@ -1,12 +1,9 @@
-import {
-  ButtonResult,
-  createJoymap,
-  createQueryModule,
-  Joymap,
-} from '@nkzw/joymap';
+import type { ButtonResult, Joymap } from '@nkzw/joymap';
+import { createJoymap, createQueryModule } from '@nkzw/joymap';
 import { getCurrentScrollContainer } from '../ScrollContainer.tsx';
 import dynamicThrottle from './dynamicThrottle.tsx';
-import Input, { NavigationDirection } from './Input.tsx';
+import type { NavigationDirection } from './Input.tsx';
+import Input from './Input.tsx';
 import throttle from './throttle.tsx';
 
 const singlePress = (button?: ButtonResult) =>

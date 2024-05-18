@@ -1,4 +1,4 @@
-import { Level } from './Types.tsx';
+import type { Level } from './Types.tsx';
 
 export default function toPlainLevelList<T>(
   list?: ReadonlyArray<Level<T> | [number, Level<T>]>,

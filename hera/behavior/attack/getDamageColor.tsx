@@ -1,5 +1,5 @@
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
-import { FlyoutColor } from '../../ui/Flyout.tsx';
+import type { FlyoutColor } from '../../ui/Flyout.tsx';
 
 export default function getDamageColor(
   damage: number | null,

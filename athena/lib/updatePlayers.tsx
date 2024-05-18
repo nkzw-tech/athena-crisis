@@ -1,5 +1,5 @@
-import Player from '../map/Player.tsx';
-import { Teams } from '../map/Team.tsx';
+import type Player from '../map/Player.tsx';
+import type { Teams } from '../map/Team.tsx';
 import updatePlayer from './updatePlayer.tsx';
 
 export default function updatePlayers(

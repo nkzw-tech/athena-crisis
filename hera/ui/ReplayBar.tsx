@@ -1,4 +1,5 @@
-import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -12,7 +13,7 @@ import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
 import useRelativeTime from '@nkzw/use-relative-time';
 import { getShortLocale } from '../i18n/getLocale.tsx';
-import { Actions, ReplayState } from '../Types.tsx';
+import type { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
 
 const TurnTimer = ({ timeout }: { timeout: number }) => {

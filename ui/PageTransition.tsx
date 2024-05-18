@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import React, { memo, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { memo } from 'react';
 
 export const PageTransitionDuration = 0.15;
 

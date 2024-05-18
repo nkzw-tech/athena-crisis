@@ -1,10 +1,10 @@
 import { SabotageAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike } from '../Types.tsx';
+import type { Actions, State, StateLike } from '../Types.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import sabotageAction from './sabotage/sabotageAction.tsx';
 

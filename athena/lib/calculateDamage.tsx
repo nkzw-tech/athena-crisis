@@ -1,7 +1,8 @@
-import { Weapon } from '../info/Unit.tsx';
+import type { Weapon } from '../info/Unit.tsx';
 import { MaxHealth, MinDamage } from '../map/Configuration.tsx';
-import Entity, { isEntityWithoutCover } from '../map/Entity.tsx';
-import Unit from '../map/Unit.tsx';
+import type Entity from '../map/Entity.tsx';
+import { isEntityWithoutCover } from '../map/Entity.tsx';
+import type Unit from '../map/Unit.tsx';
 
 export default function calculateDamage(
   unitA: Unit,

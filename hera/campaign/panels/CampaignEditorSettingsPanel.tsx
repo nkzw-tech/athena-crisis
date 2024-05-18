@@ -1,4 +1,4 @@
-import {
+import type {
   AttributeRange,
   AttributeRangeWithZero,
 } from '@deities/athena/lib/getAttributeRange.tsx';
@@ -8,18 +8,14 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
-import {
-  TypeaheadDataSource,
-  TypeaheadDataSourceEntry,
-} from '@deities/ui/Typeahead.tsx';
+import type { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import { TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
 import { fbt } from 'fbt';
 import { RangeSelector } from '../../card/Range.tsx';
 import useTagDataSource from '../../hooks/useTagDataSource.tsx';
-import PlayStyle, {
-  getTranslatedPlayStyleName,
-  PlayStyleType,
-} from '../lib/PlayStyle.tsx';
+import type { PlayStyleType } from '../lib/PlayStyle.tsx';
+import PlayStyle, { getTranslatedPlayStyleName } from '../lib/PlayStyle.tsx';
 
 export type UserNode = Readonly<{
   displayName: string;

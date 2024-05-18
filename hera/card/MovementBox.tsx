@@ -1,6 +1,6 @@
-import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import InlineTileList from './InlineTileList.tsx';
 import TileBox from './TileBox.tsx';
 

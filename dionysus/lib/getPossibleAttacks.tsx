@@ -10,13 +10,16 @@ import {
   MaxHealth,
   MinDamage,
 } from '@deities/athena/map/Configuration.tsx';
-import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
-import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { attackable, RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding } from '@deities/athena/map/Entity.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import { attackable } from '@deities/athena/Radius.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import shouldAttack from './shouldAttack.tsx';
 
 export type PossibleAttack = Readonly<{

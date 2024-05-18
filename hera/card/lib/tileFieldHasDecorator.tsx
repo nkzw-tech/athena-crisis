@@ -1,5 +1,6 @@
-import { getTile, getTileInfo, TileField } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { TileField } from '@deities/athena/info/Tile.tsx';
+import { getTile, getTileInfo } from '@deities/athena/info/Tile.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 
 export default function tileFieldHasDecorator(field: TileField, biome: Biome) {
   const tile0 = getTile(field, 0);

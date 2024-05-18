@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { InputLayer } from './Input.tsx';
+import type { InputLayer } from './Input.tsx';
 import useAcceptNavigation from './useAcceptNavigation.tsx';
 import useHorizontalNavigation from './useHorizontalNavigation.tsx';
 

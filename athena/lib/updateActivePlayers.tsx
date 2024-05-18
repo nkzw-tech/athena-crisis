@@ -1,5 +1,7 @@
-import Player, { Bot, HumanPlayer, PlayerID } from '../map/Player.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
+import { Bot, HumanPlayer } from '../map/Player.tsx';
+import type MapData from '../MapData.tsx';
 import updatePlayers from './updatePlayers.tsx';
 
 export default function updateActivePlayers(

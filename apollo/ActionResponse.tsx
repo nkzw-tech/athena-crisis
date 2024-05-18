@@ -1,14 +1,15 @@
-import { Skill } from '@deities/athena/info/Skill.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
-import { Reward } from '@deities/athena/map/Reward.tsx';
-import { Teams } from '@deities/athena/map/Team.tsx';
-import Unit, { DryUnit } from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { WinCondition } from '@deities/athena/WinConditions.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
-import { GameOverActionResponses } from './GameOver.tsx';
-import { HiddenActionResponse } from './HiddenAction.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
+import type { Reward } from '@deities/athena/map/Reward.tsx';
+import type { Teams } from '@deities/athena/map/Team.tsx';
+import type { DryUnit } from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
+import type { GameOverActionResponses } from './GameOver.tsx';
+import type { HiddenActionResponse } from './HiddenAction.tsx';
 
 export type MoveActionResponse = Readonly<{
   completed?: boolean;

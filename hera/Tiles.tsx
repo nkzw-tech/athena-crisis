@@ -1,19 +1,19 @@
 import { spriteImage } from '@deities/art/Sprites.tsx';
 import { Shelter } from '@deities/athena/info/Building.tsx';
+import type { TileInfo, TileLayer } from '@deities/athena/info/Tile.tsx';
 import {
   Campsite,
   getFloatingEdgeAnimation,
   getTileInfo,
-  TileInfo,
-  TileLayer,
 } from '@deities/athena/info/Tile.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getFloatingEdgeModifier from '@deities/athena/lib/getFloatingEdgeModifier.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { ModifierField } from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import {
   Tiles0,

@@ -1,8 +1,8 @@
 import { Skill } from '../info/Skill.tsx';
-import { UnitInfo } from '../info/Unit.tsx';
-import { PlayerID } from '../map/Player.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type { UnitInfo } from '../info/Unit.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import canDeploy from './canDeploy.tsx';
 
 export default function getDeployableVectors(

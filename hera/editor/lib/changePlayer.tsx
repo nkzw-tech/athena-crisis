@@ -1,12 +1,9 @@
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
-import {
-  HumanPlayer,
-  PlaceholderPlayer,
-  PlayerID,
-} from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { HumanPlayer, PlaceholderPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 
 export default async function changePlayer(
   state: State,

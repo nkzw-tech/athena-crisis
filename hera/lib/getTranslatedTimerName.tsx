@@ -1,4 +1,4 @@
-import { GameTimerValue } from '@deities/apollo/lib/GameTimerValue.tsx';
+import type { GameTimerValue } from '@deities/apollo/lib/GameTimerValue.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 
 export default function getTranslatedTimerName(timer: GameTimerValue) {

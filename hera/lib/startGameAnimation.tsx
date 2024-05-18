@@ -1,6 +1,6 @@
 import getMapName from '../i18n/getMapName.tsx';
-import { Animations } from '../MapAnimations.tsx';
-import { Actions, State } from '../Types.tsx';
+import type { Animations } from '../MapAnimations.tsx';
+import type { Actions, State } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 
 export default function startGameAnimation(

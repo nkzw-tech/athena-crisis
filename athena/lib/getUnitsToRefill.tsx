@@ -1,9 +1,10 @@
 import { Ability } from '../info/Unit.tsx';
-import Player from '../map/Player.tsx';
-import Vector, { isVector } from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
-import { VisionT } from '../Vision.tsx';
-import { UnitsWithPosition } from './getUnitsByPositions.tsx';
+import type Player from '../map/Player.tsx';
+import type Vector from '../map/Vector.tsx';
+import { isVector } from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
+import type { VisionT } from '../Vision.tsx';
+import type { UnitsWithPosition } from './getUnitsByPositions.tsx';
 
 export default function getUnitsToRefill(
   map: MapData,

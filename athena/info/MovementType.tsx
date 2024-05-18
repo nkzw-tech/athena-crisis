@@ -1,4 +1,4 @@
-import { SoundName } from './Music.tsx';
+import type { SoundName } from './Music.tsx';
 
 export class MovementType {
   constructor(

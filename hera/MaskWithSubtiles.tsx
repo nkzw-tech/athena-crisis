@@ -1,11 +1,11 @@
 import { DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { css, cx } from '@emotion/css';
 import React, { memo, useMemo } from 'react';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
-import { BaseMaskProps } from './Mask.tsx';
-import { MapEnterType } from './Types.tsx';
+import type { BaseMaskProps } from './Mask.tsx';
+import type { MapEnterType } from './Types.tsx';
 
 export default memo(function MaskWithSubtiles({
   enter,

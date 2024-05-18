@@ -2,24 +2,20 @@ import {
   mapBuildings,
   mapBuildingsWithContentRestriction,
 } from '@deities/athena/info/Building.tsx';
-import {
-  getAllTiles,
-  getTileInfo,
-  Plain,
-  TileInfo,
-} from '@deities/athena/info/Tile.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import { getAllTiles, getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
 import {
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   DoubleSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Box from '@deities/ui/Box.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
@@ -31,19 +27,20 @@ import { css, cx } from '@emotion/css';
 import Fill from '@iconify-icons/pixelarticons/fill-half.js';
 import { fbt } from 'fbt';
 import { useCallback, useMemo } from 'react';
-import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import type { SelectTileFn } from '../../card/InlineTileList.tsx';
+import InlineTileList from '../../card/InlineTileList.tsx';
+import type { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import Tick from '../../Tick.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
 import canFillTile from '../lib/canFillTile.tsx';
 import DeleteTile from '../lib/DeleteTile.tsx';
 import navigate from '../lib/navigate.tsx';
 import useGridNavigation from '../lib/useGridNavigation.tsx';
 import EditorPlayerSelector from '../selectors/EditorPlayerSelector.tsx';
-import { EditorState } from '../Types.tsx';
+import type { EditorState } from '../Types.tsx';
 
 export default function DesignPanel({
   actions,

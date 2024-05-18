@@ -1,8 +1,8 @@
 import { EntityType } from '../map/Entity.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import { attackable } from '../Radius.tsx';
-import { VisionT } from '../Vision.tsx';
+import type { VisionT } from '../Vision.tsx';
 
 export default function getAttackableEntitiesInRange(
   map: MapData,

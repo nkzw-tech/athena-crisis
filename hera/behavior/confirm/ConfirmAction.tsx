@@ -1,9 +1,7 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import { State, StateLike, StateWithActions } from '../../Types.tsx';
-import ActionWheel, {
-  ActionButton,
-  ActionButtonType,
-} from '../../ui/ActionWheel.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { State, StateLike, StateWithActions } from '../../Types.tsx';
+import type { ActionButtonType } from '../../ui/ActionWheel.tsx';
+import ActionWheel, { ActionButton } from '../../ui/ActionWheel.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 
 export type ConfirmProps = Readonly<{

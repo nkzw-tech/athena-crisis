@@ -1,9 +1,9 @@
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import { EntityType } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 
 export default function shouldAttack(
   map: MapData,

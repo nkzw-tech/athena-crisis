@@ -1,4 +1,4 @@
-import { State } from '../../Types.tsx';
+import type { State } from '../../Types.tsx';
 
 export default function canEndTurn(state: State) {
   const { behavior, currentViewer, lastActionResponse, map, replayState } =

@@ -4,7 +4,8 @@ import {
 } from '@deities/athena/info/Tile.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
-import React, { ReactNode, useCallback, useRef } from 'react';
+import type { ReactNode } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { getIdleFrame, useTick } from './lib/tick.tsx';
 
 const UnitAnimation = {

@@ -1,5 +1,5 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import { Level } from '@deities/hermes/Types.tsx';
+import type { Level } from '@deities/hermes/Types.tsx';
 
 export default function sortByDepth<T>(
   next: Array<Level<T> | [number, Level<T>]>,

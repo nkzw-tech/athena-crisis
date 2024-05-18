@@ -3,7 +3,7 @@ import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
-import { BaseColor } from '@deities/ui/getColor.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Portal from '@deities/ui/Portal.tsx';
@@ -12,7 +12,7 @@ import Forward from '@iconify-icons/pixelarticons/reply.js';
 import { Sprites } from 'athena-crisis:images';
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+import type { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 

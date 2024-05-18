@@ -1,4 +1,5 @@
-import { EntityGroup, EntityType } from '@deities/athena/map/Entity.tsx';
+import type { EntityGroup } from '@deities/athena/map/Entity.tsx';
+import { EntityType } from '@deities/athena/map/Entity.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { fbt } from 'fbt';
 

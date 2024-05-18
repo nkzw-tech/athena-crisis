@@ -1,5 +1,5 @@
 import isPvP from '@deities/athena/lib/isPvP.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 
 export default function hasTimer<T>(
   game: T & {

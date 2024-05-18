@@ -1,22 +1,22 @@
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
 import {
-  BuildingInfo,
   getAllBuildings,
   ResearchLab,
 } from '@deities/athena/info/Building.tsx';
-import { Skill } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import getAttributeRange, {
   getAttributeRangeValue,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';
@@ -42,7 +42,7 @@ import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
 import getTranslatedEntityName from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Tick from '../Tick.tsx';
-import { FactionNames } from '../Types.tsx';
+import type { FactionNames } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import UILabel from '../ui/UILabel.tsx';

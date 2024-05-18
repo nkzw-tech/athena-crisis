@@ -1,4 +1,4 @@
-import { CharacterMessageActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { CharacterMessageActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import getMessageKey from '@deities/apollo/lib/getMessageKey.tsx';
 import CampaignMap from './CampaignMap.tsx';
 

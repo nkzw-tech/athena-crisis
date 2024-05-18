@@ -3,15 +3,14 @@ import canBuild from '@deities/athena/lib/canBuild.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
-import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import type { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
 import BuildingTile from '../Building.tsx';
-import toTransformOrigin, {
-  ClientCoordinates,
-} from '../lib/toTransformOrigin.tsx';
-import { StateWithActions } from '../Types.tsx';
+import type { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin from '../lib/toTransformOrigin.tsx';
+import type { StateWithActions } from '../Types.tsx';
 import ActionWheel, {
   ActionWheelFunds,
   LargeActionButton,

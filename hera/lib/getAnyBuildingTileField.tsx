@@ -1,5 +1,6 @@
-import { BuildingInfo } from '@deities/athena/info/Building.tsx';
-import { Plain, TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
+import type { TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
+import { Plain } from '@deities/athena/info/Tile.tsx';
 
 export default function getAnyBuildingTileField(
   building: BuildingInfo,

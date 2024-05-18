@@ -2,10 +2,11 @@ import { css, cx } from '@emotion/css';
 import { useMemo, useRef } from 'react';
 import Stack from './Stack.tsx';
 import { TagListInternal } from './TagList.tsx';
-import Typeahead, {
+import type {
   TypeaheadDataSource,
   TypeaheadDataSourceEntry,
 } from './Typeahead.tsx';
+import Typeahead from './Typeahead.tsx';
 
 export default function TagInput<T>({
   dataSource,

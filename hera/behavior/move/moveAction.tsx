@@ -1,8 +1,8 @@
 import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { Actions, State, StateLike } from '../../Types.tsx';
+import type { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import type { Actions, State, StateLike } from '../../Types.tsx';
 import clientMoveAction from './clientMoveAction.tsx';
 
 export default function moveAction(

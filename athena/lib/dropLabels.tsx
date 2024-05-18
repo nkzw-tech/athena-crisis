@@ -1,4 +1,4 @@
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { getHiddenLabels } from '../WinConditions.tsx';
 
 export default function dropLabels(map: MapData) {

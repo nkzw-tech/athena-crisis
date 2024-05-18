@@ -1,4 +1,4 @@
-import { PlainEntity } from '../map/Entity.tsx';
+import type { PlainEntity } from '../map/Entity.tsx';
 
 export default function filterNullables<
   T extends PlainEntity | Record<string, unknown>,

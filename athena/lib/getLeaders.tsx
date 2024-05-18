@@ -1,6 +1,7 @@
-import { PlayerID } from '../map/Player.tsx';
-import Unit, { TransportedUnit } from '../map/Unit.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type { TransportedUnit } from '../map/Unit.tsx';
+import type Unit from '../map/Unit.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function getLeaders(
   map: MapData,

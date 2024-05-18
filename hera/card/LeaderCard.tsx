@@ -4,8 +4,8 @@ import {
   LeaderStatusEffect,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';

@@ -1,10 +1,5 @@
-import {
-  DetailedHTMLProps,
-  FormHTMLAttributes,
-  memo,
-  useEffect,
-  useRef,
-} from 'react';
+import type { DetailedHTMLProps, FormHTMLAttributes } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 export default memo(function Form(
   props: DetailedHTMLProps<

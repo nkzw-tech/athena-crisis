@@ -1,6 +1,6 @@
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { Bot } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import getColorName from './getColorName.tsx';
 import nameGenerator from './nameGenerator.tsx';
 

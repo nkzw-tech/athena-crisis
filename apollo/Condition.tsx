@@ -1,9 +1,9 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { ActionResponse } from './ActionResponse.tsx';
+import type { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 
 export type WinConditionID = 'win' | 'lose' | 'draw' | number;

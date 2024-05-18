@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import AudioPlayer from '../AudioPlayer.tsx';
-import { InputLayer } from './Input.tsx';
+import type { InputLayer } from './Input.tsx';
 import useInput from './useInput.tsx';
 
 export default function useHorizontalNavigation(

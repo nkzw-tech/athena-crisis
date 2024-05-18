@@ -1,5 +1,5 @@
 import hasLowAmmoSupply from '@deities/athena/lib/hasLowAmmoSupply.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 
 const needsFuel = (unit: Unit) =>
   unit.fuel <= unit.info.configuration.fuel * 0.3;

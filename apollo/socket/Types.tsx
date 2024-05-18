@@ -1,5 +1,5 @@
-import { EncodedAction } from '../EncodedActions.tsx';
-import { EncodedGameActionResponseWithError } from '../Types.tsx';
+import type { EncodedAction } from '../EncodedActions.tsx';
+import type { EncodedGameActionResponseWithError } from '../Types.tsx';
 
 export type ClientToServerEvents = {
   '/campaign-state/reset': (campaignStateID: string) => void;

@@ -1,7 +1,8 @@
 import { MinFunds } from '../info/Building.tsx';
 import { Charge, MaxHealth } from '../map/Configuration.tsx';
-import Entity, { isBuilding, isUnit } from '../map/Entity.tsx';
-import Player from '../map/Player.tsx';
+import type Entity from '../map/Entity.tsx';
+import { isBuilding, isUnit } from '../map/Entity.tsx';
+import type Player from '../map/Player.tsx';
 import getUnitValue from './getUnitValue.tsx';
 
 export default function getChargeValue(

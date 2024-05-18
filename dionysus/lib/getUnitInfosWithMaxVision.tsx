@@ -1,4 +1,4 @@
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 
 export default function getUnitInfosWithMaxVision(

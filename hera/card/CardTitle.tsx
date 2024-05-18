@@ -1,9 +1,9 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import { css, cx } from '@emotion/css';
-import { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 
 export default function CardTitle({
   className,

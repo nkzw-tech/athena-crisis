@@ -2,7 +2,7 @@ import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export default function TileBox({ children }: { children: ReactNode }) {
   return (

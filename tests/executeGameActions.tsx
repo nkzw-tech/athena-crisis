@@ -1,14 +1,17 @@
-import { Actions, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type {
+  Actions,
+  MutateActionResponseFn,
+} from '@deities/apollo/Action.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
-import { Effects } from '@deities/apollo/Effects.tsx';
+import type { Effects } from '@deities/apollo/Effects.tsx';
 import { formatAction } from '@deities/apollo/FormatActions.tsx';
-import {
+import type {
   EncodedGameActionResponse,
   GameState,
 } from '@deities/apollo/Types.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 

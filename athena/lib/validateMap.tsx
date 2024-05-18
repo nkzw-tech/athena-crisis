@@ -9,7 +9,8 @@ import {
   mapBuildingsWithContentRestriction,
   MaxSkills,
 } from '../info/Building.tsx';
-import { Skill, Skills } from '../info/Skill.tsx';
+import type { Skill } from '../info/Skill.tsx';
+import { Skills } from '../info/Skill.tsx';
 import { getTileInfo } from '../info/Tile.tsx';
 import {
   getUnitInfo,
@@ -18,22 +19,21 @@ import {
   Pioneer,
 } from '../info/Unit.tsx';
 import { Biomes } from '../map/Biome.tsx';
-import Building from '../map/Building.tsx';
+import type Building from '../map/Building.tsx';
 import {
   DecoratorsPerSide,
   MaxHealth,
   MaxSize,
 } from '../map/Configuration.tsx';
-import Entity from '../map/Entity.tsx';
-import Player, {
-  PlaceholderPlayer,
-  PlayerID,
-  toPlayerID,
-} from '../map/Player.tsx';
+import type Entity from '../map/Entity.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
+import { PlaceholderPlayer, toPlayerID } from '../map/Player.tsx';
 import Team, { toTeamArray } from '../map/Team.tsx';
-import Unit, { TransportedUnit } from '../map/Unit.tsx';
+import type { TransportedUnit } from '../map/Unit.tsx';
+import type Unit from '../map/Unit.tsx';
 import vec from '../map/vec.tsx';
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import {
   dropInactivePlayersFromWinConditions,
   validateWinConditions,
@@ -44,7 +44,8 @@ import canPlaceDecorator from './canPlaceDecorator.tsx';
 import canPlaceTile from './canPlaceTile.tsx';
 import getActivePlayers from './getActivePlayers.tsx';
 import indexToVector from './indexToVector.tsx';
-import validateTeams, { TeamsList } from './validateTeams.tsx';
+import type { TeamsList } from './validateTeams.tsx';
+import validateTeams from './validateTeams.tsx';
 import withModifiers from './withModifiers.tsx';
 
 export type ErrorReason =

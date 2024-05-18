@@ -1,4 +1,4 @@
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 
 export default function gameHasEnded(
   gameState: ReadonlyArray<readonly [ActionResponse, ...Array<unknown>]> | null,

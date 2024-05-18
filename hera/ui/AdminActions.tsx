@@ -2,8 +2,9 @@ import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, cx } from '@emotion/css';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { StateWithActions } from '../Types.tsx';
+import type { ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
+import type { StateWithActions } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 
 export default function AdminActions({

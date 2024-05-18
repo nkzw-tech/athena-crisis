@@ -1,10 +1,10 @@
-import { SecretDiscoveredActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { SecretDiscoveredActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
 import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
-import { Actions, State } from '../Types.tsx';
+import type { Actions, State } from '../Types.tsx';
 
 export default async function secretDiscoveredAnimation(
   actions: Actions,

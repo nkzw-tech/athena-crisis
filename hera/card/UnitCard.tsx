@@ -1,15 +1,17 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
-import { MovementType } from '@deities/athena/info/MovementType.tsx';
+import type { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { getAllTiles, getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
+import type {
+  UnitInfo,
+  Weapon as WeaponT,
+} from '@deities/athena/info/Unit.tsx';
 import {
   Abilities,
   Ability,
   AttackType,
   getAllUnits,
   mapUnitsWithContentRestriction,
-  UnitInfo,
-  Weapon as WeaponT,
 } from '@deities/athena/info/Unit.tsx';
 import calculateLikelyDamage from '@deities/athena/lib/calculateLikelyDamage.tsx';
 import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
@@ -19,24 +21,22 @@ import getAttributeRange, {
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import Entity, {
-  EntityType,
-  getEntityGroup,
-} from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { EntityType, getEntityGroup } from '@deities/athena/map/Entity.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   numberToPlayerID,
-  PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type SpriteVector from '@deities/athena/map/SpriteVector.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';
@@ -46,7 +46,8 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
-import Icon, { SVGIcon } from '@deities/ui/Icon.tsx';
+import type { SVGIcon } from '@deities/ui/Icon.tsx';
+import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
 import DropUnit from '@deities/ui/icons/DropUnit.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
@@ -69,14 +70,8 @@ import Visible from '@iconify-icons/pixelarticons/visible.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
-import {
-  ComponentProps,
-  memo,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import type { ComponentProps, ReactNode } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getAnyBuildingTileField from '../lib/getAnyBuildingTileField.tsx';
@@ -86,7 +81,7 @@ import getTranslatedEntityName, {
 } from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Tick from '../Tick.tsx';
-import { FactionNames } from '../Types.tsx';
+import type { FactionNames } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import UILabel from '../ui/UILabel.tsx';
 import UnitTile from '../Unit.tsx';

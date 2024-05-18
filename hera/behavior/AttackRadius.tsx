@@ -1,5 +1,5 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 

@@ -1,12 +1,14 @@
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
-import React, { CSSProperties, useCallback } from 'react';
-import { StateToStateLike, UpdateFunction } from '../Types.tsx';
-import Animation, { AnimationProps } from './Animation.tsx';
+import type { CSSProperties } from 'react';
+import React, { useCallback } from 'react';
+import type { StateToStateLike, UpdateFunction } from '../Types.tsx';
+import type { AnimationProps } from './Animation.tsx';
+import Animation from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
 export type ExplosionStyle =

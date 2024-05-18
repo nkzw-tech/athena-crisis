@@ -1,18 +1,20 @@
-import { Skill, Skills } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { Skills } from '@deities/athena/info/Skill.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { DefaultMapSkillSlots } from '@deities/athena/map/Configuration.tsx';
-import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useCallback, useMemo } from 'react';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
-import { State } from '../../Types.tsx';
+import type { State } from '../../Types.tsx';
 import PlayerSelector from '../../ui/PlayerSelector.tsx';
 import TeamSelector from '../../ui/TeamSelector.tsx';
-import { SetMapFunction } from '../Types.tsx';
+import type { SetMapFunction } from '../Types.tsx';
 
 const aiRegistry =
   process.env.NODE_ENV === 'development'

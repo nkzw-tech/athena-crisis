@@ -1,13 +1,17 @@
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import { Barracks, BuildingInfo, getBuildingInfo } from '../info/Building.tsx';
-import { Skill } from '../info/Skill.tsx';
+import type { Skill } from '../info/Skill.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
-import { ID } from '../MapData.tsx';
-import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
+import type { ID } from '../MapData.tsx';
+import type { AIBehavior } from './AIBehavior.tsx';
+import { AIBehaviors } from './AIBehavior.tsx';
 import { Biome } from './Biome.tsx';
 import { MaxHealth } from './Configuration.tsx';
-import Entity, { PlainEntity } from './Entity.tsx';
-import Player, { PlayerID, toPlayerID } from './Player.tsx';
+import type { PlainEntity } from './Entity.tsx';
+import Entity from './Entity.tsx';
+import type { PlayerID } from './Player.tsx';
+import type Player from './Player.tsx';
+import { toPlayerID } from './Player.tsx';
 
 export type PlainBuilding = PlainEntity & {
   readonly b?: ReadonlyArray<AIBehavior> | AIBehavior;

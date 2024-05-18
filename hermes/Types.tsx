@@ -1,6 +1,6 @@
-import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { CampaignMapName } from './CampaignMapName.tsx';
+import type { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { CampaignMapName } from './CampaignMapName.tsx';
 
 export type LevelResult = Readonly<
   Partial<{

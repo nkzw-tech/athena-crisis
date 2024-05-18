@@ -12,6 +12,7 @@ import {
   HQ,
   VerticalBarrier,
 } from '../info/Building.tsx';
+import type { TileInfo } from '../info/Tile.tsx';
 import {
   Beach,
   Bridge,
@@ -27,7 +28,6 @@ import {
   Ruins,
   Sea,
   Street,
-  TileInfo,
   TileTypes,
 } from '../info/Tile.tsx';
 import { Pioneer } from '../info/Unit.tsx';
@@ -39,11 +39,12 @@ import getMovementPath from '../lib/getMovementPath.tsx';
 import indexToVector from '../lib/indexToVector.tsx';
 import withModifiers from '../lib/withModifiers.tsx';
 import { Biome, Biomes } from '../map/Biome.tsx';
-import Building from '../map/Building.tsx';
+import type Building from '../map/Building.tsx';
 import { toPlayerID } from '../map/Player.tsx';
-import Unit from '../map/Unit.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { SizeVector, TileMap } from '../MapData.tsx';
+import type Unit from '../map/Unit.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { SizeVector, TileMap } from '../MapData.tsx';
+import MapData from '../MapData.tsx';
 import { moveable, MoveConfiguration } from '../Radius.tsx';
 import vec from './../map/vec.tsx';
 

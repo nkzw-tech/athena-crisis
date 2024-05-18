@@ -2,29 +2,30 @@ import {
   mapBuildings,
   mapBuildingsWithContentRestriction,
 } from '@deities/athena/info/Building.tsx';
-import { Skill, Skills } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { Skills } from '@deities/athena/info/Skill.tsx';
 import { getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
 import {
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import { ID } from '@deities/athena/MapData.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type { ID } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useCallback, useMemo, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import type { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import Tick from '../../Tick.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import SkillDialog from '../../ui/SkillDialog.tsx';
-import { EditorState } from '../Types.tsx';
+import type { EditorState } from '../Types.tsx';
 
 const mutate = (list: ReadonlySet<ID>, id: ID) => {
   const newList = new Set(list);

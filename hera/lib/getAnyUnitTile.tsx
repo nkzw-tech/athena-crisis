@@ -1,6 +1,6 @@
 import { MovementTypes } from '@deities/athena/info/MovementType.tsx';
 import { findTile, Sea } from '@deities/athena/info/Tile.tsx';
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 
 export default function getAnyUnitTile(info: UnitInfo) {
   if (

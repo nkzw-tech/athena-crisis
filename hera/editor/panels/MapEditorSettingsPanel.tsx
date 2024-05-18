@@ -1,4 +1,4 @@
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import type { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import {
   DoubleSize,
   MaxSize,
@@ -17,9 +17,9 @@ import { useState } from 'react';
 import useTagDataSource, {
   DEFAULT_TAGS,
 } from '../../hooks/useTagDataSource.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import BiomeSelector from '../selectors/BiomeSelector.tsx';
-import { MapObject, SaveMapFunction, SetMapFunction } from '../Types.tsx';
+import type { MapObject, SaveMapFunction, SetMapFunction } from '../Types.tsx';
 
 export default function MapEditorSettingsPanel({
   actions,

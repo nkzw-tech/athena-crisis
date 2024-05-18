@@ -1,13 +1,14 @@
 import { generateRandomMap } from '../generator/MapGenerator.tsx';
-import { Decorator } from '../info/Decorator.tsx';
+import type { Decorator } from '../info/Decorator.tsx';
 import { getTileInfo, TileTypes } from '../info/Tile.tsx';
 import { DecoratorsPerSide } from '../map/Configuration.tsx';
-import { PlainEntitiesList } from '../map/PlainMap.tsx';
+import type { PlainEntitiesList } from '../map/PlainMap.tsx';
 import { decodeDecorators } from '../map/Serialization.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { SizeVector } from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { SizeVector } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { winConditionHasVectors } from '../WinConditions.tsx';
 import { verifyMap } from './verifyTiles.tsx';
 import withModifiers from './withModifiers.tsx';

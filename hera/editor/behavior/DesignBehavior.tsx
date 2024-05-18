@@ -1,4 +1,5 @@
-import { Decorator } from '@deities/athena/info/Decorator.tsx';
+import type { Decorator } from '@deities/athena/info/Decorator.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
 import {
   CrossOverTiles,
   DeepSea,
@@ -9,7 +10,6 @@ import {
   River,
   Sea,
   ShipyardConstructionSite,
-  TileInfo,
   TileTypes,
   Trench,
 } from '@deities/athena/info/Tile.tsx';
@@ -20,18 +20,18 @@ import canPlaceTile from '@deities/athena/lib/canPlaceTile.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getDecoratorIndex from '@deities/athena/lib/getDecoratorIndex.tsx';
 import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import { getDecoratorLimit } from '@deities/athena/map/Configuration.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import writeTile from '@deities/athena/mutation/writeTile.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
+import type ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
 import addExplosionAnimation from '../../animations/addExplosionAnimation.tsx';
 import Decorators from '../../Decorators.tsx';
@@ -39,7 +39,7 @@ import addFlashAnimation from '../../lib/addFlashAnimation.tsx';
 import explodeUnits from '../../lib/explodeUnits.tsx';
 import spawn from '../../lib/spawn.tsx';
 import { RadiusType } from '../../Radius.tsx';
-import {
+import type {
   Actions,
   MapBehavior,
   State,
@@ -49,7 +49,7 @@ import {
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
-import { EditorState } from '../Types.tsx';
+import type { EditorState } from '../Types.tsx';
 
 const playPutSound = throttle(() => AudioPlayer.playSound('UI/Put'), 300);
 

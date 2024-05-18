@@ -1,6 +1,6 @@
-import { CreateTracksActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { CreateTracksActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

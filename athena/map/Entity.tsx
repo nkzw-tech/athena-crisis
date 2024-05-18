@@ -1,10 +1,10 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { UnitInfo } from '../info/Unit.tsx';
-import { ID } from '../MapData.tsx';
-import Building from './Building.tsx';
+import type { UnitInfo } from '../info/Unit.tsx';
+import type { ID } from '../MapData.tsx';
+import type Building from './Building.tsx';
 import { MaxHealth } from './Configuration.tsx';
-import { PlayerID, PlayerIDSet } from './Player.tsx';
-import Unit from './Unit.tsx';
+import type { PlayerID, PlayerIDSet } from './Player.tsx';
+import type Unit from './Unit.tsx';
 
 export type PlainEntity = Readonly<{
   f?: 1 | null;

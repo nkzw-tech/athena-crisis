@@ -1,4 +1,4 @@
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 
 type FieldMap = Readonly<{
   characterDescription: string;

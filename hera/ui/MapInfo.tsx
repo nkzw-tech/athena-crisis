@@ -1,26 +1,21 @@
-import {
-  getTileInfo,
-  TileField,
-  TileInfo,
-} from '@deities/athena/info/Tile.tsx';
+import type { TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
+import { getTileInfo } from '@deities/athena/info/Tile.tsx';
 import { getLargeAttributeRangeValue } from '@deities/athena/lib/getAttributeRange.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   DoubleSize,
   MaxHealth,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, {
-  ModifierField,
-  SizeVector,
-} from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { ModifierField } from '@deities/athena/MapData.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
 import cssVar, {
@@ -41,7 +36,7 @@ import CoverRange from '../card/lib/CoverRange.tsx';
 import { LargeRange } from '../card/Range.tsx';
 import Map from '../Map.tsx';
 import Tick from '../Tick.tsx';
-import { State } from '../Types.tsx';
+import type { State } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 

@@ -1,6 +1,6 @@
-import { ActiveUnitTypes } from '../info/Skill.tsx';
-import Unit from '../map/Unit.tsx';
-import Vector from '../map/Vector.tsx';
+import type { ActiveUnitTypes } from '../info/Skill.tsx';
+import type Unit from '../map/Unit.tsx';
+import type Vector from '../map/Vector.tsx';
 
 export default function matchesActiveType(
   types: ActiveUnitTypes | undefined,

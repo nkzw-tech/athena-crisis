@@ -1,7 +1,8 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import { motion } from 'framer-motion';
-import { CSSProperties, memo, MouseEvent, ReactNode, RefObject } from 'react';
+import type { CSSProperties, MouseEvent, ReactNode, RefObject } from 'react';
+import { memo } from 'react';
 import { BoxStyle } from './Box.tsx';
 
 export default memo(function MenuButton({

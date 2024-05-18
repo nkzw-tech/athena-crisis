@@ -1,7 +1,9 @@
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
-import Team, { Teams } from '@deities/athena/map/Team.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { toPlayerID } from '@deities/athena/map/Player.tsx';
+import type { Teams } from '@deities/athena/map/Team.tsx';
+import Team from '@deities/athena/map/Team.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -19,14 +21,8 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { motion } from 'framer-motion';
-import {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import type { RefObject } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PlayerIcon from './PlayerIcon.tsx';
 
 export default function TeamSelector({

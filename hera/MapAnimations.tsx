@@ -1,23 +1,28 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import { UnitAnimationSprite, Weapon } from '@deities/athena/info/Unit.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import type {
+  UnitAnimationSprite,
+  Weapon,
+} from '@deities/athena/info/Unit.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   InstantAnimationConfig,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { BaseColor } from '@deities/ui/getColor.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AttackAnimation from './animations/AttackAnimation.tsx';
 import BuildingCreate from './animations/BuildingCreate.tsx';
-import Explosion, { ExplosionStyle } from './animations/Explosion.tsx';
+import type { ExplosionStyle } from './animations/Explosion.tsx';
+import Explosion from './animations/Explosion.tsx';
 import Fireworks from './animations/Fireworks.tsx';
 import Heal from './animations/Heal.tsx';
 import HealthAnimation from './animations/HealthAnimation.tsx';
@@ -26,7 +31,7 @@ import Sabotage from './animations/Sabotage.tsx';
 import Shake from './animations/Shake.tsx';
 import Spawn from './animations/Spawn.tsx';
 import UpgradeAnimation from './animations/UpgradeAnimation.tsx';
-import {
+import type {
   Actions,
   FactionNames,
   GetLayerFunction,
@@ -36,7 +41,8 @@ import {
 import Banner from './ui/Banner.tsx';
 import CharacterMessage from './ui/CharacterMessage.tsx';
 import FlashFlyout from './ui/FlashFlyout.tsx';
-import { FlyoutColor, FlyoutItem } from './ui/Flyout.tsx';
+import type { FlyoutColor } from './ui/Flyout.tsx';
+import { FlyoutItem } from './ui/Flyout.tsx';
 import Message from './ui/Message.tsx';
 import Notice from './ui/Notice.tsx';
 

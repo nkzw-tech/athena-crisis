@@ -1,23 +1,23 @@
-import { Action } from '@deities/apollo/Action.tsx';
+import type { Action } from '@deities/apollo/Action.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import {
   getUnitInfoOrThrow,
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   MaxMessageLength,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   DynamicPlayerIDs,
   encodeDynamicPlayerID,
-  PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
@@ -33,11 +33,12 @@ import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
-import { memo, RefObject, useRef, useState } from 'react';
+import type { RefObject } from 'react';
+import { memo, useRef, useState } from 'react';
 import Portrait from '../../character/Portrait.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
-import { FactionNames } from '../../Types.tsx';
+import type { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import type { FactionNames } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import UnitTile from '../../Unit.tsx';

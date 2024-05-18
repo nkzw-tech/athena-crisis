@@ -1,4 +1,5 @@
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 
 export default function getTagColor(tag: string) {
   return ((Array.from(tag)

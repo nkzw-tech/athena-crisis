@@ -1,7 +1,7 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import { css, cx } from '@emotion/css';
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import VolumeControl from './VolumeControl.tsx';
 
 export default function LoggedOutVolumeControl({

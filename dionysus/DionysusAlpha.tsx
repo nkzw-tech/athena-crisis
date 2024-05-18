@@ -20,7 +20,8 @@ import {
 import { Behavior, filterBuildings } from '@deities/athena/info/Building.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { Lightning } from '@deities/athena/info/Tile.tsx';
-import { Ability, UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import { Ability } from '@deities/athena/info/Unit.tsx';
 import calculateClusters from '@deities/athena/lib/calculateClusters.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
@@ -30,17 +31,18 @@ import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
 import {
   EntityType,
   getEntityGroup,
   getEntityInfoGroup,
 } from '@deities/athena/map/Entity.tsx';
-import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
 import { getOpponentPriorityLabels } from '@deities/athena/WinConditions.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';

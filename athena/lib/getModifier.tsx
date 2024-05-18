@@ -1,3 +1,4 @@
+import type { TileInfo, TileLayer } from '../info/Tile.tsx';
 import {
   Box,
   Box2,
@@ -12,16 +13,15 @@ import {
   River,
   Sea,
   StormCloud,
-  TileInfo,
-  TileLayer,
   TileTypes,
   Trench,
   Wall,
   Weeds,
   Window,
 } from '../info/Tile.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { ModifierMap } from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { ModifierMap } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { Modifier } from './Modifier.tsx';
 
 type AnyTileInfo = TileInfo | null | undefined;

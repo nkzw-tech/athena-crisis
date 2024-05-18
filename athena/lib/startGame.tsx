@@ -1,4 +1,4 @@
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import assignUnitNames from './assignUnitNames.tsx';
 import calculateFunds from './calculateFunds.tsx';
 import updatePlayer from './updatePlayer.tsx';

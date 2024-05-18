@@ -1,11 +1,11 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { BaseColor } from '@deities/ui/getColor.tsx';
-import { SVGIcon } from '@deities/ui/Icon.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import type { SVGIcon } from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
-import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
+import type { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import Tree from '@deities/ui/icons/Tree.tsx';

@@ -1,6 +1,7 @@
 import { generateUnitName } from '../info/UnitNames.tsx';
-import Unit, { TransportedUnit } from '../map/Unit.tsx';
-import MapData from '../MapData.tsx';
+import type { TransportedUnit } from '../map/Unit.tsx';
+import type Unit from '../map/Unit.tsx';
+import type MapData from '../MapData.tsx';
 import getLeaders from './getLeaders.tsx';
 
 export default function assignUnitNames(map: MapData): MapData {

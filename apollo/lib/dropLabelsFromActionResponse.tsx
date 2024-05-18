@@ -1,6 +1,6 @@
-import { PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import type { PlayerIDSet } from '@deities/athena/map/Player.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 
 export default function dropLabelsFromActionResponse(
   actionResponse: ActionResponse,

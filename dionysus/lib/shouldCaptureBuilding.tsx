@@ -1,8 +1,8 @@
 import { Ability } from '@deities/athena/info/Unit.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 
 export default function shouldCaptureBuilding(
   map: MapData,

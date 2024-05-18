@@ -1,8 +1,8 @@
-import { Scenario } from '@deities/apollo/Effects.tsx';
-import { ClientLevelID } from '@deities/hermes/Types.tsx';
-import { BaseMapEditorProps } from '../editor/MapEditor.tsx';
-import { EditorMode } from '../editor/Types.tsx';
-import { PlayStyleType } from './lib/PlayStyle.tsx';
+import type { Scenario } from '@deities/apollo/Effects.tsx';
+import type { ClientLevelID } from '@deities/hermes/Types.tsx';
+import type { BaseMapEditorProps } from '../editor/MapEditor.tsx';
+import type { EditorMode } from '../editor/Types.tsx';
+import type { PlayStyleType } from './lib/PlayStyle.tsx';
 
 type CampaignEditorMode = 'settings';
 

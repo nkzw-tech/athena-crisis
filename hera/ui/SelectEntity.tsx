@@ -1,8 +1,8 @@
-import Building from '@deities/athena/map/Building.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { useCallback } from 'react';
-import { Actions, State } from '../Types.tsx';
+import type { Actions, State } from '../Types.tsx';
 import EntityPickerFlyout from './EntityPickerFlyout.tsx';
 
 export default function SelectEntity({

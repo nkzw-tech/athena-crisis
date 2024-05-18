@@ -1,14 +1,12 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
-import {
+import type {
   AnchorHTMLAttributes,
-  memo,
   MutableRefObject,
   ReactNode,
   RefCallback,
-  useCallback,
-  useRef,
 } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import clipBorder from './clipBorder.tsx';
 import useActive from './controls/useActive.tsx';

@@ -1,6 +1,6 @@
-import Unit from '../map/Unit.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Unit from '../map/Unit.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function canLoad(
   map: MapData,

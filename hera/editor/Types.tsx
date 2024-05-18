@@ -1,11 +1,11 @@
-import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
-import { Decorator } from '@deities/athena/info/Decorator.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { WinConditionsWithVectors } from '@deities/athena/WinConditions.tsx';
-import { Edges } from '../lib/Edges.tsx';
-import { MapCreator } from '../ui/MapDetails.tsx';
+import type { Effects, Scenario } from '@deities/apollo/Effects.tsx';
+import type { Decorator } from '@deities/athena/info/Decorator.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { WinConditionsWithVectors } from '@deities/athena/WinConditions.tsx';
+import type { Edges } from '../lib/Edges.tsx';
+import type { MapCreator } from '../ui/MapDetails.tsx';
 
 export type EditorMode =
   | 'conditions'

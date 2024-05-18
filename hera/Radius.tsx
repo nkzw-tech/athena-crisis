@@ -1,18 +1,18 @@
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import isPlayable from '@deities/athena/map/isPlayable.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { motion } from 'framer-motion';
 import React, { memo } from 'react';
-import { GetLayerFunction } from './Types.tsx';
+import type { GetLayerFunction } from './Types.tsx';
 
 export enum RadiusType {
   Attack,

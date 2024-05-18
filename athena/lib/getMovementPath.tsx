@@ -1,7 +1,7 @@
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
-import { RadiusItem } from '../Radius.tsx';
-import { VisionT } from '../Vision.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
+import type { RadiusItem } from '../Radius.tsx';
+import type { VisionT } from '../Vision.tsx';
 
 export default function getMovementPath(
   map: MapData,

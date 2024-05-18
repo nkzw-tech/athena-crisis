@@ -1,18 +1,19 @@
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
-import { BaseColor } from '@deities/ui/getColor.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
-import { motion, Variants } from 'framer-motion';
+import type { Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+import type { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
 const multiplier = process.env.NODE_ENV === 'development' ? 3 : 1.5;

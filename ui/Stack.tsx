@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
 import Breakpoints from './Breakpoints.tsx';
 
 export type Gap = 1 | 2 | 4 | 16 | 24 | 32 | true;

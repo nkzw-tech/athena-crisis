@@ -1,13 +1,9 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { Biome } from '../map/Biome.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
-import { ID } from '../MapData.tsx';
-import {
-  PlainTileGroup,
-  SeaTileGroup,
-  TileAnimation,
-  TileInfo,
-} from './Tile.tsx';
+import type { ID } from '../MapData.tsx';
+import type { TileAnimation, TileInfo } from './Tile.tsx';
+import { PlainTileGroup, SeaTileGroup } from './Tile.tsx';
 
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
 

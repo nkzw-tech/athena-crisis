@@ -1,5 +1,5 @@
-import Player from '../map/Player.tsx';
-import Unit from '../map/Unit.tsx';
+import type Player from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
 
 export default function getUnitValue(unit: Unit, player: Player) {
   const cost = unit.info.getCostFor(player);

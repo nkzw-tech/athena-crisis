@@ -1,6 +1,6 @@
-import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
+import type { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
 import { prepareSprites } from '@deities/art/Sprites.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
 import useClientGame from '@deities/hera/hooks/useClientGame.tsx';
 import useClientGameAction from '@deities/hera/hooks/useClientGameAction.tsx';

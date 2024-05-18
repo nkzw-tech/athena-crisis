@@ -1,5 +1,5 @@
+import type { TileAnimation } from '@deities/athena/info/Tile.tsx';
 import {
-  TileAnimation,
   WaterfallAnimation,
   WaterfallModifiers,
 } from '@deities/athena/info/Tile.tsx';

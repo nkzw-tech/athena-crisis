@@ -1,16 +1,17 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type { VectorLike } from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { useCallback, useState } from 'react';
 import BuildingTile from '../Building.tsx';
 import Tick from '../Tick.tsx';
-import { Actions } from '../Types.tsx';
+import type { Actions } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 import Flyout, {
   FlyoutItemWithHighlight,

@@ -1,4 +1,4 @@
-import { Gender } from '@deities/athena/info/Unit.tsx';
+import type { Gender } from '@deities/athena/info/Unit.tsx';
 
 export default function LeaderTitle({ gender }: { gender: Gender }) {
   return gender === 'male' ? (

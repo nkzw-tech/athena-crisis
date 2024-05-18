@@ -3,8 +3,9 @@ import { Modifier } from '../lib/Modifier.tsx';
 import { Biome } from '../map/Biome.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import { isVector } from '../map/Vector.tsx';
-import { ID, TileMap } from '../MapData.tsx';
-import { MovementType, MovementTypes } from './MovementType.tsx';
+import type { ID, TileMap } from '../MapData.tsx';
+import type { MovementType } from './MovementType.tsx';
+import { MovementTypes } from './MovementType.tsx';
 
 export enum RenderType {
   Composite = 0,

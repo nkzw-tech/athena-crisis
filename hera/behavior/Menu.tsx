@@ -8,20 +8,20 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
-import getAvailableUnitActions, {
-  UnitActionTypes,
-} from '@deities/athena/lib/getAvailableUnitActions.tsx';
-import { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
+import type { UnitActionTypes } from '@deities/athena/lib/getAvailableUnitActions.tsx';
+import getAvailableUnitActions from '@deities/athena/lib/getAvailableUnitActions.tsx';
+import type { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import { CreateTracksCost } from '@deities/athena/map/Configuration.tsx';
-import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { fbt } from 'fbt';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
+import type { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, { ActionButton } from '../ui/ActionWheel.tsx';
 import AttackBehavior from './Attack.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';

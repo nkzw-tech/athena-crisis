@@ -1,5 +1,5 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { isIOS, isSafari } from '@deities/ui/Browser.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -8,7 +8,7 @@ import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import getDamageColor from '../behavior/attack/getDamageColor.tsx';
-import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+import type { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 
 export default function HealthAnimation({
   animationConfig,

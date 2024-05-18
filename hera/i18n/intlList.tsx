@@ -1,5 +1,6 @@
 /* eslint-disable @deities/require-fbt-description */
-import { isValidElement, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { isValidElement } from 'react';
 
 export const Conjunctions = {
   AND: 'AND',

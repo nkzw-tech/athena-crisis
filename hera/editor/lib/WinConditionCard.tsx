@@ -1,11 +1,11 @@
 import { Skills } from '@deities/athena/info/Skill.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
 import {
   MAX_AMOUNT,
   MAX_ROUNDS,
   MIN_AMOUNT,
   MIN_ROUNDS,
-  WinCondition,
   winConditionHasAmounts,
   winConditionHasLabel,
   winConditionHasRounds,

@@ -1,7 +1,7 @@
 import { executeEffect } from '@deities/apollo/Action.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
-import { GameState } from '@deities/apollo/Types.tsx';
+import type { GameState } from '@deities/apollo/Types.tsx';
 import { Bomber, FighterJet, Helicopter } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';

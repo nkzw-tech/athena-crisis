@@ -5,14 +5,14 @@ import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
-import BuildingT from '@deities/athena/map/Building.tsx';
+import type BuildingT from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
-import UnitT from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import type UnitT from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import { css, cx } from '@emotion/css';
 import Images from 'athena-crisis:images';
 // eslint-disable-next-line @deities/no-lazy-import
@@ -33,17 +33,15 @@ import {
   WeaponMap,
 } from './i18n/EntityMap.tsx';
 import injectTranslation from './i18n/injectTranslation.tsx';
-import {
-  Animation,
-  Animations,
-  isBuildingAnimation,
-  isUnitAnimation,
-} from './MapAnimations.tsx';
-import { RadiusInfo, RadiusType } from './Radius.tsx';
+import type { Animation, Animations } from './MapAnimations.tsx';
+import { isBuildingAnimation, isUnitAnimation } from './MapAnimations.tsx';
+import type { RadiusInfo } from './Radius.tsx';
+import { RadiusType } from './Radius.tsx';
 import Tick from './Tick.tsx';
 import TileDecorators from './TileDecorators.tsx';
-import Tiles, { TileStyle } from './Tiles.tsx';
-import {
+import type { TileStyle } from './Tiles.tsx';
+import Tiles from './Tiles.tsx';
+import type {
   GetLayerFunction,
   MapBehavior,
   RequestFrameFunction,

@@ -1,4 +1,4 @@
-import { Campaign, PlainCampaign, PlainLevel } from './Types.tsx';
+import type { Campaign, PlainCampaign, PlainLevel } from './Types.tsx';
 import unrollCampaign from './unrollCampaign.tsx';
 
 export default function toPlainCampaign<T>(

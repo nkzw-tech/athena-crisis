@@ -4,11 +4,13 @@ import {
   getFloatingEdgeAnimation,
 } from '@deities/athena/info/Tile.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { ModifierField } from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import { getFrame } from '../lib/tick.tsx';
-import renderTile, { TileSet } from './renderTile.tsx';
+import type { TileSet } from './renderTile.tsx';
+import renderTile from './renderTile.tsx';
 
 export default function renderFloatingTile(
   context: CanvasRenderingContext2D,

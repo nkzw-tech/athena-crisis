@@ -1,4 +1,4 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';

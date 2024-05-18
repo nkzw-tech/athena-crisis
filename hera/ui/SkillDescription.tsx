@@ -1,7 +1,8 @@
-import { Bar, BuildingInfo } from '@deities/athena/info/Building.tsx';
-import { MovementType } from '@deities/athena/info/MovementType.tsx';
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
+import { Bar } from '@deities/athena/info/Building.tsx';
+import type { MovementType } from '@deities/athena/info/MovementType.tsx';
+import type { ActiveUnitTypes } from '@deities/athena/info/Skill.tsx';
 import {
-  ActiveUnitTypes,
   getBlockedUnits,
   getHealUnitTypes,
   getSkillAttackMovementTypeStatusEffect,
@@ -15,13 +16,14 @@ import {
   getUnitRangeForSkill,
   Skill,
 } from '@deities/athena/info/Skill.tsx';
-import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
+import type { TileType } from '@deities/athena/info/Tile.tsx';
+import { Plain, TileTypes } from '@deities/athena/info/Tile.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import {
   Battleship,
   getUnitInfoOrThrow,
   Sniper,
   SpecialUnits,
-  UnitInfo,
 } from '@deities/athena/info/Unit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
@@ -32,13 +34,15 @@ import {
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Vector, { isVector } from '@deities/athena/map/Vector.tsx';
-import { ID } from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { isVector } from '@deities/athena/map/Vector.tsx';
+import type { ID } from '@deities/athena/MapData.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
-import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { css, cx } from '@emotion/css';
 import Coin from '@iconify-icons/pixelarticons/coin.js';

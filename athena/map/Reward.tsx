@@ -1,5 +1,6 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { Skill, Skills } from '../info/Skill.tsx';
+import type { Skill } from '../info/Skill.tsx';
+import { Skills } from '../info/Skill.tsx';
 
 type SkillReward = Readonly<{
   skill: Skill;

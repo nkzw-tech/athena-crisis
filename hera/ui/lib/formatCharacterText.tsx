@@ -1,14 +1,14 @@
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import formatText from '@deities/athena/lib/formatText.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   isDynamicPlayerID,
-  PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
-import { FactionNames } from '../../Types.tsx';
+import type { FactionNames } from '../../Types.tsx';
 
 export default function formatCharacterText(
   text: string,

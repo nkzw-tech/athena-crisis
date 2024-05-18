@@ -1,7 +1,7 @@
-import { PlayerID } from '../map/Player.tsx';
-import Unit from '../map/Unit.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import isFuelConsumingUnit from './isFuelConsumingUnit.tsx';
 
 export default function shouldRemoveUnit(

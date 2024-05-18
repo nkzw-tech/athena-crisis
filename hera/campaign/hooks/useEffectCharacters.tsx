@@ -1,4 +1,4 @@
-import { Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
+import type { Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
 import { useMemo } from 'react';
 import getAllEffectCharacters from '../lib/getAllEffectCharacters.tsx';
 

@@ -1,9 +1,9 @@
 import { OilRig, Shipyard } from '@deities/athena/info/Building.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
@@ -12,9 +12,9 @@ import Label from './Label.tsx';
 import getBuildingSpritePosition from './lib/getBuildingSpritePosition.tsx';
 import getFlashDelay from './lib/getFlashDelay.tsx';
 import sprite from './lib/sprite.tsx';
-import { BuildingAnimation } from './MapAnimations.tsx';
+import type { BuildingAnimation } from './MapAnimations.tsx';
 import Tick from './Tick.tsx';
-import { RequestFrameFunction, TimerFunction } from './Types.tsx';
+import type { RequestFrameFunction, TimerFunction } from './Types.tsx';
 
 const defaultPosition = vec(1, 1);
 

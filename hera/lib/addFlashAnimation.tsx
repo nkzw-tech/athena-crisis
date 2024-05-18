@@ -1,9 +1,9 @@
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import type { ReactNode } from 'react';
-import { Animations } from '../MapAnimations.tsx';
-import { StateToStateLike } from '../Types.tsx';
-import { FlyoutColor } from '../ui/Flyout.tsx';
+import type { Animations } from '../MapAnimations.tsx';
+import type { StateToStateLike } from '../Types.tsx';
+import type { FlyoutColor } from '../ui/Flyout.tsx';
 import AnimationKey from './AnimationKey.tsx';
 
 export default function addFlashAnimation(

@@ -2,15 +2,13 @@ import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import getVectorRadius from '@deities/athena/lib/getVectorRadius.tsx';
 import { getEntityGroup } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector, { isVector } from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import {
-  moveable,
-  MoveConfiguration,
-  RadiusItem,
-} from '@deities/athena/Radius.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { isVector } from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import { moveable, MoveConfiguration } from '@deities/athena/Radius.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import maxBy from '@deities/hephaestus/maxBy.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';

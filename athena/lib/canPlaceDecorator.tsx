@@ -1,7 +1,7 @@
 import { getDecorator } from '../info/Decorator.tsx';
 import { getDecoratorLimit } from '../map/Configuration.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function canPlaceDecorator(
   map: MapData,

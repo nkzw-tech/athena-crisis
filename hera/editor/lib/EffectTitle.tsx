@@ -1,9 +1,13 @@
-import {
+import type {
   GameEndCondition,
   WinConditionID,
 } from '@deities/apollo/Condition.tsx';
-import { Effect, Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
-import { WinConditions } from '@deities/athena/WinConditions.tsx';
+import type {
+  Effect,
+  Effects,
+  EffectTrigger,
+} from '@deities/apollo/Effects.tsx';
+import type { WinConditions } from '@deities/athena/WinConditions.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import { css, cx } from '@emotion/css';
 import { memo } from 'react';

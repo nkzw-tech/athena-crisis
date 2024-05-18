@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 let currentScrollContainer: HTMLElement | null = null;
 

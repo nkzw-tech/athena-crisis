@@ -1,8 +1,8 @@
 import { getSkillAttackStatusEffects } from '../info/Skill.tsx';
-import { TileInfo } from '../info/Tile.tsx';
+import type { TileInfo } from '../info/Tile.tsx';
 import { LeaderStatusEffect } from '../map/Configuration.tsx';
-import Unit from '../map/Unit.tsx';
-import MapData from '../MapData.tsx';
+import type Unit from '../map/Unit.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function getAttackStatusEffect(
   map: MapData,

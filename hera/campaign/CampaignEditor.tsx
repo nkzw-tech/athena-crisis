@@ -1,14 +1,16 @@
-import { Scenario } from '@deities/apollo/Effects.tsx';
-import {
-  AttributeRangeWithZero,
-  validateAttributeRange,
-} from '@deities/athena/lib/getAttributeRange.tsx';
+import type { Scenario } from '@deities/apollo/Effects.tsx';
+import type { AttributeRangeWithZero } from '@deities/athena/lib/getAttributeRange.tsx';
+import { validateAttributeRange } from '@deities/athena/lib/getAttributeRange.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import getCampaignLevelDepths from '@deities/hermes/getCampaignLevelDepths.tsx';
 import toCampaign from '@deities/hermes/toCampaign.tsx';
 import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import toPlainCampaign from '@deities/hermes/toPlainCampaign.tsx';
-import { Campaign, ClientLevelID, PlainLevel } from '@deities/hermes/Types.tsx';
+import type {
+  Campaign,
+  ClientLevelID,
+  PlainLevel,
+} from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import validateCampaign from '@deities/hermes/validateCampaign.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
@@ -28,17 +30,15 @@ import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import ScrollContainer from '@deities/ui/ScrollContainer.tsx';
 import Stack from '@deities/ui/Stack.tsx';
-import {
-  TypeaheadDataSource,
-  TypeaheadDataSourceEntry,
-} from '@deities/ui/Typeahead.tsx';
+import type { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import { TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import { fbt } from 'fbt';
 import { AnimatePresence, motion } from 'framer-motion';
+import type { ComponentType } from 'react';
 import {
-  ComponentType,
   useCallback,
   useEffect,
   useMemo,
@@ -49,16 +49,16 @@ import {
 import useMusic, { usePlayMusic } from '../audio/Music.tsx';
 import useSetTags from '../editor/hooks/useSetTags.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
-import { EditorMode } from '../editor/Types.tsx';
+import type { EditorMode } from '../editor/Types.tsx';
 import useHide from '../hooks/useHide.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import Notification from '../ui/Notification.tsx';
 import Level from './Level.tsx';
 import LevelDialogue from './LevelDialogue.tsx';
-import { PlayStyleType } from './lib/PlayStyle.tsx';
+import type { PlayStyleType } from './lib/PlayStyle.tsx';
 import CampaignEditorPanel from './panels/CampaignEditorControlPanel.tsx';
-import { UserNode } from './panels/CampaignEditorSettingsPanel.tsx';
-import {
+import type { UserNode } from './panels/CampaignEditorSettingsPanel.tsx';
+import type {
   CampaignEditorSaveState,
   CampaignEditorState,
   CampaignObject,

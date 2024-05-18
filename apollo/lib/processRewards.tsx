@@ -1,9 +1,9 @@
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
-import { GameEndActionResponse } from '../GameOver.tsx';
-import { GameState, MutableGameState } from '../Types.tsx';
+import type { GameEndActionResponse } from '../GameOver.tsx';
+import type { GameState, MutableGameState } from '../Types.tsx';
 import getWinningTeam from './getWinningTeam.tsx';
 
 export function processRewards(

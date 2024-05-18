@@ -1,5 +1,5 @@
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
 import {
-  WinCondition,
   winConditionHasLabel,
   WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
@@ -13,7 +13,7 @@ import { css } from '@emotion/css';
 import { Fragment } from 'react';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
-import { FactionNames } from '../Types.tsx';
+import type { FactionNames } from '../Types.tsx';
 import UILabel from '../ui/UILabel.tsx';
 import WinConditionTitle from '../win-conditions/WinConditionTitle.tsx';
 

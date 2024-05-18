@@ -1,4 +1,4 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { ButtonStyle } from './Button.tsx';

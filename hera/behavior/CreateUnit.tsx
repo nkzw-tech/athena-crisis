@@ -1,31 +1,31 @@
 import { CreateUnitAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
 import getBuildableUnits from '@deities/athena/lib/getBuildableUnits.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import getLeaders from '@deities/athena/lib/getLeaders.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
-import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import type { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
 import { fbt } from 'fbt';
-import { MouseEvent, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
-import toTransformOrigin, {
-  ClientCoordinates,
-} from '../lib/toTransformOrigin.tsx';
+import type { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
+import type { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, {
   ActionWheelFunds,
   LargeActionButton,

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import Input, { InputLayer } from './Input.tsx';
+import type { InputLayer } from './Input.tsx';
+import Input from './Input.tsx';
 
 export default function useBlockInput(
   block: InputLayer,

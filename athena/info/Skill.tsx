@@ -1,14 +1,17 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import matchesActiveType from '../lib/matchesActiveType.tsx';
 import { HealAmount } from '../map/Configuration.tsx';
-import { EntityType, isUnitInfo } from '../map/Entity.tsx';
-import Player from '../map/Player.tsx';
-import Vector from '../map/Vector.tsx';
+import type { EntityType } from '../map/Entity.tsx';
+import { isUnitInfo } from '../map/Entity.tsx';
+import type Player from '../map/Player.tsx';
+import type Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
-import { BuildingInfo } from './Building.tsx';
+import type { BuildingInfo } from './Building.tsx';
 import { BarID } from './BuildingIDs.tsx';
-import { MovementType, MovementTypes } from './MovementType.tsx';
-import { TileInfo, TileType, TileTypes } from './Tile.tsx';
+import type { MovementType } from './MovementType.tsx';
+import { MovementTypes } from './MovementType.tsx';
+import type { TileInfo, TileType } from './Tile.tsx';
+import { TileTypes } from './Tile.tsx';
 import type { UnitInfo } from './Unit.tsx';
 import UnitID from './UnitID.tsx';
 

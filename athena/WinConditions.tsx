@@ -1,20 +1,16 @@
 import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import type { PlayerID, PlayerIDs, PlayerIDSet } from './map/Player.tsx';
+import { toPlayerIDs } from './map/Player.tsx';
+import type { EncodedReward, Reward } from './map/Reward.tsx';
 import {
-  PlayerID,
-  PlayerIDs,
-  PlayerIDSet,
-  toPlayerIDs,
-} from './map/Player.tsx';
-import {
-  EncodedReward,
   maybeDecodeReward,
   maybeEncodeReward,
-  Reward,
   validateReward,
 } from './map/Reward.tsx';
-import Vector, { decodeVectorArray, encodeVectorArray } from './map/Vector.tsx';
-import MapData from './MapData.tsx';
+import type Vector from './map/Vector.tsx';
+import { decodeVectorArray, encodeVectorArray } from './map/Vector.tsx';
+import type MapData from './MapData.tsx';
 
 export enum WinCriteria {
   Default = 0,

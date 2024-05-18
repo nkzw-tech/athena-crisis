@@ -1,18 +1,16 @@
-import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import getAllUnitsToRefill from '@deities/athena/lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
 import getUnitsToHealOnBuildings from '@deities/athena/lib/getUnitsToHealOnBuildings.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector, {
-  sortByVectorKey,
-  sortVectors,
-} from '@deities/athena/map/Vector.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
 import NullBehavior from '../behavior/NullBehavior.tsx';
-import { Actions, State, StateToStateLike } from '../Types.tsx';
+import type { Actions, State, StateToStateLike } from '../Types.tsx';
 import animateHeal from './animateHeal.tsx';
 import animateSupply from './animateSupply.tsx';
 import AnimationKey from './AnimationKey.tsx';

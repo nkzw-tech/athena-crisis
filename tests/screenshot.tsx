@@ -1,13 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import {
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type {
   EncodedGameActionResponse,
   GameState,
 } from '@deities/apollo/Types.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import playwright, { Browser, Page } from 'playwright';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { Browser, Page } from 'playwright';
+import playwright from 'playwright';
 
 const APP_PORT = 3001;
 const BASE_URL = `http://localhost:${APP_PORT}/display.html`;

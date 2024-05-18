@@ -1,13 +1,13 @@
 import getAllUnitsToRefill from '@deities/athena/lib/getAllUnitsToRefill.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import {
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type {
   ActionResponse,
   ActionResponses,
   AttackBuildingActionResponse,
@@ -27,7 +27,7 @@ import {
   ToggleLightningActionResponse,
 } from '../ActionResponse.tsx';
 import getAttackDirection from '../attack-direction/getAttackDirection.tsx';
-import {
+import type {
   HiddenDestroyedBuildingActionResponse,
   HiddenMoveActionResponse,
   HiddenSourceAttackBuildingActionResponse,
@@ -35,7 +35,7 @@ import {
   HiddenTargetAttackBuildingActionResponse,
   HiddenTargetAttackUnitActionResponse,
 } from '../HiddenAction.tsx';
-import { GameState } from '../Types.tsx';
+import type { GameState } from '../Types.tsx';
 
 const completeUnit = ({ from }: { from: Vector }) =>
   ({

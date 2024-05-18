@@ -3,7 +3,7 @@ import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import addEndTurnAnimations from '../../lib/addEndTurnAnimations.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

@@ -2,8 +2,9 @@ import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import { css } from '@emotion/css';
 import { AnimatePresence } from 'framer-motion';
+import type { ComponentType } from 'react';
 // eslint-disable-next-line @deities/no-lazy-import
-import { lazy as _lazy, ComponentType } from 'react';
+import { lazy as _lazy } from 'react';
 import Box from '../Box.tsx';
 import PageTransition from '../PageTransition.tsx';
 import Portal from '../Portal.tsx';

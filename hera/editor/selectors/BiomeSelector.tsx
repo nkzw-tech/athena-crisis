@@ -1,13 +1,13 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import { fbt } from 'fbt';
 import React, { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
-import { State } from '../../Types.tsx';
+import type { State } from '../../Types.tsx';
 import useGridNavigation from '../lib/useGridNavigation.tsx';
 
 const biomes = new Set(Biomes);

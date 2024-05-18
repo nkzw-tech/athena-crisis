@@ -1,9 +1,9 @@
-import Entity from '@deities/athena/map/Entity.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import { useCallback } from 'react';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
+import type { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import attackAction from './attack/attackAction.tsx';
 import AttackSelector from './attack/AttackSelector.tsx';
 import getAttackableEntities from './attack/getAttackableEntities.tsx';

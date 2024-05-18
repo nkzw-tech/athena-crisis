@@ -1,10 +1,10 @@
 import { getTileInfo, StormCloud } from '@deities/athena/info/Tile.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import { RadiusInfo } from './Radius.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type { RadiusInfo } from './Radius.tsx';
 import TileDecorator from './TileDecorator.tsx';
-import { GetLayerFunction } from './Types.tsx';
+import type { GetLayerFunction } from './Types.tsx';
 
 export default function TileDecorators({
   getLayer,

@@ -6,7 +6,7 @@ import {
   MoveAction,
   StartAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Effect, Effects } from '@deities/apollo/Effects.tsx';
+import type { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { RelativeVectors } from '@deities/apollo/lib/transformEffectValue.tsx';
 import { Barracks } from '@deities/athena/info/Building.tsx';
 import {

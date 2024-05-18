@@ -1,6 +1,6 @@
-import { Skill } from '@deities/athena/info/Skill.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 
 export const MoveAction = (
   from: Vector,

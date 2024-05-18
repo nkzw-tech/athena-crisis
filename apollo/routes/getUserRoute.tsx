@@ -1,4 +1,4 @@
-import { Route, UserRoute } from '../Routes.tsx';
+import type { Route, UserRoute } from '../Routes.tsx';
 
 export default function getUserRoute(
   username: string,

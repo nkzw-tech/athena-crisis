@@ -1,5 +1,5 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 
 export default function upgradeUnits(

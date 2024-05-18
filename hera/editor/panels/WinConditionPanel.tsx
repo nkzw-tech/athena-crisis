@@ -1,8 +1,8 @@
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
 import {
   getInitialWinCondition,
   validateWinCondition,
-  WinCondition,
   winConditionHasVectors,
   WinCriteria,
   WinCriteriaList,
@@ -13,11 +13,11 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import { useCallback, useState } from 'react';
 import getWinCriteriaName from '../../lib/getWinCriteriaName.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import hasGameEndCondition from '../lib/hasGameEndCondition.tsx';
 import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
 import WinConditionCard from '../lib/WinConditionCard.tsx';
-import { EditorState, SetEditorStateFunction } from '../Types.tsx';
+import type { EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 export default function WinConditionPanel({
   actions,

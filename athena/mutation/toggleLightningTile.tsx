@@ -1,7 +1,7 @@
 import { Lightning } from '../info/Tile.tsx';
 import getModifier from '../lib/getModifier.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import writeTile from './writeTile.tsx';
 
 export default function toggleLightningTile(map: MapData, vector: Vector) {

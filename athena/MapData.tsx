@@ -1,34 +1,27 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Decorator, DecoratorInfo, getDecorator } from './info/Decorator.tsx';
-import { ActiveUnitTypes, getActiveUnitTypes, Skill } from './info/Skill.tsx';
-import {
-  getTile,
-  getTileInfo,
-  TileField,
-  TileInfo,
-  TileLayer,
-} from './info/Tile.tsx';
+import type { Decorator, DecoratorInfo } from './info/Decorator.tsx';
+import { getDecorator } from './info/Decorator.tsx';
+import type { ActiveUnitTypes, Skill } from './info/Skill.tsx';
+import { getActiveUnitTypes } from './info/Skill.tsx';
+import type { TileField, TileInfo, TileLayer } from './info/Tile.tsx';
+import { getTile, getTileInfo } from './info/Tile.tsx';
 import getAllUnitsToRefill from './lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from './lib/getUnitsByPositions.tsx';
 import indexToSpriteVector from './lib/indexToSpriteVector.tsx';
 import indexToVector from './lib/indexToVector.tsx';
 import isFuelConsumingUnit from './lib/isFuelConsumingUnit.tsx';
-import { Modifier } from './lib/Modifier.tsx';
+import type { Modifier } from './lib/Modifier.tsx';
 import refillUnits from './lib/refillUnits.tsx';
 import shouldRemoveUnit from './lib/shouldRemoveUnit.tsx';
 import { Biome } from './map/Biome.tsx';
-import Building from './map/Building.tsx';
+import type Building from './map/Building.tsx';
 import { DecoratorsPerSide } from './map/Configuration.tsx';
-import Entity from './map/Entity.tsx';
+import type Entity from './map/Entity.tsx';
 import type { PlainMap, PlainMapConfig } from './map/PlainMap.tsx';
-import Player, {
-  HumanPlayer,
-  PlayerID,
-  PlayerIDs,
-  toPlayerID,
-  toPlayerIDs,
-} from './map/Player.tsx';
+import type { PlayerID, PlayerIDs } from './map/Player.tsx';
+import type Player from './map/Player.tsx';
+import { HumanPlayer, toPlayerID, toPlayerIDs } from './map/Player.tsx';
 import {
   decodeBuildings,
   decodeDecorators,
@@ -38,14 +31,16 @@ import {
   encodeEntities,
   encodeTeams,
 } from './map/Serialization.tsx';
-import Team, { Teams } from './map/Team.tsx';
-import Unit from './map/Unit.tsx';
-import Vector from './map/Vector.tsx';
-import Vision, { Fog, VisionT } from './Vision.tsx';
+import type { Teams } from './map/Team.tsx';
+import Team from './map/Team.tsx';
+import type Unit from './map/Unit.tsx';
+import type Vector from './map/Vector.tsx';
+import type { VisionT } from './Vision.tsx';
+import Vision, { Fog } from './Vision.tsx';
+import type { WinConditions } from './WinConditions.tsx';
 import {
   decodeWinConditions,
   encodeWinConditions,
-  WinConditions,
   WinCriteria,
 } from './WinConditions.tsx';
 

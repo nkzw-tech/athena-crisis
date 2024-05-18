@@ -1,13 +1,14 @@
 import getAvailableUnitActions from '@deities/athena/lib/getAvailableUnitActions.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { useCallback } from 'react';
 import AbstractSelectBehavior from '../../behavior/AbstractSelectBehavior.tsx';
-import { MenuItemProps } from '../../behavior/Menu.tsx';
+import type { MenuItemProps } from '../../behavior/Menu.tsx';
 import Cursor from '../../Cursor.tsx';
-import { State, StateLike, StateWithActions } from '../../Types.tsx';
+import type { State, StateLike, StateWithActions } from '../../Types.tsx';
 import ActionWheel, { ActionButton } from '../../ui/ActionWheel.tsx';
 import SelectEntity from '../../ui/SelectEntity.tsx';
 

@@ -1,8 +1,8 @@
 import updatePlayers from './lib/updatePlayers.tsx';
-import { PlayerID } from './map/Player.tsx';
+import type { PlayerID } from './map/Player.tsx';
 import vec from './map/vec.tsx';
-import Vector from './map/Vector.tsx';
-import MapData from './MapData.tsx';
+import type Vector from './map/Vector.tsx';
+import type MapData from './MapData.tsx';
 import { visible } from './Radius.tsx';
 
 export type VisionT = {

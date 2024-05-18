@@ -1,4 +1,5 @@
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
@@ -15,13 +16,15 @@ import Dialog, {
   DialogTab,
   DialogTabBar,
 } from '@deities/ui/Dialog.tsx';
-import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
-import Icon, { SVGIcon } from '@deities/ui/Icon.tsx';
+import type { SVGIcon } from '@deities/ui/Icon.tsx';
+import Icon from '@deities/ui/Icon.tsx';
+import type { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import SkillBorder, {
   SkillBorderIcons,
-  SkillIconBorderStyle,
 } from '@deities/ui/icons/SkillBorder.tsx';
 import Skills from '@deities/ui/icons/Skills.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -35,7 +38,8 @@ import { css, cx } from '@emotion/css';
 import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import { Sprites } from 'athena-crisis:images';
-import { ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import SkillDescription from './SkillDescription.tsx';
 

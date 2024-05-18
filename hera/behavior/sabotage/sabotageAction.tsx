@@ -1,9 +1,9 @@
-import { SabotageActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { SabotageActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import getUnitDirection from '../../lib/getUnitDirection.tsx';
-import { State, StateLike, StateToStateLike } from '../../Types.tsx';
+import type { State, StateLike, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

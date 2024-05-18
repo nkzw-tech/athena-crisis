@@ -1,9 +1,9 @@
-import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
+import type { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { MovementTypes } from '@deities/athena/info/MovementType.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
 import {
   getAllTiles,
   Plain,
-  TileInfo,
   tilesToTileMap,
 } from '@deities/athena/info/Tile.tsx';
 import { mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
@@ -11,16 +11,18 @@ import getAttributeRange, {
   getAttributeRangeValue,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifiers.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   DecoratorsPerSide,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { numberToPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { numberToPlayerID } from '@deities/athena/map/Player.tsx';
 import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { ModifierField } from '@deities/athena/MapData.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';

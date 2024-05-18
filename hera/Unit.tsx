@@ -1,7 +1,8 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { MovementType } from '@deities/athena/info/MovementType.tsx';
-import { isSea, TileInfo } from '@deities/athena/info/Tile.tsx';
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type { MovementType } from '@deities/athena/info/MovementType.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import { isSea } from '@deities/athena/info/Tile.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import hasLowAmmoSupply from '@deities/athena/lib/hasLowAmmoSupply.tsx';
 import isFuelConsumingUnit from '@deities/athena/lib/isFuelConsumingUnit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
@@ -9,23 +10,23 @@ import {
   AnimationConfig,
   MaxHealth,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { ShadowImages, Sprites } from 'athena-crisis:images';
 import { useEffect, useRef } from 'react';
-import { AnimationDirection } from './animations/Animation.tsx';
+import type { AnimationDirection } from './animations/Animation.tsx';
 import Label from './Label.tsx';
 import getFlashDelay from './lib/getFlashDelay.tsx';
 import getUnitDirection from './lib/getUnitDirection.tsx';
 import sprite from './lib/sprite.tsx';
-import {
+import type {
   AttackAnimation,
   MoveAnimation,
   UnfoldAnimation,
@@ -34,7 +35,7 @@ import {
   UnitHealAnimation,
 } from './MapAnimations.tsx';
 import Tick from './Tick.tsx';
-import {
+import type {
   GetLayerFunction,
   RequestFrameFunction,
   TimerFunction,

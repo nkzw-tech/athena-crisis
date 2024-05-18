@@ -1,5 +1,5 @@
-import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
-import { SyntheticEvent, TouchEvent } from 'react';
+import type { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
+import type { SyntheticEvent, TouchEvent } from 'react';
 
 export type ClientCoordinates = {
   clientX: number | string;

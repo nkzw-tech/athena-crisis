@@ -1,10 +1,10 @@
 import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
-import { Teams } from '@deities/athena/map/Team.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { Teams } from '@deities/athena/map/Team.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
-import { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
+import type { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import getUnitDirection from './getUnitDirection.tsx';
 

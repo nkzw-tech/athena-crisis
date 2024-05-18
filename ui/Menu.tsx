@@ -8,8 +8,8 @@ import Map from '@iconify-icons/pixelarticons/map.js';
 import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
 import User from '@iconify-icons/pixelarticons/user.js';
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import {
-  ReactNode,
   useCallback,
   useEffect,
   useLayoutEffect,

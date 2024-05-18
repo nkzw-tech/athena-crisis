@@ -3,8 +3,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
-import { NodePath } from '@babel/traverse';
-import {
+import type { NodePath } from '@babel/traverse';
+import type {
   TSType,
   TSTypeAliasDeclaration,
   TSTypeElement,

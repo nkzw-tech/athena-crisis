@@ -1,4 +1,4 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 
 const NAMES: Record<PlayerID, string> = {
   0: 'Neutral',

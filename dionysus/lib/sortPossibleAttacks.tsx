@@ -1,4 +1,4 @@
-import { PossibleAttack } from './getPossibleAttacks.tsx';
+import type { PossibleAttack } from './getPossibleAttacks.tsx';
 
 export default function sortPossibleAttacks(
   itemA: PossibleAttack,

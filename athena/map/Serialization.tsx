@@ -1,25 +1,24 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import { Decorator } from '../info/Decorator.tsx';
+import type { Decorator } from '../info/Decorator.tsx';
 import getDecoratorIndex from '../lib/getDecoratorIndex.tsx';
-import MapData, { DecoratorMap, SizeVector } from '../MapData.tsx';
-import Building, { PlainBuilding } from './Building.tsx';
+import type { DecoratorMap, SizeVector } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
+import type { PlainBuilding } from './Building.tsx';
+import Building from './Building.tsx';
 import { DecoratorsPerSide } from './Configuration.tsx';
-import Entity from './Entity.tsx';
-import { PlainEntitiesList } from './PlainMap.tsx';
-import Player, {
-  Bot,
-  HumanPlayer,
-  PlaceholderPlayer,
-  PlainPlayer,
-  PlayerID,
-  toPlayerID,
-} from './Player.tsx';
+import type Entity from './Entity.tsx';
+import type { PlainEntitiesList } from './PlainMap.tsx';
+import type { PlainPlayer, PlayerID } from './Player.tsx';
+import type Player from './Player.tsx';
+import { Bot, HumanPlayer, PlaceholderPlayer, toPlayerID } from './Player.tsx';
 import SpriteVector from './SpriteVector.tsx';
 import { decodePlayerStatistics } from './Statistics.tsx';
-import Team, { PlainTeam, Teams } from './Team.tsx';
-import Unit, { PlainUnit } from './Unit.tsx';
+import type { PlainTeam, Teams } from './Team.tsx';
+import Team from './Team.tsx';
+import type { PlainUnit } from './Unit.tsx';
+import Unit from './Unit.tsx';
 import vec from './vec.tsx';
-import Vector from './Vector.tsx';
+import type Vector from './Vector.tsx';
 
 export function decodeDecorators(
   size: SizeVector,

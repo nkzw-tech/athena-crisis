@@ -1,4 +1,4 @@
-import { Direction } from './useGridNavigation.tsx';
+import type { Direction } from './useGridNavigation.tsx';
 
 export default function navigate(
   direction: Direction,

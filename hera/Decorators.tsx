@@ -1,9 +1,9 @@
 import { spriteImage } from '@deities/art/Sprites.tsx';
-import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import { DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import { css, cx } from '@emotion/css';

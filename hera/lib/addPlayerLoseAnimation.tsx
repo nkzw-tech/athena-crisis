@@ -1,9 +1,9 @@
-import { CaptureGameOverActionResponse } from '@deities/apollo/GameOver.tsx';
-import Player from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type { CaptureGameOverActionResponse } from '@deities/apollo/GameOver.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import { sortVectors } from '@deities/athena/map/Vector.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
-import { Actions, State, StateToStateLike } from '../Types.tsx';
+import type { Actions, State, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import explodeUnits from './explodeUnits.tsx';
 import getPlayerDefeatedMessage from './getPlayerDefeatedMessage.tsx';

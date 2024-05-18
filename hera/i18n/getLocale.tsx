@@ -1,7 +1,7 @@
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import Storage from '@deities/ui/Storage.tsx';
-import { TranslationDict } from 'fbt';
+import type { TranslationDict } from 'fbt';
 
 type LocaleLoaderFn = (
   locale: string,

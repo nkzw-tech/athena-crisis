@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest';
 import { Barracks, Factory, House } from '../../info/Building.tsx';
 import { ConstructionSite } from '../../info/Tile.tsx';
-import { Infantry, Jeep, SmallTank, UnitInfo } from '../../info/Unit.tsx';
+import type { UnitInfo } from '../../info/Unit.tsx';
+import { Infantry, Jeep, SmallTank } from '../../info/Unit.tsx';
 import vec from '../../map/vec.tsx';
 import MapData from '../../MapData.tsx';
 import determineUnitsToCreate from '../determineUnitsToCreate.tsx';

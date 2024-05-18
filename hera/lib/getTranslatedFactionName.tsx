@@ -1,6 +1,6 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import { fbt } from 'fbt';
-import { FactionNames } from '../Types.tsx';
+import type { FactionNames } from '../Types.tsx';
 import getTranslatedColorName from './getTranslatedColorName.tsx';
 
 const toFactionName = (player: PlayerID) => {

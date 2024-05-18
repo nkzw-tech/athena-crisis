@@ -1,6 +1,7 @@
-import { WinConditionID } from '@deities/apollo/Condition.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
-import { EditorState } from '../Types.tsx';
+import type { WinConditionID } from '@deities/apollo/Condition.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import type { EditorState } from '../Types.tsx';
 import hasGameEndCondition from './hasGameEndCondition.tsx';
 
 export default function selectWinConditionEffect(

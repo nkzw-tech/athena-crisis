@@ -5,7 +5,7 @@ import MenuButton from '@deities/ui/MenuButton.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
 import { useCallback } from 'react';
-import { SetZoomFn } from '../hooks/useZoom.tsx';
+import type { SetZoomFn } from '../hooks/useZoom.tsx';
 
 export default function ZoomButton({
   className,

@@ -1,4 +1,4 @@
-import { NativeTimeout, ThrottleFn } from './throttle.tsx';
+import type { NativeTimeout, ThrottleFn } from './throttle.tsx';
 
 export default function dynamicThrottle<T extends ThrottleFn>(
   fn: T,

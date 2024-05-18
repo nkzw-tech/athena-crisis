@@ -1,4 +1,4 @@
-import { SizeVector } from '../MapData.tsx';
+import type { SizeVector } from '../MapData.tsx';
 
 export const AnimationSpeed = 180;
 

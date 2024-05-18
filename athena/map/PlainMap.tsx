@@ -1,10 +1,10 @@
-import { Decorator } from '../info/Decorator.tsx';
-import { ModifierMap, TileMap } from '../MapData.tsx';
-import { PlainWinConditions } from '../WinConditions.tsx';
-import { Biome } from './Biome.tsx';
-import { PlainBuilding } from './Building.tsx';
-import { PlainTeams } from './Team.tsx';
-import { PlainUnit } from './Unit.tsx';
+import type { Decorator } from '../info/Decorator.tsx';
+import type { ModifierMap, TileMap } from '../MapData.tsx';
+import type { PlainWinConditions } from '../WinConditions.tsx';
+import type { Biome } from './Biome.tsx';
+import type { PlainBuilding } from './Building.tsx';
+import type { PlainTeams } from './Team.tsx';
+import type { PlainUnit } from './Unit.tsx';
 
 export type PlainEntitiesList<T> = ReadonlyArray<
   readonly [x: number, y: number, entity: T]

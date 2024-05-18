@@ -1,4 +1,4 @@
-import { Campaign, Level } from './Types.tsx';
+import type { Campaign, Level } from './Types.tsx';
 
 function unrollLevel<T>(
   level: Level<T>,

@@ -1,10 +1,10 @@
 import getAverageVector from '@deities/athena/lib/getAverageVector.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
 import { resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 
 export default function getActionResponseVectors(
   map: MapData,

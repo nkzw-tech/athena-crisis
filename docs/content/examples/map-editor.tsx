@@ -2,7 +2,7 @@ import { encodeEffects } from '@deities/apollo/Effects.tsx';
 import { Sniper } from '@deities/athena/info/Unit.tsx';
 import toSlug from '@deities/hephaestus/toSlug.tsx';
 import MapEditor from '@deities/hera/editor/MapEditor.tsx';
-import {
+import type {
   MapCreateVariables,
   MapObject,
   MapUpdateVariables,

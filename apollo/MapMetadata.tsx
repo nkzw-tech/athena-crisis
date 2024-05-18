@@ -1,4 +1,4 @@
-import { Effects } from './Effects.tsx';
+import type { Effects } from './Effects.tsx';
 
 export type MapMetadata = Readonly<{
   effects?: Effects;

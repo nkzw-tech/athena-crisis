@@ -9,8 +9,8 @@ import {
   isHumanPlayer,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { EndTurnActionResponse } from '../ActionResponse.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { EndTurnActionResponse } from '../ActionResponse.tsx';
 import getColorName from '../lib/getColorName.tsx';
 import nameGenerator from '../lib/nameGenerator.tsx';
 

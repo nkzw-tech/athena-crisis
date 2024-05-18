@@ -1,5 +1,6 @@
 import { Behavior, MaxSkills } from '@deities/athena/info/Building.tsx';
-import { getSkillConfig, Skill, Skills } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig, Skills } from '@deities/athena/info/Skill.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { generateUnitName } from '@deities/athena/info/UnitNames.tsx';
 import hasLeader from '@deities/athena/lib/hasLeader.tsx';
@@ -10,9 +11,11 @@ import {
   MaxHealth,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -31,7 +34,7 @@ import { fbt } from 'fbt';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import UnitTile from '../../Unit.tsx';
@@ -39,7 +42,7 @@ import AIBehaviorLink from '../lib/AIBehaviorLink.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
 import LabelSelector from '../selectors/LabelSelector.tsx';
-import { EntityUndoKey } from '../Types.tsx';
+import type { EntityUndoKey } from '../Types.tsx';
 
 const SkillsWithoutCosts = new Set(
   [...Skills].filter((skill) => getSkillConfig(skill).cost != null),

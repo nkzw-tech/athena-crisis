@@ -1,6 +1,6 @@
 import { Lightning, StormCloud } from '../info/Tile.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import canPlaceTile from './canPlaceTile.tsx';
 
 export default function canPlaceLightning(map: MapData, vector: Vector) {

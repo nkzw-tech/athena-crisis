@@ -3,7 +3,7 @@ import {
   decodeUnits,
 } from '@deities/athena/map/Serialization.tsx';
 import { decodeActionResponse } from '../EncodedActions.tsx';
-import {
+import type {
   EncodedGameActionResponseWithError,
   GameActionResponse,
 } from '../Types.tsx';

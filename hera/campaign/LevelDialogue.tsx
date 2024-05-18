@@ -1,5 +1,5 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import { ClientLevelID, Level as LevelT } from '@deities/hermes/Types.tsx';
+import type { ClientLevelID, Level as LevelT } from '@deities/hermes/Types.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -15,7 +15,7 @@ import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
 import getMapName from '../i18n/getMapName.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
-import { CampaignEditorSetMapFunction, MapNode } from './Types.tsx';
+import type { CampaignEditorSetMapFunction, MapNode } from './Types.tsx';
 
 export default memo(function LevelDialogue({
   depth = 0,

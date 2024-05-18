@@ -1,4 +1,5 @@
-import { memo, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { memo } from 'react';
 import { applyVar } from './cssVar.tsx';
 
 export default memo(function ErrorText({ children }: { children: ReactNode }) {

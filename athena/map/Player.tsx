@@ -1,11 +1,10 @@
-import { Skill } from '../info/Skill.tsx';
-import MapData from '../MapData.tsx';
+import type { Skill } from '../info/Skill.tsx';
+import type MapData from '../MapData.tsx';
 import { Charge, MaxCharges } from './Configuration.tsx';
+import type { PlainPlayerStatistics, PlayerStatistics } from './Statistics.tsx';
 import {
   encodePlayerStatistics,
   InitialPlayerStatistics,
-  PlainPlayerStatistics,
-  PlayerStatistics,
 } from './Statistics.tsx';
 
 export type PlainPlayerID = number;

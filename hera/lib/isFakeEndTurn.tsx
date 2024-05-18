@@ -1,4 +1,4 @@
-import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 
 export default function isFakeEndTurn({
   current,

@@ -1,5 +1,6 @@
-import Player, { PlayerID } from '../map/Player.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function calculateFunds(
   map: MapData,

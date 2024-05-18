@@ -1,5 +1,6 @@
 import dynamicThrottle from './dynamicThrottle.tsx';
-import Input, { NavigationDirection } from './Input.tsx';
+import type { NavigationDirection } from './Input.tsx';
+import Input from './Input.tsx';
 import isControlElement from './isControlElement.tsx';
 import throttle from './throttle.tsx';
 

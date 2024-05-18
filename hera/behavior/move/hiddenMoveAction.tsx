@@ -1,10 +1,13 @@
-import {
-  applyHiddenActionResponse,
-  HiddenMoveActionResponse,
-} from '@deities/apollo/HiddenAction.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { HiddenMoveActionResponse } from '@deities/apollo/HiddenAction.tsx';
+import { applyHiddenActionResponse } from '@deities/apollo/HiddenAction.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
-import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
+import type {
+  Actions,
+  State,
+  StateLike,
+  StateToStateLike,
+} from '../../Types.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default function hiddenMoveAction(

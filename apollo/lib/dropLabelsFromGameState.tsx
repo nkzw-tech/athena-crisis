@@ -1,5 +1,5 @@
-import { PlayerIDSet } from '@deities/athena/map/Player.tsx';
-import { GameState } from '../Types.tsx';
+import type { PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import type { GameState } from '../Types.tsx';
 import dropLabelsFromActionResponse from './dropLabelsFromActionResponse.tsx';
 
 export default function dropLabelsFromGameState(

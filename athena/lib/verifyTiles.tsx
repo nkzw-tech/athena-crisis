@@ -1,8 +1,9 @@
-import { getTileInfo, Plain, TileLayer } from '../info/Tile.tsx';
+import type { TileLayer } from '../info/Tile.tsx';
+import { getTileInfo, Plain } from '../info/Tile.tsx';
 import { DecoratorsPerSide } from '../map/Configuration.tsx';
 import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import writeTile from '../mutation/writeTile.tsx';
 import canBuild from './canBuild.tsx';
 import canPlaceDecorator from './canPlaceDecorator.tsx';

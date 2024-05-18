@@ -1,6 +1,6 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State } from '../Types.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Actions, State } from '../Types.tsx';
 
 type Options = Readonly<{
   direction: AttackDirection;

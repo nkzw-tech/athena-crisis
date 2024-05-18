@@ -1,5 +1,5 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { TimerFunction } from '../Types.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { TimerFunction } from '../Types.tsx';
 
 export default async function sleep(
   scheduleTimer: TimerFunction,

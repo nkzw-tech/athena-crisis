@@ -1,7 +1,7 @@
-import Building from '@deities/athena/map/Building.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { State } from '../../Types.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { State } from '../../Types.tsx';
 
 type AttackableEntities = {
   building: Building | null;

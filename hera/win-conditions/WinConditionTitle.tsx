@@ -1,4 +1,5 @@
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import type { WinCondition } from '@deities/athena/WinConditions.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import { css, cx } from '@emotion/css';
 import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';

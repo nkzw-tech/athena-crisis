@@ -1,6 +1,6 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { useEffect } from 'react';
-import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+import type { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 
 export default function Shake({
   animationConfig,

@@ -2,20 +2,19 @@ import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import {
+import type {
   GameActionResponse,
   GameActionResponses,
 } from '@deities/apollo/Types.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
-import {
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
-import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import arrayShuffle from 'array-shuffle';
@@ -58,7 +57,7 @@ import sleep from '../lib/sleep.tsx';
 import spawn from '../lib/spawn.tsx';
 import startGameAnimation from '../lib/startGameAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
-import {
+import type {
   Actions,
   AnimationConfigs,
   State,

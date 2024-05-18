@@ -1,12 +1,14 @@
-import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
-import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
-import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
-import { ActionResponse } from './ActionResponse.tsx';
-import { Effects } from './Effects.tsx';
-import { EncodedActionResponse } from './EncodedActions.tsx';
+import type { PlainBuilding } from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import type { PlainUnit } from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
+import type { ActionResponse } from './ActionResponse.tsx';
+import type { Effects } from './Effects.tsx';
+import type { EncodedActionResponse } from './EncodedActions.tsx';
 
 export type GameStateEntry = readonly [ActionResponse, MapData];
 export type GameState = ReadonlyArray<GameStateEntry>;

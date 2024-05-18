@@ -1,5 +1,5 @@
-import MapData from '../MapData.tsx';
-import { UnitsWithPosition } from './getUnitsByPositions.tsx';
+import type MapData from '../MapData.tsx';
+import type { UnitsWithPosition } from './getUnitsByPositions.tsx';
 
 export default function refillUnits(
   map: MapData,

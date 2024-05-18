@@ -1,20 +1,22 @@
-import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type {
+  Action,
+  MutateActionResponseFn,
+} from '@deities/apollo/Action.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
-import { Effects } from '@deities/apollo/Effects.tsx';
+import type { Effects } from '@deities/apollo/Effects.tsx';
 import { computeVisibleEndTurnActionResponse } from '@deities/apollo/lib/computeVisibleActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import dropLabelsFromActionResponse from '@deities/apollo/lib/dropLabelsFromActionResponse.tsx';
 import dropLabelsFromGameState from '@deities/apollo/lib/dropLabelsFromGameState.tsx';
-import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/WinConditions.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
-import toClientGame, {
-  ClientGame,
-} from '@deities/hermes/game/toClientGame.tsx';
+import type { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import toClientGame from '@deities/hermes/game/toClientGame.tsx';
 import { useCallback } from 'react';
 
 const ActionError = (action: Action) =>

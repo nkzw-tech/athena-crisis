@@ -1,5 +1,5 @@
-import { PlayerIDs } from '../map/Player.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerIDs } from '../map/Player.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function getActivePlayers(map: MapData): PlayerIDs {
   return [

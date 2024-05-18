@@ -1,11 +1,12 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
-import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
+import type { BaseColor } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
-import { TimerFunction } from '../Types.tsx';
+import type { TimerFunction } from '../Types.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
 export default function Notice(props: {

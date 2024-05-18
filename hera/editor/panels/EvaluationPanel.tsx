@@ -1,4 +1,4 @@
-import { GameEndActionResponse } from '@deities/apollo/GameOver.tsx';
+import type { GameEndActionResponse } from '@deities/apollo/GameOver.tsx';
 import getColorName from '@deities/apollo/lib/getColorName.tsx';
 import nameGenerator from '@deities/apollo/lib/nameGenerator.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
@@ -9,7 +9,7 @@ import { Bot } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import type { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import Box from '@deities/ui/Box.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import Spinner from '@deities/ui/Spinner.tsx';
@@ -19,9 +19,9 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import useClientGameAction from '../../hooks/useClientGameAction.tsx';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import type { StateWithActions } from '../../Types.tsx';
 import MiniPlayerIcon from '../../ui/MiniPlayerIcon.tsx';
-import { EditorState } from '../Types.tsx';
+import type { EditorState } from '../Types.tsx';
 
 type Result = Readonly<{
   actionResponse: GameEndActionResponse;

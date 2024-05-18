@@ -1,12 +1,12 @@
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import randomEntry from '@deities/hephaestus/randomEntry.tsx';
-import { Action } from '../Action.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
-import { Condition } from '../Condition.tsx';
+import type { Action } from '../Action.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
+import type { Condition } from '../Condition.tsx';
 
 type Mutable<T> = {
   -readonly [Key in keyof T]: T[Key];

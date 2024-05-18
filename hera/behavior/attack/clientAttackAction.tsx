@@ -1,13 +1,14 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import getAttackDirection from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { GameActionResponse } from '@deities/apollo/Types.tsx';
-import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding } from '@deities/athena/map/Entity.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import attackActionAnimation from '../../animations/attackActionAnimation.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

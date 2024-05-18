@@ -1,12 +1,12 @@
-import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 import { injectGlobal } from '@emotion/css';
-import paletteSwap, { HEX } from '@nkzw/palette-swap';
+import type { HEX } from '@nkzw/palette-swap';
+import paletteSwap from '@nkzw/palette-swap';
 import Variants from 'athena-crisis:asset-variants';
 import BiomeVariants from './BiomeVariants.tsx';
-import VariantConfiguration, {
-  SpriteVariantConfiguration,
-} from './VariantConfiguration.tsx';
+import type { SpriteVariantConfiguration } from './VariantConfiguration.tsx';
+import VariantConfiguration from './VariantConfiguration.tsx';
 
 type Resource = Readonly<[name: string, url: string]>;
 type Resources = ReadonlyArray<Resource>;

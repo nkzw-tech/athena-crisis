@@ -1,15 +1,18 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { AIBehavior } from '../map/AIBehavior.tsx';
+import type { AIBehavior } from '../map/AIBehavior.tsx';
 import { Biome } from '../map/Biome.tsx';
-import Building from '../map/Building.tsx';
+import type Building from '../map/Building.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
 import { EntityType } from '../map/Entity.tsx';
-import Player, { PlayerID } from '../map/Player.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import type { ID } from '../MapData.tsx';
 import { BarID } from './BuildingIDs.tsx';
-import { hasUnlockedBuilding, Skill } from './Skill.tsx';
-import { SpriteVariant } from './SpriteVariants.tsx';
+import type { Skill } from './Skill.tsx';
+import { hasUnlockedBuilding } from './Skill.tsx';
+import type { SpriteVariant } from './SpriteVariants.tsx';
+import type { TileInfo } from './Tile.tsx';
 import {
   Airfield,
   Bridge,
@@ -23,9 +26,9 @@ import {
   ShipyardConstructionSite,
   SpaceBridge,
   Street,
-  TileInfo,
 } from './Tile.tsx';
-import { Ability, filterUnits, SpecialUnits, UnitInfo } from './Unit.tsx';
+import type { UnitInfo } from './Unit.tsx';
+import { Ability, filterUnits, SpecialUnits } from './Unit.tsx';
 
 let _buildingClass: typeof Building;
 

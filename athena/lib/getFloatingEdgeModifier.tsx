@@ -1,7 +1,9 @@
-import { DeepSea, isSea, MaybeTileID, River } from '../info/Tile.tsx';
+import type { MaybeTileID } from '../info/Tile.tsx';
+import { DeepSea, isSea, River } from '../info/Tile.tsx';
 import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { ModifierField } from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { ModifierField } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { Modifier } from './Modifier.tsx';
 
 const isSingleSea = (tile: MaybeTileID, modifier: number | null) =>

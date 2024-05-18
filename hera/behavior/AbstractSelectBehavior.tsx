@@ -1,9 +1,9 @@
-import Building from '@deities/athena/map/Building.tsx';
-import Entity from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { useCallback } from 'react';
-import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
+import type { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import SelectEntity from '../ui/SelectEntity.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 

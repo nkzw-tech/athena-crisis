@@ -1,11 +1,12 @@
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import { Action, execute, MutateActionResponseFn } from '../Action.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
-import { Effects } from '../Effects.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type { Action, MutateActionResponseFn } from '../Action.tsx';
+import { execute } from '../Action.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
+import type { Effects } from '../Effects.tsx';
 import applyConditions from '../lib/applyConditions.tsx';
 import gameHasEnded from '../lib/gameHasEnded.tsx';
-import { GameState } from '../Types.tsx';
+import type { GameState } from '../Types.tsx';
 
 type AIType = {
   act(map: MapData): MapData | null;

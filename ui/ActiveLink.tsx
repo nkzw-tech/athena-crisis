@@ -1,9 +1,10 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
 import React, { memo } from 'react';
 import { useMatch, useResolvedPath } from 'react-router-dom';
 import { applyVar } from './cssVar.tsx';
-import Link, { LinkProps } from './Link.tsx';
+import type { LinkProps } from './Link.tsx';
+import Link from './Link.tsx';
 
 export default memo(function ActiveLink({
   className,

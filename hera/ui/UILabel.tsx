@@ -1,4 +1,4 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import { css, cx } from '@emotion/css';
 import sprite from '../lib/sprite.tsx';
 

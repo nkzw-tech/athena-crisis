@@ -1,12 +1,13 @@
-import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import {
   winConditionHasVectors,
   WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import { BuildableTiles } from './getInterestingVectors.tsx';
-import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
+import type { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
 import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
 

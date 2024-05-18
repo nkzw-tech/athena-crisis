@@ -1,7 +1,7 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { useMemo } from 'react';
-import { CharacterImage } from '../character/PortraitPicker.tsx';
+import type { CharacterImage } from '../character/PortraitPicker.tsx';
 import botToUser from '../lib/botToUser.tsx';
 
 export type UserLike = Readonly<{

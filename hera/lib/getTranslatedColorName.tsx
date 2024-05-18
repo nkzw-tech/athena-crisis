@@ -1,4 +1,4 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import { playerToColor } from '@deities/ui/getColor.tsx';
 import { fbt } from 'fbt';
 

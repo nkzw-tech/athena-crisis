@@ -1,6 +1,6 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State, StateLike } from '../../Types.tsx';
-import { EditorState } from '../Types.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { Actions, State, StateLike } from '../../Types.tsx';
+import type { EditorState } from '../Types.tsx';
 
 export default class VectorBehavior {
   public readonly type = 'vector' as const;

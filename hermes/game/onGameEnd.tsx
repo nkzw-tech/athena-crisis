@@ -1,7 +1,8 @@
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { applyEffects, Effects } from '@deities/apollo/Effects.tsx';
-import { GameState, MutableGameState } from '@deities/apollo/Types.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import type { Effects } from '@deities/apollo/Effects.tsx';
+import { applyEffects } from '@deities/apollo/Effects.tsx';
+import type { GameState, MutableGameState } from '@deities/apollo/Types.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 
 export default function onGameEnd(

@@ -1,17 +1,17 @@
-import {
-  PlayerIDs,
-  PlayerIDSet,
-  toPlayerIDs,
-} from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { Actions, executeEffect } from './Action.tsx';
-import { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
+import type { PlayerIDs, PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import { toPlayerIDs } from '@deities/athena/map/Player.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { Actions } from './Action.tsx';
+import { executeEffect } from './Action.tsx';
+import type { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
 import validateAction from './actions/validateAction.tsx';
-import {
-  Conditions,
-  evaluateCondition,
-  validateCondition,
-} from './Condition.tsx';
+import type { Conditions } from './Condition.tsx';
+import { evaluateCondition, validateCondition } from './Condition.tsx';
+import type {
+  EncodedActionResponseType,
+  EncodedActions,
+  EncodedConditions,
+} from './EncodedActions.tsx';
 import {
   decodeActionID,
   decodeActions,
@@ -19,12 +19,9 @@ import {
   encodeActionID,
   encodeActions,
   encodeCondition,
-  EncodedActionResponseType,
-  EncodedActions,
-  EncodedConditions,
 } from './EncodedActions.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
-import { GameStateWithEffects } from './Types.tsx';
+import type { GameStateWithEffects } from './Types.tsx';
 
 export type Effect = Readonly<{
   actions: Actions;

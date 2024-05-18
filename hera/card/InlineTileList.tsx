@@ -1,19 +1,16 @@
-import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
-import {
-  TileField,
-  TileInfo,
-  tilesToTileMap,
-} from '@deities/athena/info/Tile.tsx';
+import type { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
+import type { TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
+import { tilesToTileMap } from '@deities/athena/info/Tile.tsx';
 import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifiers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   DecoratorsPerSide,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
@@ -24,14 +21,8 @@ import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { useInView } from 'framer-motion';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BuildingTile from '../Building.tsx';
 import Cursor from '../Cursor.tsx';
 import Decorators from '../Decorators.tsx';
@@ -39,7 +30,7 @@ import tileFieldHasAnimation from '../editor/lib/tileFieldHasAnimation.tsx';
 import { useSprites } from '../hooks/useSprites.tsx';
 import TileDecorators from '../TileDecorators.tsx';
 import Tiles from '../Tiles.tsx';
-import { TimerFunction } from '../Types.tsx';
+import type { TimerFunction } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 
 export type SelectTileFn = (selection: {

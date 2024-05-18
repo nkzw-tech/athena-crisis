@@ -4,13 +4,15 @@ import {
   destroyedBuildingsByPlayer,
   escortedByPlayer,
 } from '@deities/apollo/lib/checkWinCondition.tsx';
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
-import { isBot, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import { isBot, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import {
   winConditionHasAmounts,
   WinCriteria,
@@ -35,9 +37,9 @@ import activatePowerAction from '../behavior/activatePower/activatePowerAction.t
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitWidth } from '../character/Portrait.tsx';
-import { UserLike } from '../hooks/useUserMap.tsx';
+import type { UserLike } from '../hooks/useUserMap.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
-import { Actions } from '../Types.tsx';
+import type { Actions } from '../Types.tsx';
 import Funds from './Funds.tsx';
 import { SkillIcon } from './SkillDialog.tsx';
 

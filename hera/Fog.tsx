@@ -1,10 +1,10 @@
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import { css, cx } from '@emotion/css';
 import { memo, useLayoutEffect, useRef } from 'react';
-import { TileStyle } from './Tiles.tsx';
+import type { TileStyle } from './Tiles.tsx';
 
 export default memo(function CanvasFog({
   fogStyle,

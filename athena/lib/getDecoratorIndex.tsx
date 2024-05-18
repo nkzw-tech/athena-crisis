@@ -1,5 +1,5 @@
-import Vector from '../map/Vector.tsx';
-import { SizeVector } from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { SizeVector } from '../MapData.tsx';
 
 export default function getDecoratorIndex(
   vector: Vector,

@@ -1,5 +1,6 @@
-import ImmutableMap from '@nkzw/immutable-map';
-import Player, { PlainPlayer, PlayerID } from './Player.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
+import type { PlainPlayer, PlayerID } from './Player.tsx';
+import type Player from './Player.tsx';
 
 export type PlainTeam = Readonly<{
   id: PlayerID;

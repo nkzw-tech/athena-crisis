@@ -1,4 +1,4 @@
-import {
+import type {
   BuySkillActionResponse,
   ReceiveRewardActionResponse,
 } from '@deities/apollo/ActionResponse.tsx';
@@ -7,7 +7,7 @@ import { fbt } from 'fbt';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

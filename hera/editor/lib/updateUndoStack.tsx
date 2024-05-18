@@ -1,4 +1,8 @@
-import { EditorState, SetEditorStateFunction, UndoEntry } from '../Types.tsx';
+import type {
+  EditorState,
+  SetEditorStateFunction,
+  UndoEntry,
+} from '../Types.tsx';
 
 export default function updateUndoStack(
   { setEditorState }: { setEditorState: SetEditorStateFunction },

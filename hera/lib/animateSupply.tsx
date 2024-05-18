@@ -1,10 +1,10 @@
-import { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
-import { State, StateLike, StateToStateLike } from '../Types.tsx';
+import type { State, StateLike, StateToStateLike } from '../Types.tsx';
 import addFlashAnimation from './addFlashAnimation.tsx';
 import AnimationKey from './AnimationKey.tsx';
 

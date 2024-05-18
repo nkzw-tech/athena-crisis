@@ -15,12 +15,12 @@ import {
   HealAmount,
   MaxHealth,
 } from '@deities/athena/map/Configuration.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import toggleLightningTile from '@deities/athena/mutation/toggleLightningTile.tsx';
 import writeTile from '@deities/athena/mutation/writeTile.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 import { applyGameOverActionResponse } from '../GameOver.tsx';
 import { applyHiddenActionResponse } from '../HiddenAction.tsx';
 import applyEndTurnActionResponse from './applyEndTurnActionResponse.tsx';

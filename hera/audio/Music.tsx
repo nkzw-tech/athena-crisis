@@ -1,9 +1,10 @@
-import { SongName } from '@deities/athena/info/Music.tsx';
+import type { SongName } from '@deities/athena/info/Music.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 type MusicContext = {
   songByRoute: Map<string, SongName | null>;

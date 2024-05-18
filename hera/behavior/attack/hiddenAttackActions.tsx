@@ -1,19 +1,19 @@
 import getAttackDirection, {
   AttackDirection,
 } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import {
-  applyHiddenActionResponse,
+import type {
   HiddenDestroyedBuildingActionResponse,
   HiddenSourceAttackBuildingActionResponse,
   HiddenSourceAttackUnitActionResponse,
   HiddenTargetAttackBuildingActionResponse,
   HiddenTargetAttackUnitActionResponse,
 } from '@deities/apollo/HiddenAction.tsx';
+import { applyHiddenActionResponse } from '@deities/apollo/HiddenAction.tsx';
 import attackActionAnimation from '../../animations/attackActionAnimation.tsx';
 import attackFlashAnimation from '../../animations/attackFlashAnimation.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
-import { Actions, State } from '../../Types.tsx';
+import type { Actions, State } from '../../Types.tsx';
 
 export async function hiddenSourceAttackAction(
   actions: Actions,

@@ -1,7 +1,7 @@
 import { hasSpriteURL } from '@deities/art/Sprites.tsx';
-import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
+import type { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
 
 export default function sprite(
   sprite: SpriteVariant,

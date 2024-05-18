@@ -1,4 +1,4 @@
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { getAllModifiers } from './getModifier.tsx';
 
 export default function withModifiers(map: MapData) {

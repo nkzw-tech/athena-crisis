@@ -1,10 +1,11 @@
-import { MouseEvent, useCallback, useRef } from 'react';
-import {
+import type { MouseEvent } from 'react';
+import { useCallback, useRef } from 'react';
+import type {
   LongPressReactEvents as _LongPressReactEvents,
   LongPressCallbackMeta,
   LongPressOptions,
-  useLongPress,
 } from 'use-long-press';
+import { useLongPress } from 'use-long-press';
 
 export type LongPressReactEvents<T extends Element> = _LongPressReactEvents<T>;
 

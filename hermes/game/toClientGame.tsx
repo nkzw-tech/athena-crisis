@@ -1,7 +1,7 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import { Effects } from '@deities/apollo/Effects.tsx';
-import { GameState } from '@deities/apollo/Types.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { Effects } from '@deities/apollo/Effects.tsx';
+import type { GameState } from '@deities/apollo/Types.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 
 export type ClientGame = Readonly<{
   effects: Effects;

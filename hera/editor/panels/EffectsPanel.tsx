@@ -1,6 +1,6 @@
-import { Action } from '@deities/apollo/Action.tsx';
-import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { Action } from '@deities/apollo/Action.tsx';
+import type { Effect, Scenario } from '@deities/apollo/Effects.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -14,13 +14,14 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Plus from '@iconify-icons/pixelarticons/plus.js';
-import { RefObject, useCallback, useMemo, useState } from 'react';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import type { RefObject } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import type { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
 import EffectTitle, { EffectWinConditionTitle } from '../lib/EffectTitle.tsx';
 import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
-import { EditorState, SetEditorStateFunction } from '../Types.tsx';
+import type { EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 export default function EffectsPanel({
   editor,

@@ -1,6 +1,6 @@
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import addExplosionAnimation from '../animations/addExplosionAnimation.tsx';
-import { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
+import type { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 
 export default function explodeUnits(

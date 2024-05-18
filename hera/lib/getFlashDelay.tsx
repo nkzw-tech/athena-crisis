@@ -1,5 +1,5 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { Animation } from '../MapAnimations.tsx';
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { Animation } from '../MapAnimations.tsx';
 
 export default function getFlashDelay(
   animation: Animation | undefined,

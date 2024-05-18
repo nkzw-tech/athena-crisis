@@ -1,9 +1,10 @@
 import ImmutableMap from '@nkzw/immutable-map';
 import { Skills } from '../info/Skill.tsx';
 import { DefaultMapSkillSlots } from '../map/Configuration.tsx';
-import { PlaceholderPlayer, PlayerID, toPlayerID } from '../map/Player.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import { PlaceholderPlayer, toPlayerID } from '../map/Player.tsx';
 import Team from '../map/Team.tsx';
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import validateSkills from './validateSkills.tsx';
 
 export type TeamsList = ReadonlyArray<

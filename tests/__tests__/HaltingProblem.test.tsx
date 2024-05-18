@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
@@ -8,7 +8,7 @@ import { encodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import { computeVisibleEndTurnActionResponse } from '@deities/apollo/lib/computeVisibleActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import { GameState } from '@deities/apollo/Types.tsx';
+import type { GameState } from '@deities/apollo/Types.tsx';
 import {
   generateBuildings,
   generateRandomMap,
@@ -20,7 +20,8 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
-import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import chalk from 'chalk';
 import { expect, test } from 'vitest';

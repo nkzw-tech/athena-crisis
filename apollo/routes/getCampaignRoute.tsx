@@ -1,4 +1,4 @@
-import { Route, UserCampaignRoute } from '../Routes.tsx';
+import type { Route, UserCampaignRoute } from '../Routes.tsx';
 
 export default function getCampaignRoute(
   slug: string,

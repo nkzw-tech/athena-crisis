@@ -1,14 +1,15 @@
 import FastPriorityQueue from 'fastpriorityqueue';
 import { Skill } from './info/Skill.tsx';
-import { TileInfo, TileTypes } from './info/Tile.tsx';
-import { UnitInfo } from './info/Unit.tsx';
+import type { TileInfo } from './info/Tile.tsx';
+import { TileTypes } from './info/Tile.tsx';
+import type { UnitInfo } from './info/Unit.tsx';
 import canLoad from './lib/canLoad.tsx';
 import getVectorRadius from './lib/getVectorRadius.tsx';
 import { EntityType } from './map/Entity.tsx';
-import Unit from './map/Unit.tsx';
+import type Unit from './map/Unit.tsx';
 import vec from './map/vec.tsx';
-import Vector from './map/Vector.tsx';
-import MapData from './MapData.tsx';
+import type Vector from './map/Vector.tsx';
+import type MapData from './MapData.tsx';
 
 type RadiusConfiguration = {
   getCost(map: MapData, unit: Unit, vector: Vector): number;

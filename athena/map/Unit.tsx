@@ -1,20 +1,16 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { Skill } from '../info/Skill.tsx';
-import {
-  Ability,
-  getUnitInfo,
-  Sniper,
-  Supply,
-  UnitInfo,
-  Weapon,
-  WeaponID,
-} from '../info/Unit.tsx';
+import type { Supply, Weapon, WeaponID } from '../info/Unit.tsx';
+import { Ability, getUnitInfo, Sniper, UnitInfo } from '../info/Unit.tsx';
 import getUnitName from '../info/UnitNames.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
-import { ID } from '../MapData.tsx';
+import type { ID } from '../MapData.tsx';
 import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
-import Entity, { PlainEntity } from './Entity.tsx';
-import Player, { PlayerID, PlayerIDSet, toPlayerID } from './Player.tsx';
+import type { PlainEntity } from './Entity.tsx';
+import Entity from './Entity.tsx';
+import type { PlayerID, PlayerIDSet } from './Player.tsx';
+import type Player from './Player.tsx';
+import { toPlayerID } from './Player.tsx';
 
 type PlainAmmo = ReadonlyArray<[number, number]>;
 

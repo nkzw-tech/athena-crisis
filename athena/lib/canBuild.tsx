@@ -1,6 +1,7 @@
-import { BuildingInfo } from '../info/Building.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { PlayerOrPlayerID } from '../MapData.tsx';
+import type { BuildingInfo } from '../info/Building.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { PlayerOrPlayerID } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function canBuild(
   map: MapData,

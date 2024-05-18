@@ -1,28 +1,32 @@
-import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import {
+import type {
+  Action,
+  MutateActionResponseFn,
+} from '@deities/apollo/Action.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type {
   GameActionResponse,
   GameActionResponses,
 } from '@deities/apollo/Types.tsx';
-import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
-import { Skill } from '@deities/athena/info/Skill.tsx';
-import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import type { Biome } from '@deities/athena/map/Biome.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { ModifierField } from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import type { ReactElement, ReactNode } from 'react';
-import { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
-import { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
-import { Animations } from './MapAnimations.tsx';
-import { RadiusInfo } from './Radius.tsx';
-import { TileStyle } from './Tiles.tsx';
+import type { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
+import type { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
+import type { Animations } from './MapAnimations.tsx';
+import type { RadiusInfo } from './Radius.tsx';
+import type { TileStyle } from './Tiles.tsx';
 
 export type Size = Readonly<{
   height: number;

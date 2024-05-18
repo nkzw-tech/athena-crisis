@@ -1,9 +1,14 @@
 import { CreateBuildingAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { CreateBuildingActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { CreateBuildingActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { BuildingInfo } from '@deities/athena/info/Building.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
+import type { BuildingInfo } from '@deities/athena/info/Building.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type {
+  Actions,
+  State,
+  StateLike,
+  StateToStateLike,
+} from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 

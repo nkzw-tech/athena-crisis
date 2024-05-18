@@ -2,12 +2,12 @@ import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getPathFields from '@deities/athena/lib/getPathFields.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
 import addMoveAnimation from '../lib/addMoveAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateWithActions } from '../Types.tsx';
+import type { Actions, State, StateWithActions } from '../Types.tsx';
 import ActionWheel, {
   ActionButton,
   CancelActionButton,

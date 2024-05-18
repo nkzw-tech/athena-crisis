@@ -1,11 +1,13 @@
-import { SoundName } from '@deities/athena/info/Music.tsx';
-import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type { SoundName } from '@deities/athena/info/Music.tsx';
+import type { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
-import { Rumble, rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
-import { CSSProperties, useCallback, useEffect } from 'react';
+import type { Rumble } from '@deities/ui/controls/setupGamePad.tsx';
+import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
+import type { CSSProperties } from 'react';
+import { useCallback, useEffect } from 'react';
 import sprite from '../lib/sprite.tsx';
-import { RequestFrameFunction, TimerFunction } from '../Types.tsx';
+import type { RequestFrameFunction, TimerFunction } from '../Types.tsx';
 
 export type AnimationDirection = 'left' | 'right' | 'up' | 'down';
 

@@ -1,11 +1,13 @@
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import getAvailableUnitActions from '@deities/athena/lib/getAvailableUnitActions.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
-import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
-import Vector, { sortVectors } from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import { sortVectors } from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { attackable, RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -22,9 +24,8 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import Forward from '@iconify-icons/pixelarticons/forward.js';
 import EndTurn from '@iconify-icons/pixelarticons/reply-all.js';
 import Next from '@iconify-icons/pixelarticons/reply.js';
+import type { MouseEvent, ReactNode } from 'react';
 import React, {
-  MouseEvent,
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -36,11 +37,11 @@ import Base from '../behavior/Base.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import canEndTurn from '../behavior/endTurn/canEndTurn.tsx';
 import endTurnAction from '../behavior/endTurn/endTurnAction.tsx';
-import { SetZoomFn } from '../editor/hooks/useZoom.tsx';
+import type { SetZoomFn } from '../editor/hooks/useZoom.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { StateWithActions } from '../Types.tsx';
+import type { StateWithActions } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import ReplayBar from './ReplayBar.tsx';
 

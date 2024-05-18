@@ -1,11 +1,13 @@
-import { PotentialUnitAbilities } from '../../dionysus/lib/getPossibleUnitAbilities.tsx';
+import type { PotentialUnitAbilities } from '../../dionysus/lib/getPossibleUnitAbilities.tsx';
 import needsSupply from '../../dionysus/lib/needsSupply.tsx';
 import { filterBuildings, MinFunds } from '../info/Building.tsx';
-import { Ability, UnitInfo } from '../info/Unit.tsx';
+import type { UnitInfo } from '../info/Unit.tsx';
+import { Ability } from '../info/Unit.tsx';
 import { getEntityInfoGroup } from '../map/Entity.tsx';
-import Player, { PlayerID } from '../map/Player.tsx';
-import Unit from '../map/Unit.tsx';
-import MapData from '../MapData.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Player from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
+import type MapData from '../MapData.tsx';
 import calculateFunds, {
   calculateTotalPossibleFunds,
 } from './calculateFunds.tsx';

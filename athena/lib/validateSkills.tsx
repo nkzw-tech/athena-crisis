@@ -1,5 +1,6 @@
-import { Skill, Skills } from '../info/Skill.tsx';
-import MapData from '../MapData.tsx';
+import type { Skill } from '../info/Skill.tsx';
+import { Skills } from '../info/Skill.tsx';
+import type MapData from '../MapData.tsx';
 
 export default function validateSkills(
   { skillSlots, skills }: { skillSlots: number; skills: Iterable<number> },

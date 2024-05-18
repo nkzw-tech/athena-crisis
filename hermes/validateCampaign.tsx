@@ -1,4 +1,4 @@
-import { Campaign, Level, LevelMap } from './Types.tsx';
+import type { Campaign, Level, LevelMap } from './Types.tsx';
 import unrollCampaign from './unrollCampaign.tsx';
 
 function detectCycle<T>(

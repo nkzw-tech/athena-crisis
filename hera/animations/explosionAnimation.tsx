@@ -1,8 +1,9 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { Actions, State } from '../Types.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { Actions, State } from '../Types.tsx';
 import addExplosionAnimation from './addExplosionAnimation.tsx';
 
 export default function explosionAnimation(

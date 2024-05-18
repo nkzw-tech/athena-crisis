@@ -1,9 +1,7 @@
 import { spriteURL } from '@deities/art/Sprites.tsx';
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
-import {
-  DynamicPlayerID,
-  encodeDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { DynamicPlayerID } from '@deities/athena/map/Player.tsx';
+import { encodeDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';

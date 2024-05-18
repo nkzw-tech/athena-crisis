@@ -1,5 +1,5 @@
 import { Bridge, getTile, RailBridge } from '../info/Tile.tsx';
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import { Modifier } from './Modifier.tsx';
 
 export function singleTilesToModifiers(map: MapData) {

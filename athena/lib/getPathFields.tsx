@@ -1,5 +1,5 @@
-import Vector from '../map/Vector.tsx';
-import { RadiusItem } from '../Radius.tsx';
+import type Vector from '../map/Vector.tsx';
+import type { RadiusItem } from '../Radius.tsx';
 
 export default function getPathFields(
   path: ReadonlyArray<Vector>,

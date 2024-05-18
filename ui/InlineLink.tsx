@@ -1,14 +1,13 @@
-import { Route } from '@deities/apollo/Routes.tsx';
+import type { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
-import React, {
+import type {
   AnchorHTMLAttributes,
   CSSProperties,
   MouseEvent,
   MutableRefObject,
   RefCallback,
-  useCallback,
-  useRef,
 } from 'react';
+import React, { useCallback, useRef } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import Breakpoints from './Breakpoints.tsx';
 import useActive from './controls/useActive.tsx';
@@ -16,7 +15,7 @@ import { applyVar, CSSVariables } from './cssVar.tsx';
 import useScrollIntoView from './hooks/useScrollIntoView.tsx';
 import Link from './Link.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import { Gap } from './Stack.tsx';
+import type { Gap } from './Stack.tsx';
 
 export const InlineLinkColor = 'InlineLink-color';
 

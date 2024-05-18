@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { InputLayer } from './Input.tsx';
+import type { InputLayer } from './Input.tsx';
 import useInput from './useInput.tsx';
 
 export default function useAcceptNavigation(

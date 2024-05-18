@@ -1,5 +1,5 @@
 import getOrThrow from '@deities/hephaestus/getOrThrow.tsx';
-import { Campaign, Level, LevelID, PlainCampaign } from './Types.tsx';
+import type { Campaign, Level, LevelID, PlainCampaign } from './Types.tsx';
 
 type MutableLevel<T = LevelID> = Omit<Level<T>, 'next'> & {
   next?: Array<MutableLevel<T> | [number, MutableLevel<T>]>;

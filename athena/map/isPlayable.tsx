@@ -1,5 +1,7 @@
-import MapData, { AnyEntity } from '../MapData.tsx';
-import Player, { PlayerID } from './Player.tsx';
+import type { AnyEntity } from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
+import type { PlayerID } from './Player.tsx';
+import type Player from './Player.tsx';
 
 export default function isPlayable(
   map: MapData,

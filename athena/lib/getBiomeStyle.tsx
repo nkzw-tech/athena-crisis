@@ -1,3 +1,4 @@
+import type { TileInfo } from '../info/Tile.tsx';
 import {
   Beach,
   Box,
@@ -23,7 +24,6 @@ import {
   StormCloud,
   Street,
   SwampBiome,
-  TileInfo,
   Weeds,
 } from '../info/Tile.tsx';
 import { Biome } from '../map/Biome.tsx';

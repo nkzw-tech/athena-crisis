@@ -1,15 +1,14 @@
-import {
+import type {
   AttributeRange,
   AttributeRangeWithZero,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import type { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
 import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
-import { PlayStyleType } from '../lib/PlayStyle.tsx';
-import { CampaignEditorState } from '../Types.tsx';
-import CampaignEditorSettingsPanel, {
-  UserNode,
-} from './CampaignEditorSettingsPanel.tsx';
+import type { PlayStyleType } from '../lib/PlayStyle.tsx';
+import type { CampaignEditorState } from '../Types.tsx';
+import type { UserNode } from './CampaignEditorSettingsPanel.tsx';
+import CampaignEditorSettingsPanel from './CampaignEditorSettingsPanel.tsx';
 
 export default function CampaignEditorControlPanel({
   campaignEditorState,

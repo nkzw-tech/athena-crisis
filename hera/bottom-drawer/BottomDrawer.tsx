@@ -7,7 +7,7 @@ import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { motion } from 'framer-motion';
-import { HTMLAttributes, ReactNode, RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 export default function BottomDrawer({
   children,

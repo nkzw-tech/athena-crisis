@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import Input, { EventName, Events, InputLayer } from './Input.tsx';
+import type { EventName, Events, InputLayer } from './Input.tsx';
+import Input from './Input.tsx';
 
 export default function useInput<T extends EventName>(
   type: T,

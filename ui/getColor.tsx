@@ -1,4 +1,4 @@
-import { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
+import type { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { applyVar } from './cssVar.tsx';
 

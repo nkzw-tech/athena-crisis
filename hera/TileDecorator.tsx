@@ -1,8 +1,8 @@
-import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import { Modifier } from '@deities/athena/lib/Modifier.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import type { Modifier } from '@deities/athena/lib/Modifier.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';

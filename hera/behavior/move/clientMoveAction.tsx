@@ -1,11 +1,11 @@
-import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import { GameActionResponse } from '@deities/apollo/Types.tsx';
+import type { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { RadiusItem } from '@deities/athena/Radius.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
-import { Actions, State, StateLike } from '../../Types.tsx';
+import type { Actions, State, StateLike } from '../../Types.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default function clientMoveAction(

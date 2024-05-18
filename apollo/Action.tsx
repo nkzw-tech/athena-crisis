@@ -5,7 +5,8 @@ import {
   Skill,
 } from '@deities/athena/info/Skill.tsx';
 import { Lightning } from '@deities/athena/info/Tile.tsx';
-import { Ability, getUnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
+import type { Weapon } from '@deities/athena/info/Unit.tsx';
+import { Ability, getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -25,7 +26,7 @@ import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
-import Building from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
 import {
   BuildingCover,
   Charge,
@@ -34,19 +35,16 @@ import {
   MinDamage,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
-import {
-  DynamicPlayerID,
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
-import { Teams } from '@deities/athena/map/Team.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
+import { resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
+import type { Teams } from '@deities/athena/map/Team.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
-import ImmutableMap from '@nkzw/immutable-map';
-import { ActionResponse } from './ActionResponse.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
+import type ImmutableMap from '@nkzw/immutable-map';
+import type { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
 
 export type MutateActionResponseFn = (action: ActionResponse) => ActionResponse;

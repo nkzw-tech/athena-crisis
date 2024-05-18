@@ -1,9 +1,9 @@
-import { Skill } from '@deities/athena/info/Skill.tsx';
-import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { Skill } from '@deities/athena/info/Skill.tsx';
+import type { TileInfo } from '@deities/athena/info/Tile.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { PlayerID } from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
@@ -18,13 +18,14 @@ import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { fbt } from 'fbt';
-import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import BuildingCard from '../card/BuildingCard.tsx';
 import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
 import TileCard from '../card/TileCard.tsx';
 import UnitCard from '../card/UnitCard.tsx';
-import {
+import type {
   CurrentGameInfoState,
   FactionNames,
   MapInfoState,

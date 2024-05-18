@@ -1,5 +1,5 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 
 export default class ActionResponseError extends Error {
   constructor(

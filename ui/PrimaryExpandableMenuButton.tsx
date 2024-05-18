@@ -1,6 +1,6 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import Breakpoints from './Breakpoints.tsx';
 import { applyVar, insetStyle } from './cssVar.tsx';
 import ExpandableMenuButton from './ExpandableMenuButton.tsx';

@@ -1,4 +1,4 @@
-import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
+import type { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 

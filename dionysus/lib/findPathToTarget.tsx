@@ -1,9 +1,10 @@
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { getEntityGroup } from '@deities/athena/map/Entity.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { MoveConfiguration, RadiusItem } from '@deities/athena/Radius.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { RadiusItem } from '@deities/athena/Radius.tsx';
+import { MoveConfiguration } from '@deities/athena/Radius.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';
 import getAttackableArea from './getAttackableArea.tsx';
 import getWinConditionVectors from './getWinConditionVectors.tsx';

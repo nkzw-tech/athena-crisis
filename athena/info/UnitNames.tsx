@@ -1,9 +1,9 @@
 import random from '@deities/hephaestus/random.tsx';
 import _hasLeader from '../lib/hasLeader.tsx';
-import { PlayerID } from '../map/Player.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
-import { Gender, UnitInfo } from './Unit.tsx';
+import type { PlayerID } from '../map/Player.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
+import type { Gender, UnitInfo } from './Unit.tsx';
 
 const names = {
   female: [

@@ -1,5 +1,6 @@
-import { getUnitInfoOrThrow, UnitInfo } from '@deities/athena/info/Unit.tsx';
-import { DynamicPlayerID } from '@deities/athena/map/Player.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
+import type { DynamicPlayerID } from '@deities/athena/map/Player.tsx';
 
 export default function CharacterMessage(
   unit: UnitInfo | number,

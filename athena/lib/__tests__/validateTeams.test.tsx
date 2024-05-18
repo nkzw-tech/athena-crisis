@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { toPlayerID } from '../../map/Player.tsx';
-import { PlainTeams, toTeamArray } from '../../map/Team.tsx';
+import type { PlainTeams } from '../../map/Team.tsx';
+import { toTeamArray } from '../../map/Team.tsx';
 import MapData from '../../MapData.tsx';
 import validateTeams from '../validateTeams.tsx';
 import withModifiers from '../withModifiers.tsx';

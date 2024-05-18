@@ -1,4 +1,4 @@
-import Vector from '../map/Vector.tsx';
+import type Vector from '../map/Vector.tsx';
 import vec from './../map/vec.tsx';
 
 export default function indexToVector(index: number, width: number): Vector {

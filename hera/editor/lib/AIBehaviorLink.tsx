@@ -1,10 +1,11 @@
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
-import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import { css } from '@emotion/css';
-import { State } from '../../Types.tsx';
-import { EntityUndoKey } from '../Types.tsx';
+import type { State } from '../../Types.tsx';
+import type { EntityUndoKey } from '../Types.tsx';
 
 const getAIBehaviorText = (behavior: AIBehavior) => {
   switch (behavior) {

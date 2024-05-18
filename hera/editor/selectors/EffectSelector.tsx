@@ -1,5 +1,5 @@
-import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
-import { WinConditions } from '@deities/athena/WinConditions.tsx';
+import type { Effects, Scenario } from '@deities/apollo/Effects.tsx';
+import type { WinConditions } from '@deities/athena/WinConditions.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
 import EffectTitle from '../lib/EffectTitle.tsx';

@@ -1,11 +1,6 @@
-import {
-  getTile,
-  getTileInfo,
-  TileField,
-  TileInfo,
-  TileLayer,
-} from '../info/Tile.tsx';
-import { ModifierField } from '../MapData.tsx';
+import type { TileField, TileInfo, TileLayer } from '../info/Tile.tsx';
+import { getTile, getTileInfo } from '../info/Tile.tsx';
+import type { ModifierField } from '../MapData.tsx';
 
 const getModifier = (modifier: ModifierField, layer: TileLayer): number => {
   const isNumber = typeof modifier === 'number';

@@ -1,4 +1,4 @@
-import MapData from '../MapData.tsx';
+import type MapData from '../MapData.tsx';
 import getActivePlayers from './getActivePlayers.tsx';
 
 export default function dropInactivePlayers(map: MapData) {

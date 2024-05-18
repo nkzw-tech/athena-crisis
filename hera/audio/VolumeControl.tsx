@@ -1,5 +1,6 @@
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import AudioPlayer, { AudioVolumeType } from '@deities/ui/AudioPlayer.tsx';
+import type { AudioVolumeType } from '@deities/ui/AudioPlayer.tsx';
+import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -9,7 +10,8 @@ import VolumeXIcon from '@deities/ui/icons/VolumeX.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
 import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export default function VolumeControl({
   canPause = true,

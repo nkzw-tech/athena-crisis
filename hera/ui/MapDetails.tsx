@@ -1,7 +1,7 @@
 import { isValidTimer } from '@deities/apollo/lib/GameTimerValue.tsx';
 import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import getMapSize from '@deities/athena/lib/getMapSize.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -20,7 +20,7 @@ import Timeline from '@iconify-icons/pixelarticons/timeline.js';
 import Tournament from '@iconify-icons/pixelarticons/tournament.js';
 import User from '@iconify-icons/pixelarticons/user.js';
 import Users from '@iconify-icons/pixelarticons/users.js';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import getMapSizeName from '../lib/getMapSizeName.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import getTranslatedTimerName from '../lib/getTranslatedTimerName.tsx';

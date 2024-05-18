@@ -1,16 +1,18 @@
-import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
-import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import type { PlainBuilding } from '@deities/athena/map/Building.tsx';
+import type Building from '@deities/athena/map/Building.tsx';
+import type { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
 import { encodeEntities } from '@deities/athena/map/Serialization.tsx';
-import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import type { PlainUnit } from '@deities/athena/map/Unit.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
+import type { VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { ActionResponse } from '../ActionResponse.tsx';
+import type { ActionResponse } from '../ActionResponse.tsx';
 import { encodeActionResponse } from '../EncodedActions.tsx';
 import computeVisibleActions from '../lib/computeVisibleActions.tsx';
 import getVisibleEntities from '../lib/getVisibleEntities.tsx';
-import {
+import type {
   EncodedGameActionResponse,
   EncodedGameActionResponseItem,
   GameState,

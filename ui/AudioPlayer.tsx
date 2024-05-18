@@ -1,4 +1,4 @@
-import { SongName, SoundName } from '@deities/athena/info/Music.tsx';
+import type { SongName, SoundName } from '@deities/athena/info/Music.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import { Music, Sounds } from 'athena-crisis:audio';
 import { Howl, Howler } from 'howler';

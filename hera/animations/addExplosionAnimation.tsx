@@ -1,11 +1,13 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { Beach, isSea, MaybeTileID } from '@deities/athena/info/Tile.tsx';
+import type { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import type { MaybeTileID } from '@deities/athena/info/Tile.tsx';
+import { Beach, isSea } from '@deities/athena/info/Tile.tsx';
 import isAmphibiousOnLand from '@deities/athena/lib/isAmphibiousOnLand.tsx';
-import Entity, { getEntityGroup, isUnit } from '@deities/athena/map/Entity.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
+import { getEntityGroup, isUnit } from '@deities/athena/map/Entity.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
-import { Animations } from '../MapAnimations.tsx';
-import { State, StateToStateLike } from '../Types.tsx';
+import type { Animations } from '../MapAnimations.tsx';
+import type { State, StateToStateLike } from '../Types.tsx';
 
 const isSeaExceptBeach = (id: MaybeTileID | null) =>
   !id || (isSea(id) && id !== Beach.id);

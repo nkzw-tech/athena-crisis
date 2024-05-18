@@ -1,8 +1,9 @@
-import { DecoratorInfo, getDecorator } from '../info/Decorator.tsx';
+import type { DecoratorInfo } from '../info/Decorator.tsx';
+import { getDecorator } from '../info/Decorator.tsx';
 import { DecoratorsPerSide } from '../map/Configuration.tsx';
 import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData from '../MapData.tsx';
+import type Vector from '../map/Vector.tsx';
+import type MapData from '../MapData.tsx';
 import getDecoratorIndex from './getDecoratorIndex.tsx';
 
 export default function getDecoratorsAtField(

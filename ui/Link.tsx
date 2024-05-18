@@ -1,5 +1,5 @@
-import { Route } from '@deities/apollo/Routes.tsx';
-import { ComponentProps, FC, Ref } from 'react';
+import type { Route } from '@deities/apollo/Routes.tsx';
+import type { ComponentProps, FC, Ref } from 'react';
 import { Link } from 'react-router-dom';
 
 export type LinkProps = Omit<ComponentProps<typeof Link>, 'to'> & {

@@ -1,11 +1,11 @@
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import type { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import calculateLikelyDamage from '@deities/athena/lib/calculateLikelyDamage.tsx';
 import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
-import Player from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
-import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import type Player from '@deities/athena/map/Player.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
+import type MapData from '@deities/athena/MapData.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 
 export default function sortByDamage(
