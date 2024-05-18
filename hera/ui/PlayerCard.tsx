@@ -295,7 +295,7 @@ export default memo(function PlayerCard({
                 [
                   [
                     'fundsPerTurn',
-                    player.stats.fundsPerTurn,
+                    shouldShow ? player.stats.fundsPerTurn : '???',
                     <Icon
                       className={playerStatsAfterIconStyle}
                       icon={Reload}
@@ -304,19 +304,23 @@ export default memo(function PlayerCard({
                   ] as const,
                   [
                     'netUnits',
-                    Math.max(
-                      player.stats.createdUnits - player.stats.lostUnits,
-                      0,
-                    ),
+                    shouldShow
+                      ? Math.max(
+                          player.stats.createdUnits - player.stats.lostUnits,
+                          0,
+                        )
+                      : '???',
                     null,
                   ] as const,
                   [
                     'netBuildings',
-                    Math.max(
-                      player.stats.createdBuildings -
-                        player.stats.lostBuildings,
-                      0,
-                    ),
+                    shouldShow
+                      ? Math.max(
+                          player.stats.createdBuildings -
+                            player.stats.lostBuildings,
+                          0,
+                        )
+                      : '???',
                     null,
                   ] as const,
                 ].map(([key, value, after]) => {
