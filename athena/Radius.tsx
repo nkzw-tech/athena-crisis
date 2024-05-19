@@ -95,22 +95,25 @@ function calculateRadius(
 
   while (!queue.isEmpty()) {
     const { cost: parentCost, vector } = queue.poll()!;
-    if (closed[map.getTileIndex(vector)]) {
+    const index = map.getTileIndex(vector);
+    if (closed[index]) {
       continue;
     }
+    closed[index] = true;
+
     const vectors = vector.adjacent();
     for (let i = 0; i < vectors.length; i++) {
       const currentVector = vectors[i];
       if (!map.contains(currentVector)) {
         continue;
       }
-      const index = map.getTileIndex(currentVector);
-      if (closed[index] || currentVector.equals(start)) {
+      const currentIndex = map.getTileIndex(currentVector);
+      if (closed[currentIndex]) {
         continue;
       }
       const cost = getCost(map, unit, currentVector);
       if (cost < 0 || !isAccessible(map, unit, currentVector)) {
-        closed[index] = true;
+        closed[currentIndex] = true;
         continue;
       }
       const nextCost =
