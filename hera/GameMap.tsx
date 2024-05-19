@@ -718,8 +718,12 @@ export default class GameMap extends Component<Props, State> {
   ) => {
     this._update((state) => {
       const newState = {
-        ...this.state.behavior?.deactivate?.(),
-        ...resetBehavior(this.props.behavior),
+        ...state.behavior?.deactivate?.(),
+        ...resetBehavior(
+          state.lastActionResponse?.type === 'GameEnd'
+            ? NullBehavior
+            : this.props.behavior,
+        ),
       };
 
       if (
@@ -856,7 +860,13 @@ export default class GameMap extends Component<Props, State> {
     action: Action,
   ): [Promise<GameActionResponse>, MapData, ActionResponse] => {
     const { onAction } = this.props;
-    const { map, preventRemoteActions, vision } = state;
+    const { lastActionResponse, map, preventRemoteActions, vision } = state;
+    if (lastActionResponse?.type === 'GameEnd') {
+      throw new Error(
+        `Action: Cannot issue actions for a game that has ended.\nAction: '${JSON.stringify(action)}'`,
+      );
+    }
+
     if (preventRemoteActions) {
       const { currentViewer } = state;
       const player = map.getCurrentPlayer();
