@@ -5,6 +5,7 @@ import {
   escortedByPlayer,
 } from '@deities/apollo/lib/checkWinCondition.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -33,7 +34,7 @@ import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
@@ -63,6 +64,23 @@ export default memo(function PlayerCard({
   vision: VisionT;
   wide?: boolean;
 }) {
+  const [rootHeight, setRootHeight] = useState(0);
+  const playerInfoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (playerInfoRef.current) {
+      const playerInfoEl = playerInfoRef.current;
+      const resizeObserver = new window.ResizeObserver((entries) => {
+        setRootHeight(entries[0].borderBoxSize[0].blockSize);
+      });
+      resizeObserver.observe(playerInfoEl);
+
+      return () => {
+        resizeObserver.unobserve(playerInfoEl);
+      };
+    }
+  }, []);
+
   const { optimisticAction, showGameInfo, update } = actions;
   const { winConditions } = map.config;
   const color = getColor(player.id);
@@ -162,7 +180,10 @@ export default memo(function PlayerCard({
   return (
     <div
       className={playerStyle}
-      style={{ opacity: map.active.includes(player.id) ? 1 : 0.3 }}
+      style={{
+        height: rootHeight > 0 ? rootHeight : undefined,
+        opacity: map.active.includes(player.id) ? 1 : 0.3,
+      }}
     >
       <Stack className={chargeStyle} nowrap start>
         {Array(availableCharges + 1)
@@ -210,6 +231,7 @@ export default memo(function PlayerCard({
           charge > 0 && playerInfoWithCharges,
           wide && widePlayerInfoStyle,
         )}
+        ref={playerInfoRef}
       >
         <Stack alignCenter nowrap>
           <Stack vertical>
@@ -291,11 +313,13 @@ export default memo(function PlayerCard({
                     null
                   );
                 })}
-              {wide &&
-                [
+            </Stack>
+            {wide && (
+              <Stack className={offsetStyle} gap nowrap start>
+                {[
                   [
                     'fundsPerTurn',
-                    shouldShow ? player.stats.fundsPerTurn : '???',
+                    shouldShow ? calculateFunds(map, player) : '???',
                     <Icon
                       className={playerStatsAfterIconStyle}
                       icon={Reload}
@@ -343,7 +367,8 @@ export default memo(function PlayerCard({
                     </Stack>
                   );
                 })}
-            </Stack>
+              </Stack>
+            )}
           </Stack>
           {player.skills.size ? (
             <Stack className={skillStyle} nowrap>

@@ -8,18 +8,7 @@ export default function startGame(map: MapData): MapData {
     teams: map.teams.map((team) =>
       team.copy({
         players: team.players.map((player) =>
-          player
-            .setFunds(map.config.seedCapital)
-            .resetStatistics()
-            .modifyStatistics({
-              createdBuildings: map.buildings.filter(
-                (building) => building.player === player.id,
-              ).size,
-              createdUnits: map.units.filter(
-                (unit) => unit.player === player.id,
-              ).size,
-              fundsPerTurn: calculateFunds(map, player),
-            }),
+          player.setFunds(map.config.seedCapital).resetStatistics(),
         ),
       }),
     ),

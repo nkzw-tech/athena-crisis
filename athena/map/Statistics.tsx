@@ -5,7 +5,6 @@ export type PlayerStatistics = Readonly<{
   damage: number;
   destroyedBuildings: number;
   destroyedUnits: number;
-  fundsPerTurn: number;
   lostBuildings: number;
   lostUnits: number;
 }>;
@@ -17,7 +16,6 @@ export type PlainPlayerStatistics = [
   damage: number,
   destroyedBuildings: number,
   destroyedUnits: number,
-  fundsPerTurn: number,
   lostBuildings: number,
   lostUnits: number,
 ];
@@ -29,7 +27,6 @@ export const InitialPlayerStatistics = {
   damage: 0,
   destroyedBuildings: 0,
   destroyedUnits: 0,
-  fundsPerTurn: 0,
   lostBuildings: 0,
   lostUnits: 0,
 } as const;
@@ -56,9 +53,8 @@ export function decodePlayerStatistics(
     destroyedBuildings:
       stats?.[4] || InitialPlayerStatistics.destroyedBuildings,
     destroyedUnits: stats?.[5] || InitialPlayerStatistics.destroyedUnits,
-    fundsPerTurn: stats?.[6] || InitialPlayerStatistics.fundsPerTurn,
-    lostBuildings: stats?.[7] || InitialPlayerStatistics.lostBuildings,
-    lostUnits: stats?.[8] || InitialPlayerStatistics.lostUnits,
+    lostBuildings: stats?.[6] || InitialPlayerStatistics.lostBuildings,
+    lostUnits: stats?.[7] || InitialPlayerStatistics.lostUnits,
   };
 }
 
@@ -73,7 +69,6 @@ export function encodePlayerStatistics(
         stats.damage,
         stats.destroyedBuildings,
         stats.destroyedUnits,
-        stats.fundsPerTurn,
         stats.lostBuildings,
         stats.lostUnits,
       ]
