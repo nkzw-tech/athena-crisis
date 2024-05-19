@@ -168,7 +168,7 @@ export default class DesignBehavior {
         vector,
         ...getSymmetricPositions(vector, editor.drawingMode, state.map.size),
       ];
-      return this.putMultiple(vectors, state, actions, editor);
+      return this.draw(vectors, state, actions, editor);
     }
 
     const { animations, map } = state;
@@ -234,7 +234,7 @@ export default class DesignBehavior {
     return null;
   }
 
-  private putMultiple(
+  private draw(
     vectors: Array<Vector>,
     state: State,
     actions: Actions,
@@ -242,8 +242,7 @@ export default class DesignBehavior {
   ): StateLike | null {
     let newState: StateLike | null = null;
     const players = Array.from(
-      // `PlayerIDs` starts with `0`, which we don't want to include here.
-      new Set([...state.map.active, ...PlayerIDs.slice(1)]),
+      new Set([...state.map.active, ...PlayerIDs.filter((id) => id !== 0)]),
     ).slice(0, vectors.length);
     vectors.forEach((vector, index) => {
       const currentPlayerIndex = players.indexOf(
@@ -255,16 +254,15 @@ export default class DesignBehavior {
             players.length
         ];
 
-      const tempState = this.put(
-        vector,
-        { ...state, ...newState },
-        actions,
-        editor,
-        playerId,
-      );
       newState = {
         ...newState,
-        ...tempState,
+        ...this.put(
+          vector,
+          { ...state, ...newState },
+          actions,
+          editor,
+          playerId,
+        ),
       };
     });
     return newState;

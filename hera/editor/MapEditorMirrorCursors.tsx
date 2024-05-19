@@ -6,30 +6,23 @@ import getSymmetricPositions from './lib/getSymmetricPositions.ts';
 import { DrawingMode } from './Types.tsx';
 
 export default function MapEditorMirrorCursors({
-  defaultCursorPosition,
   drawingMode,
   mapSize,
+  origin: orign,
   ...props
 }: {
-  defaultCursorPosition: Vector | null;
   drawingMode: DrawingMode | undefined;
   mapSize: SizeVector;
+  origin: Vector | null;
 } & Omit<ComponentProps<typeof Cursor>, 'position'>) {
-  if (!defaultCursorPosition || !drawingMode || drawingMode === 'regular') {
+  if (!orign || !drawingMode || drawingMode === 'regular') {
     return null;
   }
 
-  const vectors = getSymmetricPositions(
-    defaultCursorPosition,
-    drawingMode,
-    mapSize,
-  );
-
-  if (!vectors.length) {
-    return null;
-  }
-
-  return vectors.map((vector) => (
-    <Cursor key={vector.toString()} {...props} position={vector} />
-  ));
+  const vectors = getSymmetricPositions(orign, drawingMode, mapSize);
+  return vectors.size
+    ? [...vectors].map((vector) => (
+        <Cursor {...props} key={vector.toString()} position={vector} />
+      ))
+    : null;
 }

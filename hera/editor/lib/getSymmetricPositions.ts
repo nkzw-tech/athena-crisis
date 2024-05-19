@@ -8,13 +8,13 @@ export default function getSymmetricPositions(
   drawingMode: DrawingMode,
   mapSize: SizeVector,
 ) {
-  const vectors: Array<Vector> = [];
+  const vectors = new Set<Vector>();
 
   if (drawingMode !== 'regular') {
     if (drawingMode === 'horizontal-vertical') {
-      vectors.push(
-        mirrorVector(origin, mapSize, 'horizontal'),
-        mirrorVector(origin, mapSize, 'vertical'),
+      vectors.add(mirrorVector(origin, mapSize, 'horizontal'));
+      vectors.add(mirrorVector(origin, mapSize, 'vertical'));
+      vectors.add(
         mirrorVector(
           mirrorVector(origin, mapSize, 'horizontal'),
           mapSize,
@@ -22,9 +22,10 @@ export default function getSymmetricPositions(
         ),
       );
     } else {
-      vectors.push(mirrorVector(origin, mapSize, drawingMode));
+      vectors.add(mirrorVector(origin, mapSize, drawingMode));
     }
   }
 
-  return vectors.filter((vector) => !origin.equals(vector));
+  vectors.delete(origin);
+  return vectors;
 }

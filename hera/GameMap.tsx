@@ -1730,11 +1730,10 @@ export default class GameMap extends Component<Props, State> {
                   />
                   {editor?.mode === 'design' && (
                     <MapEditorExtraCursors
-                      // TODO: adjust color
                       color="red"
-                      defaultCursorPosition={position}
                       drawingMode={editor?.drawingMode}
                       mapSize={map.size}
+                      origin={position}
                       size={tileSize}
                       zIndex={zIndex}
                     />

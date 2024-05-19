@@ -25,7 +25,13 @@ import Box from '@deities/ui/Box.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
-import Supply from '@deities/ui/icons/Supply.tsx';
+import {
+  DiagonalDrawingMode,
+  HorizontalDrawingMode,
+  HorizontalVerticalDrawingMode,
+  RegularDrawingMode,
+  VerticalDrawingMode,
+} from '@deities/ui/icons/DrawingMode.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -357,7 +363,6 @@ export default function DesignPanel({
           </Box>
         </Stack>
         <Box className={drawingModeContainerStyle}>
-          {/* TODO: Styling */}
           <Stack gap={16} start vertical>
             <InlineLink
               className={cx(fillStyle, ellipsis)}
@@ -366,7 +371,7 @@ export default function DesignPanel({
               }}
               selected={editor.drawingMode === 'regular'}
             >
-              <Icon height={32} icon={Supply} width={32} />
+              <Icon height={32} icon={RegularDrawingMode} width={32} />
             </InlineLink>
             <InlineLink
               className={cx(fillStyle, ellipsis)}
@@ -375,7 +380,7 @@ export default function DesignPanel({
               }}
               selected={editor.drawingMode === 'horizontal'}
             >
-              <Icon height={32} icon={Supply} width={32} />
+              <Icon height={32} icon={HorizontalDrawingMode} width={32} />
             </InlineLink>
             <InlineLink
               className={cx(fillStyle, ellipsis)}
@@ -384,16 +389,7 @@ export default function DesignPanel({
               }}
               selected={editor.drawingMode === 'vertical'}
             >
-              <Icon height={32} icon={Supply} width={32} />
-            </InlineLink>
-            <InlineLink
-              className={cx(fillStyle, ellipsis)}
-              onClick={() => {
-                setEditorState({ drawingMode: 'horizontal-vertical' });
-              }}
-              selected={editor.drawingMode === 'horizontal-vertical'}
-            >
-              <Icon height={32} icon={Supply} width={32} />
+              <Icon height={32} icon={VerticalDrawingMode} width={32} />
             </InlineLink>
             <InlineLink
               className={cx(fillStyle, ellipsis)}
@@ -402,7 +398,20 @@ export default function DesignPanel({
               }}
               selected={editor.drawingMode === 'diagonal'}
             >
-              <Icon height={32} icon={Supply} width={32} />
+              <Icon height={32} icon={DiagonalDrawingMode} width={32} />
+            </InlineLink>{' '}
+            <InlineLink
+              className={cx(fillStyle, ellipsis)}
+              onClick={() => {
+                setEditorState({ drawingMode: 'horizontal-vertical' });
+              }}
+              selected={editor.drawingMode === 'horizontal-vertical'}
+            >
+              <Icon
+                height={32}
+                icon={HorizontalVerticalDrawingMode}
+                width={32}
+              />
             </InlineLink>
           </Stack>
         </Box>
