@@ -181,7 +181,7 @@ export default memo(function CurrentGameCard({
     </div>
   );
   return inlineUI ? (
-    <div className={inlineContainerStyle} style={{ zIndex: zIndex + 10 }}>
+    <div className={inlineContainerStyle} style={{ zIndex: zIndex - 1 }}>
       {content}
     </div>
   ) : (

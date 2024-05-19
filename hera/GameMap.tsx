@@ -1818,7 +1818,7 @@ export default class GameMap extends Component<Props, State> {
                             position={vector}
                             tileSize={tileSize}
                             width={map.size.width}
-                            zIndex={zIndex + 20}
+                            zIndex={zIndex}
                           />
                         )
                       );
