@@ -33,6 +33,7 @@ import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
+import toSlug from '@deities/hephaestus/toSlug.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
@@ -91,8 +92,8 @@ import BiomeIcon from './lib/BiomeIcon.tsx';
 import canFillTile from './lib/canFillTile.tsx';
 import getMapValidationErrorText from './lib/getMapValidationErrorText.tsx';
 import updateUndoStack, {
-  UNDO_STACK_INDEX_KEY,
-  UNDO_STACK_KEY,
+  getUndoStackIndexKey,
+  getUndoStackKey,
 } from './lib/updateUndoStack.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
@@ -114,9 +115,9 @@ const generateName = nameGenerator();
 
 export function decodeUndoStack(
   encodedUndoStack: string | null,
-): UndoStack | undefined {
+): UndoStack | null {
   if (!encodedUndoStack) {
-    return undefined;
+    return null;
   }
 
   try {
@@ -124,15 +125,15 @@ export function decodeUndoStack(
       ([key, value]: [string, PlainMap]) => [key, MapData.fromObject(value)],
     );
   } catch {
-    return undefined;
+    return null;
   }
 }
 
 const getUndoStack = (id?: string) =>
-  decodeUndoStack(Storage.getItem(UNDO_STACK_KEY(id)));
+  decodeUndoStack(Storage.getItem(getUndoStackKey(id)));
 
 const getUndoStackIndex = (id?: string) => {
-  const index = Storage.getItem(UNDO_STACK_INDEX_KEY(id));
+  const index = Storage.getItem(getUndoStackIndexKey(id));
   return index ? Number.parseInt(index, 10) : undefined;
 };
 
@@ -153,8 +154,8 @@ const getEditorBaseState = (
   mapObject: Pick<MapObject, 'effects'> | null = null,
   mode: EditorMode = 'design',
   scenario?: Scenario,
-  undoStack?: UndoStack,
-  undoStackIndex?: number,
+  undoStack?: UndoStack | null,
+  undoStackIndex?: number | null,
 ): EditorState => {
   const startScenario = new Set([{ actions: [] }]);
   let effects: Effects = mapObject?.effects
@@ -364,8 +365,8 @@ export default function MapEditor({
           return null;
         }
 
-        const undoStackIndex = getUndoStackIndex(mapObject?.id);
-        const map = undoStack[undoStackIndex ?? -1][1];
+        const undoStackIndex = getUndoStackIndex(mapObject?.id) ?? -1;
+        const map = undoStack[undoStackIndex ?? undoStack.length - 1][1];
 
         return {
           effects,
@@ -521,11 +522,9 @@ export default function MapEditor({
       ]);
 
       if (isNew) {
-        const id = generateName();
         createMap(
           {
             effects: editor.effects,
-            id,
             map,
             mapName,
             tags: mapObject?.id
@@ -534,12 +533,15 @@ export default function MapEditor({
           },
           setSaveState,
         );
-        Storage.removeItem(UNDO_STACK_KEY(''));
-        Storage.removeItem(UNDO_STACK_INDEX_KEY(''));
-        Storage.setItem(UNDO_STACK_KEY(id), JSON.stringify(stack));
+        Storage.removeItem(getUndoStackKey(''));
+        Storage.removeItem(getUndoStackIndexKey(''));
+        Storage.setItem(
+          getUndoStackKey(toSlug(mapName)),
+          JSON.stringify(stack),
+        );
         if (editor.undoStackIndex !== null) {
           Storage.setItem(
-            UNDO_STACK_INDEX_KEY(id),
+            getUndoStackIndexKey(toSlug(mapName)),
             `${editor?.undoStackIndex}`,
           );
         }
@@ -555,10 +557,10 @@ export default function MapEditor({
           type,
           setSaveState,
         );
-        Storage.setItem(UNDO_STACK_KEY(mapObject?.id), JSON.stringify(stack));
+        Storage.setItem(getUndoStackKey(mapObject?.id), JSON.stringify(stack));
         if (editor.undoStackIndex !== null) {
           Storage.setItem(
-            UNDO_STACK_INDEX_KEY(mapObject?.id),
+            getUndoStackIndexKey(mapObject?.id),
             `${editor?.undoStackIndex}`,
           );
         }
@@ -657,7 +659,7 @@ export default function MapEditor({
                 undoStack.length,
               ),
             );
-            Storage.setItem(UNDO_STACK_INDEX_KEY(mapObject?.id), `${index}`);
+            Storage.setItem(getUndoStackIndexKey(mapObject?.id), `${index}`);
             if (index > -1 && index < undoStack.length) {
               const [, newMap] = undoStack.at(index) || [];
               if (newMap) {

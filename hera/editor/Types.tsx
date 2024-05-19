@@ -71,7 +71,6 @@ export type SetMapFunction = (
 type MapSaveType = 'New' | 'Update' | 'Disk' | 'Export';
 export type MapCreateVariables = Readonly<{
   effects: Effects;
-  id: string;
   map: MapData;
   mapName: string;
   tags: ReadonlyArray<string>;
