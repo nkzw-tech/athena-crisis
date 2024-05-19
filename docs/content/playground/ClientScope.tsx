@@ -1,8 +1,10 @@
+import { HideContext } from '@deities/hera/hooks/useHide.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import setupGamePad from '@deities/ui/controls/setupGamePad.tsx';
 import setupKeyboard from '@deities/ui/controls/setupKeyboard.tsx';
 import { getScopedCSSDefinitions } from '@deities/ui/CSS.tsx';
 import { initializeCSSVariables } from '@deities/ui/cssVar.tsx';
+import { AlertContext } from '@deities/ui/hooks/useAlert.tsx';
 import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
@@ -66,7 +68,11 @@ if (import.meta.env.DEV) {
 export default function ClientScope({ children }: { children: JSX.Element }) {
   return (
     <ScaleContext>
-      <div className={clientScopeStyle}>{children}</div>
+      <HideContext>
+        <AlertContext>
+          <div className={clientScopeStyle}>{children}</div>
+        </AlertContext>
+      </HideContext>
     </ScaleContext>
   );
 }
