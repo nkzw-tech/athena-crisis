@@ -134,6 +134,7 @@ const getEditorBaseState = (
     effects = new Map([...effects, ['Start', startScenario]]);
   }
   return {
+    drawingMode: 'regular',
     effects,
     isDrawing: false,
     isErasing: false,

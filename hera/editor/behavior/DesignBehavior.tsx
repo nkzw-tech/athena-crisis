@@ -23,6 +23,7 @@ import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { getDecoratorLimit } from '@deities/athena/map/Configuration.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
+import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -48,6 +49,7 @@ import {
 } from '../../Types.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
+import getSymmetricPositions from '../lib/getSymmetricPositions.ts';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
 import { EditorState } from '../Types.tsx';
 
@@ -162,7 +164,11 @@ export default class DesignBehavior {
     subVector?: Vector,
   ): StateLike | null {
     if (editor?.isDrawing && editor.selected) {
-      return this.put(vector, state, actions, editor);
+      const vectors = [
+        vector,
+        ...getSymmetricPositions(vector, editor.drawingMode, state.map.size),
+      ];
+      return this.draw(vectors, state, actions, editor);
     }
 
     const { animations, map } = state;
@@ -228,11 +234,46 @@ export default class DesignBehavior {
     return null;
   }
 
+  private draw(
+    vectors: Array<Vector>,
+    state: State,
+    actions: Actions,
+    editor: EditorState,
+  ): StateLike | null {
+    let newState: StateLike | null = null;
+    const players = Array.from(
+      new Set([...state.map.active, ...PlayerIDs.filter((id) => id !== 0)]),
+    ).slice(0, vectors.length);
+    vectors.forEach((vector, index) => {
+      const currentPlayerIndex = players.indexOf(
+        state.map.getCurrentPlayer().id,
+      );
+      const playerId =
+        players[
+          ((currentPlayerIndex >= 0 ? currentPlayerIndex : 0) + index) %
+            players.length
+        ];
+
+      newState = {
+        ...newState,
+        ...this.put(
+          vector,
+          { ...state, ...newState },
+          actions,
+          editor,
+          playerId,
+        ),
+      };
+    });
+    return newState;
+  }
+
   private put(
     vector: Vector,
     state: State,
     actions: Actions,
     editor: EditorState,
+    playerId: PlayerID,
   ): StateLike | null {
     if (shouldPlaceDecorator(editor)) {
       return null;
@@ -299,7 +340,14 @@ export default class DesignBehavior {
       );
     } else if (selected.unit) {
       this.previous = null;
-      return this.putUnit(selected.unit, vector, state, actions, editor);
+      return this.putUnit(
+        selected.unit,
+        vector,
+        state,
+        actions,
+        editor,
+        playerId,
+      );
     } else if (selected.building) {
       this.previous = null;
       return this.putBuilding(
@@ -308,6 +356,7 @@ export default class DesignBehavior {
         state,
         actions,
         editor,
+        playerId,
       );
     }
     return null;
@@ -503,6 +552,7 @@ export default class DesignBehavior {
     state: State,
     actions: Actions,
     editor: EditorState,
+    playerId: PlayerID,
   ): StateLike | null {
     const { map } = state;
     const { units } = map;
@@ -521,12 +571,7 @@ export default class DesignBehavior {
           ...spawn(
             actions,
             state,
-            [
-              [
-                vector,
-                unit.removeLeader().setPlayer(map.getCurrentPlayer().id),
-              ],
-            ],
+            [[vector, unit.removeLeader().setPlayer(playerId)]],
             null,
             ({ map }) => {
               updateUndoStack(actions, editor, [
@@ -551,6 +596,7 @@ export default class DesignBehavior {
     state: State,
     actions: Actions,
     editor: EditorState,
+    playerId: PlayerID,
   ): StateLike | null {
     const { animations, map } = state;
     const { buildings, units } = map;
@@ -568,14 +614,13 @@ export default class DesignBehavior {
     const config = map.config.copy({
       blocklistedBuildings: new Set(),
     });
-    const player = map.getCurrentPlayer();
     const isAlwaysNeutral = building.info.isStructure();
 
     const tryToPlaceBuilding = (state: State): StateLike | null => {
       let { map } = state;
       map = map.copy({
         active: getActivePlayers(map),
-        buildings: map.buildings.set(vector, building.setPlayer(player.id)),
+        buildings: map.buildings.set(vector, building.setPlayer(playerId)),
       });
 
       const { editorPlaceOn, placeOn } = building.info.configuration;
@@ -618,7 +663,7 @@ export default class DesignBehavior {
     return canBuild(
       getTemporaryMapForBuilding(temporaryMap, vector, building),
       building.info,
-      isAlwaysNeutral ? 0 : player,
+      isAlwaysNeutral ? 0 : playerId,
       vector,
       true,
     ) && !(building.info.isHQ() && map.currentPlayer === 0)
@@ -636,7 +681,7 @@ export default class DesignBehavior {
               return newState;
             },
             type: 'createBuilding',
-            variant: isAlwaysNeutral ? 0 : player.id,
+            variant: isAlwaysNeutral ? 0 : playerId,
           }),
           map: state.map.copy({ buildings: buildings.delete(vector) }),
         }
