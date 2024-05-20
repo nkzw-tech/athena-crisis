@@ -795,7 +795,6 @@ export default function MapEditor({
     setMap('reset', newMap);
     _setEditorState(getEditorBaseState(newMap, mapObject, mode, scenario));
     updatePreviousMap();
-    // TODO: delete fallback here
     Storage.removeItem(getUndoStackKey(''));
     Storage.removeItem(getUndoStackIndexKey(''));
   }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
