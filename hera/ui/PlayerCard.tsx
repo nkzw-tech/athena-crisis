@@ -321,47 +321,51 @@ export default memo(function PlayerCard({
                     'fundsPerTurn',
                     shouldShow ? calculateFunds(map, player) : '???',
                     <Icon
+                      className={playerStatsBeforeIconStyle}
+                      icon={Coin}
+                      key="before"
+                    />,
+                    <Icon
                       className={playerStatsAfterIconStyle}
                       icon={Reload}
-                      key={0}
+                      key="after"
                     />,
                   ] as const,
                   [
-                    'netUnits',
+                    'units',
                     shouldShow
-                      ? Math.max(
-                          player.stats.createdUnits - player.stats.lostUnits,
-                          0,
-                        )
+                      ? map.units.filter((unit) =>
+                          map.matchesPlayer(unit, player),
+                        ).size
                       : '???',
+                    <Icon
+                      className={playerStatsBeforeIconStyle}
+                      icon={HumanHandsdown}
+                      key="before"
+                    />,
                     null,
                   ] as const,
                   [
-                    'netBuildings',
+                    'buildings',
                     shouldShow
-                      ? Math.max(
-                          player.stats.createdBuildings -
-                            player.stats.lostBuildings,
-                          0,
-                        )
+                      ? map.buildings.filter((building) =>
+                          map.matchesPlayer(building, player),
+                        ).size
                       : '???',
+                    <Icon
+                      className={playerStatsBeforeIconStyle}
+                      icon={Buildings}
+                      key="before"
+                    />,
                     null,
                   ] as const,
-                ].map(([key, value, after]) => {
-                  const icon =
-                    key === 'fundsPerTurn'
-                      ? Coin
-                      : key === 'netUnits'
-                        ? HumanHandsdown
-                        : Buildings;
+                ].map(([key, value, before, after]) => {
                   return (
                     <Stack
                       className={cx(playerStatsStyle, nowrapStyle)}
                       key={key}
                     >
-                      <span>
-                        <Icon className={playerStatsIconStyle} icon={icon} />
-                      </span>
+                      <span>{before}</span>
                       <span>{value}</span>
                       <span>{after}</span>
                     </Stack>
@@ -514,7 +518,7 @@ const playerStatsStyle = css`
   margin-top: -1px;
 `;
 
-const playerStatsIconStyle = css`
+const playerStatsBeforeIconStyle = css`
   margin: 3px 4px 0 0;
 `;
 
