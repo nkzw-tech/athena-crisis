@@ -37,7 +37,7 @@ const style = css`
   pointer-events: auto;
   top: ${applyVar('inset')};
   width: calc(100vw - ${size * 3}px);
-  z-index: calc(${applyVar('inset-z')} + 2);
+  z-index: max(calc(${applyVar('inset-z')} + 2), 20);
 
   ${Breakpoints.xs} {
     width: 220px;

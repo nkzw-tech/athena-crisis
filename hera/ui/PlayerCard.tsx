@@ -28,17 +28,16 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
-import { PortraitWidth } from '../character/Portrait.tsx';
+import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { Actions } from '../Types.tsx';
@@ -64,23 +63,6 @@ export default memo(function PlayerCard({
   vision: VisionT;
   wide?: boolean;
 }) {
-  const [rootHeight, setRootHeight] = useState(0);
-  const playerInfoRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (playerInfoRef.current) {
-      const playerInfoEl = playerInfoRef.current;
-      const resizeObserver = new window.ResizeObserver((entries) => {
-        setRootHeight(entries[0].borderBoxSize[0].blockSize);
-      });
-      resizeObserver.observe(playerInfoEl);
-
-      return () => {
-        resizeObserver.unobserve(playerInfoEl);
-      };
-    }
-  }, []);
-
   const { optimisticAction, showGameInfo, update } = actions;
   const { winConditions } = map.config;
   const color = getColor(player.id);
@@ -179,9 +161,8 @@ export default memo(function PlayerCard({
 
   return (
     <div
-      className={playerStyle}
+      className={cx(playerStyle, wide && playerWideStyle)}
       style={{
-        height: rootHeight > 0 ? rootHeight : undefined,
         opacity: map.active.includes(player.id) ? 1 : 0.3,
       }}
     >
@@ -231,7 +212,6 @@ export default memo(function PlayerCard({
           charge > 0 && playerInfoWithCharges,
           wide && widePlayerInfoStyle,
         )}
-        ref={playerInfoRef}
       >
         <Stack alignCenter nowrap>
           <Stack vertical>
@@ -316,61 +296,37 @@ export default memo(function PlayerCard({
             </Stack>
             {wide && (
               <Stack className={offsetStyle} gap nowrap start>
-                {[
+                {(
                   [
-                    'fundsPerTurn',
-                    shouldShow ? calculateFunds(map, player) : '???',
-                    <Icon
-                      className={playerStatsBeforeIconStyle}
-                      icon={Coin}
-                      key="before"
-                    />,
-                    <Icon
-                      className={playerStatsAfterIconStyle}
-                      icon={Reload}
-                      key="after"
-                    />,
-                  ] as const,
-                  [
-                    'units',
-                    shouldShow
-                      ? map.units.filter((unit) =>
+                    [Reload, () => calculateFunds(map, player)],
+                    [
+                      HumanHandsdown,
+                      () =>
+                        map.units.filter((unit) =>
                           map.matchesPlayer(unit, player),
-                        ).size
-                      : '???',
-                    <Icon
-                      className={playerStatsBeforeIconStyle}
-                      icon={HumanHandsdown}
-                      key="before"
-                    />,
-                    null,
-                  ] as const,
-                  [
-                    'buildings',
-                    shouldShow
-                      ? map.buildings.filter((building) =>
+                        ).size,
+                    ],
+                    [
+                      Buildings,
+                      () =>
+                        map.buildings.filter((building) =>
                           map.matchesPlayer(building, player),
-                        ).size
-                      : '???',
+                        ).size,
+                    ],
+                  ] as const
+                ).map(([icon, getValue], index) => (
+                  <Stack
+                    className={cx(playerStatsStyle, nowrapStyle)}
+                    key={index}
+                  >
                     <Icon
                       className={playerStatsBeforeIconStyle}
-                      icon={Buildings}
-                      key="before"
-                    />,
-                    null,
-                  ] as const,
-                ].map(([key, value, before, after]) => {
-                  return (
-                    <Stack
-                      className={cx(playerStatsStyle, nowrapStyle)}
-                      key={key}
-                    >
-                      <span>{before}</span>
-                      <span>{value}</span>
-                      <span>{after}</span>
-                    </Stack>
-                  );
-                })}
+                      icon={icon}
+                      key="icon"
+                    />
+                    <span>{shouldShow ? getValue() : '???'}</span>
+                  </Stack>
+                ))}
               </Stack>
             )}
           </Stack>
@@ -415,6 +371,12 @@ export default memo(function PlayerCard({
 const width = PortraitWidth / 2;
 const playerStyle = css`
   position: relative;
+  max-height: ${PortraitHeight / 2}px;
+`;
+
+const playerWideStyle = css`
+  height: ${PortraitHeight * 0.75}px;
+  max-height: ${PortraitHeight}px;
 `;
 
 const playerInfoStyle = css`
@@ -520,8 +482,4 @@ const playerStatsStyle = css`
 
 const playerStatsBeforeIconStyle = css`
   margin: 3px 4px 0 0;
-`;
-
-const playerStatsAfterIconStyle = css`
-  margin: 3px 0 0 2px;
 `;
