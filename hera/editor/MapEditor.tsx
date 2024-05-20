@@ -201,6 +201,23 @@ export type BaseMapEditorProps = Readonly<{
   setHasChanges: (hasChanges: boolean) => void;
 }>;
 
+const getInitialMapFromUndoStack = (id?: string) => {
+  const undoStack = getUndoStack(id);
+
+  if (!undoStack) {
+    return null;
+  }
+
+  const undoStackIndex = getUndoStackIndex(id) ?? undoStack.length - 1;
+  const map = undoStack.at(undoStackIndex)?.[1];
+
+  if (!map) {
+    return null;
+  }
+
+  return { map, undoStack, undoStackIndex };
+};
+
 export default function MapEditor({
   animationSpeed,
   campaignLock,
@@ -244,7 +261,8 @@ export default function MapEditor({
     (size = new SizeVector(random(10, 15), random(10, 15))): MapData => {
       return withHumanPlayer(
         mapObject
-          ? MapData.fromJSON(mapObject.state)!
+          ? getInitialMapFromUndoStack(mapObject?.id)?.map ??
+              MapData.fromJSON(mapObject.state)!
           : withModifiers(
               generateSea(
                 generateBuildings(
@@ -359,20 +377,18 @@ export default function MapEditor({
     useState<PreviousMapEditorState | null>(() => {
       try {
         const effects = Storage.getItem(EFFECTS_KEY) || '';
-        const undoStack = getUndoStack(mapObject?.id);
 
-        if (!undoStack) {
+        const stateFromStorage = getInitialMapFromUndoStack(mapObject?.id);
+
+        if (!stateFromStorage) {
           return null;
         }
 
-        const undoStackIndex = getUndoStackIndex(mapObject?.id) ?? -1;
-        const map = undoStack[undoStackIndex ?? undoStack.length - 1][1];
-
         return {
           effects,
-          map,
-          undoStack,
-          undoStackIndex,
+          map: stateFromStorage.map,
+          undoStack: stateFromStorage.undoStack,
+          undoStackIndex: stateFromStorage.undoStackIndex,
         };
         // eslint-disable-next-line no-empty
       } catch {}
@@ -394,12 +410,11 @@ export default function MapEditor({
                 : 'checkpoint',
             map,
           ],
-          mapObject?.id,
         );
       }
       setInternalMapID(internalMapID + 1);
     },
-    [editor, internalMapID, setEditorState, mapObject?.id],
+    [editor, internalMapID, setEditorState],
   );
 
   const updatePreviousMap = useCallback(
@@ -659,7 +674,9 @@ export default function MapEditor({
                 undoStack.length,
               ),
             );
-            Storage.setItem(getUndoStackIndexKey(mapObject?.id), `${index}`);
+            if (Storage.getItem(getUndoStackKey(mapObject?.id)) !== null) {
+              Storage.setItem(getUndoStackIndexKey(mapObject?.id), `${index}`);
+            }
             if (index > -1 && index < undoStack.length) {
               const [, newMap] = undoStack.at(index) || [];
               if (newMap) {
@@ -778,6 +795,9 @@ export default function MapEditor({
     setMap('reset', newMap);
     _setEditorState(getEditorBaseState(newMap, mapObject, mode, scenario));
     updatePreviousMap();
+    // TODO: delete fallback here
+    Storage.removeItem(getUndoStackKey(''));
+    Storage.removeItem(getUndoStackIndexKey(''));
   }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
 
   const fillMap = useCallback(() => {
@@ -849,6 +869,16 @@ export default function MapEditor({
       return () => clearTimeout(timer);
     }
   }, [saveState]);
+
+  useEffect(() => {
+    if (editor.undoStack) {
+      const stack = editor.undoStack.map(([key, value]) => [
+        key,
+        value.toJSON(),
+      ]);
+      Storage.setItem(getUndoStackKey(mapObject?.id), JSON.stringify(stack));
+    }
+  }, [editor.undoStack, mapObject?.id]);
 
   // Disabling the context menu is handled globally in production,
   // so this is only needed for the Map Editor in development.
