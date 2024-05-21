@@ -1,0 +1,145 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "pnpm install"
+    },
+    {
+      "name": "Development Setup",
+      "command": "pnpm dev:setup"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "analyze": {
+      "name": "analyze",
+      "command": "pnpm analyze"
+    },
+    "build-assets:force": {
+      "name": "build-assets:force",
+      "command": "pnpm build-assets:force"
+    },
+    "build-assets": {
+      "name": "build-assets",
+      "command": "pnpm build-assets"
+    },
+    "build:client": {
+      "name": "build:client",
+      "command": "pnpm build:client"
+    },
+    "build:demo": {
+      "name": "build:demo",
+      "command": "pnpm build:demo"
+    },
+    "build:docker-server": {
+      "name": "build:docker-server",
+      "command": "pnpm build:docker-server"
+    },
+    "build:offline": {
+      "name": "build:offline",
+      "command": "pnpm build:offline"
+    },
+    "build:server": {
+      "name": "build:server",
+      "command": "pnpm build:server"
+    },
+    "build:splash": {
+      "name": "build:splash",
+      "command": "pnpm build:splash"
+    },
+    "build:docs": {
+      "name": "build:docs",
+      "command": "pnpm build:docs"
+    },
+    "build:steam-i18n": {
+      "name": "build:steam-i18n",
+      "command": "pnpm build:steam-i18n"
+    },
+    "codegen": {
+      "name": "codegen",
+      "command": "pnpm codegen"
+    },
+    "dev": {
+      "name": "dev",
+      "command": "pnpm dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3003
+      }
+    },
+    "dev:setup": {
+      "name": "dev:setup",
+      "command": "pnpm dev:setup"
+    },
+    "dev:update-deps": {
+      "name": "dev:update-deps",
+      "command": "pnpm dev:update-deps"
+    },
+    "disable-canvas": {
+      "name": "disable-canvas",
+      "command": "pnpm disable-canvas"
+    },
+    "enable-canvas": {
+      "name": "enable-canvas",
+      "command": "pnpm enable-canvas"
+    },
+    "fbt": {
+      "name": "fbt",
+      "command": "pnpm fbt"
+    },
+    "format": {
+      "name": "format",
+      "command": "pnpm format"
+    },
+    "i18n:download": {
+      "name": "i18n:download",
+      "command": "pnpm i18n:download"
+    },
+    "i18n:upload": {
+      "name": "i18n:upload",
+      "command": "pnpm i18n:upload"
+    },
+    "lint:format": {
+      "name": "lint:format",
+      "command": "pnpm lint:format"
+    },
+    "lint": {
+      "name": "lint",
+      "command": "pnpm lint"
+    },
+    "preinstall": {
+      "name": "preinstall",
+      "command": "pnpm preinstall"
+    },
+    "prisma": {
+      "name": "prisma",
+      "command": "pnpm prisma"
+    },
+    "relay": {
+      "name": "relay",
+      "command": "pnpm relay"
+    },
+    "test:ci": {
+      "name": "test:ci",
+      "command": "pnpm test:ci"
+    },
+    "test": {
+      "name": "test",
+      "command": "pnpm test"
+    },
+    "tsc:check": {
+      "name": "tsc:check",
+      "command": "pnpm tsc:check"
+    },
+    "vitest:run-ci": {
+      "name": "vitest:run-ci",
+      "command": "pnpm vitest:run-ci"
+    },
+    "vitest:run": {
+      "name": "vitest:run",
+      "command": "pnpm vitest:run"
+    }
+  }
+}

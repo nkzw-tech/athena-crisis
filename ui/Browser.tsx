@@ -4,7 +4,7 @@ declare global {
 }
 
 const maybeWindow =
-  typeof window === 'undefined'
+  typeof window === 'undefined' || typeof navigator === 'undefined'
     ? {
         HTMLElement: false,
         navigator: { maxTouchPoints: 0, userAgent: '' },
@@ -30,6 +30,10 @@ export const isSafari =
   ) ||
   isIOS;
 
-export const isWindows = /Win(dows|32|64|NT)/.test(navigator.userAgent);
+export const isWindows = /Win(dows|32|64|NT)/.test(
+  maybeWindow.navigator.userAgent,
+);
 
-export const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+export const isFirefox = maybeWindow.navigator.userAgent
+  .toLowerCase()
+  .includes('firefox');
