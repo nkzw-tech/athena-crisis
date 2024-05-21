@@ -62,6 +62,7 @@ import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
 import NullBehavior from './behavior/NullBehavior.tsx';
 import Cursor from './Cursor.tsx';
+import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
 import animateSupply from './lib/animateSupply.tsx';
@@ -717,8 +718,12 @@ export default class GameMap extends Component<Props, State> {
   ) => {
     this._update((state) => {
       const newState = {
-        ...this.state.behavior?.deactivate?.(),
-        ...resetBehavior(this.props.behavior),
+        ...state.behavior?.deactivate?.(),
+        ...resetBehavior(
+          state.lastActionResponse?.type === 'GameEnd'
+            ? NullBehavior
+            : this.props.behavior,
+        ),
       };
 
       if (
@@ -855,7 +860,13 @@ export default class GameMap extends Component<Props, State> {
     action: Action,
   ): [Promise<GameActionResponse>, MapData, ActionResponse] => {
     const { onAction } = this.props;
-    const { map, preventRemoteActions, vision } = state;
+    const { lastActionResponse, map, preventRemoteActions, vision } = state;
+    if (lastActionResponse?.type === 'GameEnd') {
+      throw new Error(
+        `Action: Cannot issue actions for a game that has ended.\nAction: '${JSON.stringify(action)}'`,
+      );
+    }
+
     if (preventRemoteActions) {
       const { currentViewer } = state;
       const player = map.getCurrentPlayer();
@@ -1721,12 +1732,25 @@ export default class GameMap extends Component<Props, State> {
             {(propsShowCursor || propsShowCursor == null) &&
               showCursor &&
               !replayState.isReplaying && (
-                <Cursor
-                  position={position}
-                  size={tileSize}
-                  zIndex={zIndex - 4}
-                />
+                <>
+                  <Cursor
+                    position={position}
+                    size={tileSize}
+                    zIndex={zIndex - 4}
+                  />
+                  {editor?.mode === 'design' && (
+                    <MapEditorExtraCursors
+                      color="red"
+                      drawingMode={editor?.drawingMode}
+                      mapSize={map.size}
+                      origin={position}
+                      size={tileSize}
+                      zIndex={zIndex}
+                    />
+                  )}
+                </>
               )}
+
             <MapAnimations
               actions={this._actions}
               animationComplete={this._animationComplete}
@@ -1804,7 +1828,7 @@ export default class GameMap extends Component<Props, State> {
                             position={vector}
                             tileSize={tileSize}
                             width={map.size.width}
-                            zIndex={zIndex + 20}
+                            zIndex={zIndex}
                           />
                         )
                       );

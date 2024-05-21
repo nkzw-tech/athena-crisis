@@ -5,6 +5,7 @@ import {
   escortedByPlayer,
 } from '@deities/apollo/lib/checkWinCondition.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -29,12 +30,14 @@ import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
+import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
+import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
-import { PortraitWidth } from '../character/Portrait.tsx';
+import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { Actions } from '../Types.tsx';
@@ -158,8 +161,10 @@ export default memo(function PlayerCard({
 
   return (
     <div
-      className={playerStyle}
-      style={{ opacity: map.active.includes(player.id) ? 1 : 0.3 }}
+      className={cx(playerStyle, wide && playerWideStyle)}
+      style={{
+        opacity: map.active.includes(player.id) ? 1 : 0.3,
+      }}
     >
       <Stack className={chargeStyle} nowrap start>
         {Array(availableCharges + 1)
@@ -289,6 +294,41 @@ export default memo(function PlayerCard({
                   );
                 })}
             </Stack>
+            {wide && (
+              <Stack className={offsetStyle} gap nowrap start>
+                {(
+                  [
+                    [Reload, () => calculateFunds(map, player)],
+                    [
+                      HumanHandsdown,
+                      () =>
+                        map.units.filter((unit) =>
+                          map.matchesPlayer(unit, player),
+                        ).size,
+                    ],
+                    [
+                      Buildings,
+                      () =>
+                        map.buildings.filter((building) =>
+                          map.matchesPlayer(building, player),
+                        ).size,
+                    ],
+                  ] as const
+                ).map(([icon, getValue], index) => (
+                  <Stack
+                    className={cx(playerStatsStyle, nowrapStyle)}
+                    key={index}
+                  >
+                    <Icon
+                      className={playerStatsBeforeIconStyle}
+                      icon={icon}
+                      key="icon"
+                    />
+                    <span>{shouldShow ? getValue() : '???'}</span>
+                  </Stack>
+                ))}
+              </Stack>
+            )}
           </Stack>
           {player.skills.size ? (
             <Stack className={skillStyle} nowrap>
@@ -331,6 +371,12 @@ export default memo(function PlayerCard({
 const width = PortraitWidth / 2;
 const playerStyle = css`
   position: relative;
+  max-height: ${PortraitHeight / 2}px;
+`;
+
+const playerWideStyle = css`
+  height: ${PortraitHeight * 0.75}px;
+  max-height: ${PortraitHeight}px;
 `;
 
 const playerInfoStyle = css`
@@ -428,4 +474,12 @@ const skillStyle = css`
 
 const fundStyle = css`
   margin-top: -1px;
+`;
+
+const playerStatsStyle = css`
+  margin-top: -1px;
+`;
+
+const playerStatsBeforeIconStyle = css`
+  margin: 3px 4px 0 0;
 `;

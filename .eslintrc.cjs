@@ -47,6 +47,7 @@ module.exports = {
   ],
   plugins: ['@deities'],
   rules: {
+    '@typescript-eslint/array-type': [2, { default: 'generic' }],
     '@typescript-eslint/no-restricted-imports': [
       2,
       {
