@@ -43,6 +43,7 @@ import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
+import { Abilities, Ability } from '../../athena/info/Unit.tsx';
 
 const initialMap = MapData.createMap({
   config: {
@@ -845,4 +846,64 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
     "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4] }
     GameEnd { condition: { hidden: false, label: [ 2 ], players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
   `);
+});
+
+test('AI heals units when healers are available', () => {
+  const map = new MapData();
+  const currentPlayer = map.getCurrentPlayer();
+  const healerUnit = new Unit({ player: currentPlayer, abilities: [Ability.Heal], currentHp: 100, maxHp: 100 });
+  const injuredUnit = new Unit({ player: currentPlayer, currentHp: 50, maxHp: 100 });
+
+  map.units.set(new Vector(1, 1), healerUnit);
+  map.units.set(new Vector(2, 2), injuredUnit);
+
+  const ai = new AIBehavior();
+  const result = ai.healUnit(map);
+
+  expect(result).not.toBeNull();
+  expect(injuredUnit.currentHp).toBeGreaterThan(50); // Check if the unit has been healed
+});
+
+test('AI does not heal when no healable units are present', () => {
+  const map = new MapData();
+  const currentPlayer = map.getCurrentPlayer();
+  const healerUnit = new Unit({ player: currentPlayer, abilities: [Ability.Heal], currentHp: 100, maxHp: 100 });
+  const healthyUnit = new Unit({ player: currentPlayer, currentHp: 100, maxHp: 100 });
+
+  map.units.set(new Vector(1, 1), healerUnit);
+  map.units.set(new Vector(2, 2), healthyUnit);
+
+  const ai = new AIBehavior();
+  const result = ai.healUnit(map);
+
+  expect(result).toBeNull(); // No heal should happen since the unit is already at max health
+});
+
+test('AI considers building a Medic or Support Ship', () => {
+  const map = new MapData();
+  const currentPlayer = new Player({ id: 1, funds: 200, resources: [{ type: ResourceType.Metal, amount: 100 }] });
+  map.setCurrentPlayer(currentPlayer);
+
+  const building = new Building({ player: currentPlayer, buildableUnitTypes: [UnitType.Medic, UnitType.SupportShip] });
+  map.buildings.set(new Vector(1, 1), building);
+
+  const ai = new AIBehavior();
+  const result = ai.createUnit(map);
+
+  expect(result).not.toBeNull();
+  expect([UnitType.Medic, UnitType.SupportShip]).toContain(result.unitType);
+});
+
+test('AI does not build Medic or Support Ship when funds are insufficient', () => {
+  const map = new MapData();
+  const currentPlayer = new Player({ id: 1, funds: 50, resources: [{ type: ResourceType.Metal, amount: 50 }] });
+  map.setCurrentPlayer(currentPlayer);
+
+  const building = new Building({ player: currentPlayer, buildableUnitTypes: [UnitType.Medic, UnitType.SupportShip] });
+  map.buildings.set(new Vector(1, 1), building);
+
+  const ai = new AIBehavior();
+  const result = ai.createUnit(map);
+
+  expect(result).toBeNull();
 });

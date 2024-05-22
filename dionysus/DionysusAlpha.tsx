@@ -73,6 +73,29 @@ type CreateUnitCombination = {
   weight: number;
 };
 
+// Define or import the necessary constants and types
+const UnitType = {
+  Medic: 'Medic',
+  SupportShip: 'SupportShip',
+};
+
+const ResourceType = {
+  Metal: 'Metal',
+};
+
+const Medic = {
+  cost: 100, // Example cost, replace with actual cost
+  metalCost: 50, // Example metal cost, replace with actual cost
+  getInfo: () => ({ id: 'medic', type: UnitType.Medic, maxHp: 100, ...otherMedicProperties }),
+};
+
+const SupportShip = {
+  cost: 150, // Example cost, replace with actual cost
+  metalCost: 75, // Example metal cost, replace with actual cost
+  getInfo: () => ({ id: 'supportShip', type: UnitType.SupportShip, maxHp: 200, ...otherSupportShipProperties }),
+};
+
+
 // DionysusAlpha is the first AI, and it is the most aggressive one.
 // At each turn, it checks which unit can do the most damage to another unit and then attacks.
 export default class DionysusAlpha extends BaseAI {
@@ -88,6 +111,7 @@ export default class DionysusAlpha extends BaseAI {
       this.fold(map) ||
       this.createBuilding(map) ||
       this.move(map) ||
+      this.healUnit(map) ||
       this.unfold(map) ||
       this.buySkills(map) ||
       this.createUnit(map) ||
@@ -363,6 +387,59 @@ export default class DionysusAlpha extends BaseAI {
 
     return null;
   }
+
+
+private healUnit(map: MapData): MapData | null {
+    const currentPlayer = map.getCurrentPlayer();
+    const healers = map.units.filter(
+      (unit: any) =>
+        !unit.isCompleted() &&
+        unit.info.hasAbility(Ability.Heal) &&
+        map.matchesPlayer(currentPlayer, unit),
+    );
+  
+    if (!healers.size) {
+      return null;
+    }
+  
+    for (const [from, healer] of healers) {
+      const healableUnits = map.units
+        .filter((unit: any) => {
+          return (
+            unit &&
+            map.isPlayerUnit(currentPlayer, unit) && 
+            unit.currentHp < unit.info.maxHp 
+          );
+        })
+        .map((unit: any) => unit.position); 
+  
+      for (const to of healableUnits) {
+        const healCost = this.getHealCost(healer.info, map.units.get(to)!.info);
+        if (currentPlayer.resources >= healCost) {
+          this.tryAttacking(); 
+          return this.execute(map, this.HealUnitAction(from, to));
+        }
+      }
+    }
+  
+    return null;
+  }
+
+  
+  
+  
+  HealUnitAction(from: Vector, to: Vector): { from: Vector, to: Vector } {
+    return { from, to };
+  }
+  
+  getHealCost(unit: Unit, map: MapData): number {
+    const healCostPerHp = 10; 
+    const maxHp = unit.info.maxHp;
+    const missingHp = maxHp - unit.currentHp;
+    return missingHp * healCostPerHp;
+  }
+  
+  
 
   private rescue(map: MapData): MapData | null {
     if (!map.hasNeutralUnits()) {
@@ -664,6 +741,33 @@ export default class DionysusAlpha extends BaseAI {
     if (!buildings.size) {
       return null;
     }
+
+    //logic to consider building a Medic or Support Ship
+    const shouldBuildMedicOrSupportShip =
+    Math.random() < 0.1 && // Adjust the probability 
+    currentPlayer.funds >= Medic.cost && 
+    currentPlayer.resources.some(resource => resource.type === ResourceType.Metal && resource.amount >= Medic.metalCost); 
+
+  // Check if Medic or Support Ship should be built
+  if (shouldBuildMedicOrSupportShip) {
+    const availableBuildings = [...buildings.values()];
+    const validBuildings = availableBuildings.filter(building =>
+      building.canBuildUnitType(currentPlayer, UnitType.Medic) ||
+      building.canBuildUnitType(currentPlayer, UnitType.SupportShip)
+    );
+
+    if (validBuildings.length > 0) {
+      const building = validBuildings[Math.floor(Math.random() * validBuildings.length)];
+      const unitType = Math.random() < 0.5 ? UnitType.Medic : UnitType.SupportShip; // Randomly choose between Medic and Support Ship
+      const unitInfo = unitType === UnitType.Medic ? Medic.getInfo() : SupportShip.getInfo();
+      const deployableVectors = getDeployableVectors(map, unitInfo, building.position, currentPlayer.id);
+      
+      if (deployableVectors.length > 0) {
+        const to = deployableVectors[Math.floor(Math.random() * deployableVectors.length)];
+        return this.execute(map, CreateUnitAction(building.position, unitInfo.id, to));
+      }
+    }
+  }
 
     const buildCapabilities = getPossibleUnitAbilitiesForBuildings(
       [...buildings.values()],
@@ -1270,3 +1374,6 @@ const shouldBuildNavalUnits = (
 const hasTooManyOfType = (units: ReadonlyArray<Unit>, unitInfo: UnitInfo) =>
   units.length > 10 &&
   units.filter(({ id }) => id === unitInfo.id).length / units.length > 0.2;
+
+
+  
