@@ -80,7 +80,7 @@ export default function MapEditorExample() {
 
   const handleMapUpdate = useCallback(
     (variables: MapCreateVariables | MapUpdateVariables) => {
-      const nameToSlug = toSlug(variables.mapName);
+      const slug = toSlug(variables.mapName);
 
       setMapObject({
         campaigns: {
@@ -92,9 +92,9 @@ export default function MapEditorExample() {
           username: viewer.username,
         },
         effects: JSON.stringify(encodeEffects(variables.effects)),
-        id: 'id' in variables ? variables.id : nameToSlug,
+        id: 'id' in variables ? variables.id : slug,
         name: variables.mapName,
-        slug: nameToSlug,
+        slug,
         state: JSON.stringify(variables.map.toJSON()),
         tags: variables.tags,
       });

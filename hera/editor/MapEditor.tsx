@@ -92,8 +92,8 @@ import BiomeIcon from './lib/BiomeIcon.tsx';
 import canFillTile from './lib/canFillTile.tsx';
 import getMapValidationErrorText from './lib/getMapValidationErrorText.tsx';
 import updateUndoStack, {
-  getUndoStackIndexKey,
-  getUndoStackKey,
+  getUndoStackIndexKeyFor,
+  getUndoStackKeyFor,
 } from './lib/updateUndoStack.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
@@ -130,10 +130,10 @@ export function decodeUndoStack(
 }
 
 const getUndoStack = (id?: string) =>
-  decodeUndoStack(Storage.getItem(getUndoStackKey(id)));
+  decodeUndoStack(Storage.getItem(getUndoStackKeyFor(id)));
 
 const getUndoStackIndex = (id?: string) => {
-  const index = Storage.getItem(getUndoStackIndexKey(id));
+  const index = Storage.getItem(getUndoStackIndexKeyFor(id));
   return index ? Number.parseInt(index, 10) : undefined;
 };
 
@@ -377,7 +377,6 @@ export default function MapEditor({
     useState<PreviousMapEditorState | null>(() => {
       try {
         const effects = Storage.getItem(EFFECTS_KEY) || '';
-
         const stateFromStorage = getInitialMapFromUndoStack(mapObject?.id);
 
         if (!stateFromStorage) {
@@ -548,15 +547,15 @@ export default function MapEditor({
           },
           setSaveState,
         );
-        Storage.removeItem(getUndoStackKey(''));
-        Storage.removeItem(getUndoStackIndexKey(''));
+        Storage.removeItem(getUndoStackKeyFor(''));
+        Storage.removeItem(getUndoStackIndexKeyFor(''));
         Storage.setItem(
-          getUndoStackKey(toSlug(mapName)),
+          getUndoStackKeyFor(toSlug(mapName)),
           JSON.stringify(stack),
         );
         if (editor.undoStackIndex !== null) {
           Storage.setItem(
-            getUndoStackIndexKey(toSlug(mapName)),
+            getUndoStackIndexKeyFor(toSlug(mapName)),
             `${editor?.undoStackIndex}`,
           );
         }
@@ -572,10 +571,13 @@ export default function MapEditor({
           type,
           setSaveState,
         );
-        Storage.setItem(getUndoStackKey(mapObject?.id), JSON.stringify(stack));
+        Storage.setItem(
+          getUndoStackKeyFor(mapObject?.id),
+          JSON.stringify(stack),
+        );
         if (editor.undoStackIndex !== null) {
           Storage.setItem(
-            getUndoStackIndexKey(mapObject?.id),
+            getUndoStackIndexKeyFor(mapObject?.id),
             `${editor?.undoStackIndex}`,
           );
         }
@@ -674,8 +676,11 @@ export default function MapEditor({
                 undoStack.length,
               ),
             );
-            if (Storage.getItem(getUndoStackKey(mapObject?.id)) !== null) {
-              Storage.setItem(getUndoStackIndexKey(mapObject?.id), `${index}`);
+            if (Storage.getItem(getUndoStackKeyFor(mapObject?.id)) !== null) {
+              Storage.setItem(
+                getUndoStackIndexKeyFor(mapObject?.id),
+                `${index}`,
+              );
             }
             if (index > -1 && index < undoStack.length) {
               const [, newMap] = undoStack.at(index) || [];
@@ -795,8 +800,8 @@ export default function MapEditor({
     setMap('reset', newMap);
     _setEditorState(getEditorBaseState(newMap, mapObject, mode, scenario));
     updatePreviousMap();
-    Storage.removeItem(getUndoStackKey(''));
-    Storage.removeItem(getUndoStackIndexKey(''));
+    Storage.removeItem(getUndoStackKeyFor(''));
+    Storage.removeItem(getUndoStackIndexKeyFor(''));
   }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
 
   const fillMap = useCallback(() => {
@@ -875,7 +880,7 @@ export default function MapEditor({
         key,
         value.toJSON(),
       ]);
-      Storage.setItem(getUndoStackKey(mapObject?.id), JSON.stringify(stack));
+      Storage.setItem(getUndoStackKeyFor(mapObject?.id), JSON.stringify(stack));
     }
   }, [editor.undoStack, mapObject?.id]);
 
