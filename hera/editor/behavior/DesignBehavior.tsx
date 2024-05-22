@@ -241,9 +241,7 @@ export default class DesignBehavior {
     editor: EditorState,
   ): StateLike | null {
     let newState: StateLike | null = null;
-    const players = Array.from(
-      new Set([...state.map.active, ...PlayerIDs.filter((id) => id !== 0)]),
-    ).slice(0, vectors.length);
+    const players = PlayerIDs.filter((id) => id !== 0);
     vectors.forEach((vector, index) => {
       const currentPlayerIndex = players.indexOf(
         state.map.getCurrentPlayer().id,
