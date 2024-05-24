@@ -1,19 +1,39 @@
 import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
-import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import { PlainEntitiesList, PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import { Effects } from './Effects.tsx';
-import { EncodedActionResponse } from './EncodedActions.tsx';
+import {
+  decodeActionResponse,
+  encodeActionResponse,
+  EncodedActionResponse,
+} from './EncodedActions.tsx';
 
 export type GameStateEntry = readonly [ActionResponse, MapData];
+export type EncodedGameStateEntry = readonly [EncodedActionResponse, PlainMap];
 export type GameState = ReadonlyArray<GameStateEntry>;
+export type EncodedGameState = ReadonlyArray<EncodedGameStateEntry>;
 export type MutableGameState = Array<GameStateEntry>;
 export type GameStateWithEffects = ReadonlyArray<
   readonly [...GameStateEntry, Effects]
 >;
+
+export function encodeGameState(gameState: GameState): EncodedGameState {
+  return [...gameState].map(([actionResponse, map]) => [
+    encodeActionResponse(actionResponse),
+    map.toJSON(),
+  ]);
+}
+
+export function decodeGameState(encodedGameState: EncodedGameState): GameState {
+  return encodedGameState.map(([encodedActionResponse, plainMap]) => [
+    decodeActionResponse(encodedActionResponse),
+    MapData.fromObject(plainMap),
+  ]);
+}
 
 export type EncodedGameActionResponseWithError =
   | EncodedGameActionResponse

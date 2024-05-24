@@ -155,5 +155,8 @@ export default defineConfig({
     resolve: {
       alias: [resolver],
     },
+    server: {
+      hmr: false,
+    },
   },
 });
