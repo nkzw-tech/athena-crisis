@@ -1,6 +1,7 @@
 import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
+import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   decodeEffects,
   Effects,
@@ -24,14 +25,13 @@ import {
 import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/WinConditions.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, {
   ClientGame,
 } from '@deities/hermes/game/toClientGame.tsx';
 import { useCallback } from 'react';
 import EvaluationWorker from '../editor/workers/evaluation?worker';
-
-var worker = new EvaluationWorker();
 
 const ActionError = (action: Action) =>
   new Error(`Map: Error executing remote '${action.type}' action.`);
@@ -62,27 +62,42 @@ export default function useClientGameAction(
       }
 
       try {
-        const [
-          encodedActionResponse,
-          plainMap,
-          encodedGameState,
-          encodedEffects,
-        ] = await new Promise<
-          [EncodedActionResponse, PlainMap, EncodedGameState, EncodedEffects]
-        >((resolve) => {
-          worker.postMessage([
-            map.toJSON(),
-            encodeEffects(game.effects),
-            action,
-            mutateAction,
-          ]);
-          worker.onmessage = (event) => resolve(event.data);
-        });
+        // In production run evaluation using async worker,
+        // Not supported in development mode yet, see : https://github.com/vitejs/vite/issues/5396
+        if (import.meta.env.PROD) {
+          var worker = new EvaluationWorker();
+          const [
+            encodedActionResponse,
+            plainMap,
+            encodedGameState,
+            encodedEffects,
+          ] = await new Promise<
+            [EncodedActionResponse, PlainMap, EncodedGameState, EncodedEffects]
+          >((resolve) => {
+            worker.postMessage([
+              map.toJSON(),
+              encodeEffects(game.effects),
+              action,
+              mutateAction,
+            ]);
+            worker.onmessage = (event) => resolve(event.data);
+          });
 
-        actionResponse = decodeActionResponse(encodedActionResponse);
-        initialActiveMap = MapData.fromObject(plainMap);
-        gameState = decodeGameState(encodedGameState);
-        newEffects = decodeEffects(encodedEffects);
+          actionResponse = decodeActionResponse(encodedActionResponse);
+          initialActiveMap = MapData.fromObject(plainMap);
+          gameState = decodeGameState(encodedGameState);
+          newEffects = decodeEffects(encodedEffects);
+        } else {
+          [actionResponse, initialActiveMap, gameState, newEffects] =
+            executeGameAction(
+              map,
+              vision,
+              game.effects,
+              action,
+              AIRegistry,
+              mutateAction,
+            ) || [null, null, null];
+        }
       } catch (error) {
         return Promise.reject(
           process.env.NODE_ENV === 'development' ? error : ActionError(action),
