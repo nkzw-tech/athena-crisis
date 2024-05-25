@@ -3,6 +3,7 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import { injectGlobal } from '@emotion/css';
 import paletteSwap, { HEX } from '@nkzw/palette-swap';
 import Variants from 'athena-crisis:asset-variants';
+import { AssetDomain, AssetVersion } from './AssetInfo.tsx';
 import BiomeVariants from './BiomeVariants.tsx';
 import VariantConfiguration, {
   SpriteVariantConfiguration,
@@ -31,9 +32,6 @@ type CanvasToURLFn = (canvas: Canvas, name: string) => Promise<string>;
 
 const SHOULD_SWAP =
   process.env.NODE_ENV !== 'production' || process.env.IS_DEMO;
-
-export const AssetDomain = 'https://art.athenacrisis.com';
-export const AssetVersion = 'v10';
 
 // Keep remote images in memory forever.
 const imageCache = [];
