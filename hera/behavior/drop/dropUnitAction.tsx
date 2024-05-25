@@ -15,7 +15,15 @@ export default function dropUnitAction(
   const { from, to } = actionResponse;
   const { vision } = state;
   const originalUnitA = state.map.units.get(from)!;
+  const newUnitB = map.units.get(to);
   const unitB = originalUnitA.getTransportedUnit(actionResponse.index)!;
+  if (!newUnitB) {
+    return {
+      map,
+      ...resetBehavior(),
+    };
+  }
+
   return {
     animations: addMoveAnimation(state.animations, {
       from,
@@ -47,7 +55,7 @@ export default function dropUnitAction(
     map: map.copy({
       units: map.units
         .set(from, originalUnitA.drop(unitB).recover())
-        .set(to, map.units.get(to)!.recover()),
+        .set(to, newUnitB.recover()),
     }),
     ...resetBehavior(),
     behavior: new NullBehavior(),
