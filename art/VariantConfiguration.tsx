@@ -71,6 +71,7 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
         -2,
         -3,
       ]),
+      asImage: true,
     },
   ],
   [
