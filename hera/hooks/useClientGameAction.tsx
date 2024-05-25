@@ -32,7 +32,7 @@ import toClientGame, {
 } from '@deities/hermes/game/toClientGame.tsx';
 import { useCallback } from 'react';
 // eslint-disable-next-line import/no-unresolved
-import EvaluationWorker from '../workers/evaluation?worker';
+import gameActionWorker from '../workers/gameAction?worker';
 
 const ActionError = (action: Action) =>
   new Error(`Map: Error executing remote '${action.type}' action.`);
@@ -66,7 +66,7 @@ export default function useClientGameAction(
         // In production run evaluation using async worker,
         // Not supported in development mode yet, see : https://github.com/vitejs/vite/issues/5396
         if (import.meta.env.PROD) {
-          const worker = new EvaluationWorker();
+          const worker = new gameActionWorker();
           const [
             encodedActionResponse,
             plainMap,
