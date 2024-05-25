@@ -31,7 +31,8 @@ import toClientGame, {
   ClientGame,
 } from '@deities/hermes/game/toClientGame.tsx';
 import { useCallback } from 'react';
-import EvaluationWorker from '../editor/workers/evaluation?worker';
+// eslint-disable-next-line import/no-unresolved
+import EvaluationWorker from '../workers/evaluation?worker';
 
 const ActionError = (action: Action) =>
   new Error(`Map: Error executing remote '${action.type}' action.`);
@@ -44,7 +45,7 @@ export default function useClientGameAction(
   return useCallback(
     async (action: Action): Promise<GameActionResponse> => {
       if (!game) {
-        return Promise.reject(new Error('Client Game: Map state is missing.'));
+        throw new Error('Client Game: Map state is missing.');
       }
 
       let actionResponse: ActionResponse | null;
@@ -58,14 +59,14 @@ export default function useClientGameAction(
       const isStart = action.type === 'Start';
 
       if (isStart === !!game.lastAction) {
-        return Promise.reject(ActionError(action));
+        throw ActionError(action);
       }
 
       try {
         // In production run evaluation using async worker,
         // Not supported in development mode yet, see : https://github.com/vitejs/vite/issues/5396
         if (import.meta.env.PROD) {
-          var worker = new EvaluationWorker();
+          const worker = new EvaluationWorker();
           const [
             encodedActionResponse,
             plainMap,
@@ -99,9 +100,9 @@ export default function useClientGameAction(
             ) || [null, null, null];
         }
       } catch (error) {
-        return Promise.reject(
-          process.env.NODE_ENV === 'development' ? error : ActionError(action),
-        );
+        throw process.env.NODE_ENV === 'development'
+          ? error
+          : ActionError(action);
       }
 
       if (actionResponse && initialActiveMap && gameState) {
@@ -122,31 +123,25 @@ export default function useClientGameAction(
         );
         gameState = dropLabelsFromGameState(gameState, hiddenLabels);
 
-        return Promise.resolve(
-          decodeGameActionResponse(
-            encodeGameActionResponse(
-              map,
-              initialActiveMap,
-              vision,
-              onGameEnd(
-                gameState,
-                newEffects || game.effects,
-                currentViewer.id,
-              ),
-              null,
-              actionResponse?.type === 'EndTurn'
-                ? computeVisibleEndTurnActionResponse(
-                    actionResponse,
-                    map,
-                    initialActiveMap,
-                    vision,
-                  )
-                : actionResponse,
-            ),
+        return decodeGameActionResponse(
+          encodeGameActionResponse(
+            map,
+            initialActiveMap,
+            vision,
+            onGameEnd(gameState, newEffects || game.effects, currentViewer.id),
+            null,
+            actionResponse?.type === 'EndTurn'
+              ? computeVisibleEndTurnActionResponse(
+                  actionResponse,
+                  map,
+                  initialActiveMap,
+                  vision,
+                )
+              : actionResponse,
           ),
         );
       }
-      return Promise.reject(ActionError(action));
+      throw ActionError(action);
     },
     [game, mutateAction, setGame],
   );

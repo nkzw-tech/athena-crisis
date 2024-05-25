@@ -10,7 +10,7 @@ import { encodeGameState, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 
-onmessage = function (event) {
+self.onmessage = function (event) {
   const [plainMap, encodedEffects, action, mutateAction] = event.data;
 
   const map = MapData.fromObject(plainMap);
@@ -25,7 +25,7 @@ onmessage = function (event) {
     Effects | null,
   ] = executeGameAction(map, vision, effects, action, AIRegistry, mutateAction);
 
-  postMessage([
+  self.postMessage([
     actionResponse ? encodeActionResponse(actionResponse) : null,
     initialActiveMap ? initialActiveMap?.toJSON() : null,
     gameState ? encodeGameState(gameState) : null,
