@@ -19,14 +19,14 @@
     "@emotion/css": "^11.11.2",
     "array-shuffle": "^3.0.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.2.4",
+    "framer-motion": "^11.2.6",
     "react": "19.0.0-rc-915b914b3a-20240515",
     "react-dom": "19.0.0-rc-915b914b3a-20240515",
     "react-error-boundary": "^4.0.13"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.11.0",
-    "@types/react": "^18.3.2",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0"
   }
 }
