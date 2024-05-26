@@ -33,16 +33,6 @@ export default memo(function Portrait({
   const hasPortraits = useSprites('portraits');
 
   const { position } = unit.sprite.portrait;
-  const positions = [
-    {
-      x: position.x * PortraitWidth,
-      y: (position.y + (variant || 0)) * PortraitHeight,
-    },
-    {
-      x: position.x * PortraitWidth,
-      y: (position.y + (variant || 0) + 6) * PortraitHeight,
-    },
-  ];
 
   useLayoutEffect(() => {
     if (!hasPortraits) {
@@ -58,6 +48,16 @@ export default memo(function Portrait({
     const context = canvas.getContext('2d')!;
 
     let currentPosition = 0;
+    const positions = [
+      {
+        x: position.x * PortraitWidth,
+        y: (position.y + (variant || 0)) * PortraitHeight,
+      },
+      {
+        x: position.x * PortraitWidth,
+        y: (position.y + (variant || 0) + 6) * PortraitHeight,
+      },
+    ];
     function animateImage() {
       context.drawImage(
         image,
@@ -80,7 +80,7 @@ export default memo(function Portrait({
     }
 
     animateImage();
-  }, [hasPortraits, animate, paused]);
+  }, [hasPortraits, animate, paused, player, position, variant]);
 
   return (
     <div
