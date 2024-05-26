@@ -59,6 +59,7 @@ export default memo(function Portrait({
       },
     ];
     function animateImage() {
+      context.clearRect(0, 0, PortraitWidth, PortraitHeight);
       context.drawImage(
         image,
         positions[currentPosition].x,
