@@ -75,7 +75,8 @@ export default memo(function Portrait({
     }
 
     if (animate) {
-      setInterval(animate, 1000 / positions.length);
+      const interval = setInterval(animate, 1000 / positions.length);
+      return () => clearInterval(interval);
     }
   }, [hasPortraits]);
 
