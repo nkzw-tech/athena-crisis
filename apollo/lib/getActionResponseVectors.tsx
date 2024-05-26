@@ -90,6 +90,7 @@ export default function getActionResponseVectors(
     case 'PreviousTurnGameOver':
     case 'ReceiveReward':
     case 'SecretDiscovered':
+    case 'OptionalWin':
     case 'SetViewer':
     case 'Start':
       break;

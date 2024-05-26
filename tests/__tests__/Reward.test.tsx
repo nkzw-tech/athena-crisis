@@ -39,6 +39,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
   const captureCondition = {
     amount: 1,
     hidden: false,
+    optional: false,
     reward: {
       skill: Skill.BuyUnitCannon,
       type: 'skill',
@@ -51,6 +52,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
       winConditions: [
         {
           hidden: false,
+          optional: false,
           type: WinCriteria.Default,
         },
         captureCondition,
@@ -114,7 +116,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
   `);
 });
 
@@ -128,6 +130,7 @@ test(`each skill is only received once`, () => {
   const captureCondition = {
     amount: 1,
     hidden: false,
+    optional: false,
     reward,
     type: WinCriteria.CaptureAmount,
   } as const;
@@ -137,6 +140,7 @@ test(`each skill is only received once`, () => {
       winConditions: [
         {
           hidden: false,
+          optional: false,
           reward,
           type: WinCriteria.Default,
         },
@@ -201,7 +205,7 @@ test(`each skill is only received once`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
   `);
 });
 

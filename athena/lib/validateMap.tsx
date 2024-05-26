@@ -35,7 +35,7 @@ import Unit, { TransportedUnit } from '../map/Unit.tsx';
 import vec from '../map/vec.tsx';
 import MapData from '../MapData.tsx';
 import {
-  dropInactivePlayersFromWinConditions,
+  resetWinConditions,
   validateWinConditions,
 } from '../WinConditions.tsx';
 import canBuild from './canBuild.tsx';
@@ -405,7 +405,7 @@ export default function validateMap(
     active,
     buildings: map.buildings.map((entity) => entity.recover()),
     config: map.config.copy({
-      winConditions: dropInactivePlayersFromWinConditions(
+      winConditions: resetWinConditions(
         map.config.winConditions,
         new Set(active),
       ),

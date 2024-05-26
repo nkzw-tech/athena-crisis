@@ -2,22 +2,23 @@ import MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
-import { GameEndActionResponse } from '../GameOver.tsx';
+import {
+  GameEndActionResponse,
+  OptionalWinActionResponse,
+} from '../GameOver.tsx';
 import { GameState, MutableGameState } from '../Types.tsx';
 import getWinningTeam from './getWinningTeam.tsx';
 
 export function processRewards(
   map: MapData,
-  gameEndResponse: GameEndActionResponse,
+  actionResponse: GameEndActionResponse | OptionalWinActionResponse,
 ): [GameState, MapData] {
   const gameState: MutableGameState = [];
-  const winningTeam = getWinningTeam(map, gameEndResponse);
+  const winningTeam = getWinningTeam(map, actionResponse);
   if (winningTeam !== 'draw') {
     const rewards = new Set(
       [
-        'condition' in gameEndResponse
-          ? gameEndResponse.condition?.reward
-          : null,
+        'condition' in actionResponse ? actionResponse.condition?.reward : null,
         map.config.winConditions.find(
           (condition) => condition.type === WinCriteria.Default,
         )?.reward,

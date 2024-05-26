@@ -381,10 +381,11 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
     ),
     config: initialMap.config.copy({
       winConditions: [
-        { hidden: false, type: WinCriteria.Default },
+        { hidden: false, optional: false, type: WinCriteria.Default },
         {
           hidden: false,
           label: new Set([1]),
+          optional: false,
           players: [1],
           type: WinCriteria.CaptureLabel,
         },
@@ -399,7 +400,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: 2166 }
-    GameEnd { condition: { hidden: false, label: [ 1 ], players: [ 1 ], reward: null, type: 1 }, conditionId: 1, toPlayer: 2 }"
-  `);
+      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: 2166 }
+      GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, conditionId: 1, toPlayer: 2 }"
+    `);
 });

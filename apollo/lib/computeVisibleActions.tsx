@@ -363,6 +363,7 @@ const VisibleActionModifiers: Record<
   MoveUnit: {
     Source: true,
   },
+  OptionalWin: true,
   PreviousTurnGameOver: true,
   ReceiveReward: true,
   Rescue: {

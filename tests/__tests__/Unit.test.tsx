@@ -273,6 +273,7 @@ test('escort radius with label', async () => {
           amount: 1,
           hidden: false,
           label: new Set([2]),
+          optional: false,
           players: [1],
           type: WinCriteria.EscortAmount,
           vectors: new Set([v4, v5]),
@@ -281,6 +282,7 @@ test('escort radius with label', async () => {
           amount: 7,
           hidden: false,
           label: new Set([1]),
+          optional: false,
           players: [2],
           type: WinCriteria.EscortAmount,
           vectors: new Set([v6, v7]),
@@ -288,6 +290,7 @@ test('escort radius with label', async () => {
         {
           amount: 15,
           hidden: false,
+          optional: false,
           players: [1],
           type: WinCriteria.EscortAmount,
           vectors: new Set([v8, v9]),
@@ -309,7 +312,7 @@ test('escort radius with label', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      GameEnd { condition: { amount: 1, hidden: false, label: [ 2 ], players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   const screenshot = await captureOne(initialMap, '1');

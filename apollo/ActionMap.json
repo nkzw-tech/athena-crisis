@@ -171,5 +171,6 @@
   ["BuySkill", [39, ["type", "from", "skill", "player"]]],
   ["ActivatePower", [40, ["type", "skill"]]],
   ["PreviousTurnGameOver", [41, ["type", "fromPlayer"]]],
-  ["SecretDiscovered", [42, ["type", "condition"]]]
+  ["SecretDiscovered", [42, ["type", "condition"]]],
+  ["OptionalWin", [43, ["type", "condition", "conditionId", "toPlayer"]]]
 ]

@@ -52,12 +52,20 @@ export type GameEndActionResponse = Readonly<{
   type: 'GameEnd';
 }>;
 
+export type OptionalWinActionResponse = Readonly<{
+  condition: WinCondition;
+  conditionId: number;
+  toPlayer: PlayerID;
+  type: 'OptionalWin';
+}>;
+
 export type GameOverActionResponses =
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
   | GameEndActionResponse
-  | PreviousTurnGameOverActionResponse;
+  | PreviousTurnGameOverActionResponse
+  | OptionalWinActionResponse;
 
 function check(
   previousMap: MapData,
@@ -90,9 +98,12 @@ const pickWinningPlayer = (
   if (condition.type === WinCriteria.DefeatAmount) {
     return (
       condition.players?.length ? condition.players : activeMap.active
-    ).find(
-      (playerID) =>
-        activeMap.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
+    ).find((playerID) =>
+      !condition.optional
+        ? activeMap.getPlayer(playerID).stats.destroyedUnits >= condition.amount
+        : !condition.completed?.has(playerID) &&
+          activeMap.getPlayer(playerID).stats.destroyedUnits >=
+            condition.amount,
     );
   }
 
@@ -138,19 +149,20 @@ export function checkGameOverConditions(
   const gameState: MutableGameState = actionResponse
     ? [[actionResponse, map]]
     : [];
-  const gameEndResponse = condition
-    ? ({
-        condition,
-        conditionId: activeMap.config.winConditions.indexOf(condition),
-        toPlayer: pickWinningPlayer(
-          previousMap,
-          activeMap,
-          lastActionResponse,
+
+  const winningPlayer = condition
+    ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, condition)
+    : undefined;
+
+  const gameEndResponse =
+    condition?.optional === false
+      ? ({
           condition,
-        ),
-        type: 'GameEnd',
-      } as const)
-    : checkGameEnd(map);
+          conditionId: activeMap.config.winConditions.indexOf(condition),
+          toPlayer: winningPlayer,
+          type: 'GameEnd',
+        } as const)
+      : checkGameEnd(map);
 
   if (gameEndResponse) {
     let newGameState: GameState = [];
@@ -159,6 +171,36 @@ export function checkGameOverConditions(
       ...gameState,
       ...newGameState,
       [gameEndResponse, applyGameOverActionResponse(map, gameEndResponse)],
+    ];
+  }
+
+  const optionalWinResponse =
+    condition?.optional === true &&
+    winningPlayer &&
+    !condition.completed?.has(winningPlayer)
+      ? ({
+          condition,
+          conditionId: activeMap.config.winConditions.indexOf(condition),
+          toPlayer: winningPlayer,
+          type: 'OptionalWin',
+        } as const)
+      : null;
+
+  if (optionalWinResponse) {
+    let newGameState: GameState = [];
+    [newGameState, map] = processRewards(map, optionalWinResponse);
+    map = applyGameOverActionResponse(map, optionalWinResponse);
+    return [
+      ...gameState,
+      ...newGameState,
+      [
+        // update `optionalWinResponse.condition` with the new `map.config` updated in `applyGameOverActionResponse()`
+        {
+          ...optionalWinResponse,
+          condition: map.config.winConditions[optionalWinResponse.conditionId],
+        },
+        map,
+      ],
     ];
   }
 
@@ -231,6 +273,21 @@ export function applyGameOverActionResponse(
     }
     case 'GameEnd':
       return map;
+    case 'OptionalWin': {
+      const { condition, conditionId, toPlayer } = actionResponse;
+      const winConditions = Array.from(map.config.winConditions);
+      winConditions[conditionId] = {
+        ...condition,
+        completed: condition.completed
+          ? new Set([...condition.completed, toPlayer])
+          : new Set([toPlayer]),
+      };
+      return map.copy({
+        config: map.config.copy({
+          winConditions,
+        }),
+      });
+    }
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('applyGameOverActionResponse', type);
