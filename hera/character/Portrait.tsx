@@ -74,7 +74,7 @@ export default memo(function Portrait({
       currentPosition = (currentPosition + 1) % positions.length;
     }
 
-    if (animate) {
+    if (animate && !paused) {
       const interval = setInterval(animate, 1000 / positions.length);
       return () => clearInterval(interval);
     }
