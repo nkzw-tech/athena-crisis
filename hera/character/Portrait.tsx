@@ -95,7 +95,6 @@ export default memo(function Portrait({
 });
 
 const portraitStyle = css`
-  contain: content;
   image-rendering: pixelated;
   pointer-events: none;
 `;
