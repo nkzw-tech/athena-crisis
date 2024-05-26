@@ -6,11 +6,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import { Effects } from './Effects.tsx';
-import {
-  decodeActionResponse,
-  encodeActionResponse,
-  EncodedActionResponse,
-} from './EncodedActions.tsx';
+import { EncodedActionResponse } from './EncodedActions.tsx';
 
 export type GameStateEntry = readonly [ActionResponse, MapData];
 export type EncodedGameStateEntry = readonly [EncodedActionResponse, PlainMap];
@@ -20,20 +16,6 @@ export type MutableGameState = Array<GameStateEntry>;
 export type GameStateWithEffects = ReadonlyArray<
   readonly [...GameStateEntry, Effects]
 >;
-
-export function encodeGameState(gameState: GameState): EncodedGameState {
-  return [...gameState].map(([actionResponse, map]) => [
-    encodeActionResponse(actionResponse),
-    map.toJSON(),
-  ]);
-}
-
-export function decodeGameState(encodedGameState: EncodedGameState): GameState {
-  return encodedGameState.map(([encodedActionResponse, plainMap]) => [
-    decodeActionResponse(encodedActionResponse),
-    MapData.fromObject(plainMap),
-  ]);
-}
 
 export type EncodedGameActionResponseWithError =
   | EncodedGameActionResponse
