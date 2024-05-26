@@ -58,7 +58,7 @@ export default memo(function Portrait({
     const context = canvas.getContext('2d')!;
 
     let currentPosition = 0;
-    function animate() {
+    function animateImage() {
       context.drawImage(
         image,
         positions[currentPosition].x,
@@ -75,10 +75,12 @@ export default memo(function Portrait({
     }
 
     if (animate && !paused) {
-      const interval = setInterval(animate, 1000 / positions.length);
+      const interval = setInterval(animateImage, 1000 / positions.length);
       return () => clearInterval(interval);
     }
-  }, [hasPortraits]);
+
+    animateImage();
+  }, [hasPortraits, animate, paused]);
 
   return (
     <div
