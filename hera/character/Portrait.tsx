@@ -33,11 +33,16 @@ export default memo(function Portrait({
   const hasPortraits = useSprites('portraits');
 
   const { position } = unit.sprite.portrait;
-  const keyFrameYs = [
-    (position.y + (variant || 0)) * PortraitHeight,
-    (position.y + (variant || 0) + 6) * PortraitHeight,
+  const positions = [
+    {
+      x: position.x * PortraitWidth,
+      y: (position.y + (variant || 0)) * PortraitHeight,
+    },
+    {
+      x: position.x * PortraitWidth,
+      y: (position.y + (variant || 0) + 6) * PortraitHeight,
+    },
   ];
-  let curKeyFrameY = 0;
 
   useLayoutEffect(() => {
     if (!hasPortraits) {
@@ -52,11 +57,12 @@ export default memo(function Portrait({
     const image = spriteImage('Portraits', encodeDynamicPlayerID(player));
     const context = canvas.getContext('2d')!;
 
+    let currentPosition = 0;
     function animate() {
       context.drawImage(
         image,
-        position.x * PortraitWidth,
-        keyFrameYs[curKeyFrameY],
+        positions[currentPosition].x,
+        positions[currentPosition].y,
         PortraitWidth,
         PortraitHeight,
         0,
@@ -65,11 +71,11 @@ export default memo(function Portrait({
         PortraitHeight,
       );
 
-      curKeyFrameY = (curKeyFrameY + 1) % keyFrameYs.length;
+      currentPosition = (currentPosition + 1) % positions.length;
     }
 
     if (animate) {
-      setInterval(animate, 1000 / keyFrameYs.length);
+      setInterval(animate, 1000 / positions.length);
     }
   }, [hasPortraits]);
 
