@@ -31,7 +31,6 @@ export default memo(function Portrait({
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const hasPortraits = useSprites('portraits');
-
   const { position } = unit.sprite.portrait;
 
   useLayoutEffect(() => {
@@ -46,8 +45,6 @@ export default memo(function Portrait({
 
     const image = spriteImage('Portraits', encodeDynamicPlayerID(player));
     const context = canvas.getContext('2d')!;
-
-    let currentPosition = 0;
     const positions = [
       {
         x: position.x * PortraitWidth,
@@ -58,8 +55,10 @@ export default memo(function Portrait({
         y: (position.y + (variant || 0) + 6) * PortraitHeight,
       },
     ];
-    function animateImage() {
-      context.clearRect(0, 0, PortraitWidth, PortraitHeight);
+    let currentPosition =
+      ((Number(document.timeline.currentTime) || 0) / 1000) % 1 < 0.5 ? 0 : 1;
+
+    const draw = () => {
       context.drawImage(
         image,
         positions[currentPosition].x,
@@ -71,29 +70,27 @@ export default memo(function Portrait({
         PortraitWidth,
         PortraitHeight,
       );
-
       currentPosition = (currentPosition + 1) % positions.length;
-    }
+    };
+
+    draw();
 
     if (animate && !paused) {
-      const interval = setInterval(animateImage, 1000 / positions.length);
+      const interval = setInterval(draw, 1000 / positions.length);
       return () => clearInterval(interval);
     }
-
-    animateImage();
   }, [hasPortraits, animate, paused, player, position, variant]);
 
   return (
-    <div
+    <canvas
       className={cx(portraitStyle, clip && clipStyle)}
+      height={PortraitHeight}
+      ref={ref}
       style={{
-        height: PortraitHeight,
-        width: PortraitWidth,
         zoom: scale,
       }}
-    >
-      <canvas ref={ref}></canvas>
-    </div>
+      width={PortraitWidth}
+    />
   );
 });
 
