@@ -716,6 +716,10 @@ export default class GameMap extends Component<Props, State> {
     transformOrigin: string | undefined,
     isEscape: boolean,
   ) => {
+    if (this.state.behavior?.type === 'null') {
+      return;
+    }
+
     this._update((state) => {
       const newState = {
         ...state.behavior?.deactivate?.(),
