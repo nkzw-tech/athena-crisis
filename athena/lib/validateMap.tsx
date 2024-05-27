@@ -378,7 +378,7 @@ export default function validateMap(
 
   const teams = ImmutableMap(
     active.map((id) => {
-      const player = map.getPlayer(id);
+      const player = map.maybeGetPlayer(id);
       return [
         id,
         new Team(
@@ -390,10 +390,10 @@ export default function validateMap(
               toPlayerID(id),
               id,
               0,
-              player.ai != null && AIRegistry.has(player.ai)
+              player?.ai != null && AIRegistry.has(player.ai)
                 ? player.ai
                 : undefined,
-              player.skills,
+              player?.skills || new Set(),
             ),
           ),
         ),
