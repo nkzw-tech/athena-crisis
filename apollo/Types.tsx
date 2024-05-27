@@ -1,5 +1,5 @@
 import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
-import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import { PlainEntitiesList, PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -9,7 +9,9 @@ import { Effects } from './Effects.tsx';
 import { EncodedActionResponse } from './EncodedActions.tsx';
 
 export type GameStateEntry = readonly [ActionResponse, MapData];
+export type EncodedGameStateEntry = readonly [EncodedActionResponse, PlainMap];
 export type GameState = ReadonlyArray<GameStateEntry>;
+export type EncodedGameState = ReadonlyArray<EncodedGameStateEntry>;
 export type MutableGameState = Array<GameStateEntry>;
 export type GameStateWithEffects = ReadonlyArray<
   readonly [...GameStateEntry, Effects]

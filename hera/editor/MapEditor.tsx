@@ -1,4 +1,4 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import ActionResponseMutator from '@deities/apollo/ActionResponseMutator.tsx';
 import {
   decodeEffects,
   Effects,
@@ -738,15 +738,11 @@ export default function MapEditor({
     [editor?.selected?.tile, setMap],
   );
 
-  const mutateAction = useCallback(
-    (actionResponse: ActionResponse) =>
-      actAsEveryPlayer && actionResponse.type === 'EndTurn'
-        ? { ...actionResponse, rotatePlayers: true }
-        : actionResponse,
-    [actAsEveryPlayer],
+  const onAction = useClientGameAction(
+    game,
+    setGame,
+    actAsEveryPlayer ? 'actAsEveryPlayer' : null,
   );
-
-  const onAction = useClientGameAction(game, setGame, mutateAction);
 
   useEffect(() => {
     if (saveState) {
@@ -791,7 +787,9 @@ export default function MapEditor({
         key="play-test-map"
         lastActionResponse={game?.lastAction || undefined}
         map={game?.state || map}
-        mutateAction={mutateAction}
+        mutateAction={
+          actAsEveryPlayer ? ActionResponseMutator.actAsEveryPlayer : undefined
+        }
         onAction={onAction}
         pan
         scale={zoom}
