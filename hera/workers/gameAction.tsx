@@ -1,36 +1,23 @@
 import './initializeWorker.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import ActionResponseMutator, {
-  MutateActionResponseFnName,
-} from '@deities/apollo/ActionResponseMutator.tsx';
+import ActionResponseMutator from '@deities/apollo/ActionResponseMutator.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   decodeEffects,
   Effects,
-  EncodedEffects,
   encodeEffects,
 } from '@deities/apollo/Effects.tsx';
 import {
   decodeAction,
   encodeActionResponse,
-  EncodedAction,
 } from '@deities/apollo/EncodedActions.tsx';
 import { encodeGameState } from '@deities/apollo/GameState.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
-import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
+import { ClientGameActionRequest, ClientGameActionResponse } from './Types.tsx';
 
-self.onmessage = function (
-  event: MessageEvent<
-    [
-      map: PlainMap,
-      encodedEffects: EncodedEffects,
-      action: EncodedAction,
-      mutateAction: MutateActionResponseFnName | undefined | null,
-    ]
-  >,
-) {
+self.onmessage = function (event: MessageEvent<ClientGameActionRequest>) {
   const [plainMap, encodedEffects, action, mutateAction] = event.data;
   const map = MapData.fromObject(plainMap);
   const vision = map.createVisionObject(map.getCurrentPlayer());
@@ -49,10 +36,21 @@ self.onmessage = function (
     mutateAction ? ActionResponseMutator[mutateAction] : undefined,
   );
 
-  self.postMessage([
-    actionResponse ? encodeActionResponse(actionResponse) : null,
-    initialActiveMap ? initialActiveMap?.toJSON() : null,
-    gameState ? encodeGameState(gameState) : null,
-    newEffects ? encodeEffects(newEffects) : null,
-  ]);
+  const message: ClientGameActionResponse | null =
+    actionResponse && initialActiveMap && gameState
+      ? [
+          encodeActionResponse(actionResponse),
+          initialActiveMap?.toJSON(),
+          encodeGameState(gameState),
+          newEffects ? encodeEffects(newEffects) : null,
+        ]
+      : null;
+
+  if (event.ports.length === 1) {
+    event.ports[0].postMessage(message);
+  } else {
+    for (const port of event.ports) {
+      port.postMessage(message);
+    }
+  }
 };

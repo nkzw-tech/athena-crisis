@@ -5,25 +5,18 @@ import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionRe
 import {
   decodeEffects,
   Effects,
-  EncodedEffects,
   encodeEffects,
 } from '@deities/apollo/Effects.tsx';
 import {
   decodeActionResponse,
   encodeAction,
-  EncodedActionResponse,
 } from '@deities/apollo/EncodedActions.tsx';
 import { decodeGameState } from '@deities/apollo/GameState.tsx';
 import { computeVisibleEndTurnActionResponse } from '@deities/apollo/lib/computeVisibleActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import dropLabelsFromActionResponse from '@deities/apollo/lib/dropLabelsFromActionResponse.tsx';
 import dropLabelsFromGameState from '@deities/apollo/lib/dropLabelsFromGameState.tsx';
-import {
-  EncodedGameState,
-  GameActionResponse,
-  GameState,
-} from '@deities/apollo/Types.tsx';
-import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
+import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/WinConditions.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
@@ -32,16 +25,26 @@ import toClientGame, {
 } from '@deities/hermes/game/toClientGame.tsx';
 import { useCallback } from 'react';
 import gameActionWorker from '../workers/gameAction.tsx?worker';
-
-type ClientGameAction = [
-  actionResponse: EncodedActionResponse,
-  map: PlainMap,
-  gameState: EncodedGameState,
-  effects: EncodedEffects,
-];
+import {
+  ClientGameActionRequest,
+  ClientGameActionResponse,
+} from '../workers/Types.tsx';
 
 const ActionError = (action: Action) =>
   new Error(`Map: Error executing remote '${action.type}' action.`);
+
+let worker: Worker | null = null;
+const getWorker = () => {
+  if (worker) {
+    return worker;
+  }
+  worker = new gameActionWorker();
+  worker.onerror = () => {
+    worker?.terminate();
+    worker = null;
+  };
+  return worker;
+};
 
 export default function useClientGameAction(
   game: ClientGame | null,
@@ -69,27 +72,36 @@ export default function useClientGameAction(
       }
 
       try {
-        const worker = new gameActionWorker();
+        const message: ClientGameActionRequest = [
+          map.toJSON(),
+          encodeEffects(game.effects),
+          encodeAction(action),
+          mutateAction,
+        ];
+
         const [
           encodedActionResponse,
           plainMap,
           encodedGameState,
           encodedEffects,
-        ] = await new Promise<ClientGameAction>((resolve) => {
-          worker.postMessage([
-            map.toJSON(),
-            encodeEffects(game.effects),
-            encodeAction(action),
-            mutateAction,
-          ]);
-          worker.onmessage = (event: MessageEvent<ClientGameAction>) =>
-            resolve(event.data);
+        ] = await new Promise<ClientGameActionResponse>((resolve, reject) => {
+          const { port1, port2 } = new MessageChannel();
+          port1.onmessage = (
+            event: MessageEvent<ClientGameActionResponse | null>,
+          ) => {
+            if (event.data) {
+              resolve(event.data);
+            } else {
+              reject();
+            }
+          };
+          port1.onmessageerror = reject;
+          getWorker().postMessage(message, [port2]);
         });
-
         actionResponse = decodeActionResponse(encodedActionResponse);
         initialActiveMap = MapData.fromObject(plainMap);
         gameState = decodeGameState(encodedGameState);
-        newEffects = decodeEffects(encodedEffects);
+        newEffects = encodedEffects ? decodeEffects(encodedEffects) : null;
       } catch (error) {
         throw process.env.NODE_ENV === 'development'
           ? error
