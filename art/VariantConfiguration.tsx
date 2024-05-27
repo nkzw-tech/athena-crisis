@@ -65,6 +65,7 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
   [
     'Portraits',
     {
+      asImage: true,
       variantNames: new Set<PlainDynamicPlayerID>([
         ...variantNames,
         -1,
