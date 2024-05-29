@@ -151,10 +151,12 @@ test('capture amount win criteria', async () => {
 
   const mapWithOptionalConditions = mapWithConditions.copy({
     config: mapWithConditions.config.copy({
-      winConditions: mapWithConditions.config.winConditions.map((c) => ({
-        ...c,
-        optional: true,
-      })),
+      winConditions: mapWithConditions.config.winConditions.map(
+        (condition) => ({
+          ...condition,
+          optional: true,
+        }),
+      ),
     }),
   });
 
@@ -214,7 +216,7 @@ test('capture amount win criteria', async () => {
     mapWithAsymmetricConditions.copy({
       config: mapWithAsymmetricConditions.config.copy({
         winConditions: mapWithAsymmetricConditions.config.winConditions.map(
-          (c) => ({ ...c, optional: true }),
+          (condition) => ({ ...condition, optional: true }),
         ),
       }),
     });
@@ -290,8 +292,8 @@ test('capture amount win criteria also works when creating buildings', async () 
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -368,8 +370,8 @@ test('capture label win criteria', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -438,8 +440,8 @@ test('capture label win criteria fails because building is destroyed', async () 
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -529,8 +531,8 @@ test('capture label win criteria (fail with missing label)', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -692,7 +694,7 @@ test('destroy amount win criteria', async () => {
   const mapWithAsymmetricOptionalConditions = mapWithAsymmetricConditions.copy({
     config: mapWithAsymmetricConditions.config.copy({
       winConditions: mapWithAsymmetricConditions.config.winConditions.map(
-        (c) => ({ ...c, optional: true }),
+        (condition) => ({ ...condition, optional: true }),
       ),
     }),
   });
@@ -774,8 +776,8 @@ test('destroy label win criteria', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -847,8 +849,8 @@ test('destroy label does not fire without label', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -909,8 +911,8 @@ test('destroy label win criteria (neutral structure)', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -984,8 +986,8 @@ test('defeat with label', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1052,8 +1054,8 @@ test('defeat one with label', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1123,8 +1125,8 @@ test('defeat by amount', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1187,8 +1189,8 @@ test('defeat by amount through counter attack', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1245,8 +1247,8 @@ test('defeat with label and Zombie', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1303,8 +1305,8 @@ test('defeat by amount and Zombie', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1366,8 +1368,8 @@ test('defeat with label (fail because label did not previously exist)', async ()
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1443,8 +1445,8 @@ test('defeat with label and a unit hiding inside of another', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1519,8 +1521,8 @@ test('win by survival', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1604,8 +1606,8 @@ test('win by survival in one round', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1686,8 +1688,8 @@ test('escort units', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1750,8 +1752,8 @@ test('escort units by label without having units with that label (fails)', async
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1816,8 +1818,8 @@ test('escort units (transport)', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1894,8 +1896,8 @@ test('escort units by drop (transport)', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -1980,8 +1982,8 @@ test('escort units by label fails', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2065,8 +2067,8 @@ test('escort units by label fails (transport)', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2141,8 +2143,8 @@ test('escort units by amount', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2335,8 +2337,8 @@ test('escort units by amount with label fails', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2417,8 +2419,8 @@ test('escort units by amount does not fail when enough units are remaining', asy
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2495,8 +2497,8 @@ test('escort units by amount does not fail when the player has more units left',
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2580,8 +2582,8 @@ test('rescue label win criteria', async () => {
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
@@ -2665,8 +2667,8 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   const mapWithOptionalConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
+      winConditions: initialMap.config.winConditions.map((condition) => ({
+        ...condition,
         optional: true,
       })),
     }),
