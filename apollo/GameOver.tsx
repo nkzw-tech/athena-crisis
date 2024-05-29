@@ -98,12 +98,10 @@ const pickWinningPlayer = (
   if (condition.type === WinCriteria.DefeatAmount) {
     return (
       condition.players?.length ? condition.players : activeMap.active
-    ).find((playerID) =>
-      !condition.optional
-        ? activeMap.getPlayer(playerID).stats.destroyedUnits >= condition.amount
-        : !condition.completed?.has(playerID) &&
-          activeMap.getPlayer(playerID).stats.destroyedUnits >=
-            condition.amount,
+    ).find(
+      (playerID) =>
+        (!condition.optional || !condition.completed?.has(playerID)) &&
+        activeMap.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
     );
   }
 
