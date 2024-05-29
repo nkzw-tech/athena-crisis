@@ -20,7 +20,6 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
-import optionalWinAnimation from '../animations/optionalWinAnimation.tsx';
 import secretDiscoveredAnimation from '../animations/secretDiscoveredAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
@@ -625,7 +624,7 @@ async function processActionResponse(
     case 'SecretDiscovered':
       return secretDiscoveredAnimation(actions, state, actionResponse);
     case 'OptionalWin':
-      return optionalWinAnimation(actions, state, actionResponse);
+      return secretDiscoveredAnimation(actions, state, actionResponse);
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('processActionResponse', type);
