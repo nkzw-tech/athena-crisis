@@ -577,9 +577,7 @@ export default class MapData {
         data.config.biome,
         (data.config.winConditions
           ? decodeWinConditions(data.config.winConditions)
-          : null) || [
-          { hidden: false, optional: false, type: WinCriteria.Default },
-        ],
+          : null) || [{ hidden: false, type: WinCriteria.Default }],
       ),
       size,
       toPlayerID(data.currentPlayer),

@@ -381,7 +381,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
     ),
     config: initialMap.config.copy({
       winConditions: [
-        { hidden: false, optional: false, type: WinCriteria.Default },
+        { hidden: false, type: WinCriteria.Default },
         {
           hidden: false,
           label: new Set([1]),

@@ -52,7 +52,6 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
       winConditions: [
         {
           hidden: false,
-          optional: false,
           type: WinCriteria.Default,
         },
         captureCondition,
@@ -140,7 +139,6 @@ test(`each skill is only received once`, () => {
       winConditions: [
         {
           hidden: false,
-          optional: false,
           reward,
           type: WinCriteria.Default,
         },

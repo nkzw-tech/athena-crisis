@@ -497,7 +497,6 @@ test('only one game end win effect is fired', () => {
       winConditions: [
         {
           hidden: false,
-          optional: false,
           type: WinCriteria.Default,
         },
         {

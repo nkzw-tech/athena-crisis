@@ -79,17 +79,6 @@ test('default win criteria', async () => {
     GameEnd { condition: null, conditionId: null, toPlayer: 1 }"
   `,
   );
-
-  const mapWithOptionalConditions = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((c) => ({
-        ...c,
-        optional: true,
-      })),
-    }),
-  });
-
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(false);
 });
 
 test('capture amount win criteria', async () => {

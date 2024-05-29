@@ -155,7 +155,7 @@ export function checkGameOverConditions(
     : undefined;
 
   const gameEndResponse =
-    condition?.optional === false
+    condition?.type === WinCriteria.Default || condition?.optional === false
       ? ({
           condition,
           conditionId: activeMap.config.winConditions.indexOf(condition),
@@ -175,6 +175,7 @@ export function checkGameOverConditions(
   }
 
   const optionalWinResponse =
+    condition?.type !== WinCriteria.Default &&
     condition?.optional === true &&
     winningPlayer &&
     !condition.completed?.has(winningPlayer)
@@ -275,6 +276,9 @@ export function applyGameOverActionResponse(
       return map;
     case 'OptionalWin': {
       const { condition, conditionId, toPlayer } = actionResponse;
+      if (condition.type === WinCriteria.Default) {
+        return map;
+      }
       const winConditions = Array.from(map.config.winConditions);
       winConditions[conditionId] = {
         ...condition,

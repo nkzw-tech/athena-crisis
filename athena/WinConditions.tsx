@@ -184,9 +184,7 @@ export type WinConditionsWithVectors =
 
 export type WinCondition =
   | Readonly<{
-      completed?: PlayerIDSet;
       hidden: boolean;
-      optional: boolean;
       reward?: Reward | null;
       type: WinCriteria.Default;
     }>
@@ -317,16 +315,10 @@ export type WinConditions = ReadonlyArray<WinCondition>;
 export type PlainWinConditions = ReadonlyArray<PlainWinCondition>;
 
 export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
-  const { hidden, optional, type } = condition;
+  const { hidden, type } = condition;
   switch (type) {
     case WinCriteria.Default:
-      return [
-        type,
-        hidden ? 1 : 0,
-        maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
-        condition.completed ? Array.from(condition.completed) : [],
-      ];
+      return [type, hidden ? 1 : 0, maybeEncodeReward(condition.reward)];
     case WinCriteria.CaptureLabel:
     case WinCriteria.DestroyLabel:
       return [
@@ -335,7 +327,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         Array.from(condition.label),
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.CaptureAmount:
@@ -346,7 +338,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.amount,
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.DefeatLabel:
@@ -356,7 +348,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         Array.from(condition.label),
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.EscortLabel:
@@ -367,7 +359,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.players || [],
         encodeVectorArray([...condition.vectors]),
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.Survival:
@@ -377,7 +369,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.rounds,
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.EscortAmount:
@@ -389,7 +381,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         encodeVectorArray([...condition.vectors]),
         condition.label ? Array.from(condition.label) : [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.RescueLabel:
@@ -399,7 +391,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         Array.from(condition.label),
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.DefeatAmount:
@@ -409,7 +401,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.amount,
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     case WinCriteria.DefeatOneLabel:
@@ -419,7 +411,7 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.label ? Array.from(condition.label) : [],
         condition.players || [],
         maybeEncodeReward(condition.reward),
-        optional ? 1 : 0,
+        condition.optional ? 1 : 0,
         condition.completed ? Array.from(condition.completed) : [],
       ];
     default: {
@@ -434,11 +426,7 @@ export function decodeWinCondition(condition: PlainWinCondition): WinCondition {
   switch (type) {
     case WinCriteria.Default: {
       return {
-        completed: condition[4]
-          ? new Set(toPlayerIDs(condition[4]))
-          : new Set(),
         hidden: !!condition[1],
-        optional: !!condition[3],
         reward: maybeDecodeReward(condition[2]),
         type,
       };
@@ -688,11 +676,10 @@ const validateAmount = (amount: number) =>
   isPositiveInteger(amount) && amount >= MIN_AMOUNT && amount <= MAX_AMOUNT;
 
 export function validateWinCondition(map: MapData, condition: WinCondition) {
-  const { completed, hidden, optional, type } = condition;
+  const { hidden, type } = condition;
   if (
     (hidden !== false && hidden !== true) ||
-    (condition.reward && !validateReward(condition.reward)) ||
-    (completed && completed.size > 0)
+    (condition.reward && !validateReward(condition.reward))
   ) {
     return false;
   }
@@ -701,7 +688,7 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
 
   switch (type) {
     case WinCriteria.Default:
-      return optional ? false : true;
+      return true;
     case WinCriteria.CaptureLabel:
     case WinCriteria.DefeatLabel:
     case WinCriteria.DefeatOneLabel:
@@ -711,7 +698,8 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
         validateLabel(condition.label) &&
         (condition.players?.length
           ? validatePlayers(map, condition.players)
-          : true)
+          : true) &&
+        (condition.completed === undefined || condition.completed?.size === 0)
       );
     case WinCriteria.CaptureAmount:
     case WinCriteria.DefeatAmount:
@@ -719,16 +707,20 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
       if (!validateAmount(condition.amount)) {
         return false;
       }
-      return condition.players?.length
-        ? validatePlayers(map, condition.players)
-        : true;
+      return (
+        (condition.players?.length
+          ? validatePlayers(map, condition.players)
+          : true) &&
+        (condition.completed === undefined || condition.completed?.size === 0)
+      );
     case WinCriteria.EscortLabel:
       if (![...condition.vectors].every(validateVector)) {
         return false;
       }
       return (
         validateLabel(condition.label) &&
-        validatePlayers(map, condition.players)
+        validatePlayers(map, condition.players) &&
+        (condition.completed === undefined || condition.completed?.size === 0)
       );
     case WinCriteria.Survival:
       if (
@@ -743,9 +735,12 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
         return false;
       }
 
-      return condition.players.includes(map.active[0])
-        ? condition.rounds > 1
-        : true;
+      return (
+        (condition.players.includes(map.active[0])
+          ? condition.rounds > 1
+          : true) &&
+        (condition.completed === undefined || condition.completed?.size === 0)
+      );
     case WinCriteria.EscortAmount:
       if (condition.label?.size && !validateLabel(condition.label)) {
         return false;
@@ -760,7 +755,8 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
 
       return (
         validatePlayers(map, toPlayerIDs(condition.players)) &&
-        [...condition.vectors].every(validateVector)
+        [...condition.vectors].every(validateVector) &&
+        (condition.completed === undefined || condition.completed?.size === 0)
       );
     default: {
       condition satisfies never;
@@ -845,7 +841,6 @@ export function getInitialWinCondition(
     case WinCriteria.Default:
       return {
         hidden,
-        optional,
         type: criteria,
       };
     case WinCriteria.CaptureLabel:
