@@ -28,7 +28,7 @@
     "@emotion/css": "^11.11.2",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.4.0",
+    "@sentry/browser": "^8.5.0",
     "@stripe/react-stripe-js": "^2.7.1",
     "@stripe/stripe-js": "^3.4.1",
     "fbt": "^1.0.2",
