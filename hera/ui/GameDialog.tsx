@@ -4,6 +4,7 @@ import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
@@ -265,7 +266,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
             <p>
               {conditions.length ? (
                 <fbt desc="Description of how to win">
-                  Complete any win condition to win the game.
+                  Complete any non-optional win condition to win the game.
                 </fbt>
               ) : (
                 <fbt desc="Win conditions are all secret">
@@ -273,7 +274,16 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 </fbt>
               )}
             </p>
-            {conditions.map((condition, index) => (
+            {[
+              ...conditions.filter(
+                (condition) =>
+                  condition.type === WinCriteria.Default || !condition.optional,
+              ),
+              ...conditions.filter(
+                (condition) =>
+                  condition.type !== WinCriteria.Default && condition.optional,
+              ),
+            ].map((condition, index) => (
               <WinConditionDescription
                 condition={condition}
                 factionNames={factionNames}
