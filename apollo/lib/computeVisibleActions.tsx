@@ -12,6 +12,7 @@ import {
   ActionResponses,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
+  CaptureActionResponse,
   CompleteUnitActionResponse,
   CreateBuildingActionResponse,
   CreateUnitActionResponse,
@@ -223,6 +224,14 @@ const VisibleActionModifiers: Record<
   BeginTurnGameOver: true,
   BuySkill: true,
   Capture: {
+    Hidden: (
+      actionResponse: CaptureActionResponse,
+    ): null | CaptureActionResponse => {
+      const { building } = actionResponse;
+      return building && building.info.configuration.attackStatusEffect
+        ? actionResponse
+        : null;
+    },
     Source: true,
   },
   CaptureGameOver: true,

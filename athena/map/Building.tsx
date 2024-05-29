@@ -63,8 +63,11 @@ export default class Building extends Entity {
     });
   }
 
-  neutralize(biome: Biome) {
-    return this.player === 0 ? this : this.capture(0, biome);
+  neutralize(biome: Biome, displayOnly = false) {
+    return this.player === 0 ||
+      (!displayOnly && this.info.configuration.attackStatusEffect)
+      ? this
+      : this.capture(0, biome);
   }
 
   recover(): this {
@@ -75,8 +78,8 @@ export default class Building extends Entity {
     return !this.completed ? this.copy({ completed: true }) : this;
   }
 
-  hide(biome: Biome): this {
-    return this.recover().setHealth(MaxHealth).neutralize(biome);
+  hide(biome: Biome, displayOnly = false): this {
+    return this.recover().setHealth(MaxHealth).neutralize(biome, displayOnly);
   }
 
   matchesBehavior(behavior: AIBehavior) {

@@ -54,7 +54,7 @@ const BuildingTile = memo(function BuildingTile({
   zIndex?: number;
 }) {
   if (isVisible === false) {
-    building = building.hide(biome);
+    building = building.hide(biome, true);
   }
 
   const { x, y } = position;

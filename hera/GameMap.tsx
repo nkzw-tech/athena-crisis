@@ -1409,7 +1409,7 @@ export default class GameMap extends Component<Props, State> {
         biome: map.config.biome,
         building: vision.isVisible(map, vector)
           ? building
-          : building?.hide(map.config.biome),
+          : building?.hide(map.config.biome, true),
         decorators: getDecoratorsAtField(map, vector),
         modifierField: map.modifiers[map.getTileIndex(vector)],
         origin,
