@@ -105,13 +105,14 @@ export function getDeterministicUnitName(
 ) {
   const units = map.units.filter((unit) => map.matchesPlayer(unit, player));
   const name =
-    (units
-      .map((unit) => unit.id * 11 + unit.health * 2 + unit.fuel * 3)
-      .reduce((sum, value) => sum + value, 0) +
-      vector.x * 5 +
-      vector.y * 7 +
-      info.id * 13 +
-      offset) %
-    amount;
+    Math.floor(
+      units
+        .map((unit) => unit.id * 11 + unit.health * 2 + unit.fuel * 3)
+        .reduce((sum, value) => sum + value, 0) +
+        vector.x * 5 +
+        vector.y * 7 +
+        info.id * 13 +
+        offset,
+    ) % amount;
   return hasLeader ? name : name * -1 - 1;
 }

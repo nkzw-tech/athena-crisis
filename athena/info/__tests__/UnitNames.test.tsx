@@ -61,6 +61,13 @@ test('assignUnitNames` assigns unit names to all units', () => {
   expect(getDeterministicUnitName(map, vector, 1, Pioneer)).not.toEqual(
     getDeterministicUnitName(map, vector, 1, Pioneer, 1),
   );
+
+  const mapWithOddFuel = map.copy({
+    units: map.units.set(vec(1, 1), Flamethrower.create(1).setFuel(20.5)),
+  });
+  expect(
+    Math.round(getDeterministicUnitName(mapWithOddFuel, vector, 1, Pioneer)),
+  ).toEqual(getDeterministicUnitName(mapWithOddFuel, vector, 1, Pioneer));
 });
 
 test('does not lose unit names when encoding and decoding them', () => {
