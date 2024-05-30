@@ -8,6 +8,7 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
+import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dialog, {
   DialogScrollContainer,
   DialogTab,
@@ -259,10 +260,10 @@ const GameInfoPanel = memo(function GameInfoPanel({
         {(typeof panel === 'string' &&
           gameInfoState.panels?.get(panel)?.content) || (
           <Stack gap={16} vertical>
-            <h1>
+            <h1 style={{ color: applyVar('text-color') }}>
               <fbt desc="Headline for describing how to win">How to win</fbt>
             </h1>
-            <p>
+            <p style={{ color: applyVar('text-color') }}>
               {conditions.length ? (
                 <fbt desc="Description of how to win">
                   Complete any win condition to win the game.

@@ -426,6 +426,7 @@ export default function WinConditionDescription({
           condition.type !== WinCriteria.Default && condition.players?.length
             ? gradient(condition.players, 0.15)
             : applyVar('background-color'),
+        color: applyVar('text-color'),
       }}
       vertical
     >
