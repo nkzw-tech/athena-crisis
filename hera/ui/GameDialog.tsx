@@ -253,7 +253,14 @@ const GameInfoPanel = memo(function GameInfoPanel({
     'dialog',
   );
 
-  const conditions = winConditions.filter(({ hidden }) => !hidden);
+  const visibleConditions = winConditions.filter(({ hidden }) => !hidden);
+  const visibleWinConditions = visibleConditions.filter(
+    (condition) =>
+      condition.type === WinCriteria.Default || !condition.optional,
+  );
+  const visibleOptionalConditions = visibleConditions.filter(
+    (condition) => condition.type !== WinCriteria.Default && condition.optional,
+  );
   return (
     <>
       <DialogScrollContainer>
@@ -264,9 +271,9 @@ const GameInfoPanel = memo(function GameInfoPanel({
               <fbt desc="Headline for describing how to win">How to win</fbt>
             </h1>
             <p>
-              {conditions.length ? (
+              {visibleConditions.length ? (
                 <fbt desc="Description of how to win">
-                  Complete any non-optional win condition to win the game.
+                  Complete any win condition to win the game.
                 </fbt>
               ) : (
                 <fbt desc="Win conditions are all secret">
@@ -274,16 +281,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 </fbt>
               )}
             </p>
-            {[
-              ...conditions.filter(
-                (condition) =>
-                  condition.type === WinCriteria.Default || !condition.optional,
-              ),
-              ...conditions.filter(
-                (condition) =>
-                  condition.type !== WinCriteria.Default && condition.optional,
-              ),
-            ].map((condition, index) => (
+            {visibleWinConditions.map((condition, index) => (
               <WinConditionDescription
                 condition={condition}
                 factionNames={factionNames}
@@ -291,6 +289,23 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 round={map.round}
               />
             ))}
+            {visibleOptionalConditions.length > 0 && (
+              <>
+                <p>
+                  <fbt desc="Description of how to win">
+                    Complete optional conditions for extra rewards.
+                  </fbt>
+                </p>
+                {visibleOptionalConditions.map((condition, index) => (
+                  <WinConditionDescription
+                    condition={condition}
+                    factionNames={factionNames}
+                    key={index}
+                    round={map.round}
+                  />
+                ))}
+              </>
+            )}
           </Stack>
         )}
       </DialogScrollContainer>
