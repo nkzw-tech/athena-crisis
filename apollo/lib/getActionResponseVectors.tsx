@@ -87,10 +87,10 @@ export default function getActionResponseVectors(
     case 'GameEnd':
     case 'HiddenFundAdjustment':
     case 'Message':
+    case 'OptionalCondition':
     case 'PreviousTurnGameOver':
     case 'ReceiveReward':
     case 'SecretDiscovered':
-    case 'OptionalCondition':
     case 'SetViewer':
     case 'Start':
       break;

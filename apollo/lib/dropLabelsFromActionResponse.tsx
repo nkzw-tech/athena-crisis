@@ -62,10 +62,10 @@ export default function dropLabelsFromActionResponse(
     case 'GameEnd':
     case 'HiddenFundAdjustment':
     case 'Message':
+    case 'OptionalCondition':
     case 'PreviousTurnGameOver':
     case 'ReceiveReward':
     case 'SecretDiscovered':
-    case 'OptionalCondition':
     case 'SetViewer':
     case 'Start':
       return actionResponse;

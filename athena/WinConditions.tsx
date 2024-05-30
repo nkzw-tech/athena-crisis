@@ -784,16 +784,15 @@ export function resetWinConditions(
   conditions: WinConditions,
   active: PlayerIDSet,
 ): WinConditions {
-  return conditions
-    .map((condition) => ({ ...condition, completed: new Set<PlayerID>() }))
-    .map((condition) =>
-      condition.type === WinCriteria.Default || !condition.players
-        ? condition
-        : ({
-            ...condition,
-            players: condition.players.filter((player) => active.has(player)),
-          } as const),
-    );
+  return conditions.map((condition) =>
+    condition.type === WinCriteria.Default || !condition.players
+      ? { ...condition, completed: new Set() }
+      : ({
+          ...condition,
+          completed: new Set(),
+          players: condition.players.filter((player) => active.has(player)),
+        } as const),
+  );
 }
 
 export function onlyHasDefaultWinCondition(winConditions: WinConditions) {

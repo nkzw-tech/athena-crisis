@@ -17,7 +17,7 @@ export default async function secretDiscoveredAnimation(
   const { requestFrame, update } = actions;
   const { condition, type } = actionResponse;
   const player = state.map.getCurrentPlayer().id;
-  const mainText =
+  const text =
     type === 'SecretDiscovered'
       ? String(fbt(`Secret Discovered!`, 'Secret discovered banner'))
       : !condition.hidden
@@ -55,7 +55,7 @@ export default async function secretDiscoveredAnimation(
         }),
         player,
         sound: 'UI/Start',
-        text: mainText,
+        text,
         type: 'banner',
       }),
       ...resetBehavior(),

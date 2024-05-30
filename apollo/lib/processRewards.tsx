@@ -7,14 +7,14 @@ import {
   OptionalConditionActionResponse,
 } from '../GameOver.tsx';
 import { GameState, MutableGameState } from '../Types.tsx';
-import getWinningTeam from './getWinningTeam.tsx';
+import getMatchingTeam from './getMatchingTeam.tsx';
 
 export function processRewards(
   map: MapData,
   actionResponse: GameEndActionResponse | OptionalConditionActionResponse,
 ): [GameState, MapData] {
   const gameState: MutableGameState = [];
-  const winningTeam = getWinningTeam(map, actionResponse);
+  const winningTeam = getMatchingTeam(map, actionResponse);
   if (winningTeam !== 'draw') {
     const rewards = new Set(
       [

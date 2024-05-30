@@ -5,7 +5,7 @@ import {
   OptionalConditionActionResponse,
 } from '../GameOver.tsx';
 
-export default function getWinningTeam(
+export default function getMatchingTeam(
   map: MapData,
   actionResponse: GameEndActionResponse | OptionalConditionActionResponse,
 ): 'draw' | PlayerID {
