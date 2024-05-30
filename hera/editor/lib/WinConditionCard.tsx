@@ -217,36 +217,6 @@ export default function WinConditionCard({
               </fbt>
             </p>
           )}
-          {condition.type !== WinCriteria.Default && (
-            <>
-              <label>
-                <Stack gap start>
-                  <span className="input-label">
-                    <fbt desc="Label for optional win condition checkbox">
-                      Optional
-                    </fbt>
-                  </span>
-                  <input
-                    checked={condition.optional}
-                    onChange={(event) =>
-                      onChange({
-                        ...condition,
-                        optional: event.target.checked,
-                      })
-                    }
-                    type="checkbox"
-                  />
-                </Stack>
-              </label>
-              {condition.optional && (
-                <p>
-                  <fbt desc="Description for optional win conditions">
-                    Optional conditions do not end the game when fulfilled.
-                  </fbt>
-                </p>
-              )}
-            </>
-          )}
           <Stack gap start verticalPadding>
             <fbt desc="Label for win condition reward">Reward</fbt>
             <SkillSelector

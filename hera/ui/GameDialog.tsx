@@ -4,7 +4,6 @@ import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
@@ -253,14 +252,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
     'dialog',
   );
 
-  const visibleConditions = winConditions.filter(({ hidden }) => !hidden);
-  const visibleWinConditions = visibleConditions.filter(
-    (condition) =>
-      condition.type === WinCriteria.Default || !condition.optional,
-  );
-  const visibleOptionalConditions = visibleConditions.filter(
-    (condition) => condition.type !== WinCriteria.Default && condition.optional,
-  );
+  const conditions = winConditions.filter(({ hidden }) => !hidden);
   return (
     <>
       <DialogScrollContainer>
@@ -271,7 +263,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
               <fbt desc="Headline for describing how to win">How to win</fbt>
             </h1>
             <p>
-              {visibleConditions.length ? (
+              {conditions.length ? (
                 <fbt desc="Description of how to win">
                   Complete any win condition to win the game.
                 </fbt>
@@ -281,7 +273,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 </fbt>
               )}
             </p>
-            {visibleWinConditions.map((condition, index) => (
+            {conditions.map((condition, index) => (
               <WinConditionDescription
                 condition={condition}
                 factionNames={factionNames}
@@ -289,23 +281,6 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 round={map.round}
               />
             ))}
-            {visibleOptionalConditions.length > 0 && (
-              <>
-                <p>
-                  <fbt desc="Description of how to win">
-                    Complete optional conditions for extra rewards.
-                  </fbt>
-                </p>
-                {visibleOptionalConditions.map((condition, index) => (
-                  <WinConditionDescription
-                    condition={condition}
-                    factionNames={factionNames}
-                    key={index}
-                    round={map.round}
-                  />
-                ))}
-              </>
-            )}
           </Stack>
         )}
       </DialogScrollContainer>

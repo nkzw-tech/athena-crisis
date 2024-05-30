@@ -132,7 +132,6 @@ test('drops labels from hidden win conditions', () => {
         {
           hidden: true,
           label: new Set([3]),
-          optional: false,
           type: WinCriteria.CaptureLabel,
         } as const,
       ],

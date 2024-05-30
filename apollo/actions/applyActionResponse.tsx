@@ -480,12 +480,11 @@ export default function applyActionResponse(
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
       return applyHiddenActionResponse(map, vision, actionResponse);
-    case 'OptionalCondition':
     case 'AttackUnitGameOver':
     case 'BeginTurnGameOver':
     case 'CaptureGameOver':
-    case 'GameEnd':
     case 'PreviousTurnGameOver':
+    case 'GameEnd':
       return applyGameOverActionResponse(map, actionResponse);
     case 'SetViewer': {
       const currentPlayer = map.maybeGetPlayer(vision.currentViewer)?.id;

@@ -79,10 +79,8 @@ type ValueType = Readonly<
   | { type: 'object'; value: ReadonlyArray<Prop> }
 >;
 
-const getShortName = (type: ActionType, name: string) =>
-  type === 'action'
-    ? name.replace(/Action(Response)?$/, '')
-    : name.replace(/Condition$/, '');
+const getShortName = (name: string) =>
+  name.replace(/Action(Response)?|Condition$/, '');
 
 const actionMap = new Map<string, [number, Array<string>]>(
   JSON.parse(readFileSync(stableActionMapFileName, 'utf8')),
@@ -97,7 +95,7 @@ const getStableTypeID = (() => {
 
   return (type: ActionType, name: string) => {
     const map = type === 'action' ? actionMap : conditionMap;
-    const shortName = getShortName(type, name);
+    const shortName = getShortName(name);
     if (!map.has(shortName)) {
       map.set(shortName, [
         type === 'action' ? actionCounter++ : conditionCounter++,
@@ -109,9 +107,7 @@ const getStableTypeID = (() => {
 })();
 
 const getStableTypeProps = (type: ActionType, name: string) =>
-  (type === 'action' ? actionMap : conditionMap).get(
-    getShortName(type, name),
-  )?.[1];
+  (type === 'action' ? actionMap : conditionMap).get(getShortName(name))?.[1];
 
 const isAllowedReference = (node: TSType): node is TSTypeReference =>
   node.type === 'TSTypeReference' &&
@@ -267,7 +263,7 @@ const extract = (
           if (
             !props[0] ||
             props[0].name !== 'type' ||
-            props[0].value.value !== getShortName(type, name)
+            props[0].value.value !== getShortName(name)
           ) {
             throw new Error(
               `generate-actions: Invalid type definition for '${name}' with props '${JSON.stringify(
@@ -423,10 +419,7 @@ const decodeProps = (
         if (name === 'type' && type === 'literal') {
           return {
             counter: counter + 1,
-            list: [
-              ...list,
-              `${name}: "${getShortName(actionType, actionName)}"`,
-            ],
+            list: [...list, `${name}: "${getShortName(actionName)}"`],
           };
         }
 
@@ -619,12 +612,8 @@ const formatProp = (
     : `${name}: ${formatValue(name, optional, value, prefix)}`;
 };
 
-const formatAction = ({
-  name: actionName,
-  props,
-  type,
-}: ExtractedType): string => {
-  const shortName = getShortName(type, actionName);
+const formatAction = ({ name: actionName, props }: ExtractedType): string => {
+  const shortName = getShortName(actionName);
   const from = props.find(({ name }) => name === 'from');
   const to = props.find(({ name }) => name === 'to');
   props = props.filter(
@@ -776,7 +765,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       const hasOptional = props.at(-1)?.optional;
       const value = `[${encodeProps(props, type).join(',')}]`;
       return `
-        case '${getShortName(type, name)}':
+        case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
     `
@@ -793,7 +782,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       const hasOptional = props.at(-1)?.optional;
       const value = `[${encodeProps(props, type).join(',')}]`;
       return `
-        case '${getShortName(type, name)}':
+        case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
     `
@@ -809,7 +798,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       const hasOptional = props.at(-1)?.optional;
       const value = `[${encodeProps(props, type).join(',')}]`;
       return `
-        case '${getShortName(type, name)}':
+        case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
     `
@@ -823,7 +812,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     `,
     ...actionResponses.map(
       ({ name, type }) =>
-        `case '${getShortName(type, name)}':
+        `case '${getShortName(name)}':
           return ${getStableTypeID(type, name)};`,
     ),
     `default: {
@@ -877,7 +866,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     ...actionResponses.map(
       ({ name, type }) =>
         `case ${getStableTypeID(type, name)}:
-          return '${getShortName(type, name)}';`,
+          return '${getShortName(name)}';`,
     ),
     `default: {
         throw new Error('decodeActionID: Invalid Action ID.');
@@ -949,14 +938,14 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
 
   const newActionMap = new Map<string, [number, ReadonlySet<string>]>();
   for (const action of actions) {
-    newActionMap.set(getShortName(action.type, action.name), [
+    newActionMap.set(getShortName(action.name), [
       action.id,
       new Set(getPropNames(action.props)),
     ]);
   }
 
   for (const action of actionResponses) {
-    const name = getShortName(action.type, action.name);
+    const name = getShortName(action.name);
     const optionalProps = new Set(getOptionalProps(action.props));
     newActionMap.set(name, [
       action.id,
@@ -985,7 +974,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
 
   const newConditionMap = new Map<string, [number, ReadonlySet<string>]>();
   for (const condition of conditions) {
-    newConditionMap.set(getShortName(condition.type, condition.name), [
+    newConditionMap.set(getShortName(condition.name), [
       condition.id,
       new Set(getPropNames(condition.props)),
     ]);

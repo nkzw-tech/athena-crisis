@@ -843,6 +843,6 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4] }
-    GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
+    GameEnd { condition: { hidden: false, label: [ 2 ], players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
   `);
 });

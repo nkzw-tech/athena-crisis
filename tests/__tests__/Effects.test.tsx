@@ -502,7 +502,6 @@ test('only one game end win effect is fired', () => {
         {
           amount: 1,
           hidden: false,
-          optional: false,
           type: WinCriteria.CaptureAmount,
         },
       ],
@@ -562,11 +561,11 @@ test('only one game end win effect is fired', () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-      SetViewer
-      CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 1, toPlayer: 1 }"
-    `);
+    "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
+    SetViewer
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    GameEnd { condition: { amount: 1, hidden: false, players: [], reward: null, type: 2 }, conditionId: 1, toPlayer: 1 }"
+  `);
 });
 
 test('a unit spawns instead of ending the game', async () => {
