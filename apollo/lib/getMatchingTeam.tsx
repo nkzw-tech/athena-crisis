@@ -1,10 +1,13 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { GameEndActionResponse } from '../GameOver.tsx';
+import {
+  GameEndActionResponse,
+  OptionalConditionActionResponse,
+} from '../GameOver.tsx';
 
-export default function getWinningTeam(
+export default function getMatchingTeam(
   map: MapData,
-  actionResponse: GameEndActionResponse,
+  actionResponse: GameEndActionResponse | OptionalConditionActionResponse,
 ): 'draw' | PlayerID {
   const isDraw = !actionResponse.toPlayer;
   return isDraw
