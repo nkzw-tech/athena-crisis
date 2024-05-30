@@ -2916,3 +2916,75 @@ test('optional condition should not be triggered multiple times for the same pla
       AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1596, chargeB: 1596 }"
     `);
 });
+
+test('optional condition should not end the game, but non-optional one should when both exist', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const v3 = vec(1, 3);
+  const v4 = vec(1, 4);
+  const v5 = vec(2, 1);
+  const v6 = vec(2, 2);
+  const v7 = vec(2, 3);
+  const v8 = vec(2, 4);
+  const initialMap = map.copy({
+    config: map.config.copy({
+      winConditions: [
+        {
+          amount: 4,
+          hidden: false,
+          optional: false,
+          type: WinCriteria.DefeatAmount,
+        },
+        {
+          amount: 2,
+          hidden: false,
+          optional: true,
+          type: WinCriteria.DefeatAmount,
+        },
+      ],
+    }),
+    map: Array(3 * 4).fill(1),
+    size: new SizeVector(3, 4),
+    units: map.units
+      .set(v1, Flamethrower.create(player1))
+      .set(v2, Flamethrower.create(player1))
+      .set(v3, Flamethrower.create(player1))
+      .set(v4, Flamethrower.create(player1))
+      .set(v5, Flamethrower.create(player2))
+      .set(v6, Flamethrower.create(player2))
+      .set(v7, Flamethrower.create(player2))
+      .set(v8, Flamethrower.create(player2)),
+  });
+
+  expect(validateWinConditions(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    AttackUnitAction(v1, v5),
+    AttackUnitAction(v2, v6),
+    EndTurnAction(),
+    AttackUnitAction(v7, v3),
+    AttackUnitAction(v8, v4),
+    EndTurnAction(),
+    MoveAction(v1, v3),
+    AttackUnitAction(v3, v7),
+    MoveAction(v2, v4),
+    AttackUnitAction(v4, v8),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
+      AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
+      OptionalCondition { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
+      AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
+      OptionalCondition { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 2 }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3] }
+      AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
+      Move (1,2 → 1,4) { fuel: 28, completed: false, path: [1,3 → 1,4] }
+      AttackUnit (1,4 → 2,4) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1328, chargeB: 1864 }
+      GameEnd { condition: { amount: 4, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
+    `);
+});
