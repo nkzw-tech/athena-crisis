@@ -3,11 +3,22 @@ import {
   BuildingInfo,
   Factory,
   filterBuildings,
+  ResearchLab,
 } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
-import { BazookaBear, Cannon } from '@deities/athena/info/Unit.tsx';
+import { Plain } from '@deities/athena/info/Tile.tsx';
+import {
+  BazookaBear,
+  Cannon,
+  Pioneer,
+  SmallTank,
+} from '@deities/athena/info/Unit.tsx';
+import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
+import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import vec from '@deities/athena/map/vec.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
 
 BuildingInfo.setConstructor(Building);
@@ -182,5 +193,37 @@ test('units can be added to the Bar via skills', () => {
   );
   expect(BazookaBear.getCostFor(playerWithoutSkill)).toEqual(
     Number.POSITIVE_INFINITY,
+  );
+});
+
+test('Research Lab status effects are available even in fog', () => {
+  const initialMap = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: true,
+      },
+      map: [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1,
+      ],
+      size: { height: 5, width: 5 },
+      teams: [
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'Bot' }] },
+      ],
+    }),
+  );
+  const player1 = initialMap.getPlayer(1);
+  const vision = initialMap.createVisionObject(player1);
+
+  const map = initialMap.copy({
+    buildings: initialMap.buildings
+      .set(vec(1, 1), ResearchLab.create(2))
+      .set(vec(5, 5), ResearchLab.create(2)),
+    units: initialMap.units.set(vec(1, 1), Pioneer.create(1)),
+  });
+
+  expect(getAttackStatusEffect(map, SmallTank.create(2), Plain)).toEqual(
+    getAttackStatusEffect(vision.apply(map), SmallTank.create(2), Plain),
   );
 });
