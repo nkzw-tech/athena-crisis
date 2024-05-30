@@ -35,9 +35,13 @@ export default function addEndTurnAnimations(
   actions: Actions,
   actionResponse: EndTurnActionResponse,
   state: State,
+  maybeExtraPositions:
+    | Promise<ReadonlyArray<Vector> | null>
+    | ReadonlyArray<Vector>
+    | null,
   onComplete: StateToStateLike,
-  extraPositions?: ReadonlyArray<Vector>,
 ) {
+  const { requestFrame, update } = actions;
   const {
     current: { player: currentPlayer },
     next: { player: nextPlayer },
@@ -49,52 +53,59 @@ export default function addEndTurnAnimations(
       color: nextPlayer,
       length: 'short',
       onComplete: (state) => {
-        const { map, vision } = state;
-        const newMap = map.subtractFuel(nextPlayer);
-        const [unitsToHeal, unitsToRefill] = isFake
-          ? [emptyUnitMap, emptyUnitMap]
-          : partitionUnitsToHeal(getUnitsToHealOnBuildings(map, nextPlayer));
+        requestFrame(async () => {
+          const { map, vision } = state;
+          const newMap = map.subtractFuel(nextPlayer);
+          const [unitsToHeal, unitsToRefill] = isFake
+            ? [emptyUnitMap, emptyUnitMap]
+            : partitionUnitsToHeal(getUnitsToHealOnBuildings(map, nextPlayer));
 
-        const unitsToSupply = new Map([
-          ...(isFake
-            ? emptyUnitMap
-            : getAllUnitsToRefill(
-                newMap,
-                vision,
-                state.map.getPlayer(nextPlayer),
-              )),
-          ...(extraPositions ? getUnitsByPositions(map, extraPositions) : []),
-          ...unitsToRefill,
-        ]);
+          const extraPositions = await maybeExtraPositions;
+          const unitsToSupply = new Map([
+            ...(isFake
+              ? emptyUnitMap
+              : getAllUnitsToRefill(
+                  newMap,
+                  vision,
+                  state.map.getPlayer(nextPlayer),
+                )),
+            ...(extraPositions ? getUnitsByPositions(map, extraPositions) : []),
+            ...unitsToRefill,
+          ]);
 
-        const explodeUnitsWithoutFuel = (state: State) =>
-          explodeUnits(
-            actions,
-            state,
-            // Identify units that are out of fuel without applying the fuel adjustment, which is
-            // applied later in `applyEndTurnActionResponse`.
-            sortVectors([
-              ...newMap.units
-                .filter(
-                  (unit, vector) =>
-                    shouldRemoveUnit(newMap, vector, unit, nextPlayer) &&
-                    !unitsToSupply.has(vector) &&
-                    !unitsToHeal.has(vector),
-                )
-                .keys(),
-            ]),
-            onComplete,
+          const explodeUnitsWithoutFuel = (state: State) =>
+            explodeUnits(
+              actions,
+              state,
+              // Identify units that are out of fuel without applying the fuel adjustment, which is
+              // applied later in `applyEndTurnActionResponse`.
+              sortVectors([
+                ...newMap.units
+                  .filter(
+                    (unit, vector) =>
+                      !unitsToSupply.has(vector) &&
+                      !unitsToHeal.has(vector) &&
+                      shouldRemoveUnit(newMap, vector, unit, nextPlayer),
+                  )
+                  .keys(),
+              ]),
+              onComplete,
+            );
+
+          await update(
+            animateHeal(state, sortByVectorKey(unitsToHeal), (state) =>
+              unitsToSupply.size
+                ? animateSupply(
+                    state,
+                    sortByVectorKey(unitsToSupply),
+                    explodeUnitsWithoutFuel,
+                  )
+                : explodeUnitsWithoutFuel(state),
+            ),
           );
+        });
 
-        return animateHeal(state, sortByVectorKey(unitsToHeal), (state) =>
-          unitsToSupply.size
-            ? animateSupply(
-                state,
-                sortByVectorKey(unitsToSupply),
-                explodeUnitsWithoutFuel,
-              )
-            : explodeUnitsWithoutFuel(state),
-        );
+        return state;
       },
       player: nextPlayer,
       sound: 'UI/Start',

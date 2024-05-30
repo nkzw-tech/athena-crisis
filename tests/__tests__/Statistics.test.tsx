@@ -332,12 +332,12 @@ test('tracks statistics for players of the same team in fog', async () => {
     [EndTurnAction(), AttackUnitAction(vecC, vecB)],
   );
 
-  const { others, self } = decodeGameActionResponse(encodedGameActionResponse);
+  const { others } = decodeGameActionResponse(encodedGameActionResponse);
 
   let fogMap = applyActionResponse(
     vision.apply(initialMap),
     vision,
-    self!.actionResponse,
+    others![0].actionResponse,
   );
   for (const { actionResponse, buildings, units } of others!) {
     fogMap = updateVisibleEntities(

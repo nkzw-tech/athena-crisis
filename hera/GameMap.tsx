@@ -10,7 +10,6 @@ import dropLabels from '@deities/athena/lib/dropLabels.tsx';
 import getAverageVector from '@deities/athena/lib/getAverageVector.tsx';
 import getDecoratorsAtField from '@deities/athena/lib/getDecoratorsAtField.tsx';
 import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
-import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
@@ -24,10 +23,7 @@ import {
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector, {
-  sortByVectorKey,
-  VectorLike,
-} from '@deities/athena/map/Vector.tsx';
+import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { winConditionHasVectors } from '@deities/athena/WinConditions.tsx';
@@ -65,7 +61,6 @@ import Cursor from './Cursor.tsx';
 import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
-import animateSupply from './lib/animateSupply.tsx';
 import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
@@ -201,6 +196,7 @@ const getInitialState = (props: Props) => {
           ? new baseBehavior()
           : new BaseBehavior();
 
+  const vision = getVision(map, currentViewer, spectatorCodes);
   const newState = {
     additionalRadius: null,
     animationConfig:
@@ -220,7 +216,7 @@ const getInitialState = (props: Props) => {
     inlineUI: getInlineUIState(map, tileSize, scale),
     lastActionResponse: lastActionResponse || null,
     lastActionTime: lastActionTime || undefined,
-    map: isEditor ? map : dropLabels(map),
+    map: isEditor ? map : vision.apply(dropLabels(map)),
     mapName,
     namedPositions: null,
     navigationDirection: null,
@@ -244,7 +240,7 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout: timeout || null,
     unitSize,
-    vision: getVision(map, currentViewer, spectatorCodes),
+    vision,
     winConditionRadius: getWinConditionRadius(map, isEditor),
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
@@ -411,6 +407,7 @@ export default class GameMap extends Component<Props, State> {
                   type: 'EndTurn',
                 },
                 this.state,
+                null,
                 (state) => {
                   resolve();
                   return {
@@ -418,7 +415,6 @@ export default class GameMap extends Component<Props, State> {
                     ...resetBehavior(this.props.behavior),
                   };
                 },
-                [],
               ),
             }),
           );
@@ -920,29 +916,12 @@ export default class GameMap extends Component<Props, State> {
         }
       } else if (actionResponse.type === 'EndTurn') {
         const { map } = this.state;
-        const { current, next, supply } = actionResponse;
+        const { current, next } = actionResponse;
 
         // The turn was likely ended through a turn timeout.
         if (map.getCurrentPlayer().id !== next.player) {
           state = await this._processActionResponses([self]);
         } else {
-          if (supply) {
-            state = await new Promise((resolve) => {
-              this._update({
-                lastActionResponse: actionResponse,
-                ...animateSupply(
-                  state,
-                  sortByVectorKey(getUnitsByPositions(map, supply)),
-                  (state) => {
-                    resolve(state);
-                    return null;
-                  },
-                ),
-                lastActionTime: dateNow(),
-              });
-            });
-          }
-
           const currentPlayer = map.getPlayer(current.player);
           const nextPlayer = map.getPlayer(next.player);
           if (

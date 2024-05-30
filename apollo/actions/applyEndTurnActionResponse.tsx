@@ -31,10 +31,13 @@ export default function applyEndTurnActionResponse(
   }
 
   let teams = updatePlayers(map.teams, [nextPlayer, currentPlayer]);
+  const supplyVectors = new Set(supply);
   const destroyedUnits = map
     .subtractFuel(nextPlayer.id)
-    .units.filter((unit, vector) =>
-      shouldRemoveUnit(map, vector, unit, nextPlayer.id),
+    .units.filter(
+      (unit, vector) =>
+        !supplyVectors.has(vector) &&
+        shouldRemoveUnit(map, vector, unit, nextPlayer.id),
     ).size;
 
   if (destroyedUnits > 0) {

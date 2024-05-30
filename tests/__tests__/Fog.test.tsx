@@ -79,7 +79,6 @@ test('units that will be supplied by a hidden adjacent supply unit are not destr
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 
-  expect(gameActionResponse[0]![2]).toBeUndefined();
   gameActionResponse[1]!.map(([, , units]) => expect(units).toBeUndefined());
 });
 

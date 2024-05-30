@@ -253,6 +253,7 @@ async function processActionResponse(
           actions,
           actionResponse,
           state,
+          actionResponse.supply || null,
           (state) => {
             // All updates are handled elsewhere in this case.
             requestFrame(() => resolve(null));
@@ -261,7 +262,6 @@ async function processActionResponse(
               map: isFakeEndTurn(actionResponse) ? state.map : newMap,
             };
           },
-          actionResponse.supply,
         ),
       }));
       break;
@@ -596,8 +596,8 @@ async function processActionResponse(
             type: 'EndTurn',
           },
           state,
+          null,
           resolveWithNull,
-          [],
         ),
       }));
       break;

@@ -11,8 +11,8 @@ export default function shouldRemoveUnit(
   player: PlayerID,
 ) {
   return (
-    map.matchesPlayer(unit, player) &&
     !unit.hasFuel() &&
+    map.matchesPlayer(unit, player) &&
     isFuelConsumingUnit(unit, map.getTileInfo(vector))
   );
 }

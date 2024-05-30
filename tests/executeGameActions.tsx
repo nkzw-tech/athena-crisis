@@ -83,7 +83,7 @@ export default function executeGameActions(
       map.createVisionObject(map.getCurrentPlayer()),
       gameState,
       null,
-      gameState[0][0],
+      null,
     ),
     newEffects,
   ];
