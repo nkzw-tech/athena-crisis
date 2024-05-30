@@ -546,7 +546,7 @@ export default function applyActionResponse(
     }
     case 'BeginGame':
     case 'SecretDiscovered':
-    case 'OptionalWin':
+    case 'OptionalCondition':
     case 'Start':
       return map;
     default: {

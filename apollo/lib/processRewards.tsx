@@ -4,14 +4,14 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
 import {
   GameEndActionResponse,
-  OptionalWinActionResponse,
+  OptionalConditionActionResponse,
 } from '../GameOver.tsx';
 import { GameState, MutableGameState } from '../Types.tsx';
 import getWinningTeam from './getWinningTeam.tsx';
 
 export function processRewards(
   map: MapData,
-  actionResponse: GameEndActionResponse | OptionalWinActionResponse,
+  actionResponse: GameEndActionResponse | OptionalConditionActionResponse,
 ): [GameState, MapData] {
   const gameState: MutableGameState = [];
   const winningTeam = getWinningTeam(map, actionResponse);

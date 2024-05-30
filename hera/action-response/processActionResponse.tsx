@@ -623,7 +623,7 @@ async function processActionResponse(
       return activatePowerAction(actions, state, actionResponse);
     case 'SecretDiscovered':
       return secretDiscoveredAnimation(actions, state, actionResponse);
-    case 'OptionalWin':
+    case 'OptionalCondition':
       return secretDiscoveredAnimation(actions, state, actionResponse);
     default: {
       actionResponse satisfies never;

@@ -52,11 +52,11 @@ export type GameEndActionResponse = Readonly<{
   type: 'GameEnd';
 }>;
 
-export type OptionalWinActionResponse = Readonly<{
+export type OptionalConditionActionResponse = Readonly<{
   condition: WinCondition;
   conditionId: number;
   toPlayer: PlayerID;
-  type: 'OptionalWin';
+  type: 'OptionalCondition';
 }>;
 
 export type GameOverActionResponses =
@@ -65,7 +65,7 @@ export type GameOverActionResponses =
   | CaptureGameOverActionResponse
   | GameEndActionResponse
   | PreviousTurnGameOverActionResponse
-  | OptionalWinActionResponse;
+  | OptionalConditionActionResponse;
 
 function check(
   previousMap: MapData,
@@ -172,7 +172,7 @@ export function checkGameOverConditions(
     ];
   }
 
-  const optionalWinResponse =
+  const optionalConditionResponse =
     condition?.type !== WinCriteria.Default &&
     condition?.optional === true &&
     winningPlayer &&
@@ -181,22 +181,23 @@ export function checkGameOverConditions(
           condition,
           conditionId: activeMap.config.winConditions.indexOf(condition),
           toPlayer: winningPlayer,
-          type: 'OptionalWin',
+          type: 'OptionalCondition',
         } as const)
       : null;
 
-  if (optionalWinResponse) {
+  if (optionalConditionResponse) {
     let newGameState: GameState = [];
-    [newGameState, map] = processRewards(map, optionalWinResponse);
-    map = applyGameOverActionResponse(map, optionalWinResponse);
+    [newGameState, map] = processRewards(map, optionalConditionResponse);
+    map = applyGameOverActionResponse(map, optionalConditionResponse);
     return [
       ...gameState,
       ...newGameState,
       [
-        // update `optionalWinResponse.condition` with the new `map.config` updated in `applyGameOverActionResponse()`
+        // update `optionalConditionResponse.condition` with the new `map.config` updated in `applyGameOverActionResponse()`
         {
-          ...optionalWinResponse,
-          condition: map.config.winConditions[optionalWinResponse.conditionId],
+          ...optionalConditionResponse,
+          condition:
+            map.config.winConditions[optionalConditionResponse.conditionId],
         },
         map,
       ],
@@ -272,7 +273,7 @@ export function applyGameOverActionResponse(
     }
     case 'GameEnd':
       return map;
-    case 'OptionalWin': {
+    case 'OptionalCondition': {
       const { condition, conditionId, toPlayer } = actionResponse;
       if (condition.type === WinCriteria.Default) {
         return map;
