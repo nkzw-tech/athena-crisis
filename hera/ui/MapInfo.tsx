@@ -347,8 +347,13 @@ const unitStyle = css`
 `;
 
 const buildingStyle = css`
-  > div:nth-child(1) {
+  > div:nth-child(1),
+  > div:nth-child(2) {
     margin-top: -${TileSize - 3}px;
+  }
+
+  > div:nth-child(2) {
+    zoom: 1.5;
   }
 `;
 

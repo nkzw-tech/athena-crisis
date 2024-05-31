@@ -185,18 +185,20 @@ const BuildingTile = memo(function BuildingTile({
   return building.label != null ? (
     <>
       {buildingTile}
-      <div
-        className={cx(baseStyle, absolute && absoluteStyle)}
-        style={{
-          [vars.set('x')]: `${positionX}px`,
-          [vars.set('y')]: `${positionY}px`,
-          height,
-          width: `${size}px`,
-          zIndex: zIndex ?? 0,
-        }}
-      >
-        <Label entity={building} hide={!!animation} />
-      </div>
+      {building.label !== null && (
+        <div
+          className={cx(baseStyle, absoluteStyle)}
+          style={{
+            [vars.set('x')]: `${positionX}px`,
+            [vars.set('y')]: `${positionY}px`,
+            height,
+            width: `${size}px`,
+            zIndex: zIndex ?? 0,
+          }}
+        >
+          <Label entity={building} hide={!!animation} />
+        </div>
+      )}
     </>
   ) : (
     buildingTile
