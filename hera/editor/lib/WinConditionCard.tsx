@@ -23,7 +23,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useState } from 'react';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
@@ -131,7 +131,7 @@ export default function WinConditionCard({
           {winConditionHasAmounts(condition) && (
             <label>
               <Stack alignCenter gap start>
-                <span className="input-label">
+                <span className={cx(labelWidthStyle, 'input-label')}>
                   <fbt desc="Label for win condition amount">Amount</fbt>
                 </span>
                 <input
@@ -162,7 +162,7 @@ export default function WinConditionCard({
           {winConditionHasRounds(condition) && (
             <label>
               <Stack alignCenter gap start>
-                <span className="input-label">
+                <span className={cx(labelWidthStyle, 'input-label')}>
                   <fbt desc="Label for win condition rounds">Rounds</fbt>
                 </span>
                 <input
@@ -194,7 +194,7 @@ export default function WinConditionCard({
           )}
           <label>
             <Stack gap start>
-              <span className="input-label">
+              <span className={cx(labelWidthStyle, 'input-label')}>
                 <fbt desc="Label for secret win condition checkbox">Secret</fbt>
               </span>
               <input
@@ -217,8 +217,40 @@ export default function WinConditionCard({
               </fbt>
             </p>
           )}
-          <Stack gap start verticalPadding>
-            <fbt desc="Label for win condition reward">Reward</fbt>
+          {condition.type !== WinCriteria.Default && (
+            <Stack>
+              <label>
+                <Stack gap start>
+                  <span className={cx(labelWidthStyle, 'input-label')}>
+                    <fbt desc="Label for optional win condition checkbox">
+                      Optional
+                    </fbt>
+                  </span>
+                  <input
+                    checked={condition.optional}
+                    onChange={(event) =>
+                      onChange({
+                        ...condition,
+                        optional: event.target.checked,
+                      })
+                    }
+                    type="checkbox"
+                  />
+                </Stack>
+              </label>
+              {condition.optional && (
+                <div>
+                  <fbt desc="Description for optional win conditions">
+                    Optional conditions do not end the game when fulfilled.
+                  </fbt>
+                </div>
+              )}
+            </Stack>
+          )}
+          <Stack gap start>
+            <span className={cx(labelWidthStyle, 'input-label')}>
+              <fbt desc="Label for win condition reward">Reward</fbt>
+            </span>
             <SkillSelector
               availableSkills={Skills}
               currentSkill={condition.reward?.skill}
@@ -294,4 +326,8 @@ const noteBoxStyle = css`
   ${clipBorder()}
   padding: 12px;
   background: ${applyVar('background-color')};
+`;
+
+const labelWidthStyle = css`
+  width: 100px;
 `;

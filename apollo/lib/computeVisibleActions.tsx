@@ -372,6 +372,7 @@ const VisibleActionModifiers: Record<
   MoveUnit: {
     Source: true,
   },
+  OptionalCondition: true,
   PreviousTurnGameOver: true,
   ReceiveReward: true,
   Rescue: {

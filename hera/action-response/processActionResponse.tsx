@@ -621,6 +621,7 @@ async function processActionResponse(
     }
     case 'ActivatePower':
       return activatePowerAction(actions, state, actionResponse);
+    case 'OptionalCondition':
     case 'SecretDiscovered':
       return secretDiscoveredAnimation(actions, state, actionResponse);
     default: {
