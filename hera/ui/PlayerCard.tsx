@@ -307,15 +307,8 @@ export default memo(function PlayerCard({
             </Stack>
             {wide && (
               <Stack className={offsetStyle} gap={16} nowrap>
-                <Stack
-                  className={cx(playerStatsStyle, nowrapStyle)}
-                  key="funds-per-turn"
-                >
-                  <Icon
-                    className={playerStatsBeforeIconStyle}
-                    icon={Reload}
-                    key="icon"
-                  />
+                <Stack className={cx(playerStatsStyle, nowrapStyle)}>
+                  <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
                     {shouldShow ? calculateFunds(map, player) : '???'}
                   </span>
