@@ -245,7 +245,7 @@ export default function WinConditionCard({
               {condition.optional && (
                 <p className={lightStyle}>
                   <fbt desc="Description for optional win conditions">
-                    Optional objectives do not end the game when fulfilled.
+                    Fulfilling optional objectives does not end the game.
                   </fbt>
                 </p>
               )}
