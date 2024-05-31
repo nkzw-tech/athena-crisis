@@ -87,6 +87,7 @@ input[type="checkbox"] {
   color: ${applyVar('text-color')};
   cursor: pointer;
   height: 28px;
+  line-height: initial;
   margin: 0;
   min-width: 28px;
   padding: 0;
