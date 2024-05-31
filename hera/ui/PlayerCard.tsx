@@ -13,6 +13,7 @@ import { isBot, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import {
+  WinCondition,
   winConditionHasAmounts,
   WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
@@ -246,63 +247,15 @@ export default memo(function PlayerCard({
                       matchesPlayerList(condition.players, player.id) &&
                       !condition.completed?.has(player.id),
                   )
-                  .map((condition, index) => {
-                    const [icon, status, amount] =
-                      condition.type === WinCriteria.DefeatAmount
-                        ? [
-                            Crosshair,
-                            player.stats.destroyedUnits,
-                            condition.amount,
-                          ]
-                        : condition.type === WinCriteria.CaptureAmount
-                          ? [
-                              Flag,
-                              capturedByPlayer(map, player.id),
-                              condition.amount,
-                            ]
-                          : condition.type === WinCriteria.DestroyAmount
-                            ? [
-                                Buildings,
-                                destroyedBuildingsByPlayer(map, player.id),
-                                condition.amount,
-                              ]
-                            : condition.type === WinCriteria.EscortAmount
-                              ? [
-                                  Escort,
-                                  escortedByPlayer(
-                                    map,
-                                    player.id,
-                                    condition.vectors,
-                                    condition.label,
-                                  ),
-                                  condition.amount,
-                                ]
-                              : condition.type === WinCriteria.Survival
-                                ? [Hourglass, map.round, condition.rounds]
-                                : [null, null];
-
-                    return (
-                      (icon && status != null && (
-                        <Stack
-                          className={nowrapStyle}
-                          gap={2}
-                          key={index}
-                          nowrap
-                        >
-                          <div>
-                            <Icon
-                              className={winConditionIconStyle}
-                              icon={icon}
-                            />
-                            {status}
-                          </div>
-                          <div>/</div>
-                          <div>{amount}</div>
-                        </Stack>
-                      )) ||
-                      null
-                    );
-                  })}
+                  .map((condition, index) => (
+                    <PlayerCardObjective
+                      condition={condition}
+                      index={index}
+                      key={index}
+                      map={map}
+                      player={player}
+                    />
+                  ))}
               </Stack>
             </Stack>
             {wide && (
@@ -385,6 +338,58 @@ export default memo(function PlayerCard({
     </div>
   );
 });
+
+const PlayerCardObjective = ({
+  condition,
+  index,
+  map,
+  player,
+}: {
+  condition: WinCondition;
+  index: number;
+  map: MapData;
+  player: Player;
+}) => {
+  const [icon, status, amount] =
+    condition.type === WinCriteria.DefeatAmount
+      ? [Crosshair, player.stats.destroyedUnits, condition.amount]
+      : condition.type === WinCriteria.CaptureAmount
+        ? [Flag, capturedByPlayer(map, player.id), condition.amount]
+        : condition.type === WinCriteria.DestroyAmount
+          ? [
+              Buildings,
+              destroyedBuildingsByPlayer(map, player.id),
+              condition.amount,
+            ]
+          : condition.type === WinCriteria.EscortAmount
+            ? [
+                Escort,
+                escortedByPlayer(
+                  map,
+                  player.id,
+                  condition.vectors,
+                  condition.label,
+                ),
+                condition.amount,
+              ]
+            : condition.type === WinCriteria.Survival
+              ? [Hourglass, map.round, condition.rounds]
+              : [null, null];
+
+  return (
+    (icon && status != null && (
+      <Stack className={nowrapStyle} gap={2} key={index} nowrap>
+        <div>
+          <Icon className={winConditionIconStyle} icon={icon} />
+          {status}
+        </div>
+        <div>/</div>
+        <div>{amount}</div>
+      </Stack>
+    )) ||
+    null
+  );
+};
 
 const width = PortraitWidth / 2;
 const playerStyle = css`
