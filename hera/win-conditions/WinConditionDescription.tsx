@@ -11,7 +11,6 @@ import getColor from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import { Fragment } from 'react';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { FactionNames } from '../Types.tsx';
@@ -26,42 +25,31 @@ const PlayerList = ({
   conjunction?: 'and' | 'or';
   factionNames: FactionNames;
   players: PlayerIDs;
-}) => {
-  const list =
-    players?.map((id) => (
-      <span key={`player-${id}`} style={{ color: getColor(id) }}>
-        {getTranslatedFactionName(factionNames, id)}
-      </span>
-    )) || [];
-
-  return list
-    ? intlList(
-        list,
-        Conjunctions[conjunction === 'or' ? 'OR' : 'AND'],
-        Delimiters.COMMA,
-      )
-    : null;
-};
+}) =>
+  players.length ? (
+    intlList(
+      players.map((id) => (
+        <span key={`player-${id}`} style={{ color: getColor(id) }}>
+          {getTranslatedFactionName(factionNames, id)}
+        </span>
+      )),
+      Conjunctions[conjunction === 'or' ? 'OR' : 'AND'],
+      Delimiters.COMMA,
+    )
+  ) : (
+    <fbt desc="Player list name that applies to any player, like 'Any player can achieve the objective…'">
+      Any player
+    </fbt>
+  );
 
 const WinConditionText = ({
   condition,
   factionNames,
-  round,
 }: {
   condition: WinCondition;
   factionNames: FactionNames;
-  round: number;
 }) => {
   const { type } = condition;
-  const players =
-    (type !== WinCriteria.Default &&
-      condition.players?.map((id) => (
-        <span key={`player-${id}`} style={{ color: getColor(id) }}>
-          {getTranslatedFactionName(factionNames, id)}
-        </span>
-      ))) ||
-    [];
-
   const playerList = (
     <PlayerList
       factionNames={factionNames}
@@ -94,63 +82,25 @@ const WinConditionText = ({
         </fbt>
       );
     case WinCriteria.CaptureLabel:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the capture by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by capturing all buildings with the{' '}
           <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
+            count={labels?.length || 0}
+            many="labels"
+            name="number of labels"
           >
-            wins
+            label
           </fbt:plural>{' '}
-          if they capture all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
-          <fbt:param name="label">{labelList}</fbt:param>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the capture by label win condition">
-          Any player wins if they capture all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
     case WinCriteria.CaptureAmount:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the capture by amount win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they capture{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={condition.amount}
-            many="buildings"
-            name="number of buildings"
-          >
-            building
-          </fbt:plural>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the capture by amount win condition for any player">
-          You win if you capture{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by capturing{' '}
           <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
           <fbt:plural
             count={condition.amount}
@@ -163,17 +113,10 @@ const WinConditionText = ({
       );
     case WinCriteria.DefeatOneLabel:
     case WinCriteria.DefeatLabel:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they defeat{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by defeating{' '}
           <fbt:plural
             count={type === WinCriteria.DefeatOneLabel ? 1 : 0}
             many="all units"
@@ -188,45 +131,15 @@ const WinConditionText = ({
             name="number of labels"
           >
             label
-          </fbt:plural>
-          <fbt:param name="label">{labelList}</fbt:param>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the defeat by label win condition">
-          Any player wins if they defeat all units with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
+          </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
     case WinCriteria.DefeatAmount:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they defeat <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={condition.amount}
-            many="units"
-            name="number of units"
-          >
-            unit
-          </fbt:plural>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the defeat by label win condition">
-          Any player wins if they defeat{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by defeating{' '}
           <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
           <fbt:plural
             count={condition.amount}
@@ -240,57 +153,39 @@ const WinConditionText = ({
     case WinCriteria.EscortLabel:
       return (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they escort all units with the{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by escorting all units with the{' '}
           <fbt:plural
             count={labels?.length || 0}
             many="labels"
             name="number of labels"
           >
             label
-          </fbt:plural>
+          </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
     case WinCriteria.Survival:
       return (
-        <Fragment>
-          <fbt desc="Explanation for the survival win condition with multiple players">
-            <fbt:param name="players">{playerList}</fbt:param>{' '}
-            <fbt:plural
-              count={players.length}
-              many="win"
-              name="number of players"
-            >
-              wins
-            </fbt:plural>{' '}
-            if they survive{' '}
-            <fbt:param name="rounds">{condition.rounds}</fbt:param> rounds.
-          </fbt>{' '}
-          <fbt desc="Current round description">
-            Current round: <fbt:param name="round">{round}</fbt:param>.
-          </fbt>
-        </Fragment>
+        <fbt desc="Explanation for the survival win condition with multiple players">
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by surviving{' '}
+          <fbt:param name="rounds">{condition.rounds}</fbt:param>{' '}
+          <fbt:plural
+            count={condition.rounds}
+            many="rounds"
+            name="number of rounds"
+          >
+            round
+          </fbt:plural>.
+        </fbt>
       );
     case WinCriteria.EscortAmount:
       return labels?.length ? (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they escort <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by escorting{' '}
+          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
           <fbt:plural
             count={condition.amount}
             many="units"
@@ -305,20 +200,14 @@ const WinConditionText = ({
             name="number of labels"
           >
             label
-          </fbt:plural>
+          </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       ) : (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they escort <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by escorting{' '}
+          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
           <fbt:plural
             count={condition.amount}
             many="units"
@@ -329,97 +218,40 @@ const WinConditionText = ({
         </fbt>
       );
     case WinCriteria.RescueLabel:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by rescuing all units with the{' '}
           <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
+            count={labels?.length || 0}
+            many="labels"
+            name="number of labels"
           >
-            wins
+            label
           </fbt:plural>{' '}
-          if they rescue all units with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
-          <fbt:param name="label">{labelList}</fbt:param>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the rescue by label win condition">
-          Any player wins if they rescue all units with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
     case WinCriteria.DestroyLabel:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the destroy by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by destroying all buildings with the{' '}
           <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
+            count={labels?.length || 0}
+            many="labels"
+            name="number of labels"
           >
-            wins
+            label
           </fbt:plural>{' '}
-          if they destroy all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
-          <fbt:param name="label">{labelList}</fbt:param>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the destroy by label win condition">
-          Any player wins if they destroy all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
-            label
-          </fbt:plural>
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
     case WinCriteria.DestroyAmount:
-      return players.length ? (
+      return (
         <fbt desc="Explanation for the destroy by amount win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param>{' '}
-          <fbt:plural
-            count={players.length}
-            many="win"
-            name="number of players"
-          >
-            wins
-          </fbt:plural>{' '}
-          if they destroy{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={condition.amount}
-            many="buildings"
-            name="number of buildings"
-          >
-            building
-          </fbt:plural>.
-        </fbt>
-      ) : (
-        <fbt desc="Explanation for the destroy by amount win condition for any player">
-          You win if you destroy{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by destroying{' '}
           <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
           <fbt:plural
             count={condition.amount}
@@ -479,12 +311,15 @@ export default function WinConditionDescription({
         <WinConditionTitle condition={condition} />
       </h2>
       <p>
-        <WinConditionText
-          condition={condition}
-          factionNames={factionNames}
-          round={round}
-        />
+        <WinConditionText condition={condition} factionNames={factionNames} />
       </p>
+      {condition.type === WinCriteria.Survival && (
+        <div>
+          <fbt desc="Current round description">
+            Current round: <fbt:param name="round">{round}</fbt:param>.
+          </fbt>
+        </div>
+      )}
       {condition.type !== WinCriteria.Default && condition.completed?.size ? (
         <CompletedConditionText
           factionNames={factionNames}
