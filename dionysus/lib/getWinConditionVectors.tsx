@@ -9,6 +9,7 @@ export default function getWinConditionVectors(map: MapData, unit: Unit) {
     if (
       winConditionHasVectors(condition) &&
       (!condition.players || condition.players.includes(unit.player)) &&
+      !condition.completed?.has(unit.player) &&
       (!condition.label?.size ||
         (unit.label != null && condition.label.has(unit.label)))
     ) {
