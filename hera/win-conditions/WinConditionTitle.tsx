@@ -15,7 +15,9 @@ export default function WinConditionTitle({
   const space = index != null ? (short ? ` ` : `: `) : '';
   return (
     <span className={cx(titleStyle, short && nowrapStyle)}>
-      {index != null ? `W${index + 1}` : null}
+      {index != null
+        ? `${condition.type !== WinCriteria.Default && condition.optional ? 'O' : 'W'}${index + 1}`
+        : null}
       {short ? space : `${space}${getWinCriteriaName(condition.type)} `}
       {condition.type !== WinCriteria.Default &&
         condition.players?.map((id) => <MiniPlayerIcon gap id={id} key={id} />)}

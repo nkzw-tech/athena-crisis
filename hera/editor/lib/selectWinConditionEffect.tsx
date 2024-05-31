@@ -5,35 +5,51 @@ import hasEffectWinCondition from './hasEffectWinCondition.tsx';
 
 export default function selectWinConditionEffect(
   editor: EditorState,
-  conditionIndex: number | WinConditionID,
+  conditionIndex: WinConditionID,
   condition?: WinCondition,
 ): Partial<EditorState> {
-  const effectList = editor.effects.get('GameEnd');
+  const isDefault = condition?.type === WinCriteria.Default;
+  const trigger =
+    !isDefault && condition?.optional ? 'OptionalObjective' : 'GameEnd';
+  const effectList = editor.effects.get(trigger);
   const effect = effectList
     ? [...effectList].find(({ conditions }) =>
         hasEffectWinCondition(
-          'GameEnd',
-          condition?.type === WinCriteria.Default ? 'win' : conditionIndex,
+          trigger,
+          isDefault ? 'win' : conditionIndex,
           conditions,
         ),
       )
     : false;
 
-  const newEffect = {
-    actions: [],
-    conditions: [{ type: 'GameEnd', value: conditionIndex }],
-  } as const;
+  const newEffect =
+    trigger === 'OptionalObjective' && typeof conditionIndex === 'number'
+      ? ({
+          actions: [],
+          conditions: [{ type: trigger, value: conditionIndex }],
+        } as const)
+      : trigger === 'GameEnd'
+        ? ({
+            actions: [],
+            conditions: [{ type: trigger, value: conditionIndex }],
+          } as const)
+        : null;
+
+  if (!newEffect) {
+    throw new Error('selectWinConditionEffect: Invalid effect condition.');
+  }
+
   const effects = effect
     ? editor.effects
     : new Map([
         ...editor.effects,
-        ['GameEnd', new Set([...(effectList || []), newEffect])] as const,
+        [trigger, new Set([...(effectList || []), newEffect])] as const,
       ]);
 
   return {
     condition: undefined,
     effects,
     mode: 'effects',
-    scenario: { effect: effect || newEffect, trigger: 'GameEnd' },
+    scenario: { effect: effect || newEffect, trigger },
   };
 }

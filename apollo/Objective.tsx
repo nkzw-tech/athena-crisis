@@ -148,14 +148,17 @@ export function checkObjectives(
     let newGameState: GameState = [];
     [newGameState, map] = processRewards(map, optionalObjective);
     map = applyObjectiveActionResponse(map, optionalObjective);
-    gameState.push(...newGameState, [
-      // Update the condition with the mutated value.
-      {
-        ...optionalObjective,
-        condition: map.config.winConditions[optionalObjective.conditionId],
-      },
-      map,
-    ]);
+    gameState.push(
+      [
+        // Update the condition with the mutated value.
+        {
+          ...optionalObjective,
+          condition: map.config.winConditions[optionalObjective.conditionId],
+        },
+        map,
+      ],
+      ...newGameState,
+    );
   }
 
   const gameEndResponse =
@@ -258,6 +261,7 @@ export function applyObjectiveActionResponse(
         completed: condition.completed
           ? new Set([...condition.completed, toPlayer])
           : new Set([toPlayer]),
+        hidden: false,
       };
       return map.copy({
         config: map.config.copy({

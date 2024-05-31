@@ -19,9 +19,11 @@ export function processRewards(
     const rewards = new Set(
       [
         'condition' in actionResponse ? actionResponse.condition?.reward : null,
-        map.config.winConditions.find(
-          (condition) => condition.type === WinCriteria.Default,
-        )?.reward,
+        actionResponse.type === 'GameEnd'
+          ? map.config.winConditions.find(
+              (condition) => condition.type === WinCriteria.Default,
+            )?.reward
+          : null,
       ].filter(isPresent),
     );
 

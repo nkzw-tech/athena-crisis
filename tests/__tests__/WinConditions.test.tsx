@@ -8,8 +8,10 @@ import {
   MoveAction,
   RescueAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { Effect } from '@deities/apollo/Effects.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { CrashedAirplane, House } from '@deities/athena/info/Building.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
   Bomber,
@@ -3000,6 +3002,10 @@ test('optional objectives are processed before game end responses', async () => 
           amount: 1,
           hidden: false,
           optional: true,
+          reward: {
+            skill: Skill.BuyUnitBazookaBear,
+            type: 'skill',
+          },
           type: WinCriteria.DefeatAmount,
         },
       ],
@@ -3009,15 +3015,42 @@ test('optional objectives are processed before game end responses', async () => 
       .set(v2, Flamethrower.create(player2)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(
+    initialMap,
+    [AttackUnitAction(v1, v2)],
+    new Map([
+      [
+        'OptionalObjective',
+        new Set<Effect>([
+          {
+            actions: [
+              {
+                message: `FIRE!`,
+                player: 'self',
+                type: 'CharacterMessageEffect',
+                unitId: Flamethrower.id,
+                variant: 2,
+              },
+            ],
+            conditions: [
+              {
+                type: 'OptionalObjective',
+                value: 1,
+              },
+            ],
+          },
+        ]),
+      ],
+    ]),
+  );
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'skill' }, type: 9 }, conditionId: 1, toPlayer: 1 }
+      CharacterMessage { message: 'FIRE!', player: 'self', unitId: 15, variant: 2 }
+      ReceiveReward { player: 1, reward: 'Reward { skill: 12 }' }
       GameEnd { condition: null, conditionId: null, toPlayer: 1 }"
     `);
 });

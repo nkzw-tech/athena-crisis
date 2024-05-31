@@ -192,33 +192,37 @@ export default function WinConditionCard({
               </Stack>
             </label>
           )}
-          <label>
-            <Stack gap start>
-              <span className={cx(labelWidthStyle, 'input-label')}>
-                <fbt desc="Label for secret win condition checkbox">Secret</fbt>
-              </span>
-              <input
-                checked={condition.hidden}
-                onChange={(event) =>
-                  onChange({
-                    ...condition,
-                    hidden: event.target.checked,
-                  })
-                }
-                type="checkbox"
-              />
-            </Stack>
-          </label>
-          {condition.hidden && hasLabel && (
-            <p>
-              <fbt desc="Description for secret win condition labels">
-                Labels associated with this win condition will be hidden from
-                all players.
-              </fbt>
-            </p>
-          )}
+          <Stack gap>
+            <label>
+              <Stack gap start>
+                <span className={cx(labelWidthStyle, 'input-label')}>
+                  <fbt desc="Label for secret win condition checkbox">
+                    Secret
+                  </fbt>
+                </span>
+                <input
+                  checked={condition.hidden}
+                  onChange={(event) =>
+                    onChange({
+                      ...condition,
+                      hidden: event.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                />
+              </Stack>
+            </label>
+            {condition.hidden && hasLabel && (
+              <p className={lightStyle}>
+                <fbt desc="Description for secret win condition labels">
+                  Labels associated with this win condition will be hidden from
+                  all players.
+                </fbt>
+              </p>
+            )}
+          </Stack>
           {condition.type !== WinCriteria.Default && (
-            <Stack>
+            <Stack gap>
               <label>
                 <Stack gap start>
                   <span className={cx(labelWidthStyle, 'input-label')}>
@@ -239,11 +243,11 @@ export default function WinConditionCard({
                 </Stack>
               </label>
               {condition.optional && (
-                <div>
+                <p className={lightStyle}>
                   <fbt desc="Description for optional win conditions">
                     Optional objectives do not end the game when fulfilled.
                   </fbt>
-                </div>
+                </p>
               )}
             </Stack>
           )}
@@ -330,4 +334,8 @@ const noteBoxStyle = css`
 
 const labelWidthStyle = css`
   width: 100px;
+`;
+
+const lightStyle = css`
+  opacity: 0.7;
 `;

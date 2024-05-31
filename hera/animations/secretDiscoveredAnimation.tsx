@@ -22,7 +22,7 @@ export default async function secretDiscoveredAnimation(
       ? String(fbt(`Secret Discovered!`, 'Secret discovered banner'))
       : !condition.hidden
         ? String(
-            fbt(`Optional Objective fulfilled!`, 'Optional objective banner'),
+            fbt(`Optional Objective Fulfilled!`, 'Optional objective banner'),
           )
         : String(
             fbt(

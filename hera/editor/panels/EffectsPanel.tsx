@@ -51,23 +51,25 @@ export default function EffectsPanel({
     config: { biome, winConditions },
   } = map;
 
-  const effectList = effects.get('GameEnd');
-  const conditionsByID = useMemo(
-    () =>
-      effectList
-        ? new Set(
-            [...effectList].flatMap(
-              ({ conditions }) =>
-                conditions
-                  ?.map((condition) =>
-                    condition.type === 'GameEnd' ? condition.value : null,
-                  )
-                  .filter(isPresent),
-            ),
-          )
-        : null,
-    [effectList],
-  );
+  const conditionsByID = useMemo(() => {
+    const effectList = new Set([
+      ...(effects.get('GameEnd') || []),
+      ...(effects.get('OptionalObjective') || []),
+    ]);
+    return new Set(
+      [...effectList].flatMap(
+        ({ conditions }) =>
+          conditions
+            ?.map((condition) =>
+              condition.type === 'GameEnd' ||
+              condition.type === 'OptionalObjective'
+                ? condition.value
+                : null,
+            )
+            .filter(isPresent),
+      ),
+    );
+  }, [effects]);
 
   const possibleEffects = useMemo(
     () =>
@@ -86,9 +88,16 @@ export default function EffectsPanel({
             </InlineLink>
           ),
         ),
-        winConditions.map((condition, index) =>
-          condition.type === WinCriteria.Default ||
-          conditionsByID?.has(index) ? null : (
+        winConditions.map((condition, index) => {
+          if (
+            condition.type === WinCriteria.Default ||
+            conditionsByID?.has(index)
+          ) {
+            return null;
+          }
+
+          const type = condition.optional ? 'OptionalObjective' : 'GameEnd';
+          return (
             <InlineLink
               className={fitContentStyle}
               key={index}
@@ -104,17 +113,17 @@ export default function EffectsPanel({
                   actions: [],
                   conditions: [
                     {
-                      type: 'GameEnd',
+                      type,
                       value: index,
                     },
                   ],
                 }}
-                trigger="GameEnd"
+                trigger={type}
                 winConditions={winConditions}
               />
             </InlineLink>
-          ),
-        ),
+          );
+        }),
       ]
         .flat()
         .filter(isPresent),

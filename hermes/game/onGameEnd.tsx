@@ -17,8 +17,7 @@ export default function onGameEnd(
     });
     const { condition } = lastAction;
     const secretCondition = condition?.hidden ? condition : null;
-
-    const secretState = secretCondition
+    const secretGameState = secretCondition
       ? [
           [
             { condition: secretCondition, type: 'SecretDiscovered' },
@@ -39,7 +38,7 @@ export default function onGameEnd(
     if (lastMap) {
       const adjustedGameState = [
         [{ type: 'SetViewer' }, lastMap] as const,
-        ...(secretState || []),
+        ...(secretGameState || []),
         ...effectGameState.map(
           ([actionResponse, map]) => [actionResponse, map] as const,
         ),
@@ -81,8 +80,8 @@ export default function onGameEnd(
       ];
     }
 
-    return secretState
-      ? [...gameState.slice(0, -1), ...secretState, gameState.at(-1)!]
+    return secretGameState
+      ? [...gameState.slice(0, -1), ...secretGameState, gameState.at(-1)!]
       : gameState;
   }
 

@@ -68,7 +68,7 @@ export default function applyConditions(
       addToGameState = false;
 
       // Reapply the same effects on a previous version of the game state in which the player has lost but
-      // lose criteria (ie. building posession) has not been updated yet.
+      // lose criteria (ie. building ownership) has not been updated yet.
       effectGameState = applyEffects(
         previousMap,
         previousMap,
@@ -84,15 +84,15 @@ export default function applyConditions(
       ];
     }
 
-    const gameOverState = checkObjectives(
+    const objectiveState = checkObjectives(
       previousMap,
       activeMap,
       lastActionResponse,
     );
 
-    if (gameOverState?.length) {
+    if (objectiveState?.length) {
       let currentMap = activeMap;
-      for (const [actionResponse, currentActiveMap] of gameOverState) {
+      for (const [actionResponse, currentActiveMap] of objectiveState) {
         queue.push([currentMap, currentActiveMap, actionResponse, true]);
         currentMap = currentActiveMap;
       }
