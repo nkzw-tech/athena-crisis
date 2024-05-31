@@ -1,6 +1,6 @@
-import { GameEndActionResponse } from '@deities/apollo/GameOver.tsx';
 import getColorName from '@deities/apollo/lib/getColorName.tsx';
 import nameGenerator from '@deities/apollo/lib/nameGenerator.tsx';
+import { GameEndActionResponse } from '@deities/apollo/Objective.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';

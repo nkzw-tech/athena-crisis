@@ -52,42 +52,20 @@ export type GameEndActionResponse = Readonly<{
   type: 'GameEnd';
 }>;
 
-export type OptionalConditionActionResponse = Readonly<{
+export type OptionalObjectiveActionResponse = Readonly<{
   condition: WinCondition;
   conditionId: number;
   toPlayer: PlayerID;
-  type: 'OptionalCondition';
+  type: 'OptionalObjective';
 }>;
 
-export type GameOverActionResponses =
+export type ObjectiveActionResponses =
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
   | GameEndActionResponse
   | PreviousTurnGameOverActionResponse
-  | OptionalConditionActionResponse;
-
-function check(
-  previousMap: MapData,
-  activeMap: MapData,
-  actionResponse: ActionResponse,
-) {
-  if (shouldCheckDefaultWinConditions(previousMap, actionResponse)) {
-    switch (actionResponse.type) {
-      case 'AttackUnit':
-        return checkAttackUnit(activeMap, actionResponse);
-      case 'AttackBuilding':
-        return checkAttackBuilding(activeMap, actionResponse);
-      case 'Capture':
-        return checkCapture(previousMap, activeMap, actionResponse);
-      case 'ToggleLightning':
-        return checkToggleLightning(previousMap, activeMap, actionResponse);
-      case 'EndTurn':
-        return checkEndTurn(previousMap, activeMap);
-    }
-  }
-  return null;
-}
+  | OptionalObjectiveActionResponse;
 
 const pickWinningPlayer = (
   previousMap: MapData,
@@ -124,7 +102,7 @@ const pickWinningPlayer = (
   return activeMap.currentPlayer;
 };
 
-export function checkGameOverConditions(
+export function checkObjectives(
   previousMap: MapData,
   activeMap: MapData,
   lastActionResponse: ActionResponse,
@@ -136,14 +114,14 @@ export function checkGameOverConditions(
   );
   const actionResponse =
     !condition || (condition.type !== WinCriteria.Default && condition.optional)
-      ? check(previousMap, activeMap, lastActionResponse)
+      ? checkDefaultWinConditions(previousMap, activeMap, lastActionResponse)
       : null;
   if (!actionResponse && !condition) {
     return null;
   }
 
   let map = actionResponse
-    ? applyGameOverActionResponse(activeMap, actionResponse)
+    ? applyObjectiveActionResponse(activeMap, actionResponse)
     : activeMap;
   const gameState: MutableGameState = actionResponse
     ? [[actionResponse, map]]
@@ -153,7 +131,7 @@ export function checkGameOverConditions(
     ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, condition)
     : undefined;
 
-  const optionalConditionResponse =
+  const optionalObjective =
     condition?.type !== WinCriteria.Default &&
     condition?.optional === true &&
     player &&
@@ -162,20 +140,19 @@ export function checkGameOverConditions(
           condition,
           conditionId: activeMap.config.winConditions.indexOf(condition),
           toPlayer: player,
-          type: 'OptionalCondition',
+          type: 'OptionalObjective',
         } as const)
       : null;
 
-  if (optionalConditionResponse) {
+  if (optionalObjective) {
     let newGameState: GameState = [];
-    [newGameState, map] = processRewards(map, optionalConditionResponse);
-    map = applyGameOverActionResponse(map, optionalConditionResponse);
+    [newGameState, map] = processRewards(map, optionalObjective);
+    map = applyObjectiveActionResponse(map, optionalObjective);
     gameState.push(...newGameState, [
       // Update the condition with the mutated value.
       {
-        ...optionalConditionResponse,
-        condition:
-          map.config.winConditions[optionalConditionResponse.conditionId],
+        ...optionalObjective,
+        condition: map.config.winConditions[optionalObjective.conditionId],
       },
       map,
     ]);
@@ -197,7 +174,7 @@ export function checkGameOverConditions(
     return [
       ...gameState,
       ...newGameState,
-      [gameEndResponse, applyGameOverActionResponse(map, gameEndResponse)],
+      [gameEndResponse, applyObjectiveActionResponse(map, gameEndResponse)],
     ];
   }
 
@@ -233,9 +210,9 @@ export function checkGameOverConditions(
   return gameState;
 }
 
-export function applyGameOverActionResponse(
+export function applyObjectiveActionResponse(
   map: MapData,
-  actionResponse: GameOverActionResponses,
+  actionResponse: ObjectiveActionResponses,
 ) {
   const { type } = actionResponse;
   switch (type) {
@@ -270,7 +247,7 @@ export function applyGameOverActionResponse(
     }
     case 'GameEnd':
       return map;
-    case 'OptionalCondition': {
+    case 'OptionalObjective': {
       const { condition, conditionId, toPlayer } = actionResponse;
       if (condition.type === WinCriteria.Default) {
         return map;
@@ -383,6 +360,28 @@ export function checkAttackBuilding(
     (!building && !unitC ? checkHasUnits(map, toPlayer, fromPlayer) : null)
   );
 }
+
+const checkDefaultWinConditions = (
+  previousMap: MapData,
+  activeMap: MapData,
+  actionResponse: ActionResponse,
+) => {
+  if (shouldCheckDefaultWinConditions(previousMap, actionResponse)) {
+    switch (actionResponse.type) {
+      case 'AttackUnit':
+        return checkAttackUnit(activeMap, actionResponse);
+      case 'AttackBuilding':
+        return checkAttackBuilding(activeMap, actionResponse);
+      case 'Capture':
+        return checkCapture(previousMap, activeMap, actionResponse);
+      case 'ToggleLightning':
+        return checkToggleLightning(previousMap, activeMap, actionResponse);
+      case 'EndTurn':
+        return checkEndTurn(previousMap, activeMap);
+    }
+  }
+  return null;
+};
 
 const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   const previousPlayer = activeMap.getPlayer(previousMap.getCurrentPlayer().id);

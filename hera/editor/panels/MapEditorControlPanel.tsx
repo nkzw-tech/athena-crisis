@@ -343,7 +343,7 @@ const Sidebar = ({
       selectedText={editor.mode === 'conditions'}
     >
       <KeyboardShortcut shortcut="c" />
-      <fbt desc="Button to change map conditions">Conditions</fbt>
+      <fbt desc="Button to change map conditions">Objectives</fbt>
     </InlineLink>,
     <InlineLink
       className={linkStyle}

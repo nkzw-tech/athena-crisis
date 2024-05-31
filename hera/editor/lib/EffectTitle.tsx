@@ -1,6 +1,6 @@
 import {
   GameEndCondition,
-  OptionalCondition,
+  OptionalObjectiveCondition,
   WinConditionID,
 } from '@deities/apollo/Condition.tsx';
 import { Effect, Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
@@ -63,10 +63,10 @@ export default memo(function EffectTitle({
     );
   }
 
-  if (trigger === 'GameEnd' || trigger === 'OptionalCondition') {
+  if (trigger === 'GameEnd' || trigger === 'OptionalObjective') {
     const condition = effect.conditions?.find(
-      (condition): condition is GameEndCondition | OptionalCondition =>
-        condition.type === 'GameEnd' || condition.type === 'Optional',
+      (condition): condition is GameEndCondition | OptionalObjectiveCondition =>
+        condition.type === trigger,
     );
     return (
       <span className={cx(titleStyle, ellipsis)}>
@@ -75,7 +75,9 @@ export default memo(function EffectTitle({
             {condition.type === 'GameEnd' ? (
               <fbt desc="Label for 'GameEnd' effect">Game End</fbt>
             ) : (
-              <fbt desc="Label for 'Optional' effect">Optional Condition</fbt>
+              <fbt desc="Label for 'OptionalObjective' effect">
+                Optional Objective
+              </fbt>
             )}
           </span>
         )}

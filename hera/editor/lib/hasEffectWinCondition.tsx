@@ -1,7 +1,7 @@
 import { Conditions, WinConditionID } from '@deities/apollo/Condition.tsx';
 
 export default function hasEffectWinCondition(
-  type: 'GameEnd' | 'Optional',
+  type: 'GameEnd' | 'OptionalObjective',
   id: WinConditionID,
   conditions?: Conditions,
 ) {

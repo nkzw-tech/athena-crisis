@@ -149,7 +149,7 @@ test('capture amount win criteria', async () => {
       GameEnd { condition: { amount: 4, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = mapWithConditions.copy({
+  const mapWithOptionalObjectives = mapWithConditions.copy({
     config: mapWithConditions.config.copy({
       winConditions: mapWithConditions.config.winConditions.map(
         (condition) => ({
@@ -160,10 +160,10 @@ test('capture amount win criteria', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [CaptureAction(v2), CaptureAction(v3), CaptureAction(v4)],
   );
 
@@ -172,7 +172,7 @@ test('capture amount win criteria', async () => {
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
-      OptionalCondition { condition: { amount: 4, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { amount: 4, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -212,7 +212,7 @@ test('capture amount win criteria', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 2 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithAsymmetricalOptionalConditions =
+  const mapWithAsymmetricalOptionalObjectives =
     mapWithAsymmetricConditions.copy({
       config: mapWithAsymmetricConditions.config.copy({
         winConditions: mapWithAsymmetricConditions.config.winConditions.map(
@@ -221,12 +221,12 @@ test('capture amount win criteria', async () => {
       }),
     });
 
-  expect(validateWinConditions(mapWithAsymmetricalOptionalConditions)).toBe(
+  expect(validateWinConditions(mapWithAsymmetricalOptionalObjectives)).toBe(
     true,
   );
 
   const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
-    mapWithAsymmetricalOptionalConditions,
+    mapWithAsymmetricalOptionalObjectives,
     [
       CaptureAction(v2),
       CaptureAction(v3),
@@ -243,7 +243,7 @@ test('capture amount win criteria', async () => {
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 700, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Capture (1,1) { building: House { id: 2, health: 100, player: 2 }, player: 1 }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, type: 2 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, type: 2 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateC_2)).toBe(false);
@@ -290,7 +290,7 @@ test('capture amount win criteria also works when creating buildings', async () 
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -299,10 +299,10 @@ test('capture amount win criteria also works when creating buildings', async () 
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [CaptureAction(v1), CaptureAction(v2), CreateBuildingAction(v3, House.id)],
   );
 
@@ -311,7 +311,7 @@ test('capture amount win criteria also works when creating buildings', async () 
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 1, completed: true } }
-      OptionalCondition { condition: { amount: 3, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { amount: 3, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -368,7 +368,7 @@ test('capture label win criteria', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 1 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -380,7 +380,7 @@ test('capture label win criteria', async () => {
   expect(validateWinConditions(initialMap)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       CaptureAction(v2),
       CaptureAction(v3),
@@ -395,7 +395,7 @@ test('capture label win criteria', async () => {
       Capture (1,3) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1, label: 3 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 3 ], optional: true, players: [], reward: null, type: 1 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 3 ], optional: true, players: [], reward: null, type: 1 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -438,7 +438,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   `,
   );
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -447,17 +447,17 @@ test('capture label win criteria fails because building is destroyed', async () 
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateA_2, gameActionResponseA_2] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackBuildingAction(v2, v1)],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseA_2))
     .toMatchInlineSnapshot(`
       "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
@@ -478,7 +478,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   );
 
   const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
-    mapWithOptionalConditions.copy({
+    mapWithOptionalObjectives.copy({
       units: map.units.set(v2, HeavyTank.create(player2)),
     }),
     [EndTurnAction(), AttackBuildingAction(v2, v1)],
@@ -488,7 +488,7 @@ test('capture label win criteria fails because building is destroyed', async () 
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -529,7 +529,7 @@ test('capture label win criteria (fail with missing label)', async () => {
       Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -538,10 +538,10 @@ test('capture label win criteria (fail with missing label)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [CaptureAction(v1), CaptureAction(v2)],
   );
 
@@ -607,7 +607,7 @@ test('destroy amount win criteria', async () => {
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 12 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = map.copy({
+  const mapWithOptionalObjectives = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player1).setHealth(1))
       .set(v2, House.create(player1).setHealth(1))
@@ -632,10 +632,10 @@ test('destroy amount win criteria', async () => {
       .set(v4.right(), Bomber.create(player1).capture()),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackBuildingAction(v3.right(), v3),
       AttackBuildingAction(v4.right(), v4),
@@ -649,11 +649,11 @@ test('destroy amount win criteria', async () => {
     .toMatchInlineSnapshot(`
       "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: null }
       AttackBuilding (2,4 → 1,4) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }
-      OptionalCondition { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, conditionId: 0, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, conditionId: 0, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: null }
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }
-      OptionalCondition { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -691,7 +691,7 @@ test('destroy amount win criteria', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithAsymmetricOptionalConditions = mapWithAsymmetricConditions.copy({
+  const mapWithAsymmetricOptionalObjectives = mapWithAsymmetricConditions.copy({
     config: mapWithAsymmetricConditions.config.copy({
       winConditions: mapWithAsymmetricConditions.config.winConditions.map(
         (condition) => ({ ...condition, optional: true }),
@@ -699,10 +699,10 @@ test('destroy amount win criteria', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithAsymmetricOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithAsymmetricOptionalObjectives)).toBe(true);
 
   const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
-    mapWithAsymmetricOptionalConditions,
+    mapWithAsymmetricOptionalObjectives,
     [
       AttackBuildingAction(v2.right(), v2),
       AttackBuildingAction(v3.right(), v3),
@@ -717,7 +717,7 @@ test('destroy amount win criteria', async () => {
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: null }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateC_2)).toBe(false);
@@ -774,7 +774,7 @@ test('destroy label win criteria', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -783,10 +783,10 @@ test('destroy label win criteria', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackBuildingAction(v1.right(), v1),
       AttackBuildingAction(v2.right(), v2),
@@ -801,7 +801,7 @@ test('destroy label win criteria', async () => {
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 4098, chargeC: null }
       AttackBuilding (4,1 → 3,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 5464, chargeC: null }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 3 ], optional: true, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 3 ], optional: true, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -847,7 +847,7 @@ test('destroy label does not fire without label', async () => {
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -856,10 +856,10 @@ test('destroy label does not fire without label', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackBuildingAction(v1.right(), v1),
       AttackBuildingAction(v2.right(), v2),
@@ -909,7 +909,7 @@ test('destroy label win criteria (neutral structure)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 3 ], optional: false, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -918,10 +918,10 @@ test('destroy label win criteria (neutral structure)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackBuildingAction(v2.right(), v2),
       AttackBuildingAction(v1.right(), v1),
@@ -932,7 +932,7 @@ test('destroy label win criteria (neutral structure)', async () => {
     .toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: null }
       AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 3 ], optional: true, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 3 ], optional: true, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -984,7 +984,7 @@ test('defeat with label', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -993,10 +993,10 @@ test('defeat with label', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackUnitAction(v1, v2),
       AttackUnitAction(v3, v6),
@@ -1009,7 +1009,7 @@ test('defeat with label', async () => {
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1052,7 +1052,7 @@ test('defeat one with label', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 10 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1061,10 +1061,10 @@ test('defeat one with label', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
   );
 
@@ -1072,7 +1072,7 @@ test('defeat one with label', async () => {
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [], reward: null, type: 10 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [], reward: null, type: 10 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1123,7 +1123,7 @@ test('defeat by amount', async () => {
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1132,10 +1132,10 @@ test('defeat by amount', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       AttackUnitAction(v1, v2),
       AttackUnitAction(v3, v6),
@@ -1148,7 +1148,7 @@ test('defeat by amount', async () => {
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
-      OptionalCondition { condition: { amount: 3, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { amount: 3, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1187,7 +1187,7 @@ test('defeat by amount through counter attack', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1196,17 +1196,17 @@ test('defeat by amount through counter attack', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 56, ammo: [ [ 1, 3 ] ] }, chargeA: 62, chargeB: 176 }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1245,7 +1245,7 @@ test('defeat with label and Zombie', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1254,17 +1254,17 @@ test('defeat with label and Zombie', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 48, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 30, ammo: [ [ 1, 3 ] ] }, chargeA: 300, chargeB: 280 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1303,7 +1303,7 @@ test('defeat by amount and Zombie', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1312,17 +1312,17 @@ test('defeat by amount and Zombie', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 75, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 35 }, chargeA: 142, chargeB: 130 }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1366,7 +1366,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1375,10 +1375,10 @@ test('defeat with label (fail because label did not previously exist)', async ()
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
   );
 
@@ -1443,7 +1443,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [ 1 ], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1452,10 +1452,10 @@ test('defeat with label and a unit hiding inside of another', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       EndTurnAction(),
       MoveAction(v3, v2),
@@ -1474,7 +1474,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
       AttackUnit (3,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 20 }, chargeA: 72, chargeB: 220 }
       AttackUnit (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 81, chargeB: 250 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [ 1 ], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [ 1 ], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1519,7 +1519,7 @@ test('win by survival', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, rounds: 3, type: 5 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1528,10 +1528,10 @@ test('win by survival', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       EndTurnAction(),
       EndTurnAction(),
@@ -1547,7 +1547,7 @@ test('win by survival', async () => {
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, optional: true, players: [ 1 ], reward: null, rounds: 3, type: 5 }, conditionId: 0, toPlayer: 1 }
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, optional: true, players: [ 1 ], reward: null, rounds: 3, type: 5 }, conditionId: 0, toPlayer: 1 }
       Move (1,1 → 2,1) { fuel: 29, completed: false, path: [2,1] }"
     `);
 
@@ -1604,7 +1604,7 @@ test('win by survival in one round', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, rounds: 1, type: 5 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1615,8 +1615,8 @@ test('win by survival in one round', async () => {
 
   expect(
     validateWinConditions(
-      mapWithOptionalConditions.copy({
-        config: mapWithOptionalConditions.config.copy({
+      mapWithOptionalObjectives.copy({
+        config: mapWithOptionalObjectives.config.copy({
           winConditions: [
             {
               hidden: false,
@@ -1631,17 +1631,17 @@ test('win by survival in one round', async () => {
     ),
   ).toBe(false);
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [EndTurnAction()],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, rounds: 1, type: 5 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, rounds: 1, type: 5 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1686,7 +1686,7 @@ test('escort units', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1695,10 +1695,10 @@ test('escort units', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
 
@@ -1706,7 +1706,7 @@ test('escort units', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1750,7 +1750,7 @@ test('escort units by label without having units with that label (fails)', async
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1759,10 +1759,10 @@ test('escort units by label without having units with that label (fails)', async
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
 
@@ -1816,7 +1816,7 @@ test('escort units (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1825,10 +1825,10 @@ test('escort units (transport)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v4), MoveAction(v4, v7)],
   );
 
@@ -1837,7 +1837,7 @@ test('escort units (transport)', async () => {
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1] }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1894,7 +1894,7 @@ test('escort units by drop (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1903,10 +1903,10 @@ test('escort units by drop (transport)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -1927,7 +1927,7 @@ test('escort units by drop (transport)', async () => {
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       DropUnit (2,1 → 3,1) { index: 0 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1980,7 +1980,7 @@ test('escort units by label fails', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -1989,10 +1989,10 @@ test('escort units by label fails', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -2007,7 +2007,7 @@ test('escort units by label fails', async () => {
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2065,7 +2065,7 @@ test('escort units by label fails (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2074,10 +2074,10 @@ test('escort units by label fails (transport)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -2096,7 +2096,7 @@ test('escort units by label fails (transport)', async () => {
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 20 }, chargeA: 39, chargeB: 120 }
       Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2] }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 48, chargeB: 150 }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2141,7 +2141,7 @@ test('escort units by amount', async () => {
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2150,10 +2150,10 @@ test('escort units by amount', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
 
@@ -2161,7 +2161,7 @@ test('escort units by amount', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalCondition { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2229,7 +2229,7 @@ test('escort units by amount (label)', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: [
         {
@@ -2262,10 +2262,10 @@ test('escort units by amount (label)', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v5),
       MoveAction(v3, v4),
@@ -2278,10 +2278,10 @@ test('escort units by amount (label)', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,2 → 3,3) { fuel: 37, completed: false, path: [2,2 → 3,2 → 3,3] }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 2 ], reward: null, type: 6, vectors: [ '3,3', '3,2' ] }, conditionId: 1, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 2 ], reward: null, type: 6, vectors: [ '3,3', '3,2' ] }, conditionId: 1, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2335,7 +2335,7 @@ test('escort units by amount with label fails', async () => {
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2344,10 +2344,10 @@ test('escort units by amount with label fails', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -2362,7 +2362,7 @@ test('escort units by amount with label fails', async () => {
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      OptionalCondition { condition: { amount: 2, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2417,7 +2417,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
       AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2426,10 +2426,10 @@ test('escort units by amount does not fail when enough units are remaining', asy
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -2495,7 +2495,7 @@ test('escort units by amount does not fail when the player has more units left',
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2504,10 +2504,10 @@ test('escort units by amount does not fail when the player has more units left',
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
       MoveAction(v5, v4),
@@ -2580,7 +2580,7 @@ test('rescue label win criteria', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2589,10 +2589,10 @@ test('rescue label win criteria', async () => {
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [
       RescueAction(v2, v1),
       RescueAction(v4, v3),
@@ -2615,7 +2615,7 @@ test('rescue label win criteria', async () => {
       Rescue (1,2 → 1,1) { player: 1 }
       Rescue (2,3 → 1,3) { player: 1 }
       Rescue (2,1 → 2,2) { player: 1 }
-      OptionalCondition { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 0, 3 ], optional: true, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 0, 3 ], optional: true, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2665,7 +2665,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalConditions = initialMap.copy({
+  const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
       winConditions: initialMap.config.winConditions.map((condition) => ({
         ...condition,
@@ -2674,10 +2674,10 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     }),
   });
 
-  expect(validateWinConditions(mapWithOptionalConditions)).toBe(true);
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateA_2, gameActionResponseA_2] = executeGameActions(
-    mapWithOptionalConditions,
+    mapWithOptionalObjectives,
     [RescueAction(v2, v1), AttackUnitAction(v4, v3)],
   );
 
@@ -2685,7 +2685,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1 }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
@@ -2706,8 +2706,8 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     `);
 
   const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
-    mapWithOptionalConditions.copy({
-      units: mapWithOptionalConditions.units.set(v4, SmallTank.create(2)),
+    mapWithOptionalObjectives.copy({
+      units: mapWithOptionalObjectives.units.set(v4, SmallTank.create(2)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
@@ -2717,7 +2717,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -2767,7 +2767,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     `);
 
   const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
-    mapWithOptionalConditions.copy({
+    mapWithOptionalObjectives.copy({
       teams: ImmutableMap([
         ...map.teams,
         [
@@ -2795,7 +2795,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
           ),
         ],
       ]),
-      units: mapWithOptionalConditions.units
+      units: mapWithOptionalObjectives.units
         .set(v4, SmallTank.create(2))
         .set(v7, Pioneer.create(3)),
     }),
@@ -2807,7 +2807,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateC_2)).toBe(false);
@@ -2829,12 +2829,12 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     `);
 
   const [gameStateD_2, gameActionResponseD_2] = executeGameActions(
-    mapWithOptionalConditions.copy({
-      buildings: mapWithOptionalConditions.buildings.set(
+    mapWithOptionalObjectives.copy({
+      buildings: mapWithOptionalObjectives.buildings.set(
         v3,
         House.create(1).setHealth(1),
       ),
-      units: mapWithOptionalConditions.units.set(v4, SmallTank.create(2)),
+      units: mapWithOptionalObjectives.units.set(v4, SmallTank.create(2)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackBuildingAction(v4, v3)],
   );
@@ -2844,13 +2844,13 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: 1 }
-      OptionalCondition { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
   expect(gameHasEnded(gameStateD_2)).toBe(false);
 });
 
-test('optional conditions should not be triggered multiple times for the same player', async () => {
+test('optional objectives should not be triggered multiple times for the same player', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
@@ -2903,11 +2903,11 @@ test('optional conditions should not be triggered multiple times for the same pl
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
-      OptionalCondition { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
       AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
-      OptionalCondition { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }
+      OptionalObjective { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3] }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
@@ -2917,7 +2917,7 @@ test('optional conditions should not be triggered multiple times for the same pl
     `);
 });
 
-test('optional conditions should not end the game, but non-optional one should when both exist', async () => {
+test('optional objectives should not end the game, but non-optional one should when both exist', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
@@ -2975,11 +2975,11 @@ test('optional conditions should not end the game, but non-optional one should w
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
-      OptionalCondition { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
       AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
-      OptionalCondition { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 2 }
+      OptionalObjective { condition: { amount: 2, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 2 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3] }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
@@ -2989,7 +2989,7 @@ test('optional conditions should not end the game, but non-optional one should w
     `);
 });
 
-test('optional conditions are processed before game end responses', async () => {
+test('optional objectives are processed before game end responses', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const initialMap = map.copy({
@@ -3017,7 +3017,7 @@ test('optional conditions are processed before game end responses', async () => 
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      OptionalCondition { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 1, toPlayer: 1 }
       GameEnd { condition: null, conditionId: null, toPlayer: 1 }"
     `);
 });

@@ -7,8 +7,8 @@ import Unit, { DryUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { WinCondition } from '@deities/athena/WinConditions.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { GameOverActionResponses } from './GameOver.tsx';
 import { HiddenActionResponse } from './HiddenAction.tsx';
+import { ObjectiveActionResponses } from './Objective.tsx';
 
 export type MoveActionResponse = Readonly<{
   completed?: boolean;
@@ -235,7 +235,7 @@ export type ActionResponse =
   | UnfoldActionResponse
   // List of further Action Responses.
   | HiddenActionResponse
-  | GameOverActionResponses;
+  | ObjectiveActionResponses;
 
 export type ActionResponses = ReadonlyArray<ActionResponse>;
 export type ActionResponseType = ActionResponse['type'];

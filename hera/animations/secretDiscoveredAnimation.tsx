@@ -1,5 +1,5 @@
 import { SecretDiscoveredActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import { OptionalConditionActionResponse } from '@deities/apollo/GameOver.tsx';
+import { OptionalObjectiveActionResponse } from '@deities/apollo/Objective.tsx';
 import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
@@ -12,7 +12,7 @@ export default async function secretDiscoveredAnimation(
   state: State,
   actionResponse:
     | SecretDiscoveredActionResponse
-    | OptionalConditionActionResponse,
+    | OptionalObjectiveActionResponse,
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { condition, type } = actionResponse;
@@ -22,12 +22,12 @@ export default async function secretDiscoveredAnimation(
       ? String(fbt(`Secret Discovered!`, 'Secret discovered banner'))
       : !condition.hidden
         ? String(
-            fbt(`Optional Condition fulfilled!`, 'Optional condition banner'),
+            fbt(`Optional Objective fulfilled!`, 'Optional objective banner'),
           )
         : String(
             fbt(
               `Optional Secret Discovered!`,
-              'Secret Optional condition banner',
+              'Secret Optional objective banner',
             ),
           );
   return new Promise((resolve) =>

@@ -1,4 +1,4 @@
-import { CaptureGameOverActionResponse } from '@deities/apollo/GameOver.tsx';
+import { CaptureGameOverActionResponse } from '@deities/apollo/Objective.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import { sortVectors } from '@deities/athena/map/Vector.tsx';

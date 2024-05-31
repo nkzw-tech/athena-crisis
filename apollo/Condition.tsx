@@ -22,14 +22,14 @@ export type GameEndCondition = Readonly<{
   value: WinConditionID;
 }>;
 
-export type OptionalCondition = Readonly<{
-  type: 'Optional';
+export type OptionalObjectiveCondition = Readonly<{
+  type: 'OptionalObjective';
   value: number;
 }>;
 
 export type Condition =
   | GameEndCondition
-  | OptionalCondition
+  | OptionalObjectiveCondition
   | UnitEqualsCondition;
 
 export type Conditions = ReadonlyArray<Condition>;
@@ -76,13 +76,13 @@ const gameEnd = (
   return value === 'lose';
 };
 
-const optionalCondition = (
+const optionalObjective = (
   previousMap: MapData,
   activeMap: MapData,
   actionResponse: ActionResponse,
-  { value }: OptionalCondition,
+  { value }: OptionalObjectiveCondition,
 ) =>
-  actionResponse.type === 'OptionalCondition' &&
+  actionResponse.type === 'OptionalObjective' &&
   activeMap.getCurrentPlayer().teamId ===
     activeMap.getTeam(actionResponse.toPlayer).id &&
   value === actionResponse.conditionId;
@@ -99,8 +99,8 @@ export function evaluateCondition(
       return equalsUnit(previousMap, activeMap, actionResponse, condition);
     case 'GameEnd':
       return gameEnd(previousMap, activeMap, actionResponse, condition);
-    case 'Optional':
-      return optionalCondition(
+    case 'OptionalObjective':
+      return optionalObjective(
         previousMap,
         activeMap,
         actionResponse,
@@ -148,7 +148,7 @@ export function validateCondition(map: MapData, condition: Condition) {
       }
       return true;
     }
-    case 'Optional':
+    case 'OptionalObjective':
     case 'GameEnd': {
       const {
         config: { winConditions },

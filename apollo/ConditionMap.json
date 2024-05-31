@@ -1,5 +1,5 @@
 [
   ["UnitEquals", [0, ["type", "from", "target"]]],
   ["GameEnd", [1, ["type", "value"]]],
-  ["Optional", [2, ["type", "value"]]]
+  ["OptionalObjective", [2, ["type", "value"]]]
 ]

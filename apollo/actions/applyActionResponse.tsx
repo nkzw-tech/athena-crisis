@@ -21,8 +21,8 @@ import writeTile from '@deities/athena/mutation/writeTile.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
-import { applyGameOverActionResponse } from '../GameOver.tsx';
 import { applyHiddenActionResponse } from '../HiddenAction.tsx';
+import { applyObjectiveActionResponse } from '../Objective.tsx';
 import applyEndTurnActionResponse from './applyEndTurnActionResponse.tsx';
 
 export default function applyActionResponse(
@@ -480,13 +480,13 @@ export default function applyActionResponse(
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
       return applyHiddenActionResponse(map, vision, actionResponse);
-    case 'OptionalCondition':
+    case 'OptionalObjective':
     case 'AttackUnitGameOver':
     case 'BeginTurnGameOver':
     case 'CaptureGameOver':
     case 'GameEnd':
     case 'PreviousTurnGameOver':
-      return applyGameOverActionResponse(map, actionResponse);
+      return applyObjectiveActionResponse(map, actionResponse);
     case 'SetViewer': {
       const currentPlayer = map.maybeGetPlayer(vision.currentViewer)?.id;
       return currentPlayer

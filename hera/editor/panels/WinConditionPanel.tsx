@@ -31,7 +31,7 @@ const maybeRemoveEffect = (
     return;
   }
 
-  const trigger = condition.optional ? 'OptionalCondition' : 'GameEnd';
+  const trigger = condition.optional ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
   if (list) {
     setEditorState({
@@ -40,11 +40,7 @@ const maybeRemoveEffect = (
         new Set(
           [...list].filter(
             ({ conditions }) =>
-              !hasEffectWinCondition(
-                trigger === 'GameEnd' ? 'GameEnd' : 'Optional',
-                index,
-                conditions,
-              ),
+              !hasEffectWinCondition(trigger, index, conditions),
           ),
         ),
       ),
@@ -67,32 +63,26 @@ const maybeSwapEffect = (
     return;
   }
 
-  const trigger = existingCondition.optional ? 'OptionalCondition' : 'GameEnd';
+  const trigger = existingCondition.optional ? 'OptionalObjective' : 'GameEnd';
+  const newTrigger = trigger === 'GameEnd' ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
   if (!list) {
     return;
   }
 
-  const newTrigger = trigger === 'GameEnd' ? 'OptionalCondition' : 'GameEnd';
   const partition = groupBy(list, ({ conditions }) =>
-    hasEffectWinCondition(
-      trigger === 'GameEnd' ? 'GameEnd' : 'Optional',
-      index,
-      conditions,
-    )
-      ? 'target'
-      : 'origin',
+    hasEffectWinCondition(trigger, index, conditions) ? 'target' : 'origin',
   );
   const target = partition.get('target')?.map((effect) => ({
     ...effect,
     conditions: effect.conditions?.map((condition) => {
       const { type } = condition;
-      if (type === 'GameEnd' || type === 'Optional') {
+      if (type === trigger) {
         const { value } = condition;
         if (typeof value === 'number' && value === index) {
           return {
             ...condition,
-            type: type === 'GameEnd' ? 'Optional' : 'GameEnd',
+            type: newTrigger,
             value,
           } as const;
         }

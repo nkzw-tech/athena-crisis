@@ -260,8 +260,8 @@ const GameInfoPanel = memo(function GameInfoPanel({
       ? 'required'
       : 'optional',
   );
-  const requiredConditions = partition.get('required');
-  const optionalConditions = partition.get('optional');
+  const requiredObjectives = partition.get('required');
+  const optionalObjectives = partition.get('optional');
   return (
     <>
       <DialogScrollContainer>
@@ -274,15 +274,15 @@ const GameInfoPanel = memo(function GameInfoPanel({
             <p>
               {visibleConditions.length ? (
                 <fbt desc="Description of how to win">
-                  Complete any win condition to win the game.
+                  Complete any objective to win the game.
                 </fbt>
               ) : (
                 <fbt desc="Win conditions are all secret">
-                  Win conditions for this game are secret.
+                  Objectives for this game are secret.
                 </fbt>
               )}
             </p>
-            {requiredConditions?.map((condition, index) => (
+            {requiredObjectives?.map((condition, index) => (
               <WinConditionDescription
                 condition={condition}
                 factionNames={factionNames}
@@ -290,14 +290,14 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 round={map.round}
               />
             ))}
-            {optionalConditions && optionalConditions.length > 0 && (
+            {optionalObjectives && optionalObjectives.length > 0 && (
               <>
                 <p>
                   <fbt desc="Description of how to win">
-                    Complete optional conditions for extra rewards:
+                    Complete optional objectives for extra rewards:
                   </fbt>
                 </p>
-                {optionalConditions.map((condition, index) => (
+                {optionalObjectives.map((condition, index) => (
                   <WinConditionDescription
                     condition={condition}
                     factionNames={factionNames}
@@ -315,7 +315,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
           highlight={panel === winConditionsPanel}
           onClick={() => setPanel(winConditionsPanel)}
         >
-          <fbt desc="Label for win condition tab">Conditions</fbt>
+          <fbt desc="Label for win condition tab">Objectives</fbt>
         </MapInfoTab>
         {gameInfoState.panels &&
           [...gameInfoState.panels].map(([panelName, { title }]) => (
