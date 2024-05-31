@@ -1,10 +1,11 @@
 import { Conditions, WinConditionID } from '@deities/apollo/Condition.tsx';
 
-export default function hasGameEndCondition(
+export default function hasEffectWinCondition(
+  type: 'GameEnd' | 'Optional',
   id: WinConditionID,
   conditions?: Conditions,
 ) {
   return conditions?.some(
-    (condition) => condition.type === 'GameEnd' && condition.value === id,
+    (condition) => condition.type === type && condition.value === id,
   );
 }

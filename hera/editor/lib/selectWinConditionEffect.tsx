@@ -1,7 +1,7 @@
 import { WinConditionID } from '@deities/apollo/Condition.tsx';
 import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
 import { EditorState } from '../Types.tsx';
-import hasGameEndCondition from './hasGameEndCondition.tsx';
+import hasEffectWinCondition from './hasEffectWinCondition.tsx';
 
 export default function selectWinConditionEffect(
   editor: EditorState,
@@ -11,7 +11,8 @@ export default function selectWinConditionEffect(
   const effectList = editor.effects.get('GameEnd');
   const effect = effectList
     ? [...effectList].find(({ conditions }) =>
-        hasGameEndCondition(
+        hasEffectWinCondition(
+          'GameEnd',
           condition?.type === WinCriteria.Default ? 'win' : conditionIndex,
           conditions,
         ),

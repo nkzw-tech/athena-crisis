@@ -22,7 +22,16 @@ export type GameEndCondition = Readonly<{
   value: WinConditionID;
 }>;
 
-export type Condition = UnitEqualsCondition | GameEndCondition;
+export type OptionalCondition = Readonly<{
+  type: 'Optional';
+  value: number;
+}>;
+
+export type Condition =
+  | GameEndCondition
+  | OptionalCondition
+  | UnitEqualsCondition;
+
 export type Conditions = ReadonlyArray<Condition>;
 
 const equalsUnit = (
@@ -67,6 +76,17 @@ const gameEnd = (
   return value === 'lose';
 };
 
+const optionalCondition = (
+  previousMap: MapData,
+  activeMap: MapData,
+  actionResponse: ActionResponse,
+  { value }: OptionalCondition,
+) =>
+  actionResponse.type === 'OptionalCondition' &&
+  activeMap.getCurrentPlayer().teamId ===
+    activeMap.getTeam(actionResponse.toPlayer).id &&
+  value === actionResponse.conditionId;
+
 export function evaluateCondition(
   previousMap: MapData,
   activeMap: MapData,
@@ -79,6 +99,13 @@ export function evaluateCondition(
       return equalsUnit(previousMap, activeMap, actionResponse, condition);
     case 'GameEnd':
       return gameEnd(previousMap, activeMap, actionResponse, condition);
+    case 'Optional':
+      return optionalCondition(
+        previousMap,
+        activeMap,
+        actionResponse,
+        condition,
+      );
     default: {
       condition satisfies never;
       throw new UnknownTypeError('evaluateCondition', type);
@@ -121,13 +148,14 @@ export function validateCondition(map: MapData, condition: Condition) {
       }
       return true;
     }
+    case 'Optional':
     case 'GameEnd': {
       const {
         config: { winConditions },
       } = map;
       const { value } = condition;
       return (
-        WinConditionIDs.has(value) ||
+        (type === 'GameEnd' && WinConditionIDs.has(value)) ||
         (typeof value === 'number' &&
           winConditions[value] &&
           winConditions[value].type !== WinCriteria.Default)
