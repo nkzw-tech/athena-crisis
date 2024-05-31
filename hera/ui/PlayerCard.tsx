@@ -226,7 +226,7 @@ export default memo(function PlayerCard({
               <span style={{ color }}>{player.id}.</span> {user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
-            <Stack className={offsetStyle} gap nowrap stretch>
+            <Stack className={offsetStyle} gap={16} nowrap stretch>
               <Funds
                 className={cx(
                   ellipsis,
@@ -236,97 +236,122 @@ export default memo(function PlayerCard({
                 )}
                 value={shouldShow ? player.funds : '???'}
               />
-              {winConditions
-                .filter(
-                  (condition) =>
-                    !condition.hidden &&
-                    (winConditionHasAmounts(condition) ||
-                      condition.type === WinCriteria.Survival) &&
-                    matchesPlayerList(condition.players, player.id),
-                )
-                .map((condition, index) => {
-                  const [icon, status, amount] =
-                    condition.type === WinCriteria.DefeatAmount
-                      ? [
-                          Crosshair,
-                          player.stats.destroyedUnits,
-                          condition.amount,
-                        ]
-                      : condition.type === WinCriteria.CaptureAmount
+              <Stack gap>
+                {winConditions
+                  .filter(
+                    (condition) =>
+                      !condition.hidden &&
+                      (winConditionHasAmounts(condition) ||
+                        condition.type === WinCriteria.Survival) &&
+                      matchesPlayerList(condition.players, player.id) &&
+                      !condition.completed?.has(player.id),
+                  )
+                  .map((condition, index) => {
+                    const [icon, status, amount] =
+                      condition.type === WinCriteria.DefeatAmount
                         ? [
-                            Flag,
-                            capturedByPlayer(map, player.id),
+                            Crosshair,
+                            player.stats.destroyedUnits,
                             condition.amount,
                           ]
-                        : condition.type === WinCriteria.DestroyAmount
+                        : condition.type === WinCriteria.CaptureAmount
                           ? [
-                              Buildings,
-                              destroyedBuildingsByPlayer(map, player.id),
+                              Flag,
+                              capturedByPlayer(map, player.id),
                               condition.amount,
                             ]
-                          : condition.type === WinCriteria.EscortAmount
+                          : condition.type === WinCriteria.DestroyAmount
                             ? [
-                                Escort,
-                                escortedByPlayer(
-                                  map,
-                                  player.id,
-                                  condition.vectors,
-                                  condition.label,
-                                ),
+                                Buildings,
+                                destroyedBuildingsByPlayer(map, player.id),
                                 condition.amount,
                               ]
-                            : condition.type === WinCriteria.Survival
-                              ? [Hourglass, map.round, condition.rounds]
-                              : [null, null];
+                            : condition.type === WinCriteria.EscortAmount
+                              ? [
+                                  Escort,
+                                  escortedByPlayer(
+                                    map,
+                                    player.id,
+                                    condition.vectors,
+                                    condition.label,
+                                  ),
+                                  condition.amount,
+                                ]
+                              : condition.type === WinCriteria.Survival
+                                ? [Hourglass, map.round, condition.rounds]
+                                : [null, null];
 
-                  return (
-                    (icon && status != null && (
-                      <Stack className={nowrapStyle} gap={2} key={index} nowrap>
-                        <div>
-                          <Icon className={winConditionIconStyle} icon={icon} />
-                          {status}
-                        </div>
-                        <div>/</div>
-                        <div>{amount}</div>
-                      </Stack>
-                    )) ||
-                    null
-                  );
-                })}
+                    return (
+                      (icon && status != null && (
+                        <Stack
+                          className={nowrapStyle}
+                          gap={2}
+                          key={index}
+                          nowrap
+                        >
+                          <div>
+                            <Icon
+                              className={winConditionIconStyle}
+                              icon={icon}
+                            />
+                            {status}
+                          </div>
+                          <div>/</div>
+                          <div>{amount}</div>
+                        </Stack>
+                      )) ||
+                      null
+                    );
+                  })}
+              </Stack>
             </Stack>
             {wide && (
-              <Stack className={offsetStyle} gap nowrap start>
-                {(
-                  [
-                    [Reload, () => calculateFunds(map, player)],
+              <Stack className={offsetStyle} gap={16} nowrap>
+                <Stack
+                  className={cx(playerStatsStyle, nowrapStyle)}
+                  key="funds-per-turn"
+                >
+                  <Icon
+                    className={playerStatsBeforeIconStyle}
+                    icon={Reload}
+                    key="icon"
+                  />
+                  <span>
+                    {shouldShow ? calculateFunds(map, player) : '???'}
+                  </span>
+                </Stack>
+                <Stack gap>
+                  {(
                     [
-                      HumanHandsdown,
-                      () =>
-                        map.units.filter((unit) =>
-                          map.matchesPlayer(unit, player),
-                        ).size,
-                    ],
-                    [
-                      Buildings,
-                      () =>
-                        map.buildings.filter((building) =>
-                          map.matchesPlayer(building, player),
-                        ).size,
-                    ],
-                  ] as const
-                ).map(([icon, getValue], index) => (
-                  <Stack
-                    className={cx(playerStatsStyle, nowrapStyle)}
-                    key={index}
-                  >
-                    <Icon
-                      className={playerStatsBeforeIconStyle}
-                      icon={icon}
-                      key="icon"
-                    />
-                    <span>{shouldShow ? getValue() : '???'}</span>
-                  </Stack>
-                ))}
+                      [
+                        HumanHandsdown,
+                        () =>
+                          map.units.filter((unit) =>
+                            map.matchesPlayer(unit, player),
+                          ).size,
+                      ],
+                      [
+                        Buildings,
+                        () =>
+                          map.buildings.filter((building) =>
+                            map.matchesPlayer(building, player),
+                          ).size,
+                      ],
+                    ] as const
+                  ).map(([icon, getValue], index) => (
+                    <Stack
+                      className={cx(playerStatsStyle, nowrapStyle)}
+                      key={index}
+                    >
+                      <Icon
+                        className={playerStatsBeforeIconStyle}
+                        icon={icon}
+                        key="icon"
+                      />
+                      <span>{shouldShow ? getValue() : '???'}</span>
+                    </Stack>
+                  ))}
+                </Stack>
               </Stack>
             )}
           </Stack>
@@ -474,6 +499,7 @@ const skillStyle = css`
 
 const fundStyle = css`
   margin-top: -1px;
+  flex-shrink: 0;
 `;
 
 const playerStatsStyle = css`
