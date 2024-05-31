@@ -623,7 +623,7 @@ async function processActionResponse(
       return activatePowerAction(actions, state, actionResponse);
     case 'OptionalObjective':
     case 'SecretDiscovered':
-      return secretDiscoveredAnimation(actions, state, actionResponse);
+      return secretDiscoveredAnimation(newMap, actions, state, actionResponse);
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('processActionResponse', type);

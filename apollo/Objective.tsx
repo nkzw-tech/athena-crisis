@@ -131,13 +131,17 @@ export function checkObjectives(
     ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, condition)
     : undefined;
 
-  const optionalObjective =
+  const optionalObjective: OptionalObjectiveActionResponse | null =
     condition?.type !== WinCriteria.Default &&
     condition?.optional === true &&
     player &&
     !condition.completed?.has(player)
       ? ({
-          condition,
+          condition: {
+            ...condition,
+            completed: new Set([...(condition.completed || []), player]),
+            hidden: false,
+          },
           conditionId: map.config.winConditions.indexOf(condition),
           toPlayer: player,
           type: 'OptionalObjective',
@@ -145,16 +149,10 @@ export function checkObjectives(
       : null;
 
   if (optionalObjective) {
-    let newGameState: GameState = [];
     map = applyObjectiveActionResponse(map, optionalObjective);
-    gameState.push([
-      // Update the condition with the mutated value.
-      {
-        ...optionalObjective,
-        condition: map.config.winConditions[optionalObjective.conditionId],
-      },
-      map,
-    ]);
+    gameState.push([optionalObjective, map]);
+
+    let newGameState: GameState = [];
     [newGameState, map] = processRewards(map, optionalObjective);
     gameState.push(...newGameState);
   }
@@ -249,19 +247,13 @@ export function applyObjectiveActionResponse(
     case 'GameEnd':
       return map;
     case 'OptionalObjective': {
-      const { condition, conditionId, toPlayer } = actionResponse;
+      const { condition, conditionId } = actionResponse;
       if (condition.type === WinCriteria.Default) {
         return map;
       }
 
       const winConditions = Array.from(map.config.winConditions);
-      winConditions[conditionId] = {
-        ...condition,
-        completed: condition.completed
-          ? new Set([...condition.completed, toPlayer])
-          : new Set([toPlayer]),
-        hidden: false,
-      };
+      winConditions[conditionId] = condition;
       return map.copy({
         config: map.config.copy({
           winConditions,

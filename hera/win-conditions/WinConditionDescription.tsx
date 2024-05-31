@@ -1,3 +1,4 @@
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import {
   WinCondition,
   winConditionHasLabel,
@@ -16,6 +17,31 @@ import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { FactionNames } from '../Types.tsx';
 import UILabel from '../ui/UILabel.tsx';
 import WinConditionTitle from '../win-conditions/WinConditionTitle.tsx';
+
+const PlayerList = ({
+  conjunction = 'or',
+  factionNames,
+  players,
+}: {
+  conjunction?: 'and' | 'or';
+  factionNames: FactionNames;
+  players: PlayerIDs;
+}) => {
+  const list =
+    players?.map((id) => (
+      <span key={`player-${id}`} style={{ color: getColor(id) }}>
+        {getTranslatedFactionName(factionNames, id)}
+      </span>
+    )) || [];
+
+  return list
+    ? intlList(
+        list,
+        Conjunctions[conjunction === 'or' ? 'OR' : 'AND'],
+        Delimiters.COMMA,
+      )
+    : null;
+};
 
 const WinConditionText = ({
   condition,
@@ -36,9 +62,12 @@ const WinConditionText = ({
       ))) ||
     [];
 
-  const playerList = players
-    ? intlList(players, Conjunctions.OR, Delimiters.COMMA)
-    : null;
+  const playerList = (
+    <PlayerList
+      factionNames={factionNames}
+      players={(type !== WinCriteria.Default && condition.players) || []}
+    />
+  );
 
   const labels =
     (winConditionHasLabel(condition) &&
@@ -408,6 +437,23 @@ const WinConditionText = ({
   }
 };
 
+const CompletedConditionText = ({
+  factionNames,
+  players,
+}: {
+  factionNames: FactionNames;
+  players: PlayerIDs;
+}) => (
+  <div>
+    <fbt desc="List of players that completed an objective">
+      Completed by{' '}
+      <fbt:param name="players">
+        <PlayerList factionNames={factionNames} players={players} />
+      </fbt:param>.
+    </fbt>
+  </div>
+);
+
 export default function WinConditionDescription({
   condition,
   factionNames,
@@ -439,6 +485,12 @@ export default function WinConditionDescription({
           round={round}
         />
       </p>
+      {condition.type !== WinCriteria.Default && condition.completed?.size ? (
+        <CompletedConditionText
+          factionNames={factionNames}
+          players={[...condition.completed]}
+        />
+      ) : null}
     </Stack>
   );
 }

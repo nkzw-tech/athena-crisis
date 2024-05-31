@@ -1,5 +1,6 @@
 import { SecretDiscoveredActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { OptionalObjectiveActionResponse } from '@deities/apollo/Objective.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
@@ -8,6 +9,7 @@ import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function secretDiscoveredAnimation(
+  newMap: MapData,
   actions: Actions,
   state: State,
   actionResponse:
@@ -41,7 +43,7 @@ export default async function secretDiscoveredAnimation(
             color: player,
             length: 'medium',
             onComplete: (state) => {
-              requestFrame(() => resolve(state));
+              requestFrame(() => resolve({ ...state, map: newMap }));
               return state;
             },
             player,
