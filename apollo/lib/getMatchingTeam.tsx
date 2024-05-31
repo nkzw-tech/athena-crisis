@@ -10,6 +10,6 @@ export default function getMatchingTeam(
   actionResponse: GameEndActionResponse | OptionalObjectiveActionResponse,
 ): null | PlayerID {
   return actionResponse.toPlayer
-    ? map.getTeam(map.getPlayer(actionResponse.toPlayer)).id
+    ? map.getTeam(actionResponse.toPlayer).id
     : null;
 }

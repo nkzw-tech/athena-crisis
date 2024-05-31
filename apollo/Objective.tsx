@@ -138,7 +138,7 @@ export function checkObjectives(
     !condition.completed?.has(player)
       ? ({
           condition,
-          conditionId: activeMap.config.winConditions.indexOf(condition),
+          conditionId: map.config.winConditions.indexOf(condition),
           toPlayer: player,
           type: 'OptionalObjective',
         } as const)
@@ -146,26 +146,24 @@ export function checkObjectives(
 
   if (optionalObjective) {
     let newGameState: GameState = [];
-    [newGameState, map] = processRewards(map, optionalObjective);
     map = applyObjectiveActionResponse(map, optionalObjective);
-    gameState.push(
-      [
-        // Update the condition with the mutated value.
-        {
-          ...optionalObjective,
-          condition: map.config.winConditions[optionalObjective.conditionId],
-        },
-        map,
-      ],
-      ...newGameState,
-    );
+    gameState.push([
+      // Update the condition with the mutated value.
+      {
+        ...optionalObjective,
+        condition: map.config.winConditions[optionalObjective.conditionId],
+      },
+      map,
+    ]);
+    [newGameState, map] = processRewards(map, optionalObjective);
+    gameState.push(...newGameState);
   }
 
   const gameEndResponse =
     condition?.type === WinCriteria.Default || condition?.optional === false
       ? ({
           condition,
-          conditionId: activeMap.config.winConditions.indexOf(condition),
+          conditionId: map.config.winConditions.indexOf(condition),
           toPlayer: player,
           type: 'GameEnd',
         } as const)
@@ -255,6 +253,7 @@ export function applyObjectiveActionResponse(
       if (condition.type === WinCriteria.Default) {
         return map;
       }
+
       const winConditions = Array.from(map.config.winConditions);
       winConditions[conditionId] = {
         ...condition,
