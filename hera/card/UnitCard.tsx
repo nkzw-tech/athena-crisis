@@ -46,6 +46,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
+import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import Icon, { SVGIcon } from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
 import DropUnit from '@deities/ui/icons/DropUnit.tsx';
@@ -470,6 +471,7 @@ const Weapon = memo(function WeaponAttack({
   vector: Vector;
   weapon: WeaponT;
 }) {
+  const backURL = useLocation().pathname;
   const tile = map.getTileInfo(vector);
   const opponent = resolveDynamicPlayerID(map, 'opponent', player);
   const allSkills = useMemo(
@@ -601,7 +603,7 @@ const Weapon = memo(function WeaponAttack({
               Note: Cover, status effects and unit defense affect the inflicted
               damage. See the{' '}
               <fbt:param name="link">
-                <InlineLink to="/damage-chart">
+                <InlineLink to={`/damage-chart?back=${backURL}`}>
                   <fbt desc="Damage chart link name">Damage Chart</fbt>
                 </InlineLink>
               </fbt:param>{' '}
