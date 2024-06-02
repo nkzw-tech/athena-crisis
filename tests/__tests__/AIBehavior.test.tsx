@@ -22,6 +22,7 @@ import {
   Artillery,
   Battleship,
   Corvette,
+  FighterJet,
   HeavyArtillery,
   HeavyTank,
   Humvee,
@@ -32,6 +33,7 @@ import {
   SmallTank,
   Sniper,
   SuperTank,
+  TransportHelicopter,
   XFighter,
 } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
@@ -40,6 +42,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
@@ -798,12 +801,6 @@ test('AI will prefer funds generating buildings over factories if it has no inco
 test('AI will move onto escort vectors even if it is a long-range unit', () => {
   const initialMap = withModifiers(
     MapData.createMap({
-      config: {
-        winConditions: [
-          [0, 0, null],
-          [4, 0, [2], [2], [5, 4], null],
-        ],
-      },
       map: [
         6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6,
         6,
@@ -813,21 +810,27 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
         width: 5,
       },
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 0, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 0, id: 2, name: 'Bot' }],
-        },
+        { id: 1, name: '', players: [{ funds: 0, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 0, id: 2, name: 'Bot' }] },
       ],
     }),
   );
 
   const map = initialMap.copy({
+    config: initialMap.config.copy({
+      winConditions: [
+        { hidden: false, type: WinCriteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [2],
+          reward: null,
+          type: WinCriteria.EscortLabel,
+          vectors: new Set([vec(5, 4)]),
+        },
+      ],
+    }),
     units: initialMap.units
       .set(vec(5, 1), XFighter.create(2, { label: 2 }))
       .set(vec(1, 5), Pioneer.create(1)),
@@ -843,6 +846,60 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4] }
-    GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
+    GameEnd { condition: { hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
+  `);
+});
+
+test('AI will prioritize units with labels associated with win conditions', () => {
+  const initialMap = withModifiers(
+    MapData.createMap({
+      map: [
+        6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6,
+        6,
+      ],
+      size: {
+        height: 5,
+        width: 5,
+      },
+      teams: [
+        { id: 1, name: '', players: [{ funds: 0, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 0, id: 2, name: 'Bot' }] },
+      ],
+    }),
+  );
+
+  const map = initialMap.copy({
+    config: initialMap.config.copy({
+      winConditions: [
+        { hidden: false, type: WinCriteria.Default },
+        {
+          hidden: false,
+          label: new Set([1]),
+          optional: false,
+          players: [1],
+          reward: null,
+          type: WinCriteria.EscortLabel,
+          vectors: new Set([vec(1, 1)]),
+        },
+      ],
+    }),
+    units: initialMap.units
+      .set(vec(1, 1), FighterJet.create(2))
+      .set(vec(3, 3), FighterJet.create(1, { label: 2 }).setHealth(1))
+      .set(vec(5, 5), TransportHelicopter.create(1, { label: 1 })),
+  });
+
+  const [, , gameStateA] = executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Move (1,1 → 5,4) { fuel: 42, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4 → 5,4] }
+    AttackUnit (5,4 → 5,5) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
+    GameEnd { condition: { hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '1,1' ] }, conditionId: 1, toPlayer: 2 }"
   `);
 });

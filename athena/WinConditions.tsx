@@ -630,21 +630,24 @@ export function getOpponentPriorityLabels(
   player: PlayerID,
 ) {
   return new Set(
-    conditions.flatMap((condition) =>
-      winConditionHasLabel(condition) &&
-      condition.label &&
-      (((condition.type === WinCriteria.DefeatLabel ||
-        condition.type === WinCriteria.DestroyLabel ||
-        condition.type === WinCriteria.DefeatOneLabel) &&
-        (!condition.players || condition.players.includes(player))) ||
-        ((condition.type === WinCriteria.EscortAmount ||
-          condition.type === WinCriteria.EscortLabel ||
-          condition.type === WinCriteria.RescueLabel) &&
-          condition.players &&
-          !condition.players.includes(player)))
-        ? [...condition.label]
-        : [],
-    ),
+    conditions.flatMap((condition) => {
+      if (!winConditionHasLabel(condition) || !condition.label?.size) {
+        return [];
+      }
+
+      const { label, players, type } = condition;
+      return ((type === WinCriteria.DefeatLabel ||
+        type === WinCriteria.DestroyLabel ||
+        type === WinCriteria.DefeatOneLabel) &&
+        (!players?.length || players.includes(player))) ||
+        ((type === WinCriteria.EscortAmount ||
+          type === WinCriteria.EscortLabel ||
+          type === WinCriteria.RescueLabel) &&
+          players?.length &&
+          !players.includes(player))
+        ? [...label]
+        : [];
+    }),
   );
 }
 

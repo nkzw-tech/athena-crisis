@@ -228,7 +228,7 @@ export default function getPossibleAttacks(
 
       // Increase the weight for units that should be destroyed.
       if (entityB.label != null && labelsToPrioritize?.has(entityB.label)) {
-        weight *= 2;
+        weight *= 50;
       }
 
       const parentVector = getParentVector();
