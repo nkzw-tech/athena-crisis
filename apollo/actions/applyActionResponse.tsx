@@ -469,7 +469,7 @@ export default function applyActionResponse(
             ? map.getPlayer(unit.player).modifyStatistic('lostUnits', 1)
             : null,
         ]),
-        units: unit ? map.units.delete(to) : undefined,
+        units: unit ? map.units.delete(to) : map.units,
       });
     }
     case 'HiddenFundAdjustment':

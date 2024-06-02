@@ -1,5 +1,4 @@
 import { ToggleLightningAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
@@ -24,7 +23,7 @@ export async function toggleLightningAnimation(
         to,
         undefined,
       )
-    : state;
+    : { ...state, map: newMap };
 }
 
 export default async function toggleLightningAction(
@@ -34,28 +33,22 @@ export default async function toggleLightningAction(
   state: State,
 ): Promise<State> {
   const { action, processGameActionResponse, update } = actions;
-  const { map } = state;
-  const unitB = map.units.get(to);
+  const [remoteAction, newMap] = action(state, ToggleLightningAction(from, to));
 
-  const [remoteAction, newMap, actionResponse] = action(
-    state,
-    ToggleLightningAction(from, to),
+  state = await update(
+    await toggleLightningAnimation(
+      actions,
+      to,
+      await update({
+        ...resetBehavior(),
+        behavior: new NullBehavior(),
+      }),
+      newMap,
+    ),
   );
 
-  // First, hide the radius.
-  state = await update({
-    ...resetBehavior(),
-    behavior: new NullBehavior(),
-  });
-
-  state = await toggleLightningAnimation(actions, to, state, newMap);
-  const newState = await update({
-    ...state,
-    map: applyActionResponse(state.map, state.vision, actionResponse),
-    ...resetBehavior(),
-  });
-  if (unitB) {
-    return update(await processGameActionResponse(await remoteAction));
-  }
-  return newState;
+  state = await update(await processGameActionResponse(await remoteAction));
+  return state.lastActionResponse?.type !== 'GameEnd'
+    ? await update(resetBehavior())
+    : state;
 }
