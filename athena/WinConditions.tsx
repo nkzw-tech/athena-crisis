@@ -759,17 +759,30 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
 
 export function validateWinConditions(map: MapData) {
   const { winConditions } = map.config;
-  if (Array.isArray(winConditions) && winConditions.length <= 32) {
-    if (
-      winConditions.filter(({ type }) => type === WinCriteria.Default).length >
-      1
-    ) {
-      return false;
-    }
-    return winConditions.every(validateWinCondition.bind(null, map));
+  if (
+    !Array.isArray(winConditions) ||
+    winConditions.length > 32 ||
+    winConditions.filter(({ type }) => type === WinCriteria.Default).length > 1
+  ) {
+    return false;
   }
 
-  return false;
+  if (
+    winConditions.filter(({ type }) => type === WinCriteria.Default).length > 1
+  ) {
+    return false;
+  }
+
+  if (
+    winConditions.every(
+      (condition) =>
+        condition.type !== WinCriteria.Default && condition.optional,
+    )
+  ) {
+    return false;
+  }
+
+  return winConditions.every(validateWinCondition.bind(null, map));
 }
 
 export function resetWinConditions(

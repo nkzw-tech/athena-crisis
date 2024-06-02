@@ -59,6 +59,19 @@ const map = withModifiers(
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const player2 = HumanPlayer.from(map.getPlayer(2), '4');
 
+const optional = (map: MapData) =>
+  map.copy({
+    config: map.config.copy({
+      winConditions: [
+        ...map.config.winConditions.map((condition) => ({
+          ...condition,
+          optional: true,
+        })),
+        { hidden: false, type: WinCriteria.Default },
+      ],
+    }),
+  });
+
 test('default win criteria', async () => {
   const from = vec(1, 1);
   const to = vec(1, 2);
@@ -151,17 +164,7 @@ test('capture amount win criteria', async () => {
       GameEnd { condition: { amount: 4, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = mapWithConditions.copy({
-    config: mapWithConditions.config.copy({
-      winConditions: mapWithConditions.config.winConditions.map(
-        (condition) => ({
-          ...condition,
-          optional: true,
-        }),
-      ),
-    }),
-  });
-
+  const mapWithOptionalObjectives = optional(mapWithConditions);
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
   const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
@@ -214,14 +217,9 @@ test('capture amount win criteria', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 2 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithAsymmetricalOptionalObjectives =
-    mapWithAsymmetricConditions.copy({
-      config: mapWithAsymmetricConditions.config.copy({
-        winConditions: mapWithAsymmetricConditions.config.winConditions.map(
-          (condition) => ({ ...condition, optional: true }),
-        ),
-      }),
-    });
+  const mapWithAsymmetricalOptionalObjectives = optional(
+    mapWithAsymmetricConditions,
+  );
 
   expect(validateWinConditions(mapWithAsymmetricalOptionalObjectives)).toBe(
     true,
@@ -292,14 +290,7 @@ test('capture amount win criteria also works when creating buildings', async () 
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -440,14 +431,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   `,
   );
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -531,14 +515,7 @@ test('capture label win criteria (fail with missing label)', async () => {
       Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -623,6 +600,7 @@ test('destroy amount win criteria', async () => {
           optional: true,
           type: WinCriteria.DestroyAmount,
         },
+        { hidden: false, type: WinCriteria.Default },
       ],
     }),
     map: Array(3 * 4).fill(1),
@@ -693,13 +671,9 @@ test('destroy amount win criteria', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 12 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithAsymmetricOptionalObjectives = mapWithAsymmetricConditions.copy({
-    config: mapWithAsymmetricConditions.config.copy({
-      winConditions: mapWithAsymmetricConditions.config.winConditions.map(
-        (condition) => ({ ...condition, optional: true }),
-      ),
-    }),
-  });
+  const mapWithAsymmetricOptionalObjectives = optional(
+    mapWithAsymmetricConditions,
+  );
 
   expect(validateWinConditions(mapWithAsymmetricOptionalObjectives)).toBe(true);
 
@@ -776,14 +750,7 @@ test('destroy label win criteria', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -849,14 +816,7 @@ test('destroy label does not fire without label', async () => {
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2732, chargeC: null }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -911,14 +871,7 @@ test('destroy label win criteria (neutral structure)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 3 ], optional: false, players: [], reward: null, type: 11 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -986,14 +939,7 @@ test('defeat with label', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1022,6 +968,7 @@ test('defeat one with label', async () => {
   const v2 = vec(1, 2);
   const v3 = vec(2, 2);
   const v4 = vec(2, 1);
+  const v5 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
       winConditions: [
@@ -1037,7 +984,8 @@ test('defeat one with label', async () => {
       .set(v1, Flamethrower.create(player1))
       .set(v2, Pioneer.create(player2))
       .set(v3, Flamethrower.create(player1))
-      .set(v4, Pioneer.create(player2, { label: 4 })),
+      .set(v4, Pioneer.create(player2, { label: 4 }))
+      .set(v5, Pioneer.create(player2)),
   });
 
   expect(validateWinConditions(initialMap)).toBe(true);
@@ -1054,14 +1002,7 @@ test('defeat one with label', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 10 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1125,14 +1066,7 @@ test('defeat by amount', async () => {
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1189,14 +1123,7 @@ test('defeat by amount through counter attack', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1247,14 +1174,7 @@ test('defeat with label and Zombie', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1305,14 +1225,7 @@ test('defeat by amount and Zombie', async () => {
       GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1368,14 +1281,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1445,14 +1351,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [ 1 ], reward: null, type: 3 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1521,14 +1420,7 @@ test('win by survival', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, rounds: 3, type: 5 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1606,20 +1498,14 @@ test('win by survival in one round', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, rounds: 1, type: 5 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(
     validateWinConditions(
       mapWithOptionalObjectives.copy({
         config: mapWithOptionalObjectives.config.copy({
           winConditions: [
+            { hidden: false, type: WinCriteria.Default },
             {
               hidden: false,
               optional: true,
@@ -1688,14 +1574,7 @@ test('escort units', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1752,14 +1631,7 @@ test('escort units by label without having units with that label (fails)', async
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1818,14 +1690,7 @@ test('escort units (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1896,14 +1761,7 @@ test('escort units by drop (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -1982,14 +1840,7 @@ test('escort units by label fails', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2067,14 +1918,7 @@ test('escort units by label fails (transport)', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2143,14 +1987,7 @@ test('escort units by amount', async () => {
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2260,6 +2097,7 @@ test('escort units by amount (label)', async () => {
           type: WinCriteria.EscortAmount,
           vectors: new Set([v8, v9]),
         },
+        { hidden: false, type: WinCriteria.Default },
       ],
     }),
   });
@@ -2337,14 +2175,7 @@ test('escort units by amount with label fails', async () => {
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2419,14 +2250,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
       AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2497,14 +2321,7 @@ test('escort units by amount does not fail when the player has more units left',
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2582,14 +2399,7 @@ test('rescue label win criteria', async () => {
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2667,14 +2477,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
-        optional: true,
-      })),
-    }),
-  });
+  const mapWithOptionalObjectives = optional(initialMap);
 
   expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
 
@@ -2861,6 +2664,7 @@ test('optional objectives should not be triggered multiple times for the same pl
   const v6 = vec(2, 2);
   const v7 = vec(2, 3);
   const v8 = vec(2, 4);
+  const v9 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
       winConditions: [
@@ -2870,6 +2674,7 @@ test('optional objectives should not be triggered multiple times for the same pl
           optional: true,
           type: WinCriteria.DefeatAmount,
         },
+        { hidden: false, type: WinCriteria.Default },
       ],
     }),
     map: Array(3 * 4).fill(1),
@@ -2882,7 +2687,8 @@ test('optional objectives should not be triggered multiple times for the same pl
       .set(v5, Flamethrower.create(player2))
       .set(v6, Flamethrower.create(player2))
       .set(v7, Flamethrower.create(player2))
-      .set(v8, Flamethrower.create(player2)),
+      .set(v8, Flamethrower.create(player2))
+      .set(v9, Flamethrower.create(player2)),
   });
 
   expect(validateWinConditions(initialMap)).toBe(true);
