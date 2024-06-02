@@ -31,6 +31,8 @@ import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import WinConditionTitle from '../../win-conditions/WinConditionTitle.tsx';
 import { ManyLabelSelector } from '../selectors/LabelSelector.tsx';
 
+const optionalConditionsAreEnabled = () => false;
+
 export default function WinConditionCard({
   canDelete,
   condition,
@@ -221,36 +223,37 @@ export default function WinConditionCard({
               </p>
             )}
           </Stack>
-          {condition.type !== WinCriteria.Default && (
-            <Stack gap>
-              <label>
-                <Stack gap start>
-                  <span className={cx(labelWidthStyle, 'input-label')}>
-                    <fbt desc="Label for optional win condition checkbox">
-                      Optional
+          {condition.type !== WinCriteria.Default &&
+            optionalConditionsAreEnabled() && (
+              <Stack gap>
+                <label>
+                  <Stack gap start>
+                    <span className={cx(labelWidthStyle, 'input-label')}>
+                      <fbt desc="Label for optional win condition checkbox">
+                        Optional
+                      </fbt>
+                    </span>
+                    <input
+                      checked={condition.optional}
+                      onChange={(event) =>
+                        onChange({
+                          ...condition,
+                          optional: event.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                    />
+                  </Stack>
+                </label>
+                {condition.optional && (
+                  <p className={lightStyle}>
+                    <fbt desc="Description for optional win conditions">
+                      Achieving optional objectives does not end the game.
                     </fbt>
-                  </span>
-                  <input
-                    checked={condition.optional}
-                    onChange={(event) =>
-                      onChange({
-                        ...condition,
-                        optional: event.target.checked,
-                      })
-                    }
-                    type="checkbox"
-                  />
-                </Stack>
-              </label>
-              {condition.optional && (
-                <p className={lightStyle}>
-                  <fbt desc="Description for optional win conditions">
-                    Achieving optional objectives does not end the game.
-                  </fbt>
-                </p>
-              )}
-            </Stack>
-          )}
+                  </p>
+                )}
+              </Stack>
+            )}
           <Stack gap start>
             <span className={cx(labelWidthStyle, 'input-label')}>
               <fbt desc="Label for win condition reward">Reward</fbt>
