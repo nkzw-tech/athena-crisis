@@ -30,7 +30,7 @@
     "@nkzw/use-relative-time": "^1.1.0",
     "@sentry/browser": "^8.7.0",
     "@stripe/react-stripe-js": "^2.7.1",
-    "@stripe/stripe-js": "^3.4.1",
+    "@stripe/stripe-js": "^3.5.0",
     "fbt": "^1.0.2",
     "framer-motion": "^11.2.10",
     "react": "19.0.0-rc-915b914b3a-20240515",
