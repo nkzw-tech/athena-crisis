@@ -215,7 +215,12 @@ const MapComponent = ({
               />,
             );
 
-            if (unit && (isVisible || animation?.type === 'move')) {
+            if (
+              unit &&
+              (isVisible ||
+                animation?.type === 'move' ||
+                animation?.type === 'unitExplosion')
+            ) {
               const outlineUnit =
                 outline && (!radius.focus || radius.focus === 'unit');
               const power = matchesActiveType(
