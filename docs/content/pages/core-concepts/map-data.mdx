@@ -85,7 +85,7 @@ vec(5, 5).distance(vec(1, 1)); // 8, Manhattan distance
 
 ## Map State Queries
 
-Since most data structures are immutable, it's common to access data fields directly. For example, to find all opponent's of the current player you can do:
+Since most data structures are immutable, it's common to access data fields directly. For example, to find all opponents of the current player you can do:
 
 ```tsx
 const opposingUnits = map.units.filter((unit) =>
@@ -103,7 +103,7 @@ map.getTileInfo(vec(2, 2)).id === Mountain.id; // true
 
 `MapData` has a few methods that return a new map state, for example `map.recover(playerID)` which returns a new map with all `completed` and `moved` states removed from units. This is used to reset the state for a player when a user ends their turn.
 
-There is a large number of query functions available in [`athena/lib`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/lib) that can be used to access map state or produce new ones. These functions are used widely in game logic and the AI.
+There are a large number of query functions available in [`athena/lib`](https://github.com/nkzw-tech/athena-crisis/blob/main/athena/lib) that can be used to access map state or produce new ones. These functions are used widely in game logic and the AI.
 
 ## Updating Map State
 
