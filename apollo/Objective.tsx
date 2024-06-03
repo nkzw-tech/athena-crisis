@@ -135,6 +135,12 @@ export function checkObjectives(
     condition?.type !== WinCriteria.Default &&
     condition?.optional === true &&
     player &&
+    // Optional objective is only awarded to the players that have completed the mission themselves.
+    // However, unlike non-optional objectives, It is not given to the opponent
+    // when a particular optional objective becomes impossible to complete for a certain player.
+    // (e.g., capture label mission when all the labeled buildings are destroyed.)
+    player === activeMap.currentPlayer &&
+    matchesPlayerList(condition.players, player) &&
     !condition.completed?.has(player)
       ? ({
           condition: {
