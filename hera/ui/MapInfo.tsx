@@ -172,7 +172,14 @@ const renderBuilding = (
 ) => {
   if (building) {
     return (
-      <Box blur className={cx(boxStyle, buildingStyle)}>
+      <Box
+        blur
+        className={cx(
+          boxStyle,
+          buildingStyle,
+          building.label != null && buildingWithLabelStyle,
+        )}
+      >
         <BuildingTile
           biome={biome}
           building={building}
@@ -347,6 +354,12 @@ const unitStyle = css`
 `;
 
 const buildingStyle = css`
+  > div:nth-child(1) {
+    margin-top: -${TileSize - 3}px;
+  }
+`;
+
+const buildingWithLabelStyle = css`
   > div:nth-child(1),
   > div:nth-child(2) {
     margin-top: -${TileSize - 3}px;
