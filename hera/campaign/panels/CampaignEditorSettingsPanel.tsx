@@ -3,6 +3,7 @@ import {
   AttributeRangeWithZero,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -16,10 +17,7 @@ import { css } from '@emotion/css';
 import { fbt } from 'fbt';
 import { RangeSelector } from '../../card/Range.tsx';
 import useTagDataSource from '../../hooks/useTagDataSource.tsx';
-import PlayStyle, {
-  getTranslatedPlayStyleName,
-  PlayStyleType,
-} from '../lib/PlayStyle.tsx';
+import getTranslatedPlayStyleName from '../lib/getTranslatedPlayStyleName.tsx';
 
 export type UserNode = Readonly<{
   displayName: string;
@@ -55,12 +53,12 @@ export default function CampaignEditorSettingsPanel({
   difficulty: AttributeRangeWithZero;
   exportMaps: () => void;
   isAdmin?: boolean;
-  playStyle: PlayStyleType | null;
+  playStyle: PlayStyle | null;
   saveCampaign: (type?: 'Export') => void;
   setCampaignName: (name: string) => void;
   setDescription: (description: string) => void;
   setDifficulty: (rating: AttributeRange) => void;
-  setPlayStyle: (playStyle: PlayStyleType | null) => void;
+  setPlayStyle: (playStyle: PlayStyle | null) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
   setUsers: (users: ReadonlyArray<UserNode>) => void;
   tags: ReadonlyArray<string>;

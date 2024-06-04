@@ -1,0 +1,17 @@
+{
+  "name": "@deities/zeus",
+  "version": "0.0.1",
+  "private": true,
+  "description": "God of the sky and thunder. Rules as king of the gods.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkzw-tech/athena-crisis.git"
+  },
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hermes": "workspace:*"
+  }
+}

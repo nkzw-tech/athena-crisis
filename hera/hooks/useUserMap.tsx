@@ -10,11 +10,17 @@ export type UserLike = Readonly<{
   username: string;
 }>;
 
-export type UserLikeWithID = UserLike & { id: string };
-export type UserWithFactionNameAndSkills = UserLikeWithID & {
-  factionName: string;
-  skills: ReadonlyArray<number>;
-};
+export type UserLikeWithID = UserLike & Readonly<{ id: string }>;
+export type UserWithSkills = UserLikeWithID &
+  Readonly<{
+    skillSlots: number;
+    skills: ReadonlyArray<number>;
+  }>;
+
+export type UserWithFactionNameAndSkills = UserWithSkills &
+  Readonly<{
+    factionName: string;
+  }>;
 
 export default function useUserMap(
   map?: MapData | null,

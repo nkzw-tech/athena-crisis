@@ -10,7 +10,8 @@ import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton
 import { css } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import React, { memo, useCallback, useState } from 'react';
-import { UserLike } from '../hooks/useUserMap.tsx';
+import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
+import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
 import { Actions } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import PlayerCard from './PlayerCard.tsx';
@@ -139,7 +140,7 @@ export default memo(function CurrentGameCard({
   inlineUI,
   inset = 0,
   map,
-  teams,
+  users,
   vision,
   zIndex,
 }: {
@@ -150,10 +151,11 @@ export default memo(function CurrentGameCard({
   inlineUI: boolean;
   inset?: number;
   map: MapData;
-  teams: TeamList;
+  users: Map<string, UserLikeWithID>;
   vision: VisionT;
   zIndex: number;
 }) {
+  const teams = useCurrentGameTeams(map, users);
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleExpanded = useCallback(
     () => setIsExpanded((isExpanded) => !isExpanded),

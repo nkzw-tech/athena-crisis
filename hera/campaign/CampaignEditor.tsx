@@ -5,6 +5,7 @@ import {
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import getCampaignLevelDepths from '@deities/hermes/getCampaignLevelDepths.tsx';
+import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import toCampaign from '@deities/hermes/toCampaign.tsx';
 import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import toPlainCampaign from '@deities/hermes/toPlainCampaign.tsx';
@@ -55,7 +56,6 @@ import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import Notification from '../ui/Notification.tsx';
 import Level from './Level.tsx';
 import LevelDialogue from './LevelDialogue.tsx';
-import { PlayStyleType } from './lib/PlayStyle.tsx';
 import CampaignEditorPanel from './panels/CampaignEditorControlPanel.tsx';
 import { UserNode } from './panels/CampaignEditorSettingsPanel.tsx';
 import {
@@ -168,7 +168,7 @@ export default function CampaignEditor({
     campaignEditorState.map || campaignEditorState.createMap
   );
 
-  const [playStyle, setPlayStyle] = useState<PlayStyleType | null>(
+  const [playStyle, setPlayStyle] = useState<PlayStyle | null>(
     data?.playStyle || null,
   );
 

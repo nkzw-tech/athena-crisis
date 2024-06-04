@@ -71,13 +71,11 @@ import useAnimationSpeed, {
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
-import botToUser from '../lib/botToUser.tsx';
 import { hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
 import GameActions from '../ui/GameActions.tsx';
 import maybeFade from '../ui/lib/maybeFade.tsx';
-import UnknownUser from '../ui/lib/UnknownUser.tsx';
 import MapDetails from '../ui/MapDetails.tsx';
 import MapInfo from '../ui/MapInfo.tsx';
 import Notification from '../ui/Notification.tsx';
@@ -197,6 +195,7 @@ export default function MapEditor({
   updateMap: MapUpdateFunction;
   user: UserWithFactionNameAndSkills;
 }) {
+  const users = useMemo(() => new Map([[user.id, user]]), [user]);
   const withHumanPlayer = useCallback(
     (map: MapData, playerId: PlayerID = map.active[0]) => {
       const player =
@@ -812,18 +811,7 @@ export default function MapEditor({
                 inlineUI={props.inlineUI}
                 inset={inset}
                 map={props.map}
-                teams={[...props.map.teams.sortBy(({ id }) => id).values()].map(
-                  (team) => ({
-                    team,
-                    users: team.players.map((player) =>
-                      player.isHumanPlayer() && user.id === player.userId
-                        ? user
-                        : player.isBot()
-                          ? botToUser(player)
-                          : UnknownUser,
-                    ),
-                  }),
-                )}
+                users={users}
                 vision={props.vision}
                 zIndex={props.zIndex}
               />

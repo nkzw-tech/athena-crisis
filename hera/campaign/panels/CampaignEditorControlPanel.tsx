@@ -3,9 +3,9 @@ import {
   AttributeRangeWithZero,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
 import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
-import { PlayStyleType } from '../lib/PlayStyle.tsx';
 import { CampaignEditorState } from '../Types.tsx';
 import CampaignEditorSettingsPanel, {
   UserNode,
@@ -38,12 +38,12 @@ export default function CampaignEditorControlPanel({
   difficulty: AttributeRangeWithZero;
   exportMaps: () => void;
   isAdmin?: boolean;
-  playStyle: PlayStyleType | null;
+  playStyle: PlayStyle | null;
   saveCampaign: (type?: 'Export') => void;
   setCampaignName: (name: string) => void;
   setDescription: (description: string) => void;
   setDifficulty: (rating: AttributeRange) => void;
-  setPlayStyle: (playStyle: PlayStyleType | null) => void;
+  setPlayStyle: (playStyle: PlayStyle | null) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
   setUsers: (users: ReadonlyArray<UserNode>) => void;
   tags: ReadonlyArray<string>;

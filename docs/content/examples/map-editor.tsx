@@ -19,6 +19,7 @@ const viewer = {
   displayName: 'Maxima',
   factionName: 'Atlas',
   id: 'Demo-User-12',
+  skillSlots: 1,
   skills: [],
   username: 'demo-maxima',
 } as const;

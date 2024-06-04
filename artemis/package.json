@@ -18,6 +18,7 @@
     "@deities/hephaestus": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@deities/i18n": "workspace:*",
+    "@deities/zeus": "workspace:*",
     "@graphql-tools/utils": "^10.2.1",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/profane": "^2.0.1",

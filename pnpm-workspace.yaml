@@ -18,3 +18,4 @@ packages:
   - 'scripts'
   - 'tests'
   - 'ui'
+  - 'zeus'

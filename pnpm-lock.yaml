@@ -152,6 +152,9 @@ importers:
       '@deities/ui':
         specifier: workspace:*
         version: link:../ui
+      '@deities/zeus':
+        specifier: workspace:*
+        version: link:../zeus
       '@emotion/css':
         specifier: ^11.11.2
         version: 11.11.2
@@ -197,6 +200,9 @@ importers:
       socket.io-client:
         specifier: ^4.7.5
         version: 4.7.5(bufferutil@4.0.8)
+      tinybase:
+        specifier: ^4.8.10
+        version: 4.8.10(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515)
       workbox-core:
         specifier: ^7.1.0
         version: 7.1.0
@@ -291,6 +297,9 @@ importers:
       '@deities/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@deities/zeus':
+        specifier: workspace:*
+        version: link:../zeus
       '@graphql-tools/utils':
         specifier: ^10.2.1
         version: 10.2.1(graphql@16.8.1)
@@ -887,6 +896,18 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+
+  zeus:
+    dependencies:
+      '@deities/apollo':
+        specifier: workspace:*
+        version: link:../apollo
+      '@deities/athena':
+        specifier: workspace:*
+        version: link:../athena
+      '@deities/hermes':
+        specifier: workspace:*
+        version: link:../hermes
 
 packages:
 
@@ -7245,6 +7266,54 @@ packages:
 
   tiny-updater@3.5.2:
     resolution: {integrity: sha512-5EjK01h0rvgv+Eb0XaiTZJZR+ujdjCDHZ1ZCVCu+1h4+MyOYZ+za8UKuKdNOOOSKhkkC9B08o6ZhF4JnQg7ZLg==}
+
+  tinybase@4.8.10:
+    resolution: {integrity: sha512-xZ8j9JB9VtvkJyXTxwVQOEQRq0Sijl8IauXuIeGNc9Af/Vfx8d2VGaaqyTpCYMV3zRS4qnGEnrabhFT+ZWThDg==}
+    hasBin: true
+    peerDependencies:
+      '@automerge/automerge-repo': ^1.1.12
+      '@journeyapps/powersync-sdk-common': ^1.6.0
+      '@libsql/client': ^0.5.6
+      '@sqlite.org/sqlite-wasm': ^3.46.0-build1
+      '@vlcn.io/crsqlite-wasm': ^0.16.0
+      electric-sql: ^0.11.3
+      expo-sqlite: ^13.2.1
+      partykit: ^0.0.105
+      partysocket: ^1.0.1
+      prettier: ^3.2.5
+      react: 19.0.0-rc-915b914b3a-20240515
+      react-dom: ^18.3.1
+      sqlite3: ^5.1.7
+      yjs: ^13.6.15
+    peerDependenciesMeta:
+      '@automerge/automerge-repo':
+        optional: true
+      '@journeyapps/powersync-sdk-common':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@sqlite.org/sqlite-wasm':
+        optional: true
+      '@vlcn.io/crsqlite-wasm':
+        optional: true
+      electric-sql:
+        optional: true
+      expo-sqlite:
+        optional: true
+      partykit:
+        optional: true
+      partysocket:
+        optional: true
+      prettier:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      sqlite3:
+        optional: true
+      yjs:
+        optional: true
 
   tinybench@2.8.0:
     resolution: {integrity: sha512-1/eK7zUnIklz4JUUlL+658n58XO2hHLQfSk1Zf2LKieUjxidN16eKFEoDEfjHc3ohofSSqK3X5yO6VGb6iW8Lw==}
@@ -15790,6 +15859,12 @@ snapshots:
       ionstore: 1.0.0
       tiny-colors: 2.2.0
       when-exit: 2.1.2
+
+  tinybase@4.8.10(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515):
+    optionalDependencies:
+      prettier: 4.0.0-alpha.8
+      react: 19.0.0-rc-915b914b3a-20240515
+      react-dom: 19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515)
 
   tinybench@2.8.0: {}
 

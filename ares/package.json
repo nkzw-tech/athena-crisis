@@ -25,6 +25,7 @@
     "@deities/hermes": "workspace:*",
     "@deities/i18n": "workspace:*",
     "@deities/ui": "workspace:*",
+    "@deities/zeus": "workspace:*",
     "@emotion/css": "^11.11.2",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
@@ -40,6 +41,7 @@
     "react-router-dom": "^6.23.1",
     "relay-runtime": "^16.2.0",
     "socket.io-client": "^4.7.5",
+    "tinybase": "^4.8.10",
     "workbox-core": "^7.1.0",
     "workbox-window": "^7.1.0"
   },
