@@ -100,7 +100,9 @@ module.exports = {
     ],
     'import/no-unresolved': [
       2,
-      { ignore: ['athena-crisis:*', 'glob', 'virtual:*', '\\?worker'] },
+      {
+        ignore: ['athena-crisis:*', 'glob', 'virtual:*', String.raw`\?worker`],
+      },
     ],
     'no-extra-parens': 0,
     'no-restricted-globals': [2, 'alert', 'confirm'],
