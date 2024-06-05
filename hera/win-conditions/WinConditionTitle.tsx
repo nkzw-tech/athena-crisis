@@ -16,7 +16,7 @@ export default function WinConditionTitle({
   return (
     <span className={cx(titleStyle, short && nowrapStyle)}>
       {index != null
-        ? `${condition.type !== WinCriteria.Default && condition.optional ? 'O' : 'W'}${index + 1}`
+        ? `${condition.hidden ? 'S' : ''}${condition.type !== WinCriteria.Default && condition.optional ? 'O' : 'W'}${index + 1}`
         : null}
       {short ? space : `${space}${getWinCriteriaName(condition.type)} `}
       {condition.type !== WinCriteria.Default &&
