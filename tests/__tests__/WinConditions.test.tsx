@@ -440,11 +440,11 @@ test('capture label win criteria fails because building is destroyed', async () 
     [AttackBuildingAction(v2, v1)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA_2))
-    .toMatchInlineSnapshot(`
-      "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
-    `);
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA_2),
+  ).toMatchInlineSnapshot(
+    `"AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }"`,
+  );
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
 
@@ -473,8 +473,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   expect(snapshotEncodedActionResponse(gameActionResponseB_2))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 1 }, conditionId: 0, toPlayer: 2 }"
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -1132,11 +1131,14 @@ test('defeat by amount through counter attack', async () => {
     [AttackUnitAction(v1, v2)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
-      "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 56, ammo: [ [ 1, 3 ] ] }, chargeA: 62, chargeB: 176 }
-      OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
-    `);
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseB),
+  ).toMatchInlineSnapshot(
+    `
+    "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 56, ammo: [ [ 1, 3 ] ] }, chargeA: 62, chargeB: 176 }
+    OptionalObjective { condition: { amount: 1, completed: Set(1) { 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, conditionId: 0, toPlayer: 2 }"
+  `,
+  );
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1859,8 +1861,7 @@ test('escort units by label fails', async () => {
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -1941,8 +1942,7 @@ test('escort units by label fails (transport)', async () => {
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 20 }, chargeA: 39, chargeB: 120 }
       Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2] }
-      AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 48, chargeB: 150 }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 48, chargeB: 150 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2194,8 +2194,7 @@ test('escort units by amount with label fails', async () => {
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      OptionalObjective { condition: { amount: 2, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
     `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
@@ -2489,8 +2488,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   expect(snapshotEncodedActionResponse(gameActionResponseA_2))
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1 }
-      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
@@ -2521,8 +2519,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -2611,8 +2608,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
 
   expect(gameHasEnded(gameStateC_2)).toBe(false);
@@ -2648,8 +2644,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: 1 }
-      OptionalObjective { condition: { completed: Set(1) { 2 }, hidden: false, label: [ 0, 3 ], optional: true, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1366, chargeC: 1 }"
     `);
 
   expect(gameHasEnded(gameStateD_2)).toBe(false);

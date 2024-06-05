@@ -113,9 +113,10 @@ function checkWinCondition(
   condition: WinCondition,
 ) {
   const player = previousMap.currentPlayer;
+  const isDefault = condition.type === WinCriteria.Default;
   const matchesPlayer =
-    condition.type !== WinCriteria.Default &&
-    matchesPlayerList(condition.players, player);
+    !isDefault && matchesPlayerList(condition.players, player);
+  const ignoreIfOptional = !isDefault && condition.optional;
 
   if (isDestructive) {
     return (
@@ -143,6 +144,7 @@ function checkWinCondition(
         )) ||
       (condition.type === WinCriteria.EscortLabel &&
         !matchesPlayer &&
+        !ignoreIfOptional &&
         map.units
           .filter(filterUnitsByLabels(condition.label))
           .filter(filterEnemies(map, player)).size <
@@ -152,10 +154,12 @@ function checkWinCondition(
       (condition.type === WinCriteria.EscortAmount &&
         condition.label?.size &&
         !matchesPlayer &&
+        !ignoreIfOptional &&
         map.units
           .filter(filterUnitsByLabels(condition.label))
           .filter(filterEnemies(map, player)).size < condition.amount) ||
       (condition.type === WinCriteria.CaptureLabel &&
+        !ignoreIfOptional &&
         map.buildings
           .filter(filterByLabels(condition.label))
           .filter(filterEnemies(map, player)).size <
@@ -172,6 +176,7 @@ function checkWinCondition(
           .filter(filterByLabels(condition.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
       (condition.type === WinCriteria.RescueLabel &&
+        !ignoreIfOptional &&
         map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
           .size <
           previousMap.units
