@@ -771,12 +771,6 @@ export function validateWinConditions(map: MapData) {
   }
 
   if (
-    winConditions.filter(({ type }) => type === WinCriteria.Default).length > 1
-  ) {
-    return false;
-  }
-
-  if (
     winConditions.every(
       (condition) =>
         condition.type !== WinCriteria.Default && condition.optional,
