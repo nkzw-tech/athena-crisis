@@ -740,6 +740,7 @@ export default function MapEditor({
   const onAction = useClientGameAction(
     game,
     setGame,
+    null,
     actAsEveryPlayer ? 'actAsEveryPlayer' : null,
   );
 

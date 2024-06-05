@@ -47,14 +47,25 @@ const getWorker = () => {
 };
 
 export default function useClientGameAction(
-  game: ClientGame | null,
+  game: (ClientGame & { mapTags?: ReadonlyArray<string> }) | null,
   setGame: (game: ClientGame) => void,
+  onGameAction?:
+    | ((
+        gameState: GameState | null,
+        activeMap: MapData,
+        actionResponse: ActionResponse,
+      ) => Promise<void>)
+    | null,
   mutateAction?: MutateActionResponseFnName | null,
 ) {
   return useCallback(
     async (action: Action): Promise<GameActionResponse> => {
       if (!game) {
         throw new Error('Client Game: Map state is missing.');
+      }
+
+      if (game.ended) {
+        throw new Error('Client Game: Game has ended.');
       }
 
       let actionResponse: ActionResponse | null;
@@ -109,6 +120,13 @@ export default function useClientGameAction(
       }
 
       if (actionResponse && initialActiveMap && gameState) {
+        const lastEntry = gameState?.at(-1) || [
+          actionResponse,
+          initialActiveMap,
+        ];
+
+        await onGameAction?.(gameState, lastEntry[1], lastEntry[0]);
+
         setGame(
           toClientGame(
             game,
@@ -146,6 +164,6 @@ export default function useClientGameAction(
       }
       throw ActionError(action);
     },
-    [game, mutateAction, setGame],
+    [game, mutateAction, onGameAction, setGame],
   );
 }
