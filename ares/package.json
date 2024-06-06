@@ -41,14 +41,14 @@
     "react-router-dom": "^6.23.1",
     "relay-runtime": "^16.2.0",
     "socket.io-client": "^4.7.5",
-    "tinybase": "^4.8.10",
+    "tinybase": "^4.8.11",
     "workbox-core": "^7.1.0",
     "workbox-window": "^7.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.6",
+    "@babel/core": "^7.24.7",
     "@emotion/babel-plugin": "^11.11.0",
-    "@sentry/vite-plugin": "^2.17.0",
+    "@sentry/vite-plugin": "^2.18.0",
     "@types/babel__core": "^7.20.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
