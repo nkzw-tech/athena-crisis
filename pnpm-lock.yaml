@@ -206,6 +206,12 @@ importers:
       workbox-core:
         specifier: ^7.1.0
         version: 7.1.0
+      workbox-precaching:
+        specifier: ^7.1.0
+        version: 7.1.0
+      workbox-routing:
+        specifier: ^7.1.0
+        version: 7.1.0
       workbox-window:
         specifier: ^7.1.0
         version: 7.1.0
@@ -306,9 +312,6 @@ importers:
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
-      '@nkzw/profane':
-        specifier: ^2.0.1
-        version: 2.0.1
       '@nkzw/safe-word-list':
         specifier: ^2.1.0
         version: 2.1.0
@@ -908,6 +911,9 @@ importers:
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
+      '@nkzw/profane':
+        specifier: ^2.0.1
+        version: 2.0.1
 
 packages:
 

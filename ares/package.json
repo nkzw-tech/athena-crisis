@@ -43,6 +43,8 @@
     "socket.io-client": "^4.7.5",
     "tinybase": "^4.8.11",
     "workbox-core": "^7.1.0",
+    "workbox-precaching": "^7.1.0",
+    "workbox-routing": "^7.1.0",
     "workbox-window": "^7.1.0"
   },
   "devDependencies": {

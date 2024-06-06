@@ -43,13 +43,14 @@
   },
   "nodemonConfig": {
     "watch": [
-      "artemis/",
       "apollo/",
+      "artemis/",
       "athena/",
       "dionysus/",
       "hephaestus/",
       "hermes/",
-      "i18n/"
+      "i18n/",
+      "zeus/"
     ]
   },
   "devDependencies": {
