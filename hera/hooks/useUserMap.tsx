@@ -17,10 +17,11 @@ export type UserWithSkills = UserLikeWithID &
     skills: ReadonlyArray<number>;
   }>;
 
-export type UserWithFactionNameAndSkills = UserWithSkills &
-  Readonly<{
-    factionName: string;
-  }>;
+type FactionName = Readonly<{
+  factionName: string;
+}>;
+export type UserWithIDAndFactionName = UserLikeWithID & FactionName;
+export type UserWithFactionNameAndSkills = UserWithSkills & FactionName;
 
 export default function useUserMap(
   map?: MapData | null,
