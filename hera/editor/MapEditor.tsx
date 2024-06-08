@@ -26,12 +26,14 @@ import validateMap from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import { Bot, HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
+import toSlug from '@deities/hephaestus/toSlug.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
@@ -87,7 +89,10 @@ import useZoom from './hooks/useZoom.tsx';
 import BiomeIcon from './lib/BiomeIcon.tsx';
 import canFillTile from './lib/canFillTile.tsx';
 import getMapValidationErrorText from './lib/getMapValidationErrorText.tsx';
-import updateUndoStack from './lib/updateUndoStack.tsx';
+import updateUndoStack, {
+  getUndoStackIndexKeyFor,
+  getUndoStackKeyFor,
+} from './lib/updateUndoStack.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
 import ResizeHandle from './ResizeHandle.tsx';
@@ -101,15 +106,39 @@ import {
   PreviousMapEditorState,
   SaveMapFunction,
   SetMapFunction,
+  UndoStack,
 } from './Types.tsx';
 
 const generateName = nameGenerator();
+
+export function decodeUndoStack(
+  encodedUndoStack: string | null,
+): UndoStack | null {
+  if (!encodedUndoStack) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(encodedUndoStack).map(
+      ([key, value]: [string, PlainMap]) => [key, MapData.fromObject(value)],
+    );
+  } catch {
+    return null;
+  }
+}
+
+const getUndoStack = (id?: string) =>
+  decodeUndoStack(Storage.getItem(getUndoStackKeyFor(id)));
+
+const getUndoStackIndex = (id?: string) => {
+  const index = Storage.getItem(getUndoStackIndexKeyFor(id));
+  return index ? Number.parseInt(index, 10) : undefined;
+};
 
 const startAction = {
   type: 'Start',
 } as const;
 
-const MAP_KEY = 'map-editor-previous-map';
 const EFFECTS_KEY = 'map-editor-previous-effects';
 
 const getDefaultScenario = (effects: Effects) =>
@@ -123,6 +152,8 @@ const getEditorBaseState = (
   mapObject: Pick<MapObject, 'effects'> | null = null,
   mode: EditorMode = 'design',
   scenario?: Scenario,
+  undoStack?: UndoStack | null,
+  undoStackIndex?: number | null,
 ): EditorState => {
   const startScenario = new Set([{ actions: [] }]);
   let effects: Effects = mapObject?.effects
@@ -131,6 +162,7 @@ const getEditorBaseState = (
   if (!effects.has('Start')) {
     effects = new Map([...effects, ['Start', startScenario]]);
   }
+
   return {
     drawingMode: 'regular',
     effects,
@@ -142,8 +174,8 @@ const getEditorBaseState = (
     selected: {
       tile: Plain.id,
     },
-    undoStack: [['initial', map]],
-    undoStackIndex: null,
+    undoStack: undoStack ?? [['initial', map]],
+    undoStackIndex: undoStackIndex ?? null,
   };
 };
 
@@ -167,6 +199,23 @@ export type BaseMapEditorProps = Readonly<{
   scenario?: Scenario;
   setHasChanges: (hasChanges: boolean) => void;
 }>;
+
+const getInitialMapFromUndoStack = (id?: string) => {
+  const undoStack = getUndoStack(id);
+
+  if (!undoStack) {
+    return null;
+  }
+
+  const undoStackIndex = getUndoStackIndex(id) ?? undoStack.length - 1;
+  const map = undoStack.at(undoStackIndex)?.[1];
+
+  if (!map) {
+    return null;
+  }
+
+  return { map, undoStack, undoStackIndex };
+};
 
 export default function MapEditor({
   animationSpeed,
@@ -212,7 +261,8 @@ export default function MapEditor({
     (size = new SizeVector(random(10, 15), random(10, 15))): MapData => {
       return withHumanPlayer(
         mapObject
-          ? MapData.fromJSON(mapObject.state)!
+          ? getInitialMapFromUndoStack(mapObject?.id)?.map ??
+              MapData.fromJSON(mapObject.state)!
           : withModifiers(
               generateSea(
                 generateBuildings(
@@ -241,7 +291,14 @@ export default function MapEditor({
   usePlayMusic(map.config.biome);
 
   const [editor, _setEditorState] = useState<EditorState>(() =>
-    getEditorBaseState(map, mapObject, mode, scenario),
+    getEditorBaseState(
+      map,
+      mapObject,
+      mode,
+      scenario,
+      getUndoStack(mapObject?.id),
+      getUndoStackIndex(mapObject?.id),
+    ),
   );
   const [previousEffects, setPreviousEffects] = useState(editor.effects);
 
@@ -319,9 +376,18 @@ export default function MapEditor({
   const [previousState, setPreviousState] =
     useState<PreviousMapEditorState | null>(() => {
       try {
+        const effects = Storage.getItem(EFFECTS_KEY) || '';
+        const stateFromStorage = getInitialMapFromUndoStack(mapObject?.id);
+
+        if (!stateFromStorage) {
+          return null;
+        }
+
         return {
-          effects: Storage.getItem(EFFECTS_KEY) || '',
-          map: MapData.fromJSON(Storage.getItem(MAP_KEY) || ''),
+          effects,
+          map: stateFromStorage.map,
+          undoStack: stateFromStorage.undoStack,
+          undoStackIndex: stateFromStorage.undoStackIndex,
         };
         // eslint-disable-next-line no-empty
       } catch {}
@@ -329,17 +395,21 @@ export default function MapEditor({
     });
 
   const setMap: SetMapFunction = useCallback(
-    (type, map) => {
+    (type, map, undoStack) => {
       _setMap(map);
       if (type !== 'cleanup') {
-        updateUndoStack({ setEditorState }, editor, [
-          type === 'resize'
-            ? `resize-${map.size.height}-${map.size.width}`
-            : type === 'biome'
-              ? `biome-${map.config.biome}`
-              : 'checkpoint',
-          map,
-        ]);
+        updateUndoStack(
+          { setEditorState },
+          undoStack ? { ...editor, undoStack } : editor,
+          [
+            type === 'resize'
+              ? `resize-${map.size.height}-${map.size.width}`
+              : type === 'biome'
+                ? `biome-${map.config.biome}`
+                : 'checkpoint',
+            map,
+          ],
+        );
       }
       setInternalMapID(internalMapID + 1);
     },
@@ -347,12 +417,14 @@ export default function MapEditor({
   );
 
   const updatePreviousMap = useCallback(
-    (map?: MapData, editorEffects?: Effects) => {
+    (map?: MapData, editorEffects?: Effects, editorUndoStack?: UndoStack) => {
       const effects = JSON.stringify(
         editorEffects ? encodeEffects(editorEffects) : '',
       );
-      Storage.setItem(MAP_KEY, JSON.stringify(map));
-      setPreviousState(map ? { effects, map } : null);
+
+      setPreviousState(
+        map ? { effects, map, undoStack: editorUndoStack } : null,
+      );
     },
     [],
   );
@@ -457,6 +529,12 @@ export default function MapEditor({
 
       const isNew = type === 'New' || !mapObject?.id;
       setSaveState(null);
+
+      const stack = editor.undoStack.map(([key, value]) => [
+        key,
+        value.toJSON(),
+      ]);
+
       if (isNew) {
         createMap(
           {
@@ -469,6 +547,18 @@ export default function MapEditor({
           },
           setSaveState,
         );
+        Storage.removeItem(getUndoStackKeyFor(''));
+        Storage.removeItem(getUndoStackIndexKeyFor(''));
+        Storage.setItem(
+          getUndoStackKeyFor(toSlug(mapName)),
+          JSON.stringify(stack),
+        );
+        if (editor.undoStackIndex !== null) {
+          Storage.setItem(
+            getUndoStackIndexKeyFor(toSlug(mapName)),
+            `${editor?.undoStackIndex}`,
+          );
+        }
       } else {
         updateMap(
           {
@@ -481,14 +571,26 @@ export default function MapEditor({
           type,
           setSaveState,
         );
+        Storage.setItem(
+          getUndoStackKeyFor(mapObject?.id),
+          JSON.stringify(stack),
+        );
+        if (editor.undoStackIndex !== null) {
+          Storage.setItem(
+            getUndoStackIndexKeyFor(mapObject?.id),
+            `${editor?.undoStackIndex}`,
+          );
+        }
       }
     },
     [
       createMap,
       editor.effects,
+      editor.undoStackIndex,
       mapName,
       mapObject?.id,
       setMap,
+      editor.undoStack,
       tags,
       updateMap,
       withHumanPlayer,
@@ -574,6 +676,12 @@ export default function MapEditor({
                 undoStack.length,
               ),
             );
+            if (Storage.getItem(getUndoStackKeyFor(mapObject?.id)) !== null) {
+              Storage.setItem(
+                getUndoStackIndexKeyFor(mapObject?.id),
+                `${index}`,
+              );
+            }
             if (index > -1 && index < undoStack.length) {
               const [, newMap] = undoStack.at(index) || [];
               if (newMap) {
@@ -659,7 +767,15 @@ export default function MapEditor({
       document.removeEventListener('keydown', keydownListener);
       document.removeEventListener('keyup', keyupListener);
     };
-  }, [editor, saveMap, setEditorState, setMap, tilted, toggleDeleteEntity]);
+  }, [
+    editor,
+    saveMap,
+    setEditorState,
+    setMap,
+    tilted,
+    toggleDeleteEntity,
+    mapObject?.id,
+  ]);
 
   useInput(
     'select',
@@ -684,6 +800,8 @@ export default function MapEditor({
     setMap('reset', newMap);
     _setEditorState(getEditorBaseState(newMap, mapObject, mode, scenario));
     updatePreviousMap();
+    Storage.removeItem(getUndoStackKeyFor(''));
+    Storage.removeItem(getUndoStackIndexKeyFor(''));
   }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
 
   const fillMap = useCallback(() => {
@@ -712,7 +830,7 @@ export default function MapEditor({
 
   const restorePreviousState = useCallback(() => {
     if (previousState) {
-      setMap('reset', previousState.map);
+      setMap('reset', previousState.map, previousState.undoStack);
       setPreviousState(null);
       _setEditorState(
         getEditorBaseState(
@@ -722,6 +840,8 @@ export default function MapEditor({
           },
           editor.mode,
           editor.scenario,
+          previousState.undoStack,
+          previousState.undoStackIndex,
         ),
       );
     }
@@ -750,6 +870,16 @@ export default function MapEditor({
       return () => clearTimeout(timer);
     }
   }, [saveState]);
+
+  useEffect(() => {
+    if (editor.undoStack) {
+      const stack = editor.undoStack.map(([key, value]) => [
+        key,
+        value.toJSON(),
+      ]);
+      Storage.setItem(getUndoStackKeyFor(mapObject?.id), JSON.stringify(stack));
+    }
+  }, [editor.undoStack, mapObject?.id]);
 
   // Disabling the context menu is handled globally in production,
   // so this is only needed for the Map Editor in development.

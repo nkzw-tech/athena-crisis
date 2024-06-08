@@ -72,6 +72,7 @@ export type SetEditorStateFunction = (editor: Partial<EditorState>) => void;
 export type SetMapFunction = (
   type: 'biome' | 'cleanup' | 'heal' | 'reset' | 'resize' | 'teams',
   map: MapData,
+  undoStack?: UndoStack,
 ) => void;
 
 type MapSaveType = 'New' | 'Update' | 'Disk' | 'Export';
@@ -117,6 +118,8 @@ export type MapObject = Readonly<{
 export type PreviousMapEditorState = Readonly<{
   effects: string;
   map: MapData;
+  undoStack?: UndoStack;
+  undoStackIndex?: number;
 }>;
 
 export type MapEditorSaveMessageId =

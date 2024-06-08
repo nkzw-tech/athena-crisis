@@ -1,5 +1,11 @@
 import { EditorState, SetEditorStateFunction, UndoEntry } from '../Types.tsx';
 
+export const getUndoStackKeyFor = (id: string | undefined) =>
+  `map-editor-undo-stack-${id ? `${id}` : 'fallback'}`;
+
+export const getUndoStackIndexKeyFor = (id: string | undefined) =>
+  `map-editor-undo-stack-index-${id ? `${id}` : 'fallback'}`;
+
 export default function updateUndoStack(
   { setEditorState }: { setEditorState: SetEditorStateFunction },
   { undoStack, undoStackIndex }: EditorState,
