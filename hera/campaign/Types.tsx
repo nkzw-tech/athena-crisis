@@ -17,7 +17,7 @@ export type MapNode = Readonly<{
 
 export type MapEditorContainerProps = BaseMapEditorProps &
   Readonly<{
-    onCreate?: (map: MapNode) => void;
+    onCreate?: (map: MapNode & { local: boolean }) => void;
     onUpdate?: (map: MapNode) => void;
   }>;
 

@@ -61,6 +61,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import isValidName from '../../zeus/validation/isValidName.tsx';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { getDrawerPaddingStyle } from '../bottom-drawer/BottomDrawer.tsx';
@@ -430,10 +431,10 @@ export default function MapEditor({
 
   const saveMap: SaveMapFunction = useCallback(
     (currentMap, type = 'Update') => {
-      if (!mapName) {
+      if (!mapName || !isValidName(mapName, "_ -!?'")) {
         setSaveState({
           message: fbt(
-            'Please enter a map name.',
+            'Please enter a valid map name.',
             'Error dialog when saving a map',
           ),
         });

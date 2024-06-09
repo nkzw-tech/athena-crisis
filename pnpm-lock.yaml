@@ -215,6 +215,9 @@ importers:
       workbox-window:
         specifier: ^7.1.0
         version: 7.1.0
+      yocto-queue:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@babel/core':
         specifier: ^7.24.7

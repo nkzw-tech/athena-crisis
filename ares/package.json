@@ -45,7 +45,8 @@
     "workbox-core": "^7.1.0",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
-    "workbox-window": "^7.1.0"
+    "workbox-window": "^7.1.0",
+    "yocto-queue": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
