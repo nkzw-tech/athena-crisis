@@ -136,7 +136,11 @@ function calculateRadius(
           vector: currentVector,
         };
         paths.set(currentVector, item);
-        queue.add(item);
+
+        // we only need to check neighbors if we have remaining wiggle-room
+        if (nextCost < radius) {
+          queue.add(item);
+        }
       }
     }
   }
