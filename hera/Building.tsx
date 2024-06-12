@@ -142,7 +142,11 @@ const BuildingTile = memo(function BuildingTile({
           darkCompletedStyle,
         showHighlight && brightStyle,
         (maybeOutline || showHighlight) && maybeOutlineStyle,
-        outline && outlineStyle,
+        outline
+          ? biome === Biome.Volcano || biome === Biome.Luna
+            ? alternateOutlineStyle
+            : outlineStyle
+          : null,
         animation &&
           animation.type == 'attackBuildingFlash' &&
           attackFlashStyle,
@@ -283,6 +287,9 @@ const brightStyle = css`
 
 const outlineStyle = css`
   ${vars.set('drop-shadow-color', 'rgb(210, 18, 24)')}
+`;
+const alternateOutlineStyle = css`
+  ${vars.set('drop-shadow-color', 'rgb(255, 215, 0)')}
 `;
 
 const fadeStyle = css`
