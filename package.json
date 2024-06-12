@@ -59,10 +59,10 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@nkzw/eslint-config": "^1.16.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.5.25",
+    "@swc/core": "^1.5.28",
     "@types/fbt": "^1.0.5",
     "@types/node": "^20.14.2",
-    "@vitejs/plugin-react": "^4.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
     "babel-plugin-fbt-runtime": "^1.0.0",
@@ -105,7 +105,8 @@
     },
     "overrides": {
       "react@^18.0.0": "19.0.0-rc-915b914b3a-20240515",
-      "rollup@^2.0.0": "^4.16.4"
+      "rollup@^2.0.0": "^4.16.4",
+      "worktank@^2.0.0": "2.6.1"
     },
     "patchedDependencies": {
       "@remix-run/router@1.16.1": "patches/@remix-run__router@1.16.1.patch",
@@ -114,7 +115,7 @@
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
       "p-limit@5.0.0": "patches/p-limit@5.0.0.patch",
-      "resend@3.2.0": "patches/resend@3.2.0.patch"
+      "resend@3.3.0": "patches/resend@3.3.0.patch"
     }
   }
 }
