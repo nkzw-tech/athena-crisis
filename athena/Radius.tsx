@@ -136,7 +136,9 @@ function calculateRadius(
           vector: currentVector,
         };
         paths.set(currentVector, item);
-        queue.add(item);
+        if (nextCost < radius) {
+          queue.add(item);
+        }
       }
     }
   }
