@@ -74,6 +74,7 @@ export default function CampaignEditor({
   exportMap,
   initialMapId,
   isAdmin,
+  isValidName,
   mapDataSource,
   maps,
   updateCampaign,
@@ -91,6 +92,7 @@ export default function CampaignEditor({
   exportMap: (mapId: string) => void;
   initialMapId?: string | null;
   isAdmin?: boolean;
+  isValidName: (name: string, extraCharacters: string) => boolean;
   mapDataSource: TypeaheadDataSource<MapNode>;
   maps: ReadonlyMap<ClientLevelID, MapNode>;
   updateCampaign: UpdateCampaignFunction;
@@ -487,6 +489,7 @@ export default function CampaignEditor({
                 <MapEditor
                   campaignLock={data}
                   inset={inset}
+                  isValidName={isValidName}
                   mode={campaignEditorState.mapEditorMode}
                   onCreate={onMapSave}
                   onUpdate={onMapSave}

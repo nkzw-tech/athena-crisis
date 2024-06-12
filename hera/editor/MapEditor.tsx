@@ -61,7 +61,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import isValidName from '../../zeus/validation/isValidName.tsx';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { getDrawerPaddingStyle } from '../bottom-drawer/BottomDrawer.tsx';
@@ -164,6 +163,7 @@ export type BaseMapEditorProps = Readonly<{
     state: State;
   }) => ReactNode;
   inset?: number;
+  isValidName?: (name: string, extraCharacters: string) => boolean;
   mode?: EditorMode;
   scenario?: Scenario;
   setHasChanges: (hasChanges: boolean) => void;
@@ -178,6 +178,7 @@ export default function MapEditor({
   fogStyle,
   inset = 0,
   isAdmin,
+  isValidName = () => true,
   mapObject,
   mode,
   scenario,
@@ -487,6 +488,7 @@ export default function MapEditor({
     [
       createMap,
       editor.effects,
+      isValidName,
       mapName,
       mapObject?.id,
       setMap,
