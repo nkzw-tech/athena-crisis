@@ -79,15 +79,17 @@
       }
 
       img#keyart {
+        user-select: none;
         width: 100%;
       }
 
       @keyframes pulse {
         0%,
+        50%,
         100% {
           transform: scale(1);
         }
-        50% {
+        75% {
           transform: scale(1.1);
         }
       }
@@ -124,7 +126,7 @@
       }
 
       div#box {
-        animation: pulse 1.5s infinite;
+        animation: pulse 3s infinite;
       }
 
       a {
@@ -163,6 +165,9 @@
       };
 
       document.getElementById('box').addEventListener('click', reload);
+      document
+        .getElementById('keyart')
+        .addEventListener('dragstart', (event) => event.preventDefault());
 
       window.addEventListener('offline', () => {
         clearTimeout(timer);

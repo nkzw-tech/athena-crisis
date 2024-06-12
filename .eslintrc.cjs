@@ -101,13 +101,7 @@ module.exports = {
     'import/no-unresolved': [
       2,
       {
-        ignore: [
-          String.raw`\?worker`,
-          'athena-crisis:*',
-          'glob',
-          'tinybase/.*',
-          'virtual:*',
-        ],
+        ignore: [String.raw`\?worker`, 'athena-crisis:*', 'glob', 'virtual:*'],
       },
     ],
     'no-extra-parens': 0,

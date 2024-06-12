@@ -201,8 +201,8 @@ importers:
         specifier: ^4.7.5
         version: 4.7.5(bufferutil@4.0.8)
       tinybase:
-        specifier: ^4.8.11
-        version: 4.8.11(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515)
+        specifier: ^5.0.0-beta.21
+        version: 5.0.0-beta.21(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515)(ws@8.17.0(bufferutil@4.0.8))
       workbox-core:
         specifier: ^7.1.0
         version: 7.1.0
@@ -7270,24 +7270,25 @@ packages:
   tiny-updater@3.5.2:
     resolution: {integrity: sha512-5EjK01h0rvgv+Eb0XaiTZJZR+ujdjCDHZ1ZCVCu+1h4+MyOYZ+za8UKuKdNOOOSKhkkC9B08o6ZhF4JnQg7ZLg==}
 
-  tinybase@4.8.11:
-    resolution: {integrity: sha512-QqeF1jhUTSSkAi6Xv9wIo1V97kcKU8d9Z36n55tCyQV9vub0LHC798N3dOcixHzFUoBTmoovcvsdvSOu7vI5Rg==}
+  tinybase@5.0.0-beta.21:
+    resolution: {integrity: sha512-ZAPDol/m9ZlvOvfX2+Yzbuir9oUk+PsbDIJgn3CsHhHlHl0lmicJIAtpyShQGZ4l7LQSX6APU+Heu7zgrBoF4g==}
     hasBin: true
     peerDependencies:
       '@automerge/automerge-repo': ^1.1.12
       '@journeyapps/powersync-sdk-common': ^1.6.0
       '@libsql/client': ^0.6.2
-      '@sqlite.org/sqlite-wasm': ^3.46.0-build1
+      '@sqlite.org/sqlite-wasm': ^3.46.0-build2
       '@vlcn.io/crsqlite-wasm': ^0.16.0
-      electric-sql: ^0.11.3
-      expo-sqlite: ^13.2.1
+      electric-sql: ^0.12.0
+      expo-sqlite: 13.2.1
       partykit: ^0.0.105
       partysocket: ^1.0.1
-      prettier: ^3.3.0
+      prettier: ^3.3.1
       react: 19.0.0-rc-915b914b3a-20240515
       react-dom: ^18.3.1
       sqlite3: ^5.1.7
-      yjs: ^13.6.15
+      ws: ^8.17.0
+      yjs: ^13.6.16
     peerDependenciesMeta:
       '@automerge/automerge-repo':
         optional: true
@@ -7314,6 +7315,8 @@ packages:
       react-dom:
         optional: true
       sqlite3:
+        optional: true
+      ws:
         optional: true
       yjs:
         optional: true
@@ -15936,11 +15939,12 @@ snapshots:
       tiny-colors: 2.2.0
       when-exit: 2.1.2
 
-  tinybase@4.8.11(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515):
+  tinybase@5.0.0-beta.21(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515))(react@19.0.0-rc-915b914b3a-20240515)(ws@8.17.0(bufferutil@4.0.8)):
     optionalDependencies:
       prettier: 4.0.0-alpha.8
       react: 19.0.0-rc-915b914b3a-20240515
       react-dom: 19.0.0-rc-915b914b3a-20240515(react@19.0.0-rc-915b914b3a-20240515)
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   tinybench@2.8.0: {}
 
