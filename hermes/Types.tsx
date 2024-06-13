@@ -29,6 +29,7 @@ export type PlainLevel<T = number> = Readonly<{
 export type LevelEntry<T> = [T, PlainLevel<T>];
 
 export type Campaign<T> = Readonly<{
+  description: string;
   name: string;
   next: Level<T>;
 }>;
@@ -37,6 +38,7 @@ export type CampaignLevel = Level<CampaignMapName>;
 
 export type LevelMap<T, S = Level<T>> = ReadonlyMap<T, S>;
 export type PlainCampaign<T> = Readonly<{
+  description: string;
   levels: LevelMap<T, PlainLevel<T>>;
   name: string;
   next: T;

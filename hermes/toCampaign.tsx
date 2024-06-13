@@ -6,6 +6,7 @@ type MutableLevel<T = LevelID> = Omit<Level<T>, 'next'> & {
 };
 
 export default function toCampaign<T>({
+  description,
   levels,
   name,
   next,
@@ -42,6 +43,7 @@ export default function toCampaign<T>({
   }
 
   return {
+    description,
     name,
     next: getOrThrow(map, next),
   };
