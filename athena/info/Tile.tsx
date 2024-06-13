@@ -802,7 +802,7 @@ export const Beach = new TileInfo(
 export const Campsite = new TileInfo(
   11,
   'Campsite',
-  `Unknown`,
+  `Campsites can be used to build a Shelter which can heal soldiers.`,
   TileTypes.Campsite,
   { cover: 15, movement: PlainMovementCosts },
   {
