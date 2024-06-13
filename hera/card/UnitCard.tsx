@@ -248,6 +248,11 @@ export default memo(function UnitCard({
     if (info.hasAbility(Ability.Unfold)) {
       entity = entity[type === 'attack' ? 'unfold' : 'fold']();
     }
+    if (unit.isTransportingUnits()) {
+      entity = entity.copy({
+        transports: unit.transports,
+      });
+    }
     return [
       entity,
       withModifiers(
@@ -260,7 +265,7 @@ export default memo(function UnitCard({
         }).copy({ units: ImmutableMap([[defaultVector, entity]]) }),
       ),
     ];
-  }, [biome, info, player, type]);
+  }, [biome, info, player, type, unit]);
 
   useEffect(() => {
     if (unit.player > 0) {
