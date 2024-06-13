@@ -565,7 +565,7 @@ test('only one game end win effect is fired', () => {
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetViewer
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 1, toPlayer: 1 }"
+      GameEnd { condition: { amount: 1, completed: Set(0) {}, failed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 1, toPlayer: 1 }"
     `);
 });
 

@@ -262,6 +262,21 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
+    case WinCriteria.OptionalObjectiveAmount:
+      return (
+        <fbt desc="Explanation for the complete optional objectives by amount win condition with multiple players">
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by completing{' '}
+          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:plural
+            count={condition.amount}
+            many="optional objectives"
+            name="number of optional objectives"
+          >
+            optional objective
+          </fbt:plural>.
+        </fbt>
+      );
     default: {
       condition satisfies never;
       throw new UnknownTypeError('WinConditionText', type);

@@ -11,6 +11,7 @@ import {
 } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
+import getCompletedObjectives from './getCompletedObjectives.tsx';
 
 const destructiveActions = new Set([
   'AttackUnit',
@@ -118,6 +119,13 @@ function checkWinCondition(
     !isDefault && matchesPlayerList(condition.players, player);
   const ignoreIfOptional = !isDefault && condition.optional;
 
+  if (
+    !isDefault &&
+    (condition.completed?.has(player) || condition.failed?.has(player))
+  ) {
+    return false;
+  }
+
   if (isDestructive) {
     return (
       (condition.type === WinCriteria.DefeatLabel &&
@@ -142,30 +150,6 @@ function checkWinCondition(
           (playerID) =>
             map.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
         )) ||
-      (condition.type === WinCriteria.EscortLabel &&
-        !matchesPlayer &&
-        !ignoreIfOptional &&
-        map.units
-          .filter(filterUnitsByLabels(condition.label))
-          .filter(filterEnemies(map, player)).size <
-          previousMap.units
-            .filter(filterUnitsByLabels(condition.label))
-            .filter(filterEnemies(map, player)).size) ||
-      (condition.type === WinCriteria.EscortAmount &&
-        condition.label?.size &&
-        !matchesPlayer &&
-        !ignoreIfOptional &&
-        map.units
-          .filter(filterUnitsByLabels(condition.label))
-          .filter(filterEnemies(map, player)).size < condition.amount) ||
-      (condition.type === WinCriteria.CaptureLabel &&
-        !ignoreIfOptional &&
-        map.buildings
-          .filter(filterByLabels(condition.label))
-          .filter(filterEnemies(map, player)).size <
-          previousMap.buildings
-            .filter(filterByLabels(condition.label))
-            .filter(filterEnemies(map, player)).size) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
         condition.type === WinCriteria.DestroyLabel &&
@@ -175,13 +159,6 @@ function checkWinCondition(
         previousMap.buildings
           .filter(filterByLabels(condition.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (condition.type === WinCriteria.RescueLabel &&
-        !ignoreIfOptional &&
-        map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
-          .size <
-          previousMap.units
-            .filter(filterNeutral)
-            .filter(filterByLabels(condition.label)).size) ||
       (actionResponse.type === 'EndTurn' &&
         condition.type === WinCriteria.Survival &&
         matchesPlayerList(condition.players, actionResponse.next.player) &&
@@ -190,7 +167,8 @@ function checkWinCondition(
         !actionResponse.building &&
         condition.type === WinCriteria.DestroyAmount &&
         matchesPlayer &&
-        destroyedBuildingsByPlayer(map, player) >= condition.amount)
+        destroyedBuildingsByPlayer(map, player) >= condition.amount) ||
+      (!ignoreIfOptional && checkDeniedCondition(previousMap, map, condition))
     );
   }
 
@@ -244,6 +222,149 @@ function checkWinCondition(
   return false;
 }
 
+function checkDeniedCondition(
+  previousMap: MapData,
+  map: MapData,
+  condition: WinCondition,
+) {
+  const player = previousMap.currentPlayer;
+  const isDefault = condition.type === WinCriteria.Default;
+  const matchesPlayer =
+    !isDefault && matchesPlayerList(condition.players, player);
+
+  if (
+    !isDefault &&
+    (condition.completed?.has(player) || condition.failed?.has(player))
+  ) {
+    return false;
+  }
+
+  return (
+    (condition.type === WinCriteria.EscortLabel &&
+      !matchesPlayer &&
+      map.units
+        .filter(filterUnitsByLabels(condition.label))
+        .filter(filterEnemies(map, player)).size <
+        previousMap.units
+          .filter(filterUnitsByLabels(condition.label))
+          .filter(filterEnemies(map, player)).size) ||
+    (condition.type === WinCriteria.EscortAmount &&
+      condition.label?.size &&
+      !matchesPlayer &&
+      map.units
+        .filter(filterUnitsByLabels(condition.label))
+        .filter(filterEnemies(map, player)).size < condition.amount) ||
+    (condition.type === WinCriteria.CaptureLabel &&
+      map.buildings
+        .filter(filterByLabels(condition.label))
+        .filter(filterEnemies(map, player)).size <
+        previousMap.buildings
+          .filter(filterByLabels(condition.label))
+          .filter(filterEnemies(map, player)).size) ||
+    (condition.type === WinCriteria.RescueLabel &&
+      map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
+        .size <
+        previousMap.units
+          .filter(filterNeutral)
+          .filter(filterByLabels(condition.label)).size)
+  );
+}
+
+export function checkDeniedOptionalConditions(
+  previousMap: MapData,
+  map: MapData,
+  actionResponse: ActionResponse,
+) {
+  const { winConditions } = map.config;
+  if (
+    onlyHasDefaultWinCondition(winConditions) ||
+    winConditions.every(
+      (condition) => condition.type !== WinCriteria.OptionalObjectiveAmount,
+    ) ||
+    winConditions.filter(
+      (condition) =>
+        condition.type === WinCriteria.OptionalObjectiveAmount &&
+        !condition.optional,
+    ).length === 0 ||
+    !isDestructiveAction(actionResponse)
+  ) {
+    return null;
+  }
+
+  for (const condition of winConditions) {
+    if (
+      condition.type !== WinCriteria.Default &&
+      condition.type !== WinCriteria.OptionalObjectiveAmount &&
+      condition.optional &&
+      checkDeniedCondition(previousMap, map, condition)
+    ) {
+      return condition;
+    }
+  }
+
+  return null;
+}
+
+function checkOptionalObjectiveAmountWinCondition(
+  map: MapData,
+  actionResponse: ActionResponse,
+) {
+  const { winConditions } = map.config;
+  const hasOptionalObjectiveAmount = winConditions.some(
+    (condition) => condition.type === WinCriteria.OptionalObjectiveAmount,
+  );
+
+  if (!hasOptionalObjectiveAmount) {
+    return null;
+  }
+
+  if (actionResponse.type === 'OptionalObjective') {
+    const completedObjectiveCount = getCompletedObjectives(
+      map,
+      actionResponse.toPlayer,
+    ).filter(
+      (conditionIndex) =>
+        winConditions[conditionIndex].type !==
+        WinCriteria.OptionalObjectiveAmount,
+    ).length;
+
+    for (const condition of winConditions) {
+      if (
+        condition.type === WinCriteria.OptionalObjectiveAmount &&
+        completedObjectiveCount >= condition.amount
+      ) {
+        return condition;
+      }
+    }
+  } else if (
+    actionResponse.type === 'DeniedOptionalObjective' &&
+    actionResponse.condition.type !== WinCriteria.Default &&
+    actionResponse.condition.failed
+  ) {
+    for (const deniedPlayer of actionResponse.condition.failed) {
+      const viableObjectiveCount = winConditions.filter(
+        (condition) =>
+          condition.type !== WinCriteria.Default &&
+          condition.type !== WinCriteria.OptionalObjectiveAmount &&
+          condition.optional &&
+          !condition.failed?.has(deniedPlayer),
+      ).length;
+
+      for (const condition of winConditions) {
+        if (
+          condition.type === WinCriteria.OptionalObjectiveAmount &&
+          !condition.optional &&
+          viableObjectiveCount < condition.amount
+        ) {
+          return condition;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 export default function checkWinConditions(
   previousMap: MapData,
   map: MapData,
@@ -252,6 +373,14 @@ export default function checkWinConditions(
   const { winConditions } = map.config;
   if (onlyHasDefaultWinCondition(winConditions)) {
     return null;
+  }
+
+  const optionalObjectiveAmount = checkOptionalObjectiveAmountWinCondition(
+    map,
+    actionResponse,
+  );
+  if (optionalObjectiveAmount) {
+    return optionalObjectiveAmount;
   }
 
   const isDestructive = isDestructiveAction(actionResponse);

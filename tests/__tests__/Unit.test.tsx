@@ -312,7 +312,7 @@ test('escort radius with label', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
+      GameEnd { condition: { amount: 1, completed: Set(0) {}, failed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, conditionId: 0, toPlayer: 1 }"
     `);
 
   const screenshot = await captureOne(initialMap, '1');

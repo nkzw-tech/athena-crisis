@@ -624,6 +624,9 @@ async function processActionResponse(
     case 'OptionalObjective':
     case 'SecretDiscovered':
       return secretDiscoveredAnimation(newMap, actions, state, actionResponse);
+    case 'DeniedOptionalObjective': {
+      break;
+    }
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('processActionResponse', type);
