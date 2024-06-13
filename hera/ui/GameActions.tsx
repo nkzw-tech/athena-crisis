@@ -98,6 +98,22 @@ const AttackRadiusButton = ({
     [currentViewer, map],
   );
 
+  const show = useCallback(() => {
+    if (playerCanEndTurn && fields?.size) {
+      const isShowingAttackRadius = behavior?.type === 'attackRadius';
+      AudioPlayer.playSound(isShowingAttackRadius ? 'UI/Cancel' : 'UI/Accept');
+      update(
+        isShowingAttackRadius
+          ? resetBehavior()
+          : {
+              behavior: new AttackRadius(fields),
+            },
+      );
+    }
+  }, [behavior?.type, fields, playerCanEndTurn, update]);
+
+  useInput('quaternary', show);
+
   return (
     <MenuButton className={cx(actionButtonStyle, attackRadiusButtonStyle)}>
       <Icon
@@ -107,21 +123,7 @@ const AttackRadiusButton = ({
           (!playerCanEndTurn || !fields?.size) && disabledButtonStyle,
         )}
         icon={Attack}
-        onClick={() => {
-          if (playerCanEndTurn && fields?.size) {
-            const isShowingAttackRadius = behavior?.type === 'attackRadius';
-            AudioPlayer.playSound(
-              isShowingAttackRadius ? 'UI/Cancel' : 'UI/Accept',
-            );
-            update(
-              isShowingAttackRadius
-                ? resetBehavior()
-                : {
-                    behavior: new AttackRadius(fields),
-                  },
-            );
-          }
-        }}
+        onClick={show}
       />
     </MenuButton>
   );

@@ -20,6 +20,7 @@ export type Events = Readonly<{
   next: undefined;
   point: undefined;
   previous: undefined;
+  quaternary: undefined;
   reset: undefined;
   save: undefined;
   secondary: undefined;

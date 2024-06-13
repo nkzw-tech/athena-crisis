@@ -60,6 +60,7 @@ export default function setupGamePad() {
         B,
         L1,
         L2,
+        L3,
         R1,
         R2,
         R3,
@@ -207,6 +208,10 @@ export default function setupGamePad() {
 
       if (singlePress(R3)) {
         Input.fire('zoom');
+      }
+
+      if (singlePress(L3)) {
+        Input.fire('quaternary');
       }
 
       if (pressed(B) && pressed(A) && l1Pressed && r1Pressed) {
