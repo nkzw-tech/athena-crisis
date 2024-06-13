@@ -1,4 +1,9 @@
 import { Route } from '@deities/apollo/Routes.tsx';
+import {
+  FloatingGamepadTextInputMode,
+  GamepadTextInputLineMode,
+  GamepadTextInputMode,
+} from './controls/GamepadTextInput.tsx';
 
 export type NativeApp = Readonly<{
   canToggleFullScreen: () => boolean;
@@ -8,8 +13,23 @@ export type NativeApp = Readonly<{
   getSteamUserName: () => string;
   isFullscreen: () => boolean;
   isSteam: () => boolean;
+  isSteamDeck: () => boolean;
   quit: () => void;
   reload: () => void;
+  showFloatingGamepadTextInput: (
+    keyboardMode: FloatingGamepadTextInputMode,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => Promise<boolean>;
+  showGamepadTextInput: (
+    inputMode: GamepadTextInputMode,
+    inputLineMode: GamepadTextInputLineMode,
+    description: string,
+    maxCharacters: number,
+    existingText?: string | undefined | null,
+  ) => Promise<boolean>;
   toggleFullscreen: () => void;
 }>;
 
@@ -28,6 +48,7 @@ export type InitializeData = Readonly<{
   canToggleFullScreen: boolean;
   isFullscreen: boolean;
   isSteam: boolean;
+  isSteamDeck: boolean;
   steamUserId: string;
   steamUserName: string;
 }>;
@@ -55,6 +76,7 @@ declare global {
 let navigate = (url: Route) => {};
 const app = typeof $__AC__ !== 'undefined' ? window.$__AC__ : null;
 const emptyFunction = () => {};
+const emptyFalseFunction = () => Promise.resolve(false);
 
 window.$__AC__R = {
   message: <T extends RemoteCallMessageName>(
@@ -91,11 +113,15 @@ export const App: App = {
       return !!document.fullscreenElement?.nodeName;
     }),
   isSteam: app?.isSteam || (() => false),
+  isSteamDeck: app?.isSteamDeck || (() => false),
   quit: app?.quit ?? emptyFunction,
   reload: app?.reload ?? (() => location.reload()),
   setNavigationHandler: (_navigate: Navigate) => {
     navigate = _navigate;
   },
+  showFloatingGamepadTextInput:
+    app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
+  showGamepadTextInput: app?.showGamepadTextInput ?? emptyFalseFunction,
   toggleFullscreen:
     app?.toggleFullscreen ||
     (() => {
