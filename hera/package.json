@@ -25,8 +25,8 @@
     "array-shuffle": "^3.0.0",
     "fbt": "^1.0.2",
     "framer-motion": "^11.2.10",
-    "react": "19.0.0-rc-915b914b3a-20240515",
-    "react-dom": "19.0.0-rc-915b914b3a-20240515",
+    "react": "19.0.0-rc.0",
+    "react-dom": "19.0.0-rc.0",
     "react-fps": "^1.0.6"
   },
   "devDependencies": {
