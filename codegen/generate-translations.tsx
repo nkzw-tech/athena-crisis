@@ -36,6 +36,7 @@ type EntityDescription = Readonly<{
 }>;
 
 const root = process.cwd();
+const isOpenSourceRepository = isOpenSource();
 const publishedCampaigns = new Map([
   ['proto-campaign', Number.POSITIVE_INFINITY],
   ['the-athena-crisis', Number.POSITIVE_INFINITY],
@@ -82,7 +83,13 @@ const campaigns = await Promise.all(
 );
 
 const campaignMetadata: Array<string> = [];
-const campaignMaps = isOpenSource()
+if (isOpenSourceRepository) {
+  campaignMetadata.push(
+    `'placeholder-campaign': () => String(fbt(\`placeholder-campaign\`, ${JSON.stringify(`Translation for campaign name 'placeholder-campaign'.`)})),`,
+  );
+}
+
+const campaignMaps = isOpenSourceRepository
   ? maps.map((map) => ({
       campaignName: 'placeholder-campaign',
       map: map.module,
