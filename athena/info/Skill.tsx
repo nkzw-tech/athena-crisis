@@ -15,7 +15,7 @@ import UnitID from './UnitID.tsx';
 export enum Skill {
   AttackIncreaseMinor = 1,
   DefenseIncreaseMinor = 2,
-  AttackIncreaseMajorDefenseDecreaseMinor = 3,
+  AttackIncreaseMajorDefenseDecreaseMajor = 3,
   BuyUnitCannon = 4,
   DecreaseUnitCostAttackAndDefenseDecreaseMinor = 5,
   UnitAbilitySniperImmediateAction = 6,
@@ -40,7 +40,7 @@ export enum Skill {
 export const Skills = new Set<Skill>([
   Skill.AttackIncreaseMinor,
   Skill.DefenseIncreaseMinor,
-  Skill.AttackIncreaseMajorDefenseDecreaseMinor,
+  Skill.AttackIncreaseMajorDefenseDecreaseMajor,
   Skill.BuyUnitCannon,
   Skill.BuyUnitBrute,
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
@@ -67,8 +67,8 @@ const skillConfig: Record<
   Readonly<{ charges?: number; cost: number | null }>
 > = {
   [Skill.AttackIncreaseMinor]: { charges: 3, cost: 300 },
-  [Skill.DefenseIncreaseMinor]: { cost: 300 },
-  [Skill.AttackIncreaseMajorDefenseDecreaseMinor]: { charges: 5, cost: 800 },
+  [Skill.DefenseIncreaseMinor]: { charges: 2, cost: 300 },
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor]: { charges: 6, cost: 800 },
   [Skill.BuyUnitCannon]: { cost: 1000 },
   [Skill.BuyUnitBrute]: { charges: 3, cost: 1000 },
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
@@ -127,16 +127,27 @@ type SkillStatusType =
 
 const attackStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMinor, 0.05],
-  [Skill.AttackIncreaseMajorDefenseDecreaseMinor, 0.15],
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.15],
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor, -0.07],
   [Skill.AttackAndDefenseIncreaseHard, 0.1],
   [Skill.HealVehiclesAttackDecrease, -0.15],
   [Skill.AttackAndDefenseDecreaseEasy, -0.1],
 ]);
 
+const attackUnitStatusEffects: UnitSkillMap = new Map([
+  [
+    Skill.ArtilleryRangeIncrease,
+    new Map([
+      [UnitID.Artillery, 0.1],
+      [UnitID.HeavyArtillery, 0.1],
+      [UnitID.Cannon, 0.1],
+    ]),
+  ],
+]);
+
 const attackPowerStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMinor, 0.2],
-  [Skill.AttackIncreaseMajorDefenseDecreaseMinor, 0.35],
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.35],
   [Skill.HealVehiclesAttackDecrease, 0.3],
 ]);
 
@@ -186,7 +197,7 @@ const attackTilePowerStatusEffects: TileMovementSkillMap = new Map([
 ]);
 
 const defenseStatusEffects: SkillMap = new Map([
-  [Skill.AttackIncreaseMajorDefenseDecreaseMinor, -0.12],
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor, -0.2],
   [Skill.DefenseIncreaseMinor, 0.05],
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor, -0.07],
   [Skill.BuyUnitZombieDefenseDecreaseMajor, -0.5],
@@ -195,10 +206,13 @@ const defenseStatusEffects: SkillMap = new Map([
 ]);
 
 const defensePowerStatusEffects: SkillMap = new Map([
-  [Skill.AttackIncreaseMajorDefenseDecreaseMinor, -0.3],
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor, -0.5],
+  [Skill.DefenseIncreaseMinor, 0.5],
 ]);
 
 const unitCostEffects: SkillMap = new Map([
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.15],
+  [Skill.HealVehiclesAttackDecrease, -0.2],
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor, -0.1],
 ]);
 
@@ -217,8 +231,8 @@ const defenseMovementTypeStatusEffects: MovementSkillMap = new Map([
   [
     Skill.ArtilleryRangeIncrease,
     new Map([
-      [MovementTypes.Tires, -0.2],
-      [MovementTypes.Tread, -0.2],
+      [MovementTypes.Tires, 0.2],
+      [MovementTypes.Tread, 0.2],
     ]),
   ],
   [
@@ -443,7 +457,7 @@ const sumAll = (
 export const getSkillAttackStatusEffects = sumAll.bind(
   null,
   attackStatusEffects,
-  null,
+  attackUnitStatusEffects,
   null,
   attackPowerStatusEffects,
   attackUnitPowerStatusEffects,
@@ -677,7 +691,7 @@ export function getSkillAttackUnitStatusEffect(
   type: SkillActivationType,
 ) {
   return type === 'regular'
-    ? null
+    ? attackUnitStatusEffects.get(skill)
     : attackUnitPowerStatusEffects.get(skill) || null;
 }
 

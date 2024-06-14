@@ -44,7 +44,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Shield,
         name: fbt('Defense Up', 'Skill name'),
       };
-    case Skill.AttackIncreaseMajorDefenseDecreaseMinor:
+    case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
       return {
         alpha: 0.3,
         borderStyle: 'up2x',

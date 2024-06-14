@@ -555,7 +555,7 @@ const HealTypes = ({
         )
       )}
     </fbt:param>{' '}
-    are healed by <fbt:param name="effect">{`${HealAmount}%`}</fbt:param>
+    units are healed by <fbt:param name="effect">{`${HealAmount}%`}</fbt:param>
   </fbt>
 );
 
@@ -657,7 +657,6 @@ export default memo(function SkillDescription({
   const unitRange = getUnitRangeForSkill(skill, type);
   const healTypes = type === 'power' ? getHealUnitTypes(skill) : null;
   const effects = [
-    cost ? <CostEffect effect={cost} /> : null,
     attack ? <AttackStatusEffect effect={attack} /> : null,
     unitAttack ? (
       <UnitStatusEffects color={color} effects={unitAttack} type="attack" />
@@ -676,6 +675,7 @@ export default memo(function SkillDescription({
       <TileTypeStatusEffect effects={tileDefense} type="defense" />
     ) : null,
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,
+    cost ? <CostEffect effect={cost} /> : null,
   ].filter(isPresent);
 
   const list = [

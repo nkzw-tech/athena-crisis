@@ -220,7 +220,7 @@ test('status effects from skills can increase and decrease attack or defense', a
     teams: updatePlayer(
       map.teams,
       map.getPlayer(1).copy({
-        skills: new Set([Skill.AttackIncreaseMajorDefenseDecreaseMinor]),
+        skills: new Set([Skill.AttackIncreaseMajorDefenseDecreaseMajor]),
       }),
     ),
   });
@@ -482,7 +482,7 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
     execute(
       mapA,
       vision,
-      ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMinor),
+      ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor),
     ),
   ).toBe(null);
 

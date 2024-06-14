@@ -39,7 +39,7 @@ const initialMap = withModifiers(
 );
 
 test('skills are active until the beginning of the next turn', () => {
-  const skills = new Set([Skill.AttackIncreaseMajorDefenseDecreaseMinor]);
+  const skills = new Set([Skill.AttackIncreaseMajorDefenseDecreaseMajor]);
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
   const vecC = vec(2, 2);
@@ -66,7 +66,7 @@ test('skills are active until the beginning of the next turn', () => {
     AttackUnitAction(vecB, vecA),
     EndTurnAction(),
     AttackUnitAction(vecA, vecB),
-    ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMinor),
+    ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor),
     AttackUnitAction(vecC, vecD),
     EndTurnAction(),
     AttackUnitAction(vecE, vecC),
@@ -76,13 +76,13 @@ test('skills are active until the beginning of the next turn', () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 86, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 44, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 17710 }
+      AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 87, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 41, ammo: [ [ 1, 6 ] ] }, chargeA: 131, chargeB: 15254 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 18, ammo: [ [ 1, 5 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 5 ] ] }, chargeA: 17620, chargeB: 192 }
+      AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 11, ammo: [ [ 1, 5 ] ] }, unitB: DryUnit { health: 70, ammo: [ [ 1, 5 ] ] }, chargeA: 15150, chargeB: 194 }
       ActivatePower { skill: 3 }
-      AttackUnit (2,2 → 2,3) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 93, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 8893, chargeB: 548 }
+      AttackUnit (2,2 → 2,3) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 6181, chargeB: 550 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,2 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 78, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 27, ammo: [ [ 1, 5 ] ] }, chargeA: 711, chargeB: 9140 }
+      AttackUnit (3,2 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 7, ammo: [ [ 1, 5 ] ] }, chargeA: 690, chargeB: 6517 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }"
     `);
 });
