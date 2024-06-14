@@ -1,6 +1,7 @@
-import { isHumanPlayer } from '../map/Player.tsx';
 import MapData from '../MapData.tsx';
 
 export default function isPvP(map: MapData) {
-  return map.getPlayers().filter(isHumanPlayer).length > 1;
+  return (
+    map.active.filter((id) => map.getPlayer(id).isHumanPlayer()).length > 1
+  );
 }
