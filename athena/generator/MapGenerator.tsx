@@ -57,12 +57,12 @@ const isEdge = (vector: Vector, size: SizeVector) =>
   vector.y === size.height;
 
 export function generateBuildings(
-  mapData: MapData,
+  map: MapData,
   biomes: ReadonlyArray<Biome> = Biomes,
 ): MapData {
   let buildings = ImmutableMap<Vector, Building>();
-  const map = mapData.map.slice();
-  const { size } = mapData;
+  const tiles = map.map.slice();
+  const { size } = map;
   const length = size.width * size.height;
   const seed = random(0, length / 2.5);
   for (let j = seed; j < length; j++) {
@@ -80,8 +80,8 @@ export function generateBuildings(
       buildings = buildings
         .set(vector, HQ.create(1))
         .set(hq2Vector, HQ.create(2));
-      map[mapData.getTileIndex(vector)] = Plain.id;
-      map[mapData.getTileIndex(hq2Vector)] = Plain.id;
+      tiles[map.getTileIndex(vector)] = Plain.id;
+      tiles[map.getTileIndex(hq2Vector)] = Plain.id;
       break;
     }
   }
@@ -91,7 +91,7 @@ export function generateBuildings(
   if (buildings.size === 2) {
     const [start, end] = [...buildings.keys()];
     const unit = Pioneer.create(1);
-    let currentMap = mapData.copy({ buildings });
+    let currentMap = map.copy({ buildings });
     const streetPath = getMovementPath(
       currentMap,
       end,
@@ -100,14 +100,14 @@ export function generateBuildings(
     ).path.slice(0, -1);
 
     streetPath.forEach((vector) => {
-      map[currentMap.getTileIndex(vector)] = Street.id;
+      tiles[currentMap.getTileIndex(vector)] = Street.id;
     });
 
     const center =
       streetPath[Math.round(streetPath.length) / 2 - 1 + random(0, 1)];
     if (center && streetPath.length >= 3) {
       const [up, right, down, left] = center.adjacent();
-      currentMap = mapData.copy({ map });
+      currentMap = map.copy({ map: tiles });
       const possibleRivers = arrayShuffle([
         currentMap.getTile(up) !== Street.id ? up : null,
         currentMap.getTile(right) !== Street.id ? right : null,
@@ -191,7 +191,7 @@ export function generateBuildings(
                 )
               : []),
           ].forEach((vector) => {
-            map[currentMap.getTileIndex(vector)] = River.id;
+            tiles[currentMap.getTileIndex(vector)] = River.id;
           });
         }
       }
@@ -201,14 +201,14 @@ export function generateBuildings(
           const index = currentMap.getTileIndex(vector);
           return (
             currentMap.contains(vector) &&
-            map[index] !== Street.id &&
-            map[index] !== River.id
+            tiles[index] !== Street.id &&
+            tiles[index] !== River.id
           );
         }),
       )
         .slice(2)
         .forEach((vector) => {
-          map[currentMap.getTileIndex(vector)] = ConstructionSite.id;
+          tiles[currentMap.getTileIndex(vector)] = ConstructionSite.id;
         });
 
       streetPath.forEach((vector) => {
@@ -218,7 +218,7 @@ export function generateBuildings(
           .map(
             (vector) =>
               currentMap.contains(vector) &&
-              getTile(map[currentMap.getTileIndex(vector)], 0),
+              getTile(tiles[currentMap.getTileIndex(vector)], 0),
           );
 
         const shouldPlaceHorizontalBridge =
@@ -233,7 +233,7 @@ export function generateBuildings(
             left === River.id &&
             right === River.id)
         ) {
-          map[index] = [River.id, Bridge.id];
+          tiles[index] = [River.id, Bridge.id];
           if (random(0, 1)) {
             buildings = buildings.set(
               vector,
@@ -245,7 +245,7 @@ export function generateBuildings(
           }
         }
       });
-      currentMap = currentMap.copy({ map });
+      currentMap = currentMap.copy({ map: tiles });
     }
 
     const maxFactories = 2;
@@ -270,11 +270,11 @@ export function generateBuildings(
         const index = currentMap.getTileIndex(vector);
         if (
           !isEdge(vector, size) &&
-          map[index] !== Street.id &&
-          map[index] !== River.id &&
+          tiles[index] !== Street.id &&
+          tiles[index] !== River.id &&
           !buildings.has(vector)
         ) {
-          map[currentMap.getTileIndex(vector)] = ConstructionSite.id;
+          tiles[currentMap.getTileIndex(vector)] = ConstructionSite.id;
           const buildingToBuild = random(0, 1);
           if (buildingToBuild === 0) {
             factories++;
@@ -297,32 +297,32 @@ export function generateBuildings(
     }
   }
   return convertBiome(
-    copyMap(mapData.copy({ buildings }), map),
+    copyMap(map.copy({ buildings }), tiles),
     arrayShuffle(biomes)[0],
   );
 }
 
-export function generateSea(mapData: MapData): MapData {
+export function generateSea(map: MapData): MapData {
   if (!random(0, 3)) {
-    return mapData;
+    return map;
   }
 
   const seaTile =
-    getBiomeStyle(mapData.config.biome).tileConversions?.get(Sea)?.id || Sea.id;
-  const map = mapData.map.slice();
+    getBiomeStyle(map.config.biome).tileConversions?.get(Sea)?.id || Sea.id;
+  const tiles = map.map.slice();
   if (random(0, 1)) {
     const queue: Array<Vector> = [];
-    mapData.forEachField((vector, index) => {
-      if (isEdge(vector, mapData.size) && !mapData.buildings.has(vector)) {
-        map[index] = seaTile;
+    map.forEachField((vector, index) => {
+      if (isEdge(vector, map.size) && !map.buildings.has(vector)) {
+        tiles[index] = seaTile;
         queue.push(
           ...vector
             .adjacent()
             .slice(1)
             .filter((vector) => {
               const tile =
-                mapData.contains(vector) &&
-                getTile(map[mapData.getTileIndex(vector)]);
+                map.contains(vector) &&
+                getTile(tiles[map.getTileIndex(vector)]);
               return (
                 tile &&
                 tile !== River.id &&
@@ -342,19 +342,15 @@ export function generateSea(mapData: MapData): MapData {
       }
       seen.add(vector);
 
-      if (random(0, 1) && !mapData.buildings.has(vector)) {
-        map[mapData.getTileIndex(vector)] = seaTile;
+      if (random(0, 1) && !map.buildings.has(vector)) {
+        tiles[map.getTileIndex(vector)] = seaTile;
       }
     }
   } else {
-    const clusters = calculateClusters(mapData.size, [
-      ...mapData.reduceEachField((set, vector) => {
-        const tile = mapData.getTileInfo(vector);
-        if (
-          tile &&
-          tile.type & TileTypes.Plain &&
-          !mapData.buildings.has(vector)
-        ) {
+    const clusters = calculateClusters(map.size, [
+      ...map.reduceEachField((set, vector) => {
+        const tile = map.getTileInfo(vector);
+        if (tile && tile.type & TileTypes.Plain && !map.buildings.has(vector)) {
           return set.add(vector);
         }
         return set;
@@ -371,60 +367,60 @@ export function generateSea(mapData: MapData): MapData {
         continue;
       }
       seen.add(vector);
-      if (!mapData.contains(vector)) {
+      if (!map.contains(vector)) {
         continue;
       }
 
-      const index = mapData.getTileIndex(vector);
-      const tile = getTileInfo(map[index]);
+      const index = map.getTileIndex(vector);
+      const tile = getTileInfo(tiles[index]);
       if (
         (tile.type & TileTypes.Plain || tile.type & TileTypes.Forest) &&
-        !mapData.buildings.has(vector) &&
+        !map.buildings.has(vector) &&
         (vector.equals(initialVector) ||
           vector
             .adjacent()
-            .some((vector) => map[mapData.getTileIndex(vector)] === seaTile))
+            .some((vector) => tiles[map.getTileIndex(vector)] === seaTile))
       ) {
-        map[index] = seaTile;
+        tiles[index] = seaTile;
       }
 
       queue.push(
         ...vector
           .expandWithDiagonals()
           .slice(1)
-          .filter((vector) => mapData.contains(vector)),
+          .filter((vector) => map.contains(vector)),
       );
       iterations--;
     }
   }
 
-  mapData = copyMap(mapData, map);
-  mapData.forEachField((vector) => {
-    const index = mapData.getTileIndex(vector);
+  map = copyMap(map, tiles);
+  map.forEachField((vector) => {
+    const index = map.getTileIndex(vector);
     if (
       !random(0, 4) &&
-      !mapData.buildings.has(vector) &&
-      canPlaceTile(mapData, vector, Reef)
+      !map.buildings.has(vector) &&
+      canPlaceTile(map, vector, Reef)
     ) {
-      map[index] = [getTileInfo(map[index], 0).id, Reef.id];
-      mapData = copyMap(mapData, map);
+      tiles[index] = [getTileInfo(tiles[index], 0).id, Reef.id];
+      map = copyMap(map, tiles);
     }
   });
 
   // These should be separate loops.
-  mapData.forEachField((vector) => {
-    const index = mapData.getTileIndex(vector);
+  map.forEachField((vector) => {
+    const index = map.getTileIndex(vector);
     if (
       !random(0, 2) &&
-      !mapData.buildings.has(vector) &&
-      canPlaceTile(mapData, vector, Beach)
+      !map.buildings.has(vector) &&
+      canPlaceTile(map, vector, Beach)
     ) {
-      map[index] = Beach.id;
-      mapData = copyMap(mapData, map);
+      tiles[index] = Beach.id;
+      map = copyMap(map, tiles);
     }
   });
 
-  return mapData;
+  return map;
 }
 
 const copyMap = (mapData: MapData, map: TileMap) =>

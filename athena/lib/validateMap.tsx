@@ -149,7 +149,7 @@ const addLeader = (
   }
 };
 
-const validateUnit = (
+export const validateUnit = (
   unit: Unit | TransportedUnit,
   leaders: Map<PlayerID, Set<number>>,
   player?: PlayerID,

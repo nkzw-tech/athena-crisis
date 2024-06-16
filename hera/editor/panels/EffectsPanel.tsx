@@ -3,6 +3,7 @@ import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { WinCriteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -14,13 +15,24 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Plus from '@iconify-icons/pixelarticons/plus.js';
+import ImmutableMap from '@nkzw/immutable-map';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
 import EffectTitle, { EffectWinConditionTitle } from '../lib/EffectTitle.tsx';
 import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
-import { EditorState, SetEditorStateFunction } from '../Types.tsx';
+import {
+  EditorState,
+  SetEditorStateFunction,
+  SetMapFunction,
+} from '../Types.tsx';
+
+export type ActionChangeFn = (
+  index: number,
+  type: 'update' | 'up' | 'down' | 'delete' | 'toggle-select-units',
+  action?: Action,
+) => void;
 
 export default function EffectsPanel({
   editor,
@@ -29,6 +41,7 @@ export default function EffectsPanel({
   scenario,
   scrollRef,
   setEditorState,
+  setMap,
   setScenario,
   updateEffect,
   user,
@@ -39,12 +52,13 @@ export default function EffectsPanel({
   scenario: Scenario;
   scrollRef: RefObject<HTMLElement>;
   setEditorState: SetEditorStateFunction;
+  setMap: SetMapFunction;
   setScenario: (scenario: Scenario) => void;
   updateEffect: (effect: Effect) => void;
   user: UserWithFactionNameAndSkills;
 }) {
-  const { effects } = editor;
-  const { effect } = scenario;
+  const { action: currentAction, effects } = editor;
+  const { effect, trigger } = scenario;
   const { actions } = effect;
   const [showNewEffects, setShowNewEffects] = useState(false);
   const {
@@ -130,9 +144,9 @@ export default function EffectsPanel({
     [conditionsByID, editor, setEditorState, winConditions],
   );
 
-  const onChange = useCallback(
-    (index: number, type: string, action?: Action) => {
-      switch (type) {
+  const onChange: ActionChangeFn = useCallback(
+    (index, changeType, action?) => {
+      switch (changeType) {
         case 'update':
           if (action) {
             updateEffect({
@@ -171,9 +185,21 @@ export default function EffectsPanel({
             actions: actions.filter((_action, i) => i !== index),
           });
           break;
+        case 'toggle-select-units':
+          setEditorState({
+            action:
+              editor.action?.actionId === index
+                ? undefined
+                : { action: actions[index], actionId: index },
+          });
+          break;
+        default: {
+          changeType satisfies never;
+          throw new UnknownTypeError('EffectsPanel.onChange', changeType);
+        }
       }
     },
-    [actions, effect, updateEffect],
+    [actions, editor.action?.actionId, effect, setEditorState, updateEffect],
   );
 
   if (showNewEffects) {
@@ -208,6 +234,26 @@ export default function EffectsPanel({
     );
   }
 
+  if (currentAction) {
+    return (
+      <Stack gap={24} vertical verticalPadding>
+        <ActionCard
+          action={currentAction.action}
+          biome={biome}
+          focused
+          hasContentRestrictions={hasContentRestrictions}
+          index={currentAction.actionId}
+          map={map}
+          onChange={onChange}
+          scrollRef={scrollRef}
+          setMap={setMap}
+          trigger={trigger}
+          user={user}
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Stack gap={24} vertical verticalPadding>
       <Stack gap={16} vertical>
@@ -235,8 +281,11 @@ export default function EffectsPanel({
               hasContentRestrictions={hasContentRestrictions}
               index={index}
               last={index === actions.length - 1}
+              map={map}
               onChange={onChange}
               scrollRef={scrollRef}
+              setMap={setMap}
+              trigger={trigger}
               user={user}
             />
             {index === actions.length - 1 ? null : (
@@ -262,7 +311,7 @@ export default function EffectsPanel({
           </div>
         ))}
 
-        <Stack>
+        <Stack gap={16} start>
           <Button
             onClick={() =>
               updateEffect({
@@ -283,6 +332,26 @@ export default function EffectsPanel({
               Add Message
             </fbt>
           </Button>
+          {trigger !== 'GameEnd' ? (
+            <Button
+              onClick={() =>
+                updateEffect({
+                  ...effect,
+                  actions: [
+                    ...actions,
+                    {
+                      type: 'SpawnEffect',
+                      units: ImmutableMap(),
+                    },
+                  ],
+                })
+              }
+            >
+              <fbt desc="Button to add a new spawn effect in the map editor">
+                Add Spawn Effect
+              </fbt>
+            </Button>
+          ) : null}
         </Stack>
       </Stack>
     </Stack>

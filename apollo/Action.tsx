@@ -24,6 +24,7 @@ import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
+import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import {
@@ -160,7 +161,7 @@ type SabotageAction = Readonly<{
   type: 'Sabotage';
 }>;
 
-type SpawnEffectAction = Readonly<{
+export type SpawnEffectAction = Readonly<{
   player?: DynamicPlayerID;
   teams?: Teams;
   type: 'SpawnEffect';
@@ -807,15 +808,14 @@ function spawnEffect(
   map: MapData,
   { player: dynamicPlayer, teams, units }: SpawnEffectAction,
 ) {
-  const player = dynamicPlayer
-    ? resolveDynamicPlayerID(map, dynamicPlayer)
-    : null;
+  const player =
+    dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
   units = units
     .filter((unit, vector) => canDeploy(map, unit.info, vector, false))
     .map((unit) => (player != null ? unit.setPlayer(player) : unit));
   return units.size
     ? ({
-        teams,
+        teams: maybeCreatePlayers(map, teams, units),
         type: 'Spawn',
         units,
       } as const)

@@ -1,5 +1,6 @@
 import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import { Effects } from '@deities/apollo/Effects.tsx';
 import {
   GameActionResponse,
   GameActionResponses,
@@ -17,6 +18,7 @@ import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import type { ReactElement, ReactNode } from 'react';
 import { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
 import { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
@@ -47,6 +49,7 @@ export type Props = Readonly<{
   currentUserId: string;
   dangerouslyApplyExternalState?: boolean;
   editor?: EditorState;
+  effects?: Effects;
   endGame?: (type: 'Lose') => void;
   events?: EventTarget;
   factionNames: FactionNames;
@@ -102,6 +105,10 @@ export type State = Readonly<{
   confirmAction?: ConfirmProps | null;
   currentUserId: string;
   currentViewer: PlayerID | null;
+  effectState: {
+    extraUnits: ImmutableMap<Vector, Unit>;
+    radius: ReadonlyArray<RadiusInfo>;
+  } | null;
   factionNames: FactionNames;
   gameInfoState: GameInfoState | null;
   initialBehaviorClass: MapBehaviorConstructor | undefined | null;

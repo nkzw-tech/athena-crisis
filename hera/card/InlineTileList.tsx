@@ -45,6 +45,7 @@ import UnitTile from '../Unit.tsx';
 export type SelectTileFn = (selection: {
   building?: Building;
   decorator?: DecoratorInfo;
+  index: number;
   tile: TileInfo;
   unit?: Unit;
 }) => void;
@@ -203,12 +204,12 @@ const InlineTile = ({
 
   const props = usePress({
     onLongPress: useCallback(
-      () => onLongPress?.({ building, decorator, tile, unit }),
-      [building, decorator, onLongPress, tile, unit],
+      () => onLongPress?.({ building, decorator, index, tile, unit }),
+      [building, decorator, index, onLongPress, tile, unit],
     ),
     onPress: useCallback(
-      () => onSelect?.({ building, decorator, tile, unit }),
-      [building, decorator, onSelect, tile, unit],
+      () => onSelect?.({ building, decorator, index, tile, unit }),
+      [building, decorator, onSelect, tile, unit, index],
     ),
   });
 

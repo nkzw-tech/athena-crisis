@@ -1,11 +1,9 @@
-import getColorName from '@deities/apollo/lib/getColorName.tsx';
-import nameGenerator from '@deities/apollo/lib/nameGenerator.tsx';
 import { GameEndActionResponse } from '@deities/apollo/Objective.tsx';
+import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import validateMap from '@deities/athena/lib/validateMap.tsx';
-import { Bot } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
@@ -27,8 +25,6 @@ type Result = Readonly<{
   actionResponse: GameEndActionResponse;
   turns: number;
 }>;
-
-const generateName = nameGenerator();
 
 const RUNS = 10;
 
@@ -56,11 +52,7 @@ export default function EvaluationPanel({
     );
 
     return currentMap
-      ? startGame(
-          updateActivePlayers(currentMap, (player) =>
-            Bot.from(player, `${getColorName(player.id)} ${generateName()}`),
-          ),
-        )
+      ? startGame(updateActivePlayers(currentMap, createBotWithName))
       : null;
   }, [state.map]);
 

@@ -4,7 +4,8 @@ import {
   toPlayerIDs,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Actions, executeEffect } from './Action.tsx';
+import isPresent from '@deities/hephaestus/isPresent.tsx';
+import { Action, Actions, executeEffect } from './Action.tsx';
 import { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
 import validateAction from './actions/validateAction.tsx';
 import {
@@ -68,7 +69,11 @@ const applyActions = (
       } else {
         return [];
       }
-    } catch {
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error(`applyActions: Could not apply Effect Actions.`, error);
+      }
       return [];
     }
   }
@@ -176,6 +181,9 @@ export function decodeEffects(encodedEffects: EncodedEffects): Effects {
   );
 }
 
+const spawnEffectsOnGameEnd = (trigger: EffectTrigger, action: Action) =>
+  trigger !== 'GameEnd' || action.type !== 'SpawnEffect';
+
 export function validateEffects(map: MapData, effects: Effects): Effects {
   const newEffects = new Map();
 
@@ -184,7 +192,11 @@ export function validateEffects(map: MapData, effects: Effects): Effects {
 
     const newEffectList = [];
     for (const { actions, conditions, occurrence, players } of effectList) {
-      const newActions = actions.map(validateAction).filter(Boolean);
+      const newActions = actions
+        .map((action) => validateAction(map, action))
+        .filter(isPresent)
+        .filter(spawnEffectsOnGameEnd.bind(null, trigger));
+
       const newConditions = conditions?.filter(
         validateCondition.bind(null, map),
       );

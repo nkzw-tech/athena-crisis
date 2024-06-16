@@ -1,3 +1,4 @@
+import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
 import { Teams } from '@deities/athena/map/Team.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -64,14 +65,20 @@ export default function spawn(
         );
         return state;
       },
-      onSpawn: ({ map }: State) => ({
-        map: mergeTeams(
+      onSpawn: ({ map }: State) => {
+        map = mergeTeams(
           map.copy({
             units: map.units.set(position, unit),
           }),
           newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
-        ),
-      }),
+        );
+
+        return {
+          map: map.copy({
+            active: getActivePlayers(map),
+          }),
+        };
+      },
       type: 'spawn',
       unitDirection: getUnitDirection(state.map.getFirstPlayerID(), unit),
       variant: unit.player,

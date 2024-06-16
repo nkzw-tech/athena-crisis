@@ -1,10 +1,12 @@
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
+import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import randomEntry from '@deities/hephaestus/randomEntry.tsx';
-import { Action } from '../Action.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
+import { Action, SpawnEffectAction } from '../Action.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 import { Condition } from '../Condition.tsx';
 
@@ -61,6 +63,10 @@ const transformVector = <T extends Action | Condition>(
   return vector;
 };
 
+const isMutableSpawnEffect = (
+  value: Mutable<Action | Condition>,
+): value is Mutable<SpawnEffectAction> => value.type === 'SpawnEffect';
+
 export default function transformEffectValue<T extends Action | Condition>(
   map: MapData,
   actionResponse: ActionResponse,
@@ -69,6 +75,7 @@ export default function transformEffectValue<T extends Action | Condition>(
   const newValue = { ...value } as Mutable<T>;
   const from = 'from' in value ? value.from : null;
   const to = 'to' in value ? value.to : null;
+
   if ('from' in newValue) {
     newValue.from = transformVector(map, actionResponse, value, from);
   }
@@ -76,10 +83,14 @@ export default function transformEffectValue<T extends Action | Condition>(
     newValue.to = transformVector(map, actionResponse, value, to);
   }
 
-  if (value.type === 'SpawnEffect' && 'units' in newValue) {
-    newValue.units = value.units.mapKeys((vector) =>
-      transformVector(map, actionResponse, value, vector),
-    );
+  if (value.type === 'SpawnEffect' && isMutableSpawnEffect(newValue)) {
+    newValue.units = ImmutableMap<Vector, Unit>();
+    for (const [vector, unit] of value.units) {
+      const newVector = transformVector(map, actionResponse, value, vector);
+      if (newVector) {
+        newValue.units = newValue.units.set(newVector, unit);
+      }
+    }
   }
 
   return newValue;

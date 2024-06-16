@@ -17,6 +17,12 @@ export default function mergeTeams(map: MapData, newTeams: Teams | undefined) {
           );
         }
 
+        if (map.maybeGetPlayer(playerId)) {
+          throw new Error(
+            `mergeTeams: player '${playerId}' is already defined.`,
+          );
+        }
+
         if (!teams.get(id)?.players.has(playerId)) {
           team = team.copy({
             players: team.players.set(playerId, player),

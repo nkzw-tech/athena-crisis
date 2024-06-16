@@ -168,6 +168,7 @@ export default memo(function CurrentGameCard({
         gap={16}
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}
+        key={map.getPlayers().length}
         toggleExpanded={toggleExpanded}
       >
         <TeamsCard

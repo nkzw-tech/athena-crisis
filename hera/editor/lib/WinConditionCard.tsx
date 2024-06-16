@@ -302,11 +302,9 @@ export default function WinConditionCard({
             </InlineLink>
             {winConditionHasVectors(condition) && (
               <InlineLink onClick={selectLocation}>
-                {
-                  <fbt desc="Button to select win condition location">
-                    Select Location
-                  </fbt>
-                }
+                <fbt desc="Button to select win condition location">
+                  Select Location
+                </fbt>
               </InlineLink>
             )}
           </Stack>

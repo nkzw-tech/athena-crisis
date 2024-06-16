@@ -11,26 +11,19 @@ import UILabel from '../../ui/UILabel.tsx';
 
 export default function LabelSelector({
   active,
-  children,
   onChange,
 }: {
   active?: PlayerID | null;
-  children?: ReactNode;
   onChange: (label: PlayerID | null) => void;
 }) {
-  return (
-    <>
-      {PlayerIDs.map((label) => (
-        <SelectableLabel
-          active={active === label}
-          color={label}
-          key={label}
-          onClick={() => onChange(active === label ? null : label)}
-        />
-      ))}
-      {children}
-    </>
-  );
+  return PlayerIDs.map((label) => (
+    <SelectableLabel
+      active={active === label}
+      color={label}
+      key={label}
+      onClick={() => onChange(active === label ? null : label)}
+    />
+  ));
 }
 
 export function ManyLabelSelector({

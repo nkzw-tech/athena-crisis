@@ -500,7 +500,7 @@ const decodeProps = (
             list: [
               ...list,
               optional
-                ? `${name}: ${actionType}[${counter}] ? ${decodeCall} : undefined`
+                ? `${name}: ${actionType}[${counter}] != null ? ${decodeCall} : undefined`
                 : `${name}: ${decodeCall}`,
             ],
           };

@@ -18,6 +18,9 @@ export enum RadiusType {
   Attack,
   Attackable,
   Defense,
+  Effect1,
+  Effect2,
+  Effect3,
   Escort1,
   Escort2,
   Escort3,
@@ -87,6 +90,10 @@ const Item = memo(function Item({
     }
   }
 
+  const isEffect =
+    type === RadiusType.Effect1 ||
+    type === RadiusType.Effect2 ||
+    type === RadiusType.Effect3;
   const isEscort =
     type === RadiusType.Escort1 ||
     type === RadiusType.Escort2 ||
@@ -105,9 +112,10 @@ const Item = memo(function Item({
           (biome === Biome.Volcano || biome === Biome.Luna)
           ? alternateAttackStyle
           : colors[type],
+        isEffect && radialMaskStyle,
         isEscort && animateStyle,
       )}
-      initial={{ opacity: isEscort ? 1 : 0 }}
+      initial={{ opacity: isEffect || isEscort ? 1 : 0 }}
       style={{
         [vars.set('x')]: (position.x - 1) * size + 'px',
         [vars.set('y')]: (position.y - 1) * size + 'px',
@@ -351,6 +359,16 @@ const itemStyle = css`
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0);
 `;
 
+const radialMaskStyle = css`
+  mask: repeating-radial-gradient(
+    circle at 50%,
+    black,
+    black 1px,
+    ${vars.apply('background-light')} 0%,
+    ${vars.apply('background-light')} 2.13px
+  );
+`;
+
 const colors: Record<RadiusType, string> = {
   [RadiusType.Attack]: css`
     ${vars.set('color', '210, 18, 24')}
@@ -358,17 +376,29 @@ const colors: Record<RadiusType, string> = {
   [RadiusType.Attackable]: ``,
   [RadiusType.Defense]: ``,
   [RadiusType.Rescue]: ``,
-  [RadiusType.Escort1]: css`
-    ${vars.set('opacity', 0.5)}
-    ${vars.set('color', '230, 230, 0')}
+  [RadiusType.Effect1]: css`
+    ${vars.set('opacity', 0.35)}
+    ${vars.set('color', '210, 18, 24')}
   `,
-  [RadiusType.Escort2]: css`
+  [RadiusType.Effect2]: css`
+    ${vars.set('opacity', 0.35)}
+    ${vars.set('color', '0, 230, 230')}
+  `,
+  [RadiusType.Effect3]: css`
+    ${vars.set('opacity', 0.35)}
+    ${vars.set('color', '19, 19, 209')}
+  `,
+  [RadiusType.Escort1]: css`
     ${vars.set('opacity', 0.5)}
     ${vars.set('color', '195, 33, 127')}
   `,
-  [RadiusType.Escort3]: css`
+  [RadiusType.Escort2]: css`
     ${vars.set('opacity', 0.5)}
     ${vars.set('color', '0, 230, 230')}
+  `,
+  [RadiusType.Escort3]: css`
+    ${vars.set('opacity', 0.5)}
+    ${vars.set('color', '230, 230, 0')}
   `,
   [RadiusType.Highlight]: ``,
   [RadiusType.Lightning]: css`

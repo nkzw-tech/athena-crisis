@@ -5,8 +5,6 @@ import {
   encodeEffects,
   Scenario,
 } from '@deities/apollo/Effects.tsx';
-import getColorName from '@deities/apollo/lib/getColorName.tsx';
-import nameGenerator from '@deities/apollo/lib/nameGenerator.tsx';
 import { Route } from '@deities/apollo/Routes.tsx';
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import {
@@ -17,6 +15,7 @@ import {
 } from '@deities/athena/generator/MapGenerator.tsx';
 import { Bush } from '@deities/athena/info/Decorator.tsx';
 import { getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
+import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import resizeMap, { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
@@ -26,7 +25,7 @@ import validateMap from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
-import { Bot, HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
+import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
@@ -103,8 +102,6 @@ import {
   SetMapFunction,
 } from './Types.tsx';
 
-const generateName = nameGenerator();
-
 const startAction = {
   type: 'Start',
 } as const;
@@ -147,9 +144,9 @@ const getEditorBaseState = (
   };
 };
 
-const panelShouldExpand = ({ condition, mode }: EditorState) =>
+const panelShouldExpand = ({ action, condition, mode }: EditorState) =>
   (mode === 'conditions' && !condition) ||
-  mode === 'effects' ||
+  (mode === 'effects' && !action) ||
   mode === 'restrictions' ||
   mode === 'settings' ||
   mode === 'setup';
@@ -293,7 +290,7 @@ export default function MapEditor({
         ...mergedState,
         ...(shouldResetCondition ? { condition: undefined } : null),
         ...(shouldResetScenario
-          ? { scenario: getDefaultScenario(editor.effects) }
+          ? { action: undefined, scenario: getDefaultScenario(editor.effects) }
           : null),
       };
     });
@@ -373,8 +370,7 @@ export default function MapEditor({
       setActAsEveryPlayer(actAsEveryPlayer);
       const mapWithActivePlayers = updateActivePlayers(
         currentMap,
-        (player) =>
-          Bot.from(player, `${getColorName(player.id)} ${generateName()}`),
+        createBotWithName,
         editor.mode === 'effects' ? undefined : map.currentPlayer,
         user.id,
       );
@@ -396,7 +392,8 @@ export default function MapEditor({
         playTest
           ? {
               effects:
-                isEffectMode && trigger === 'GameEnd'
+                isEffectMode &&
+                (trigger === 'GameEnd' || trigger === 'OptionalObjective')
                   ? new Map([
                       ...editor.effects,
                       [
@@ -734,10 +731,23 @@ export default function MapEditor({
     (size: SizeVector, origin: Set<ResizeOrigin>) => {
       const map = stateRef.current?.map;
       if (map && !size.equals(map.size)) {
-        setMap('resize', resizeMap(map, size, origin, editor?.selected?.tile));
+        const [newMap, newEffects] = resizeMap(
+          map,
+          editor.effects,
+          size,
+          origin,
+          editor?.selected?.tile,
+        );
+        setMap('resize', newMap);
+        setEditorState({
+          action: undefined,
+          condition: undefined,
+          effects: newEffects,
+          scenario: getDefaultScenario(newEffects),
+        });
       }
     },
-    [editor?.selected?.tile, setMap],
+    [editor.effects, editor?.selected?.tile, setEditorState, setMap],
   );
 
   const onAction = useClientGameAction(
@@ -951,13 +961,15 @@ export default function MapEditor({
               ? DesignBehavior
               : editor.mode === 'entity'
                 ? EntityBehavior
-                : editor.mode === 'conditions' && editor.condition
+                : (editor.mode === 'conditions' && editor.condition) ||
+                    (editor.mode === 'effects' && editor.action)
                   ? VectorBehavior
                   : NullBehavior
           }
           confirmActionStyle={confirmActionStyle}
           currentUserId={user.id}
           editor={editor}
+          effects={editor.effects}
           factionNames={factionNames}
           fogStyle={fogStyle}
           inset={inset}

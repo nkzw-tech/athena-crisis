@@ -307,6 +307,52 @@ test('spawns an additional unit', async () => {
     `);
 });
 
+test('spawns a neutral unit', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(1, 2);
+  const vecC = vec(3, 3);
+  const vecD = vec(1, 3);
+  const initialMap = map.copy({
+    units: map.units
+      .set(vecA, Pioneer.create(1))
+      .set(vecB, Pioneer.create(1))
+      .set(vecD, Pioneer.create(2)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'EndTurn',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              player: 0,
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vecC, Flamethrower.create(0)]]),
+            },
+          ],
+          occurrence: 'once',
+        },
+      ]),
+    ],
+  ]);
+
+  const [, gameActionResponse] = executeGameActions(
+    initialMap,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponse))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }
+      Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3] }
+      Rescue (2,3 → 3,3) { player: 2 }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+    `);
+});
+
 test('effects work for game start and end', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 3);

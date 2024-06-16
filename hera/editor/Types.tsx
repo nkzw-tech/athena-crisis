@@ -1,3 +1,4 @@
+import { Action } from '@deities/apollo/Action.tsx';
 import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
 import { Decorator } from '@deities/athena/info/Decorator.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -46,7 +47,11 @@ export type DrawingMode =
   | 'diagonal';
 
 export type EditorState = Readonly<{
-  condition?: readonly [WinConditionsWithVectors, number];
+  action?: Readonly<{ action: Action; actionId: number }>;
+  condition?: readonly [
+    condition: WinConditionsWithVectors,
+    conditionId: number,
+  ];
   drawingMode: DrawingMode;
   effects: Effects;
   isDrawing: boolean;

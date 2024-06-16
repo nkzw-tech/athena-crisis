@@ -14,6 +14,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { css, cx } from '@emotion/css';
+import ImmutableMap from '@nkzw/immutable-map';
 import Images from 'athena-crisis:images';
 // eslint-disable-next-line @deities/no-lazy-import
 import React, { lazy } from 'react';
@@ -81,6 +82,7 @@ const MapComponent = ({
   attackable,
   behavior,
   className,
+  extraUnits,
   fogStyle,
   getLayer,
   map,
@@ -102,6 +104,7 @@ const MapComponent = ({
   attackable?: ReadonlyMap<Vector, RadiusItem> | null;
   behavior: MapBehavior | null;
   className?: string;
+  extraUnits?: ImmutableMap<Vector, UnitT>;
   fogStyle?: 'soft' | 'hard';
   getLayer: GetLayerFunction;
   map: MapData;
@@ -142,12 +145,13 @@ const MapComponent = ({
             const animation = animations?.get(vector);
             const building = map.buildings.get(vector);
             const unit = map.units.get(vector);
+            const extraUnit = extraUnits?.get(vector);
             const vectorKey = String(vector);
             const isVisible = vision.isVisible(map, vector);
             const isSelected = selectedPosition?.equals(vector);
             const hasRadius = radius?.fields.has(vector);
             const outline =
-              (unit || building) &&
+              (unit || building || extraUnit) &&
               !!(
                 radius &&
                 ((hasRadius &&
@@ -165,7 +169,7 @@ const MapComponent = ({
                 (building.info.sprite.size === 'medium' ||
                   building.info.sprite.size === 'tall') &&
                 vision.isVisible(map, up) &&
-                map.units.has(up);
+                (map.units.has(up) || extraUnits?.has(up));
               list.push(
                 <Building
                   absolute
@@ -214,6 +218,27 @@ const MapComponent = ({
                 vision={vision}
               />,
             );
+
+            if (extraUnit && isVisible) {
+              list.push(
+                <Unit
+                  absolute
+                  animationConfig={animationConfig}
+                  biome={biome}
+                  dim={unit ? 'flip' : 'dim'}
+                  firstPlayerID={map.getFirstPlayerID()}
+                  getLayer={getLayer}
+                  key={`eu${extraUnit.id}-${vectorKey}`}
+                  onAnimationComplete={onAnimationComplete}
+                  position={vector}
+                  requestFrame={requestFrame}
+                  scheduleTimer={scheduleTimer}
+                  size={tileSize}
+                  tile={map.getTileInfo(vector)}
+                  unit={extraUnit}
+                />,
+              );
+            }
 
             if (
               unit &&

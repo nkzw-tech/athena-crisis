@@ -258,6 +258,7 @@ export default function UnitTile({
   animationConfig,
   animationKey,
   biome,
+  dim,
   direction,
   firstPlayerID,
   getLayer = () => 0,
@@ -278,6 +279,7 @@ export default function UnitTile({
   animationConfig: AnimationConfig;
   animationKey?: Vector;
   biome: Biome;
+  dim?: 'dim' | 'flip';
   direction?: AttackDirection;
   firstPlayerID: PlayerID;
   getLayer?: GetLayerFunction;
@@ -372,6 +374,7 @@ export default function UnitTile({
           : 4)
     }ms`,
     [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
+    [vars.set('z-index')]: zIndex,
     height: size + 'px',
     width: size + 'px',
     // Do not cut unit off during recoil animation.
@@ -801,7 +804,12 @@ export default function UnitTile({
 
   return (
     <div
-      className={cx(baseStyle, absolute ? absoluteStyle : relativeStyle)}
+      className={cx(
+        baseStyle,
+        absolute ? absoluteStyle : relativeStyle,
+        dim && dimStyle,
+        dim === 'flip' && dimFlipStyle,
+      )}
       ref={elementRef}
       style={style}
     >
@@ -872,6 +880,7 @@ const vars = new CSSVariables<
   | 'transition-multiplier'
   | 'x'
   | 'y'
+  | 'z-index'
 >('u');
 
 const spriteSize = 32;
@@ -911,6 +920,23 @@ const baseStyle = css`
   pointer-events: none;
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0);
   transition: ${transition};
+`;
+
+const dimStyle = css`
+  opacity: 0.5;
+`;
+
+const dimFlipStyle = css`
+  animation: ${keyframes`
+    0%, 100% {
+      z-index: ${vars.apply('z-index')};
+      opacity: 0.5;
+    }
+    50% {
+      z-index: calc(${vars.apply('z-index')} + 1);
+      opacity: 1;
+    }
+  `} 1.5s steps(1) infinite;
 `;
 
 const neutralStyle = css`

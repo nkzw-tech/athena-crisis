@@ -1,5 +1,6 @@
 import { Action, execute } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import { Effects } from '@deities/apollo/Effects.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import {
@@ -21,7 +22,12 @@ import {
   SlowAnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
+import {
+  PlayerID,
+  resolveDynamicPlayerID,
+  toPlayerID,
+} from '@deities/athena/map/Player.tsx';
+import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
@@ -69,7 +75,7 @@ import MapComponent from './Map.tsx';
 import { Animation, Animations, MapAnimations } from './MapAnimations.tsx';
 import Mask from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
-import Radius, { RadiusType } from './Radius.tsx';
+import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
@@ -138,29 +144,67 @@ const showNamedPositionsForBehavior = new Set([
   'vector',
 ]);
 
+const effectTypes = [
+  RadiusType.Effect1,
+  RadiusType.Effect2,
+  RadiusType.Effect3,
+];
+const escortTypes = [
+  RadiusType.Escort1,
+  RadiusType.Escort2,
+  RadiusType.Escort3,
+];
+const toRadiusInfo = (vectors: ReadonlyArray<Vector>, type: RadiusType) => ({
+  fields: new Map(vectors.map((vector) => [vector, RadiusItem(vector)])),
+  path: [],
+  type,
+});
+
+const getEffectState = (map: MapData, effects: Effects | undefined) => {
+  if (!effects) {
+    return null;
+  }
+
+  let extraUnits = ImmutableMap<Vector, Unit>();
+  const radius: Array<RadiusInfo> = [];
+  let id = 0;
+  for (const [, effectList] of effects) {
+    for (const effect of effectList) {
+      for (const action of effect.actions) {
+        if (action.type === 'SpawnEffect') {
+          const { player: dynamicPlayer, units } = action;
+          const player =
+            dynamicPlayer != null
+              ? resolveDynamicPlayerID(map, dynamicPlayer)
+              : null;
+          extraUnits = extraUnits.merge(
+            units.map((unit) =>
+              player != null ? unit.setPlayer(player) : unit,
+            ),
+          );
+          radius.push(toRadiusInfo([...units.keys()], effectTypes[id]));
+          id = (id + 1) % 3;
+        }
+      }
+    }
+  }
+  return radius.length ? { extraUnits, radius } : null;
+};
 const getWinConditionRadius = (
   { config: { winConditions } }: MapData,
   isEditor: boolean,
 ) => {
+  const radiusItems: Array<RadiusInfo> = [];
   let id = 0;
-  return winConditions.flatMap((condition) => {
+  for (const condition of winConditions) {
     if ((!isEditor && condition.hidden) || !winConditionHasVectors(condition)) {
-      return [];
+      continue;
     }
+
+    radiusItems.push(toRadiusInfo([...condition.vectors], escortTypes[id]));
     id = (id + 1) % 3;
-    return {
-      fields: new Map(
-        [...condition.vectors].map((vector) => [vector, RadiusItem(vector)]),
-      ),
-      path: [],
-      type:
-        id === 0
-          ? RadiusType.Escort1
-          : id === 1
-            ? RadiusType.Escort2
-            : RadiusType.Escort3,
-    };
-  });
+  }
+  return radiusItems;
 };
 
 const getInlineUIState = (map: MapData, tileSize: number, scale: number) =>
@@ -174,6 +218,7 @@ const getInitialState = (props: Props) => {
     buildingSize,
     currentUserId,
     editor,
+    effects,
     lastActionResponse,
     lastActionTime,
     map,
@@ -210,6 +255,7 @@ const getInitialState = (props: Props) => {
     confirmAction: null,
     currentUserId,
     currentViewer,
+    effectState: getEffectState(map, effects),
     factionNames: props.factionNames,
     gameInfoState: null,
     initialBehaviorClass: baseBehavior,
@@ -351,6 +397,13 @@ export default class GameMap extends Component<Props, State> {
       newState = {
         ...(newState || state),
         paused: !!props.paused,
+      };
+    }
+
+    if ('effects' in props) {
+      newState = {
+        ...(newState || state),
+        effectState: getEffectState((newState || state).map, props.effects),
       };
     }
 
@@ -1586,6 +1639,7 @@ export default class GameMap extends Component<Props, State> {
         attackable,
         behavior,
         currentViewer,
+        effectState,
         gameInfoState,
         map,
         namedPositions,
@@ -1659,6 +1713,7 @@ export default class GameMap extends Component<Props, State> {
               animations={animations}
               attackable={attackable}
               behavior={behavior}
+              extraUnits={effectState?.extraUnits}
               fogStyle={fogStyle}
               getLayer={getLayer}
               map={map}
@@ -1678,6 +1733,17 @@ export default class GameMap extends Component<Props, State> {
               <Radius
                 currentViewer={currentViewer}
                 getLayer={() => getLayer(0, 'building')}
+                key={index}
+                map={map}
+                radius={radius}
+                size={tileSize}
+                vision={vision}
+              />
+            ))}
+            {effectState?.radius.map((radius, index) => (
+              <Radius
+                currentViewer={currentViewer}
+                getLayer={() => getLayer(0, 'unit')}
                 key={index}
                 map={map}
                 radius={radius}

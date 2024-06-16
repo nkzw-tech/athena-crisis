@@ -21,6 +21,7 @@ import { useCallback, useRef } from 'react';
 import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
+import replaceEffect from '../lib/replaceEffect.tsx';
 import {
   EditorState,
   MapObject,
@@ -92,22 +93,15 @@ export default function MapEditorControlPanel({
   const updateEffect = useCallback(
     (effect: Effect) => {
       const { effect: currentEffect, trigger } = editor.scenario;
-      const newEffects = new Map(editor.effects);
-      const effectList = newEffects.get(trigger);
-      if (effectList) {
-        const newEffectList = new Set(
-          [...effectList].map((item) =>
-            item === currentEffect ? effect : item,
-          ),
-        );
-        newEffects.set(trigger, newEffectList);
-        setEditorState({
-          effects: newEffects,
-          scenario: { effect, trigger },
-        });
-      }
+      setEditorState({
+        action: editor.action
+          ? { ...editor.action, action: effect.actions[editor.action.actionId] }
+          : undefined,
+        effects: replaceEffect(editor.effects, trigger, currentEffect, effect),
+        scenario: { effect, trigger },
+      });
     },
-    [editor.effects, editor.scenario, setEditorState],
+    [editor.action, editor.effects, editor.scenario, setEditorState],
   );
   const setScenario = useCallback(
     (scenario: Scenario) => setEditorState({ scenario }),
@@ -179,6 +173,7 @@ export default function MapEditorControlPanel({
                 scenario={editor.scenario}
                 scrollRef={ref}
                 setEditorState={setEditorState}
+                setMap={setMap}
                 setScenario={setScenario}
                 updateEffect={updateEffect}
                 user={user}
