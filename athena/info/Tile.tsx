@@ -1416,7 +1416,7 @@ export const Island = new TileInfo(
   TileTypes.Sea,
   {
     cover: 25,
-    movement: Reef.configuration.movement,
+    movement: Beach.configuration.movement,
   },
   {
     animation: HorizontalSeaAnimation,
