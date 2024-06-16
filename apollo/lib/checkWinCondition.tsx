@@ -375,12 +375,17 @@ export default function checkWinConditions(
     return null;
   }
 
-  const optionalObjectiveAmount = checkOptionalObjectiveAmountWinCondition(
-    map,
-    actionResponse,
-  );
-  if (optionalObjectiveAmount) {
-    return optionalObjectiveAmount;
+  if (
+    actionResponse.type === 'OptionalObjective' ||
+    actionResponse.type === 'DeniedOptionalObjective'
+  ) {
+    const optionalObjectiveAmount = checkOptionalObjectiveAmountWinCondition(
+      map,
+      actionResponse,
+    );
+    if (optionalObjectiveAmount) {
+      return optionalObjectiveAmount;
+    }
   }
 
   const isDestructive = isDestructiveAction(actionResponse);
