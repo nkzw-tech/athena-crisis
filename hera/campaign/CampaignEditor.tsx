@@ -517,9 +517,12 @@ export default function CampaignEditor({
             </motion.div>
           )}
         </div>
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           {saveState && (
-            <Notification center={hasSaved || undefined}>
+            <Notification
+              center={hasSaved || undefined}
+              key={'id' in saveState ? saveState.id : saveState.message}
+            >
               {hasSaved ? (
                 <fbt desc="Text after saving a campaign">
                   Campaign &quot;<fbt:param name="campaignName">

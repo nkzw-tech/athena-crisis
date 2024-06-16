@@ -1006,9 +1006,13 @@ export default function MapEditor({
         </GameMap>
       </div>
       <Portal>
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           {saveState && (
-            <Notification center={hasSaved || undefined} inset={inset}>
+            <Notification
+              center={hasSaved || undefined}
+              inset={inset}
+              key={'id' in saveState ? saveState.id : saveState.message}
+            >
               {hasSaved ? (
                 <fbt desc="Text after saving a map">
                   Map &quot;<fbt:param name="mapName">{mapName}</fbt:param>&quot;
