@@ -331,6 +331,9 @@ function checkOptionalObjectiveAmountWinCondition(
     for (const condition of winConditions) {
       if (
         condition.type === WinCriteria.OptionalObjectiveAmount &&
+        (!condition.players ||
+          condition.players.length === 0 ||
+          condition.players.includes(actionResponse.toPlayer)) &&
         completedObjectiveCount >= condition.amount
       ) {
         return condition;
@@ -339,7 +342,7 @@ function checkOptionalObjectiveAmountWinCondition(
   } else if (
     actionResponse.type === 'DeniedOptionalObjective' &&
     actionResponse.condition.type !== WinCriteria.Default &&
-    actionResponse.condition.failed
+    actionResponse.condition.failed?.size
   ) {
     for (const deniedPlayer of actionResponse.condition.failed) {
       const viableObjectiveCount = winConditions.filter(
