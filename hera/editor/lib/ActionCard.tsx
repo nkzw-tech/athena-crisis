@@ -49,9 +49,14 @@ import UnitTile from '../../Unit.tsx';
 import { ActionChangeFn } from '../panels/EffectsPanel.tsx';
 import { SetMapFunction } from '../Types.tsx';
 
-const playerIDs = sortBy([...DynamicPlayerIDs], (id) =>
-  id === 0 ? 100 : encodeDynamicPlayerID(id),
-);
+const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
+  if (id === 0) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  const number = encodeDynamicPlayerID(id);
+  return number < 0 ? 1 / number : number;
+});
 
 const TopBarIcons = ({
   first,
