@@ -14,9 +14,11 @@ const target = App.canQuit ? '_blank' : undefined;
 export default function NewVersionNotification({
   hasNewAppVersion,
   hasNewVersion,
+  reload,
 }: {
   hasNewAppVersion: boolean;
   hasNewVersion: boolean;
+  reload: () => void;
 }) {
   const [hideNotification, setHideNotification] = useState(false);
 
@@ -86,7 +88,7 @@ export default function NewVersionNotification({
             <fbt desc="New version notification">
               Athena Crisis was updated.
             </fbt>{' '}
-            <Reload />
+            <Reload reload={reload} />
           </p>
         </Notification>
       )}

@@ -2,9 +2,9 @@ import { Fragment, useMemo } from 'react';
 import { hasGamePad } from './controls/setupGamePad.tsx';
 import { useInlineLink } from './InlineLink.tsx';
 
-const reload = () => location.reload();
+const _reload = () => location.reload();
 
-export default function Reload() {
+export default function Reload({ reload = _reload }: { reload?: () => void }) {
   const linkProps = useInlineLink();
 
   return (
