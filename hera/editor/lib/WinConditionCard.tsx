@@ -140,13 +140,13 @@ export default function WinConditionCard({
                   min={MIN_AMOUNT}
                   onChange={({ target: { value } }) => {
                     const amount = parseInteger(value);
+                    setAmount(amount);
                     if (amount) {
                       const newCondition = {
                         ...condition,
                         amount,
                       };
                       if (validate(newCondition)) {
-                        setAmount(amount);
                         onChange(newCondition);
                       }
                     }
