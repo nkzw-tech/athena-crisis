@@ -3,6 +3,7 @@ import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import CloseIcon from '@iconify-icons/pixelarticons/close.js';
 import DragAndDrop from '@iconify-icons/pixelarticons/drag-and-drop.js';
+import Edit from '@iconify-icons/pixelarticons/edit.js';
 import Home from '@iconify-icons/pixelarticons/home.js';
 import Map from '@iconify-icons/pixelarticons/map.js';
 import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
@@ -166,6 +167,9 @@ export default function Menu({
             </ActiveLink>
             <ActiveLink onClick={close} to="/editor">
               <Icon button icon={Map} />
+            </ActiveLink>
+            <ActiveLink onClick={close} to="/settings">
+              <Icon button icon={Edit} />
             </ActiveLink>
             {viewer && (
               <ActiveLink onClick={close} to={getUserRoute(viewer.username)}>
@@ -341,6 +345,10 @@ const openLinkContainerStyle = css`
 
     &:nth-child(3) {
       transition-delay: 180ms;
+    }
+
+    &:nth-child(4) {
+      transition-delay: 220ms;
     }
   }
 
