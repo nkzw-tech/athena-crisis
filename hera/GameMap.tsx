@@ -66,11 +66,11 @@ import NullBehavior from './behavior/NullBehavior.tsx';
 import Cursor from './Cursor.tsx';
 import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
+import ActionError from './lib/ActionError.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
 import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
-import throwActionError from './lib/throwActionError.tsx';
 import MapComponent from './Map.tsx';
 import { Animation, Animations, MapAnimations } from './MapAnimations.tsx';
 import Mask from './Mask.tsx';
@@ -365,6 +365,7 @@ export default class GameMap extends Component<Props, State> {
       scrollIntoView: this._scrollIntoView,
       setEditorState: this._updateEditorState,
       showGameInfo: this._showGameInfo,
+      throwError: this._throwError,
       update: this._update,
     };
   }
@@ -912,30 +913,47 @@ export default class GameMap extends Component<Props, State> {
     state: State,
     action: Action,
   ): [Promise<GameActionResponse>, MapData, ActionResponse] => {
-    const { onAction } = this.props;
-    const { lastActionResponse, map, preventRemoteActions, vision } = state;
-    if (lastActionResponse?.type === 'GameEnd') {
-      throw new Error(
-        `Action: Cannot issue actions for a game that has ended.\nAction: '${JSON.stringify(action)}'`,
+    try {
+      const { onAction } = this.props;
+      const { lastActionResponse, map, preventRemoteActions, vision } = state;
+      if (lastActionResponse?.type === 'GameEnd') {
+        throw new Error(
+          `Action: Cannot issue actions for a game that has ended.\nAction: '${JSON.stringify(action)}'`,
+        );
+      }
+
+      if (preventRemoteActions) {
+        const { currentViewer } = state;
+        const player = map.getCurrentPlayer();
+        throw new Error(
+          `Action: Cannot issue actions while processing remote actions. Current Viewer: '${currentViewer}'\nCurrent Player: '${player.id} (${player.isHumanPlayer() ? 'human' : 'bot'})'\nAction: '${JSON.stringify(action)}'`,
+        );
+      }
+
+      const actionResult = execute(
+        map,
+        vision,
+        action,
+        this.props.mutateAction,
       );
+      if (!actionResult) {
+        throw new ActionError(action, map);
+      }
+
+      const [actionResponse, newMap] = actionResult;
+      const remoteAction =
+        onAction?.(action).catch((error) => {
+          this._throwError(error);
+          return { self: null };
+        }) || Promise.resolve({ self: { actionResponse } });
+      return [remoteAction, newMap, actionResponse];
+    } catch (error) {
+      this._throwError(error as Error);
     }
 
-    if (preventRemoteActions) {
-      const { currentViewer } = state;
-      const player = map.getCurrentPlayer();
-      throw new Error(
-        `Action: Cannot issue actions while processing remote actions. Current Viewer: '${currentViewer}'\nCurrent Player: '${player.id} (${player.isHumanPlayer() ? 'human' : 'bot'})'\nAction: '${JSON.stringify(action)}'`,
-      );
-    }
-
-    const actionResult = execute(map, vision, action, this.props.mutateAction);
-    if (!actionResult) {
-      throwActionError(action);
-    }
-    const [actionResponse, newMap] = actionResult;
-    const remoteAction =
-      onAction?.(action) || Promise.resolve({ self: { actionResponse } });
-    return [remoteAction, newMap, actionResponse];
+    throw new Error(
+      `Action: Unhandled error when executing action '${action.type}'.`,
+    );
   };
 
   private _optimisticAction = (
@@ -943,9 +961,7 @@ export default class GameMap extends Component<Props, State> {
     action: Action,
   ): ActionResponse => {
     const [remoteAction, , actionResponse] = this._action(state, action);
-    remoteAction.then((gameActionResponse) =>
-      this.processGameActionResponse(gameActionResponse),
-    );
+    remoteAction.then(this.processGameActionResponse);
     return actionResponse;
   };
 
@@ -1403,6 +1419,8 @@ export default class GameMap extends Component<Props, State> {
 
   private _updateEditorState = (editor: Partial<EditorState>) =>
     this.props.setEditorState?.(editor);
+
+  private _throwError = (error: Error) => this.props.onError?.(error);
 
   private _showGameInfo = (gameInfoState: GameInfoState) =>
     this.setState((state) => ({

@@ -77,7 +77,7 @@ export default function syncMoveAction(
 
   // Otherwise immediately initiate the move on the server and stop early
   // if the unit is running into an opponent.
-  const { action, requestFrame, update } = actions;
+  const { action, requestFrame, throwError, update } = actions;
   const [remoteAction] = action(state, MoveAction(from, to, path, complete));
   return {
     animations: addMoveAnimation(state.animations, {
@@ -88,9 +88,15 @@ export default function syncMoveAction(
       from,
       onComplete: (state) => {
         // Only initiate the follow-up action after the partial move has completed.
-        remoteAction.then(async (gameActionResponse) => {
-          const actionResponse = gameActionResponse.self?.actionResponse;
-          if (actionResponse?.type === 'Move') {
+        remoteAction
+          .then(async (gameActionResponse) => {
+            const actionResponse = gameActionResponse.self?.actionResponse;
+            if (actionResponse?.type !== 'Move') {
+              throw new Error(
+                `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
+              );
+            }
+
             const remainingPath =
               actionResponse.path ||
               getMovementPath(map, actionResponse.to, fields, null).path;
@@ -138,11 +144,8 @@ export default function syncMoveAction(
                 complete,
               ),
             );
-          } else {
-            // If the server response is different from expectations, most likely something went wrong.
-            // This should never happen in a real game, and the game state is broken from here on out.
-          }
-        });
+          })
+          .catch(throwError);
         return state;
       },
       partial: true,

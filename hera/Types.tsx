@@ -221,6 +221,7 @@ export type Actions = Readonly<{
   scrollIntoView: (vectors: ReadonlyArray<Vector>) => Promise<void>;
   setEditorState: SetEditorStateFunction;
   showGameInfo: (gameInfoState: GameInfoState) => void;
+  throwError: (error: Error) => void;
   update: UpdateFunction;
 }>;
 

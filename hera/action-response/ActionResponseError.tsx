@@ -8,11 +8,9 @@ export default class ActionResponseError extends Error {
     public readonly map: MapData,
   ) {
     super(
-      `${message}\nAction Response: ${JSON.stringify(
+      `${message}\nActionResponse: '${JSON.stringify(
         actionResponse,
-        null,
-        2,
-      )}\nMap: ${JSON.stringify(map, null, 2)}`,
+      )}'\nMap: '${JSON.stringify(map)}'`,
     );
   }
 }

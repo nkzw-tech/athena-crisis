@@ -9,7 +9,7 @@ import { Actions, State, StateLike } from '../../Types.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default function clientMoveAction(
-  { processGameActionResponse, update }: Actions,
+  { processGameActionResponse, throwError, update }: Actions,
   remoteAction: Promise<GameActionResponse>,
   newMap: MapData,
   from: Vector,
@@ -31,9 +31,15 @@ export default function clientMoveAction(
       endSound: map.units.get(to) ? 'Unit/Load' : undefined,
       from,
       onComplete: (state) => {
-        remoteAction.then(async (gameActionResponse) => {
-          const actionResponse = gameActionResponse.self?.actionResponse;
-          if (actionResponse?.type === 'Move') {
+        remoteAction
+          .then(async (gameActionResponse) => {
+            const actionResponse = gameActionResponse.self?.actionResponse;
+            if (actionResponse?.type !== 'Move') {
+              throw new Error(
+                `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
+              );
+            }
+
             update({
               ...onComplete(
                 await processGameActionResponse(gameActionResponse),
@@ -46,8 +52,9 @@ export default function clientMoveAction(
                   }
                 : null),
             });
-          }
-        });
+          })
+          .catch(throwError);
+
         return {
           ...state,
           map: newMap,

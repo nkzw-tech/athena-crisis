@@ -30,8 +30,10 @@ import {
   ClientGameActionResponse,
 } from '../workers/Types.tsx';
 
-const ActionError = (action: Action) =>
-  new Error(`Map: Error executing remote '${action.type}' action.`);
+const ActionError = (action: Action, map: MapData) =>
+  new Error(
+    `Map: Error executing remote '${action.type}' action.\nAction: '${JSON.stringify(action)}'\nMap: '${JSON.stringify(map)}'`,
+  );
 
 let worker: Worker | null = null;
 const getWorker = () => {
@@ -47,7 +49,7 @@ const getWorker = () => {
 };
 
 export default function useClientGameAction(
-  game: (ClientGame & { mapTags?: ReadonlyArray<string> }) | null,
+  game: ClientGame | null,
   setGame: (game: ClientGame) => void,
   onGameAction?:
     | ((
@@ -79,7 +81,7 @@ export default function useClientGameAction(
       const isStart = action.type === 'Start';
 
       if (isStart === !!game.lastAction) {
-        throw ActionError(action);
+        throw ActionError(action, map);
       }
 
       try {
@@ -114,9 +116,9 @@ export default function useClientGameAction(
         gameState = decodeGameState(encodedGameState);
         newEffects = encodedEffects ? decodeEffects(encodedEffects) : null;
       } catch (error) {
-        throw process.env.NODE_ENV === 'development'
+        throw process.env.NODE_ENV === 'development' && error
           ? error
-          : ActionError(action);
+          : ActionError(action, map);
       }
 
       if (actionResponse && initialActiveMap && gameState) {
@@ -162,7 +164,8 @@ export default function useClientGameAction(
           ),
         );
       }
-      throw ActionError(action);
+
+      throw ActionError(action, map);
     },
     [game, mutateAction, onGameAction, setGame],
   );
