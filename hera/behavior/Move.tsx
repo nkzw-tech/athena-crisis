@@ -34,7 +34,10 @@ const getCurrentMovementPath = (
   const { path } = radius;
   const last = path?.at(-1);
   if (path?.length && last?.distance(target) === 1) {
-    const maybePath = attackable?.has(target) ? path : [...path, target];
+    const maybePath =
+      attackable?.has(target) && !map.units.has(last)
+        ? path
+        : [...path, target];
     if (getPathCost(map, unit, from, maybePath) !== -1) {
       return maybePath;
     }
