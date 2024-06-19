@@ -23,7 +23,7 @@ import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, {
   ClientGame,
 } from '@deities/hermes/game/toClientGame.tsx';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import gameActionWorker from '../workers/gameAction.tsx?worker';
 import {
   ClientGameActionRequest,
@@ -49,7 +49,7 @@ const getWorker = () => {
 };
 
 export default function useClientGameAction(
-  game: ClientGame | null,
+  getCurrentGame: (ClientGame | null) | (() => ClientGame | null),
   setGame: (game: ClientGame) => void,
   onGameAction?:
     | ((
@@ -60,113 +60,126 @@ export default function useClientGameAction(
     | null,
   mutateAction?: MutateActionResponseFnName | null,
 ) {
+  const actionQueue = useRef<Promise<GameActionResponse>>();
   return useCallback(
-    async (action: Action): Promise<GameActionResponse> => {
-      if (!game) {
-        throw new Error('Client Game: Map state is missing.');
-      }
+    (action: Action): Promise<GameActionResponse> =>
+      (actionQueue.current = (
+        actionQueue.current || Promise.resolve(null)
+      ).then(async () => {
+        const game =
+          typeof getCurrentGame === 'function'
+            ? getCurrentGame()
+            : getCurrentGame;
 
-      if (game.ended) {
-        throw new Error('Client Game: Game has ended.');
-      }
+        if (!game) {
+          throw new Error('Client Game: Map state is missing.');
+        }
 
-      let actionResponse: ActionResponse | null;
-      let initialActiveMap: MapData | null;
-      let gameState: GameState | null;
-      let newEffects: Effects | null;
+        if (game.ended) {
+          throw new Error('Client Game: Game has ended.');
+        }
 
-      const map = game.state;
-      const currentViewer = map.getCurrentPlayer();
-      const vision = map.createVisionObject(currentViewer);
-      const isStart = action.type === 'Start';
+        let actionResponse: ActionResponse | null;
+        let initialActiveMap: MapData | null;
+        let gameState: GameState | null;
+        let newEffects: Effects | null;
 
-      if (isStart === !!game.lastAction) {
-        throw ActionError(action, map);
-      }
+        const map = game.state;
+        const currentViewer = map.getCurrentPlayer();
+        const vision = map.createVisionObject(currentViewer);
+        const isStart = action.type === 'Start';
 
-      try {
-        const message: ClientGameActionRequest = [
-          map.toJSON(),
-          encodeEffects(game.effects),
-          encodeAction(action),
-          mutateAction,
-        ];
+        if (isStart === !!game.lastAction) {
+          throw ActionError(action, map);
+        }
 
-        const [
-          encodedActionResponse,
-          plainMap,
-          encodedGameState,
-          encodedEffects,
-        ] = await new Promise<ClientGameActionResponse>((resolve, reject) => {
-          const { port1, port2 } = new MessageChannel();
-          port1.onmessage = (
-            event: MessageEvent<ClientGameActionResponse | null>,
-          ) => {
-            if (event.data) {
-              resolve(event.data);
-            } else {
-              reject();
-            }
-          };
-          port1.onmessageerror = reject;
-          getWorker().postMessage(message, [port2]);
-        });
-        actionResponse = decodeActionResponse(encodedActionResponse);
-        initialActiveMap = MapData.fromObject(plainMap);
-        gameState = decodeGameState(encodedGameState);
-        newEffects = encodedEffects ? decodeEffects(encodedEffects) : null;
-      } catch (error) {
-        throw process.env.NODE_ENV === 'development' && error
-          ? error
-          : ActionError(action, map);
-      }
+        try {
+          const message: ClientGameActionRequest = [
+            map.toJSON(),
+            encodeEffects(game.effects),
+            encodeAction(action),
+            mutateAction,
+          ];
 
-      if (actionResponse && initialActiveMap && gameState) {
-        const lastEntry = gameState?.at(-1) || [
-          actionResponse,
-          initialActiveMap,
-        ];
+          const [
+            encodedActionResponse,
+            plainMap,
+            encodedGameState,
+            encodedEffects,
+          ] = await new Promise<ClientGameActionResponse>((resolve, reject) => {
+            const { port1, port2 } = new MessageChannel();
+            port1.onmessage = (
+              event: MessageEvent<ClientGameActionResponse | null>,
+            ) => {
+              if (event.data) {
+                resolve(event.data);
+              } else {
+                reject();
+              }
+            };
+            port1.onmessageerror = reject;
+            getWorker().postMessage(message, [port2]);
+          });
+          actionResponse = decodeActionResponse(encodedActionResponse);
+          initialActiveMap = MapData.fromObject(plainMap);
+          gameState = decodeGameState(encodedGameState);
+          newEffects = encodedEffects ? decodeEffects(encodedEffects) : null;
+        } catch (error) {
+          throw process.env.NODE_ENV === 'development' && error
+            ? error
+            : ActionError(action, map);
+        }
 
-        await onGameAction?.(gameState, lastEntry[1], lastEntry[0]);
-
-        setGame(
-          toClientGame(
-            game,
-            initialActiveMap,
-            gameState,
-            newEffects,
+        if (actionResponse && initialActiveMap && gameState) {
+          const lastEntry = gameState?.at(-1) || [
             actionResponse,
-          ),
-        );
-
-        const hiddenLabels = getHiddenLabels(map.config.winConditions);
-        actionResponse = dropLabelsFromActionResponse(
-          actionResponse,
-          hiddenLabels,
-        );
-        gameState = dropLabelsFromGameState(gameState, hiddenLabels);
-
-        return decodeGameActionResponse(
-          encodeGameActionResponse(
-            map,
             initialActiveMap,
-            vision,
-            onGameEnd(gameState, newEffects || game.effects, currentViewer.id),
-            null,
-            actionResponse?.type === 'EndTurn'
-              ? computeVisibleEndTurnActionResponse(
-                  actionResponse,
-                  map,
-                  initialActiveMap,
-                  vision,
-                )
-              : actionResponse,
-          ),
-        );
-      }
+          ];
 
-      throw ActionError(action, map);
-    },
-    [game, mutateAction, onGameAction, setGame],
+          await onGameAction?.(gameState, lastEntry[1], lastEntry[0]);
+
+          setGame(
+            toClientGame(
+              game,
+              initialActiveMap,
+              gameState,
+              newEffects,
+              actionResponse,
+            ),
+          );
+
+          const hiddenLabels = getHiddenLabels(map.config.winConditions);
+          actionResponse = dropLabelsFromActionResponse(
+            actionResponse,
+            hiddenLabels,
+          );
+          gameState = dropLabelsFromGameState(gameState, hiddenLabels);
+
+          return decodeGameActionResponse(
+            encodeGameActionResponse(
+              map,
+              initialActiveMap,
+              vision,
+              onGameEnd(
+                gameState,
+                newEffects || game.effects,
+                currentViewer.id,
+              ),
+              null,
+              actionResponse?.type === 'EndTurn'
+                ? computeVisibleEndTurnActionResponse(
+                    actionResponse,
+                    map,
+                    initialActiveMap,
+                    vision,
+                  )
+                : actionResponse,
+            ),
+          );
+        }
+
+        throw ActionError(action, map);
+      })),
+    [getCurrentGame, mutateAction, onGameAction, setGame],
   );
 }
