@@ -41,7 +41,7 @@
     "react-router-dom": "^6.23.1",
     "relay-runtime": "^17.0.0",
     "socket.io-client": "^4.7.5",
-    "tinybase": "5.0.0-beta.22",
+    "tinybase": "5.0.0-beta.25",
     "workbox-core": "^7.1.0",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
