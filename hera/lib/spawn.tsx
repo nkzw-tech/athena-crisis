@@ -15,6 +15,7 @@ export default function spawn(
   unitsToSpawn: ReadonlyArray<[Vector, Unit]>,
   teams: Teams | null | undefined,
   onComplete: StateToStateLike,
+  isEditor = false,
 ): StateLike | null {
   const { animationConfig } = state;
   const [entry, ...remainingUnits] = unitsToSpawn;
@@ -36,18 +37,19 @@ export default function spawn(
   const name = newPlayer ? (newPlayer.isBot() ? newPlayer.name : null) : null;
 
   const animationKey = new AnimationKey();
-  const animations = name
-    ? state.animations.set(animationKey, {
-        color: unit.player,
-        text: String(
-          fbt(
-            `${fbt.param('name', name)} is invading!`,
-            'user or bot is invading the game',
+  const animations =
+    name && !isEditor
+      ? state.animations.set(animationKey, {
+          color: unit.player,
+          text: String(
+            fbt(
+              `${fbt.param('name', name)} is invading!`,
+              'user or bot is invading the game',
+            ),
           ),
-        ),
-        type: 'notice',
-      })
-    : state.animations;
+          type: 'notice',
+        })
+      : state.animations;
 
   return {
     animations: animations.set(position, {
@@ -66,12 +68,16 @@ export default function spawn(
         return state;
       },
       onSpawn: ({ map }: State) => {
-        map = mergeTeams(
-          map.copy({
-            units: map.units.set(position, unit),
-          }),
-          newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
-        );
+        map = map.copy({
+          units: map.units.set(position, unit),
+        });
+
+        if (!map.maybeGetPlayer(unit.player)) {
+          map = mergeTeams(
+            map,
+            newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
+          );
+        }
 
         return {
           map: map.copy({

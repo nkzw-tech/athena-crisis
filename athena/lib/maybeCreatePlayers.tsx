@@ -1,7 +1,7 @@
 import ImmutableMap from '@nkzw/immutable-map';
+import Entity from '../map/Entity.tsx';
 import Player, { PlaceholderPlayer, PlayerID } from '../map/Player.tsx';
 import Team, { Teams } from '../map/Team.tsx';
-import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 import createBotWithName from './createBotWithName.tsx';
@@ -9,18 +9,18 @@ import createBotWithName from './createBotWithName.tsx';
 export default function maybeCreatePlayers(
   map: MapData,
   initialTeams: Teams | undefined,
-  units: ImmutableMap<Vector, Unit>,
+  entities: ImmutableMap<Vector, Entity>,
 ): Teams | undefined {
   const players = new Set<PlayerID>();
   const newPlayers = new Set<PlayerID>();
-  for (const [, unit] of units) {
-    if (unit.player === 0) {
+  for (const [, entity] of entities) {
+    if (entity.player === 0) {
       continue;
     }
 
-    players.add(unit.player);
-    if (!map.maybeGetPlayer(unit.player)) {
-      newPlayers.add(unit.player);
+    players.add(entity.player);
+    if (!map.maybeGetPlayer(entity.player)) {
+      newPlayers.add(entity.player);
     }
   }
 

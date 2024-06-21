@@ -19,6 +19,8 @@ import canPlaceDecorator from '@deities/athena/lib/canPlaceDecorator.tsx';
 import canPlaceTile from '@deities/athena/lib/canPlaceTile.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getDecoratorIndex from '@deities/athena/lib/getDecoratorIndex.tsx';
+import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
+import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
 import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { getDecoratorLimit } from '@deities/athena/map/Configuration.tsx';
@@ -559,6 +561,10 @@ export default class DesignBehavior {
       unit =
         building && map.isOpponent(building, unit) ? unit : unit.stopCapture();
     }
+    const newUnits = ImmutableMap([
+      [vector, unit.removeLeader().setPlayer(playerId)],
+    ]);
+
     return canDeploy(
       map.copy({ units: units.delete(vector) }),
       unit.info,
@@ -569,8 +575,8 @@ export default class DesignBehavior {
           ...spawn(
             actions,
             state,
-            [[vector, unit.removeLeader().setPlayer(playerId)]],
-            null,
+            newUnits.toArray(),
+            maybeCreatePlayers(map, undefined, newUnits),
             ({ map }) => {
               updateUndoStack(actions, editor, [
                 `design-unit-${encodeEntities(map.units)}`,
@@ -582,6 +588,7 @@ export default class DesignBehavior {
                 }),
               };
             },
+            true,
           ),
           map: map.copy({ units: map.units.delete(vector) }),
         }
@@ -616,9 +623,10 @@ export default class DesignBehavior {
 
     const tryToPlaceBuilding = (state: State): StateLike | null => {
       let { map } = state;
+      const newBuilding = building.setPlayer(playerId);
       map = map.copy({
         active: getActivePlayers(map),
-        buildings: map.buildings.set(vector, building.setPlayer(playerId)),
+        buildings: map.buildings.set(vector, newBuilding),
       });
 
       const { editorPlaceOn, placeOn } = building.info.configuration;
@@ -635,6 +643,17 @@ export default class DesignBehavior {
 
         if (!newState?.map) {
           return newState;
+        }
+
+        if (!map.maybeGetPlayer(playerId)) {
+          map = mergeTeams(
+            map,
+            maybeCreatePlayers(
+              map,
+              undefined,
+              ImmutableMap([[vector, newBuilding]]),
+            ),
+          );
         }
 
         map = map.copy({
