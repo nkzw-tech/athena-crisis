@@ -11,6 +11,6 @@
   "type": "module",
   "devDependencies": {
     "vite-plugin-minify": "^1.5.2",
-    "vite-plugin-singlefile": "^2.0.1"
+    "vite-plugin-singlefile": "^2.0.2"
   }
 }

@@ -242,10 +242,10 @@ export default class DesignBehavior {
   ): StateLike | null {
     let newState: StateLike | null = null;
     const players = PlayerIDs.filter((id) => id !== 0);
+    const currentPlayerId = state.map.getCurrentPlayer().id;
     vectors.forEach((vector, index) => {
-      const currentPlayerIndex = players.indexOf(
-        state.map.getCurrentPlayer().id,
-      );
+      const currentPlayerIndex =
+        currentPlayerId != 0 ? players.indexOf(currentPlayerId) : -1;
       const playerId =
         players[
           ((currentPlayerIndex >= 0 ? currentPlayerIndex : 0) + index) %
