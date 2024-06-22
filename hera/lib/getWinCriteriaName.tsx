@@ -58,6 +58,11 @@ export default function getWinCriteriaName(criteria: WinCriteria) {
         'Destroy buildings by amount',
         'Panel button name for destroy by amount.',
       );
+    case WinCriteria.OptionalObjectiveAmount:
+      return fbt(
+        'Complete optional objectives by amount',
+        'Panel button name for complete optional objectives by amount.',
+      );
     default: {
       criteria satisfies never;
       throw new UnknownTypeError('getWinCriteriaName', criteria);

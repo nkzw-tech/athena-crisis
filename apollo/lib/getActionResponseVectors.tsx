@@ -88,6 +88,7 @@ export default function getActionResponseVectors(
     case 'HiddenFundAdjustment':
     case 'Message':
     case 'OptionalObjective':
+    case 'DeniedOptionalObjective':
     case 'PreviousTurnGameOver':
     case 'ReceiveReward':
     case 'SecretDiscovered':

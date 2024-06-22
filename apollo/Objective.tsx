@@ -18,6 +18,7 @@ import {
   ToggleLightningActionResponse,
 } from './ActionResponse.tsx';
 import checkWinConditions, {
+  checkDeniedOptionalConditions,
   isDestructiveAction,
   shouldCheckDefaultWinConditions,
 } from './lib/checkWinCondition.tsx';
@@ -59,13 +60,20 @@ export type OptionalObjectiveActionResponse = Readonly<{
   type: 'OptionalObjective';
 }>;
 
+export type DeniedOptionalObjectiveActionResponse = Readonly<{
+  condition: WinCondition;
+  conditionId: number;
+  type: 'DeniedOptionalObjective';
+}>;
+
 export type ObjectiveActionResponses =
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
   | GameEndActionResponse
   | PreviousTurnGameOverActionResponse
-  | OptionalObjectiveActionResponse;
+  | OptionalObjectiveActionResponse
+  | DeniedOptionalObjectiveActionResponse;
 
 const pickWinningPlayer = (
   previousMap: MapData,
@@ -112,11 +120,17 @@ export function checkObjectives(
     activeMap,
     lastActionResponse,
   );
+  const deniedOptionalCondition = checkDeniedOptionalConditions(
+    previousMap,
+    activeMap,
+    lastActionResponse,
+  );
   const actionResponse =
     !condition || (condition.type !== WinCriteria.Default && condition.optional)
       ? checkDefaultWinConditions(previousMap, activeMap, lastActionResponse)
       : null;
-  if (!actionResponse && !condition) {
+
+  if (!actionResponse && !condition && !deniedOptionalCondition) {
     return null;
   }
 
@@ -155,6 +169,46 @@ export function checkObjectives(
     let newGameState: GameState = [];
     [newGameState, map] = processRewards(map, optionalObjective);
     gameState.push(...newGameState);
+  }
+
+  if (deniedOptionalCondition) {
+    const denyingPlayer = pickWinningPlayer(
+      previousMap,
+      activeMap,
+      lastActionResponse,
+      deniedOptionalCondition,
+    );
+    let deniedPlayers = (
+      deniedOptionalCondition.players &&
+      deniedOptionalCondition.players.length > 0
+        ? deniedOptionalCondition.players
+        : map.active
+    )?.filter((playerId) => playerId !== denyingPlayer);
+
+    if (
+      deniedPlayers.some(
+        (player) => !deniedOptionalCondition.failed?.has(player),
+      )
+    ) {
+      deniedPlayers = deniedPlayers.filter(
+        (player) => !deniedOptionalCondition.failed?.has(player),
+      );
+
+      const deniedOptionalObjective: DeniedOptionalObjectiveActionResponse = {
+        condition: {
+          ...deniedOptionalCondition,
+          failed: new Set([
+            ...(deniedOptionalCondition.failed || []),
+            ...deniedPlayers,
+          ]),
+        },
+        conditionId: map.config.winConditions.indexOf(deniedOptionalCondition),
+        type: 'DeniedOptionalObjective',
+      } as const;
+
+      map = applyObjectiveActionResponse(map, deniedOptionalObjective);
+      gameState.push([deniedOptionalObjective, map]);
+    }
   }
 
   const gameEndResponse =
@@ -246,7 +300,8 @@ export function applyObjectiveActionResponse(
     }
     case 'GameEnd':
       return map;
-    case 'OptionalObjective': {
+    case 'OptionalObjective':
+    case 'DeniedOptionalObjective': {
       const { condition, conditionId } = actionResponse;
       if (condition.type === WinCriteria.Default) {
         return map;

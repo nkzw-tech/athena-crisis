@@ -263,6 +263,7 @@ const VisibleActionModifiers: Record<
       unit,
     }),
   },
+  DeniedOptionalObjective: true,
   DropUnit: {
     Both: true,
     Source: true,

@@ -481,6 +481,7 @@ export default function applyActionResponse(
     case 'HiddenTargetAttackUnit':
       return applyHiddenActionResponse(map, vision, actionResponse);
     case 'OptionalObjective':
+    case 'DeniedOptionalObjective':
     case 'AttackUnitGameOver':
     case 'BeginTurnGameOver':
     case 'CaptureGameOver':

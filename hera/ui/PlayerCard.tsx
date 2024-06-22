@@ -4,6 +4,7 @@ import {
   destroyedBuildingsByPlayer,
   escortedByPlayer,
 } from '@deities/apollo/lib/checkWinCondition.tsx';
+import getCompletedObjectives from '@deities/apollo/lib/getCompletedObjectives.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
@@ -33,6 +34,7 @@ import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
+import List from '@iconify-icons/pixelarticons/list.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
@@ -374,7 +376,17 @@ const PlayerCardObjective = ({
               ]
             : condition.type === WinCriteria.Survival
               ? [Hourglass, map.round, condition.rounds]
-              : [null, null];
+              : condition.type === WinCriteria.OptionalObjectiveAmount
+                ? [
+                    List,
+                    getCompletedObjectives(map, player.id).filter(
+                      (conditionIndex) =>
+                        map.config.winConditions[conditionIndex].type !==
+                        WinCriteria.OptionalObjectiveAmount,
+                    ).length,
+                    condition.amount,
+                  ]
+                : [null, null];
 
   return (
     (icon && status != null && (
