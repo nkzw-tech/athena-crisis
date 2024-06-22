@@ -1,3 +1,4 @@
+import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import ActionResponseMutator from '@deities/apollo/ActionResponseMutator.tsx';
 import {
   decodeEffects,
@@ -102,10 +103,6 @@ import {
   SetMapFunction,
 } from './Types.tsx';
 
-const startAction = {
-  type: 'Start',
-} as const;
-
 const MAP_KEY = 'map-editor-previous-map';
 const EFFECTS_KEY = 'map-editor-previous-effects';
 
@@ -141,6 +138,61 @@ const getEditorBaseState = (
     },
     undoStack: [['initial', map]],
     undoStackIndex: null,
+  };
+};
+
+const prepareEffects = (
+  effects: Effects,
+  isEffectMode: boolean,
+  { effect, trigger }: Scenario,
+): { effects: Effects; lastAction: ActionResponse | null } => {
+  const startEffect = effects.get('Start');
+  if (isEffectMode) {
+    return {
+      effects:
+        trigger !== 'Start'
+          ? new Map([
+              ...effects,
+              [
+                'Start',
+                new Set([
+                  {
+                    ...effect,
+                    conditions: undefined,
+                  },
+                ]),
+              ],
+            ])
+          : effects,
+      lastAction: null,
+    };
+  }
+
+  if (startEffect) {
+    const newStartEffect = new Set(
+      [...startEffect]
+        .map((effect) => ({
+          ...effect,
+          actions: effect.actions.filter(
+            (action) => action.type === 'SpawnEffect',
+          ),
+        }))
+        .filter((effect) => effect.actions.length),
+    );
+
+    return {
+      effects: newStartEffect.size
+        ? new Map([...effects, ['Start', newStartEffect]])
+        : effects,
+      lastAction: null,
+    };
+  }
+
+  return {
+    effects,
+    lastAction: {
+      type: 'Start',
+    },
   };
 };
 
@@ -386,31 +438,17 @@ export default function MapEditor({
       setIsPlayTesting(playTest);
       setMenuIsExpanded(false);
       setSaveState(null);
-      const { effect, trigger } = editor.scenario;
-      const isEffectMode = editor.mode === 'effects';
       setGame(
         playTest
           ? {
-              effects:
-                isEffectMode &&
-                (trigger === 'GameEnd' || trigger === 'OptionalObjective')
-                  ? new Map([
-                      ...editor.effects,
-                      [
-                        'Start',
-                        new Set([
-                          {
-                            ...effect,
-                            conditions: undefined,
-                          },
-                        ]),
-                      ],
-                    ])
-                  : editor.effects,
               ended: false,
-              lastAction: isEffectMode ? null : startAction,
               state: newMap,
               turnState: null,
+              ...prepareEffects(
+                editor.effects,
+                editor.mode === 'effects',
+                editor.scenario,
+              ),
             }
           : null,
       );
