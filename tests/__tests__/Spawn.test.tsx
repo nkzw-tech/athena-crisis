@@ -17,6 +17,8 @@ import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx'
 const map = withModifiers(
   MapData.createMap({
     config: {
+      // Restrictions are ignored in Spawn Effects.
+      blocklistedUnits: [Bomber.id],
       fog: true,
     },
     map: [
