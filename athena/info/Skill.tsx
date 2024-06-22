@@ -70,7 +70,7 @@ const skillConfig: Record<
   [Skill.DefenseIncreaseMinor]: { charges: 2, cost: 300 },
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor]: { charges: 6, cost: 800 },
   [Skill.BuyUnitCannon]: { cost: 1000 },
-  [Skill.BuyUnitBrute]: { charges: 3, cost: 1000 },
+  [Skill.BuyUnitBrute]: { charges: 5, cost: 1000 },
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
     charges: 5,
     cost: 600,
