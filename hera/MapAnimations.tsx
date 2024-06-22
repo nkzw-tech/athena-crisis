@@ -55,6 +55,7 @@ export type SpawnAnimation = Readonly<{
   locked: false;
   onComplete: StateToStateLike;
   onSpawn?: StateToStateLike;
+  speed: 'fast' | 'slow';
   type: 'spawn';
   unitDirection: UnitDirection;
   variant: PlayerID;
@@ -398,7 +399,10 @@ const MapAnimation = ({
       case 'spawn':
         return (
           <Spawn
-            delay={animationConfig.ExplosionStep}
+            delay={
+              animationConfig.ExplosionStep /
+              (animation.speed === 'fast' ? 2 : 1)
+            }
             onSpawn={animation.onSpawn}
             position={position}
             requestFrame={requestFrame}

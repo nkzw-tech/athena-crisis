@@ -577,6 +577,7 @@ export default class DesignBehavior {
             state,
             newUnits.toArray(),
             maybeCreatePlayers(map, undefined, newUnits),
+            'slow',
             ({ map }) => {
               updateUndoStack(actions, editor, [
                 `design-unit-${encodeEntities(map.units)}`,

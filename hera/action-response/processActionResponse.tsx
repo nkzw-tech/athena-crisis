@@ -386,6 +386,7 @@ async function processActionResponse(
           state,
           actionResponse.units.toArray(),
           actionResponse.teams,
+          actionResponse.units.size >= 5 ? 'fast' : 'slow',
           (state) => {
             requestFrame(() =>
               resolve({
