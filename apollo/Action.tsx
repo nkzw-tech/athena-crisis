@@ -811,7 +811,7 @@ function spawnEffect(
   const player =
     dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
   units = units
-    .filter((unit, vector) => canDeploy(map, unit.info, vector, false))
+    .filter((unit, vector) => canDeploy(map, unit.info, vector, true))
     .map((unit) => (player != null ? unit.setPlayer(player) : unit));
   return units.size
     ? ({
