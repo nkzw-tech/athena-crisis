@@ -52,57 +52,54 @@ export default function spawn(
         })
       : state.animations;
 
-  return {
-    animations: animations.set(new AnimationKey(), {
-      onComplete: (state) => ({
-        animations: animations.set(position, {
-          locked: false,
-          onComplete: (state: State) => {
-            if (!remainingUnits.length) {
-              return onComplete(state);
-            }
-            actions.scheduleTimer(
-              () =>
-                actions.update((state) =>
-                  spawn(
-                    actions,
-                    state,
-                    remainingUnits,
-                    teams,
-                    speed,
-                    onComplete,
-                  ),
-                ),
-              animationConfig.ExplosionStep,
-            );
-            return state;
-          },
-          onSpawn: ({ map }: State) => {
-            map = map.copy({
-              units: map.units.set(position, unit),
-            });
+  const spawnUnit = (state: State) => ({
+    animations: animations.set(position, {
+      locked: false,
+      onComplete: (state: State) => {
+        if (!remainingUnits.length) {
+          return onComplete(state);
+        }
+        actions.scheduleTimer(
+          () =>
+            actions.update((state) =>
+              spawn(actions, state, remainingUnits, teams, speed, onComplete),
+            ),
+          animationConfig.ExplosionStep,
+        );
+        return state;
+      },
+      onSpawn: ({ map }: State) => {
+        map = map.copy({
+          units: map.units.set(position, unit),
+        });
 
-            if (!map.maybeGetPlayer(unit.player)) {
-              map = mergeTeams(
-                map,
-                newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
-              );
-            }
+        if (!map.maybeGetPlayer(unit.player)) {
+          map = mergeTeams(
+            map,
+            newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
+          );
+        }
 
-            return {
-              map: map.copy({
-                active: getActivePlayers(map),
-              }),
-            };
-          },
-          speed,
-          type: 'spawn',
-          unitDirection: getUnitDirection(state.map.getFirstPlayerID(), unit),
-          variant: unit.player,
-        }),
-      }),
-      positions: [position],
-      type: 'scrollIntoView',
+        return {
+          map: map.copy({
+            active: getActivePlayers(map),
+          }),
+        };
+      },
+      speed,
+      type: 'spawn',
+      unitDirection: getUnitDirection(state.map.getFirstPlayerID(), unit),
+      variant: unit.player,
     }),
-  };
+  });
+
+  return isEditor
+    ? spawnUnit(state)
+    : {
+        animations: animations.set(new AnimationKey(), {
+          onComplete: spawnUnit,
+          positions: [position],
+          type: 'scrollIntoView',
+        }),
+      };
 }
