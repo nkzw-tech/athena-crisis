@@ -180,19 +180,19 @@ const prepareEffects = (
         .filter((effect) => effect.actions.length),
     );
 
-    return {
-      effects: newStartEffect.size
-        ? new Map([...effects, ['Start', newStartEffect]])
-        : effects,
-      lastAction: null,
-    };
+    if (newStartEffect.size) {
+      return {
+        effects: new Map([...effects, ['Start', newStartEffect]]),
+        lastAction: null,
+      };
+    }
   }
 
   return {
     effects,
     lastAction: {
       type: 'Start',
-    },
+    } as const,
   };
 };
 
