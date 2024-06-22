@@ -148,8 +148,8 @@ test('supply works correctly for units when a turn ends in fog', async () => {
   printGameState('Base State', initialState);
   expect(initialState).toMatchImageSnapshot();
 
-  // Ignore the final two states.
-  (await captureGameState(gameState.slice(0, -2), player1.userId)).forEach(
+  // Ignore the final state.
+  (await captureGameState(gameState.slice(0, -1), player1.userId)).forEach(
     ([actionResponse, , screenshot]) => {
       printGameState(actionResponse, screenshot);
       expect(screenshot).toMatchImageSnapshot();

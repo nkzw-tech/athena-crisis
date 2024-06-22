@@ -140,17 +140,11 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
       EndTurn { current: { funds: 500, player: 3 }, next: { funds: 600, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 
-  expect(actionResponses[0][1]).toMatchInlineSnapshot(`
+  expect(actionResponses[0][1]).toBeUndefined();
+  expect(actionResponses[0][2]).toBeUndefined();
+
+  expect(actionResponses[1][1]).toMatchInlineSnapshot(`
     [
-      [
-        1,
-        4,
-        {
-          "h": 100,
-          "i": 2,
-          "p": 1,
-        },
-      ],
       [
         1,
         5,
@@ -160,9 +154,18 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
           "p": 3,
         },
       ],
+      [
+        1,
+        4,
+        {
+          "h": 100,
+          "i": 2,
+          "p": 1,
+        },
+      ],
     ]
   `);
-  expect(actionResponses[0][2]).toMatchInlineSnapshot(`
+  expect(actionResponses[1][2]).toMatchInlineSnapshot(`
     [
       [
         1,
@@ -183,7 +186,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
     ]
   `);
 
-  for (let i = 1; i < actionResponses.length; i++) {
+  for (let i = 2; i < actionResponses.length; i++) {
     expect(actionResponses[i][1]).toBeUndefined();
     expect(actionResponses[i][2]).toBeUndefined();
   }

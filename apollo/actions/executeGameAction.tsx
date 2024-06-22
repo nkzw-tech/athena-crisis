@@ -89,27 +89,24 @@ export default function executeGameAction(
   if (!actionResult) {
     return [null, null, null, null];
   }
-  const actionResponse = actionResult[0];
-  let activeMap: MapData | null = actionResult[1];
+  const [actionResponse, activeMap] = actionResult;
   const [gameState, newEffects] = applyConditions(
     map,
     activeMap,
     effects,
     actionResponse,
   );
-  if (gameState.length) {
-    activeMap = gameState.at(-1)![1];
-  }
+  const lastMap = gameState.at(-1)?.[1] || activeMap;
   const shouldInvokeAI = !!(
     AIRegistry &&
     !gameHasEnded(gameState) &&
-    (gameState.at(-1)?.[1] || activeMap).getCurrentPlayer().isBot()
+    lastMap.getCurrentPlayer().isBot()
   );
   return [
     actionResponse,
     activeMap,
     ...((shouldInvokeAI &&
-      executeAIAction(activeMap, AIRegistry, newEffects, gameState)) || [
+      executeAIAction(lastMap, AIRegistry, newEffects, gameState)) || [
       gameState,
       newEffects,
     ]),

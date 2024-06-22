@@ -40,7 +40,7 @@ self.onmessage = function (event: MessageEvent<ClientGameActionRequest>) {
     actionResponse && initialActiveMap && gameState
       ? [
           encodeActionResponse(actionResponse),
-          initialActiveMap?.toJSON(),
+          initialActiveMap.toJSON(),
           encodeGameState(gameState),
           newEffects ? encodeEffects(newEffects) : null,
         ]

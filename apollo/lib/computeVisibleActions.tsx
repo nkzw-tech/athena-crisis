@@ -510,11 +510,16 @@ export default function computeVisibleActions(
         actionResponse,
       );
       if (newActionResponse) {
-        const items: ReadonlyArray<ActionResponseWithMapData> = Array.isArray(
+        const items: Array<ActionResponseWithMapData> = Array.isArray(
           newActionResponse,
         )
           ? newActionResponse.map((actionResponse) => [actionResponse])
-          : [[newActionResponse]];
+          : [[newActionResponse as ActionResponse]];
+
+        const lastItem = items.at(-1);
+        if (lastItem) {
+          items[items.length - 1] = [lastItem[0], previousMap, activeMap];
+        }
         responses.push(...items);
       }
     } else {
