@@ -13,11 +13,13 @@ export default function EditorPlayerSelector({
   editor,
   setEditorState,
   state,
+  vertical,
 }: {
   actions: Actions;
   editor: EditorState;
   setEditorState: SetEditorStateFunction;
   state: State;
+  vertical?: true;
 }) {
   const currentPlayer = state.map.getCurrentPlayer();
 
@@ -41,7 +43,7 @@ export default function EditorPlayerSelector({
   }, [editor, setEditorState, state, update]);
 
   return (
-    <Stack gap={16} start>
+    <Stack gap={16} start vertical={vertical}>
       {PlayerIDs.map((id) => (
         <PlayerIcon
           id={id}

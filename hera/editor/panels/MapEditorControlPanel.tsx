@@ -4,7 +4,7 @@ import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
-import Breakpoints, { lg, sm } from '@deities/ui/Breakpoints.tsx';
+import Breakpoints, { lg, sm, xl } from '@deities/ui/Breakpoints.tsx';
 import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
@@ -15,10 +15,12 @@ import InlineLink, { KeyboardShortcut } from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
+import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import { fbt } from 'fbt';
 import { useCallback, useRef } from 'react';
-import Drawer from '../../drawer/Drawer.tsx';
+import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import replaceEffect from '../lib/replaceEffect.tsx';
@@ -42,6 +44,7 @@ import WinConditionPanel from './WinConditionPanel.tsx';
 
 export default function MapEditorControlPanel({
   actions,
+  drawerPosition,
   editor,
   expand,
   fillMap,
@@ -54,6 +57,7 @@ export default function MapEditorControlPanel({
   resize,
   restorePreviousState,
   saveMap,
+  setDrawerPosition,
   setEditorState,
   setMap,
   setMapName,
@@ -64,6 +68,7 @@ export default function MapEditorControlPanel({
   user,
   visible,
 }: StateWithActions & {
+  drawerPosition: DrawerPosition;
   editor: EditorState;
   expand: boolean;
   fillMap: () => void;
@@ -76,6 +81,7 @@ export default function MapEditorControlPanel({
   resize: (size: SizeVector, origin: Set<ResizeOrigin>) => void;
   restorePreviousState: () => void;
   saveMap: SaveMapFunction;
+  setDrawerPosition: (position: DrawerPosition) => void;
   setEditorState: SetEditorStateFunction;
   setMap: SetMapFunction;
   setMapName: (name: string) => void;
@@ -113,16 +119,20 @@ export default function MapEditorControlPanel({
       expand={expand}
       inset={inset}
       mode={editor.mode}
+      position={drawerPosition}
       ref={ref}
       sidebar={
         <Sidebar
           actions={actions}
           editor={editor}
+          expand={expand}
           mapObject={mapObject}
+          position={drawerPosition}
           previousState={previousState}
           resetMap={resetMap}
           restorePreviousState={restorePreviousState}
           setEditorState={setEditorState}
+          setPosition={setDrawerPosition}
           state={state}
           togglePlaytest={togglePlaytest}
         />
@@ -237,20 +247,26 @@ export default function MapEditorControlPanel({
 
 const Sidebar = ({
   editor,
+  expand,
   mapObject,
+  position,
   previousState,
   resetMap,
   restorePreviousState,
   setEditorState,
+  setPosition,
   state,
   togglePlaytest,
 }: StateWithActions & {
   editor: EditorState;
+  expand: boolean;
   mapObject?: MapObject | null;
+  position: DrawerPosition;
   previousState: PreviousMapEditorState | null;
   resetMap: () => void;
   restorePreviousState: () => void;
   setEditorState: SetEditorStateFunction;
+  setPosition: (position: DrawerPosition) => void;
   togglePlaytest: (
     map: MapData,
     _?: boolean,
@@ -258,9 +274,17 @@ const Sidebar = ({
   ) => void;
 }) => {
   const { alert } = useAlert();
+  const isBottom = position === 'bottom';
+  const drawerIsLarge = isBottom || expand;
   const isMedium = useMedia(`(min-width: ${sm}px)`);
   const isLarge = useMedia(`(min-width: ${lg}px)`);
-  const partition = isLarge ? 4 : isMedium ? 3 : 2;
+  const isXLarge = useMedia(`(min-width: ${xl}px)`);
+  const secondaryWidthCheck = isBottom
+    ? isMedium
+    : drawerIsLarge
+      ? isLarge
+      : isXLarge;
+  const partition = drawerIsLarge && isLarge ? 4 : secondaryWidthCheck ? 3 : 2;
 
   const buttonProps = usePress({
     onLongPress: useCallback(() => {
@@ -407,6 +431,25 @@ const Sidebar = ({
     primary[primary.length - 1] = secondary[index];
     secondary.splice(index, 1);
     secondary.unshift(last);
+  }
+
+  if (isMedium) {
+    secondary.unshift(
+      <Stack gap key="icons" reverse start>
+        <InlineLink
+          onClick={() => setPosition('left')}
+          selected={position === 'left'}
+        >
+          <Icon icon={Left} />
+        </InlineLink>
+        <InlineLink
+          onClick={() => setPosition('bottom')}
+          selected={position === 'bottom'}
+        >
+          <Icon icon={Bottom} />
+        </InlineLink>
+      </Stack>,
+    );
   }
 
   return (

@@ -10,11 +10,11 @@ export default {
     }
   },
 
-  getItem(key: string) {
+  get(key: string) {
     return localStorage.getItem(`${namespace}${key}`);
   },
 
-  setItem(key: string, value: string) {
+  set(key: string, value: string) {
     if (value === null) {
       localStorage.removeItem(`${namespace}${key}`);
     } else {

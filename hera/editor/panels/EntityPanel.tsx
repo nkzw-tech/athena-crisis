@@ -341,7 +341,7 @@ export default function EntityPanel({
           (entityIsBuilding &&
             !entity.info.getAllBuildableUnits()[Symbol.iterator]().next()
               .done)) && (
-          <Box gap={16} start vertical>
+          <Box className={fitContentStyle} gap={16} start vertical>
             <Stack alignCenter start>
               <Icon className={iconStyle} icon={Magic} />
               {isUnit(entity) ? (
@@ -451,4 +451,8 @@ const pixelatedStyle = css`
 const textStyle = css`
   text-align: right;
   width: 100px;
+`;
+
+const fitContentStyle = css`
+  height: fit-content;
 `;

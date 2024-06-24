@@ -23,7 +23,7 @@ export async function setClientLocale(
 ) {
   if (availableLocales.has(locale)) {
     await maybeLoadLocale(locale, loadLocale);
-    Storage.setItem(key, locale);
+    Storage.set(key, locale);
     document.documentElement.lang = locale;
     if (locale !== currentLanguage) {
       currentLanguage = null;
@@ -37,7 +37,7 @@ export function getLocales({
   return Array.from(
     new Set(
       [
-        Storage.getItem(key) || '',
+        Storage.get(key) || '',
         navigator.language,
         ...navigator.languages,
         fallback,

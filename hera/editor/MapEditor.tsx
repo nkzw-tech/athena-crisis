@@ -33,6 +33,7 @@ import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import { sm } from '@deities/ui/Breakpoints.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -40,6 +41,7 @@ import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
+import useMedia from '@deities/ui/hooks/useMedia.tsx';
 import usePress from '@deities/ui/hooks/usePress.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -63,7 +65,7 @@ import React, {
 } from 'react';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
-import { getDrawerPaddingStyle } from '../drawer/Drawer.tsx';
+import { DrawerPosition, getDrawerPaddingStyle } from '../drawer/Drawer.tsx';
 import GameMap from '../GameMap.tsx';
 import useAnimationSpeed, {
   AnimationSpeed,
@@ -371,8 +373,8 @@ export default function MapEditor({
     useState<PreviousMapEditorState | null>(() => {
       try {
         return {
-          effects: Storage.getItem(EFFECTS_KEY) || '',
-          map: MapData.fromJSON(Storage.getItem(MAP_KEY) || ''),
+          effects: Storage.get(EFFECTS_KEY) || '',
+          map: MapData.fromJSON(Storage.get(MAP_KEY) || ''),
         };
         // eslint-disable-next-line no-empty
       } catch {}
@@ -402,7 +404,7 @@ export default function MapEditor({
       const effects = JSON.stringify(
         editorEffects ? encodeEffects(editorEffects) : '',
       );
-      Storage.setItem(MAP_KEY, JSON.stringify(map));
+      Storage.set(MAP_KEY, JSON.stringify(map));
       setPreviousState(map ? { effects, map } : null);
     },
     [],
@@ -818,6 +820,21 @@ export default function MapEditor({
     return new Map(player ? [[player.id, user.factionName]] : undefined);
   }, [map, user.factionName, user.id]);
 
+  const isMedium = useMedia(`(min-width: ${sm}px)`);
+  const [drawerPosition, _setDrawerPosition] = useState<DrawerPosition>(() =>
+    Storage.get('map-editor-position') === 'left' && isMedium
+      ? 'left'
+      : 'bottom',
+  );
+  const setDrawerPosition = useCallback((position: DrawerPosition) => {
+    _setDrawerPosition(position);
+    Storage.set('map-editor-position', position);
+  }, []);
+
+  if (!isMedium && drawerPosition === 'left') {
+    _setDrawerPosition('bottom');
+  }
+
   const delay = internalMapID === 0;
   const hidden = useHide();
   if (isPlayTesting) {
@@ -984,7 +1001,7 @@ export default function MapEditor({
         </PrimaryExpandableMenuButton>
         <ZoomButton hide={hidden} max={maxZoom} setZoom={setZoom} zoom={zoom} />
       </Portal>
-      <div className={getDrawerPaddingStyle(expand)}>
+      <div className={getDrawerPaddingStyle(drawerPosition, expand)}>
         <GameMap
           animatedChildren={({ map, position, showCursor, zIndex }) => (
             <ResizeHandle
@@ -1027,6 +1044,7 @@ export default function MapEditor({
               <>
                 <MapEditorControlPanel
                   actions={actions}
+                  drawerPosition={drawerPosition}
                   editor={editor}
                   expand={expand}
                   fillMap={fillMap}
@@ -1039,6 +1057,7 @@ export default function MapEditor({
                   resize={resize}
                   restorePreviousState={restorePreviousState}
                   saveMap={saveMap}
+                  setDrawerPosition={setDrawerPosition}
                   setEditorState={setEditorState}
                   setMap={setMap}
                   setMapName={setMapName}
