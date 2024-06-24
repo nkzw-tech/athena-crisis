@@ -51,6 +51,7 @@ import {
 } from '../../Types.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
+import changePlayer from '../lib/changePlayer.tsx';
 import getSymmetricPositions from '../lib/getSymmetricPositions.ts';
 import updateUndoStack from '../lib/updateUndoStack.tsx';
 import { EditorState } from '../Types.tsx';
@@ -216,6 +217,7 @@ export default class DesignBehavior {
     const { map } = state;
     const unit = map.units.get(vector);
     const building = map.buildings.get(vector);
+    const maybeEntity = unit || building;
 
     setEditorState({
       ...editor,
@@ -233,7 +235,11 @@ export default class DesignBehavior {
               tile: map.getTileInfo(vector).id,
             },
     });
-    return null;
+
+    return maybeEntity &&
+      !map.matchesPlayer(map.getCurrentPlayer(), maybeEntity)
+      ? changePlayer(state.map, maybeEntity.player)
+      : null;
   }
 
   private draw(

@@ -5,15 +5,11 @@ import {
   PlayerID,
 } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Actions, State } from '../../Types.tsx';
+import { StateLike } from '../../Types.tsx';
 
-export default async function changePlayer(
-  state: State,
-  { update }: Actions,
-  id: PlayerID,
-): Promise<State> {
-  const { map } = state;
+export default function changePlayer(map: MapData, id: PlayerID): StateLike {
   let { teams } = map;
 
   const current = map.getCurrentPlayer();
@@ -40,13 +36,11 @@ export default async function changePlayer(
     );
   }
 
-  const newState = update({
+  return {
     currentViewer: player.id,
     map: map.copy({
       currentPlayer: player.id,
       teams: updatePlayers(teams, [newCurrentPlayer, player]),
     }),
-  });
-
-  return newState;
+  };
 }

@@ -9,7 +9,7 @@ import changePlayer from '../lib/changePlayer.tsx';
 import { EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 export default function EditorPlayerSelector({
-  actions,
+  actions: { update },
   editor,
   setEditorState,
   state,
@@ -33,12 +33,12 @@ export default function EditorPlayerSelector({
           : (parseInteger(event.key) as PlayerID | null);
       const id = key != null && PlayerIDs.includes(key) ? key : null;
       if (id != null) {
-        changePlayer(state, actions, id);
+        update(changePlayer(state.map, id));
       }
     };
     document.body.addEventListener('keydown', listener);
     return () => document.body.removeEventListener('keydown', listener);
-  }, [actions, editor, setEditorState, state]);
+  }, [editor, setEditorState, state, update]);
 
   return (
     <Stack gap={16} start>
@@ -46,7 +46,7 @@ export default function EditorPlayerSelector({
         <PlayerIcon
           id={id}
           key={id}
-          onClick={() => changePlayer(state, actions, id)}
+          onClick={() => update(changePlayer(state.map, id))}
           selected={currentPlayer.id === id}
         />
       ))}

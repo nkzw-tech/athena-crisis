@@ -123,11 +123,11 @@ export default function EntityPanel({
           isUnit(entity)
             ? entity.setPlayer(player).removeLeader()
             : entity.setPlayer(player),
-          await changePlayer(state, actions, player),
+          await update(changePlayer(state.map, player)),
         );
       }
     },
-    [actions, editor, state, updateEntity],
+    [editor, state, update, updateEntity],
   );
 
   const updateRescue = useCallback(
