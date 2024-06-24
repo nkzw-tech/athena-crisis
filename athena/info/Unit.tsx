@@ -2928,7 +2928,7 @@ export const Dinosaur = new UnitInfo(
   DefaultUnitAbilities,
   {
     type: AttackType.ShortRange,
-    weapons: [Weapons.Bite],
+    weapons: [Weapons.Bite.withDamage(buff(Weapons.Bite.damage, 40))],
   },
   null,
   {
@@ -3258,11 +3258,18 @@ export const Dragon = new UnitInfo(
   {
     type: AttackType.ShortRange,
     weapons: [
-      Weapons.Flamethrower.withSupply(6).withAnimationPositions({
-        down: sprite(-0.4, 1),
-        horizontal: sprite(-0.85, -0.05),
-        up: sprite(0.4, -0.85),
-      }),
+      Weapons.Flamethrower.withDamage(
+        buff(
+          new Map([...Weapons.Flamethrower.damage, [EntityType.Ship, 70]]),
+          40,
+        ),
+      )
+        .withSupply(6)
+        .withAnimationPositions({
+          down: sprite(-0.4, 1),
+          horizontal: sprite(-0.85, -0.05),
+          up: sprite(0.4, -0.85),
+        }),
     ],
   },
   null,
