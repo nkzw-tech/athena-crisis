@@ -2824,7 +2824,7 @@ export const Mammoth = new UnitInfo(
   'Shamus',
   'male',
   `Unmatched in firepower on the battlefield, the Mammoth is slow but can deal massive damage to distant units. Novel technology enables the Mammoth to move and attack simultaneously, making it extremely dangerous in the hands of a skilled commander.`,
-  `Operating a gigantig siege artillery is no easy task, but for {name} it's mostly upside! When he is not moving into position or preparing a trajectory, he often spends his free time reading and gardening, all the while humming in tune with the ringing of his ears. Despite his positive demeanor, he is quietly thankful he can remain further away from action.`,
+  `Operating a gigantic siege artillery is no easy task, but for {name} it's mostly upside! When he is not moving into position or preparing a trajectory, he often spends his free time reading and gardening, all the while humming in tune with the ringing of his ears. Despite his positive demeanor, he is quietly thankful he can remain further away from action.`,
   35,
   EntityType.Rail,
   MovementTypes.Rail,
