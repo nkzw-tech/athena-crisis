@@ -1,8 +1,16 @@
+import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { executeEffect } from '@deities/apollo/Action.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
+import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
-import { Bomber, FighterJet, Helicopter } from '@deities/athena/info/Unit.tsx';
+import {
+  Bomber,
+  FighterJet,
+  Flamethrower,
+  Helicopter,
+  Pioneer,
+} from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
@@ -10,6 +18,7 @@ import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
+import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
 import { captureGameActionResponse, captureGameState } from '../screenshot.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
@@ -88,7 +97,6 @@ test('spawns units and adds new players', async () => {
     ]),
     type: 'SpawnEffect',
     units: ImmutableMap([
-      [vec(2, 1), Bomber.create(2)], // This unit is dropped because there is already a unit in this location.
       [vec(3, 2), Bomber.create(2)],
       [vec(2, 2), FighterJet.create(1)],
       [vec(5, 4), Helicopter.create(5)],
@@ -130,4 +138,83 @@ test('spawns units and adds new players', async () => {
   }
   printGameState('Client State', gameActionResponseScreenshot);
   expect(gameActionResponseScreenshot).toMatchImageSnapshot();
+});
+
+test('spawns new units at adjacent fields if necessary', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(3, 3);
+  const initialMap = map.copy({
+    units: map.units.set(vecA, Pioneer.create(1)).set(vecB, Pioneer.create(1)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'EndTurn',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              player: 0,
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vecB, Flamethrower.create(0)]]),
+            },
+          ],
+          occurrence: 'once',
+        },
+      ]),
+    ],
+  ]);
+
+  const [, gameActionResponse] = executeGameActions(
+    initialMap,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponse))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }"
+  `);
+});
+
+test('drops a spawn if no adjacent field is available', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 2);
+  const initialMap = map.copy({
+    units: ImmutableMap(
+      vecB.expand().map((vector) => [vector, Pioneer.create(1)]),
+    ).set(vecA, Pioneer.create(2)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'EndTurn',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              player: 0,
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vecB, Flamethrower.create(0)]]),
+            },
+          ],
+          occurrence: 'once',
+        },
+      ]),
+    ],
+  ]);
+
+  const [, gameActionResponse] = executeGameActions(
+    initialMap,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponse))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      CompleteUnit (1,1)
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+    `);
 });

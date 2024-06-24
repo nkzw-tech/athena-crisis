@@ -810,14 +810,24 @@ function spawnEffect(
 ) {
   const player =
     dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
-  units = units
-    .filter((unit, vector) => canDeploy(map, unit.info, vector, true))
-    .map((unit) => (player != null ? unit.setPlayer(player) : unit));
-  return units.size
+  let newUnits = ImmutableMap<Vector, Unit>();
+
+  for (const [vector, unit] of units) {
+    const deployVector = vector
+      .expand()
+      .find((vector) => canDeploy(map, unit.info, vector, true));
+    if (deployVector) {
+      const newUnit = player != null ? unit.setPlayer(player) : unit;
+      map = map.copy({ units: map.units.set(deployVector, newUnit) });
+      newUnits = newUnits.set(deployVector, newUnit);
+    }
+  }
+
+  return newUnits.size
     ? ({
-        teams: maybeCreatePlayers(map, teams, units),
+        teams: maybeCreatePlayers(map, teams, newUnits),
         type: 'Spawn',
-        units,
+        units: newUnits,
       } as const)
     : null;
 }
