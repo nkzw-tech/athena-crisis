@@ -29,7 +29,7 @@
     "@emotion/css": "^11.11.2",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.10.0",
+    "@sentry/browser": "^8.11.0",
     "@stripe/react-stripe-js": "^2.7.1",
     "@stripe/stripe-js": "^4.0.0",
     "fbt": "^1.0.2",
