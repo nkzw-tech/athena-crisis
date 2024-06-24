@@ -1,4 +1,4 @@
-import { Effects } from '@deities/apollo/Effects.tsx';
+import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import {
   getInitialWinCondition,
@@ -34,16 +34,36 @@ const maybeRemoveEffect = (
   const trigger = condition.optional ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
   if (list) {
-    setEditorState({
-      effects: new Map(effects).set(
-        trigger,
-        new Set(
-          [...list].filter(
-            ({ conditions }) =>
-              !hasEffectWinCondition(trigger, index, conditions),
-          ),
-        ),
+    const newList = new Set(
+      [...list].filter(
+        ({ conditions }) => !hasEffectWinCondition(trigger, index, conditions),
       ),
+    );
+    const newEffects = new Map(effects).set(trigger, newList);
+    if (!newList.size) {
+      newEffects.delete(trigger);
+    }
+    for (const [effectTrigger, effectList] of newEffects) {
+      const newList = new Set<Effect>();
+      for (const effect of effectList) {
+        newList.add({
+          ...effect,
+          conditions: effect.conditions?.map((condition) =>
+            condition.type === trigger &&
+            typeof condition.value === 'number' &&
+            condition.value > index
+              ? {
+                  ...condition,
+                  value: condition.value - 1,
+                }
+              : condition,
+          ),
+        });
+      }
+      newEffects.set(effectTrigger, newList);
+    }
+    setEditorState({
+      effects: newEffects,
     });
   }
 };

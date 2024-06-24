@@ -273,7 +273,7 @@ export default function EffectsPanel({
           </Button>
         </Stack>
         {actions.map((action, index) => (
-          <div className={actionStyle} key={index}>
+          <div className={actionStyle} key={`${index}-${action.type}`}>
             <ActionCard
               action={action}
               biome={biome}

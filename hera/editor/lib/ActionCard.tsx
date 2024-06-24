@@ -6,6 +6,7 @@ import {
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
+import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
@@ -40,7 +41,6 @@ import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
-import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import Tick from '../../Tick.tsx';
 import { FactionNames } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
@@ -333,7 +333,6 @@ export default memo(function ActionCard({
     );
   } else if (action.type === 'SpawnEffect') {
     const { player } = action;
-    const units = [...action.units.values()];
     return (
       <Box className={boxStyle} gap={16} vertical>
         <Stack className={headlineStyle} nowrap>
@@ -359,12 +358,23 @@ export default memo(function ActionCard({
                     ? ({ index: unitIndex }) => {
                         const units = [...action.units];
                         const [vector, unit] = units[unitIndex];
-                        setMap(
-                          'teams',
-                          map.copy({
-                            units: map.units.set(vector, unit),
-                          }),
-                        );
+
+                        if (
+                          canDeploy(
+                            map.copy({ units: map.units.delete(vector) }),
+                            unit.info,
+                            vector,
+                            true,
+                          )
+                        ) {
+                          setMap(
+                            'units',
+                            map.copy({
+                              units: map.units.set(vector, unit),
+                            }),
+                          );
+                        }
+
                         onChange(index, 'update', {
                           ...action,
                           units: ImmutableMap(
@@ -374,8 +384,10 @@ export default memo(function ActionCard({
                       }
                     : undefined
                 }
-                tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
-                units={units}
+                tiles={[...action.units.keys()].map(
+                  (vector) => map?.getTileInfo(vector) || Plain,
+                )}
+                units={[...action.units.values()]}
               />
             </Tick>
           </Stack>

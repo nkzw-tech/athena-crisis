@@ -75,7 +75,7 @@ export type EditorState = Readonly<{
 export type SaveMapFunction = (currentMap: MapData, type?: MapSaveType) => void;
 export type SetEditorStateFunction = (editor: Partial<EditorState>) => void;
 export type SetMapFunction = (
-  type: 'biome' | 'cleanup' | 'heal' | 'reset' | 'resize' | 'teams',
+  type: 'biome' | 'cleanup' | 'heal' | 'reset' | 'resize' | 'teams' | 'units',
   map: MapData,
 ) => void;
 
