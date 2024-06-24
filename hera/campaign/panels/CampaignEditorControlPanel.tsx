@@ -5,7 +5,7 @@ import {
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
-import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
+import Drawer from '../../drawer/Drawer.tsx';
 import { CampaignEditorState } from '../Types.tsx';
 import CampaignEditorSettingsPanel, {
   UserNode,
@@ -51,7 +51,7 @@ export default function CampaignEditorControlPanel({
   users: ReadonlyArray<UserNode>;
 }) {
   return (
-    <BottomDrawer expand={false} mode={campaignEditorState.mode} visible>
+    <Drawer expand={false} mode={campaignEditorState.mode} visible>
       {(() => {
         const { mode } = campaignEditorState;
         switch (mode) {
@@ -83,6 +83,6 @@ export default function CampaignEditorControlPanel({
           }
         }
       })()}
-    </BottomDrawer>
+    </Drawer>
   );
 }

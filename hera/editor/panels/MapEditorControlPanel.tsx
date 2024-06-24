@@ -18,7 +18,7 @@ import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import { fbt } from 'fbt';
 import { useCallback, useRef } from 'react';
-import BottomDrawer from '../../bottom-drawer/BottomDrawer.tsx';
+import Drawer from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import replaceEffect from '../lib/replaceEffect.tsx';
@@ -109,7 +109,7 @@ export default function MapEditorControlPanel({
   );
 
   return (
-    <BottomDrawer
+    <Drawer
       expand={expand}
       inset={inset}
       mode={editor.mode}
@@ -231,7 +231,7 @@ export default function MapEditorControlPanel({
           }
         }
       })()}
-    </BottomDrawer>
+    </Drawer>
   );
 }
 

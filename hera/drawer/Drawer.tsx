@@ -9,7 +9,7 @@ import { css, cx } from '@emotion/css';
 import { motion } from 'framer-motion';
 import { HTMLAttributes, ReactNode, RefObject } from 'react';
 
-export default function BottomDrawer({
+export default function Drawer({
   children,
   expand,
   inset = 0,

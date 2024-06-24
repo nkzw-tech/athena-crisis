@@ -63,7 +63,7 @@ import React, {
 } from 'react';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
-import { getDrawerPaddingStyle } from '../bottom-drawer/BottomDrawer.tsx';
+import { getDrawerPaddingStyle } from '../drawer/Drawer.tsx';
 import GameMap from '../GameMap.tsx';
 import useAnimationSpeed, {
   AnimationSpeed,
