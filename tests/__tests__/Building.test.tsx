@@ -26,31 +26,31 @@ BuildingInfo.setConstructor(Building);
 test('ensures the configuration for buildings and the units they can create is correct', () => {
   expect(
     new Map(
-      filterBuildings(
-        (building) => !![...building.getAllBuildableUnits()].length,
-      ).map((building) => [
-        building.name,
-        [
-          ...building
-            .create(1)
-            .getBuildableUnits(
-              new HumanPlayer(
-                1,
-                '1',
-                1,
-                0,
-                undefined,
-                new Set(),
-                new Set(),
-                0,
-                null,
-                0,
+      filterBuildings((building) => building.canBuildUnits()).map(
+        (building) => [
+          building.name,
+          [
+            ...building
+              .create(1)
+              .getBuildableUnits(
+                new HumanPlayer(
+                  1,
+                  '1',
+                  1,
+                  0,
+                  undefined,
+                  new Set(),
+                  new Set(),
+                  0,
+                  null,
+                  0,
+                ),
               ),
-            ),
-        ]
-          .map((unit) => unit.name)
-          .sort(),
-      ]),
+          ]
+            .map((unit) => unit.name)
+            .sort(),
+        ],
+      ),
     ),
   ).toMatchInlineSnapshot(`
     Map {

@@ -23,6 +23,7 @@ import {
   Battleship,
   Corvette,
   FighterJet,
+  Flamethrower,
   HeavyArtillery,
   HeavyTank,
   Humvee,
@@ -772,6 +773,7 @@ test('AI does not keep building naval units if the opponent does not have any na
 
 test('AI will prefer funds generating buildings over factories if it has no income', () => {
   const vecA = vec(1, 2);
+  const vecB = vec(2, 2);
   const map = initialMap.copy({
     map: [1, Airfield.id, ConstructionSite.id, 1, 1, 1, 1, 1, 1],
     teams: updatePlayers(
@@ -780,7 +782,9 @@ test('AI will prefer funds generating buildings over factories if it has no inco
         .getPlayers()
         .map((player) => player.setFunds(Airbase.configuration.cost)),
     ),
-    units: initialMap.units.set(vecA, Pioneer.create(2)),
+    units: initialMap.units
+      .set(vecA, Pioneer.create(2))
+      .set(vecB, Flamethrower.create(2)),
   });
 
   const [, , gameStateA] = executeGameAction(
@@ -794,6 +798,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
     CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true } }
+    CompleteUnit (2,2)
     EndTurn { current: { funds: 100, player: 2 }, next: { funds: 200, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });

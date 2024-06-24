@@ -3,7 +3,8 @@ import {
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Factory, House } from '@deities/athena/info/Building.tsx';
-import { Pioneer } from '@deities/athena/info/Unit.tsx';
+import { StormCloud } from '@deities/athena/info/Tile.tsx';
+import { Infantry, Pioneer } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -19,7 +20,31 @@ const map = withModifiers(
       fog: true,
     },
     map: [
-      8, 1, 3, 1, 3, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 3, 1, 1, 2, 2, 2, 8, 8,
+      8,
+      1,
+      3,
+      [1, StormCloud.id],
+      1,
+      1,
+      1,
+      1,
+      3,
+      [1, StormCloud.id],
+      1,
+      3,
+      1,
+      1,
+      1,
+      3,
+      1,
+      3,
+      1,
+      1,
+      2,
+      2,
+      2,
+      8,
+      8,
     ],
     size: { height: 5, width: 5 },
     teams: [
@@ -28,6 +53,7 @@ const map = withModifiers(
     ],
     units: [
       [1, 1, Pioneer.create(1).toJSON()],
+      [5, 1, Infantry.create(1).toJSON()],
       [5, 5, Pioneer.create(2).toJSON()],
       [4, 5, Pioneer.create(2).toJSON()],
     ],
@@ -39,8 +65,8 @@ test('buildings appear properly when they are created in fog', async () => {
   const [, gameActionResponse] = executeGameActions(map, [
     CreateBuildingAction(vec(1, 1), House.id),
     EndTurnAction(),
-    CreateBuildingAction(vec(4, 5), House.id),
     CreateBuildingAction(vec(5, 5), Factory.id),
+    CreateBuildingAction(vec(4, 5), House.id),
     EndTurnAction(),
   ]);
   const screenshot = await captureGameActionResponse(

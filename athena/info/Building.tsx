@@ -194,6 +194,10 @@ export class BuildingInfo {
     return this.buildableUnits;
   }
 
+  canBuildUnits() {
+    return this.buildableUnits.size > 0;
+  }
+
   hasBehavior(behavior: Behavior) {
     return this.configuration.behaviors.has(behavior);
   }

@@ -17,7 +17,11 @@ import {
   ToggleLightningAction,
   UnfoldAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Behavior, filterBuildings } from '@deities/athena/info/Building.tsx';
+import {
+  Behavior,
+  BuildingInfo,
+  filterBuildings,
+} from '@deities/athena/info/Building.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, UnitInfo } from '@deities/athena/info/Unit.tsx';
@@ -29,6 +33,7 @@ import determineUnitsToCreate from '@deities/athena/lib/determineUnitsToCreate.t
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
+import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
@@ -477,6 +482,20 @@ export default class DionysusAlpha extends BaseAI {
     const getFunds = () =>
       _funds == null ? (_funds = calculateFunds(map, currentPlayer)) : _funds;
 
+    let _allowAnyBuilding: boolean | null = null;
+    const getAllowAnyBuilding = () =>
+      _allowAnyBuilding === null
+        ? (_allowAnyBuilding = hasUnitsOrProductionBuildings(
+            map,
+            currentPlayer,
+          ))
+        : _allowAnyBuilding;
+
+    const shouldBuild = (info: BuildingInfo) =>
+      getAllowAnyBuilding()
+        ? info.configuration.funds > 0 || getFunds() > 0
+        : info.canBuildUnits();
+
     // Find a building to construct based on importance.
     const { info, to } =
       maxBy(
@@ -497,11 +516,12 @@ export default class DionysusAlpha extends BaseAI {
             ) {
               return null;
             }
+
             const buildingInfos = filterBuildings(
               (info) =>
                 info.configuration.cost <= currentPlayer.funds &&
                 canBuild(map, info, unit.player, item.vector) &&
-                (getFunds() > 0 || info.configuration.funds > 0),
+                shouldBuild(info),
             );
             if (!buildingInfos.length) {
               return null;

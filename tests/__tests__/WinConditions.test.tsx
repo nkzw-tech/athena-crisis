@@ -10,7 +10,11 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Effect } from '@deities/apollo/Effects.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
-import { CrashedAirplane, House } from '@deities/athena/info/Building.tsx';
+import {
+  CrashedAirplane,
+  Factory,
+  House,
+} from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
@@ -279,14 +283,14 @@ test('capture amount win criteria also works when creating buildings', async () 
   const [, gameActionResponseA] = executeGameActions(initialMap, [
     CaptureAction(v1),
     CaptureAction(v2),
-    CreateBuildingAction(v3, House.id),
+    CreateBuildingAction(v3, Factory.id),
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
-      CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 1, completed: true } }
+      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true } }
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 
@@ -296,14 +300,18 @@ test('capture amount win criteria also works when creating buildings', async () 
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
     mapWithOptionalObjectives,
-    [CaptureAction(v1), CaptureAction(v2), CreateBuildingAction(v3, House.id)],
+    [
+      CaptureAction(v1),
+      CaptureAction(v2),
+      CreateBuildingAction(v3, Factory.id),
+    ],
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
-      CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 1, completed: true } }
+      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true } }
       OptionalObjective { condition: { amount: 3, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, conditionId: 0, toPlayer: 1 }"
     `);
 

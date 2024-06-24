@@ -24,6 +24,7 @@ import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
+import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -625,14 +626,16 @@ function createBuilding(map: MapData, { from, id }: CreateBuildingAction) {
   }
 
   const infoB = getBuildingInfo(id);
+  const player = map.getPlayer(unit);
   if (
     infoB &&
     map.isCurrentPlayer(unit) &&
     !unit.isCompleted() &&
     !map.buildings.has(from) &&
     unit.info.hasAbility(Ability.CreateBuildings) &&
-    map.getPlayer(unit).funds >= infoB.configuration.cost &&
-    canBuild(map, infoB, unit.player, from)
+    player.funds >= infoB.configuration.cost &&
+    canBuild(map, infoB, unit.player, from) &&
+    (infoB.canBuildUnits() || hasUnitsOrProductionBuildings(map, player))
   ) {
     return {
       building: infoB.create(unit.player, { label: unit.label }).complete(),
