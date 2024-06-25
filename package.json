@@ -61,7 +61,7 @@
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.6.5",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.14.9",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -108,13 +108,13 @@
       "rollup@^2.0.0": "^4.16.4"
     },
     "patchedDependencies": {
-      "@remix-run/router@1.16.1": "patches/@remix-run__router@1.16.1.patch",
+      "@remix-run/router@1.17.0": "patches/@remix-run__router@1.17.0.patch",
       "eslint-plugin-import@2.29.1": "patches/eslint-plugin-import@2.29.1.patch",
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
       "p-limit@5.0.0": "patches/p-limit@5.0.0.patch",
-      "resend@3.3.0": "patches/resend@3.3.0.patch"
+      "resend@3.4.0": "patches/resend@3.4.0.patch"
     }
   }
 }

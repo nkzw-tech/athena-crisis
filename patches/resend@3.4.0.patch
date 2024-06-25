@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index 12d87650e845266261d494eaef787792955d9790..46eaa09f9a938348a8c183811376b976777e7c4f 100644
+index d0ed6fc1187c455ad9136fc4fda2ea21bc2da9bf..d02e22fe4d4a9a31ec0cf281b1bef8196a8e987d 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -135,7 +135,6 @@ var Audiences = class {
@@ -43,7 +43,7 @@ index 12d87650e845266261d494eaef787792955d9790..46eaa09f9a938348a8c183811376b976
          "/emails",
          payload,
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 12b1e2eebd9d4d613b5ba5fa78040dd630fbe30c..fc0619447e34c3cd288f950d3efe92e8e98b21d6 100644
+index 2ef41bd7e252c60b1b2e5a82e8898b7f74b66809..e589b29483f4f39a5a82d31d2e6b695a568be982 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -112,7 +112,6 @@ var Audiences = class {
@@ -87,7 +87,7 @@ index 12b1e2eebd9d4d613b5ba5fa78040dd630fbe30c..fc0619447e34c3cd288f950d3efe92e8
          "/emails",
          payload,
 diff --git a/package.json b/package.json
-index 3ff376737103c19f84b812cbd0b727f345f76a47..5cd388e9b6bb527efffd4b53b3b5b3576c70e07c 100644
+index 3625d776eef78953dfc85bc2e1ff0a949f7c4632..f94e9bd3d79696f26432840f7e04affca294dc8d 100644
 --- a/package.json
 +++ b/package.json
 @@ -41,9 +41,6 @@
