@@ -299,7 +299,7 @@ const AirUnitTypes = new Set([
 export const Airbase = new BuildingInfo(
   4,
   'Airbase',
-  `This building is used to build air units like helicopters and airplanes. They also automatically repair damaged air units at the beginning of each turn.`,
+  `This building is used to build air units like helicopters and airplanes. They automatically repair damaged air units at this location at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -474,7 +474,7 @@ export const Barracks = new BuildingInfo(
 export const Shelter = new BuildingInfo(
   13,
   'Shelter',
-  `Shelters can be used to automatically heal infantry units at the beginning of each turn.`,
+  `Shelters automatically heal infantry units at this location at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -520,7 +520,7 @@ export const OilRig = new BuildingInfo(
 export const RepairShop = new BuildingInfo(
   17,
   'Repair Shop',
-  `This building automatically repairs damaged ground units and amphibious units at the beginning of each turn.`,
+  `This building automatically repairs damaged ground units and amphibious units at this location at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 300,
