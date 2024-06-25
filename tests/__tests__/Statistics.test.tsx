@@ -90,6 +90,7 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 2,
       "lostBuildings": 0,
       "lostUnits": 1,
+      "rescuedUnits": 0,
     }
   `);
   expect(statsB).toMatchInlineSnapshot(`
@@ -102,6 +103,7 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 1,
       "lostBuildings": 0,
       "lostUnits": 2,
+      "rescuedUnits": 0,
     }
   `);
 
@@ -118,6 +120,7 @@ test('collects statistics on attacks', async () => {
         "destroyedUnits": 2,
         "lostBuildings": 0,
         "lostUnits": 1,
+        "rescuedUnits": 0,
       }
     `);
   expect(fogMap.getPlayer(player2.id).stats).toMatchInlineSnapshot(`
@@ -130,6 +133,7 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "rescuedUnits": 0,
     }
   `);
 });
@@ -192,6 +196,7 @@ test('collects statistics when attacking buildings', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "rescuedUnits": 0,
     }
   `);
   expect(statsB.lostBuildings).toEqual(1);
@@ -206,6 +211,7 @@ test('collects statistics when attacking buildings', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 1,
+      "rescuedUnits": 0,
     }
   `);
 });
@@ -250,6 +256,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "rescuedUnits": 0,
     }
   `);
 
@@ -263,6 +270,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "rescuedUnits": 0,
     }
   `);
   expect(statsC).toMatchInlineSnapshot(`
@@ -275,6 +283,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "rescuedUnits": 0,
     }
   `);
 });

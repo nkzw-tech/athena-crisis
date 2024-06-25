@@ -87,6 +87,10 @@ export function destroyedBuildingsByPlayer(map: MapData, player: PlayerID) {
   return map.getPlayer(player).stats.destroyedBuildings;
 }
 
+export function rescuedUnitsByPlayer(map: MapData, player: PlayerID) {
+  return map.getPlayer(player).stats.rescuedUnits;
+}
+
 export function escortedByPlayer(
   map: MapData,
   player: PlayerID,
@@ -182,6 +186,12 @@ function checkWinCondition(
           previousMap.units
             .filter(filterNeutral)
             .filter(filterByLabels(condition.label)).size) ||
+      (actionResponse.type === 'AttackUnit' &&
+        condition.type === WinCriteria.RescueAmount &&
+        !ignoreIfOptional &&
+        map.units.filter(filterNeutral).size +
+          rescuedUnitsByPlayer(map, player) <
+          condition.amount) ||
       (actionResponse.type === 'EndTurn' &&
         condition.type === WinCriteria.Survival &&
         matchesPlayerList(condition.players, actionResponse.next.player) &&
@@ -212,13 +222,16 @@ function checkWinCondition(
 
   if (isRescue) {
     return (
-      condition.type === WinCriteria.RescueLabel &&
-      matchesPlayer &&
-      !map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
-        .size &&
-      previousMap.units
-        .filter(filterNeutral)
-        .filter(filterByLabels(condition.label)).size > 0
+      (condition.type === WinCriteria.RescueLabel &&
+        matchesPlayer &&
+        !map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
+          .size &&
+        previousMap.units
+          .filter(filterNeutral)
+          .filter(filterByLabels(condition.label)).size > 0) ||
+      (condition.type === WinCriteria.RescueAmount &&
+        matchesPlayer &&
+        rescuedUnitsByPlayer(map, player) >= condition.amount)
     );
   }
 

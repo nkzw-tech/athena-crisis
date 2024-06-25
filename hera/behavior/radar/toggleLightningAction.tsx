@@ -4,6 +4,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export async function toggleLightningAnimation(
@@ -32,10 +33,10 @@ export default async function toggleLightningAction(
   to: Vector,
   state: State,
 ): Promise<State> {
-  const { action, processGameActionResponse, update } = actions;
+  const { action, update } = actions;
   const [remoteAction, newMap] = action(state, ToggleLightningAction(from, to));
 
-  state = await update(
+  await update(
     await toggleLightningAnimation(
       actions,
       to,
@@ -47,8 +48,5 @@ export default async function toggleLightningAction(
     ),
   );
 
-  state = await update(await processGameActionResponse(await remoteAction));
-  return state.lastActionResponse?.type !== 'GameEnd'
-    ? await update(resetBehavior())
-    : state;
+  return handleRemoteAction(actions, remoteAction);
 }

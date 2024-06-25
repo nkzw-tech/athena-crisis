@@ -92,6 +92,7 @@ const pickWinningPlayer = (
 
   if (
     (condition.type === WinCriteria.RescueLabel ||
+      condition.type === WinCriteria.RescueAmount ||
       condition.type === WinCriteria.CaptureLabel) &&
     isDestructiveAction(actionResponse) &&
     matchesPlayerList(condition.players, activeMap.currentPlayer)
@@ -140,7 +141,6 @@ export function checkObjectives(
           condition: {
             ...condition,
             completed: new Set([...(condition.completed || []), player]),
-            hidden: false,
           },
           conditionId: map.config.winConditions.indexOf(condition),
           toPlayer: player,
@@ -253,7 +253,7 @@ export function applyObjectiveActionResponse(
       }
 
       const winConditions = Array.from(map.config.winConditions);
-      winConditions[conditionId] = condition;
+      winConditions[conditionId] = { ...condition, hidden: false };
       return map.copy({
         config: map.config.copy({
           winConditions,

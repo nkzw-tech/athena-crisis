@@ -3,6 +3,7 @@ import {
   capturedByPlayer,
   destroyedBuildingsByPlayer,
   escortedByPlayer,
+  rescuedUnitsByPlayer,
 } from '@deities/apollo/lib/checkWinCondition.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -24,6 +25,7 @@ import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
+import Rescue from '@deities/ui/icons/Rescue.tsx';
 import { BackgroundRainbowAnimation } from '@deities/ui/RainbowPulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
@@ -34,7 +36,7 @@ import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
@@ -350,31 +352,40 @@ const PlayerCardObjective = ({
   map: MapData;
   player: Player;
 }) => {
-  const [icon, status, amount] =
-    condition.type === WinCriteria.DefeatAmount
-      ? [Crosshair, player.stats.destroyedUnits, condition.amount]
-      : condition.type === WinCriteria.CaptureAmount
-        ? [Flag, capturedByPlayer(map, player.id), condition.amount]
-        : condition.type === WinCriteria.DestroyAmount
-          ? [
-              Buildings,
-              destroyedBuildingsByPlayer(map, player.id),
-              condition.amount,
-            ]
-          : condition.type === WinCriteria.EscortAmount
+  const [icon, status, amount] = useMemo(
+    () =>
+      condition.type === WinCriteria.DefeatAmount
+        ? [Crosshair, player.stats.destroyedUnits, condition.amount]
+        : condition.type === WinCriteria.CaptureAmount
+          ? [Flag, capturedByPlayer(map, player.id), condition.amount]
+          : condition.type === WinCriteria.DestroyAmount
             ? [
-                Escort,
-                escortedByPlayer(
-                  map,
-                  player.id,
-                  condition.vectors,
-                  condition.label,
-                ),
+                Buildings,
+                destroyedBuildingsByPlayer(map, player.id),
                 condition.amount,
               ]
-            : condition.type === WinCriteria.Survival
-              ? [Hourglass, map.round, condition.rounds]
-              : [null, null];
+            : condition.type === WinCriteria.EscortAmount
+              ? [
+                  Escort,
+                  escortedByPlayer(
+                    map,
+                    player.id,
+                    condition.vectors,
+                    condition.label,
+                  ),
+                  condition.amount,
+                ]
+              : condition.type === WinCriteria.RescueAmount
+                ? [
+                    Rescue,
+                    rescuedUnitsByPlayer(map, player.id),
+                    condition.amount,
+                  ]
+                : condition.type === WinCriteria.Survival
+                  ? [Hourglass, map.round, condition.rounds]
+                  : [null, null],
+    [condition, map, player.id, player.stats.destroyedUnits],
+  );
 
   return (
     (icon && status != null && (

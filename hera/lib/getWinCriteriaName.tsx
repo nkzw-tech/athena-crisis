@@ -33,6 +33,11 @@ export default function getWinCriteriaName(criteria: WinCriteria) {
       return fbt('Survival', 'Panel button name for survival.');
     case WinCriteria.EscortAmount:
       return fbt('Escort units by amount', 'Panel button name for escort.');
+    case WinCriteria.RescueAmount:
+      return fbt(
+        'Rescue units by amount',
+        'Panel button name for rescuing by amount.',
+      );
     case WinCriteria.RescueLabel:
       return fbt(
         'Rescue units by label',

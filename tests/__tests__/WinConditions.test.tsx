@@ -2658,6 +2658,168 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   expect(gameHasEnded(gameStateD_2)).toBe(false);
 });
 
+test('rescue amount win criteria', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const v3 = vec(1, 3);
+  const v4 = vec(2, 3);
+  const v5 = vec(2, 2);
+  const v6 = vec(2, 1);
+  const v7 = vec(3, 3);
+  const initialMap = map.copy({
+    config: map.config.copy({
+      winConditions: [
+        {
+          amount: 2,
+          hidden: false,
+          optional: false,
+          type: WinCriteria.RescueAmount,
+        },
+      ],
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(0, { label: 0 }))
+      .set(v2, Pioneer.create(player1))
+      .set(v3, Pioneer.create(0, { label: 3 }))
+      .set(v4, Pioneer.create(player1))
+      .set(v5, Pioneer.create(0, { label: 0 }))
+      .set(v6, Pioneer.create(player1))
+      .set(v7, Pioneer.create(0, { label: 4 })),
+  });
+
+  expect(validateWinConditions(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+    RescueAction(v6, v5),
+    EndTurnAction(),
+    EndTurnAction(),
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "Rescue (1,2 → 1,1) { player: 1 }
+      Rescue (2,3 → 1,3) { player: 1 }
+      Rescue (2,1 → 2,2) { player: 1 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      Rescue (1,2 → 1,1) { player: 1 }
+      Rescue (2,3 → 1,3) { player: 1 }
+      GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 13 }, conditionId: 0, toPlayer: 1 }"
+    `);
+
+  const mapWithOptionalObjectives = optional(initialMap);
+
+  expect(validateWinConditions(mapWithOptionalObjectives)).toBe(true);
+
+  const [gameStateB, gameActionResponseB] = executeGameActions(
+    mapWithOptionalObjectives,
+    [
+      RescueAction(v2, v1),
+      RescueAction(v4, v3),
+      RescueAction(v6, v5),
+      EndTurnAction(),
+      EndTurnAction(),
+      RescueAction(v2, v1),
+      RescueAction(v4, v3),
+    ],
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "Rescue (1,2 → 1,1) { player: 1 }
+      Rescue (2,3 → 1,3) { player: 1 }
+      Rescue (2,1 → 2,2) { player: 1 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      Rescue (1,2 → 1,1) { player: 1 }
+      Rescue (2,3 → 1,3) { player: 1 }
+      OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 13 }, conditionId: 0, toPlayer: 1 }"
+    `);
+
+  expect(gameHasEnded(gameStateB)).toBe(false);
+});
+
+test('rescue amount win criteria loses when destroying the rescuable unit', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const v3 = vec(1, 3);
+  const v4 = vec(2, 3);
+  const v5 = vec(2, 2);
+  const mapA = map.copy({
+    config: map.config.copy({
+      winConditions: [
+        {
+          amount: 3,
+          hidden: false,
+          optional: false,
+          players: [1],
+          type: WinCriteria.RescueAmount,
+        },
+      ],
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(0))
+      .set(v2, Pioneer.create(player1))
+      .set(v3, Pioneer.create(0).setHealth(1))
+      .set(v4, SmallTank.create(player1))
+      .set(v5, Pioneer.create(0)),
+  });
+
+  expect(validateWinConditions(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(mapA, [
+    RescueAction(v2, v1),
+    AttackUnitAction(v4, v3),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "Rescue (1,2 → 1,1) { player: 1 }
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
+      GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, conditionId: 0, toPlayer: 2 }"
+    `);
+
+  const mapB = map.copy({
+    config: map.config.copy({
+      winConditions: [
+        {
+          amount: 3,
+          hidden: false,
+          optional: false,
+          players: [1],
+          type: WinCriteria.RescueAmount,
+        },
+      ],
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(0))
+      .set(v2, Pioneer.create(player1))
+      .set(v3, Pioneer.create(0).setHealth(1))
+      .set(v4, SmallTank.create(player2))
+      .set(v5, Pioneer.create(0)),
+  });
+
+  expect(validateWinConditions(mapB)).toBe(true);
+
+  const [, gameActionResponseB] = executeGameActions(mapB, [
+    RescueAction(v2, v1),
+    EndTurnAction(),
+    AttackUnitAction(v4, v3),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+        "Rescue (1,2 → 1,1) { player: 1 }
+        EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+        AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
+        GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, conditionId: 0, toPlayer: 2 }"
+      `);
+});
+
 test('optional objectives should not be triggered multiple times for the same player', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

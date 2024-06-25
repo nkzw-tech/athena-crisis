@@ -217,6 +217,43 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
+    case WinCriteria.RescueAmount:
+      return labels?.length ? (
+        <fbt desc="Explanation for the rescue by label win condition with multiple players">
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by rescuing{' '}
+          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:plural
+            count={condition.amount}
+            many="units"
+            name="number of units"
+          >
+            unit
+          </fbt:plural>{' '}
+          with the{' '}
+          <fbt:plural
+            count={labels?.length || 0}
+            many="labels"
+            name="number of labels"
+          >
+            label
+          </fbt:plural>{' '}
+          <fbt:param name="label">{labelList}</fbt:param>.
+        </fbt>
+      ) : (
+        <fbt desc="Explanation for the rescue by label win condition with multiple players">
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the
+          objective by rescuing{' '}
+          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:plural
+            count={condition.amount}
+            many="units"
+            name="number of units"
+          >
+            unit
+          </fbt:plural>.
+        </fbt>
+      );
     case WinCriteria.RescueLabel:
       return (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">

@@ -9,6 +9,7 @@ import attackActionAnimation from '../../animations/attackActionAnimation.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default async function clientAttackAction(
@@ -22,7 +23,7 @@ export default async function clientAttackAction(
   entityB: Entity,
   state: State,
 ): Promise<State> {
-  const { processGameActionResponse, scheduleTimer, update } = actions;
+  const { scheduleTimer, update } = actions;
   const { map: previousMap } = state;
   const entityIsBuilding = isBuilding(entityB);
 
@@ -58,10 +59,7 @@ export default async function clientAttackAction(
 
   const complete = async (state: State) => {
     await update({ ...state, map: newMap });
-    state = await update(await processGameActionResponse(await remoteAction));
-    return state.lastActionResponse?.type !== 'GameEnd'
-      ? await update(resetBehavior())
-      : state;
+    return handleRemoteAction(actions, remoteAction);
   };
 
   const unitB = state.map.units.get(to)!;

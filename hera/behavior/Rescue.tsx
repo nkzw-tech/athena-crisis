@@ -12,16 +12,17 @@ export default class Rescue {
   public readonly type = 'rescue' as const;
 
   select(vector: Vector, state: State, actions: Actions): StateLike | null {
+    const { action, requestFrame } = actions;
     const { map, radius, selectedPosition } = state;
     const unitB = radius?.fields.has(vector) && map.units.get(vector);
     if (selectedPosition && unitB) {
-      const actionResponse = actions.optimisticAction(
-        state,
-        RescueAction(selectedPosition, vector),
+      requestFrame(() =>
+        rescueAction(
+          actions,
+          ...action(state, RescueAction(selectedPosition, vector)),
+        ),
       );
-      if (actionResponse.type === 'Rescue') {
-        return rescueAction(actionResponse, state);
-      }
+      return null;
     }
     return selectFallback(vector, state, actions);
   }

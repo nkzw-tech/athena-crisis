@@ -419,9 +419,10 @@ export default function applyActionResponse(
       const { from, player, to } = actionResponse;
       const unitA = from && map.units.get(from)!;
       const unitB = map.units.get(to)!;
+      const rescueFinished = unitB.isBeingRescuedBy(player);
       const units = map.units.set(
         to,
-        unitB.isBeingRescuedBy(player)
+        rescueFinished
           ? unitB
               .stopBeingRescued()
               .setPlayer(player)
@@ -430,6 +431,12 @@ export default function applyActionResponse(
           : unitB.rescue(player),
       );
       return map.copy({
+        teams: rescueFinished
+          ? updatePlayer(
+              map.teams,
+              map.getPlayer(player).modifyStatistic('rescuedUnits', 1),
+            )
+          : map.teams,
         units: unitA ? units.set(from, unitA.complete()) : units,
       });
     }

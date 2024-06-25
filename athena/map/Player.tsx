@@ -138,6 +138,10 @@ export default abstract class Player {
           this.stats.lostBuildings + (stats.lostBuildings || 0),
         ),
         lostUnits: Math.max(0, this.stats.lostUnits + (stats.lostUnits || 0)),
+        rescuedUnits: Math.max(
+          0,
+          this.stats.rescuedUnits + (stats.rescuedUnits || 0),
+        ),
       },
     });
   }

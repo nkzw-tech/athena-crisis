@@ -38,9 +38,7 @@ import clientMoveAction from '../behavior/move/clientMoveAction.tsx';
 import hiddenMoveAction from '../behavior/move/hiddenMoveAction.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { toggleLightningAnimation } from '../behavior/radar/toggleLightningAction.tsx';
-import rescueAction, {
-  addRescueAnimation,
-} from '../behavior/rescue/rescueAction.tsx';
+import rescueAction from '../behavior/rescue/rescueAction.tsx';
 import sabotageAction, {
   addSabotageAnimation,
 } from '../behavior/sabotage/sabotageAction.tsx';
@@ -352,20 +350,8 @@ async function processActionResponse(
       requestFrame(() => resolve({ ...state, ...newState, map: newMap }));
       break;
     }
-    case 'Rescue': {
-      await update((state) =>
-        actionResponse.from
-          ? rescueAction(actionResponse, state, resolveWithNull)
-          : addRescueAnimation(
-              newMap,
-              actionResponse.to,
-              actionResponse.player,
-              state,
-              resolveWithNull,
-            ),
-      );
-      break;
-    }
+    case 'Rescue':
+      return rescueAction(actions, ...remoteActionResponse);
     case 'Sabotage': {
       await update((state) =>
         actionResponse.from

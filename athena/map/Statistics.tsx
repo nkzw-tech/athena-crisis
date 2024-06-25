@@ -7,6 +7,7 @@ export type PlayerStatistics = Readonly<{
   destroyedUnits: number;
   lostBuildings: number;
   lostUnits: number;
+  rescuedUnits: number;
 }>;
 
 export type PlainPlayerStatistics = [
@@ -17,6 +18,7 @@ export type PlainPlayerStatistics = [
   destroyedBuildings: number,
   destroyedUnits: number,
   lostBuildings: number,
+  rescuedUnits: number,
   lostUnits: number,
 ];
 
@@ -29,6 +31,7 @@ export const InitialPlayerStatistics = {
   destroyedUnits: 0,
   lostBuildings: 0,
   lostUnits: 0,
+  rescuedUnits: 0,
 } as const;
 
 export const PlayerStatisticsEntries = [
@@ -40,21 +43,23 @@ export const PlayerStatisticsEntries = [
   'destroyedUnits',
   'lostBuildings',
   'lostUnits',
+  'rescuedUnits',
 ] as const;
 
 export function decodePlayerStatistics(
   stats: PlainPlayerStatistics | null,
 ): PlayerStatistics {
   return {
-    captured: stats?.[0] || InitialPlayerStatistics.captured,
-    createdBuildings: stats?.[1] || InitialPlayerStatistics.createdBuildings,
-    createdUnits: stats?.[2] || InitialPlayerStatistics.createdUnits,
-    damage: stats?.[3] || InitialPlayerStatistics.damage,
+    captured: stats?.[0] ?? InitialPlayerStatistics.captured,
+    createdBuildings: stats?.[1] ?? InitialPlayerStatistics.createdBuildings,
+    createdUnits: stats?.[2] ?? InitialPlayerStatistics.createdUnits,
+    damage: stats?.[3] ?? InitialPlayerStatistics.damage,
     destroyedBuildings:
-      stats?.[4] || InitialPlayerStatistics.destroyedBuildings,
-    destroyedUnits: stats?.[5] || InitialPlayerStatistics.destroyedUnits,
-    lostBuildings: stats?.[6] || InitialPlayerStatistics.lostBuildings,
-    lostUnits: stats?.[7] || InitialPlayerStatistics.lostUnits,
+      stats?.[4] ?? InitialPlayerStatistics.destroyedBuildings,
+    destroyedUnits: stats?.[5] ?? InitialPlayerStatistics.destroyedUnits,
+    lostBuildings: stats?.[6] ?? InitialPlayerStatistics.lostBuildings,
+    lostUnits: stats?.[7] ?? InitialPlayerStatistics.lostUnits,
+    rescuedUnits: stats?.[8] ?? InitialPlayerStatistics.rescuedUnits,
   };
 }
 
@@ -71,6 +76,7 @@ export function encodePlayerStatistics(
         stats.destroyedUnits,
         stats.lostBuildings,
         stats.lostUnits,
+        stats.rescuedUnits,
       ]
     : null;
 }

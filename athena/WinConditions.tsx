@@ -29,35 +29,38 @@ export enum WinCriteria {
   DefeatOneLabel = 10,
   DestroyLabel = 11,
   DestroyAmount = 12,
+  RescueAmount = 13,
 }
 
 export const WinCriteriaList = [
   WinCriteria.Default,
-  WinCriteria.CaptureLabel,
   WinCriteria.CaptureAmount,
+  WinCriteria.CaptureLabel,
+  WinCriteria.DefeatAmount,
   WinCriteria.DefeatLabel,
   WinCriteria.DefeatOneLabel,
-  WinCriteria.DefeatAmount,
-  WinCriteria.EscortLabel,
-  WinCriteria.EscortAmount,
-  WinCriteria.Survival,
-  WinCriteria.RescueLabel,
-  WinCriteria.DestroyLabel,
   WinCriteria.DestroyAmount,
+  WinCriteria.DestroyLabel,
+  WinCriteria.EscortAmount,
+  WinCriteria.EscortLabel,
+  WinCriteria.RescueAmount,
+  WinCriteria.RescueLabel,
+  WinCriteria.Survival,
 ] as const;
 
 export const WinCriteriaListWithoutDefault = [
-  WinCriteria.CaptureLabel,
   WinCriteria.CaptureAmount,
-  WinCriteria.DefeatLabel,
+  WinCriteria.CaptureLabel,
   WinCriteria.DefeatAmount,
-  WinCriteria.EscortLabel,
-  WinCriteria.EscortAmount,
-  WinCriteria.Survival,
-  WinCriteria.RescueLabel,
+  WinCriteria.DefeatLabel,
   WinCriteria.DefeatOneLabel,
-  WinCriteria.DestroyLabel,
   WinCriteria.DestroyAmount,
+  WinCriteria.DestroyLabel,
+  WinCriteria.EscortAmount,
+  WinCriteria.EscortLabel,
+  WinCriteria.RescueAmount,
+  WinCriteria.RescueLabel,
+  WinCriteria.Survival,
 ] as const;
 
 export const MIN_AMOUNT = 1;
@@ -178,6 +181,16 @@ type DestroyAmountWinCondition = Readonly<{
   type: WinCriteria.DestroyAmount;
 }>;
 
+type RescueAmountWinCondition = Readonly<{
+  amount: number;
+  completed?: PlayerIDSet;
+  hidden: boolean;
+  optional: boolean;
+  players?: PlayerIDs;
+  reward?: Reward | null;
+  type: WinCriteria.RescueAmount;
+}>;
+
 export type WinConditionsWithVectors =
   | EscortLabelWinCondition
   | EscortAmountWinCondition;
@@ -197,6 +210,7 @@ export type WinCondition =
   | DestroyLabelWinCondition
   | EscortAmountWinCondition
   | EscortLabelWinCondition
+  | RescueAmountWinCondition
   | RescueLabelWinCondition
   | SurvivalWinCondition;
 
@@ -309,6 +323,15 @@ export type PlainWinCondition =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+    ]
+  | [
+      type: WinCriteria.RescueAmount,
+      hidden: 0 | 1,
+      amount: number,
+      players: ReadonlyArray<number>,
+      reward?: EncodedReward | null,
+      optional?: 0 | 1,
+      completed?: ReadonlyArray<number>,
     ];
 
 export type WinConditions = ReadonlyArray<WinCondition>;
@@ -380,6 +403,16 @@ export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
         condition.players,
         encodeVectorArray([...condition.vectors]),
         condition.label ? Array.from(condition.label) : [],
+        maybeEncodeReward(condition.reward),
+        condition.optional ? 1 : 0,
+        condition.completed?.size ? Array.from(condition.completed) : [],
+      ];
+    case WinCriteria.RescueAmount:
+      return [
+        type,
+        hidden ? 1 : 0,
+        condition.amount,
+        condition.players || [],
         maybeEncodeReward(condition.reward),
         condition.optional ? 1 : 0,
         condition.completed?.size ? Array.from(condition.completed) : [],
@@ -508,6 +541,18 @@ export function decodeWinCondition(condition: PlainWinCondition): WinCondition {
         type,
         vectors: new Set(decodeVectorArray(condition[4])),
       };
+    case WinCriteria.RescueAmount:
+      return {
+        amount: condition[2],
+        completed: condition[6]
+          ? new Set(toPlayerIDs(condition[6]))
+          : new Set(),
+        hidden: !!condition[1],
+        optional: !!condition[5],
+        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
+        reward: maybeDecodeReward(condition[4]),
+        type,
+      };
     case WinCriteria.RescueLabel:
       return {
         completed: condition[6]
@@ -608,12 +653,14 @@ export function winConditionHasAmounts(
   | CaptureAmountWinCondition
   | DefeatAmountWinCondition
   | DestroyAmountWinCondition
-  | EscortAmountWinCondition {
+  | EscortAmountWinCondition
+  | RescueAmountWinCondition {
   const { type } = condition;
   return (
     type === WinCriteria.CaptureAmount ||
     type === WinCriteria.DestroyAmount ||
     type === WinCriteria.DefeatAmount ||
+    type === WinCriteria.RescueAmount ||
     type === WinCriteria.EscortAmount
   );
 }
@@ -629,26 +676,30 @@ export function getOpponentPriorityLabels(
   conditions: WinConditions,
   player: PlayerID,
 ) {
-  return new Set(
-    conditions.flatMap((condition) => {
-      if (!winConditionHasLabel(condition) || !condition.label?.size) {
-        return [];
-      }
+  const labels = new Set<PlayerID>();
+  for (const condition of conditions) {
+    if (!winConditionHasLabel(condition) || !condition.label?.size) {
+      continue;
+    }
 
-      const { label, players, type } = condition;
-      return ((type === WinCriteria.DefeatLabel ||
+    const { label, players, type } = condition;
+    if (
+      ((type === WinCriteria.DefeatLabel ||
         type === WinCriteria.DestroyLabel ||
         type === WinCriteria.DefeatOneLabel) &&
         (!players?.length || players.includes(player))) ||
-        ((type === WinCriteria.EscortAmount ||
-          type === WinCriteria.EscortLabel ||
-          type === WinCriteria.RescueLabel) &&
-          players?.length &&
-          !players.includes(player))
-        ? [...label]
-        : [];
-    }),
-  );
+      ((type === WinCriteria.EscortAmount ||
+        type === WinCriteria.EscortLabel ||
+        type === WinCriteria.RescueLabel) &&
+        players?.length &&
+        !players.includes(player))
+    ) {
+      for (const player of label) {
+        labels.add(player);
+      }
+    }
+  }
+  return labels;
 }
 
 const validateLabel = (label: PlayerIDSet) => {
@@ -659,6 +710,7 @@ const validateLabel = (label: PlayerIDSet) => {
   toPlayerIDs([...label]);
   return true;
 };
+
 const validatePlayers = (map: MapData, players: PlayerIDs) => {
   if (players.length > 0) {
     const playerIDSet = new Set(toPlayerIDs(players));
@@ -738,14 +790,11 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
         ? condition.rounds > 1
         : true;
     case WinCriteria.EscortAmount:
-      if (condition.label?.size && !validateLabel(condition.label)) {
+      if (!validateAmount(condition.amount)) {
         return false;
       }
 
-      if (
-        !isPositiveInteger(condition.amount) ||
-        condition.amount > MAX_AMOUNT
-      ) {
+      if (condition.label?.size && !validateLabel(condition.label)) {
         return false;
       }
 
@@ -753,6 +802,14 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
         validatePlayers(map, toPlayerIDs(condition.players)) &&
         [...condition.vectors].every(validateVector)
       );
+    case WinCriteria.RescueAmount:
+      if (!validateAmount(condition.amount)) {
+        return false;
+      }
+
+      return condition.players?.length
+        ? validatePlayers(map, condition.players)
+        : true;
     default: {
       condition satisfies never;
       return false;
@@ -892,6 +949,14 @@ export function getInitialWinCondition(
         players,
         type: criteria,
         vectors: new Set(),
+      };
+    case WinCriteria.RescueAmount:
+      return {
+        amount: 1,
+        hidden,
+        optional,
+        players,
+        type: criteria,
       };
     case WinCriteria.RescueLabel:
       return {
