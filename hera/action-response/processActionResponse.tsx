@@ -20,7 +20,7 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
-import secretDiscoveredAnimation from '../animations/secretDiscoveredAnimation.tsx';
+import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
 import {
@@ -610,12 +610,13 @@ async function processActionResponse(
       return activatePowerAction(actions, state, actionResponse);
     case 'OptionalObjective':
     case 'SecretDiscovered':
-      return secretDiscoveredAnimation(newMap, actions, state, actionResponse);
+      return objectiveAnimation(newMap, actions, state, actionResponse);
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('processActionResponse', type);
     }
   }
+
   return promise;
 }
 

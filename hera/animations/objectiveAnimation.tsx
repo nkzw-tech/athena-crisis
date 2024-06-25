@@ -8,7 +8,7 @@ import AnimationKey from '../lib/AnimationKey.tsx';
 import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
 import { Actions, State } from '../Types.tsx';
 
-export default async function secretDiscoveredAnimation(
+export default async function objectiveAnimation(
   newMap: MapData,
   actions: Actions,
   state: State,
@@ -18,20 +18,17 @@ export default async function secretDiscoveredAnimation(
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { condition, type } = actionResponse;
+  if (type === 'OptionalObjective' && condition.hidden) {
+    return actions.update({ map: newMap });
+  }
+
   const player = state.map.getCurrentPlayer().id;
   const text =
     type === 'SecretDiscovered'
       ? String(fbt(`Secret Discovered!`, 'Secret discovered banner'))
-      : !condition.hidden
-        ? String(
-            fbt(`Optional Objective Achieved!`, 'Optional objective banner'),
-          )
-        : String(
-            fbt(
-              `Optional Secret Discovered!`,
-              'Secret Optional objective banner',
-            ),
-          );
+      : String(
+          fbt(`Optional Objective Achieved!`, 'Optional objective banner'),
+        );
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
