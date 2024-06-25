@@ -192,12 +192,17 @@ const getEffectState = (map: MapData, effects: Effects | undefined) => {
 };
 const getWinConditionRadius = (
   { config: { winConditions } }: MapData,
+  currentViewer: PlayerID | null,
   isEditor: boolean,
 ) => {
   const radiusItems: Array<RadiusInfo> = [];
   let id = 0;
   for (const condition of winConditions) {
-    if ((!isEditor && condition.hidden) || !winConditionHasVectors(condition)) {
+    if (
+      (!isEditor && condition.hidden) ||
+      !winConditionHasVectors(condition) ||
+      (currentViewer != null && condition.completed?.has(currentViewer))
+    ) {
       continue;
     }
 
@@ -287,7 +292,7 @@ const getInitialState = (props: Props) => {
     timeout: timeout || null,
     unitSize,
     vision,
-    winConditionRadius: getWinConditionRadius(map, isEditor),
+    winConditionRadius: getWinConditionRadius(map, currentViewer, isEditor),
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
   return {
@@ -890,6 +895,7 @@ export default class GameMap extends Component<Props, State> {
               ...newState,
               winConditionRadius: getWinConditionRadius(
                 newState.map,
+                newState.currentViewer ?? this.state.currentViewer,
                 !!this.props.editor,
               ),
             };
