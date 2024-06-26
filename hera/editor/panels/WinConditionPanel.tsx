@@ -248,9 +248,7 @@ export default function WinConditionPanel({
       ))}
       <Box gap={16} vertical>
         <h2>
-          <fbt desc="Headline for adding new win conditions">
-            Add new win condition
-          </fbt>
+          <fbt desc="Headline for adding a new objective">New Objective</fbt>
         </h2>
         <Stack gap vertical>
           {WinCriteriaList.filter(
