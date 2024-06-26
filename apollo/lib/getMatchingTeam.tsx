@@ -1,4 +1,4 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import Team from '@deities/athena/map/Team.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   GameEndActionResponse,
@@ -8,8 +8,6 @@ import {
 export default function getMatchingTeam(
   map: MapData,
   actionResponse: GameEndActionResponse | OptionalObjectiveActionResponse,
-): null | PlayerID {
-  return actionResponse.toPlayer
-    ? map.getTeam(actionResponse.toPlayer).id
-    : null;
+): Team | null {
+  return actionResponse.toPlayer ? map.getTeam(actionResponse.toPlayer) : null;
 }

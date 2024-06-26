@@ -29,7 +29,7 @@ export function processRewards(
 
     if (rewards.size) {
       for (const reward of rewards) {
-        for (const [, player] of map.getTeam(team).players) {
+        for (const [, player] of team.players) {
           if (!player.skills.has(reward.skill)) {
             const rewardActionResponse = {
               player: player.id,

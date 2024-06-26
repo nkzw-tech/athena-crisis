@@ -1,6 +1,7 @@
 import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
+import getMatchingTeam from '@deities/apollo/lib/getMatchingTeam.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import {
   GameActionResponse,
@@ -474,7 +475,8 @@ async function processActionResponse(
     }
     case 'GameEnd': {
       const { toPlayer } = actionResponse;
-      if (!toPlayer) {
+      const team = getMatchingTeam(map, actionResponse);
+      if (!toPlayer || !team) {
         await update((currentState) => ({
           ...state,
           animations: currentState.animations.set(new AnimationKey(), {
@@ -488,19 +490,18 @@ async function processActionResponse(
         break;
       }
 
-      const winners = [
-        ...map
-          .getTeam(toPlayer)
-          .players.map(({ id }) => id)
-          .values(),
-      ];
-
-      const possiblePositions = [
-        ...map.buildings
-          .filter((building) => map.matchesTeam(building, toPlayer))
-          .keys(),
-        ...map.units.filter((unit) => map.matchesTeam(unit, toPlayer)).keys(),
-      ];
+      const winners = [...team.players.map(({ id }) => id).values()];
+      const possiblePositions = new Set<Vector>();
+      for (const [vector, building] of map.buildings) {
+        if (map.matchesTeam(building, toPlayer)) {
+          possiblePositions.add(vector);
+        }
+      }
+      for (const [vector, unit] of map.units) {
+        if (map.matchesTeam(unit, toPlayer)) {
+          possiblePositions.add(vector);
+        }
+      }
 
       const animateFireworks = (
         state: State,
@@ -543,7 +544,7 @@ async function processActionResponse(
           onComplete: (state) =>
             animateFireworks(
               state,
-              arrayShuffle(possiblePositions).slice(0, count),
+              arrayShuffle([...possiblePositions]).slice(0, count),
               (state) => {
                 resolve({
                   ...state,
