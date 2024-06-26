@@ -17,18 +17,25 @@ export default async function objectiveAnimation(
     | OptionalObjectiveActionResponse,
 ): Promise<State> {
   const { requestFrame, update } = actions;
+  const { map } = state;
   const { condition, type } = actionResponse;
-  if (type === 'OptionalObjective' && condition.hidden) {
+  const isOptional = type === 'OptionalObjective';
+  if (isOptional && condition.hidden) {
     return actions.update({ map: newMap });
   }
 
-  const player = state.map.getCurrentPlayer().id;
-  const text =
-    type === 'SecretDiscovered'
-      ? String(fbt(`Secret Discovered!`, 'Secret discovered banner'))
-      : String(
-          fbt(`Optional Objective Achieved!`, 'Optional objective banner'),
-        );
+  const currentPlayer = state.map.getCurrentPlayer().id;
+  const player = actionResponse.toPlayer || currentPlayer;
+  const matchesTeam = map.matchesTeam(player, currentPlayer);
+  const text = String(
+    isOptional
+      ? matchesTeam
+        ? fbt(`Optional Objective Achieved!`, 'Optional objective banner')
+        : fbt(`Optional Objective Failed!`, 'Optional objective banner')
+      : matchesTeam
+        ? fbt(`Secret Discovered!`, 'Secret discovered banner')
+        : fbt(`Secret Denied!`, 'Secret discovered banner'),
+  );
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {

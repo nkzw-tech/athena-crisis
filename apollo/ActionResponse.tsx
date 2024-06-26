@@ -200,6 +200,7 @@ export type ActivatePowerActionResponse = Readonly<{
 
 export type SecretDiscoveredActionResponse = Readonly<{
   condition: WinCondition;
+  toPlayer?: PlayerID;
   type: 'SecretDiscovered';
 }>;
 

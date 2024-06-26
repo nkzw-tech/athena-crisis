@@ -15,12 +15,12 @@ export default function onGameEnd(
     const map = activeMap.copy({
       currentPlayer: viewerId,
     });
-    const { condition } = lastAction;
+    const { condition, toPlayer } = lastAction;
     const secretCondition = condition?.hidden ? condition : null;
     const secretGameState = secretCondition
       ? [
           [
-            { condition: secretCondition, type: 'SecretDiscovered' },
+            { condition: secretCondition, toPlayer, type: 'SecretDiscovered' },
             activeMap,
           ] as const,
         ]
