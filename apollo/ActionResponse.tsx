@@ -152,6 +152,7 @@ export type HealActionResponse = Readonly<{
 
 export type RescueActionResponse = Readonly<{
   from?: Vector;
+  name?: number;
   player: PlayerID;
   to: Vector;
   type: 'Rescue';

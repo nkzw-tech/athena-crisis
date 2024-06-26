@@ -166,7 +166,7 @@
   ["Start", [34, ["type"]]],
   ["SetViewer", [35, ["type"]]],
   ["BeginGame", [36, ["type"]]],
-  ["Rescue", [37, ["type", "from", "to", "player"]]],
+  ["Rescue", [37, ["type", "from", "to", "player", "name"]]],
   ["ReceiveReward", [38, ["type", "player", "reward"]]],
   ["BuySkill", [39, ["type", "from", "skill", "player"]]],
   ["ActivatePower", [40, ["type", "skill"]]],

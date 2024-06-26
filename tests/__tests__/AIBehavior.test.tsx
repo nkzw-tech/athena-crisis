@@ -517,7 +517,7 @@ test('AI will prefer to rescue over capture', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
-    Rescue (3,2 → 3,3) { player: 2 }
+    Rescue (3,2 → 3,3) { player: 2, name: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -531,8 +531,8 @@ test('AI will prefer to rescue over capture', () => {
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "Rescue (3,2 → 3,3) { player: 2 }
-    AttackUnit (3,3 → 2,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 26, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 277 }
+    "Rescue (3,2 → 3,3) { player: 2, name: -18 }
+    AttackUnit (3,3 → 2,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 20, ammo: [ [ 1, 6 ] ] }, chargeA: 129, chargeB: 300 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
   `);
 });

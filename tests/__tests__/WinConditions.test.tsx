@@ -2395,14 +2395,14 @@ test('rescue label win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
+      Rescue (2,3 → 1,3) { player: 1, name: null }
+      Rescue (2,1 → 2,2) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      Rescue (1,2 → 1,1) { player: 1, name: -7 }
+      Rescue (2,3 → 1,3) { player: 1, name: 21 }
+      Rescue (2,1 → 2,2) { player: 1, name: 20 }
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
     `);
 
@@ -2426,14 +2426,14 @@ test('rescue label win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
+      Rescue (2,3 → 1,3) { player: 1, name: null }
+      Rescue (2,1 → 2,2) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      Rescue (1,2 → 1,1) { player: 1, name: -7 }
+      Rescue (2,3 → 1,3) { player: 1, name: 21 }
+      Rescue (2,1 → 2,2) { player: 1, name: 20 }
       OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: false, label: [ 0, 3 ], optional: true, players: [], reward: null, type: 8 }, conditionId: 0, toPlayer: 1 }"
     `);
 
@@ -2479,7 +2479,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
     `);
@@ -2495,7 +2495,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseA_2))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
 
@@ -2510,7 +2510,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
@@ -2525,7 +2525,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseB_2))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
@@ -2570,7 +2570,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseC))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
@@ -2614,7 +2614,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseC_2))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
@@ -2631,7 +2631,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseD))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1 }
       GameEnd { condition: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, conditionId: 0, toPlayer: 2 }"
@@ -2650,7 +2650,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(snapshotEncodedActionResponse(gameActionResponseD_2))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,3) { player: 1 }
+      "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1 }"
     `);
@@ -2701,13 +2701,13 @@ test('rescue amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
+      Rescue (2,3 → 1,3) { player: 1, name: null }
+      Rescue (2,1 → 2,2) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
+      Rescue (1,2 → 1,1) { player: 1, name: -7 }
+      Rescue (2,3 → 1,3) { player: 1, name: 21 }
       GameEnd { condition: { amount: 2, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 13 }, conditionId: 0, toPlayer: 1 }"
     `);
 
@@ -2730,13 +2730,13 @@ test('rescue amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
-      Rescue (2,1 → 2,2) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
+      Rescue (2,3 → 1,3) { player: 1, name: null }
+      Rescue (2,1 → 2,2) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Rescue (1,2 → 1,1) { player: 1 }
-      Rescue (2,3 → 1,3) { player: 1 }
+      Rescue (1,2 → 1,1) { player: 1, name: -7 }
+      Rescue (2,3 → 1,3) { player: 1, name: 21 }
       OptionalObjective { condition: { amount: 2, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 13 }, conditionId: 0, toPlayer: 1 }"
     `);
 
@@ -2778,7 +2778,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "Rescue (1,2 → 1,1) { player: 1 }
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, conditionId: 0, toPlayer: 2 }"
     `);
@@ -2813,11 +2813,11 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-        "Rescue (1,2 → 1,1) { player: 1 }
-        EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-        AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
-        GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, conditionId: 0, toPlayer: 2 }"
-      `);
+      "Rescue (1,2 → 1,1) { player: 1, name: null }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
+      GameEnd { condition: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, conditionId: 0, toPlayer: 2 }"
+    `);
 });
 
 test('optional objectives should not be triggered multiple times for the same player', async () => {

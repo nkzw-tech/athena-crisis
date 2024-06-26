@@ -416,20 +416,21 @@ export default function applyActionResponse(
       return map.copy({ units: map.units.set(from, unit.move()) });
     }
     case 'Rescue': {
-      const { from, player, to } = actionResponse;
+      const { from, name, player, to } = actionResponse;
       const unitA = from && map.units.get(from)!;
       const unitB = map.units.get(to)!;
       const rescueFinished = unitB.isBeingRescuedBy(player);
-      const units = map.units.set(
-        to,
-        rescueFinished
-          ? unitB
-              .stopBeingRescued()
-              .setPlayer(player)
-              .setHealth(MaxHealth)
-              .recover()
-          : unitB.rescue(player),
-      );
+      let newUnit = rescueFinished
+        ? unitB
+            .stopBeingRescued()
+            .setPlayer(player)
+            .setHealth(MaxHealth)
+            .recover()
+        : unitB.rescue(player);
+      if (name != null) {
+        newUnit = newUnit.withName(name);
+      }
+      const units = map.units.set(to, newUnit);
       return map.copy({
         teams: rescueFinished
           ? updatePlayer(

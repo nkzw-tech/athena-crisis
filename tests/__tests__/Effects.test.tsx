@@ -348,7 +348,7 @@ test('spawns a neutral unit', async () => {
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Casey' }], teams: null }
       Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3] }
-      Rescue (2,3 → 3,3) { player: 2 }
+      Rescue (2,3 → 3,3) { player: 2, name: null }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 });

@@ -49,8 +49,8 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
     snapshotEncodedActionResponse(gameActionResponseA),
   ).toMatchInlineSnapshot(
     `
-    "Rescue (1,1 → 2,1) { player: 1 }
-    Rescue (3,1 → 2,1) { player: 1 }"
+    "Rescue (1,1 → 2,1) { player: 1, name: null }
+    Rescue (3,1 → 2,1) { player: 1, name: -11 }"
   `,
   );
 
@@ -68,10 +68,10 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
     snapshotEncodedActionResponse(gameActionResponseB),
   ).toMatchInlineSnapshot(
     `
-    "Rescue (1,1 → 2,1) { player: 1 }
+    "Rescue (1,1 → 2,1) { player: 1, name: null }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-    Rescue (1,1 → 2,1) { player: 1 }"
+    Rescue (1,1 → 2,1) { player: 1, name: -11 }"
   `,
   );
 
@@ -102,11 +102,11 @@ test('in-progress rescues can be stolen by other players', () => {
     snapshotEncodedActionResponse(gameActionResponse),
   ).toMatchInlineSnapshot(
     `
-    "Rescue (1,1 → 2,1) { player: 1 }
+    "Rescue (1,1 → 2,1) { player: 1, name: null }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Rescue (3,1 → 2,1) { player: 2 }
+    Rescue (3,1 → 2,1) { player: 2, name: null }
     EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-    Rescue (1,1 → 2,1) { player: 1 }"
+    Rescue (1,1 → 2,1) { player: 1, name: null }"
   `,
   );
 

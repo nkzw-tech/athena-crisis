@@ -787,7 +787,15 @@ function rescue(map: MapData, { from, to }: RescueAction) {
     return null;
   }
 
-  return { from, player: unitA.player, to, type: 'Rescue' } as const;
+  return {
+    from,
+    name: unitB.isBeingRescuedBy(unitA.player)
+      ? getDeterministicUnitName(map, to, unitA.player, unitB.info)
+      : undefined,
+    player: unitA.player,
+    to,
+    type: 'Rescue',
+  } as const;
 }
 
 function sabotage(map: MapData, { from, to }: SabotageAction) {
