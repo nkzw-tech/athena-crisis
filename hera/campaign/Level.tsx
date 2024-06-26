@@ -479,7 +479,7 @@ const selectorContainerStyle = css`
     opacity: 1;
     pointer-events: auto;
     transform: scale(1);
-    transition-delay: 0;
+    transition-delay: 0ms;
   }
 `;
 
