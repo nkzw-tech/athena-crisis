@@ -480,6 +480,7 @@ const vars = new CSSVariables<'portraits'>('ad');
 
 const boxStyle = css`
   margin: 4px 2px 4px 0px;
+  flex-shrink: 0;
 `;
 
 const selectorContainerStyle = css`
