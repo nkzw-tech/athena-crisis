@@ -30,7 +30,7 @@ export function processRewards(
     if (rewards.size) {
       for (const reward of rewards) {
         for (const [, player] of team.players) {
-          if (!player.skills.has(reward.skill)) {
+          if (reward.type !== 'Skill' || !player.skills.has(reward.skill)) {
             const rewardActionResponse = {
               player: player.id,
               reward,

@@ -251,46 +251,47 @@ export default function WinConditionCard({
               )}
             </Stack>
           )}
-          <Stack gap start>
-            <span className={cx(labelWidthStyle, 'input-label')}>
-              <fbt desc="Label for win condition reward">Reward</fbt>
-            </span>
-            <SkillSelector
-              availableSkills={Skills}
-              currentSkill={condition.reward?.skill}
-              note={
-                <Stack gap>
-                  <h2>Note</h2>
-                  <p className={noteBoxStyle}>
-                    {condition.type === WinCriteria.Default ? (
-                      <fbt desc="Explanation in the map editor of how rewards work for the default win condition">
-                        Players receive a reward for the default win condition
-                        if they win in any way.
-                      </fbt>
-                    ) : (
-                      <fbt desc="Explanation in the map editor for how rewards work">
-                        Players receive a reward if they win the map through
-                        this win condition.
-                      </fbt>
-                    )}{' '}
-                    <fbt desc="Reward tags">
-                      The map must have the
-                      <fbt:param name="tag">
-                        <Tag tag="reward" />
-                      </fbt:param>{' '}
-                      tag applied which can only be added by an Athena Crisis
-                      admin.
-                    </fbt>
-                  </p>
-                </Stack>
-              }
-              onSelect={(skill) =>
-                onChange({
-                  ...condition,
-                  reward: skill ? { skill, type: 'skill' } : undefined,
-                })
-              }
-            />
+          <Stack gap={16} vertical>
+            <Stack gap start>
+              <span className={cx(labelWidthStyle, 'input-label')}>
+                <fbt desc="Label for win condition reward">Reward</fbt>
+              </span>
+              <SkillSelector
+                availableSkills={Skills}
+                currentSkill={
+                  condition.reward?.type === 'Skill'
+                    ? condition.reward.skill
+                    : null
+                }
+                onSelect={(skill) =>
+                  onChange({
+                    ...condition,
+                    reward: skill ? { skill, type: 'Skill' } : undefined,
+                  })
+                }
+              />
+            </Stack>
+            {condition.reward && (
+              <p className={noteBoxStyle}>
+                {condition.type === WinCriteria.Default ? (
+                  <fbt desc="Explanation in the map editor of how rewards work for the default objective">
+                    Players receive this reward for the default objective if
+                    they win in any way.
+                  </fbt>
+                ) : (
+                  <fbt desc="Explanation in the map editor for how rewards work">
+                    Players receive this reward if they achieve this objective.
+                  </fbt>
+                )}{' '}
+                <fbt desc="Reward tags">
+                  The map must have the
+                  <fbt:param name="tag">
+                    <Tag tag="reward" />
+                  </fbt:param>{' '}
+                  tag which can only be added by an Athena Crisis admin.
+                </fbt>
+              </p>
+            )}
           </Stack>
           <Stack reverse>
             <InlineLink onClick={selectEffect}>

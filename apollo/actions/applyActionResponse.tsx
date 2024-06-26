@@ -540,7 +540,7 @@ export default function applyActionResponse(
     }
     case 'ReceiveReward': {
       const { player, reward } = actionResponse;
-      if (reward.type === 'skill') {
+      if (reward.type === 'Skill') {
         const playerA = map.getPlayer(player);
         return map.copy({
           teams: updatePlayer(

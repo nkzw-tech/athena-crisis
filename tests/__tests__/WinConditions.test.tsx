@@ -2975,7 +2975,7 @@ test('optional objectives are processed before game end responses', async () => 
           optional: true,
           reward: {
             skill: Skill.BuyUnitBazookaBear,
-            type: 'skill',
+            type: 'Skill',
           },
           type: WinCriteria.DefeatAmount,
         },
@@ -3019,7 +3019,7 @@ test('optional objectives are processed before game end responses', async () => 
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'skill' }, type: 9 }, conditionId: 1, toPlayer: 1 }
+      OptionalObjective { condition: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'Skill' }, type: 9 }, conditionId: 1, toPlayer: 1 }
       CharacterMessage { message: 'FIRE!', player: 'self', unitId: 15, variant: 2 }
       ReceiveReward { player: 1, reward: 'Reward { skill: 12 }' }
       GameEnd { condition: null, conditionId: null, toPlayer: 1 }"

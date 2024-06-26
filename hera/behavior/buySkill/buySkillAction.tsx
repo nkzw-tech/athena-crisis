@@ -20,7 +20,7 @@ export default async function buySkillAction(
   const isBuy = actionResponse.type === 'BuySkill';
   const skill = isBuy
     ? actionResponse.skill
-    : actionResponse.reward.type === 'skill'
+    : actionResponse.reward.type === 'Skill'
       ? actionResponse.reward.skill
       : null;
 

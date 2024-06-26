@@ -487,7 +487,6 @@ export function SkillSelector({
   blocklistedSkills,
   currentSkill,
   isFocused,
-  note,
   onSelect,
   selectedSkills,
   showCost,
@@ -498,7 +497,6 @@ export function SkillSelector({
   blocklistedSkills?: ReadonlySet<Skill> | null;
   currentSkill?: Skill | null;
   isFocused?: boolean;
-  note?: ReactElement;
   onSelect: (skill: Skill | null) => void;
   selectedSkills?: ReadonlySet<Skill> | null;
   showCost?: boolean;
@@ -574,9 +572,7 @@ export function SkillSelector({
                 </DialogTab>
               ) : undefined
             }
-          >
-            {note}
-          </SkillDialog>
+          />
         </Portal>
       )}
     </>

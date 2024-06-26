@@ -42,7 +42,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     optional: false,
     reward: {
       skill: Skill.BuyUnitCannon,
-      type: 'skill',
+      type: 'Skill',
     },
     type: WinCriteria.CaptureAmount,
   } as const;
@@ -115,7 +115,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
   `);
 });
 
@@ -124,7 +124,7 @@ test(`each skill is only received once`, () => {
   const vecB = vec(3, 3);
   const reward = {
     skill: Skill.BuyUnitCannon,
-    type: 'skill',
+    type: 'Skill',
   } as const;
   const captureCondition = {
     amount: 1,
@@ -203,7 +203,7 @@ test(`each skill is only received once`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
   `);
 });
 
@@ -212,7 +212,7 @@ test('receiving skill rewards during a game will add them to the player', async 
     player: 1,
     reward: {
       skill: Skill.BuyUnitCannon,
-      type: 'skill',
+      type: 'Skill',
     },
     type: 'ReceiveReward',
   } as const);

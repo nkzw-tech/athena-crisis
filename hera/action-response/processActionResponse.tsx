@@ -602,7 +602,7 @@ async function processActionResponse(
       return buySkillAction(actions, state, actionResponse);
     case 'ReceiveReward': {
       const { reward } = actionResponse;
-      if (reward.type === 'skill') {
+      if (reward.type === 'Skill') {
         return buySkillAction(actions, state, actionResponse);
       }
       break;
