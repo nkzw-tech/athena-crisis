@@ -120,7 +120,7 @@ test('spawns units and adds new players', async () => {
   expect(
     snapshotEncodedActionResponse(encodedGameActionResponse),
   ).toMatchInlineSnapshot(
-    `"Spawn { units: [2,2 → Fighter Jet { id: 18, health: 100, player: 1, fuel: 50, ammo: [ [ 1, 8 ] ] }, 1,3 → Bomber { id: 19, health: 100, player: 4, fuel: 40, ammo: [ [ 1, 5 ] ] }, 3,2 → Bomber { id: 19, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 5 ] ] }], teams: [ { id: 1, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 4, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] }, { id: 5, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 5, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] } ] }"`,
+    `"Spawn { units: [2,2 → Fighter Jet { id: 18, health: 100, player: 1, fuel: 50, ammo: [ [ 1, 8 ] ], name: 'Titan' }, 1,3 → Bomber { id: 19, health: 100, player: 4, fuel: 40, ammo: [ [ 1, 5 ] ], name: 'Léon' }, 3,2 → Bomber { id: 19, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 5 ] ], name: 'Léon' }], teams: [ { id: 1, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 4, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] }, { id: 5, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 5, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] } ] }"`,
   );
 
   printGameState('Last State', screenshot);
@@ -173,9 +173,9 @@ test('spawns new units at adjacent fields if necessary', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }"
-  `);
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Zephyr' }], teams: null }"
+    `);
 });
 
 test('drops a spawn if no adjacent field is available', async () => {

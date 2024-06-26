@@ -314,22 +314,24 @@ export default memo(function UnitCard({
           <CardTitle player={player}>{info.name}</CardTitle>
           {getTranslatedEntityName(info.type)},{' '}
           {getTranslatedEntityGroupName(getEntityGroup(entity))}
-          <div>
-            <fbt desc="Unit character name">
-              Name:{' '}
-              <fbt:param name="name">
-                <Stack
-                  center
-                  inline
-                  start
-                  style={isLeader ? { color } : undefined}
-                >
-                  {name}
-                  {isLeader && <Icon icon={Magic} />}
-                </Stack>
-              </fbt:param>
-            </fbt>
-          </div>
+          {player != 0 && (
+            <div>
+              <fbt desc="Unit character name">
+                Name:{' '}
+                <fbt:param name="name">
+                  <Stack
+                    center
+                    inline
+                    start
+                    style={isLeader ? { color } : undefined}
+                  >
+                    {name}
+                    {isLeader && <Icon icon={Magic} />}
+                  </Stack>
+                </fbt:param>
+              </fbt>
+            </div>
+          )}
         </Stack>
       </Stack>
       <Stack gap={16} vertical>

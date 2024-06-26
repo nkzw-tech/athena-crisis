@@ -114,5 +114,5 @@ export function getDeterministicUnitName(
         info.id * 13 +
         offset,
     ) % amount;
-  return hasLeader ? name : name * -1 - 1;
+  return hasLeader || player === 0 ? name : name * -1 - 1;
 }

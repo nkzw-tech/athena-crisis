@@ -7,6 +7,7 @@ import {
 import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, getUnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
+import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
@@ -819,6 +820,7 @@ function spawnEffect(
     const deployVector = vector
       .expand()
       .find((vector) => canDeploy(map, unit.info, vector, true));
+
     if (deployVector) {
       const newUnit = player != null ? unit.setPlayer(player) : unit;
       map = map.copy({ units: map.units.set(deployVector, newUnit) });
@@ -830,7 +832,7 @@ function spawnEffect(
     ? ({
         teams: maybeCreatePlayers(map, teams, newUnits),
         type: 'Spawn',
-        units: newUnits,
+        units: assignDeterministicUnitNames(map, newUnits),
       } as const)
     : null;
 }

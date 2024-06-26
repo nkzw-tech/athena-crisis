@@ -299,7 +299,7 @@ test('spawns an additional unit', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }
+      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null }
       Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
       AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       CompleteUnit (1,3)
@@ -346,7 +346,7 @@ test('spawns a neutral unit', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }
+      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Casey' }], teams: null }
       Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3] }
       Rescue (2,3 → 3,3) { player: 2 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -652,7 +652,7 @@ test('a unit spawns instead of ending the game', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
-      Spawn { units: [1,1 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }"
+      Spawn { units: [1,1 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null }"
     `);
 
   expect(newEffects?.get('AttackUnitGameOver')).toBeUndefined();
@@ -696,9 +696,9 @@ test('spawns a new unit when a player loses their last unit at the beginning of 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [2,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ] }], teams: null }
+      Spawn { units: [2,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null }
       Move (2,3 → 2,1) { fuel: 28, completed: false, path: [2,2 → 2,1] }
-      AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 67, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 72, ammo: [ [ 1, 6 ] ] }, chargeA: 166, chargeB: 105 }
+      AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 68, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 68, ammo: [ [ 1, 6 ] ] }, chargeA: 167, chargeB: 120 }
       CreateUnit (1,3 → 1,2) { unit: Rocket Launcher { id: 3, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: false, skipBehaviorRotation: false }
       EndTurn { current: { funds: 225, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);

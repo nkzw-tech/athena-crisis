@@ -1865,21 +1865,24 @@ export default class GameMap extends Component<Props, State> {
                 {!behavior || showNamedPositionsForBehavior.has(behavior.type)
                   ? namedPositions?.map((vector) => {
                       const unit = map.units.get(vector);
+                      const hasName =
+                        unit && unit.hasName() && unit.player !== 0;
+                      const showHealth = unit && unit.health < MaxHealth;
                       return (
-                        unit?.hasName() && (
+                        (hasName || showHealth) && (
                           <FlashFlyout
-                            align={
-                              unit.health < MaxHealth ? 'top' : 'top-lower'
-                            }
+                            align="top-lower"
                             animationConfig={animationConfig}
                             items={[
                               <FlyoutItem color={unit.player} key="unit-name">
                                 <Stack gap={4} nowrap>
-                                  <Stack gap={1} nowrap>
-                                    {unit.getName(currentViewer)}
-                                    {unit.isLeader() && <Icon icon={Magic} />}
-                                  </Stack>
-                                  {unit.health < MaxHealth ? (
+                                  {hasName && (
+                                    <Stack gap={1} nowrap>
+                                      {unit.getName(currentViewer)}
+                                      {unit.isLeader() && <Icon icon={Magic} />}
+                                    </Stack>
+                                  )}
+                                  {showHealth ? (
                                     <Stack
                                       gap={1}
                                       nowrap
