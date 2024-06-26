@@ -64,7 +64,7 @@ export function biomeToSong(
     return 'gaias-rise';
   }
 
-  if (tags?.includes('bside')) {
+  if (tags?.includes('b-side')) {
     switch (biome) {
       case Biome.Grassland:
         return 'artemis-glade';
