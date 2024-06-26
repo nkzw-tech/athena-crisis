@@ -68,8 +68,6 @@ const MessageComponent = ({
   }
 
   const duration = animationConfig.MessageSpeed / 1000;
-  const rate = AnimationConfig.MessageSpeed / animationConfig.MessageSpeed;
-
   const transition = {
     duration: duration / 2,
   };
@@ -191,10 +189,10 @@ const MessageComponent = ({
   }, [currentLine, clientWidth, lines]);
 
   useEffect(() => {
-    AudioPlayer.playSound(sound, rate);
+    AudioPlayer.playSound(sound);
 
     return () => AudioPlayer.stop(sound);
-  }, [rate, sound]);
+  }, [sound]);
 
   const isBottom = position === 'bottom';
   const offset = isBottom ? 20 : -20;
