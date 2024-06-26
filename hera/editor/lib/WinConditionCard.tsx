@@ -23,7 +23,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useState } from 'react';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
@@ -131,7 +131,7 @@ export default function WinConditionCard({
           {winConditionHasAmounts(condition) && (
             <label>
               <Stack alignCenter gap start>
-                <span className={cx(labelWidthStyle, 'input-label')}>
+                <span className={labelWidthStyle}>
                   <fbt desc="Label for win condition amount">Amount</fbt>
                 </span>
                 <input
@@ -162,7 +162,7 @@ export default function WinConditionCard({
           {winConditionHasRounds(condition) && (
             <label>
               <Stack alignCenter gap start>
-                <span className={cx(labelWidthStyle, 'input-label')}>
+                <span className={labelWidthStyle}>
                   <fbt desc="Label for win condition rounds">Rounds</fbt>
                 </span>
                 <input
@@ -195,7 +195,7 @@ export default function WinConditionCard({
           <Stack gap>
             <label>
               <Stack gap start>
-                <span className={cx(labelWidthStyle, 'input-label')}>
+                <span className={labelWidthStyle}>
                   <fbt desc="Label for secret win condition checkbox">
                     Secret
                   </fbt>
@@ -225,7 +225,7 @@ export default function WinConditionCard({
             <Stack gap>
               <label>
                 <Stack gap start>
-                  <span className={cx(labelWidthStyle, 'input-label')}>
+                  <span className={labelWidthStyle}>
                     <fbt desc="Label for optional win condition checkbox">
                       Optional
                     </fbt>
@@ -252,8 +252,8 @@ export default function WinConditionCard({
             </Stack>
           )}
           <Stack gap={16} vertical>
-            <Stack gap start>
-              <span className={cx(labelWidthStyle, 'input-label')}>
+            <Stack alignCenter gap start>
+              <span className={labelWidthStyle}>
                 <fbt desc="Label for win condition reward">Reward</fbt>
               </span>
               <SkillSelector

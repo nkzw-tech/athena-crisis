@@ -78,24 +78,19 @@ textarea.invalid {
   ${pixelBorder('#e06068')};
 }
 
-.input-label {
-  cursor: pointer;
-  padding-top: 4px;
-}
-
 input[type="checkbox"] {
   color: ${applyVar('text-color')};
   cursor: pointer;
-  height: 28px;
+  height: 24px;
   line-height: initial;
   margin: 0;
-  min-width: 28px;
+  min-width: 24px;
   padding: 0;
   position: relative;
   transform: scale(1);
   transition: transform 150ms ease;
   vertical-align: middle;
-  width: 28px;
+  width: 24px;
 
   &:not(.disabled):hover {
     transform: scale(1.1);
@@ -108,10 +103,10 @@ input[type="checkbox"] {
   &:before {
     color: rgba(0, 0, 0, 0);
     content: 'X';
-    font-size: 32px;
-    left: 2.65px;
+    font-size: 28px;
+    left: 2.1px;
     position: absolute;
-    top: -6.8px;
+    top: -6.1px;
     transition: color 350ms ease;
   }
 

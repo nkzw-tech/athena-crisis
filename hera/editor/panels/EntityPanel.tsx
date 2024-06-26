@@ -324,13 +324,13 @@ export default function EntityPanel({
           </AttributeGrid>
           {isUnit(entity) && entity.player > 0 && (
             <label>
-              <Stack gap start>
+              <Stack alignCenter gap start>
                 <input
                   checked={entity.isLeader()}
                   onChange={toggleLeader}
                   type="checkbox"
                 />
-                <span className="input-label">
+                <span>
                   <fbt desc="Label for changing the leader unit">Leader</fbt>
                 </span>
               </Stack>

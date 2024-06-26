@@ -61,7 +61,7 @@ export default function MapEditorSettingsPanel({
         </h2>
         <Stack alignCenter gap>
           <label>
-            <Stack gap>
+            <Stack alignCenter gap>
               <input
                 checked={state.map.config.fog}
                 onChange={() => {
@@ -76,14 +76,14 @@ export default function MapEditorSettingsPanel({
                 }}
                 type="checkbox"
               />
-              <span className="input-label">
+              <span>
                 <fbt desc="Label for fog">Fog</fbt>
               </span>
             </Stack>
           </label>
           <label>
             <Stack alignCenter gap>
-              <span className="input-label">
+              <span>
                 <fbt desc="Starting funds for a game">Starting Funds</fbt>
               </span>
               <input
@@ -116,7 +116,7 @@ export default function MapEditorSettingsPanel({
         <Stack gap={16} start>
           <label>
             <Stack alignCenter gap>
-              <span className="input-label">
+              <span>
                 <fbt desc="Map size input field width">Width</fbt>
               </span>
               <input
@@ -134,7 +134,7 @@ export default function MapEditorSettingsPanel({
           </label>
           <label>
             <Stack alignCenter gap>
-              <span className="input-label">
+              <span>
                 <fbt desc="Map size input field height">Height</fbt>
               </span>
               <input
@@ -168,7 +168,7 @@ export default function MapEditorSettingsPanel({
       <Box gap vertical>
         <label>
           <Stack gap start vertical>
-            <span className="input-label">
+            <span>
               <fbt desc="Map name label">Name</fbt>
             </span>
             <input

@@ -72,7 +72,7 @@ export default function CampaignEditorSettingsPanel({
       <Box gap vertical>
         <label>
           <Stack gap start vertical>
-            <div className="input-label">
+            <div>
               <fbt desc="Campaign name label">Name</fbt>
             </div>
             <input
