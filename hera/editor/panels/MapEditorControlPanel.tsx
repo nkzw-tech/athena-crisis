@@ -195,8 +195,11 @@ export default function MapEditorControlPanel({
               <WinConditionPanel
                 actions={actions}
                 editor={editor}
+                hasContentRestrictions={!isAdmin}
+                isAdmin={isAdmin}
                 setEditorState={setEditorState}
                 state={state}
+                user={user}
               />
             );
           case 'restrictions':

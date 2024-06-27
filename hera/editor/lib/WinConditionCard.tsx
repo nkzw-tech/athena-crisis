@@ -26,28 +26,36 @@ import Tag from '@deities/ui/Tag.tsx';
 import { css } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useState } from 'react';
+import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import WinConditionTitle from '../../win-conditions/WinConditionTitle.tsx';
 import { ManyLabelSelector } from '../selectors/LabelSelector.tsx';
+import UnitSelector from './UnitSelector.tsx';
 
 export default function WinConditionCard({
   canDelete,
   condition,
+  hasContentRestrictions,
   index,
+  isAdmin,
   map,
   onChange,
   selectEffect,
   selectLocation,
+  user,
   validate,
 }: {
   canDelete?: boolean;
   condition: WinCondition;
+  hasContentRestrictions: boolean;
   index: number;
+  isAdmin?: boolean;
   map: MapData;
   onChange: (condition: WinCondition | null) => void;
   selectEffect: () => void;
   selectLocation: () => void;
+  user: UserWithFactionNameAndSkills;
   validate: (condition: WinCondition) => boolean;
 }) {
   const [rounds, setRounds] = useState<number | null>(
@@ -58,6 +66,8 @@ export default function WinConditionCard({
   );
   const hasPlayers = condition.type !== WinCriteria.Default;
   const hasLabel = winConditionHasLabel(condition);
+  const { reward } = condition;
+  const selectedUnit = reward?.type === 'UnitPortraits' ? reward.unit : null;
 
   return (
     <Box
@@ -259,11 +269,7 @@ export default function WinConditionCard({
               <Stack gap={16} start>
                 <SkillSelector
                   availableSkills={Skills}
-                  currentSkill={
-                    condition.reward?.type === 'Skill'
-                      ? condition.reward.skill
-                      : null
-                  }
+                  currentSkill={reward?.type === 'Skill' ? reward.skill : null}
                   onSelect={(skill) =>
                     onChange({
                       ...condition,
@@ -271,7 +277,25 @@ export default function WinConditionCard({
                     })
                   }
                 />
-                {condition.reward && (
+                {isAdmin && (
+                  <UnitSelector
+                    border
+                    hasContentRestrictions={hasContentRestrictions}
+                    highlight={!!selectedUnit}
+                    isVisible
+                    onSelect={(unit) =>
+                      onChange({
+                        ...condition,
+                        reward: { type: 'UnitPortraits', unit },
+                      })
+                    }
+                    selectedPlayer="self"
+                    selectedUnit={selectedUnit}
+                    user={user}
+                    width="auto"
+                  />
+                )}
+                {reward && (
                   <Icon
                     button
                     className={iconStyle}
@@ -283,7 +307,7 @@ export default function WinConditionCard({
                 )}
               </Stack>
             </Stack>
-            {condition.reward && (
+            {reward && (
               <p className={noteBoxStyle}>
                 {condition.type === WinCriteria.Default ? (
                   <fbt desc="Explanation in the map editor of how rewards work for the default objective">

@@ -14,6 +14,7 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import { useCallback, useState } from 'react';
+import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getWinCriteriaName from '../../lib/getWinCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import hasEffectWinCondition from '../lib/hasEffectWinCondition.tsx';
@@ -130,11 +131,17 @@ const maybeSwapEffect = (
 export default function WinConditionPanel({
   actions,
   editor,
+  hasContentRestrictions,
+  isAdmin,
   setEditorState,
   state,
+  user,
 }: StateWithActions & {
   editor: EditorState;
+  hasContentRestrictions: boolean;
+  isAdmin?: boolean;
   setEditorState: SetEditorStateFunction;
+  user: UserWithFactionNameAndSkills;
 }) {
   const { map } = state;
   const { config } = map;
@@ -229,7 +236,9 @@ export default function WinConditionPanel({
             conditions.length > 1 || condition.type !== WinCriteria.Default
           }
           condition={condition}
+          hasContentRestrictions={hasContentRestrictions}
           index={index}
+          isAdmin={isAdmin}
           key={`${renders}-${index}`}
           map={mapWithActivePlayers}
           onChange={(condition) => updateWinCondition(condition, index)}
@@ -243,6 +252,7 @@ export default function WinConditionPanel({
               });
             }
           }}
+          user={user}
           validate={validate}
         />
       ))}

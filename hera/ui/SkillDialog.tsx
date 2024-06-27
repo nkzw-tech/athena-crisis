@@ -549,6 +549,7 @@ export function SkillSelector({
         color={color}
         icon={Skills}
         isFocused={isFocused}
+        key={currentSkill}
         onClick={() => setShowSkillSelector(true)}
         {...config}
       />

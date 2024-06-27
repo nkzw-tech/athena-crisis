@@ -7,8 +7,8 @@ type SkillReward = Readonly<{
   type: 'Skill';
 }>;
 
-type PortraitReward = Readonly<{
-  type: 'Portrait';
+type UnitPortraitsReward = Readonly<{
+  type: 'UnitPortraits';
   unit: UnitInfo;
 }>;
 
@@ -16,7 +16,7 @@ type EncodedSkillReward =
   | readonly [type: 0, skill: Skill]
   | readonly [type: 1, unit: number];
 
-export type Reward = PortraitReward | SkillReward;
+export type Reward = UnitPortraitsReward | SkillReward;
 export type EncodedReward = EncodedSkillReward;
 export type PlainReward = EncodedReward;
 
@@ -29,7 +29,7 @@ export function encodeReward(reward: Reward): EncodedReward {
   switch (rewardType) {
     case 'Skill':
       return [0, reward.skill];
-    case 'Portrait':
+    case 'UnitPortraits':
       return [1, reward.unit.id];
     default:
       rewardType satisfies never;
@@ -42,7 +42,7 @@ export function decodeReward([rewardType, ...rest]: EncodedReward): Reward {
     case 0:
       return { skill: rest[0], type: 'Skill' };
     case 1:
-      return { type: 'Portrait', unit: getUnitInfoOrThrow(rest[0]) };
+      return { type: 'UnitPortraits', unit: getUnitInfoOrThrow(rest[0]) };
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('decodeReward', rewardType);
@@ -66,7 +66,7 @@ export function formatReward(reward: Reward): string {
   switch (rewardType) {
     case 'Skill':
       return `Reward { skill: ${reward.skill} }`;
-    case 'Portrait':
+    case 'UnitPortraits':
       return `Reward { unit: ${reward.unit.name} }`;
     default:
       rewardType satisfies never;
@@ -78,7 +78,7 @@ export function validateReward(reward: Reward): boolean {
   switch (reward.type) {
     case 'Skill':
       return Skills.has(reward.skill);
-    case 'Portrait':
+    case 'UnitPortraits':
       return !!getUnitInfo(reward.unit.id);
     default:
       return false;
