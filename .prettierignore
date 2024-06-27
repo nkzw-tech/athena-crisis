@@ -1,7 +1,6 @@
 ares/.enum_manifest.json
 ares/.src_manifest.json
 ares/**/__generated__
-ares/scripts/translateStorepage.js
 ares/src/generated/
 ares/translations/
 artemis/graphql/schema.graphql
