@@ -7,6 +7,7 @@ import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg, sm, xl } from '@deities/ui/Breakpoints.tsx';
 import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import Dropdown from '@deities/ui/Dropdown.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import useMedia from '@deities/ui/hooks/useMedia.tsx';
 import usePress, { UsePressProps } from '@deities/ui/hooks/usePress.tsx';
@@ -457,14 +458,15 @@ const Sidebar = ({
       <Box alignCenter flex1 gap={16} nowrap>
         {primary}
         {secondary.length && (
-          <div className={moreContainerStyle}>
-            <Icon icon={More} />
-            <div className={moreStyle}>
-              <Box className={moreInnerStyle} gap vertical>
-                {secondary}
-              </Box>
-            </div>
-          </div>
+          <Dropdown
+            className={moreContainerStyle}
+            dropdownClassName={moreStyle}
+            title={<Icon icon={More} />}
+          >
+            <Box className={moreInnerStyle} gap vertical>
+              {secondary}
+            </Box>
+          </Dropdown>
         )}
       </Box>
       <Button className={buttonStyle} {...buttonProps}>
@@ -501,33 +503,12 @@ const buttonStyle = css`
 
 const moreContainerStyle = css`
   display: inline-flex;
-  cursor: pointer;
-  position: relative;
-
-  & > div {
-    transition-delay: 150ms;
-  }
-  &:hover > div {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-    transition-delay: 0ms;
-  }
 `;
 
 const moreStyle = css`
-  cursor: initial;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  transform: scale(0.9);
-  transition:
-    opacity 150ms ease,
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 100;
-
   right: -12px;
   top: 8px;
+  z-index: 100;
 `;
 
 const moreInnerStyle = css`

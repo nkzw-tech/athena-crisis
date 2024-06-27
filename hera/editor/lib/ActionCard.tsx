@@ -19,6 +19,7 @@ import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import Dropdown from '@deities/ui/Dropdown.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -131,8 +132,8 @@ export default memo(function ActionCard({
     margin: '-100px 0px 100px 0px',
     root: scrollRef || undefined,
   });
-  const shouldRenderControls =
-    (!scrollRef || isVisible) && onChange && index != null;
+  const canChange = onChange && index != null;
+  const shouldRenderControls = (!scrollRef || isVisible) && canChange;
   const [animate, setAnimate] = useState(false);
   const hasCurrentPlayer = map && currentPlayer != null;
 
@@ -158,39 +159,43 @@ export default memo(function ActionCard({
         : action.message;
 
     return (
-      <Stack className={messageStyle} nowrap ref={ref} start>
-        <div className={selectorContainerStyle}>
-          <Portrait
-            animate={isVisible && animate}
-            player={player}
-            unit={unit}
-            variant={action.variant}
-          />
-          {shouldRenderControls && (
-            <Stack
-              className={cx(
-                selectorStyle,
-                portraitSelectorStyle,
-                portrait.variants > 3 && portraitWithManyVariantsStyle,
-              )}
-              gap
-              nowrap
-              style={{
-                [vars.set('portraits')]: portrait.variants,
-              }}
-            >
-              {Array.from(
-                { length: portrait.variants },
-                (_, index) => index,
-              ).map((variant) => (
+      <Stack
+        className={messageStyle}
+        nowrap
+        ref={ref}
+        start
+        style={{
+          [vars.set('portraits')]: portrait.variants,
+        }}
+      >
+        <Dropdown
+          dropdownClassName={cx(
+            portraitSelectorStyle,
+            portrait.variants > 3 && portraitWithManyVariantsStyle,
+          )}
+          shouldRenderControls={!!(canChange && shouldRenderControls)}
+          title={
+            <Portrait
+              animate={isVisible && animate}
+              player={player}
+              unit={unit}
+              variant={action.variant}
+            />
+          }
+        >
+          <Stack gap nowrap>
+            {Array.from({ length: portrait.variants }, (_, index) => index).map(
+              (variant) => (
                 <div
                   className={cx(
                     selectPortraitStyle,
                     (action.variant || 0) === variant && selectedPortraitStyle,
                   )}
                   key={variant}
-                  onClick={() =>
-                    onChange(index, 'update', { ...action, variant })
+                  onClick={
+                    canChange
+                      ? () => onChange(index, 'update', { ...action, variant })
+                      : undefined
                   }
                 >
                   <Portrait
@@ -200,38 +205,38 @@ export default memo(function ActionCard({
                     variant={variant}
                   />
                 </div>
-              ))}
-            </Stack>
-          )}
-        </div>
+              ),
+            )}
+          </Stack>
+        </Dropdown>
         <Box className={boxMarginStyle} gap start vertical>
           <Stack className={headlineStyle} nowrap>
             <Stack gap nowrap start stretch>
               {!hasCurrentPlayer && (
-                <Stack className={selectorContainerStyle}>
-                  <PlayerIcon id={player} inline />
-                  {shouldRenderControls && (
-                    <Stack
-                      className={cx(selectorStyle, playerSelectorStyle)}
-                      nowrap
-                      vertical
-                    >
-                      {playerIDs.map((id) => (
-                        <PlayerIcon
-                          id={id}
-                          key={id}
-                          onClick={() =>
-                            onChange(index, 'update', {
-                              ...action,
-                              player: id,
-                            })
-                          }
-                          selected={player === id}
-                        />
-                      ))}
-                    </Stack>
-                  )}
-                </Stack>
+                <Dropdown
+                  dropdownClassName={playerSelectorStyle}
+                  shouldRenderControls={!!(canChange && shouldRenderControls)}
+                  title={<PlayerIcon id={player} inline />}
+                >
+                  <Stack className={playerSelectorListStyle} nowrap vertical>
+                    {playerIDs.map((id) => (
+                      <PlayerIcon
+                        id={id}
+                        key={id}
+                        onClick={
+                          canChange
+                            ? () =>
+                                onChange(index, 'update', {
+                                  ...action,
+                                  player: id,
+                                })
+                            : undefined
+                        }
+                        selected={player === id}
+                      />
+                    ))}
+                  </Stack>
+                </Dropdown>
               )}
               <UnitSelector
                 currentPlayer={currentPlayer}
@@ -239,7 +244,7 @@ export default memo(function ActionCard({
                 isVisible={isVisible}
                 map={map}
                 onSelect={
-                  onChange && index != null
+                  canChange
                     ? ({ id }) =>
                         onChange(index, 'update', {
                           ...action,
@@ -260,7 +265,7 @@ export default memo(function ActionCard({
               onChange={onChange}
             />
           </Stack>
-          {onChange && index != null ? (
+          {canChange ? (
             <textarea
               className={cx(textareaStyle, heightStyle)}
               maxLength={MaxMessageLength}
@@ -309,7 +314,7 @@ export default memo(function ActionCard({
               <InlineTileList
                 biome={biome}
                 onSelect={
-                  onChange && index != null && setMap && map
+                  canChange && setMap && map
                     ? ({ index: unitIndex }) => {
                         const units = [...action.units];
                         const [vector, unit] = units[unitIndex];
@@ -352,7 +357,7 @@ export default memo(function ActionCard({
             Spawn units as player:
           </fbt>
           <Stack gap={16} nowrap>
-            {onChange && index != null ? (
+            {canChange ? (
               <>
                 <InlineLink
                   className={spawnLinkStyle}
@@ -387,7 +392,7 @@ export default memo(function ActionCard({
             )}
           </Stack>
         </Stack>
-        {onChange && index != null ? (
+        {canChange ? (
           <Stack start>
             <InlineLink onClick={() => onChange(index, 'toggle-select-units')}>
               {focused ? (
@@ -436,36 +441,6 @@ const vars = new CSSVariables<'portraits'>('ad');
 const boxStyle = css`
   margin: 4px 2px 4px 0px;
   flex-shrink: 0;
-`;
-
-const selectorContainerStyle = css`
-  cursor: pointer;
-  position: relative;
-
-  & > div {
-    transition-delay: 150ms;
-  }
-  &:hover > div {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-    transition-delay: 0ms;
-  }
-`;
-
-const selectorStyle = css`
-  ${pixelBorder(applyVar('background-color'))}
-  background: ${applyVar('background-color')};
-
-  cursor: initial;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  transform: scale(0.9);
-  transition:
-    opacity 150ms ease,
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 2;
 `;
 
 const portraitSelectorStyle = css`
@@ -524,12 +499,15 @@ const selectedPortraitStyle = css`
 `;
 
 const playerSelectorStyle = css`
-  gap: 12px;
   left: -12px;
   overflow-y: auto;
+  top: -12px;
+`;
+
+const playerSelectorListStyle = css`
+  gap: 12px;
   padding: 2px;
   padding: 8px;
-  top: -12px;
 `;
 
 const messageStyle = css`

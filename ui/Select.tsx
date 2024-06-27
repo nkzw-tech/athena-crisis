@@ -1,8 +1,9 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import { ReactNode } from 'react';
-import Box from './Box.tsx';
+import { BoxStyle } from './Box.tsx';
 import { applyVar } from './cssVar.tsx';
+import Dropdown from './Dropdown.tsx';
 import Icon from './Icon.tsx';
 import pixelBorder from './pixelBorder.tsx';
 import Stack from './Stack.tsx';
@@ -15,49 +16,37 @@ export default function Select({
   selectedItem: ReactNode;
 }) {
   return (
-    <Box className={selectorContainerStyle} flex1>
-      <Stack gap nowrap stretch>
-        {selectedItem}
-        <Icon icon={ChevronDown} />
-      </Stack>
-      <Box className={selectorStyle} gap={16} vertical>
-        {children}
-      </Box>
-    </Box>
+    <Dropdown
+      className={cx(BoxStyle, dropdownStyle)}
+      dropdownClassName={cx(BoxStyle, selectorStyle)}
+      title={
+        <Stack gap nowrap stretch>
+          {selectedItem}
+          <Icon icon={ChevronDown} />
+        </Stack>
+      }
+    >
+      {children}
+    </Dropdown>
   );
 }
 
-const selectorContainerStyle = css`
-  cursor: pointer;
+const dropdownStyle = css`
+  flex: 1;
   height: 44px;
-  position: relative;
-
-  & > div {
-    transition-delay: 150ms;
-  }
-  &:hover > div {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-    transition-delay: 0ms;
-  }
+  min-height: 32px;
+  padding: 12px;
 `;
 
 const selectorStyle = css`
   ${pixelBorder(applyVar('background-color'))}
-  background: ${applyVar('background-color')};
 
-  cursor: initial;
+  background: ${applyVar('background-color')};
+  gap: 16px;
   left: 0;
-  opacity: 0;
+  min-height: 32px;
   overflow-x: auto;
-  pointer-events: none;
-  position: absolute;
+  padding: 12px;
   top: calc(100% - 20px);
-  transform: scale(0.9);
-  transition:
-    opacity 150ms ease,
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
   width: 100%;
-  z-index: 2;
 `;

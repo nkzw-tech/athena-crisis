@@ -18,6 +18,7 @@ import {
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import Dropdown from '@deities/ui/Dropdown.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -26,7 +27,7 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import Typeahead, { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import ArrowLeftBox from '@iconify-icons/pixelarticons/arrow-left-box.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
@@ -165,57 +166,58 @@ export default memo(function Level({
           nowrap
           ref={ref}
         >
-          <div className={selectorContainerStyle}>
-            {condition && winConditionIndex != null ? (
-              <WinConditionTitle
-                condition={condition}
-                index={winConditionIndex}
-                short
-              />
-            ) : (
-              depth > 0 && (
-                <fbt desc="Short description for 'any win condition'">Win</fbt>
+          <Dropdown
+            dropdownClassName={winConditionSelectorStyle}
+            title={
+              condition && winConditionIndex != null ? (
+                <WinConditionTitle
+                  condition={condition}
+                  index={winConditionIndex}
+                  short
+                />
+              ) : (
+                depth > 0 && (
+                  <fbt desc="Short description for 'any win condition'">
+                    Win
+                  </fbt>
+                )
               )
+            }
+          >
+            {parentLevel && (
+              <>
+                <InlineLink
+                  className={winConditionSelectorItemStyle}
+                  onClick={() => updateWinCondition(null)}
+                  selectedText={
+                    winConditionIndex == null ||
+                    (condition && condition.type === WinCriteria.Default)
+                  }
+                >
+                  <fbt desc="Long description for 'any win condition'">
+                    Win (in any way)
+                  </fbt>
+                </InlineLink>
+                {winConditions
+                  ?.map((condition, index) =>
+                    condition.type !== WinCriteria.Default ? (
+                      <InlineLink
+                        className={winConditionSelectorItemStyle}
+                        key={index}
+                        onClick={() => updateWinCondition(index)}
+                        selectedText={index === winConditionIndex}
+                      >
+                        <WinConditionTitle
+                          condition={condition}
+                          index={index}
+                        />
+                      </InlineLink>
+                    ) : null,
+                  )
+                  .filter(isPresent)}
+              </>
             )}
-            <Stack
-              className={cx(selectorStyle, winConditionSelectorStyle)}
-              vertical
-            >
-              {parentLevel && (
-                <>
-                  <InlineLink
-                    className={winConditionSelectorItemStyle}
-                    onClick={() => updateWinCondition(null)}
-                    selectedText={
-                      winConditionIndex == null ||
-                      (condition && condition.type === WinCriteria.Default)
-                    }
-                  >
-                    <fbt desc="Long description for 'any win condition'">
-                      Win (in any way)
-                    </fbt>
-                  </InlineLink>
-                  {winConditions
-                    ?.map((condition, index) =>
-                      condition.type !== WinCriteria.Default ? (
-                        <InlineLink
-                          className={winConditionSelectorItemStyle}
-                          key={index}
-                          onClick={() => updateWinCondition(index)}
-                          selectedText={index === winConditionIndex}
-                        >
-                          <WinConditionTitle
-                            condition={condition}
-                            index={index}
-                          />
-                        </InlineLink>
-                      ) : null,
-                    )
-                    .filter(isPresent)}
-                </>
-              )}
-            </Stack>
-          </div>
+          </Dropdown>
           <Stack gap vertical>
             <Stack>
               <h2>{node.name}</h2>
@@ -298,55 +300,51 @@ export default memo(function Level({
             />
             <Stack className={mapBottomStyle} gap={16}>
               {characters.length ? (
-                <Stack
-                  className={cx(selectorContainerStyle, effectContainerStyle)}
-                  gap
-                  start
-                >
-                  {characters.map((action, index) => (
-                    <Portrait
-                      clip
-                      key={index}
-                      player={action.player}
-                      scale={0.5}
-                      unit={getUnitInfoOrThrow(action.unitId)}
-                      variant={action.variant}
-                    />
-                  ))}
-                  {isInView && effects && (
-                    <Stack
-                      className={cx(selectorStyle, effectPanelStyle)}
-                      gap
-                      nowrap
-                      padding
-                      vertical
-                    >
-                      <Stack alignCenter gap={16} nowrap>
-                        <EffectSelector
-                          effects={effects}
-                          scenario={scenario}
-                          setScenario={(scenario) => setScenario(scenario)}
-                          winConditions={map.config.winConditions}
-                        />
-                        <Button
-                          onClick={() => setMap(node.id, 'effects', scenario)}
-                        >
-                          <Icon className={iconActiveStyle} icon={Edit} />
-                        </Button>
-                      </Stack>
-                      {scenario.effect.actions.map((action, index) => (
-                        <ActionCard
-                          action={action}
-                          biome={map.config.biome}
-                          hasContentRestrictions={false}
+                <Dropdown
+                  className={effectContainerStyle}
+                  dropdownClassName={effectPanelStyle}
+                  shouldRenderControls={isInView && !!effects}
+                  title={
+                    <Stack gap start>
+                      {characters.map((action, index) => (
+                        <Portrait
+                          clip
                           key={index}
-                          scrollRef={null}
-                          user={null}
+                          player={action.player}
+                          scale={0.5}
+                          unit={getUnitInfoOrThrow(action.unitId)}
+                          variant={action.variant}
                         />
                       ))}
                     </Stack>
-                  )}
-                </Stack>
+                  }
+                >
+                  <Stack gap nowrap padding vertical>
+                    <Stack alignCenter gap={16} nowrap>
+                      <EffectSelector
+                        effects={effects}
+                        scenario={scenario}
+                        setScenario={(scenario) => setScenario(scenario)}
+                        winConditions={map.config.winConditions}
+                      />
+                      <Button
+                        onClick={() => setMap(node.id, 'effects', scenario)}
+                      >
+                        <Icon className={iconActiveStyle} icon={Edit} />
+                      </Button>
+                    </Stack>
+                    {scenario.effect.actions.map((action, index) => (
+                      <ActionCard
+                        action={action}
+                        biome={map.config.biome}
+                        hasContentRestrictions={false}
+                        key={index}
+                        scrollRef={null}
+                        user={null}
+                      />
+                    ))}
+                  </Stack>
+                </Dropdown>
               ) : null}
               <Typeahead
                 dataSource={dataSource}
@@ -468,46 +466,21 @@ const tagListStyle = css`
   margin: 0 0 12px;
 `;
 
-const selectorContainerStyle = css`
-  cursor: pointer;
-  position: relative;
-
-  & > div {
-    transition-delay: 150ms;
-  }
-  &:hover > div {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-    transition-delay: 0ms;
-  }
-`;
-
 const effectContainerStyle = css`
   & > div {
     transition-delay: 250ms;
   }
 `;
 
-const selectorStyle = css`
-  ${pixelBorder(applyVar('background-color-light'))}
-  background: ${applyVar('background-color-light')};
-
-  cursor: initial;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  transform: scale(0.9);
-  transition:
-    opacity 150ms ease,
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 102;
-`;
-
 const winConditionSelectorStyle = css`
+  ${pixelBorder(applyVar('background-color-light'))}
+
+  backdrop-filter: blur(2px);
+  background: ${applyVar('background-color-light')};
   left: -4px;
   overflow-y: auto;
   top: -4px;
+  z-index: 102;
 `;
 
 const winConditionSelectorItemStyle = css`
@@ -523,8 +496,8 @@ const effectPanelStyle = css`
   max-height: min(480px, 90vh);
   overflow: scroll;
   overscroll-behavior: contain;
-  position: absolute;
   top: -${TileSize * 6}px;
+  z-index: 102;
 `;
 
 const miniMapStyle = css`

@@ -256,20 +256,32 @@ export default function WinConditionCard({
               <span className={labelWidthStyle}>
                 <fbt desc="Label for win condition reward">Reward</fbt>
               </span>
-              <SkillSelector
-                availableSkills={Skills}
-                currentSkill={
-                  condition.reward?.type === 'Skill'
-                    ? condition.reward.skill
-                    : null
-                }
-                onSelect={(skill) =>
-                  onChange({
-                    ...condition,
-                    reward: skill ? { skill, type: 'Skill' } : undefined,
-                  })
-                }
-              />
+              <Stack gap={16} start>
+                <SkillSelector
+                  availableSkills={Skills}
+                  currentSkill={
+                    condition.reward?.type === 'Skill'
+                      ? condition.reward.skill
+                      : null
+                  }
+                  onSelect={(skill) =>
+                    onChange({
+                      ...condition,
+                      reward: skill ? { skill, type: 'Skill' } : undefined,
+                    })
+                  }
+                />
+                {condition.reward && (
+                  <Icon
+                    button
+                    className={iconStyle}
+                    icon={Close}
+                    onClick={() =>
+                      onChange({ ...condition, reward: undefined })
+                    }
+                  />
+                )}
+              </Stack>
             </Stack>
             {condition.reward && (
               <p className={noteBoxStyle}>
@@ -337,4 +349,8 @@ const labelWidthStyle = css`
 
 const lightStyle = css`
   opacity: 0.7;
+`;
+
+const iconStyle = css`
+  cursor: pointer;
 `;
