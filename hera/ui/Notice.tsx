@@ -1,21 +1,15 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
-import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
-import { TimerFunction } from '../Types.tsx';
+import { BaseAnimationProps, NoticeAnimation } from '../MapAnimations.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
-export default function Notice(props: {
-  animationConfig: AnimationConfig;
-  color: BaseColor | undefined;
-  onComplete: () => void;
-  scheduleTimer: TimerFunction;
-  text: string;
-  zIndex: number;
-}) {
+export default function Notice(
+  props: Omit<NoticeAnimation, 'onComplete' | 'type'> & BaseAnimationProps,
+) {
   if (useSkipAnimation(props)) {
     return null;
   }

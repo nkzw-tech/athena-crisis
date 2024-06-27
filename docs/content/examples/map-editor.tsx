@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 const viewer = {
   access: 'User',
   character: {
+    color: 1,
     unitId: Sniper.id,
     variant: 0,
   },

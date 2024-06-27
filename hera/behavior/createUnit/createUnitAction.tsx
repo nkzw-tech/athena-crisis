@@ -36,8 +36,7 @@ export default async function createUnitAction(
       map: state.map.copy({
         units: state.map.units.set(to, unit.recover()),
       }),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
     })),
   );
 }

@@ -39,6 +39,7 @@ import clientMoveAction from '../behavior/move/clientMoveAction.tsx';
 import hiddenMoveAction from '../behavior/move/hiddenMoveAction.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { toggleLightningAnimation } from '../behavior/radar/toggleLightningAction.tsx';
+import receivePortraitAnimation from '../behavior/receivePortrait/receivePortraitAnimation.tsx';
 import rescueAction from '../behavior/rescue/rescueAction.tsx';
 import sabotageAction, {
   addSabotageAnimation,
@@ -602,8 +603,19 @@ async function processActionResponse(
       return buySkillAction(actions, state, actionResponse);
     case 'ReceiveReward': {
       const { reward } = actionResponse;
-      if (reward.type === 'Skill') {
-        return buySkillAction(actions, state, actionResponse);
+      const rewardType = reward.type;
+      switch (rewardType) {
+        case 'Skill':
+          return buySkillAction(actions, state, actionResponse);
+        case 'UnitPortraits':
+          return receivePortraitAnimation(actions, state, actionResponse);
+        default: {
+          rewardType satisfies never;
+          throw new UnknownTypeError(
+            'processActionResponse:ReceiveReward',
+            rewardType,
+          );
+        }
       }
       break;
     }

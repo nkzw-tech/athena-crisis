@@ -266,7 +266,7 @@ export default function WinConditionCard({
               <span className={labelWidthStyle}>
                 <fbt desc="Label for win condition reward">Reward</fbt>
               </span>
-              <Stack gap={16} start>
+              <Stack alignCenter gap={16} start>
                 <SkillSelector
                   availableSkills={Skills}
                   currentSkill={reward?.type === 'Skill' ? reward.skill : null}

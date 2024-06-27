@@ -94,7 +94,6 @@ export default class CreateBuilding {
                 | ClientCoordinates,
             ) =>
               showGameInfo({
-                biome: map.config.biome,
                 building: entity,
                 create: isDisabled ? undefined : create,
                 origin: toTransformOrigin(event),

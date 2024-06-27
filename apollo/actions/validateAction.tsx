@@ -24,7 +24,7 @@ const validateCharacterMessage = (action: CharacterMessageEffectAction) => {
 
   if (
     variant != null &&
-    (variant > (unit.sprite.portrait.variants || 0) - 1 || variant < 0)
+    (variant < 0 || variant >= unit.sprite.portrait.variants)
   ) {
     return null;
   }

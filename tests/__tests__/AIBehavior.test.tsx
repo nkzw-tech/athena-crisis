@@ -331,7 +331,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "CreateUnit (1,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true, behavior: 1 }, free: false, skipBehaviorRotation: false }
-    CreateUnit (1,1 → 2,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Unknown', completed: true, behavior: 2 }, free: false, skipBehaviorRotation: false }
+    CreateUnit (1,1 → 2,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true, behavior: 2 }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 250, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -448,7 +448,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
   // The AI tries to build the strongest unit (likely 'Mammoth') which requires rails, but there are none.
   // This test ensures that the AI still actually creates a unit.
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
-    "CreateUnit (1,1 → 2,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Unknown', completed: true }, free: false, skipBehaviorRotation: false }
+    "CreateUnit (1,1 → 2,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 350, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -724,7 +724,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Unknown', completed: true }, free: false, skipBehaviorRotation: false }
+    "CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Thomas', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 400, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -737,7 +737,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Unknown', completed: true }, free: false, skipBehaviorRotation: false }
+    "CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -752,7 +752,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
     AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 4 ] ] }, chargeA: 108, chargeB: 330 }
-    CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Unknown', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -767,7 +767,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
     AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 4 ] ] }, chargeA: 108, chargeB: 330 }
-    CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Unknown', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Thomas', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 400, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });

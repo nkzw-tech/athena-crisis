@@ -20,6 +20,7 @@ export default function botToUser(bot: Bot): UserLike {
   const unit = getUnit(bot.name);
   return {
     character: {
+      color: 1,
       unitId: unit.id,
       variant: bot.name.length % unit.sprite.portrait.variants,
     },

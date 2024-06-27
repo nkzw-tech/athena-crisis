@@ -1462,7 +1462,6 @@ export default class GameMap extends Component<Props, State> {
       }
       AudioPlayer.playSound('UI/LongPress');
       this._showGameInfo({
-        biome: map.config.biome,
         building: vision.isVisible(map, vector)
           ? building
           : building?.hide(map.config.biome, true),

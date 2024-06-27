@@ -17,6 +17,6 @@ export default async function createTracksAction(
       type: 'createBuilding',
       variant: 0,
     }),
-    behavior: new NullBehavior(),
+    ...resetBehavior(NullBehavior),
   }));
 }

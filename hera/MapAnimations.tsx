@@ -14,7 +14,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 import AttackAnimation from './animations/AttackAnimation.tsx';
 import BuildingCreate from './animations/BuildingCreate.tsx';
 import Explosion, { ExplosionStyle } from './animations/Explosion.tsx';
@@ -28,10 +28,12 @@ import Spawn from './animations/Spawn.tsx';
 import UpgradeAnimation from './animations/UpgradeAnimation.tsx';
 import {
   Actions,
+  ClearTimerFunction,
   FactionNames,
   GetLayerFunction,
   State,
   StateToStateLike,
+  TimerFunction,
 } from './Types.tsx';
 import Banner from './ui/Banner.tsx';
 import CharacterMessage from './ui/CharacterMessage.tsx';
@@ -41,6 +43,15 @@ import Message from './ui/Message.tsx';
 import Notice from './ui/Notice.tsx';
 
 type UnitDirection = 'left' | 'right';
+
+export type BaseAnimationProps = Readonly<{
+  animationConfig: AnimationConfig;
+  clearTimer: ClearTimerFunction;
+  onComplete: () => void;
+  rate: number;
+  scheduleTimer: TimerFunction;
+  zIndex: number;
+}>;
 
 export type ExplosionAnimation = Readonly<{
   direction?: AttackDirection;
@@ -199,6 +210,8 @@ export type FlashAnimation = Readonly<{
 
 export type BannerAnimation = Readonly<{
   color?: BaseColor | ReadonlyArray<BaseColor>;
+  component?: ComponentType<{ duration: number; isVisible: boolean }>;
+  direction?: 'up';
   length: 'short' | 'medium' | 'long';
   onComplete?: StateToStateLike;
   player: PlayerID;

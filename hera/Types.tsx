@@ -8,7 +8,6 @@ import {
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -172,7 +171,6 @@ export type CurrentGameInfoState = Readonly<{
 }>;
 
 export type MapInfoState = Readonly<{
-  biome: Biome;
   building?: Building | null;
   buildingPlayer?: PlayerID;
   create?: () => void;
@@ -181,6 +179,13 @@ export type MapInfoState = Readonly<{
   origin: string;
   tile?: TileInfo | null;
   type: 'map-info';
+  unit?: Unit | null;
+  vector: Vector;
+}>;
+
+export type LeaderInfoState = Readonly<{
+  origin: string;
+  type: 'leader-info';
   unit?: Unit | null;
   vector: Vector;
 }>;
@@ -199,6 +204,7 @@ export type SkillInfoState = Readonly<{
 
 export type GameInfoState =
   | CurrentGameInfoState
+  | LeaderInfoState
   | MapInfoState
   | SkillInfoState;
 

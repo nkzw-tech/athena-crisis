@@ -44,8 +44,7 @@ export function addSabotageAnimation(
           type: 'sabotage',
           unitDirection: getUnitDirection(newMap.getFirstPlayerID(), unitB),
         }),
-        ...resetBehavior(),
-        behavior: new NullBehavior(),
+        ...resetBehavior(NullBehavior),
       }
     : null;
 }

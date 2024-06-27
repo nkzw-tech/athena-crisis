@@ -908,6 +908,9 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
+      '@deities/hephaestus':
+        specifier: workspace:*
+        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes

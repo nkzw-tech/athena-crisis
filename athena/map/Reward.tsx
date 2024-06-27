@@ -20,10 +20,6 @@ export type Reward = UnitPortraitsReward | SkillReward;
 export type EncodedReward = EncodedSkillReward;
 export type PlainReward = EncodedReward;
 
-export function isSkillReward(reward: Reward): reward is SkillReward {
-  return reward.type === 'Skill';
-}
-
 export function encodeReward(reward: Reward): EncodedReward {
   const rewardType = reward.type;
   switch (rewardType) {

@@ -11,7 +11,7 @@ export default function startGameAnimation(
   return new Promise((resolve) =>
     update({
       animations: animations.set(new AnimationKey(), {
-        length: 'long',
+        length: 'medium',
         onComplete: (state) => {
           requestAnimationFrame(() => resolve(state));
           return null;

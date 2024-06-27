@@ -21,7 +21,6 @@ export default async function captureAction(
   if (actionResponse.type === 'Capture') {
     return new Promise((resolve) =>
       update((state) => ({
-        ...resetBehavior(),
         animations: state.animations.set(position, {
           direction: UpAttackDirection,
           onComplete: (state) => {
@@ -36,7 +35,7 @@ export default async function captureAction(
           variant: 0,
           weapon: actionResponse.building ? CapturedWeapon : CaptureWeapon,
         }),
-        behavior: new NullBehavior(),
+        ...resetBehavior(NullBehavior),
       })),
     );
   }

@@ -29,8 +29,7 @@ export default async function clientAttackAction(
 
   // First, hide the attack/moveable radius.
   state = await update({
-    ...resetBehavior(),
-    behavior: new NullBehavior(),
+    ...resetBehavior(NullBehavior),
     selectedPosition: from,
     selectedUnit: unitA,
   });

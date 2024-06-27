@@ -222,20 +222,19 @@ const supplyRange = getAttributeRange(
 );
 
 export default memo(function UnitCard({
-  biome,
   factionNames,
   map,
   unit,
   vector,
   viewer,
 }: {
-  biome: Biome;
   factionNames: FactionNames;
   map: MapData;
   unit: Unit;
   vector: Vector;
   viewer?: PlayerID | null;
 }) {
+  const { biome } = map.config;
   const { info, player } = unit;
   const {
     configuration: { fuel, vision },
@@ -265,7 +264,7 @@ export default memo(function UnitCard({
         }).copy({ units: ImmutableMap([[defaultVector, entity]]) }),
       ),
     ];
-  }, [biome, info, player, type, unit]);
+  }, [info, biome, player, type, unit]);
 
   useEffect(() => {
     if (unit.player > 0) {

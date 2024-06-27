@@ -100,8 +100,7 @@ export default async function activatePowerAction(
         text: String(name),
         type: 'banner',
       }),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
     })),
   );
 }

@@ -61,8 +61,7 @@ export function addHealAnimation(
           type: 'heal',
           unitDirection: getUnitDirection(newMap.getFirstPlayerID(), unitB),
         }),
-        ...resetBehavior(),
-        behavior: new NullBehavior(),
+        ...resetBehavior(NullBehavior),
       }
     : null;
 }

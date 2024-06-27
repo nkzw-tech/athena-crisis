@@ -29,6 +29,7 @@ import UnitCard from '../card/UnitCard.tsx';
 import {
   CurrentGameInfoState,
   FactionNames,
+  LeaderInfoState,
   MapInfoState,
   SkillInfoState,
   State,
@@ -68,10 +69,12 @@ const MapInfoPanel = memo(function MapInfoPanel({
 }: {
   currentViewer: PlayerID | null;
   factionNames: FactionNames;
-  info: MapInfoState;
+  info: MapInfoState | LeaderInfoState;
   map: MapData;
 }) {
-  const { building, tile, unit } = info;
+  const unit = info.unit;
+  const { building, tile } =
+    info.type === 'map-info' ? info : { building: null, tile: null };
   const { buildingState, leaderState, states, tileState, unitState } =
     useMemo(() => {
       const unitState = unit
@@ -98,6 +101,11 @@ const MapInfoPanel = memo(function MapInfoPanel({
             type: 'tile',
           } as const)
         : null;
+
+      if (info.type === 'leader-info' && leaderState) {
+        const states: ReadonlyArray<MapInfoPanelState> = [leaderState];
+        return { leaderState, states };
+      }
       const states: ReadonlyArray<MapInfoPanelState> = [
         unitState,
         leaderState,
@@ -105,9 +113,9 @@ const MapInfoPanel = memo(function MapInfoPanel({
         tileState,
       ].filter(isPresent);
       return { buildingState, leaderState, states, tileState, unitState };
-    }, [unit, building, tile]);
+    }, [unit, building, tile, info.type]);
   const [panel, setPanel] = useState<MapInfoPanelState>(
-    unitState || buildingState || tileState || { type: 'none' },
+    unitState || leaderState || buildingState || tileState || { type: 'none' },
   );
   useDialogNavigation(states, states.indexOf(panel), setPanel);
 
@@ -115,7 +123,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
     'accept',
     useCallback(
       (event) => {
-        if (info.create) {
+        if (info.type === 'map-info' && info.create) {
           event.preventDefault();
           info.create();
         }
@@ -193,7 +201,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
             <fbt desc="Label for field tab">Field</fbt>
           </MapInfoTab>
         )}
-        {info.create && (unit || building) && (
+        {info.type === 'map-info' && info.create && (unit || building) && (
           <MapInfoTab end onClick={info.create}>
             {unit ? (
               <fbt desc="Button to create a unit">Deploy</fbt>
@@ -343,7 +351,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
   state: { currentViewer, factionNames, map },
 }: {
   endGame?: () => void;
-  gameInfoState: CurrentGameInfoState | MapInfoState;
+  gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
   state: Pick<
     State,
     'currentViewer' | 'factionNames' | 'gameInfoState' | 'map'
@@ -363,6 +371,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
         />
       );
     }
+    case 'leader-info':
     case 'map-info':
       return (
         <MapInfoPanel

@@ -205,7 +205,6 @@ export default class CreateUnit {
                 | ClientCoordinates,
             ) =>
               showGameInfo({
-                biome: map.config.biome,
                 create: isDisabled ? undefined : create,
                 origin: toTransformOrigin(event),
                 type: 'map-info',

@@ -56,16 +56,14 @@ export default async function objectiveAnimation(
             text: String(getWinCriteriaName(condition.type)),
             type: 'banner',
           }),
-          ...resetBehavior(),
-          behavior: new NullBehavior(),
+          ...resetBehavior(NullBehavior),
         }),
         player,
         sound: 'UI/Start',
         text,
         type: 'banner',
       }),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
     })),
   );
 }

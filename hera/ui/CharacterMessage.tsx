@@ -1,10 +1,5 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import {
-  AnimationConfig,
-  DoubleSize,
-} from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints, { lg, sm } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
@@ -20,26 +15,16 @@ import { Sprites } from 'athena-crisis:images';
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Portrait, { PortraitWidth } from '../character/Portrait.tsx';
-import { ClearTimerFunction, FactionNames, TimerFunction } from '../Types.tsx';
+import {
+  BaseAnimationProps,
+  CharacterMessageAnimation,
+} from '../MapAnimations.tsx';
 import formatCharacterText from './lib/formatCharacterText.tsx';
 import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
-type Props = Readonly<{
-  animationConfig: AnimationConfig;
-  clearTimer: ClearTimerFunction;
-  factionNames: FactionNames;
-  map: MapData;
-  onComplete: () => void;
-  player: PlayerID;
-  position?: 'top' | 'bottom';
-  scheduleTimer: TimerFunction;
-  text: string;
-  unitId: number;
-  userDisplayName: string;
-  variant?: number;
-  viewer?: PlayerID;
-}>;
+type Props = Omit<CharacterMessageAnimation, 'onComplete'> &
+  BaseAnimationProps & { userDisplayName: string };
 
 const sizes = {
   fontSize: 9,

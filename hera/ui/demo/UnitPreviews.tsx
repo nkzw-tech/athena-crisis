@@ -67,7 +67,6 @@ export default function UnitPreviews() {
 
   const showGameInfo = useCallback((event: MouseEvent, unit: Unit) => {
     setGameInfoState({
-      biome: map.config.biome,
       origin: toTransformOrigin(event),
       type: 'map-info',
       unit,

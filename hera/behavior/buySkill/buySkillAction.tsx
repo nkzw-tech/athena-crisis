@@ -28,12 +28,13 @@ export default async function buySkillAction(
     return state;
   }
 
-  const { name } = getSkillConfigForDisplay(skill);
+  const { colors, name } = getSkillConfigForDisplay(skill);
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
-        color: player,
-        length: 'medium',
+        color: colors,
+        direction: 'up',
+        length: 'long',
         onComplete: (state) => {
           requestFrame(() =>
             resolve({
@@ -45,6 +46,7 @@ export default async function buySkillAction(
         },
         player,
         sound: 'UI/Start',
+        style: 'flashy',
         text: String(
           isBuy
             ? fbt(
@@ -71,8 +73,7 @@ export default async function buySkillAction(
         type: 'banner',
       }),
       map: applyActionResponse(state.map, state.vision, actionResponse),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
     })),
   );
 }

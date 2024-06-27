@@ -66,8 +66,7 @@ export default async function endTurnAction(actions: Actions, state: State) {
           return state;
         },
       ),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
       lastActionResponse: actionResponse,
       lastActionTime: dateNow(),
       map: newMap

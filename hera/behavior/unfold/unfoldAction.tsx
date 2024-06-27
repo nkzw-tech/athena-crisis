@@ -39,8 +39,7 @@ const unfoldAnimation = async (
             },
             type,
           }),
-          ...resetBehavior(),
-          behavior: new NullBehavior(),
+          ...resetBehavior(NullBehavior),
           selectedPosition: state.selectedPosition,
           selectedUnit: state.selectedUnit,
         }));
@@ -65,14 +64,13 @@ export default async function unfoldAction(
   state = await unfoldAnimation(actions, position, unit, type);
 
   await update({
-    ...resetBehavior(),
-    behavior: new NullBehavior(),
     map: state.map.copy({
       units: state.map.units.set(
         position,
         (type === 'fold' ? unit.fold().move() : unit.unfold()).recover(),
       ),
     }),
+    ...resetBehavior(NullBehavior),
   });
 
   return new Promise((resolve) =>

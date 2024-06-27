@@ -247,7 +247,6 @@ export default function DesignPanel({
   const onLongPress: SelectTileFn = useCallback(
     ({ building, tile, unit }) => {
       actions.showGameInfo({
-        biome,
         building,
         origin,
         tile: unit || building ? null : tile,
@@ -256,7 +255,7 @@ export default function DesignPanel({
         vector: vec(1, 1),
       });
     },
-    [actions, biome],
+    [actions],
   );
 
   return (

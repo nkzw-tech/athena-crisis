@@ -49,8 +49,7 @@ export default function rescueAction(
               unitDirection: getUnitDirection(newMap.getFirstPlayerID(), unitB),
               variant: player,
             }),
-            ...resetBehavior(),
-            behavior: new NullBehavior(),
+            ...resetBehavior(NullBehavior),
           }
         : null;
     });

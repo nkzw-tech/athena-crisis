@@ -30,7 +30,6 @@ export function addCreateBuildingAnimation(
 ) {
   const { building, from } = actionResponse;
   return {
-    ...resetBehavior(),
     animations: state.animations.set(from, {
       onComplete: (state) => {
         return onComplete({
@@ -57,6 +56,6 @@ export function addCreateBuildingAnimation(
       type: 'createBuilding',
       variant: building.player,
     }),
-    behavior: new NullBehavior(),
+    ...resetBehavior(NullBehavior),
   };
 }

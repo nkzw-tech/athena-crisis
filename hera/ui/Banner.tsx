@@ -1,18 +1,17 @@
-import { SoundName } from '@deities/athena/info/Music.tsx';
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
-import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
+import throttle from '@deities/ui/controls/throttle.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
-import { BaseColor } from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
 import { motion, Variants } from 'framer-motion';
-import { useEffect } from 'react';
-import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+import { useEffect, useMemo, useState } from 'react';
+import { BannerAnimation, BaseAnimationProps } from '../MapAnimations.tsx';
+import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
 const multiplier = process.env.NODE_ENV === 'development' ? 3 : 1.5;
@@ -22,24 +21,20 @@ const transition = {
   type: 'spring',
 };
 
-export default function Banner(props: {
-  animationConfig: AnimationConfig;
-  clearTimer: ClearTimerFunction;
-  color?: BaseColor | ReadonlyArray<BaseColor>;
-  length: 'short' | 'medium' | 'long';
-  onComplete: () => void;
-  player: PlayerID;
-  rate: number;
-  scheduleTimer: TimerFunction;
-  sound: SoundName | null;
-  style?: 'regular' | 'flashy';
-  text: string;
-  zIndex: number;
-}) {
+const sizes = {
+  fontSize: 12,
+  letterSpacing: 1,
+  padding: 16,
+};
+
+export default function Banner(
+  props: Omit<BannerAnimation, 'onComplete'> & BaseAnimationProps,
+) {
   const {
-    animationConfig,
     clearTimer,
     color,
+    component: Component,
+    direction: initialDirection,
     length,
     onComplete,
     player,
@@ -51,36 +46,58 @@ export default function Banner(props: {
     zIndex,
   } = props;
 
-  const words = text.trim().split(' ');
+  const [showComponent, setShowComponent] = useState(false);
+  const [clientWidth, setClientWidth] = useState<number>(
+    () => document.body.clientWidth,
+  );
+  const isLarge = clientWidth >= sm;
+  const lines = useMemo(
+    () =>
+      measureText(
+        text.toLocaleUpperCase(),
+        (clientWidth - sizes.padding) / (isLarge ? 4 : 2),
+        sizes,
+      ),
+    [text, clientWidth, isLarge],
+  );
+
+  useEffect(() => {
+    const listener = throttle(
+      () => setClientWidth(document.body.clientWidth),
+      100,
+    );
+    window.addEventListener('resize', listener);
+    return () => window.removeEventListener('resize', listener);
+  }, [clientWidth]);
 
   useEffect(() => {
     if (sound) {
       const timer = scheduleTimer(
         () => AudioPlayer.playSound(sound, rate),
-        (rate * animationConfig.AnimationDuration) / 4,
+        (rate * AnimationConfig.AnimationDuration) / 4,
       );
       return () => clearTimer(timer);
     }
-  }, [
-    animationConfig.AnimationDuration,
-    clearTimer,
-    rate,
-    scheduleTimer,
-    sound,
-  ]);
+  }, [clearTimer, rate, scheduleTimer, sound]);
 
   if (useSkipAnimation(props)) {
     return null;
   }
 
-  const duration = animationConfig.AnimationDuration / 1000 / multiplier;
-  const direction = player === 0 || player % 2 ? 1 : -1;
+  const duration = AnimationConfig.AnimationDuration / 1000 / multiplier;
+  const direction =
+    initialDirection || (player === 0 || player % 2 ? 'right' : 'left');
   const isFlashy = style === 'flashy';
   const child: Variants = {
     hidden: {
       opacity: 0,
       transition,
-      x: isFlashy ? (direction === 1 ? '-100%' : '100%') : '',
+      x:
+        isFlashy && direction !== 'up'
+          ? direction === 'right'
+            ? '-100%'
+            : '100%'
+          : '',
       y: 20,
     },
     visible: {
@@ -127,46 +144,56 @@ export default function Banner(props: {
           <div
             className={cx(
               backgroundStyle,
-              isFlashy
-                ? direction === 1
-                  ? flashyRightStyle
-                  : flashyLeftStyle
-                : direction === 1
-                  ? backgroundRightStyle
-                  : backgroundLeftStyle,
+              (isFlashy ? flashyBackgroundStyle : backgroundAnimationStyle)[
+                direction
+              ],
             )}
             style={{
               background: gradient(color, 0.9),
             }}
           />
-          {words.flatMap((word, wordIndex) => [
-            ...(isSafari ? [word] : Array.from(word)).map((letter, index) => (
-              <motion.span
-                className={letterStyle}
-                key={`${wordIndex}$${index}`}
-                onAnimationComplete={
-                  wordIndex === words.length - 1 &&
-                  (isSafari || index === word.length - 1)
-                    ? () => {
-                        scheduleTimer(
-                          onComplete,
-                          animationConfig.AnimationDuration *
-                            (length === 'short'
-                              ? 1
-                              : length === 'medium'
-                                ? 3
-                                : 5),
-                        );
+          {lines.flatMap((line, lineIndex) => {
+            const words = line.split(' ');
+            return [
+              ...words.flatMap((word, wordIndex) => [
+                ...(isSafari ? [word] : Array.from(word)).map(
+                  (letter, index) => (
+                    <motion.span
+                      className={letterStyle}
+                      key={`${lineIndex}$${wordIndex}$${index}`}
+                      onAnimationComplete={
+                        lineIndex === lines.length - 1 &&
+                        wordIndex === words.length - 1 &&
+                        (isSafari || index === word.length - 1)
+                          ? () => {
+                              setShowComponent(true);
+                              scheduleTimer(
+                                onComplete,
+                                AnimationConfig.AnimationDuration *
+                                  (length === 'short'
+                                    ? 1
+                                    : length === 'medium'
+                                      ? 3
+                                      : 5) *
+                                  (Component ? 4.5 : 1),
+                              );
+                            }
+                          : undefined
                       }
-                    : undefined
-                }
-                variants={child}
-              >
-                {letter}
-              </motion.span>
-            )),
-            ' ',
-          ])}
+                      variants={child}
+                    >
+                      {letter}
+                    </motion.span>
+                  ),
+                ),
+                ' ',
+              ]),
+              <br key={`br-${lineIndex}`} />,
+            ];
+          })}
+          {Component && (
+            <Component duration={duration} isVisible={showComponent} />
+          )}
         </motion.div>
       </motion.div>
     </Portal>
@@ -191,35 +218,35 @@ const innerStyle = css`
   border-bottom: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
   border-top: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
   color: #fff;
-  font-size: calc(${vars.apply('multiplier')} * 12px);
+  font-size: calc(${vars.apply('multiplier')} * ${sizes.fontSize}px);
+  letter-spacing: ${sizes.letterSpacing}px;
   line-height: calc(${vars.apply('multiplier')} * 18px);
   overflow: hidden;
   padding-bottom: 8px;
-  padding: 8px 16px;
+  padding: 8px ${sizes.padding}px;
   position: relative;
   text-align: center;
   text-shadow: rgba(0, 0, 0, 0.8) calc(${vars.apply('multiplier')} * 1px)
     calc(${vars.apply('multiplier')} * 1px) 0;
   text-wrap: balance;
+  white-space: nowrap;
   width: 100%;
-  word-break: break-word;
-  white-space-collapse: break-spaces;
 
   ${Breakpoints.sm} {
     ${vars.set('multiplier', 4)}
 
-    padding: 8px 16px 16px;
+    padding: 8px ${sizes.padding}px 16px;
     line-height: calc(${vars.apply('multiplier')} * 14px);
   }
 `;
 
 const flashyInnerStyle = css`
   backdrop-filter: blur(4px);
-  padding: 36px 16px 38px;
+  padding: 36px ${sizes.padding}px 38px;
   text-transform: uppercase;
 
   ${Breakpoints.sm} {
-    padding: 48px 16px 54px;
+    padding: 48px ${sizes.padding}px 54px;
   }
 `;
 
@@ -237,8 +264,9 @@ const backgroundStyle = css`
   position: absolute;
 `;
 
-const backgroundLeftStyle = css`
-  animation: ${keyframes`
+const backgroundAnimationStyle = {
+  left: css`
+    animation: ${keyframes`
     0% {
       transform: translate3d(0, 0, 0);
     }
@@ -246,10 +274,10 @@ const backgroundLeftStyle = css`
       transform: translate3d(-72px, 72px, 0);
     }
   `} 5s linear infinite;
-`;
+  `,
 
-const backgroundRightStyle = css`
-  animation: ${keyframes`
+  right: css`
+    animation: ${keyframes`
     0% {
       transform: translate3d(0, 0, 0);
     }
@@ -257,10 +285,23 @@ const backgroundRightStyle = css`
       transform: translate3d(72px, 72px, 0);
     }
   `} 5s linear infinite;
-`;
+  `,
 
-const flashyLeftStyle = css`
-  animation: ${keyframes`
+  up: css`
+    animation: ${keyframes`
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, -72px, 0);
+    }
+    `} 5s linear infinite;
+  `,
+};
+
+const flashyBackgroundStyle = {
+  left: css`
+    animation: ${keyframes`
     0% {
       transform: translate3d(0, 0, 0);
     }
@@ -268,10 +309,10 @@ const flashyLeftStyle = css`
       transform: translate3d(-360px, 0, 0);
     }
   `} 3s linear infinite;
-`;
+  `,
 
-const flashyRightStyle = css`
-  animation: ${keyframes`
+  right: css`
+    animation: ${keyframes`
     0% {
       transform: translate3d(0, 0, 0);
     }
@@ -279,7 +320,19 @@ const flashyRightStyle = css`
       transform: translate3d(360px, 0, 0);
     }
   `} 3s linear infinite;
-`;
+  `,
+
+  up: css`
+    animation: ${keyframes`
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, -360px, 0);
+    }
+    `} 3s linear infinite;
+  `,
+};
 
 const letterStyle = css`
   display: inline-block;

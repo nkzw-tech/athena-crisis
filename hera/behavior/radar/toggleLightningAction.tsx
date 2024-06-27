@@ -40,10 +40,7 @@ export default async function toggleLightningAction(
     await toggleLightningAnimation(
       actions,
       to,
-      await update({
-        ...resetBehavior(),
-        behavior: new NullBehavior(),
-      }),
+      await update(resetBehavior(NullBehavior)),
       newMap,
     ),
   );

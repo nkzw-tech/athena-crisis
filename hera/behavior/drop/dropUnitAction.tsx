@@ -57,7 +57,6 @@ export default function dropUnitAction(
         .set(from, originalUnitA.drop(unitB).recover())
         .set(to, newUnitB.recover()),
     }),
-    ...resetBehavior(),
-    behavior: new NullBehavior(),
+    ...resetBehavior(NullBehavior),
   };
 }

@@ -49,8 +49,7 @@ const loadAction = (
         path,
         tiles: path.map((vector) => map.getTileInfo(vector)),
       }),
-      ...resetBehavior(),
-      behavior: new NullBehavior(),
+      ...resetBehavior(NullBehavior),
     });
   }
 };

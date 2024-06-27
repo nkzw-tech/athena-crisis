@@ -12,6 +12,7 @@
   "dependencies": {
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
+    "@deities/hephaestus": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@nkzw/profane": "^2.0.1"
   }

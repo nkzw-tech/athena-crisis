@@ -75,18 +75,17 @@ const defenseRange = getAttributeRange(
 );
 
 export default memo(function BuildingCard({
-  biome,
   building,
   factionNames,
   map,
   unit,
 }: {
-  biome: Biome;
   building: Building;
   factionNames: FactionNames;
   map: MapData;
   unit?: Unit | null;
 }) {
+  const { biome } = map.config;
   const { info, player } = building;
   const {
     configuration: { canBeCreated, cost, funds, isAccessible, limit },

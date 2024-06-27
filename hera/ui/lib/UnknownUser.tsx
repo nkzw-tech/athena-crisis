@@ -2,6 +2,7 @@ import { Pioneer } from '@deities/athena/info/Unit.tsx';
 
 export default {
   character: {
+    color: 1,
     unitId: Pioneer.id,
     variant: 2,
   },
