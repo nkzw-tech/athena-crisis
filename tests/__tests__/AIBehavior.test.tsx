@@ -4,6 +4,7 @@ import {
   Airbase,
   Barracks,
   Factory,
+  filterBuildings,
   House,
   HQ,
   RepairShop,
@@ -801,6 +802,75 @@ test('AI will prefer funds generating buildings over factories if it has no inco
     CompleteUnit (2,2)
     EndTurn { current: { funds: 100, player: 2 }, next: { funds: 200, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
+});
+
+test('AI will create factories if it has no income and cannot build funds generating buildings', () => {
+  const vecA = vec(1, 2);
+  const vecB = vec(3, 3);
+  const blocklistedBuildings = new Set(
+    filterBuildings(({ configuration }) => configuration.funds > 0).map(
+      ({ id }) => id,
+    ),
+  );
+  const unitBuildings = new Set(
+    filterBuildings((building) => building.canBuildUnits()).map(({ id }) => id),
+  );
+
+  const map = initialMap.copy({
+    config: initialMap.config.copy({
+      blocklistedBuildings,
+    }),
+    map: [1, 1, ConstructionSite.id, 1, 1, 1, 1, 1, 1],
+    teams: updatePlayers(
+      initialMap.teams,
+      initialMap.getPlayers().map((player) => player.setFunds(10_000)),
+    ),
+    units: initialMap.units.set(vecA, Pioneer.create(2)),
+  });
+
+  const [, , gameStateA] = executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  const actionResponseA = gameStateA!.at(1)![0];
+  expect(actionResponseA.type).toBe('CreateBuilding');
+  expect(
+    actionResponseA.type === 'CreateBuilding' &&
+      unitBuildings.has(actionResponseA.building.id),
+  ).toBe(true);
+
+  expect(
+    snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)]),
+  ).toMatchInlineSnapshot(
+    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
+  );
+
+  const [, , gameStateB] = executeGameAction(
+    map.copy({
+      units: map.units.set(vecB, Flamethrower.create(2)),
+    }),
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  const actionResponseB = gameStateB!.at(1)![0];
+  expect(actionResponseB.type).toBe('CreateBuilding');
+  expect(
+    actionResponseB.type === 'CreateBuilding' &&
+      unitBuildings.has(actionResponseB.building.id),
+  ).toBe(true);
+
+  expect(
+    snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)]),
+  ).toMatchInlineSnapshot(
+    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
+  );
 });
 
 test('AI will move onto escort vectors even if it is a long-range unit', () => {

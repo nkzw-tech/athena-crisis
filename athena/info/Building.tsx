@@ -602,3 +602,9 @@ export function mapBuildingsWithContentRestriction<T>(
     )
     .map(fn);
 }
+
+export const BuildableTiles = new Set(
+  filterBuildings(
+    ({ configuration: { canBeCreated } }) => canBeCreated,
+  ).flatMap(({ configuration: { placeOn } }) => (placeOn ? [...placeOn] : [])),
+);

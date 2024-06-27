@@ -1,6 +1,6 @@
 import { PotentialUnitAbilities } from '../../dionysus/lib/getPossibleUnitAbilities.tsx';
 import needsSupply from '../../dionysus/lib/needsSupply.tsx';
-import { filterBuildings, MinFunds } from '../info/Building.tsx';
+import { BuildableTiles, MinFunds } from '../info/Building.tsx';
 import { Ability, UnitInfo } from '../info/Unit.tsx';
 import { getEntityInfoGroup } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';
@@ -9,12 +9,6 @@ import MapData from '../MapData.tsx';
 import calculateFunds, {
   calculateTotalPossibleFunds,
 } from './calculateFunds.tsx';
-
-const buildableTiles = new Set(
-  filterBuildings(
-    ({ configuration: { canBeCreated } }) => canBeCreated,
-  ).flatMap(({ configuration: { placeOn } }) => (placeOn ? [...placeOn] : [])),
-);
 
 export default function determineUnitsToCreate(
   map: MapData,
@@ -40,7 +34,7 @@ export default function determineUnitsToCreate(
   const availableTiles = map.reduceEachField(
     (sum, vector) =>
       sum +
-      (buildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)
+      (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)
         ? 1
         : 0),
     0,

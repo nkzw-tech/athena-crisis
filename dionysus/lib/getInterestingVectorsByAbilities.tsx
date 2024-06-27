@@ -1,3 +1,4 @@
+import { BuildableTiles } from '@deities/athena/info/Building.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -5,7 +6,6 @@ import {
   winConditionHasVectors,
   WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
-import { BuildableTiles } from './getInterestingVectors.tsx';
 import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
 import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';

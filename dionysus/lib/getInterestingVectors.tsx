@@ -1,4 +1,4 @@
-import { filterBuildings } from '@deities/athena/info/Building.tsx';
+import { BuildableTiles } from '@deities/athena/info/Building.tsx';
 import { Beach, isSeaTile } from '@deities/athena/info/Tile.tsx';
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
@@ -9,12 +9,6 @@ import MapData from '@deities/athena/MapData.tsx';
 import getWinConditionVectors from './getWinConditionVectors.tsx';
 import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
-
-export const BuildableTiles = new Set(
-  filterBuildings(
-    ({ configuration: { canBeCreated } }) => canBeCreated,
-  ).flatMap(({ configuration: { placeOn } }) => (placeOn ? [...placeOn] : [])),
-);
 
 export default function getInterestingVectors(
   map: MapData,
