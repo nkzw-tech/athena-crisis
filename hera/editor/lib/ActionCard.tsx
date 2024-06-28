@@ -169,6 +169,7 @@ export default memo(function ActionCard({
         }}
       >
         <Dropdown
+          className={portraitStyle}
           dropdownClassName={cx(
             portraitSelectorStyle,
             portrait.variants > 3 && portraitWithManyVariantsStyle,
@@ -441,6 +442,10 @@ const vars = new CSSVariables<'portraits'>('ad');
 const boxStyle = css`
   margin: 4px 2px 4px 0px;
   flex-shrink: 0;
+`;
+
+const portraitStyle = css`
+  height: fit-content;
 `;
 
 const portraitSelectorStyle = css`
