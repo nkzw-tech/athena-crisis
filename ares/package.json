@@ -29,8 +29,8 @@
     "@emotion/css": "^11.11.2",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.12.0",
-    "@stripe/react-stripe-js": "^2.7.1",
+    "@sentry/browser": "^8.13.0",
+    "@stripe/react-stripe-js": "^2.7.2",
     "@stripe/stripe-js": "^4.0.0",
     "fbt": "^1.0.2",
     "framer-motion": "^11.2.12",
@@ -63,6 +63,6 @@
     "relay-compiler": "^17.0.0",
     "vite-plugin-minify": "^1.5.2",
     "vite-plugin-pwa": "^0.20.0",
-    "vite-plugin-restart": "^0.4.0"
+    "vite-plugin-restart": "^0.4.1"
   }
 }
