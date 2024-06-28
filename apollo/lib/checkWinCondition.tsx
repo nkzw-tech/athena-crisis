@@ -120,7 +120,20 @@ function checkWinCondition(
   const isDefault = condition.type === WinCriteria.Default;
   const matchesPlayer =
     !isDefault && matchesPlayerList(condition.players, player);
+  const isSurvivalAndEndTurn =
+    condition.type === WinCriteria.Survival &&
+    actionResponse.type === 'EndTurn';
+  const targetPlayer = isSurvivalAndEndTurn
+    ? actionResponse.next.player
+    : player;
   const ignoreIfOptional = !isDefault && condition.optional;
+
+  if (
+    condition.type !== WinCriteria.Default &&
+    condition.completed?.has(targetPlayer)
+  ) {
+    return false;
+  }
 
   if (isDestructive) {
     return (
@@ -192,9 +205,8 @@ function checkWinCondition(
         map.units.filter(filterNeutral).size +
           rescuedUnitsByPlayer(map, player) <
           condition.amount) ||
-      (actionResponse.type === 'EndTurn' &&
-        condition.type === WinCriteria.Survival &&
-        matchesPlayerList(condition.players, actionResponse.next.player) &&
+      (isSurvivalAndEndTurn &&
+        matchesPlayerList(condition.players, targetPlayer) &&
         condition.rounds <= actionResponse.round) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&

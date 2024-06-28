@@ -1545,6 +1545,54 @@ test('win by survival in one round', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test('win by survival with optional survival', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const initialMap = map.copy({
+    config: map.config.copy({
+      winConditions: [
+        {
+          hidden: false,
+          optional: false,
+          players: [1],
+          rounds: 3,
+          type: WinCriteria.Survival,
+        },
+        {
+          hidden: true,
+          optional: true,
+          players: [1],
+          rounds: 2,
+          type: WinCriteria.Survival,
+        },
+      ],
+    }),
+    units: map.units
+      .set(v1, Flamethrower.create(player1))
+      .set(v2, Pioneer.create(player2)),
+  });
+
+  expect(validateWinConditions(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      OptionalObjective { condition: { completed: Set(1) { 1 }, hidden: true, optional: true, players: [ 1 ], reward: null, rounds: 2, type: 5 }, conditionId: 1, toPlayer: 1 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
+      GameEnd { condition: { completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, rounds: 3, type: 5 }, conditionId: 0, toPlayer: 1 }"
+    `);
+});
+
 test('escort units', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
