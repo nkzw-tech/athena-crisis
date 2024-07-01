@@ -1801,7 +1801,7 @@ export const Jeep = new UnitInfo(
   null,
   {
     limit: 2,
-    types: new Set([EntityType.Infantry]),
+    types: new Set([EntityType.Infantry, EntityType.AirInfantry]),
   },
   {
     direction: 'left',
