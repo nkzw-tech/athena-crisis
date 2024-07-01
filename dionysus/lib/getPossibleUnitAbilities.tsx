@@ -13,11 +13,13 @@ export function getPossibleUnitAbilitiesForBuildings(
   buildings: ReadonlyArray<Building>,
   currentPlayer: Player,
 ): PotentialUnitAbilities {
-  return getPossibleUnitAbilities(
-    [
-      ...new Map(buildings.map((building) => [building.id, building])).values(),
-    ].flatMap((building) => building.getBuildableUnits(currentPlayer)),
-  );
+  const unitInfos = new Set<UnitInfo>();
+  for (const building of buildings) {
+    for (const unit of building.getBuildableUnits(currentPlayer)) {
+      unitInfos.add(unit);
+    }
+  }
+  return getPossibleUnitAbilities([...unitInfos]);
 }
 
 export default function getPossibleUnitAbilities(
