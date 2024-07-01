@@ -540,18 +540,29 @@ export default function applyActionResponse(
     }
     case 'ReceiveReward': {
       const { player, reward } = actionResponse;
-      if (reward.type === 'Skill') {
-        const playerA = map.getPlayer(player);
-        return map.copy({
-          teams: updatePlayer(
-            map.teams,
-            playerA.copy({
-              skills: new Set([...playerA.skills, reward.skill]),
-            }),
-          ),
-        });
+      const rewardType = reward.type;
+      switch (rewardType) {
+        case 'Skill': {
+          const playerA = map.getPlayer(player);
+          return map.copy({
+            teams: updatePlayer(
+              map.teams,
+              playerA.copy({
+                skills: new Set([...playerA.skills, reward.skill]),
+              }),
+            ),
+          });
+        }
+        case 'UnitPortraits':
+          return map;
+        default: {
+          rewardType satisfies never;
+          throw new UnknownTypeError(
+            'applyActionResponse:ReceiveReward',
+            rewardType,
+          );
+        }
       }
-      return map;
     }
     case 'BeginGame':
     case 'SecretDiscovered':

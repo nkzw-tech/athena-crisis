@@ -1,5 +1,8 @@
 import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import {
+  ActionResponse,
+  ReceiveRewardActionResponse,
+} from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import {
   GameActionResponse,
@@ -37,6 +40,12 @@ export type AnimationConfigs = readonly [
   fastPlayer: AnimationConfig,
 ];
 
+export type PlayerHasRewardFunction = (
+  map: MapData,
+  player: PlayerID,
+  actionResponse: ReceiveRewardActionResponse,
+) => boolean;
+
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
   animationConfig?: AnimationConfigs | AnimationConfig;
@@ -65,6 +74,7 @@ export type Props = Readonly<{
   onError?: (error: Error) => void;
   pan?: true;
   paused?: boolean;
+  playerHasRewards?: PlayerHasRewardFunction;
   scale: number;
   scroll?: boolean;
   setEditorState?: SetEditorStateFunction;

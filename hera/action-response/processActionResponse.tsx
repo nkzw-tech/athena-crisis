@@ -54,6 +54,7 @@ import AnimationKey from '../lib/AnimationKey.tsx';
 import getPlayerDefeatedMessage from '../lib/getPlayerDefeatedMessage.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import isFakeEndTurn from '../lib/isFakeEndTurn.tsx';
+import isSkillRewardActionResponse from '../lib/isSkillRewardActionResponse.tsx';
 import sleep from '../lib/sleep.tsx';
 import spawn from '../lib/spawn.tsx';
 import startGameAnimation from '../lib/startGameAnimation.tsx';
@@ -61,6 +62,7 @@ import { RadiusType } from '../Radius.tsx';
 import {
   Actions,
   AnimationConfigs,
+  PlayerHasRewardFunction,
   State,
   StateLike,
   StateToStateLike,
@@ -86,6 +88,7 @@ async function processActionResponse(
     lastPlayerId: PlayerID | null;
     lastUnitId: number | null;
   },
+  playerHasReward: PlayerHasRewardFunction,
 ): Promise<State | null> {
   const { factionNames, map, vision } = state;
   const { requestFrame, scrollIntoView, update } = actions;
@@ -600,15 +603,27 @@ async function processActionResponse(
     case 'SetViewer':
       return { ...state, map: newMap };
     case 'BuySkill':
-      return buySkillAction(actions, state, actionResponse);
+      return buySkillAction(actions, actionResponse);
     case 'ReceiveReward': {
       const { reward } = actionResponse;
       const rewardType = reward.type;
       switch (rewardType) {
-        case 'Skill':
-          return buySkillAction(actions, state, actionResponse);
-        case 'UnitPortraits':
-          return receivePortraitAnimation(actions, state, actionResponse);
+        case 'Skill': {
+          if (isSkillRewardActionResponse(actionResponse)) {
+            return buySkillAction(actions, actionResponse);
+          }
+
+          throw new UnknownTypeError(
+            'processActionResponse:ReceiveReward',
+            `${actionResponse.type} - ${rewardType}`,
+          );
+        }
+        case 'UnitPortraits': {
+          if (!playerHasReward(map, actionResponse.player, actionResponse)) {
+            return receivePortraitAnimation(actions, state, actionResponse);
+          }
+          break;
+        }
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError(
@@ -617,6 +632,13 @@ async function processActionResponse(
           );
         }
       }
+
+      requestFrame(() =>
+        resolve({
+          ...state,
+          map: newMap,
+        }),
+      );
       break;
     }
     case 'ActivatePower':
@@ -639,6 +661,7 @@ export default async function processActionResponses(
   gameActionResponses: GameActionResponses,
   animationConfigs: AnimationConfigs,
   fastButtonIsPressed: { current: boolean },
+  playerHasReward: PlayerHasRewardFunction,
 ): Promise<State> {
   let lastActionResponse: ActionResponse | null = null;
   const messageState = { count: 0, lastPlayerId: null, lastUnitId: null };
@@ -667,6 +690,7 @@ export default async function processActionResponses(
           actions,
           response.actionResponse,
           messageState,
+          playerHasReward,
         )),
         behavior: new NullBehavior(),
         lastActionResponse,

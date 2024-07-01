@@ -112,7 +112,7 @@ export default class BuySkills {
                   BuySkillAction(selectedPosition, skill),
                 );
                 if (actionResponse.type === 'BuySkill') {
-                  update(await buySkillAction(actions, state, actionResponse));
+                  update(await buySkillAction(actions, actionResponse));
                 }
               }
             };

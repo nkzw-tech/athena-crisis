@@ -2,7 +2,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { Skill, Skills } from '../info/Skill.tsx';
 import { getUnitInfo, getUnitInfoOrThrow, UnitInfo } from '../info/Unit.tsx';
 
-type SkillReward = Readonly<{
+export type SkillReward = Readonly<{
   skill: Skill;
   type: 'Skill';
 }>;
