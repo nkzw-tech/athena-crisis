@@ -619,7 +619,11 @@ async function processActionResponse(
           );
         }
         case 'UnitPortraits': {
-          if (!playerHasReward(map, actionResponse.player, actionResponse)) {
+          const player = map.getPlayer(actionResponse.player);
+          if (
+            player.isHumanPlayer() &&
+            !playerHasReward(map, actionResponse.player, actionResponse)
+          ) {
             return receivePortraitAnimation(actions, state, actionResponse);
           }
           break;

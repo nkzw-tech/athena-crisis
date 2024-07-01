@@ -5,7 +5,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { useCallback } from 'react';
 
-export default function usePlayerHasRewards({
+export default function usePlayerHasReward({
   id,
   portraits,
   skills,
@@ -34,7 +34,7 @@ export default function usePlayerHasRewards({
           return portraits.includes(reward.unit.id);
         default: {
           rewardType satisfies never;
-          throw new UnknownTypeError('usePlayerHasRewards', rewardType);
+          throw new UnknownTypeError('usePlayerHasReward', rewardType);
         }
       }
     },

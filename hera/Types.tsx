@@ -74,7 +74,7 @@ export type Props = Readonly<{
   onError?: (error: Error) => void;
   pan?: true;
   paused?: boolean;
-  playerHasRewards?: PlayerHasRewardFunction;
+  playerHasReward?: PlayerHasRewardFunction;
   scale: number;
   scroll?: boolean;
   setEditorState?: SetEditorStateFunction;

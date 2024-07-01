@@ -1101,7 +1101,7 @@ export default class GameMap extends Component<Props, State> {
               gameActionResponses,
               this._animationConfigs,
               this._isFastForward,
-              this.props.playerHasRewards || (() => false),
+              this.props.playerHasReward || (() => false),
             );
           } catch (error) {
             if (onError) {
