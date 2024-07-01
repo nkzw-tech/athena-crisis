@@ -10,21 +10,14 @@ import withModifiers from '../withModifiers.tsx';
 const format = (unitInfos: ReadonlyArray<UnitInfo>) =>
   unitInfos.map((info) => info.name).sort();
 
+const size = 20;
 const map = withModifiers(
   MapData.createMap({
-    map: Array(15 * 15).fill(1),
-    size: { height: 15, width: 15 },
+    map: Array(size * size).fill(1),
+    size: { height: size, width: size },
     teams: [
-      {
-        id: 1,
-        name: '',
-        players: [{ funds: 0, id: 1, userId: '1' }],
-      },
-      {
-        id: 2,
-        name: '',
-        players: [{ funds: 0, id: 2, name: 'AI' }],
-      },
+      { id: 1, name: '', players: [{ funds: 0, id: 1, userId: '1' }] },
+      { id: 2, name: '', players: [{ funds: 0, id: 2, name: 'AI' }] },
     ],
   }),
 );
@@ -181,8 +174,7 @@ test('`determineUnitsToCreate` builds transporters early in the game', () => {
     round: 3,
     units: map.units
       .set(vec(1, 1), Infantry.create(1))
-      .set(vec(2, 1), Infantry.create(1))
-      .set(vec(3, 1), Infantry.create(1)),
+      .set(vec(2, 1), Infantry.create(1)),
   });
   expect(
     format(
@@ -197,6 +189,44 @@ test('`determineUnitsToCreate` builds transporters early in the game', () => {
   ).toMatchInlineSnapshot(`
     [
       "Jeep",
+      "Transport Train",
+    ]
+  `);
+});
+
+test('`determineUnitsToCreate` does not build transporters early in the game if the player has many units', () => {
+  const currentMap = map.copy({
+    round: 3,
+    units: map.units
+      .set(vec(1, 1), Infantry.create(1))
+      .set(vec(2, 1), Infantry.create(1))
+      .set(vec(3, 1), Infantry.create(1))
+      .set(vec(4, 1), Infantry.create(1))
+      .set(vec(5, 1), Infantry.create(1))
+      .set(vec(6, 1), Infantry.create(1)),
+  });
+  expect(
+    format(
+      determineUnitsToCreate(
+        currentMap,
+        player1,
+        getPlayerUnits(currentMap),
+        factoryUnits,
+        options,
+      ),
+    ),
+  ).toMatchInlineSnapshot(`
+    [
+      "APU",
+      "Anti Air",
+      "Artillery",
+      "Heavy Artillery",
+      "Heavy Tank",
+      "Humvee",
+      "Jeep",
+      "Mammoth",
+      "Small Tank",
+      "Supply Train",
       "Transport Train",
     ]
   `);

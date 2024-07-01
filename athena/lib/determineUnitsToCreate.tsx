@@ -1,10 +1,13 @@
+import ImmutableMap from '@nkzw/immutable-map';
 import { PotentialUnitAbilities } from '../../dionysus/lib/getPossibleUnitAbilities.tsx';
 import needsSupply from '../../dionysus/lib/needsSupply.tsx';
 import { BuildableTiles, MinFunds } from '../info/Building.tsx';
 import { Ability, UnitInfo } from '../info/Unit.tsx';
+import Building from '../map/Building.tsx';
 import { getEntityInfoGroup } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';
 import Unit from '../map/Unit.tsx';
+import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 import calculateFunds, {
   calculateTotalPossibleFunds,
@@ -31,28 +34,43 @@ export default function determineUnitsToCreate(
     return [];
   }
 
-  const availableTiles = map.reduceEachField(
-    (sum, vector) =>
-      sum +
-      (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)
-        ? 1
-        : 0),
-    0,
-  );
-  const structures = map.buildings.filter(
-    (building) => map.isNeutral(building) && !building.info.isStructure(),
-  );
+  let _availableTiles: number | null = null;
+  const getAvailableTiles = () =>
+    _availableTiles === null
+      ? (_availableTiles = map.reduceEachField(
+          (sum, vector) =>
+            sum +
+            (BuildableTiles.has(map.getTileInfo(vector)) &&
+            !map.buildings.has(vector)
+              ? 1
+              : 0),
+          0,
+        ))
+      : _availableTiles;
+
+  let _structures: ImmutableMap<Vector, Building> | null = null;
+  const getStructures = () =>
+    _structures === null
+      ? (_structures = map.buildings.filter(
+          (building) => map.isNeutral(building) && !building.info.isStructure(),
+        ))
+      : _structures;
 
   const totalFunds = calculateTotalPossibleFunds(map);
-  const minUnitsWithCaptureAbility =
-    Math.max(structures.size, totalFunds / MinFunds) * 0.2;
   const unitsWithCreateBuildingsAbility = playerUnits.filter((unit) =>
     unit.info.hasAbility(Ability.CreateBuildings),
   );
-  const shouldBuildCaptureUnits =
-    calculateFunds(map, currentPlayer) / totalFunds < 0.4 / map.active.length &&
-    playerUnits.filter((unit) => unit.info.hasAbility(Ability.Capture)).length <
-      minUnitsWithCaptureAbility;
+  const getShouldBuildCaptureUnits = () => {
+    const minUnitsWithCaptureAbility =
+      Math.max(getStructures().size, totalFunds / MinFunds) * 0.2;
+
+    return (
+      calculateFunds(map, currentPlayer) / totalFunds <
+        0.4 / map.active.length &&
+      playerUnits.filter((unit) => unit.info.hasAbility(Ability.Capture))
+        .length < minUnitsWithCaptureAbility
+    );
+  };
 
   const unitsWithSupplyNeeds = playerUnits.filter(needsSupply);
   const entitiesWithSupplyNeeds = new Set(
@@ -79,11 +97,11 @@ export default function determineUnitsToCreate(
     // Otherwise, prefer units that can build buildings, if there is space.
   } else if (
     (canCreateBuildUnits || canCreateCaptureUnits) &&
-    (availableTiles || structures.size) &&
+    (getAvailableTiles() || getStructures().size) &&
     (map.round <= 2 ||
       (map.round > 4 && !(map.round % 4)) ||
-      (!unitsWithCreateBuildingsAbility.length && availableTiles > 3)) &&
-    (shouldBuildCaptureUnits ||
+      (!unitsWithCreateBuildingsAbility.length && getAvailableTiles() > 3)) &&
+    (getShouldBuildCaptureUnits() ||
       buildableUnits.some(
         (info) =>
           info.hasAbility(Ability.Capture) ||
@@ -93,7 +111,7 @@ export default function determineUnitsToCreate(
     if (
       playerUnits.filter(({ info }) => info.hasAbility(Ability.Capture))
         .length <
-        structures.size * 0.3 &&
+        getStructures().size * 0.3 &&
       (map.round <= 2 ||
         buildableUnits.some((info) => info.hasAbility(Ability.Capture)))
     ) {
@@ -101,7 +119,7 @@ export default function determineUnitsToCreate(
     }
 
     if (
-      unitsWithCreateBuildingsAbility.length < availableTiles &&
+      unitsWithCreateBuildingsAbility.length < getAvailableTiles() &&
       (map.round <= 2 ||
         buildableUnits.some((info) => info.hasAbility(Ability.CreateBuildings)))
     ) {
@@ -111,10 +129,11 @@ export default function determineUnitsToCreate(
     }
   } else if (
     canCreateTransportUnits &&
-    ((map.round >= 3 && map.round <= 4) ||
+    playerUnits.length < map.round * 2 &&
+    (map.round === 3 ||
+      map.round === 4 ||
       (map.round > 5 && !(map.round % 5))) &&
-    (map.size.width >= 15 ||
-      map.size.height >= 15 ||
+    (map.size.width * map.size.height >= 250 ||
       buildableUnits.some((info) => getEntityInfoGroup(info) === 'naval')) &&
     playerUnits.filter(({ info }) => info.canTransportUnits()).length <
       playerUnits.length * 0.15
