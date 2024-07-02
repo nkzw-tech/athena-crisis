@@ -170,8 +170,7 @@ class AudioPlayer {
     localStorage.setItem(storageKeys[type], String(volume));
     if (type === 'master') {
       Howler.volume(volume);
-    }
-    if (type === 'music') {
+    } else if (type === 'music') {
       this.currentInstance?.volume(volume);
     }
   }

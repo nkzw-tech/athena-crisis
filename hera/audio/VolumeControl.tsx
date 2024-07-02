@@ -12,14 +12,14 @@ import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 export default function VolumeControl({
-  canPause = true,
   invert,
   menuIsOpen,
+  showPauseButton = true,
   type = 'master',
 }: {
-  canPause?: boolean;
   invert?: boolean;
   menuIsOpen?: boolean;
+  showPauseButton?: boolean;
   type?: AudioVolumeType;
 }) {
   const [isPaused, setIsPaused] = useState(() => AudioPlayer.isPaused());
@@ -36,11 +36,11 @@ export default function VolumeControl({
         timerRef.current = setTimeout(() => AudioPlayer.resume(), 300);
       }
 
-      if (canPause) {
+      if (showPauseButton) {
         setIsPaused(AudioPlayer.isPaused());
       }
     },
-    [canPause, type],
+    [showPauseButton, type],
   );
 
   useInput(
@@ -65,7 +65,7 @@ export default function VolumeControl({
 
   return (
     <div className={volumeControllerStyle}>
-      {canPause && (
+      {showPauseButton && (
         <Icon
           button
           className={iconStyle}
@@ -91,7 +91,7 @@ export default function VolumeControl({
         min="0"
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           const volume = parseInteger(event.target.value);
-          if (volume) {
+          if (volume != null) {
             setVolume(volume / 100);
           }
         }}
