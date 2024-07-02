@@ -2,28 +2,17 @@ import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { CampaignMapName } from './CampaignMapName.tsx';
 
-export type LevelResult = Readonly<
-  Partial<{
-    capture: number;
-    destroy: number;
-    lost: number;
-    rounds: number;
-  }>
->;
-
 export type ClientLevelID = string;
 export type LevelID = number;
 
 export type Level<T> = Readonly<{
   mapId: T;
   next?: Array<Level<T> | [number, Level<T>]>;
-  result: LevelResult;
 }>;
 
 export type PlainLevel<T = number> = Readonly<{
   mapId: T;
   next?: ReadonlyArray<T | [number, T]>;
-  result: LevelResult;
 }>;
 
 export type LevelEntry<T> = [T, PlainLevel<T>];

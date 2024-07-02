@@ -221,7 +221,6 @@ export default function CampaignEditor({
         addMap(newMap);
         levels.set(newMap.id, {
           mapId: newMap.id,
-          result: {},
         });
       }
 

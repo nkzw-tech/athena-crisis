@@ -14,9 +14,8 @@ export default function toCampaign<T>({
   const map = new Map<T, MutableLevel<T>>();
 
   // First, create a mutable map of levels.
-  for (const [mapId, level] of levels) {
-    const { result } = level;
-    map.set(mapId, { mapId, result });
+  for (const [mapId] of levels) {
+    map.set(mapId, { mapId });
   }
 
   // Then fill in the `next` value based on the new level objects.
