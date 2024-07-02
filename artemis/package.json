@@ -20,6 +20,7 @@
     "@deities/i18n": "workspace:*",
     "@deities/zeus": "workspace:*",
     "@graphql-tools/utils": "^10.2.3",
+    "@nkzw/histogram": "^1.0.1",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/safe-word-list": "^2.1.0",
     "@pothos/core": "^3.41.2",

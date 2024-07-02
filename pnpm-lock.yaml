@@ -312,6 +312,9 @@ importers:
       '@graphql-tools/utils':
         specifier: ^10.2.3
         version: 10.2.3(graphql@16.9.0)
+      '@nkzw/histogram':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
@@ -2247,6 +2250,10 @@ packages:
     resolution: {integrity: sha512-doODSLfA7C6fA/wF20uk9whJIeH0ZydyVb8PlhDBZE0kJaOUSKfZqTKzxflxPF9sGG+Lhr2v/Ih//dzBHp/rxw==}
     peerDependencies:
       eslint: '>= 8'
+
+  '@nkzw/histogram@1.0.1':
+    resolution: {integrity: sha512-WGkWe0yDEDNX2kKp9GQN2A6+2CLBRpTQsR0NfWKKusER8GSuz0tADfIMuv6/c415u0SAeDwK4njiO9UiqU6esQ==}
+    engines: {node: '>=18.0.0'}
 
   '@nkzw/immutable-map@1.2.2':
     resolution: {integrity: sha512-DmoDmO6e5kre79+F6i6+FK/BERO9BDHduUwIX//9vvbtwuN68P1T5tv9FN968x/H9X6pLFsUmYsnJnIPB63jqQ==}
@@ -9851,6 +9858,8 @@ snapshots:
   '@nkzw/eslint-plugin@1.8.0(eslint@8.57.0)':
     dependencies:
       eslint: 8.57.0
+
+  '@nkzw/histogram@1.0.1': {}
 
   '@nkzw/immutable-map@1.2.2': {}
 

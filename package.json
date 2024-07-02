@@ -9,7 +9,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "scripts": {
-    "analyze": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./artemis/scripts/analyze.tsx",
+    "ac": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./artemis/scripts/ac.tsx",
     "build-assets:force": "rm -rf node_modules **/node_modules && pnpm enable-canvas && pnpm install && pnpm dev:setup && pnpm build-assets && pnpm disable-canvas",
     "build-assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
     "build:client": "rm -rf ./dist/ares && pnpm fbt && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
