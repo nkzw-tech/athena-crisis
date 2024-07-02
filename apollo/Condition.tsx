@@ -6,8 +6,12 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 
-export type WinConditionID = 'win' | 'lose' | 'draw' | number;
-const WinConditionIDs = new Set<WinConditionID>(['win', 'lose', 'draw']);
+export type DynamicEffectObjectiveID = 'win' | 'lose' | 'draw' | number;
+const WinConditionIDs = new Set<DynamicEffectObjectiveID>([
+  'win',
+  'lose',
+  'draw',
+]);
 
 export type PlainWinConditionID = number;
 
@@ -19,7 +23,7 @@ type UnitEqualsCondition = Readonly<{
 
 export type GameEndCondition = Readonly<{
   type: 'GameEnd';
-  value: WinConditionID;
+  value: DynamicEffectObjectiveID;
 }>;
 
 export type OptionalObjectiveCondition = Readonly<{
@@ -113,7 +117,9 @@ export function evaluateCondition(
   }
 }
 
-export function encodeWinConditionID(id: WinConditionID): PlainWinConditionID {
+export function encodeWinConditionID(
+  id: DynamicEffectObjectiveID,
+): PlainWinConditionID {
   switch (id) {
     case 'win':
       return -1;
@@ -126,7 +132,9 @@ export function encodeWinConditionID(id: WinConditionID): PlainWinConditionID {
   }
 }
 
-export function decodeWinConditionID(id: PlainWinConditionID): WinConditionID {
+export function decodeWinConditionID(
+  id: PlainWinConditionID,
+): DynamicEffectObjectiveID {
   switch (id) {
     case -1:
       return 'win';

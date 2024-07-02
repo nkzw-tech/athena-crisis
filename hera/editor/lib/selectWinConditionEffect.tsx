@@ -1,11 +1,11 @@
-import { WinConditionID } from '@deities/apollo/Condition.tsx';
+import { DynamicEffectObjectiveID } from '@deities/apollo/Condition.tsx';
 import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
 import { EditorState } from '../Types.tsx';
 import hasEffectWinCondition from './hasEffectWinCondition.tsx';
 
 export default function selectWinConditionEffect(
   editor: EditorState,
-  conditionIndex: WinConditionID,
+  conditionIndex: DynamicEffectObjectiveID,
   condition?: WinCondition,
 ): Partial<EditorState> {
   const isDefault = condition?.type === WinCriteria.Default;

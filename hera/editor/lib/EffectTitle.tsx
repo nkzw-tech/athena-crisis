@@ -1,7 +1,7 @@
 import {
+  DynamicEffectObjectiveID,
   GameEndCondition,
   OptionalObjectiveCondition,
-  WinConditionID,
 } from '@deities/apollo/Condition.tsx';
 import { Effect, Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
 import { WinConditions } from '@deities/athena/WinConditions.tsx';
@@ -15,7 +15,7 @@ export const EffectWinConditionTitle = ({
   id,
   winConditions,
 }: {
-  id: WinConditionID;
+  id: DynamicEffectObjectiveID;
   winConditions?: WinConditions;
 }) => {
   switch (id) {

@@ -1,8 +1,11 @@
-import { Conditions, WinConditionID } from '@deities/apollo/Condition.tsx';
+import {
+  Conditions,
+  DynamicEffectObjectiveID,
+} from '@deities/apollo/Condition.tsx';
 
 export default function hasEffectWinCondition(
   type: 'GameEnd' | 'OptionalObjective',
-  id: WinConditionID,
+  id: DynamicEffectObjectiveID,
   conditions?: Conditions,
 ) {
   return conditions?.some(
