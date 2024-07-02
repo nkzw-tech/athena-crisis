@@ -39,9 +39,9 @@ import EffectsPanel from './EffectsPanel.tsx';
 import EntityPanel from './EntityPanel.tsx';
 import EvaluationPanel from './EvaluationPanel.tsx';
 import MapEditorSettingsPanel from './MapEditorSettingsPanel.tsx';
+import ObjectivePanel from './ObjectivePanel.tsx';
 import RestrictionsPanel from './RestrictionsPanel.tsx';
 import SetupPanel from './SetupPanel.tsx';
-import WinConditionPanel from './WinConditionPanel.tsx';
 
 export default function MapEditorControlPanel({
   actions,
@@ -192,7 +192,7 @@ export default function MapEditorControlPanel({
             );
           case 'conditions':
             return (
-              <WinConditionPanel
+              <ObjectivePanel
                 actions={actions}
                 editor={editor}
                 hasContentRestrictions={!isAdmin}

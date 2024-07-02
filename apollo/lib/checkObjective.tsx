@@ -6,9 +6,9 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
-  onlyHasDefaultWinCondition,
-  WinCondition,
-} from '@deities/athena/WinConditions.tsx';
+  Objective,
+  onlyHasDefaultObjective,
+} from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 
@@ -25,30 +25,30 @@ export function isDestructiveAction(actionResponse: ActionResponse) {
   return destructiveActions.has(actionResponse.type);
 }
 
-export function shouldCheckDefaultWinConditions(
+export function shouldCheckDefaultObjectives(
   map: MapData,
   actionResponse: ActionResponse,
 ) {
   const { winConditions } = map.config;
   if (isDestructiveAction(actionResponse)) {
     return (
-      onlyHasDefaultWinCondition(winConditions) ||
+      onlyHasDefaultObjective(winConditions) ||
       winConditions.some(
-        (condition) =>
-          condition.type === Criteria.Default ||
-          (condition.type === Criteria.DefeatLabel &&
-            matchesPlayerList(condition.players, map.currentPlayer)),
+        (objective) =>
+          objective.type === Criteria.Default ||
+          (objective.type === Criteria.DefeatLabel &&
+            matchesPlayerList(objective.players, map.currentPlayer)),
       )
     );
   } else if (actionResponse.type === 'Capture' && actionResponse.building) {
     return (
-      onlyHasDefaultWinCondition(winConditions) ||
+      onlyHasDefaultObjective(winConditions) ||
       winConditions.some(
-        (condition) =>
-          condition.type === Criteria.Default ||
-          ((condition.type === Criteria.CaptureAmount ||
-            condition.type === Criteria.CaptureLabel) &&
-            matchesPlayerList(condition.players, map.currentPlayer)),
+        (objective) =>
+          objective.type === Criteria.Default ||
+          ((objective.type === Criteria.CaptureAmount ||
+            objective.type === Criteria.CaptureLabel) &&
+            matchesPlayerList(objective.players, map.currentPlayer)),
       )
     );
   }
@@ -106,7 +106,7 @@ export function escortedByPlayer(
     .filter(filterUnitsByLabels(label)).length;
 }
 
-function checkWinCondition(
+function checkObjective(
   previousMap: MapData,
   map: MapData,
   actionResponse: ActionResponse,
@@ -114,167 +114,167 @@ function checkWinCondition(
   isCapture: boolean,
   isRescue: boolean,
   isMove: boolean,
-  condition: WinCondition,
+  objective: Objective,
 ) {
   const player = previousMap.currentPlayer;
-  const isDefault = condition.type === Criteria.Default;
+  const isDefault = objective.type === Criteria.Default;
   const matchesPlayer =
-    !isDefault && matchesPlayerList(condition.players, player);
+    !isDefault && matchesPlayerList(objective.players, player);
   const isSurvivalAndEndTurn =
-    condition.type === Criteria.Survival && actionResponse.type === 'EndTurn';
+    objective.type === Criteria.Survival && actionResponse.type === 'EndTurn';
   const targetPlayer = isSurvivalAndEndTurn
     ? actionResponse.next.player
     : player;
-  const ignoreIfOptional = !isDefault && condition.optional;
+  const ignoreIfOptional = !isDefault && objective.optional;
 
   if (
-    condition.type !== Criteria.Default &&
-    condition.completed?.has(targetPlayer)
+    objective.type !== Criteria.Default &&
+    objective.completed?.has(targetPlayer)
   ) {
     return false;
   }
 
   if (isDestructive) {
     return (
-      (condition.type === Criteria.DefeatLabel &&
+      (objective.type === Criteria.DefeatLabel &&
         matchesPlayer &&
         map.units
-          .filter(filterUnitsByLabels(condition.label))
+          .filter(filterUnitsByLabels(objective.label))
           .filter(filterEnemies(map, player)).size === 0 &&
         previousMap.units
-          .filter(filterUnitsByLabels(condition.label))
+          .filter(filterUnitsByLabels(objective.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (condition.type === Criteria.DefeatOneLabel &&
+      (objective.type === Criteria.DefeatOneLabel &&
         matchesPlayer &&
         map.units
-          .filter(filterUnitsByLabels(condition.label))
+          .filter(filterUnitsByLabels(objective.label))
           .filter(filterEnemies(map, player)).size <
           previousMap.units
-            .filter(filterUnitsByLabels(condition.label))
+            .filter(filterUnitsByLabels(objective.label))
             .filter(filterEnemies(previousMap, player)).size) ||
-      (condition.type === Criteria.DefeatAmount &&
+      (objective.type === Criteria.DefeatAmount &&
         matchesPlayer &&
-        (condition.players?.length ? condition.players : map.active).find(
+        (objective.players?.length ? objective.players : map.active).find(
           (playerID) =>
-            map.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
+            map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
         )) ||
-      (condition.type === Criteria.EscortLabel &&
+      (objective.type === Criteria.EscortLabel &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
-          .filter(filterUnitsByLabels(condition.label))
+          .filter(filterUnitsByLabels(objective.label))
           .filter(filterEnemies(map, player)).size <
           previousMap.units
-            .filter(filterUnitsByLabels(condition.label))
+            .filter(filterUnitsByLabels(objective.label))
             .filter(filterEnemies(map, player)).size) ||
-      (condition.type === Criteria.EscortAmount &&
-        condition.label?.size &&
+      (objective.type === Criteria.EscortAmount &&
+        objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
-          .filter(filterUnitsByLabels(condition.label))
-          .filter(filterEnemies(map, player)).size < condition.amount) ||
-      (condition.type === Criteria.CaptureLabel &&
+          .filter(filterUnitsByLabels(objective.label))
+          .filter(filterEnemies(map, player)).size < objective.amount) ||
+      (objective.type === Criteria.CaptureLabel &&
         !ignoreIfOptional &&
         map.buildings
-          .filter(filterByLabels(condition.label))
+          .filter(filterByLabels(objective.label))
           .filter(filterEnemies(map, player)).size <
           previousMap.buildings
-            .filter(filterByLabels(condition.label))
+            .filter(filterByLabels(objective.label))
             .filter(filterEnemies(map, player)).size) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
-        condition.type === Criteria.DestroyLabel &&
+        objective.type === Criteria.DestroyLabel &&
         map.buildings
-          .filter(filterByLabels(condition.label))
+          .filter(filterByLabels(objective.label))
           .filter(filterEnemies(map, player)).size === 0 &&
         previousMap.buildings
-          .filter(filterByLabels(condition.label))
+          .filter(filterByLabels(objective.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (condition.type === Criteria.RescueLabel &&
+      (objective.type === Criteria.RescueLabel &&
         !ignoreIfOptional &&
-        map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
+        map.units.filter(filterNeutral).filter(filterByLabels(objective.label))
           .size <
           previousMap.units
             .filter(filterNeutral)
-            .filter(filterByLabels(condition.label)).size) ||
+            .filter(filterByLabels(objective.label)).size) ||
       (actionResponse.type === 'AttackUnit' &&
-        condition.type === Criteria.RescueAmount &&
+        objective.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
         map.units.filter(filterNeutral).size +
           rescuedUnitsByPlayer(map, player) <
-          condition.amount) ||
+          objective.amount) ||
       (isSurvivalAndEndTurn &&
-        matchesPlayerList(condition.players, targetPlayer) &&
-        condition.rounds <= actionResponse.round) ||
+        matchesPlayerList(objective.players, targetPlayer) &&
+        objective.rounds <= actionResponse.round) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
-        condition.type === Criteria.DestroyAmount &&
+        objective.type === Criteria.DestroyAmount &&
         matchesPlayer &&
-        destroyedBuildingsByPlayer(map, player) >= condition.amount)
+        destroyedBuildingsByPlayer(map, player) >= objective.amount)
     );
   }
 
   if (isCapture) {
     return (
-      (condition.type === Criteria.CaptureAmount &&
+      (objective.type === Criteria.CaptureAmount &&
         matchesPlayer &&
-        capturedByPlayer(map, player) >= condition.amount) ||
-      (condition.type === Criteria.CaptureLabel &&
+        capturedByPlayer(map, player) >= objective.amount) ||
+      (objective.type === Criteria.CaptureLabel &&
         matchesPlayer &&
         !map.buildings
-          .filter(filterByLabels(condition.label))
+          .filter(filterByLabels(objective.label))
           .filter(filterEnemies(map, player)).size &&
         previousMap.buildings
-          .filter(filterByLabels(condition.label))
+          .filter(filterByLabels(objective.label))
           .filter(filterEnemies(map, player)).size > 0)
     );
   }
 
   if (isRescue) {
     return (
-      (condition.type === Criteria.RescueLabel &&
+      (objective.type === Criteria.RescueLabel &&
         matchesPlayer &&
-        !map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
+        !map.units.filter(filterNeutral).filter(filterByLabels(objective.label))
           .size &&
         previousMap.units
           .filter(filterNeutral)
-          .filter(filterByLabels(condition.label)).size > 0) ||
-      (condition.type === Criteria.RescueAmount &&
+          .filter(filterByLabels(objective.label)).size > 0) ||
+      (objective.type === Criteria.RescueAmount &&
         matchesPlayer &&
-        rescuedUnitsByPlayer(map, player) >= condition.amount)
+        rescuedUnitsByPlayer(map, player) >= objective.amount)
     );
   }
 
   if (isMove) {
-    if (condition.type === Criteria.EscortLabel && matchesPlayer) {
+    if (objective.type === Criteria.EscortLabel && matchesPlayer) {
       const units = map.units
-        .filter(filterUnitsByLabels(condition.label))
+        .filter(filterUnitsByLabels(objective.label))
         .filter((unit) => map.matchesPlayer(unit, player));
       return (
         units.size > 0 &&
-        units.filter((_, vector) => !condition.vectors.has(vector)).size === 0
+        units.filter((_, vector) => !objective.vectors.has(vector)).size === 0
       );
     }
 
     return (
-      condition.type === Criteria.EscortAmount &&
+      objective.type === Criteria.EscortAmount &&
       matchesPlayer &&
-      escortedByPlayer(map, player, condition.vectors, condition.label) >=
-        condition.amount
+      escortedByPlayer(map, player, objective.vectors, objective.label) >=
+        objective.amount
     );
   }
 
   return false;
 }
 
-export default function checkWinConditions(
+export default function checkObjectives(
   previousMap: MapData,
   map: MapData,
   actionResponse: ActionResponse,
 ) {
   const { winConditions } = map.config;
-  if (onlyHasDefaultWinCondition(winConditions)) {
+  if (onlyHasDefaultObjective(winConditions)) {
     return null;
   }
 
@@ -289,7 +289,7 @@ export default function checkWinConditions(
     map.units.get(actionResponse.to)?.player === actionResponse.player;
 
   if (isDestructive || isCapture || isMove || isRescue) {
-    const check = checkWinCondition.bind(
+    const check = checkObjective.bind(
       null,
       previousMap,
       map,
@@ -300,26 +300,26 @@ export default function checkWinConditions(
       isMove,
     );
     if (winConditions.length === 1) {
-      const condition = winConditions[0];
-      if (check(condition)) {
-        return condition;
+      const objective = winConditions[0];
+      if (check(objective)) {
+        return objective;
       }
     }
 
     if (winConditions.length === 2) {
-      const conditionA = winConditions[0];
-      if (check(conditionA)) {
-        return conditionA;
+      const objectiveA = winConditions[0];
+      if (check(objectiveA)) {
+        return objectiveA;
       }
 
-      const conditionB = winConditions[1];
-      if (check(conditionB)) {
-        return conditionB;
+      const objectiveB = winConditions[1];
+      if (check(objectiveB)) {
+        return objectiveB;
       }
     } else {
-      for (const condition of winConditions) {
-        if (check(condition)) {
-          return condition;
+      for (const objective of winConditions) {
+        if (check(objective)) {
+          return objective;
         }
       }
     }

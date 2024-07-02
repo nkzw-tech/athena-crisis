@@ -20,7 +20,7 @@ import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
@@ -420,7 +420,7 @@ test('effects work for game start and end', async () => {
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       SetViewer
       CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { condition: null, conditionId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
 
   expect(newEffects?.get('Start')).toMatchInlineSnapshot(`
@@ -530,7 +530,7 @@ test('effects work when a player loses', () => {
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       SetViewer
       CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2 }
-      GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
     `);
 });
 
@@ -611,7 +611,7 @@ test('only one game end win effect is fired', () => {
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetViewer
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { condition: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, conditionId: 1, toPlayer: 1 }"
+      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1 }"
     `);
 });
 

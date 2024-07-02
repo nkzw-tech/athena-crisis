@@ -1,5 +1,5 @@
 import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
-import { WinConditions } from '@deities/athena/WinConditions.tsx';
+import { Objectives } from '@deities/athena/Objectives.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
 import EffectTitle from '../lib/EffectTitle.tsx';
@@ -13,7 +13,7 @@ export default function EffectSelector({
   effects: Effects;
   scenario: Scenario;
   setScenario: (scenario: Scenario) => void;
-  winConditions: WinConditions | undefined;
+  winConditions: Objectives | undefined;
 }) {
   return (
     <Select

@@ -1,20 +1,20 @@
 import { DynamicEffectObjectiveID } from '@deities/apollo/Condition.tsx';
-import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
+import { Criteria, Objective } from '@deities/athena/Objectives.tsx';
 import { EditorState } from '../Types.tsx';
-import hasEffectWinCondition from './hasEffectWinCondition.tsx';
+import hasEffectObjective from './hasEffectObjective.tsx';
 
-export default function selectWinConditionEffect(
+export default function selectObjectiveEffect(
   editor: EditorState,
   conditionIndex: DynamicEffectObjectiveID,
-  condition?: WinCondition,
+  objective?: Objective,
 ): Partial<EditorState> {
-  const isDefault = condition?.type === Criteria.Default;
+  const isDefault = objective?.type === Criteria.Default;
   const trigger =
-    !isDefault && condition?.optional ? 'OptionalObjective' : 'GameEnd';
+    !isDefault && objective?.optional ? 'OptionalObjective' : 'GameEnd';
   const effectList = editor.effects.get(trigger);
   const effect = effectList
     ? [...effectList].find(({ conditions }) =>
-        hasEffectWinCondition(
+        hasEffectObjective(
           trigger,
           isDefault ? 'win' : conditionIndex,
           conditions,
@@ -47,9 +47,9 @@ export default function selectWinConditionEffect(
       ]);
 
   return {
-    condition: undefined,
     effects,
     mode: 'effects',
+    objective: undefined,
     scenario: { effect: effect || newEffect, trigger },
   };
 }

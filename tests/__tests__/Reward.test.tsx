@@ -8,7 +8,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotGameState from '../snapshotGameState.tsx';
@@ -115,7 +115,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
   `);
 });
 
@@ -203,7 +203,7 @@ test(`each skill is only received once`, () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
-    GameEnd { condition: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, conditionId: 1, toPlayer: 1 }"
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
   `);
 });
 

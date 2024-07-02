@@ -34,10 +34,7 @@ import Team, { toTeamArray } from '../map/Team.tsx';
 import Unit, { TransportedUnit } from '../map/Unit.tsx';
 import vec from '../map/vec.tsx';
 import MapData from '../MapData.tsx';
-import {
-  resetWinConditions,
-  validateWinConditions,
-} from '../WinConditions.tsx';
+import { resetObjectives, validateObjectives } from '../Objectives.tsx';
 import canBuild from './canBuild.tsx';
 import canDeploy from './canDeploy.tsx';
 import canPlaceDecorator from './canPlaceDecorator.tsx';
@@ -405,10 +402,7 @@ export default function validateMap(
     active,
     buildings: map.buildings.map((entity) => entity.recover()),
     config: map.config.copy({
-      winConditions: resetWinConditions(
-        map.config.winConditions,
-        new Set(active),
-      ),
+      winConditions: resetObjectives(map.config.winConditions, new Set(active)),
     }),
     currentPlayer: active[0],
     round: 1,
@@ -416,7 +410,7 @@ export default function validateMap(
     units: map.units.map((entity) => entity.recover()),
   });
 
-  if (!validateWinConditions(newMap)) {
+  if (!validateObjectives(newMap)) {
     return [null, 'invalid-win-conditions'];
   }
 

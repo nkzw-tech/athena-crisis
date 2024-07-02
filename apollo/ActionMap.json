@@ -73,7 +73,7 @@
   ["AttackUnitGameOver", [13, ["type", "fromPlayer", "toPlayer"]]],
   ["BeginTurnGameOver", [14, ["type"]]],
   ["CaptureGameOver", [15, ["type", "fromPlayer", "toPlayer"]]],
-  ["GameEnd", [16, ["type", "condition", "conditionId", "toPlayer"]]],
+  ["GameEnd", [16, ["type", "objective", "objectiveId", "toPlayer"]]],
   ["HiddenMove", [17, ["type", "path", "completed", "fuel", "unit"]]],
   [
     "HiddenSourceAttackUnit",
@@ -171,6 +171,6 @@
   ["BuySkill", [39, ["type", "from", "skill", "player"]]],
   ["ActivatePower", [40, ["type", "skill"]]],
   ["PreviousTurnGameOver", [41, ["type", "fromPlayer"]]],
-  ["SecretDiscovered", [42, ["type", "condition", "toPlayer"]]],
-  ["OptionalObjective", [43, ["type", "condition", "conditionId", "toPlayer"]]]
+  ["SecretDiscovered", [42, ["type", "objective", "toPlayer"]]],
+  ["OptionalObjective", [43, ["type", "objective", "objectiveId", "toPlayer"]]]
 ]

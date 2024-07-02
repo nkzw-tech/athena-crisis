@@ -1,6 +1,6 @@
 import { Decorator } from '../info/Decorator.tsx';
 import { ModifierMap, TileMap } from '../MapData.tsx';
-import { PlainWinConditions } from '../WinConditions.tsx';
+import { PlainObjectives } from '../Objectives.tsx';
 import { Biome } from './Biome.tsx';
 import { PlainBuilding } from './Building.tsx';
 import { PlainTeams } from './Team.tsx';
@@ -18,7 +18,7 @@ export type PlainMapConfig = Readonly<{
   fog: boolean;
   multiplier: number;
   seedCapital: number;
-  winConditions?: PlainWinConditions;
+  winConditions?: PlainObjectives;
 }>;
 
 export type PlainMap = Readonly<{

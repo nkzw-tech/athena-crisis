@@ -23,9 +23,9 @@ export default class VectorBehavior {
   ): StateLike | null {
     const { map } = state;
     const { config } = map;
-    const { action, condition, effects, scenario } = editor;
-    if (condition) {
-      const [winCondition, index] = condition;
+    const { action, effects, objective, scenario } = editor;
+    if (objective) {
+      const [winCondition, index] = objective;
       const winConditions = [...config.winConditions];
 
       const vectors = new Set(winCondition.vectors);
@@ -36,7 +36,7 @@ export default class VectorBehavior {
       };
       winConditions[index] = newWinCondition;
       setEditorState({
-        condition: [newWinCondition, index],
+        objective: [newWinCondition, index],
       });
       return {
         map: map.copy({

@@ -11,7 +11,7 @@ import SpriteVector from '../map/SpriteVector.tsx';
 import vec from '../map/vec.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData, { SizeVector } from '../MapData.tsx';
-import { winConditionHasVectors } from '../WinConditions.tsx';
+import { objectiveHasVectors } from '../Objectives.tsx';
 import { verifyMap } from './verifyTiles.tsx';
 import withModifiers from './withModifiers.tsx';
 
@@ -77,7 +77,7 @@ export default function resizeMap(
   );
 
   const winConditions = map.config.winConditions.map((condition) =>
-    winConditionHasVectors(condition)
+    objectiveHasVectors(condition)
       ? {
           ...condition,
           vectors: new Set(

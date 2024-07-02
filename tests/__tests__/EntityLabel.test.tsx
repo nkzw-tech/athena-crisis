@@ -22,7 +22,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';

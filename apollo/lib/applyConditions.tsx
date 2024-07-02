@@ -2,7 +2,7 @@ import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 import { applyEffects, Effects } from '../Effects.tsx';
-import { checkObjectives } from '../Objective.tsx';
+import { applyObjectives } from '../Objective.tsx';
 import { GameState, GameStateWithEffects } from '../Types.tsx';
 
 const getLosingPlayer = (gameState: GameState): PlayerID | null => {
@@ -84,7 +84,7 @@ export default function applyConditions(
       ];
     }
 
-    const objectiveState = checkObjectives(
+    const objectiveState = applyObjectives(
       previousMap,
       activeMap,
       lastActionResponse,

@@ -6,7 +6,7 @@ import {
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
+import { Criteria, Objectives } from '@deities/athena/Objectives.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
@@ -42,7 +42,7 @@ import EffectSelector from '../editor/selectors/EffectSelector.tsx';
 import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
 import MapComponent from '../Map.tsx';
-import WinConditionTitle from '../win-conditions/WinConditionTitle.tsx';
+import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
 import {
@@ -77,7 +77,7 @@ export default memo(function Level({
     newMap?: MapNode,
   ) => void;
   winConditionIndex?: number;
-  winConditions?: ReadonlyArray<WinCondition>;
+  winConditions?: Objectives;
   zoom?: number;
 }) {
   const {
@@ -170,9 +170,9 @@ export default memo(function Level({
             dropdownClassName={winConditionSelectorStyle}
             title={
               condition && winConditionIndex != null ? (
-                <WinConditionTitle
-                  condition={condition}
+                <ObjectiveTitle
                   index={winConditionIndex}
+                  objective={condition}
                   short
                 />
               ) : (
@@ -207,10 +207,7 @@ export default memo(function Level({
                         onClick={() => updateWinCondition(index)}
                         selectedText={index === winConditionIndex}
                       >
-                        <WinConditionTitle
-                          condition={condition}
-                          index={index}
-                        />
+                        <ObjectiveTitle index={index} objective={condition} />
                       </InlineLink>
                     ) : null,
                   )

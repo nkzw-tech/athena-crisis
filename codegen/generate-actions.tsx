@@ -36,8 +36,8 @@ const customEncoderReferences = new Set([
   'DynamicPlayerID',
   'Reward',
   'Teams',
-  'WinCondition',
-  'WinConditionID',
+  'Objective',
+  'DynamicEffectObjectiveID',
 ]);
 const scalarReferences = new Set(['PlayerID', 'Skill']);
 const allowedReferences = new Set([
@@ -686,19 +686,19 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       import {
         Condition,
         Conditions,
-        PlainWinConditionID,
-        decodeWinConditionID,
-        encodeWinConditionID,
+        PlainDynamicEffectObjectiveID,
+        decodeDynamicEffectObjectiveID,
+        encodeDynamicEffectObjectiveID,
       } from './Condition.tsx';
       import {
         AttackDirection,
         PlainAttackDirection,
       } from './attack-direction/getAttackDirection.tsx';
       import {
-        PlainWinCondition,
-        decodeWinCondition,
-        encodeWinCondition,
-      } from '@deities/athena/WinConditions.tsx';
+        PlainObjective,
+        decodeObjective,
+        encodeObjective,
+      } from '@deities/athena/Objectives.tsx';
       import { Skill as PlainSkill } from '@deities/athena/info/Skill.tsx';
       import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
       import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
@@ -882,7 +882,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     `
       import { Action } from './Action.tsx';
       import { ActionResponse, ActionResponses } from './ActionResponse.tsx';
-      import { formatWinCondition } from '@deities/athena/WinConditions.tsx';
+      import { formatObjective } from '@deities/athena/Objectives.tsx';
       import { getBuildingInfo } from '@deities/athena/info/Building.tsx';
       import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
       import { formatReward } from '@deities/athena/map/Reward.tsx';

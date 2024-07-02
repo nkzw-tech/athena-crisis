@@ -164,7 +164,7 @@ const characterMessages = campaignMaps.flatMap(
             condition.type === 'GameEnd' ||
             condition.type === 'OptionalObjective',
         );
-        const winCondition = condition?.value ?? null;
+        const objective = condition?.value ?? null;
         let count = 1;
         for (const action of effect.actions) {
           if (action.type === 'CharacterMessageEffect') {
@@ -172,7 +172,7 @@ const characterMessages = campaignMaps.flatMap(
               description: `Campaign ${campaignName}, Map${
                 mapNumber ? ` ${mapNumber}` : ''
               } "${name}", ${trigger}${
-                winCondition ? ` ${winCondition}` : ''
+                objective ? ` ${objective}` : ''
               }, #${count++}: Player ${action.player}, Character ${
                 getUnitInfoOrThrow(action.unitId).characterName
               }`,

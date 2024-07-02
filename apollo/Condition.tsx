@@ -1,19 +1,19 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 
 export type DynamicEffectObjectiveID = 'win' | 'lose' | 'draw' | number;
-const WinConditionIDs = new Set<DynamicEffectObjectiveID>([
+const DynamicEffectObjectiveIDs = new Set<DynamicEffectObjectiveID>([
   'win',
   'lose',
   'draw',
 ]);
 
-export type PlainWinConditionID = number;
+export type PlainDynamicEffectObjectiveID = number;
 
 type UnitEqualsCondition = Readonly<{
   from: Vector;
@@ -72,8 +72,8 @@ const gameEnd = (
     activeMap.getTeam(actionResponse.toPlayer).id
   ) {
     return (
-      (value === 'win' && !actionResponse.condition) ||
-      (typeof value === 'number' && value === actionResponse.conditionId)
+      (value === 'win' && !actionResponse.objective) ||
+      (typeof value === 'number' && value === actionResponse.objectiveId)
     );
   }
 
@@ -89,7 +89,7 @@ const optionalObjective = (
   actionResponse.type === 'OptionalObjective' &&
   activeMap.getCurrentPlayer().teamId ===
     activeMap.getTeam(actionResponse.toPlayer).id &&
-  value === actionResponse.conditionId;
+  value === actionResponse.objectiveId;
 
 export function evaluateCondition(
   previousMap: MapData,
@@ -117,9 +117,9 @@ export function evaluateCondition(
   }
 }
 
-export function encodeWinConditionID(
+export function encodeDynamicEffectObjectiveID(
   id: DynamicEffectObjectiveID,
-): PlainWinConditionID {
+): PlainDynamicEffectObjectiveID {
   switch (id) {
     case 'win':
       return -1;
@@ -132,8 +132,8 @@ export function encodeWinConditionID(
   }
 }
 
-export function decodeWinConditionID(
-  id: PlainWinConditionID,
+export function decodeDynamicEffectObjectiveID(
+  id: PlainDynamicEffectObjectiveID,
 ): DynamicEffectObjectiveID {
   switch (id) {
     case -1:
@@ -163,7 +163,7 @@ export function validateCondition(map: MapData, condition: Condition) {
       } = map;
       const { value } = condition;
       return (
-        (type === 'GameEnd' && WinConditionIDs.has(value)) ||
+        (type === 'GameEnd' && DynamicEffectObjectiveIDs.has(value)) ||
         (typeof value === 'number' &&
           winConditions[value] &&
           winConditions[value].type !== Criteria.Default)

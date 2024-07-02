@@ -1,9 +1,9 @@
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import {
   Criteria,
-  WinCondition,
-  winConditionHasLabel,
-} from '@deities/athena/WinConditions.tsx';
+  Objective,
+  objectiveHasLabel,
+} from '@deities/athena/Objectives.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -15,7 +15,7 @@ import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { FactionNames } from '../Types.tsx';
 import UILabel from '../ui/UILabel.tsx';
-import WinConditionTitle from '../win-conditions/WinConditionTitle.tsx';
+import ObjectiveTitle from './ObjectiveTitle.tsx';
 
 const PlayerList = ({
   conjunction = 'or',
@@ -42,25 +42,25 @@ const PlayerList = ({
     </fbt>
   );
 
-const WinConditionText = ({
-  condition,
+const ObjectiveText = ({
   factionNames,
+  objective,
 }: {
-  condition: WinCondition;
   factionNames: FactionNames;
+  objective: Objective;
 }) => {
-  const { type } = condition;
+  const { type } = objective;
   const playerList = (
     <PlayerList
       factionNames={factionNames}
-      players={(type !== Criteria.Default && condition.players) || []}
+      players={(type !== Criteria.Default && objective.players) || []}
     />
   );
 
   const labels =
-    (winConditionHasLabel(condition) &&
-      condition.label &&
-      [...condition.label].map((id) => (
+    (objectiveHasLabel(objective) &&
+      objective.label &&
+      [...objective.label].map((id) => (
         <UILabel className={labelStyle} color={id} key={`label-${id}`} />
       ))) ||
     null;
@@ -101,9 +101,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the capture by amount win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by capturing{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="buildings"
             name="number of buildings"
           >
@@ -140,9 +140,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by defeating{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="units"
             name="number of units"
           >
@@ -170,9 +170,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the survival win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by surviving{' '}
-          <fbt:param name="rounds">{condition.rounds}</fbt:param>{' '}
+          <fbt:param name="rounds">{objective.rounds}</fbt:param>{' '}
           <fbt:plural
-            count={condition.rounds}
+            count={objective.rounds}
             many="rounds"
             name="number of rounds"
           >
@@ -185,9 +185,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the escort by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by escorting{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="units"
             name="number of units"
           >
@@ -207,9 +207,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the escort by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by escorting{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="units"
             name="number of units"
           >
@@ -222,9 +222,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by rescuing{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="units"
             name="number of units"
           >
@@ -244,9 +244,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by rescuing{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="units"
             name="number of units"
           >
@@ -289,9 +289,9 @@ const WinConditionText = ({
         <fbt desc="Explanation for the destroy by amount win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by destroying{' '}
-          <fbt:param name="amount">{condition.amount}</fbt:param>{' '}
+          <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
           <fbt:plural
-            count={condition.amount}
+            count={objective.amount}
             many="buildings"
             name="number of buildings"
           >
@@ -300,7 +300,7 @@ const WinConditionText = ({
         </fbt>
       );
     default: {
-      condition satisfies never;
+      objective satisfies never;
       throw new UnknownTypeError('WinConditionText', type);
     }
   }
@@ -323,13 +323,13 @@ const CompletedConditionText = ({
   </div>
 );
 
-export default function WinConditionDescription({
-  condition,
+export default function ObjectiveDescription({
   factionNames,
+  objective,
   round,
 }: {
-  condition: WinCondition;
   factionNames: FactionNames;
+  objective: Objective;
   round: number;
 }) {
   return (
@@ -338,29 +338,29 @@ export default function WinConditionDescription({
       gap
       style={{
         background:
-          condition.type !== Criteria.Default && condition.players?.length
-            ? gradient(condition.players, 0.15)
+          objective.type !== Criteria.Default && objective.players?.length
+            ? gradient(objective.players, 0.15)
             : applyVar('background-color'),
       }}
       vertical
     >
       <h2>
-        <WinConditionTitle condition={condition} />
+        <ObjectiveTitle objective={objective} />
       </h2>
       <p>
-        <WinConditionText condition={condition} factionNames={factionNames} />
+        <ObjectiveText factionNames={factionNames} objective={objective} />
       </p>
-      {condition.type === Criteria.Survival && (
+      {objective.type === Criteria.Survival && (
         <div>
           <fbt desc="Current round description">
             Current round: <fbt:param name="round">{round}</fbt:param>.
           </fbt>
         </div>
       )}
-      {condition.type !== Criteria.Default && condition.completed?.size ? (
+      {objective.type !== Criteria.Default && objective.completed?.size ? (
         <CompletedConditionText
           factionNames={factionNames}
-          players={[...condition.completed]}
+          players={[...objective.completed]}
         />
       ) : null}
     </Stack>

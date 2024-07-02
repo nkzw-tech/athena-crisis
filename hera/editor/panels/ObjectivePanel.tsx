@@ -3,11 +3,11 @@ import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import {
   Criteria,
   CriteriaList,
-  getInitialWinCondition,
-  validateWinCondition,
-  WinCondition,
-  winConditionHasVectors,
-} from '@deities/athena/WinConditions.tsx';
+  getInitialObjective,
+  Objective,
+  objectiveHasVectors,
+  validateObjective,
+} from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -17,27 +17,27 @@ import { useCallback, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getCriteriaName from '../../lib/getCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
-import hasEffectWinCondition from '../lib/hasEffectWinCondition.tsx';
-import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
-import WinConditionCard from '../lib/WinConditionCard.tsx';
+import hasEffectObjective from '../lib/hasEffectObjective.tsx';
+import ObjectiveCard from '../lib/ObjectiveCard.tsx';
+import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
 import { EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 const maybeRemoveEffect = (
   effects: Effects,
-  condition: WinCondition,
+  objective: Objective,
   index: number,
   setEditorState: SetEditorStateFunction,
 ) => {
-  if (condition.type === Criteria.Default) {
+  if (objective.type === Criteria.Default) {
     return;
   }
 
-  const trigger = condition.optional ? 'OptionalObjective' : 'GameEnd';
+  const trigger = objective.optional ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
   if (list) {
     const newList = new Set(
       [...list].filter(
-        ({ conditions }) => !hasEffectWinCondition(trigger, index, conditions),
+        ({ conditions }) => !hasEffectObjective(trigger, index, conditions),
       ),
     );
     const newEffects = new Map(effects).set(trigger, newList);
@@ -71,20 +71,20 @@ const maybeRemoveEffect = (
 
 const maybeSwapEffect = (
   effects: Effects,
-  condition: WinCondition,
-  existingCondition: WinCondition,
+  objective: Objective,
+  existingObjective: Objective,
   index: number,
   setEditorState: SetEditorStateFunction,
 ) => {
   if (
-    condition.type === Criteria.Default ||
-    existingCondition.type === Criteria.Default ||
-    existingCondition.optional === condition.optional
+    objective.type === Criteria.Default ||
+    existingObjective.type === Criteria.Default ||
+    existingObjective.optional === objective.optional
   ) {
     return;
   }
 
-  const trigger = existingCondition.optional ? 'OptionalObjective' : 'GameEnd';
+  const trigger = existingObjective.optional ? 'OptionalObjective' : 'GameEnd';
   const newTrigger = trigger === 'GameEnd' ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
   if (!list) {
@@ -92,7 +92,7 @@ const maybeSwapEffect = (
   }
 
   const partition = groupBy(list, ({ conditions }) =>
-    hasEffectWinCondition(trigger, index, conditions) ? 'target' : 'origin',
+    hasEffectObjective(trigger, index, conditions) ? 'target' : 'origin',
   );
   const target = partition.get('target')?.map((effect) => ({
     ...effect,
@@ -128,7 +128,7 @@ const maybeSwapEffect = (
   });
 };
 
-export default function WinConditionPanel({
+export default function ObjectivePanel({
   actions,
   editor,
   hasContentRestrictions,
@@ -150,19 +150,16 @@ export default function WinConditionPanel({
 
   const [renders, setRenders] = useState(0);
   const validate = useCallback(
-    (condition: WinCondition) => validateWinCondition(map, condition),
+    (objective: Objective) => validateObjective(map, objective),
     [map],
   );
 
   const hasDefault = conditions.some(({ type }) => type === Criteria.Default);
 
-  const updateWinCondition = (
-    condition: WinCondition | null,
-    index: number,
-  ) => {
+  const updateWinCondition = (objective: Objective | null, index: number) => {
     const winConditions = [...conditions];
     const existingCondition = winConditions[index];
-    if (!condition) {
+    if (!objective) {
       maybeRemoveEffect(
         editor.effects,
         existingCondition,
@@ -171,7 +168,7 @@ export default function WinConditionPanel({
       );
       winConditions.splice(index, 1);
       if (!winConditions.length) {
-        winConditions.push(getInitialWinCondition(map, Criteria.Default));
+        winConditions.push(getInitialObjective(map, Criteria.Default));
       }
       // Increment this counter to force re-rendering all list items which resets their state.
       setRenders((renders) => renders + 1);
@@ -186,16 +183,16 @@ export default function WinConditionPanel({
       return;
     }
 
-    if (validate(condition)) {
+    if (validate(objective)) {
       maybeSwapEffect(
         editor.effects,
-        condition,
+        objective,
         existingCondition,
         index,
         setEditorState,
       );
 
-      winConditions[index] = condition;
+      winConditions[index] = objective;
       actions.update({
         map: map.copy({
           config: map.config.copy({
@@ -206,14 +203,14 @@ export default function WinConditionPanel({
     }
   };
 
-  if (editor?.condition) {
+  if (editor?.objective) {
     return (
       <Stack gap={24} vertical verticalPadding>
         <Box>
           <InlineLink
             onClick={() => {
               setEditorState({
-                condition: undefined,
+                objective: undefined,
               });
             }}
           >
@@ -229,24 +226,24 @@ export default function WinConditionPanel({
   return (
     <Stack gap={24} vertical verticalPadding>
       {conditions.map((condition, index) => (
-        <WinConditionCard
+        <ObjectiveCard
           canDelete={
             conditions.length > 1 || condition.type !== Criteria.Default
           }
-          condition={condition}
           hasContentRestrictions={hasContentRestrictions}
           index={index}
           isAdmin={isAdmin}
           key={`${renders}-${index}`}
           map={mapWithActivePlayers}
+          objective={condition}
           onChange={(condition) => updateWinCondition(condition, index)}
           selectEffect={() =>
-            setEditorState(selectWinConditionEffect(editor, index, condition))
+            setEditorState(selectObjectiveEffect(editor, index, condition))
           }
           selectLocation={() => {
-            if (winConditionHasVectors(condition)) {
+            if (objectiveHasVectors(condition)) {
               setEditorState({
-                condition: [condition, index],
+                objective: [condition, index],
               });
             }
           }}
@@ -271,7 +268,7 @@ export default function WinConditionPanel({
                     config: map.config.copy({
                       winConditions: [
                         ...conditions,
-                        getInitialWinCondition(map, type),
+                        getInitialObjective(map, type),
                       ],
                     }),
                   }),

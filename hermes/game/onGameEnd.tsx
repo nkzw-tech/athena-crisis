@@ -15,12 +15,12 @@ export default function onGameEnd(
     const map = activeMap.copy({
       currentPlayer: viewerId,
     });
-    const { condition, toPlayer } = lastAction;
-    const secretCondition = condition?.hidden ? condition : null;
+    const { objective, toPlayer } = lastAction;
+    const secretCondition = objective?.hidden ? objective : null;
     const secretGameState = secretCondition
       ? [
           [
-            { condition: secretCondition, toPlayer, type: 'SecretDiscovered' },
+            { objective: secretCondition, toPlayer, type: 'SecretDiscovered' },
             activeMap,
           ] as const,
         ]
@@ -30,8 +30,8 @@ export default function onGameEnd(
       applyEffects(map, map, effects, lastAction) ||
       applyEffects(map, map, effects, {
         ...lastAction,
-        condition: undefined,
-        conditionId: undefined,
+        objective: undefined,
+        objectiveId: undefined,
       });
 
     const lastMap = effectGameState?.at(-1)?.[1];

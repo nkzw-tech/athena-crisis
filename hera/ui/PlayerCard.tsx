@@ -4,7 +4,7 @@ import {
   destroyedBuildingsByPlayer,
   escortedByPlayer,
   rescuedUnitsByPlayer,
-} from '@deities/apollo/lib/checkWinCondition.tsx';
+} from '@deities/apollo/lib/checkObjective.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
@@ -12,12 +12,12 @@ import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
 import { isBot, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
 import {
   Criteria,
-  WinCondition,
-  winConditionHasAmounts,
-} from '@deities/athena/WinConditions.tsx';
+  Objective,
+  objectiveHasAmounts,
+} from '@deities/athena/Objectives.tsx';
+import { VisionT } from '@deities/athena/Vision.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -244,17 +244,17 @@ export default memo(function PlayerCard({
                   .filter(
                     (condition) =>
                       !condition.hidden &&
-                      (winConditionHasAmounts(condition) ||
+                      (objectiveHasAmounts(condition) ||
                         condition.type === Criteria.Survival) &&
                       matchesPlayerList(condition.players, player.id) &&
                       !condition.completed?.has(player.id),
                   )
                   .map((condition, index) => (
                     <PlayerCardObjective
-                      condition={condition}
                       index={index}
                       key={index}
                       map={map}
+                      objective={condition}
                       player={player}
                     />
                   ))}
@@ -342,49 +342,49 @@ export default memo(function PlayerCard({
 });
 
 const PlayerCardObjective = ({
-  condition,
   index,
   map,
+  objective,
   player,
 }: {
-  condition: WinCondition;
   index: number;
   map: MapData;
+  objective: Objective;
   player: Player;
 }) => {
   const [icon, status, amount] = useMemo(
     () =>
-      condition.type === Criteria.DefeatAmount
-        ? [Crosshair, player.stats.destroyedUnits, condition.amount]
-        : condition.type === Criteria.CaptureAmount
-          ? [Flag, capturedByPlayer(map, player.id), condition.amount]
-          : condition.type === Criteria.DestroyAmount
+      objective.type === Criteria.DefeatAmount
+        ? [Crosshair, player.stats.destroyedUnits, objective.amount]
+        : objective.type === Criteria.CaptureAmount
+          ? [Flag, capturedByPlayer(map, player.id), objective.amount]
+          : objective.type === Criteria.DestroyAmount
             ? [
                 Buildings,
                 destroyedBuildingsByPlayer(map, player.id),
-                condition.amount,
+                objective.amount,
               ]
-            : condition.type === Criteria.EscortAmount
+            : objective.type === Criteria.EscortAmount
               ? [
                   Escort,
                   escortedByPlayer(
                     map,
                     player.id,
-                    condition.vectors,
-                    condition.label,
+                    objective.vectors,
+                    objective.label,
                   ),
-                  condition.amount,
+                  objective.amount,
                 ]
-              : condition.type === Criteria.RescueAmount
+              : objective.type === Criteria.RescueAmount
                 ? [
                     Rescue,
                     rescuedUnitsByPlayer(map, player.id),
-                    condition.amount,
+                    objective.amount,
                   ]
-                : condition.type === Criteria.Survival
-                  ? [Hourglass, map.round, condition.rounds]
+                : objective.type === Criteria.Survival
+                  ? [Hourglass, map.round, objective.rounds]
                   : [null, null],
-    [condition, map, player.id, player.stats.destroyedUnits],
+    [objective, map, player.id, player.stats.destroyedUnits],
   );
 
   return (

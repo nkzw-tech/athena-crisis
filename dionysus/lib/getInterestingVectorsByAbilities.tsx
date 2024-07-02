@@ -2,10 +2,7 @@ import { BuildableTiles } from '@deities/athena/info/Building.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  Criteria,
-  winConditionHasVectors,
-} from '@deities/athena/WinConditions.tsx';
+import { Criteria, objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
 import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
@@ -55,7 +52,7 @@ export default function getInterestingVectorsByAbilities(
       (!condition.players || condition.players.includes(currentPlayer.id))
     ) {
       if (
-        winConditionHasVectors(condition) &&
+        objectiveHasVectors(condition) &&
         (!condition.label?.size ||
           (label != null && condition.label.has(label)))
       ) {

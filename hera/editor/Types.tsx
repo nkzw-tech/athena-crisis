@@ -4,7 +4,7 @@ import { Decorator } from '@deities/athena/info/Decorator.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinConditionsWithVectors } from '@deities/athena/WinConditions.tsx';
+import { ObjectivesWithVectors } from '@deities/athena/Objectives.tsx';
 import { Edges } from '../lib/Edges.tsx';
 import { MapCreator } from '../ui/MapDetails.tsx';
 
@@ -48,15 +48,12 @@ export type DrawingMode =
 
 export type EditorState = Readonly<{
   action?: Readonly<{ action: Action; actionId: number }>;
-  condition?: readonly [
-    condition: WinConditionsWithVectors,
-    conditionId: number,
-  ];
   drawingMode: DrawingMode;
   effects: Effects;
   isDrawing: boolean;
   isErasing: boolean;
   mode: EditorMode;
+  objective?: readonly [objective: ObjectivesWithVectors, objectiveId: number];
   scenario: Scenario;
   selected?: Readonly<{
     building?: Building;

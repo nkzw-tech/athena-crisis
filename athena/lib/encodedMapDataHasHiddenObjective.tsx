@@ -1,5 +1,5 @@
 import { PlainMap } from '../map/PlainMap.tsx';
 
-export default function encodedMapDataHasHiddenWinCondition(state: PlainMap) {
+export default function encodedMapDataHasHiddenObjective(state: PlainMap) {
   return state.config.winConditions?.some(([, hidden]) => hidden);
 }

@@ -6,7 +6,7 @@ import { EntityType, getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import getWinConditionVectors from './getWinConditionVectors.tsx';
+import getObjectiveVectors from './getObjectiveVectors.tsx';
 import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
 
@@ -83,7 +83,7 @@ export default function getInterestingVectors(
     }
   }
 
-  vectors.push(...getWinConditionVectors(map, unit));
+  vectors.push(...getObjectiveVectors(map, unit));
 
   if (isDefensive) {
     for (const [vector, building] of map.buildings) {

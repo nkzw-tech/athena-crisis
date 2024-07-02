@@ -1,7 +1,7 @@
 import { Action } from '@deities/apollo/Action.tsx';
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -20,7 +20,7 @@ import { RefObject, useCallback, useMemo, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
 import EffectTitle, { EffectWinConditionTitle } from '../lib/EffectTitle.tsx';
-import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
+import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
 import {
   EditorState,
@@ -95,7 +95,7 @@ export default function EffectsPanel({
               key={id}
               onClick={() => {
                 setShowNewEffects(false);
-                setEditorState(selectWinConditionEffect(editor, id));
+                setEditorState(selectObjectiveEffect(editor, id));
               }}
             >
               <EffectWinConditionTitle id={id} />
@@ -117,9 +117,7 @@ export default function EffectsPanel({
               key={index}
               onClick={() => {
                 setShowNewEffects(false);
-                setEditorState(
-                  selectWinConditionEffect(editor, index, condition),
-                );
+                setEditorState(selectObjectiveEffect(editor, index, condition));
               }}
             >
               <EffectTitle

@@ -5,7 +5,7 @@ import { Reward } from '@deities/athena/map/Reward.tsx';
 import { Teams } from '@deities/athena/map/Team.tsx';
 import Unit, { DryUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { WinCondition } from '@deities/athena/WinConditions.tsx';
+import { Objective } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { HiddenActionResponse } from './HiddenAction.tsx';
 import { ObjectiveActionResponses } from './Objective.tsx';
@@ -200,7 +200,7 @@ export type ActivatePowerActionResponse = Readonly<{
 }>;
 
 export type SecretDiscoveredActionResponse = Readonly<{
-  condition: WinCondition;
+  objective: Objective;
   toPlayer?: PlayerID;
   type: 'SecretDiscovered';
 }>;

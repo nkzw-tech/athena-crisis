@@ -68,7 +68,7 @@ export const MAX_AMOUNT = 128;
 export const MIN_ROUNDS = 1;
 export const MAX_ROUNDS = 1024;
 
-type CaptureLabelWinCondition = Readonly<{
+type CaptureLabelObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -78,7 +78,7 @@ type CaptureLabelWinCondition = Readonly<{
   type: Criteria.CaptureLabel;
 }>;
 
-type CaptureAmountWinCondition = Readonly<{
+type CaptureAmountObjective = Readonly<{
   amount: number;
   completed?: PlayerIDSet;
   hidden: boolean;
@@ -88,7 +88,7 @@ type CaptureAmountWinCondition = Readonly<{
   type: Criteria.CaptureAmount;
 }>;
 
-type DefeatWinCondition = Readonly<{
+type DefeatObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -98,7 +98,7 @@ type DefeatWinCondition = Readonly<{
   type: Criteria.DefeatLabel;
 }>;
 
-type SurvivalWinCondition = Readonly<{
+type SurvivalObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   optional: boolean;
@@ -108,7 +108,7 @@ type SurvivalWinCondition = Readonly<{
   type: Criteria.Survival;
 }>;
 
-type EscortLabelWinCondition = Readonly<{
+type EscortLabelObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -119,7 +119,7 @@ type EscortLabelWinCondition = Readonly<{
   vectors: ReadonlySet<Vector>;
 }>;
 
-type EscortAmountWinCondition = Readonly<{
+type EscortAmountObjective = Readonly<{
   amount: number;
   completed?: PlayerIDSet;
   hidden: boolean;
@@ -131,7 +131,7 @@ type EscortAmountWinCondition = Readonly<{
   vectors: ReadonlySet<Vector>;
 }>;
 
-type RescueLabelWinCondition = Readonly<{
+type RescueLabelObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -141,7 +141,7 @@ type RescueLabelWinCondition = Readonly<{
   type: Criteria.RescueLabel;
 }>;
 
-type DefeatAmountWinCondition = Readonly<{
+type DefeatAmountObjective = Readonly<{
   amount: number;
   completed?: PlayerIDSet;
   hidden: boolean;
@@ -151,7 +151,7 @@ type DefeatAmountWinCondition = Readonly<{
   type: Criteria.DefeatAmount;
 }>;
 
-type DefeatOneLabelWinCondition = Readonly<{
+type DefeatOneLabelObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -161,7 +161,7 @@ type DefeatOneLabelWinCondition = Readonly<{
   type: Criteria.DefeatOneLabel;
 }>;
 
-type DestroyLabelWinCondition = Readonly<{
+type DestroyLabelObjective = Readonly<{
   completed?: PlayerIDSet;
   hidden: boolean;
   label: PlayerIDSet;
@@ -171,7 +171,7 @@ type DestroyLabelWinCondition = Readonly<{
   type: Criteria.DestroyLabel;
 }>;
 
-type DestroyAmountWinCondition = Readonly<{
+type DestroyAmountObjective = Readonly<{
   amount: number;
   completed?: PlayerIDSet;
   hidden: boolean;
@@ -181,7 +181,7 @@ type DestroyAmountWinCondition = Readonly<{
   type: Criteria.DestroyAmount;
 }>;
 
-type RescueAmountWinCondition = Readonly<{
+type RescueAmountObjective = Readonly<{
   amount: number;
   completed?: PlayerIDSet;
   hidden: boolean;
@@ -191,30 +191,30 @@ type RescueAmountWinCondition = Readonly<{
   type: Criteria.RescueAmount;
 }>;
 
-export type WinConditionsWithVectors =
-  | EscortLabelWinCondition
-  | EscortAmountWinCondition;
+export type ObjectivesWithVectors =
+  | EscortLabelObjective
+  | EscortAmountObjective;
 
-export type WinCondition =
+export type Objective =
   | Readonly<{
       hidden: boolean;
       reward?: Reward | null;
       type: Criteria.Default;
     }>
-  | CaptureAmountWinCondition
-  | CaptureLabelWinCondition
-  | DefeatAmountWinCondition
-  | DefeatOneLabelWinCondition
-  | DefeatWinCondition
-  | DestroyAmountWinCondition
-  | DestroyLabelWinCondition
-  | EscortAmountWinCondition
-  | EscortLabelWinCondition
-  | RescueAmountWinCondition
-  | RescueLabelWinCondition
-  | SurvivalWinCondition;
+  | CaptureAmountObjective
+  | CaptureLabelObjective
+  | DefeatAmountObjective
+  | DefeatOneLabelObjective
+  | DefeatObjective
+  | DestroyAmountObjective
+  | DestroyLabelObjective
+  | EscortAmountObjective
+  | EscortLabelObjective
+  | RescueAmountObjective
+  | RescueLabelObjective
+  | SurvivalObjective;
 
-export type PlainWinCondition =
+export type PlainObjective =
   | [
       type: Criteria.Default,
       hidden: 0 | 1,
@@ -334,308 +334,308 @@ export type PlainWinCondition =
       completed?: ReadonlyArray<number>,
     ];
 
-export type WinConditions = ReadonlyArray<WinCondition>;
-export type PlainWinConditions = ReadonlyArray<PlainWinCondition>;
+export type Objectives = ReadonlyArray<Objective>;
+export type PlainObjectives = ReadonlyArray<PlainObjective>;
 
-export function encodeWinCondition(condition: WinCondition): PlainWinCondition {
-  const { hidden, type } = condition;
+export function encodeObjective(objective: Objective): PlainObjective {
+  const { hidden, type } = objective;
   switch (type) {
     case Criteria.Default:
-      return [type, hidden ? 1 : 0, maybeEncodeReward(condition.reward)];
+      return [type, hidden ? 1 : 0, maybeEncodeReward(objective.reward)];
     case Criteria.CaptureLabel:
     case Criteria.DestroyLabel:
       return [
         type,
         hidden ? 1 : 0,
-        Array.from(condition.label),
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        Array.from(objective.label),
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.CaptureAmount:
     case Criteria.DestroyAmount:
       return [
         type,
         hidden ? 1 : 0,
-        condition.amount,
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.amount,
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.DefeatLabel:
       return [
         type,
         hidden ? 1 : 0,
-        Array.from(condition.label),
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        Array.from(objective.label),
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.EscortLabel:
       return [
         type,
         hidden ? 1 : 0,
-        Array.from(condition.label),
-        condition.players || [],
-        encodeVectorArray([...condition.vectors]),
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        Array.from(objective.label),
+        objective.players || [],
+        encodeVectorArray([...objective.vectors]),
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.Survival:
       return [
         type,
         hidden ? 1 : 0,
-        condition.rounds,
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.rounds,
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.EscortAmount:
       return [
         type,
         hidden ? 1 : 0,
-        condition.amount,
-        condition.players,
-        encodeVectorArray([...condition.vectors]),
-        condition.label ? Array.from(condition.label) : [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.amount,
+        objective.players,
+        encodeVectorArray([...objective.vectors]),
+        objective.label ? Array.from(objective.label) : [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.RescueAmount:
       return [
         type,
         hidden ? 1 : 0,
-        condition.amount,
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.amount,
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.RescueLabel:
       return [
         type,
         hidden ? 1 : 0,
-        Array.from(condition.label),
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        Array.from(objective.label),
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.DefeatAmount:
       return [
         type,
         hidden ? 1 : 0,
-        condition.amount,
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.amount,
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     case Criteria.DefeatOneLabel:
       return [
         type,
         hidden ? 1 : 0,
-        condition.label ? Array.from(condition.label) : [],
-        condition.players || [],
-        maybeEncodeReward(condition.reward),
-        condition.optional ? 1 : 0,
-        condition.completed?.size ? Array.from(condition.completed) : [],
+        objective.label ? Array.from(objective.label) : [],
+        objective.players || [],
+        maybeEncodeReward(objective.reward),
+        objective.optional ? 1 : 0,
+        objective.completed?.size ? Array.from(objective.completed) : [],
       ];
     default: {
-      condition satisfies never;
-      throw new UnknownTypeError('encodeWinCondition', type);
+      objective satisfies never;
+      throw new UnknownTypeError('encodeObjective', type);
     }
   }
 }
 
-export function decodeWinCondition(condition: PlainWinCondition): WinCondition {
-  const type = condition[0];
+export function decodeObjective(objective: PlainObjective): Objective {
+  const type = objective[0];
   switch (type) {
     case Criteria.Default: {
       return {
-        hidden: !!condition[1],
-        reward: maybeDecodeReward(condition[2]),
+        hidden: !!objective[1],
+        reward: maybeDecodeReward(objective[2]),
         type,
       };
     }
     case Criteria.CaptureLabel:
     case Criteria.DestroyLabel:
       return {
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        label: new Set(toPlayerIDs(condition[2])),
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        label: new Set(toPlayerIDs(objective[2])),
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.CaptureAmount:
     case Criteria.DestroyAmount:
       return {
-        amount: condition[2]!,
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        amount: objective[2]!,
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.DefeatLabel:
       return {
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        label: new Set(toPlayerIDs(condition[2])),
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        label: new Set(toPlayerIDs(objective[2])),
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.EscortLabel:
       return {
-        completed: condition[7]
-          ? new Set(toPlayerIDs(condition[7]))
+        completed: objective[7]
+          ? new Set(toPlayerIDs(objective[7]))
           : new Set(),
-        hidden: !!condition[1],
-        label: new Set(toPlayerIDs(condition[2])),
-        optional: !!condition[6],
-        players: toPlayerIDs(condition[3]),
-        reward: maybeDecodeReward(condition[5]),
+        hidden: !!objective[1],
+        label: new Set(toPlayerIDs(objective[2])),
+        optional: !!objective[6],
+        players: toPlayerIDs(objective[3]),
+        reward: maybeDecodeReward(objective[5]),
         type,
-        vectors: new Set(decodeVectorArray(condition[4])),
+        vectors: new Set(decodeVectorArray(objective[4])),
       };
     case Criteria.Survival:
       return {
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        optional: !!condition[5],
-        players: toPlayerIDs(condition[3]),
-        reward: maybeDecodeReward(condition[4]),
-        rounds: condition[2]!,
+        hidden: !!objective[1],
+        optional: !!objective[5],
+        players: toPlayerIDs(objective[3]),
+        reward: maybeDecodeReward(objective[4]),
+        rounds: objective[2]!,
         type,
       };
     case Criteria.EscortAmount:
       return {
-        amount: condition[2],
-        completed: condition[8]
-          ? new Set(toPlayerIDs(condition[8]))
+        amount: objective[2],
+        completed: objective[8]
+          ? new Set(toPlayerIDs(objective[8]))
           : new Set(),
-        hidden: !!condition[1],
-        label: condition[5] ? new Set(toPlayerIDs(condition[5])) : undefined,
-        optional: !!condition[7],
-        players: toPlayerIDs(condition[3]),
-        reward: maybeDecodeReward(condition[6]),
+        hidden: !!objective[1],
+        label: objective[5] ? new Set(toPlayerIDs(objective[5])) : undefined,
+        optional: !!objective[7],
+        players: toPlayerIDs(objective[3]),
+        reward: maybeDecodeReward(objective[6]),
         type,
-        vectors: new Set(decodeVectorArray(condition[4])),
+        vectors: new Set(decodeVectorArray(objective[4])),
       };
     case Criteria.RescueAmount:
       return {
-        amount: condition[2],
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        amount: objective[2],
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.RescueLabel:
       return {
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        label: new Set(toPlayerIDs(condition[2])),
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        label: new Set(toPlayerIDs(objective[2])),
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.DefeatAmount:
       return {
-        amount: condition[2],
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        amount: objective[2],
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        optional: !!condition[5],
-        players: toPlayerIDs(condition[3]),
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        optional: !!objective[5],
+        players: toPlayerIDs(objective[3]),
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     case Criteria.DefeatOneLabel:
       return {
-        completed: condition[6]
-          ? new Set(toPlayerIDs(condition[6]))
+        completed: objective[6]
+          ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
-        hidden: !!condition[1],
-        label: condition[2] ? new Set(toPlayerIDs(condition[2])) : new Set(),
-        optional: !!condition[5],
-        players: condition[3] ? toPlayerIDs(condition[3]) : undefined,
-        reward: maybeDecodeReward(condition[4]),
+        hidden: !!objective[1],
+        label: objective[2] ? new Set(toPlayerIDs(objective[2])) : new Set(),
+        optional: !!objective[5],
+        players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
+        reward: maybeDecodeReward(objective[4]),
         type,
       };
     default: {
-      condition satisfies never;
-      throw new UnknownTypeError('decodeWinCondition', type);
+      objective satisfies never;
+      throw new UnknownTypeError('decodeObjective', type);
     }
   }
 }
 
-export function encodeWinConditions(conditions: WinConditions) {
-  return conditions.map(encodeWinCondition);
+export function encodeObjectives(objectives: Objectives) {
+  return objectives.map(encodeObjective);
 }
 
-export function decodeWinConditions(conditions: PlainWinConditions) {
-  return conditions.map(decodeWinCondition);
+export function decodeObjectives(objectives: PlainObjectives) {
+  return objectives.map(decodeObjective);
 }
 
-export function formatWinCondition(condition: WinCondition) {
-  const newCondition: Record<string, unknown> = { ...condition };
-  if ('label' in condition && condition.label) {
-    newCondition.label = Array.from(condition.label || []);
+export function formatObjective(objective: Objective) {
+  const newObjective: Record<string, unknown> = { ...objective };
+  if ('label' in objective && objective.label) {
+    newObjective.label = Array.from(objective.label || []);
   }
-  if ('players' in condition && condition.players) {
-    newCondition.players = Array.from(condition.players || []);
+  if ('players' in objective && objective.players) {
+    newObjective.players = Array.from(objective.players || []);
   }
-  if ('vectors' in condition) {
-    newCondition.vectors = Array.from(condition.vectors).map(String);
+  if ('vectors' in objective) {
+    newObjective.vectors = Array.from(objective.vectors).map(String);
   }
-  return newCondition;
+  return newObjective;
 }
 
-export function winConditionHasVectors(
-  condition: WinCondition,
-): condition is EscortLabelWinCondition | EscortAmountWinCondition {
-  const { type } = condition;
+export function objectiveHasVectors(
+  objective: Objective,
+): objective is EscortLabelObjective | EscortAmountObjective {
+  const { type } = objective;
   return type === Criteria.EscortLabel || type === Criteria.EscortAmount;
 }
 
-export function winConditionHasLabel(
-  condition: WinCondition,
-): condition is
-  | CaptureLabelWinCondition
-  | DefeatOneLabelWinCondition
-  | DefeatWinCondition
-  | DestroyLabelWinCondition
-  | EscortAmountWinCondition
-  | EscortLabelWinCondition
-  | RescueLabelWinCondition {
-  const { type } = condition;
+export function objectiveHasLabel(
+  objective: Objective,
+): objective is
+  | CaptureLabelObjective
+  | DefeatOneLabelObjective
+  | DefeatObjective
+  | DestroyLabelObjective
+  | EscortAmountObjective
+  | EscortLabelObjective
+  | RescueLabelObjective {
+  const { type } = objective;
   return (
     type === Criteria.CaptureLabel ||
     type === Criteria.DefeatLabel ||
@@ -647,15 +647,15 @@ export function winConditionHasLabel(
   );
 }
 
-export function winConditionHasAmounts(
-  condition: WinCondition,
-): condition is
-  | CaptureAmountWinCondition
-  | DefeatAmountWinCondition
-  | DestroyAmountWinCondition
-  | EscortAmountWinCondition
-  | RescueAmountWinCondition {
-  const { type } = condition;
+export function objectiveHasAmounts(
+  objective: Objective,
+): objective is
+  | CaptureAmountObjective
+  | DefeatAmountObjective
+  | DestroyAmountObjective
+  | EscortAmountObjective
+  | RescueAmountObjective {
+  const { type } = objective;
   return (
     type === Criteria.CaptureAmount ||
     type === Criteria.DestroyAmount ||
@@ -665,20 +665,20 @@ export function winConditionHasAmounts(
   );
 }
 
-export function winConditionHasRounds(
-  condition: WinCondition,
-): condition is SurvivalWinCondition {
-  const { type } = condition;
+export function objectiveHasRounds(
+  objective: Objective,
+): objective is SurvivalObjective {
+  const { type } = objective;
   return type === Criteria.Survival;
 }
 
 export function getOpponentPriorityLabels(
-  conditions: WinConditions,
+  conditions: Objectives,
   player: PlayerID,
 ) {
   const labels = new Set<PlayerID>();
   for (const condition of conditions) {
-    if (!winConditionHasLabel(condition) || !condition.label?.size) {
+    if (!objectiveHasLabel(condition) || !condition.label?.size) {
       continue;
     }
 
@@ -730,12 +730,12 @@ const validatePlayers = (map: MapData, players: PlayerIDs) => {
 const validateAmount = (amount: number) =>
   isPositiveInteger(amount) && amount >= MIN_AMOUNT && amount <= MAX_AMOUNT;
 
-export function validateWinCondition(map: MapData, condition: WinCondition) {
-  const { hidden, type } = condition;
+export function validateObjective(map: MapData, objective: Objective) {
+  const { hidden, type } = objective;
   if (
     (hidden !== false && hidden !== true) ||
-    (condition.reward && !validateReward(condition.reward)) ||
-    (type !== Criteria.Default && condition.completed?.size)
+    (objective.reward && !validateReward(objective.reward)) ||
+    (type !== Criteria.Default && objective.completed?.size)
   ) {
     return false;
   }
@@ -751,73 +751,73 @@ export function validateWinCondition(map: MapData, condition: WinCondition) {
     case Criteria.DestroyLabel:
     case Criteria.RescueLabel:
       return (
-        validateLabel(condition.label) &&
-        (condition.players?.length
-          ? validatePlayers(map, condition.players)
+        validateLabel(objective.label) &&
+        (objective.players?.length
+          ? validatePlayers(map, objective.players)
           : true)
       );
     case Criteria.CaptureAmount:
     case Criteria.DefeatAmount:
     case Criteria.DestroyAmount:
-      if (!validateAmount(condition.amount)) {
+      if (!validateAmount(objective.amount)) {
         return false;
       }
-      return condition.players?.length
-        ? validatePlayers(map, condition.players)
+      return objective.players?.length
+        ? validatePlayers(map, objective.players)
         : true;
     case Criteria.EscortLabel:
-      if (![...condition.vectors].every(validateVector)) {
+      if (![...objective.vectors].every(validateVector)) {
         return false;
       }
       return (
-        validateLabel(condition.label) &&
-        validatePlayers(map, condition.players)
+        validateLabel(objective.label) &&
+        validatePlayers(map, objective.players)
       );
     case Criteria.Survival:
       if (
-        !isPositiveInteger(condition.rounds) ||
-        condition.rounds < MIN_ROUNDS ||
-        condition.rounds > MAX_ROUNDS
+        !isPositiveInteger(objective.rounds) ||
+        objective.rounds < MIN_ROUNDS ||
+        objective.rounds > MAX_ROUNDS
       ) {
         return false;
       }
 
-      if (!validatePlayers(map, condition.players)) {
+      if (!validatePlayers(map, objective.players)) {
         return false;
       }
 
-      return condition.players.includes(map.active[0])
-        ? condition.rounds > 1
+      return objective.players.includes(map.active[0])
+        ? objective.rounds > 1
         : true;
     case Criteria.EscortAmount:
-      if (!validateAmount(condition.amount)) {
+      if (!validateAmount(objective.amount)) {
         return false;
       }
 
-      if (condition.label?.size && !validateLabel(condition.label)) {
+      if (objective.label?.size && !validateLabel(objective.label)) {
         return false;
       }
 
       return (
-        validatePlayers(map, toPlayerIDs(condition.players)) &&
-        [...condition.vectors].every(validateVector)
+        validatePlayers(map, toPlayerIDs(objective.players)) &&
+        [...objective.vectors].every(validateVector)
       );
     case Criteria.RescueAmount:
-      if (!validateAmount(condition.amount)) {
+      if (!validateAmount(objective.amount)) {
         return false;
       }
 
-      return condition.players?.length
-        ? validatePlayers(map, condition.players)
+      return objective.players?.length
+        ? validatePlayers(map, objective.players)
         : true;
     default: {
-      condition satisfies never;
+      objective satisfies never;
       return false;
     }
   }
 }
 
-export function validateWinConditions(map: MapData) {
+export function validateObjectives(map: MapData) {
   const { winConditions } = map.config;
   if (
     !Array.isArray(winConditions) ||
@@ -835,13 +835,13 @@ export function validateWinConditions(map: MapData) {
     return false;
   }
 
-  return winConditions.every(validateWinCondition.bind(null, map));
+  return winConditions.every(validateObjective.bind(null, map));
 }
 
-export function resetWinConditions(
-  conditions: WinConditions,
+export function resetObjectives(
+  conditions: Objectives,
   active: PlayerIDSet,
-): WinConditions {
+): Objectives {
   return conditions.map((condition) =>
     condition.type === Criteria.Default || !condition.players
       ? { ...condition, completed: new Set() }
@@ -853,25 +853,21 @@ export function resetWinConditions(
   );
 }
 
-export function onlyHasDefaultWinCondition(winConditions: WinConditions) {
+export function onlyHasDefaultObjective(winConditions: Objectives) {
   return (
     winConditions.length === 0 ||
     (winConditions.length === 1 && winConditions[0].type === Criteria.Default)
   );
 }
 
-export function getHiddenLabels(conditions: WinConditions): PlayerIDSet | null {
-  if (onlyHasDefaultWinCondition(conditions)) {
+export function getHiddenLabels(conditions: Objectives): PlayerIDSet | null {
+  if (onlyHasDefaultObjective(conditions)) {
     return null;
   }
 
   let labels: Set<PlayerID> | null = null;
   for (const condition of conditions) {
-    if (
-      condition.hidden &&
-      winConditionHasLabel(condition) &&
-      condition.label
-    ) {
+    if (condition.hidden && objectiveHasLabel(condition) && condition.label) {
       for (const label of condition.label) {
         if (!labels) {
           labels = new Set();
@@ -884,10 +880,10 @@ export function getHiddenLabels(conditions: WinConditions): PlayerIDSet | null {
   return labels;
 }
 
-export function getInitialWinCondition(
+export function getInitialObjective(
   map: MapData,
   criteria: Criteria,
-): WinCondition {
+): Objective {
   const hidden = false;
   const optional = false;
   const currentPlayer = map.getCurrentPlayer().id;
@@ -980,7 +976,7 @@ export function getInitialWinCondition(
       };
     default: {
       criteria satisfies never;
-      throw new UnknownTypeError('getInitialWinCondition', criteria);
+      throw new UnknownTypeError('getInitialObjective', criteria);
     }
   }
 }

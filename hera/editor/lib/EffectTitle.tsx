@@ -4,19 +4,19 @@ import {
   OptionalObjectiveCondition,
 } from '@deities/apollo/Condition.tsx';
 import { Effect, Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
-import { WinConditions } from '@deities/athena/WinConditions.tsx';
+import { Objectives } from '@deities/athena/Objectives.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import { css, cx } from '@emotion/css';
 import { memo } from 'react';
+import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
 import MiniPlayerIcon from '../../ui/MiniPlayerIcon.tsx';
-import WinConditionTitle from '../../win-conditions/WinConditionTitle.tsx';
 
 export const EffectWinConditionTitle = ({
   id,
   winConditions,
 }: {
   id: DynamicEffectObjectiveID;
-  winConditions?: WinConditions;
+  winConditions?: Objectives;
 }) => {
   switch (id) {
     case 'win':
@@ -28,7 +28,7 @@ export const EffectWinConditionTitle = ({
     default: {
       const condition = winConditions?.[id];
       return condition ? (
-        <WinConditionTitle condition={condition} index={id} />
+        <ObjectiveTitle index={id} objective={condition} />
       ) : null;
     }
   }
@@ -43,7 +43,7 @@ export default memo(function EffectTitle({
   effect: Effect;
   effects?: Effects;
   trigger: EffectTrigger;
-  winConditions: WinConditions | undefined;
+  winConditions: Objectives | undefined;
 }) {
   const effectList = effects?.get(trigger);
   const hasMany = (effectList?.size || 1) > 1;

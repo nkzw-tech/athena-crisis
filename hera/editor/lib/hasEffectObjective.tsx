@@ -3,7 +3,7 @@ import {
   DynamicEffectObjectiveID,
 } from '@deities/apollo/Condition.tsx';
 
-export default function hasEffectWinCondition(
+export default function hasEffectObjective(
   type: 'GameEnd' | 'OptionalObjective',
   id: DynamicEffectObjectiveID,
   conditions?: Conditions,

@@ -41,13 +41,13 @@ import {
 import Team, { Teams } from './map/Team.tsx';
 import Unit from './map/Unit.tsx';
 import Vector from './map/Vector.tsx';
-import Vision, { Fog, VisionT } from './Vision.tsx';
 import {
   Criteria,
-  decodeWinConditions,
-  encodeWinConditions,
-  WinConditions,
-} from './WinConditions.tsx';
+  decodeObjectives,
+  encodeObjectives,
+  Objectives,
+} from './Objectives.tsx';
+import Vision, { Fog, VisionT } from './Vision.tsx';
 
 export type ID = number;
 
@@ -88,7 +88,7 @@ export class MapConfig {
     public readonly blocklistedUnits: ReadonlySet<ID>,
     public readonly fog: boolean,
     public readonly biome: Biome,
-    public readonly winConditions: WinConditions,
+    public readonly winConditions: Objectives,
   ) {}
 
   copy({
@@ -132,7 +132,7 @@ export class MapConfig {
       fog,
       multiplier,
       seedCapital,
-      winConditions: encodeWinConditions(winConditions),
+      winConditions: encodeObjectives(winConditions),
     };
   }
 }
@@ -576,7 +576,7 @@ export default class MapData {
         data.config.fog,
         data.config.biome,
         (data.config.winConditions
-          ? decodeWinConditions(data.config.winConditions)
+          ? decodeObjectives(data.config.winConditions)
           : null) || [{ hidden: false, type: Criteria.Default }],
       ),
       size,

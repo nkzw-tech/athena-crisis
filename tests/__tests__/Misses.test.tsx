@@ -54,12 +54,12 @@ test('lose the game when missing two turns in a row', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
-    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
-    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
-    PreviousTurnGameOver { fromPlayer: 1 }
-    GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
-  `);
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
+      PreviousTurnGameOver { fromPlayer: 1 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+    `);
 });
 
 test('misses reset when taking any action', async () => {
@@ -92,7 +92,7 @@ test('misses reset when taking any action', async () => {
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 2 }
-      GameEnd { condition: null, conditionId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
 });
 
@@ -154,6 +154,6 @@ test('lose the game, but continue when missing two turns in a row with multiple 
       PreviousTurnGameOver { fromPlayer: 1 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 300, player: 3 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 2 }
-      GameEnd { condition: null, conditionId: null, toPlayer: 3 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 3 }"
     `);
 });

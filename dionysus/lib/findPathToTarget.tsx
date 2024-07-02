@@ -6,7 +6,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { MoveConfiguration, RadiusItem } from '@deities/athena/Radius.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';
 import getAttackableArea from './getAttackableArea.tsx';
-import getWinConditionVectors from './getWinConditionVectors.tsx';
+import getObjectiveVectors from './getObjectiveVectors.tsx';
 
 export default function findPathToTarget(
   map: MapData,
@@ -20,7 +20,7 @@ export default function findPathToTarget(
   let target: RadiusItem | null = to;
   const minimumDistance =
     (considerRange &&
-      !getWinConditionVectors(map, unit).has(to.vector) &&
+      !getObjectiveVectors(map, unit).has(to.vector) &&
       info.getRangeFor(map.getPlayer(unit))?.[0]) ||
     0;
 

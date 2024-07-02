@@ -6,12 +6,12 @@ import {
   MAX_ROUNDS,
   MIN_AMOUNT,
   MIN_ROUNDS,
-  WinCondition,
-  winConditionHasAmounts,
-  winConditionHasLabel,
-  winConditionHasRounds,
-  winConditionHasVectors,
-} from '@deities/athena/WinConditions.tsx';
+  Objective,
+  objectiveHasAmounts,
+  objectiveHasLabel,
+  objectiveHasRounds,
+  objectiveHasVectors,
+} from '@deities/athena/Objectives.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -27,19 +27,19 @@ import { css } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
-import WinConditionTitle from '../../win-conditions/WinConditionTitle.tsx';
 import { ManyLabelSelector } from '../selectors/LabelSelector.tsx';
 import UnitSelector from './UnitSelector.tsx';
 
-export default function WinConditionCard({
+export default function ObjectiveCard({
   canDelete,
-  condition,
   hasContentRestrictions,
   index,
   isAdmin,
   map,
+  objective,
   onChange,
   selectEffect,
   selectLocation,
@@ -47,26 +47,26 @@ export default function WinConditionCard({
   validate,
 }: {
   canDelete?: boolean;
-  condition: WinCondition;
   hasContentRestrictions: boolean;
   index: number;
   isAdmin?: boolean;
   map: MapData;
-  onChange: (condition: WinCondition | null) => void;
+  objective: Objective;
+  onChange: (objective: Objective | null) => void;
   selectEffect: () => void;
   selectLocation: () => void;
   user: UserWithFactionNameAndSkills;
-  validate: (condition: WinCondition) => boolean;
+  validate: (objective: Objective) => boolean;
 }) {
   const [rounds, setRounds] = useState<number | null>(
-    winConditionHasRounds(condition) ? condition.rounds : 0,
+    objectiveHasRounds(objective) ? objective.rounds : 0,
   );
   const [amount, setAmount] = useState<number | null>(
-    winConditionHasAmounts(condition) ? condition.amount : 0,
+    objectiveHasAmounts(objective) ? objective.amount : 0,
   );
-  const hasPlayers = condition.type !== Criteria.Default;
-  const hasLabel = winConditionHasLabel(condition);
-  const { reward } = condition;
+  const hasPlayers = objective.type !== Criteria.Default;
+  const hasLabel = objectiveHasLabel(objective);
+  const { reward } = objective;
   const selectedUnit = reward?.type === 'UnitPortraits' ? reward.unit : null;
 
   return (
@@ -75,8 +75,8 @@ export default function WinConditionCard({
       gap={16}
       style={{
         backgroundImage:
-          hasPlayers && condition.players?.length
-            ? gradient(condition.players, 0.15)
+          hasPlayers && objective.players?.length
+            ? gradient(objective.players, 0.15)
             : undefined,
       }}
       vertical
@@ -90,34 +90,34 @@ export default function WinConditionCard({
         />
       )}
       <h2>
-        <WinConditionTitle condition={condition} index={index} />
+        <ObjectiveTitle index={index} objective={objective} />
       </h2>
       <Form>
         <Stack gap={16} vertical>
           {hasPlayers && (
             <Stack alignCenter gap={16} nowrap>
               <Stack flex1>
-                <fbt desc="Player selector for win condition">Players</fbt>
+                <fbt desc="Player selector for objective">Players</fbt>
               </Stack>
               {map.active.map((id) => (
                 <PlayerIcon
                   id={id}
                   key={id}
                   onClick={() => {
-                    const newCondition = {
-                      ...condition,
-                      players: condition.players?.includes(id)
-                        ? condition.players.filter((player) => player !== id)
+                    const newObjective = {
+                      ...objective,
+                      players: objective.players?.includes(id)
+                        ? objective.players.filter((player) => player !== id)
                         : sortBy(
-                            [...(condition.players || []), id],
+                            [...(objective.players || []), id],
                             (id) => id,
                           ),
                     };
-                    if (validate(newCondition)) {
-                      onChange(newCondition);
+                    if (validate(newObjective)) {
+                      onChange(newObjective);
                     }
                   }}
-                  selected={condition.players?.includes(id)}
+                  selected={objective.players?.includes(id)}
                 />
               ))}
             </Stack>
@@ -125,24 +125,24 @@ export default function WinConditionCard({
           {hasLabel && (
             <Stack alignCenter nowrap>
               <Stack flex1>
-                <fbt desc="Label selector for win condition">Labels</fbt>
+                <fbt desc="Label selector for objective">Labels</fbt>
               </Stack>
               <ManyLabelSelector
-                active={condition.label}
+                active={objective.label}
                 onChange={(label) =>
                   onChange({
-                    ...condition,
+                    ...objective,
                     label,
                   })
                 }
               />
             </Stack>
           )}
-          {winConditionHasAmounts(condition) && (
+          {objectiveHasAmounts(objective) && (
             <label>
               <Stack alignCenter gap start>
                 <span className={labelWidthStyle}>
-                  <fbt desc="Label for win condition amount">Amount</fbt>
+                  <fbt desc="Label for objective amount">Amount</fbt>
                 </span>
                 <input
                   className={rounds == null ? 'invalid' : undefined}
@@ -152,12 +152,12 @@ export default function WinConditionCard({
                     const amount = parseInteger(value);
                     setAmount(amount);
                     if (amount) {
-                      const newCondition = {
-                        ...condition,
+                      const newObjective = {
+                        ...objective,
                         amount,
                       };
-                      if (validate(newCondition)) {
-                        onChange(newCondition);
+                      if (validate(newObjective)) {
+                        onChange(newObjective);
                       }
                     }
                   }}
@@ -169,11 +169,11 @@ export default function WinConditionCard({
               </Stack>
             </label>
           )}
-          {winConditionHasRounds(condition) && (
+          {objectiveHasRounds(objective) && (
             <label>
               <Stack alignCenter gap start>
                 <span className={labelWidthStyle}>
-                  <fbt desc="Label for win condition rounds">Rounds</fbt>
+                  <fbt desc="Label for objective rounds">Rounds</fbt>
                 </span>
                 <input
                   className={rounds == null ? 'invalid' : undefined}
@@ -183,14 +183,14 @@ export default function WinConditionCard({
                     const rounds = parseInteger(value);
                     setRounds(rounds);
                     if (rounds) {
-                      const newCondition = {
-                        ...condition,
+                      const newObjective = {
+                        ...objective,
                         rounds,
                       };
-                      if (validate(newCondition)) {
-                        onChange(newCondition);
+                      if (validate(newObjective)) {
+                        onChange(newObjective);
                       } else {
-                        setRounds(condition.rounds);
+                        setRounds(objective.rounds);
                       }
                     }
                   }}
@@ -206,15 +206,13 @@ export default function WinConditionCard({
             <label>
               <Stack gap start>
                 <span className={labelWidthStyle}>
-                  <fbt desc="Label for secret win condition checkbox">
-                    Secret
-                  </fbt>
+                  <fbt desc="Label for secret objective checkbox">Secret</fbt>
                 </span>
                 <input
-                  checked={condition.hidden}
+                  checked={objective.hidden}
                   onChange={(event) =>
                     onChange({
-                      ...condition,
+                      ...objective,
                       hidden: event.target.checked,
                     })
                   }
@@ -222,29 +220,29 @@ export default function WinConditionCard({
                 />
               </Stack>
             </label>
-            {condition.hidden && hasLabel && (
+            {objective.hidden && hasLabel && (
               <p className={lightStyle}>
-                <fbt desc="Description for secret win condition labels">
-                  Labels associated with this win condition will be hidden from
-                  all players.
+                <fbt desc="Description for secret objective labels">
+                  Labels associated with this objective will be hidden from all
+                  players.
                 </fbt>
               </p>
             )}
           </Stack>
-          {condition.type !== Criteria.Default && (
+          {objective.type !== Criteria.Default && (
             <Stack gap>
               <label>
                 <Stack gap start>
                   <span className={labelWidthStyle}>
-                    <fbt desc="Label for optional win condition checkbox">
+                    <fbt desc="Label for optional objective checkbox">
                       Optional
                     </fbt>
                   </span>
                   <input
-                    checked={condition.optional}
+                    checked={objective.optional}
                     onChange={(event) =>
                       onChange({
-                        ...condition,
+                        ...objective,
                         optional: event.target.checked,
                       })
                     }
@@ -252,9 +250,9 @@ export default function WinConditionCard({
                   />
                 </Stack>
               </label>
-              {condition.optional && (
+              {objective.optional && (
                 <p className={lightStyle}>
-                  <fbt desc="Description for optional win conditions">
+                  <fbt desc="Description for optional objectives">
                     Achieving optional objectives does not end the game.
                   </fbt>
                 </p>
@@ -264,7 +262,7 @@ export default function WinConditionCard({
           <Stack gap={16} vertical>
             <Stack alignCenter gap start>
               <span className={labelWidthStyle}>
-                <fbt desc="Label for win condition reward">Reward</fbt>
+                <fbt desc="Label for objective reward">Reward</fbt>
               </span>
               <Stack alignCenter gap={16} start>
                 <SkillSelector
@@ -272,7 +270,7 @@ export default function WinConditionCard({
                   currentSkill={reward?.type === 'Skill' ? reward.skill : null}
                   onSelect={(skill) =>
                     onChange({
-                      ...condition,
+                      ...objective,
                       reward: skill ? { skill, type: 'Skill' } : undefined,
                     })
                   }
@@ -285,7 +283,7 @@ export default function WinConditionCard({
                     isVisible
                     onSelect={(unit) =>
                       onChange({
-                        ...condition,
+                        ...objective,
                         reward: { type: 'UnitPortraits', unit },
                       })
                     }
@@ -301,7 +299,7 @@ export default function WinConditionCard({
                     className={iconStyle}
                     icon={Close}
                     onClick={() =>
-                      onChange({ ...condition, reward: undefined })
+                      onChange({ ...objective, reward: undefined })
                     }
                   />
                 )}
@@ -309,14 +307,14 @@ export default function WinConditionCard({
             </Stack>
             {reward && (
               <p className={noteBoxStyle}>
-                {condition.type === Criteria.Default ? (
+                {objective.type === Criteria.Default ? (
                   <fbt desc="Explanation in the map editor of how rewards work for the default objective">
-                    Players receive this reward for the default objective if
-                    they win in any way.
+                    Players receive the reward for the default objective if they
+                    win in any way.
                   </fbt>
                 ) : (
                   <fbt desc="Explanation in the map editor for how rewards work">
-                    Players receive this reward if they achieve this objective.
+                    Players receive the reward if they achieve this objective.
                   </fbt>
                 )}{' '}
                 <fbt desc="Reward tags">
@@ -332,14 +330,14 @@ export default function WinConditionCard({
           <Stack reverse>
             <InlineLink onClick={selectEffect}>
               {
-                <fbt desc="Button to define an effect for this win condition">
+                <fbt desc="Button to define an effect for this objective">
                   Effect
                 </fbt>
               }
             </InlineLink>
-            {winConditionHasVectors(condition) && (
+            {objectiveHasVectors(objective) && (
               <InlineLink onClick={selectLocation}>
-                <fbt desc="Button to select win condition location">
+                <fbt desc="Button to select objective location">
                   Select Location
                 </fbt>
               </InlineLink>

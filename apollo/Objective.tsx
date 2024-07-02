@@ -6,8 +6,8 @@ import {
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { Criteria, Objective } from '@deities/athena/Objectives.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
@@ -17,10 +17,10 @@ import {
   AttackUnitActionResponse,
   ToggleLightningActionResponse,
 } from './ActionResponse.tsx';
-import checkWinConditions, {
+import checkObjectives, {
   isDestructiveAction,
-  shouldCheckDefaultWinConditions,
-} from './lib/checkWinCondition.tsx';
+  shouldCheckDefaultObjectives,
+} from './lib/checkObjective.tsx';
 import { processRewards } from './lib/processRewards.tsx';
 import { GameState, MutableGameState } from './Types.tsx';
 
@@ -46,15 +46,15 @@ export type CaptureGameOverActionResponse = Readonly<{
 }>;
 
 export type GameEndActionResponse = Readonly<{
-  condition?: WinCondition;
-  conditionId?: number;
+  objective?: Objective;
+  objectiveId?: number;
   toPlayer?: PlayerID;
   type: 'GameEnd';
 }>;
 
 export type OptionalObjectiveActionResponse = Readonly<{
-  condition: WinCondition;
-  conditionId: number;
+  objective: Objective;
+  objectiveId: number;
   toPlayer: PlayerID;
   type: 'OptionalObjective';
 }>;
@@ -71,31 +71,31 @@ const pickWinningPlayer = (
   previousMap: MapData,
   activeMap: MapData,
   actionResponse: ActionResponse,
-  condition: WinCondition,
+  objective: Objective,
 ) => {
-  if (condition.type === Criteria.DefeatAmount) {
+  if (objective.type === Criteria.DefeatAmount) {
     return (
-      condition.players?.length ? condition.players : activeMap.active
+      objective.players?.length ? objective.players : activeMap.active
     ).find(
       (playerID) =>
-        (!condition.optional || !condition.completed?.has(playerID)) &&
-        activeMap.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
+        (!objective.optional || !objective.completed?.has(playerID)) &&
+        activeMap.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
     );
   }
 
   if (
     actionResponse.type === 'EndTurn' &&
-    condition.type !== Criteria.Survival
+    objective.type !== Criteria.Survival
   ) {
     return previousMap.currentPlayer;
   }
 
   if (
-    (condition.type === Criteria.RescueLabel ||
-      condition.type === Criteria.RescueAmount ||
-      condition.type === Criteria.CaptureLabel) &&
+    (objective.type === Criteria.RescueLabel ||
+      objective.type === Criteria.RescueAmount ||
+      objective.type === Criteria.CaptureLabel) &&
     isDestructiveAction(actionResponse) &&
-    matchesPlayerList(condition.players, activeMap.currentPlayer)
+    matchesPlayerList(objective.players, activeMap.currentPlayer)
   ) {
     return resolveDynamicPlayerID(activeMap, 'opponent');
   }
@@ -103,21 +103,17 @@ const pickWinningPlayer = (
   return activeMap.currentPlayer;
 };
 
-export function checkObjectives(
+export function applyObjectives(
   previousMap: MapData,
   activeMap: MapData,
   lastActionResponse: ActionResponse,
 ): GameState | null {
-  const condition = checkWinConditions(
-    previousMap,
-    activeMap,
-    lastActionResponse,
-  );
+  const objective = checkObjectives(previousMap, activeMap, lastActionResponse);
   const actionResponse =
-    !condition || (condition.type !== Criteria.Default && condition.optional)
-      ? checkDefaultWinConditions(previousMap, activeMap, lastActionResponse)
+    !objective || (objective.type !== Criteria.Default && objective.optional)
+      ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
       : null;
-  if (!actionResponse && !condition) {
+  if (!actionResponse && !objective) {
     return null;
   }
 
@@ -128,21 +124,21 @@ export function checkObjectives(
     ? [[actionResponse, map]]
     : [];
 
-  const player = condition
-    ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, condition)
+  const player = objective
+    ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, objective)
     : undefined;
 
   const optionalObjective: OptionalObjectiveActionResponse | null =
-    condition?.type !== Criteria.Default &&
-    condition?.optional === true &&
+    objective?.type !== Criteria.Default &&
+    objective?.optional === true &&
     player &&
-    !condition.completed?.has(player)
+    !objective.completed?.has(player)
       ? ({
-          condition: {
-            ...condition,
-            completed: new Set([...(condition.completed || []), player]),
+          objective: {
+            ...objective,
+            completed: new Set([...(objective.completed || []), player]),
           },
-          conditionId: map.config.winConditions.indexOf(condition),
+          objectiveId: map.config.winConditions.indexOf(objective),
           toPlayer: player,
           type: 'OptionalObjective',
         } as const)
@@ -158,10 +154,10 @@ export function checkObjectives(
   }
 
   const gameEndResponse =
-    condition?.type === Criteria.Default || condition?.optional === false
+    objective?.type === Criteria.Default || objective?.optional === false
       ? ({
-          condition,
-          conditionId: map.config.winConditions.indexOf(condition),
+          objective,
+          objectiveId: map.config.winConditions.indexOf(objective),
           toPlayer: player,
           type: 'GameEnd',
         } as const)
@@ -247,13 +243,13 @@ export function applyObjectiveActionResponse(
     case 'GameEnd':
       return map;
     case 'OptionalObjective': {
-      const { condition, conditionId } = actionResponse;
-      if (condition.type === Criteria.Default) {
+      const { objective, objectiveId } = actionResponse;
+      if (objective.type === Criteria.Default) {
         return map;
       }
 
       const winConditions = Array.from(map.config.winConditions);
-      winConditions[conditionId] = { ...condition, hidden: false };
+      winConditions[objectiveId] = { ...objective, hidden: false };
       return map.copy({
         config: map.config.copy({
           winConditions,
@@ -356,12 +352,12 @@ export function checkAttackBuilding(
   );
 }
 
-const checkDefaultWinConditions = (
+const checkDefaultObjectives = (
   previousMap: MapData,
   activeMap: MapData,
   actionResponse: ActionResponse,
 ) => {
-  if (shouldCheckDefaultWinConditions(previousMap, actionResponse)) {
+  if (shouldCheckDefaultObjectives(previousMap, actionResponse)) {
     switch (actionResponse.type) {
       case 'AttackUnit':
         return checkAttackUnit(activeMap, actionResponse);

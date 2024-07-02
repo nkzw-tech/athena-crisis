@@ -198,8 +198,8 @@ const prepareEffects = (
   };
 };
 
-const panelShouldExpand = ({ action, condition, mode }: EditorState) =>
-  (mode === 'conditions' && !condition) ||
+const panelShouldExpand = ({ action, mode, objective }: EditorState) =>
+  (mode === 'conditions' && !objective) ||
   (mode === 'effects' && !action) ||
   mode === 'restrictions' ||
   mode === 'settings' ||
@@ -303,8 +303,8 @@ export default function MapEditor({
       const shouldResetCondition =
         'mode' in newState &&
         newState.mode !== 'conditions' &&
-        editor.condition &&
-        !newState.condition;
+        editor.objective &&
+        !newState.objective;
 
       const shouldResetScenario =
         'mode' in newState && newState.mode !== 'effects';
@@ -342,7 +342,7 @@ export default function MapEditor({
 
       return {
         ...mergedState,
-        ...(shouldResetCondition ? { condition: undefined } : null),
+        ...(shouldResetCondition ? { objective: undefined } : null),
         ...(shouldResetScenario
           ? { action: undefined, scenario: getDefaultScenario(editor.effects) }
           : null),
@@ -781,8 +781,8 @@ export default function MapEditor({
         setMap('resize', newMap);
         setEditorState({
           action: undefined,
-          condition: undefined,
           effects: newEffects,
+          objective: undefined,
           scenario: getDefaultScenario(newEffects),
         });
       }
@@ -1016,7 +1016,7 @@ export default function MapEditor({
               ? DesignBehavior
               : editor.mode === 'entity'
                 ? EntityBehavior
-                : (editor.mode === 'conditions' && editor.condition) ||
+                : (editor.mode === 'conditions' && editor.objective) ||
                     (editor.mode === 'effects' && editor.action)
                   ? VectorBehavior
                   : NullBehavior

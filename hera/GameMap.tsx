@@ -31,8 +31,8 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
+import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { winConditionHasVectors } from '@deities/athena/WinConditions.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -200,7 +200,7 @@ const getWinConditionRadius = (
   for (const condition of winConditions) {
     if (
       (!isEditor && condition.hidden) ||
-      !winConditionHasVectors(condition) ||
+      !objectiveHasVectors(condition) ||
       (currentViewer != null && condition.completed?.has(currentViewer))
     ) {
       continue;

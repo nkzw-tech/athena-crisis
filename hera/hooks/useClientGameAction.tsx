@@ -18,7 +18,7 @@ import dropLabelsFromActionResponse from '@deities/apollo/lib/dropLabelsFromActi
 import dropLabelsFromGameState from '@deities/apollo/lib/dropLabelsFromGameState.tsx';
 import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { getHiddenLabels } from '@deities/athena/WinConditions.tsx';
+import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, {
   ClientGame,

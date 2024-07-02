@@ -18,9 +18,9 @@ export default async function objectiveAnimation(
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { map } = state;
-  const { condition, type } = actionResponse;
+  const { objective, type } = actionResponse;
   const isOptional = type === 'OptionalObjective';
-  if (isOptional && condition.hidden) {
+  if (isOptional && objective.hidden) {
     return actions.update({ map: newMap });
   }
 
@@ -53,7 +53,7 @@ export default async function objectiveAnimation(
             player,
             sound: 'UI/Start',
             style: 'flashy',
-            text: String(getCriteriaName(condition.type)),
+            text: String(getCriteriaName(objective.type)),
             type: 'banner',
           }),
           ...resetBehavior(NullBehavior),

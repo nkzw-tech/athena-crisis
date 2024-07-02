@@ -1,6 +1,6 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 
 export default function getCompletedObjectives(
   map: MapData,
@@ -8,10 +8,10 @@ export default function getCompletedObjectives(
 ): ReadonlyArray<number> {
   const list = [];
   const team = [...map.getTeam(player).players.keys()];
-  for (const [index, condition] of map.config.winConditions.entries()) {
+  for (const [index, objective] of map.config.winConditions.entries()) {
     if (
-      condition.type !== Criteria.Default &&
-      team.some((playerID) => condition.completed?.has(playerID))
+      objective.type !== Criteria.Default &&
+      team.some((playerID) => objective.completed?.has(playerID))
     ) {
       list.push(index);
     }

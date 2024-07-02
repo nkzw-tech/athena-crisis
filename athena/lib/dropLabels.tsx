@@ -1,5 +1,5 @@
 import MapData from '../MapData.tsx';
-import { getHiddenLabels } from '../WinConditions.tsx';
+import { getHiddenLabels } from '../Objectives.tsx';
 
 export default function dropLabels(map: MapData) {
   const labels = getHiddenLabels(map.config.winConditions);

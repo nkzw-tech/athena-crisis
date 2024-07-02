@@ -44,7 +44,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
-import { Criteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
@@ -127,7 +127,7 @@ test('attempt to attack new units when they are revealed after creating a unit',
     "CreateUnit (1,3 → 2,3) { unit: Jeep { id: 6, health: 100, player: 2, fuel: 60, moved: true, name: 'Remy', completed: true }, free: false, skipBehaviorRotation: false }
     AttackUnit (1,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-    GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
   `);
 });
 
@@ -155,7 +155,7 @@ test('attempt to attack new units when they are revealed after unfolding', async
     "Unfold (1,3)
     AttackUnit (1,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-    GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
   `);
 });
 
@@ -199,7 +199,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
     "AttackUnit (2,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-    GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
   `);
 
   const thirdMap = initialMap.copy({
@@ -490,7 +490,7 @@ test('AI will not attack if the damage is too low', () => {
     "Move (1,2 → 2,3) { fuel: 48, completed: null, path: [1,3 → 2,3] }
     AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100 }, unitB: null, chargeA: 1, chargeB: 3 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-    GameEnd { condition: null, conditionId: null, toPlayer: 2 }"
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
   `);
 });
 
@@ -921,7 +921,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4] }
-    GameEnd { condition: { hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, conditionId: 1, toPlayer: 2 }"
+    GameEnd { objective: { hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, objectiveId: 1, toPlayer: 2 }"
   `);
 });
 
@@ -975,6 +975,6 @@ test('AI will prioritize units with labels associated with win conditions', () =
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,1 → 5,4) { fuel: 42, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4 → 5,4] }
     AttackUnit (5,4 → 5,5) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
-    GameEnd { condition: { hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '1,1' ] }, conditionId: 1, toPlayer: 2 }"
+    GameEnd { objective: { hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '1,1' ] }, objectiveId: 1, toPlayer: 2 }"
   `);
 });
