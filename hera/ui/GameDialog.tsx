@@ -4,7 +4,7 @@ import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
@@ -264,7 +264,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const visibleConditions = winConditions.filter(({ hidden }) => !hidden);
   const partition = groupBy(visibleConditions, (condition) =>
-    condition.type === WinCriteria.Default || !condition.optional
+    condition.type === Criteria.Default || !condition.optional
       ? 'required'
       : 'optional',
   );

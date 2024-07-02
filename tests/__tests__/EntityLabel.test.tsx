@@ -22,7 +22,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
@@ -133,7 +133,7 @@ test('drops labels from hidden win conditions', () => {
           hidden: true,
           label: new Set([3]),
           optional: false,
-          type: WinCriteria.CaptureLabel,
+          type: Criteria.CaptureLabel,
         } as const,
       ],
     }),

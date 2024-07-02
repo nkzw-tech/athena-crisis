@@ -7,7 +7,7 @@ import {
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
@@ -73,7 +73,7 @@ const pickWinningPlayer = (
   actionResponse: ActionResponse,
   condition: WinCondition,
 ) => {
-  if (condition.type === WinCriteria.DefeatAmount) {
+  if (condition.type === Criteria.DefeatAmount) {
     return (
       condition.players?.length ? condition.players : activeMap.active
     ).find(
@@ -85,15 +85,15 @@ const pickWinningPlayer = (
 
   if (
     actionResponse.type === 'EndTurn' &&
-    condition.type !== WinCriteria.Survival
+    condition.type !== Criteria.Survival
   ) {
     return previousMap.currentPlayer;
   }
 
   if (
-    (condition.type === WinCriteria.RescueLabel ||
-      condition.type === WinCriteria.RescueAmount ||
-      condition.type === WinCriteria.CaptureLabel) &&
+    (condition.type === Criteria.RescueLabel ||
+      condition.type === Criteria.RescueAmount ||
+      condition.type === Criteria.CaptureLabel) &&
     isDestructiveAction(actionResponse) &&
     matchesPlayerList(condition.players, activeMap.currentPlayer)
   ) {
@@ -114,7 +114,7 @@ export function checkObjectives(
     lastActionResponse,
   );
   const actionResponse =
-    !condition || (condition.type !== WinCriteria.Default && condition.optional)
+    !condition || (condition.type !== Criteria.Default && condition.optional)
       ? checkDefaultWinConditions(previousMap, activeMap, lastActionResponse)
       : null;
   if (!actionResponse && !condition) {
@@ -133,7 +133,7 @@ export function checkObjectives(
     : undefined;
 
   const optionalObjective: OptionalObjectiveActionResponse | null =
-    condition?.type !== WinCriteria.Default &&
+    condition?.type !== Criteria.Default &&
     condition?.optional === true &&
     player &&
     !condition.completed?.has(player)
@@ -158,7 +158,7 @@ export function checkObjectives(
   }
 
   const gameEndResponse =
-    condition?.type === WinCriteria.Default || condition?.optional === false
+    condition?.type === Criteria.Default || condition?.optional === false
       ? ({
           condition,
           conditionId: map.config.winConditions.indexOf(condition),
@@ -248,7 +248,7 @@ export function applyObjectiveActionResponse(
       return map;
     case 'OptionalObjective': {
       const { condition, conditionId } = actionResponse;
-      if (condition.type === WinCriteria.Default) {
+      if (condition.type === Criteria.Default) {
         return map;
       }
 

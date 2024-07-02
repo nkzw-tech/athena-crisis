@@ -3,8 +3,8 @@ import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
+  Criteria,
   winConditionHasVectors,
-  WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
 import needsSupply from './needsSupply.tsx';
@@ -51,7 +51,7 @@ export default function getInterestingVectorsByAbilities(
 
   for (const condition of map.config.winConditions) {
     if (
-      condition.type !== WinCriteria.Default &&
+      condition.type !== Criteria.Default &&
       (!condition.players || condition.players.includes(currentPlayer.id))
     ) {
       if (

@@ -21,7 +21,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
@@ -275,7 +275,7 @@ test('escort radius with label', async () => {
           label: new Set([2]),
           optional: false,
           players: [1],
-          type: WinCriteria.EscortAmount,
+          type: Criteria.EscortAmount,
           vectors: new Set([v4, v5]),
         },
         {
@@ -284,7 +284,7 @@ test('escort radius with label', async () => {
           label: new Set([1]),
           optional: false,
           players: [2],
-          type: WinCriteria.EscortAmount,
+          type: Criteria.EscortAmount,
           vectors: new Set([v6, v7]),
         },
         {
@@ -292,7 +292,7 @@ test('escort radius with label', async () => {
           hidden: false,
           optional: false,
           players: [1],
-          type: WinCriteria.EscortAmount,
+          type: Criteria.EscortAmount,
           vectors: new Set([v8, v9]),
         },
       ],

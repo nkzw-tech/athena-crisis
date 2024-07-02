@@ -1,7 +1,7 @@
 import { Action } from '@deities/apollo/Action.tsx';
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -104,7 +104,7 @@ export default function EffectsPanel({
         ),
         winConditions.map((condition, index) => {
           if (
-            condition.type === WinCriteria.Default ||
+            condition.type === Criteria.Default ||
             conditionsByID?.has(index)
           ) {
             return null;

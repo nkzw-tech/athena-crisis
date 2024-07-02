@@ -1,5 +1,5 @@
 import { DynamicEffectObjectiveID } from '@deities/apollo/Condition.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
 import { EditorState } from '../Types.tsx';
 import hasEffectWinCondition from './hasEffectWinCondition.tsx';
 
@@ -8,7 +8,7 @@ export default function selectWinConditionEffect(
   conditionIndex: DynamicEffectObjectiveID,
   condition?: WinCondition,
 ): Partial<EditorState> {
-  const isDefault = condition?.type === WinCriteria.Default;
+  const isDefault = condition?.type === Criteria.Default;
   const trigger =
     !isDefault && condition?.optional ? 'OptionalObjective' : 'GameEnd';
   const effectList = editor.effects.get(trigger);

@@ -18,7 +18,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -381,13 +381,13 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
     ),
     config: initialMap.config.copy({
       winConditions: [
-        { hidden: false, type: WinCriteria.Default },
+        { hidden: false, type: Criteria.Default },
         {
           hidden: false,
           label: new Set([1]),
           optional: false,
           players: [1],
-          type: WinCriteria.CaptureLabel,
+          type: Criteria.CaptureLabel,
         },
       ],
     }),

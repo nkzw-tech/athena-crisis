@@ -1,5 +1,5 @@
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
 import {
@@ -21,7 +21,7 @@ export function processRewards(
         'condition' in actionResponse ? actionResponse.condition?.reward : null,
         actionResponse.type === 'GameEnd'
           ? map.config.winConditions.find(
-              (condition) => condition.type === WinCriteria.Default,
+              (condition) => condition.type === Criteria.Default,
             )?.reward
           : null,
       ].filter(isPresent),

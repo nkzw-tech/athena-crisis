@@ -14,9 +14,9 @@ import { isBot, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import {
+  Criteria,
   WinCondition,
   winConditionHasAmounts,
-  WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
@@ -245,7 +245,7 @@ export default memo(function PlayerCard({
                     (condition) =>
                       !condition.hidden &&
                       (winConditionHasAmounts(condition) ||
-                        condition.type === WinCriteria.Survival) &&
+                        condition.type === Criteria.Survival) &&
                       matchesPlayerList(condition.players, player.id) &&
                       !condition.completed?.has(player.id),
                   )
@@ -354,17 +354,17 @@ const PlayerCardObjective = ({
 }) => {
   const [icon, status, amount] = useMemo(
     () =>
-      condition.type === WinCriteria.DefeatAmount
+      condition.type === Criteria.DefeatAmount
         ? [Crosshair, player.stats.destroyedUnits, condition.amount]
-        : condition.type === WinCriteria.CaptureAmount
+        : condition.type === Criteria.CaptureAmount
           ? [Flag, capturedByPlayer(map, player.id), condition.amount]
-          : condition.type === WinCriteria.DestroyAmount
+          : condition.type === Criteria.DestroyAmount
             ? [
                 Buildings,
                 destroyedBuildingsByPlayer(map, player.id),
                 condition.amount,
               ]
-            : condition.type === WinCriteria.EscortAmount
+            : condition.type === Criteria.EscortAmount
               ? [
                   Escort,
                   escortedByPlayer(
@@ -375,13 +375,13 @@ const PlayerCardObjective = ({
                   ),
                   condition.amount,
                 ]
-              : condition.type === WinCriteria.RescueAmount
+              : condition.type === Criteria.RescueAmount
                 ? [
                     Rescue,
                     rescuedUnitsByPlayer(map, player.id),
                     condition.amount,
                   ]
-                : condition.type === WinCriteria.Survival
+                : condition.type === Criteria.Survival
                   ? [Hourglass, map.round, condition.rounds]
                   : [null, null],
     [condition, map, player.id, player.stats.destroyedUnits],

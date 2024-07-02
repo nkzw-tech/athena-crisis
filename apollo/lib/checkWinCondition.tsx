@@ -5,9 +5,9 @@ import Unit, { TransportedUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
+  Criteria,
   onlyHasDefaultWinCondition,
   WinCondition,
-  WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
@@ -35,8 +35,8 @@ export function shouldCheckDefaultWinConditions(
       onlyHasDefaultWinCondition(winConditions) ||
       winConditions.some(
         (condition) =>
-          condition.type === WinCriteria.Default ||
-          (condition.type === WinCriteria.DefeatLabel &&
+          condition.type === Criteria.Default ||
+          (condition.type === Criteria.DefeatLabel &&
             matchesPlayerList(condition.players, map.currentPlayer)),
       )
     );
@@ -45,9 +45,9 @@ export function shouldCheckDefaultWinConditions(
       onlyHasDefaultWinCondition(winConditions) ||
       winConditions.some(
         (condition) =>
-          condition.type === WinCriteria.Default ||
-          ((condition.type === WinCriteria.CaptureAmount ||
-            condition.type === WinCriteria.CaptureLabel) &&
+          condition.type === Criteria.Default ||
+          ((condition.type === Criteria.CaptureAmount ||
+            condition.type === Criteria.CaptureLabel) &&
             matchesPlayerList(condition.players, map.currentPlayer)),
       )
     );
@@ -117,19 +117,18 @@ function checkWinCondition(
   condition: WinCondition,
 ) {
   const player = previousMap.currentPlayer;
-  const isDefault = condition.type === WinCriteria.Default;
+  const isDefault = condition.type === Criteria.Default;
   const matchesPlayer =
     !isDefault && matchesPlayerList(condition.players, player);
   const isSurvivalAndEndTurn =
-    condition.type === WinCriteria.Survival &&
-    actionResponse.type === 'EndTurn';
+    condition.type === Criteria.Survival && actionResponse.type === 'EndTurn';
   const targetPlayer = isSurvivalAndEndTurn
     ? actionResponse.next.player
     : player;
   const ignoreIfOptional = !isDefault && condition.optional;
 
   if (
-    condition.type !== WinCriteria.Default &&
+    condition.type !== Criteria.Default &&
     condition.completed?.has(targetPlayer)
   ) {
     return false;
@@ -137,7 +136,7 @@ function checkWinCondition(
 
   if (isDestructive) {
     return (
-      (condition.type === WinCriteria.DefeatLabel &&
+      (condition.type === Criteria.DefeatLabel &&
         matchesPlayer &&
         map.units
           .filter(filterUnitsByLabels(condition.label))
@@ -145,7 +144,7 @@ function checkWinCondition(
         previousMap.units
           .filter(filterUnitsByLabels(condition.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (condition.type === WinCriteria.DefeatOneLabel &&
+      (condition.type === Criteria.DefeatOneLabel &&
         matchesPlayer &&
         map.units
           .filter(filterUnitsByLabels(condition.label))
@@ -153,13 +152,13 @@ function checkWinCondition(
           previousMap.units
             .filter(filterUnitsByLabels(condition.label))
             .filter(filterEnemies(previousMap, player)).size) ||
-      (condition.type === WinCriteria.DefeatAmount &&
+      (condition.type === Criteria.DefeatAmount &&
         matchesPlayer &&
         (condition.players?.length ? condition.players : map.active).find(
           (playerID) =>
             map.getPlayer(playerID).stats.destroyedUnits >= condition.amount,
         )) ||
-      (condition.type === WinCriteria.EscortLabel &&
+      (condition.type === Criteria.EscortLabel &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
@@ -168,14 +167,14 @@ function checkWinCondition(
           previousMap.units
             .filter(filterUnitsByLabels(condition.label))
             .filter(filterEnemies(map, player)).size) ||
-      (condition.type === WinCriteria.EscortAmount &&
+      (condition.type === Criteria.EscortAmount &&
         condition.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
           .filter(filterUnitsByLabels(condition.label))
           .filter(filterEnemies(map, player)).size < condition.amount) ||
-      (condition.type === WinCriteria.CaptureLabel &&
+      (condition.type === Criteria.CaptureLabel &&
         !ignoreIfOptional &&
         map.buildings
           .filter(filterByLabels(condition.label))
@@ -185,14 +184,14 @@ function checkWinCondition(
             .filter(filterEnemies(map, player)).size) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
-        condition.type === WinCriteria.DestroyLabel &&
+        condition.type === Criteria.DestroyLabel &&
         map.buildings
           .filter(filterByLabels(condition.label))
           .filter(filterEnemies(map, player)).size === 0 &&
         previousMap.buildings
           .filter(filterByLabels(condition.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (condition.type === WinCriteria.RescueLabel &&
+      (condition.type === Criteria.RescueLabel &&
         !ignoreIfOptional &&
         map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
           .size <
@@ -200,7 +199,7 @@ function checkWinCondition(
             .filter(filterNeutral)
             .filter(filterByLabels(condition.label)).size) ||
       (actionResponse.type === 'AttackUnit' &&
-        condition.type === WinCriteria.RescueAmount &&
+        condition.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
         map.units.filter(filterNeutral).size +
           rescuedUnitsByPlayer(map, player) <
@@ -210,7 +209,7 @@ function checkWinCondition(
         condition.rounds <= actionResponse.round) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
-        condition.type === WinCriteria.DestroyAmount &&
+        condition.type === Criteria.DestroyAmount &&
         matchesPlayer &&
         destroyedBuildingsByPlayer(map, player) >= condition.amount)
     );
@@ -218,10 +217,10 @@ function checkWinCondition(
 
   if (isCapture) {
     return (
-      (condition.type === WinCriteria.CaptureAmount &&
+      (condition.type === Criteria.CaptureAmount &&
         matchesPlayer &&
         capturedByPlayer(map, player) >= condition.amount) ||
-      (condition.type === WinCriteria.CaptureLabel &&
+      (condition.type === Criteria.CaptureLabel &&
         matchesPlayer &&
         !map.buildings
           .filter(filterByLabels(condition.label))
@@ -234,21 +233,21 @@ function checkWinCondition(
 
   if (isRescue) {
     return (
-      (condition.type === WinCriteria.RescueLabel &&
+      (condition.type === Criteria.RescueLabel &&
         matchesPlayer &&
         !map.units.filter(filterNeutral).filter(filterByLabels(condition.label))
           .size &&
         previousMap.units
           .filter(filterNeutral)
           .filter(filterByLabels(condition.label)).size > 0) ||
-      (condition.type === WinCriteria.RescueAmount &&
+      (condition.type === Criteria.RescueAmount &&
         matchesPlayer &&
         rescuedUnitsByPlayer(map, player) >= condition.amount)
     );
   }
 
   if (isMove) {
-    if (condition.type === WinCriteria.EscortLabel && matchesPlayer) {
+    if (condition.type === Criteria.EscortLabel && matchesPlayer) {
       const units = map.units
         .filter(filterUnitsByLabels(condition.label))
         .filter((unit) => map.matchesPlayer(unit, player));
@@ -259,7 +258,7 @@ function checkWinCondition(
     }
 
     return (
-      condition.type === WinCriteria.EscortAmount &&
+      condition.type === Criteria.EscortAmount &&
       matchesPlayer &&
       escortedByPlayer(map, player, condition.vectors, condition.label) >=
         condition.amount

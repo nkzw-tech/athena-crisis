@@ -1,6 +1,7 @@
 import { Skills } from '@deities/athena/info/Skill.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
+  Criteria,
   MAX_AMOUNT,
   MAX_ROUNDS,
   MIN_AMOUNT,
@@ -10,7 +11,6 @@ import {
   winConditionHasLabel,
   winConditionHasRounds,
   winConditionHasVectors,
-  WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
@@ -64,7 +64,7 @@ export default function WinConditionCard({
   const [amount, setAmount] = useState<number | null>(
     winConditionHasAmounts(condition) ? condition.amount : 0,
   );
-  const hasPlayers = condition.type !== WinCriteria.Default;
+  const hasPlayers = condition.type !== Criteria.Default;
   const hasLabel = winConditionHasLabel(condition);
   const { reward } = condition;
   const selectedUnit = reward?.type === 'UnitPortraits' ? reward.unit : null;
@@ -231,7 +231,7 @@ export default function WinConditionCard({
               </p>
             )}
           </Stack>
-          {condition.type !== WinCriteria.Default && (
+          {condition.type !== Criteria.Default && (
             <Stack gap>
               <label>
                 <Stack gap start>
@@ -309,7 +309,7 @@ export default function WinConditionCard({
             </Stack>
             {reward && (
               <p className={noteBoxStyle}>
-                {condition.type === WinCriteria.Default ? (
+                {condition.type === Criteria.Default ? (
                   <fbt desc="Explanation in the map editor of how rewards work for the default objective">
                     Players receive this reward for the default objective if
                     they win in any way.

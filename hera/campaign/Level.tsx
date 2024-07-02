@@ -6,7 +6,7 @@ import {
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
@@ -191,7 +191,7 @@ export default memo(function Level({
                   onClick={() => updateWinCondition(null)}
                   selectedText={
                     winConditionIndex == null ||
-                    (condition && condition.type === WinCriteria.Default)
+                    (condition && condition.type === Criteria.Default)
                   }
                 >
                   <fbt desc="Long description for 'any win condition'">
@@ -200,7 +200,7 @@ export default memo(function Level({
                 </InlineLink>
                 {winConditions
                   ?.map((condition, index) =>
-                    condition.type !== WinCriteria.Default ? (
+                    condition.type !== Criteria.Default ? (
                       <InlineLink
                         className={winConditionSelectorItemStyle}
                         key={index}

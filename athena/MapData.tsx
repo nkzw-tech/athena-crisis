@@ -43,10 +43,10 @@ import Unit from './map/Unit.tsx';
 import Vector from './map/Vector.tsx';
 import Vision, { Fog, VisionT } from './Vision.tsx';
 import {
+  Criteria,
   decodeWinConditions,
   encodeWinConditions,
   WinConditions,
-  WinCriteria,
 } from './WinConditions.tsx';
 
 export type ID = number;
@@ -577,7 +577,7 @@ export default class MapData {
         data.config.biome,
         (data.config.winConditions
           ? decodeWinConditions(data.config.winConditions)
-          : null) || [{ hidden: false, type: WinCriteria.Default }],
+          : null) || [{ hidden: false, type: Criteria.Default }],
       ),
       size,
       toPlayerID(data.currentPlayer),

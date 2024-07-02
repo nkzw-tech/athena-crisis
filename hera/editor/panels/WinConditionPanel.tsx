@@ -1,12 +1,12 @@
 import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import {
+  Criteria,
+  CriteriaList,
   getInitialWinCondition,
   validateWinCondition,
   WinCondition,
   winConditionHasVectors,
-  WinCriteria,
-  WinCriteriaList,
 } from '@deities/athena/WinConditions.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -15,7 +15,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import { useCallback, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
-import getWinCriteriaName from '../../lib/getWinCriteriaName.tsx';
+import getCriteriaName from '../../lib/getCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import hasEffectWinCondition from '../lib/hasEffectWinCondition.tsx';
 import selectWinConditionEffect from '../lib/selectWinConditionEffect.tsx';
@@ -28,7 +28,7 @@ const maybeRemoveEffect = (
   index: number,
   setEditorState: SetEditorStateFunction,
 ) => {
-  if (condition.type === WinCriteria.Default) {
+  if (condition.type === Criteria.Default) {
     return;
   }
 
@@ -77,8 +77,8 @@ const maybeSwapEffect = (
   setEditorState: SetEditorStateFunction,
 ) => {
   if (
-    condition.type === WinCriteria.Default ||
-    existingCondition.type === WinCriteria.Default ||
+    condition.type === Criteria.Default ||
+    existingCondition.type === Criteria.Default ||
     existingCondition.optional === condition.optional
   ) {
     return;
@@ -154,9 +154,7 @@ export default function WinConditionPanel({
     [map],
   );
 
-  const hasDefault = conditions.some(
-    ({ type }) => type === WinCriteria.Default,
-  );
+  const hasDefault = conditions.some(({ type }) => type === Criteria.Default);
 
   const updateWinCondition = (
     condition: WinCondition | null,
@@ -173,7 +171,7 @@ export default function WinConditionPanel({
       );
       winConditions.splice(index, 1);
       if (!winConditions.length) {
-        winConditions.push(getInitialWinCondition(map, WinCriteria.Default));
+        winConditions.push(getInitialWinCondition(map, Criteria.Default));
       }
       // Increment this counter to force re-rendering all list items which resets their state.
       setRenders((renders) => renders + 1);
@@ -233,7 +231,7 @@ export default function WinConditionPanel({
       {conditions.map((condition, index) => (
         <WinConditionCard
           canDelete={
-            conditions.length > 1 || condition.type !== WinCriteria.Default
+            conditions.length > 1 || condition.type !== Criteria.Default
           }
           condition={condition}
           hasContentRestrictions={hasContentRestrictions}
@@ -261,8 +259,8 @@ export default function WinConditionPanel({
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
         </h2>
         <Stack gap vertical>
-          {WinCriteriaList.filter(
-            (type) => type !== WinCriteria.Default || !hasDefault,
+          {CriteriaList.filter(
+            (type) => type !== Criteria.Default || !hasDefault,
           ).map((type, index) => (
             <InlineLink
               className={linkStyle}
@@ -280,7 +278,7 @@ export default function WinConditionPanel({
                 })
               }
             >
-              {getWinCriteriaName(type)}
+              {getCriteriaName(type)}
             </InlineLink>
           ))}
         </Stack>

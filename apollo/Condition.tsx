@@ -1,7 +1,7 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
@@ -166,7 +166,7 @@ export function validateCondition(map: MapData, condition: Condition) {
         (type === 'GameEnd' && WinConditionIDs.has(value)) ||
         (typeof value === 'number' &&
           winConditions[value] &&
-          winConditions[value].type !== WinCriteria.Default)
+          winConditions[value].type !== Criteria.Default)
       );
     }
     default: {

@@ -20,7 +20,7 @@ import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
@@ -543,13 +543,13 @@ test('only one game end win effect is fired', () => {
       winConditions: [
         {
           hidden: false,
-          type: WinCriteria.Default,
+          type: Criteria.Default,
         },
         {
           amount: 1,
           hidden: false,
           optional: false,
-          type: WinCriteria.CaptureAmount,
+          type: Criteria.CaptureAmount,
         },
       ],
     }),

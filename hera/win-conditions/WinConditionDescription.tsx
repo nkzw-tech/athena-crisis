@@ -1,8 +1,8 @@
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import {
+  Criteria,
   WinCondition,
   winConditionHasLabel,
-  WinCriteria,
 } from '@deities/athena/WinConditions.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
@@ -53,7 +53,7 @@ const WinConditionText = ({
   const playerList = (
     <PlayerList
       factionNames={factionNames}
-      players={(type !== WinCriteria.Default && condition.players) || []}
+      players={(type !== Criteria.Default && condition.players) || []}
     />
   );
 
@@ -68,12 +68,12 @@ const WinConditionText = ({
     labels &&
     intlList(
       labels,
-      type === WinCriteria.DefeatOneLabel ? Conjunctions.OR : Conjunctions.AND,
+      type === Criteria.DefeatOneLabel ? Conjunctions.OR : Conjunctions.AND,
       Delimiters.COMMA,
     );
 
   switch (type) {
-    case WinCriteria.Default:
+    case Criteria.Default:
       return (
         <fbt desc="Explanation for the default win condition">
           You win by either defeating all opposing units or capturing all HQs.
@@ -81,7 +81,7 @@ const WinConditionText = ({
           buildings.
         </fbt>
       );
-    case WinCriteria.CaptureLabel:
+    case Criteria.CaptureLabel:
       return (
         <fbt desc="Explanation for the capture by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -96,7 +96,7 @@ const WinConditionText = ({
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
-    case WinCriteria.CaptureAmount:
+    case Criteria.CaptureAmount:
       return (
         <fbt desc="Explanation for the capture by amount win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -111,14 +111,14 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
-    case WinCriteria.DefeatOneLabel:
-    case WinCriteria.DefeatLabel:
+    case Criteria.DefeatOneLabel:
+    case Criteria.DefeatLabel:
       return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
           objective by defeating{' '}
           <fbt:plural
-            count={type === WinCriteria.DefeatOneLabel ? 1 : 0}
+            count={type === Criteria.DefeatOneLabel ? 1 : 0}
             many="all units"
             name="number of labels"
           >
@@ -135,7 +135,7 @@ const WinConditionText = ({
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
-    case WinCriteria.DefeatAmount:
+    case Criteria.DefeatAmount:
       return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -150,7 +150,7 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
-    case WinCriteria.EscortLabel:
+    case Criteria.EscortLabel:
       return (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -165,7 +165,7 @@ const WinConditionText = ({
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
-    case WinCriteria.Survival:
+    case Criteria.Survival:
       return (
         <fbt desc="Explanation for the survival win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -180,7 +180,7 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
-    case WinCriteria.EscortAmount:
+    case Criteria.EscortAmount:
       return labels?.length ? (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -217,7 +217,7 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
-    case WinCriteria.RescueAmount:
+    case Criteria.RescueAmount:
       return labels?.length ? (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -254,7 +254,7 @@ const WinConditionText = ({
           </fbt:plural>.
         </fbt>
       );
-    case WinCriteria.RescueLabel:
+    case Criteria.RescueLabel:
       return (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -269,7 +269,7 @@ const WinConditionText = ({
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
-    case WinCriteria.DestroyLabel:
+    case Criteria.DestroyLabel:
       return (
         <fbt desc="Explanation for the destroy by label win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -284,7 +284,7 @@ const WinConditionText = ({
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       );
-    case WinCriteria.DestroyAmount:
+    case Criteria.DestroyAmount:
       return (
         <fbt desc="Explanation for the destroy by amount win condition with multiple players">
           <fbt:param name="players">{playerList}</fbt:param> can achieve the
@@ -338,7 +338,7 @@ export default function WinConditionDescription({
       gap
       style={{
         background:
-          condition.type !== WinCriteria.Default && condition.players?.length
+          condition.type !== Criteria.Default && condition.players?.length
             ? gradient(condition.players, 0.15)
             : applyVar('background-color'),
       }}
@@ -350,14 +350,14 @@ export default function WinConditionDescription({
       <p>
         <WinConditionText condition={condition} factionNames={factionNames} />
       </p>
-      {condition.type === WinCriteria.Survival && (
+      {condition.type === Criteria.Survival && (
         <div>
           <fbt desc="Current round description">
             Current round: <fbt:param name="round">{round}</fbt:param>.
           </fbt>
         </div>
       )}
-      {condition.type !== WinCriteria.Default && condition.completed?.size ? (
+      {condition.type !== Criteria.Default && condition.completed?.size ? (
         <CompletedConditionText
           factionNames={factionNames}
           players={[...condition.completed]}

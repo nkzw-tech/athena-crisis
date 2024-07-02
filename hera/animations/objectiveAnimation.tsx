@@ -5,7 +5,7 @@ import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
-import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
+import getCriteriaName from '../lib/getCriteriaName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function objectiveAnimation(
@@ -53,7 +53,7 @@ export default async function objectiveAnimation(
             player,
             sound: 'UI/Start',
             style: 'flashy',
-            text: String(getWinCriteriaName(condition.type)),
+            text: String(getCriteriaName(condition.type)),
             type: 'banner',
           }),
           ...resetBehavior(NullBehavior),

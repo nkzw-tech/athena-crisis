@@ -8,7 +8,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria } from '@deities/athena/WinConditions.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotGameState from '../snapshotGameState.tsx';
@@ -44,7 +44,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
       skill: Skill.BuyUnitCannon,
       type: 'Skill',
     },
-    type: WinCriteria.CaptureAmount,
+    type: Criteria.CaptureAmount,
   } as const;
   const currentMap = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
@@ -52,7 +52,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
       winConditions: [
         {
           hidden: false,
-          type: WinCriteria.Default,
+          type: Criteria.Default,
         },
         captureCondition,
       ],
@@ -131,7 +131,7 @@ test(`each skill is only received once`, () => {
     hidden: false,
     optional: false,
     reward,
-    type: WinCriteria.CaptureAmount,
+    type: Criteria.CaptureAmount,
   } as const;
   const currentMap = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
@@ -140,7 +140,7 @@ test(`each skill is only received once`, () => {
         {
           hidden: false,
           reward,
-          type: WinCriteria.Default,
+          type: Criteria.Default,
         },
         captureCondition,
       ],

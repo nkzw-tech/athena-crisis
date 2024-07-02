@@ -1,6 +1,6 @@
-import { WinCondition, WinCriteria } from '@deities/athena/WinConditions.tsx';
+import { Criteria, WinCondition } from '@deities/athena/WinConditions.tsx';
 import { css, cx } from '@emotion/css';
-import getWinCriteriaName from '../lib/getWinCriteriaName.tsx';
+import getCriteriaName from '../lib/getCriteriaName.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 
 export default function WinConditionTitle({
@@ -16,10 +16,10 @@ export default function WinConditionTitle({
   return (
     <span className={cx(titleStyle, short && nowrapStyle)}>
       {index != null
-        ? `${condition.hidden ? 'S' : ''}${condition.type !== WinCriteria.Default && condition.optional ? 'O' : 'W'}${index + 1}`
+        ? `${condition.hidden ? 'S' : ''}${condition.type !== Criteria.Default && condition.optional ? 'O' : 'W'}${index + 1}`
         : null}
-      {short ? space : `${space}${getWinCriteriaName(condition.type)} `}
-      {condition.type !== WinCriteria.Default &&
+      {short ? space : `${space}${getCriteriaName(condition.type)} `}
+      {condition.type !== Criteria.Default &&
         condition.players?.map((id) => <MiniPlayerIcon gap id={id} key={id} />)}
     </span>
   );
