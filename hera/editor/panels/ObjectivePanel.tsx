@@ -11,6 +11,7 @@ import {
   validateObjective,
 } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
+import levelUsesObjective from '@deities/hermes/levelUsesObjective.tsx';
 import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -155,10 +156,10 @@ export default function ObjectivePanel({
             ?.filter(filterNodes)
             .map((edge) => edge.node)
             .map(({ levels, name, slug }) => ({
-              name,
-              next: toLevelMap<ClientLevelID>(JSON.parse(levels || '')).get(
+              level: toLevelMap<ClientLevelID>(JSON.parse(levels || '')).get(
                 mapId,
-              )?.next,
+              ),
+              name,
               slug,
             }))
         : null,
@@ -236,16 +237,9 @@ export default function ObjectivePanel({
           .map((objective, id) => (
             <ObjectiveCard
               campaigns={
-                objectivesInCampaigns?.filter(({ next }) => {
-                  if (next) {
-                    for (const entry of next) {
-                      if (Array.isArray(entry) && entry[0] === id) {
-                        return true;
-                      }
-                    }
-                  }
-                  return false;
-                }) || null
+                objectivesInCampaigns?.filter(
+                  ({ level }) => level && levelUsesObjective(id, level),
+                ) || null
               }
               canDelete={
                 objectives.size > 1 || objective.type !== Criteria.Default

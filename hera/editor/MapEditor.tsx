@@ -22,7 +22,7 @@ import resizeMap, { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import validateMap from '@deities/athena/lib/validateMap.tsx';
+import validateMap, { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
@@ -89,6 +89,7 @@ import useZoom from './hooks/useZoom.tsx';
 import BiomeIcon from './lib/BiomeIcon.tsx';
 import canFillTile from './lib/canFillTile.tsx';
 import getMapValidationErrorText from './lib/getMapValidationErrorText.tsx';
+import getValidationErrorText from './lib/getMapValidationErrorText.tsx';
 import updateUndoStack from './lib/updateUndoStack.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
@@ -1094,8 +1095,6 @@ export default function MapEditor({
                       <fbt desc="Map save error with invalid map name">
                         Invalid map name. Please choose a different map name.
                       </fbt>
-                    ) : saveState.id === 'invalid-map' ? (
-                      <fbt desc="Map save error">This map is invalid.</fbt>
                     ) : saveState.id === 'invalid-permission' ? (
                       <fbt desc="Map save error">
                         You do not have permission to change this map.
@@ -1105,9 +1104,7 @@ export default function MapEditor({
                         A map with this name already exists.
                       </fbt>
                     ) : (
-                      <fbt desc="Generic error message">
-                        Oops, something went wrong. Please try again.
-                      </fbt>
+                      getValidationErrorText(saveState.id as ErrorReason)
                     )
                   ) : (
                     saveState.message

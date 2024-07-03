@@ -24,7 +24,7 @@ export default function getValidationErrorText(error?: ErrorReason) {
       'Map validation error',
     ),
     'invalid-map': fbt(
-      'There is a problem with this map. The tiles are not valid.',
+      'There is a problem with this map.',
       'Map validation error',
     ),
     'invalid-objectives': fbt(

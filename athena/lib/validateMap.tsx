@@ -50,7 +50,7 @@ export type ErrorReason =
   | 'invalid-decorators'
   | 'invalid-entities'
   | 'invalid-funds'
-  | 'invalid-map'
+  | 'invalid-tiles'
   | 'invalid-size'
   | 'invalid-teams'
   | 'invalid-tiles'
@@ -225,7 +225,7 @@ export default function validateMap(
       const field = map.map[index];
       const modifierField = map.modifiers[index];
       if (typeof field === 'number' && typeof modifierField !== 'number') {
-        invalidReason = 'invalid-map';
+        invalidReason = 'invalid-tiles';
       }
 
       if (
@@ -235,7 +235,7 @@ export default function validateMap(
           field.length === 1 * 1 ||
           modifierField.length === 1 * 1)
       ) {
-        invalidReason = 'invalid-map';
+        invalidReason = 'invalid-tiles';
       }
     });
 
@@ -250,7 +250,7 @@ export default function validateMap(
     }
   } catch {
     // If the above iterators throw it means that one of the tiles is invalid.
-    return [null, 'invalid-map'];
+    return [null, 'invalid-tiles'];
   }
 
   map = withModifiers(
