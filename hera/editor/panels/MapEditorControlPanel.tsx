@@ -194,9 +194,11 @@ export default function MapEditorControlPanel({
             return (
               <ObjectivePanel
                 actions={actions}
+                campaignEdges={mapObject?.campaigns.edges}
                 editor={editor}
                 hasContentRestrictions={!isAdmin}
                 isAdmin={isAdmin}
+                mapId={mapObject?.id}
                 setEditorState={setEditorState}
                 state={state}
                 user={user}

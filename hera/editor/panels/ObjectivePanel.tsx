@@ -11,19 +11,26 @@ import {
   validateObjective,
 } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
+import toLevelMap from '@deities/hermes/toLevelMap.tsx';
+import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import filterNodes from '../../lib/filterNodes.tsx';
 import getCriteriaName from '../../lib/getCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import hasEffectObjective from '../lib/hasEffectObjective.tsx';
 import ObjectiveCard from '../lib/ObjectiveCard.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
-import { EditorState, SetEditorStateFunction } from '../Types.tsx';
+import {
+  CampaignEdge,
+  EditorState,
+  SetEditorStateFunction,
+} from '../Types.tsx';
 
 const maybeRemoveEffect = (
   effects: Effects,
@@ -114,16 +121,20 @@ const maybeSwapEffect = (
 
 export default function ObjectivePanel({
   actions,
+  campaignEdges,
   editor,
   hasContentRestrictions,
   isAdmin,
+  mapId,
   setEditorState,
   state,
   user,
 }: StateWithActions & {
+  campaignEdges: CampaignEdge['edges'] | undefined;
   editor: EditorState;
   hasContentRestrictions: boolean;
   isAdmin?: boolean;
+  mapId: string | undefined;
   setEditorState: SetEditorStateFunction;
   user: UserWithFactionNameAndSkills;
 }) {
@@ -135,6 +146,23 @@ export default function ObjectivePanel({
   const validate = useCallback(
     (objective: Objective) => validateObjective(map, objective, 0),
     [map],
+  );
+
+  const objectivesInCampaigns = useMemo(
+    () =>
+      mapId
+        ? campaignEdges
+            ?.filter(filterNodes)
+            .map((edge) => edge.node)
+            .map(({ levels, name, slug }) => ({
+              name,
+              next: toLevelMap<ClientLevelID>(JSON.parse(levels || '')).get(
+                mapId,
+              )?.next,
+              slug,
+            }))
+        : null,
+    [campaignEdges, mapId],
   );
 
   const hasDefault = objectives.some(({ type }) => type === Criteria.Default);
@@ -207,6 +235,18 @@ export default function ObjectivePanel({
         ...objectives
           .map((objective, id) => (
             <ObjectiveCard
+              campaigns={
+                objectivesInCampaigns?.filter(({ next }) => {
+                  if (next) {
+                    for (const entry of next) {
+                      if (Array.isArray(entry) && entry[0] === id) {
+                        return true;
+                      }
+                    }
+                  }
+                  return false;
+                }) || null
+              }
               canDelete={
                 objectives.size > 1 || objective.type !== Criteria.Default
               }

@@ -1,3 +1,4 @@
+import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import { Skills } from '@deities/athena/info/Skill.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
@@ -19,14 +20,17 @@ import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Form from '@deities/ui/Form.tsx';
 import gradient from '@deities/ui/gradient.tsx';
+import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import { css } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
+import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
@@ -34,6 +38,7 @@ import { ManyLabelSelector } from '../selectors/LabelSelector.tsx';
 import UnitSelector from './UnitSelector.tsx';
 
 export default function ObjectiveCard({
+  campaigns,
   canDelete,
   hasContentRestrictions,
   id,
@@ -46,6 +51,7 @@ export default function ObjectiveCard({
   user,
   validate,
 }: {
+  campaigns: ReadonlyArray<{ name: string; slug: string }> | null;
   canDelete?: boolean;
   hasContentRestrictions: boolean;
   id: number;
@@ -64,6 +70,58 @@ export default function ObjectiveCard({
   const [amount, setAmount] = useState<number | null>(
     objectiveHasAmounts(objective) ? objective.amount : 0,
   );
+  const { alert } = useAlert();
+  const campaignList = useMemo(
+    () =>
+      campaigns
+        ? intlList(
+            campaigns.map(({ name, slug }) => (
+              <InlineLink key={slug} to={getCampaignRoute(slug, 'edit')}>
+                {getCampaignTranslation(name)}
+              </InlineLink>
+            )),
+            Conjunctions.AND,
+            Delimiters.COMMA,
+          )
+        : null,
+    [campaigns],
+  );
+
+  const onDelete = useCallback(() => {
+    if (!canDelete) {
+      return;
+    }
+
+    if (!campaigns?.length) {
+      onChange(null);
+      return;
+    }
+
+    alert({
+      text: (
+        <fbt desc="Explanation for why the objective cannot be deleted">
+          This objective is associated with the
+          <fbt:param name="campaigns">
+            {intlList(
+              campaigns.map(({ name }) => getCampaignTranslation(name)),
+              Conjunctions.AND,
+              Delimiters.COMMA,
+            )}
+          </fbt:param>
+          <fbt:plural count={campaigns.length} many="campaigns">
+            campaign
+          </fbt:plural>. If you want to delete the objective, you must first
+          change the campaign objectives to no longer require this objective.
+        </fbt>
+      ),
+      title: (
+        <fbt desc="Label explaining the objective is part of a campaign and cannot be deleted">
+          Cannot Delete Objective
+        </fbt>
+      ),
+    });
+  }, [alert, campaigns, canDelete, onChange]);
+
   const hasPlayers = objective.type !== Criteria.Default;
   const hasLabel = objectiveHasLabel(objective);
   const { reward } = objective;
@@ -82,12 +140,7 @@ export default function ObjectiveCard({
       vertical
     >
       {canDelete && (
-        <Icon
-          button
-          className={deleteStyle}
-          icon={Close}
-          onClick={() => onChange(null)}
-        />
+        <Icon button className={deleteStyle} icon={Close} onClick={onDelete} />
       )}
       <h2>
         <ObjectiveTitle id={id} objective={objective} />
@@ -343,6 +396,19 @@ export default function ObjectiveCard({
               </InlineLink>
             )}
           </Stack>
+          {campaigns && campaigns?.length > 0 && (
+            <Stack>
+              <p>
+                <fbt desc="Explanation for where the objective is used">
+                  This objective is used in the{' '}
+                  <fbt:param name="campaigns">{campaignList}</fbt:param>{' '}
+                  <fbt:plural count={campaigns.length} many="campaigns">
+                    campaign
+                  </fbt:plural>.
+                </fbt>
+              </p>
+            </Stack>
+          )}
         </Stack>
       </Form>
     </Box>

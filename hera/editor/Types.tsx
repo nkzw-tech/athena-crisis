@@ -105,14 +105,17 @@ export type MapUpdateFunction = (
   setSaveState: (state: MapEditorSaveState) => void,
 ) => void;
 
+export type CampaignEdge = Edges<
+  Readonly<{
+    id: string;
+    levels: string;
+    name: string;
+    slug: string;
+  }>
+>;
+
 export type MapObject = Readonly<{
-  campaigns: Edges<
-    Readonly<{
-      id: string;
-      name: string;
-      slug: string;
-    }>
-  >;
+  campaigns: CampaignEdge;
   creator: MapCreator;
   effects: string;
   id: string;
