@@ -190,7 +190,7 @@ export default function MapEditorControlPanel({
                 user={user}
               />
             );
-          case 'conditions':
+          case 'objectives':
             return (
               <ObjectivePanel
                 actions={actions}
@@ -356,17 +356,17 @@ const Sidebar = ({
       onClick={() => setEditorState({ mode: 'decorators' })}
       selectedText={editor.mode === 'decorators'}
     >
-      <KeyboardShortcut shortcut="o" />
+      <KeyboardShortcut shortcut="c" />
       <fbt desc="Button to change map decorators">Decorations</fbt>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
-      key="conditions"
-      onClick={() => setEditorState({ mode: 'conditions' })}
-      selectedText={editor.mode === 'conditions'}
+      key="objectives"
+      onClick={() => setEditorState({ mode: 'objectives' })}
+      selectedText={editor.mode === 'objectives'}
     >
-      <KeyboardShortcut shortcut="c" />
-      <fbt desc="Button to change map conditions">Objectives</fbt>
+      <KeyboardShortcut shortcut="o" />
+      <fbt desc="Button to change map objectives">Objectives</fbt>
     </InlineLink>,
     <InlineLink
       className={linkStyle}

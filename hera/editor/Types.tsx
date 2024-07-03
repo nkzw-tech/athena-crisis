@@ -9,7 +9,7 @@ import { Edges } from '../lib/Edges.tsx';
 import { MapCreator } from '../ui/MapDetails.tsx';
 
 export type EditorMode =
-  | 'conditions'
+  | 'objectives'
   | 'decorators'
   | 'design'
   | 'effects'

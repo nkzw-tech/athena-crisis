@@ -199,7 +199,7 @@ const prepareEffects = (
 };
 
 const panelShouldExpand = ({ action, mode, objective }: EditorState) =>
-  (mode === 'conditions' && !objective) ||
+  (mode === 'objectives' && !objective) ||
   (mode === 'effects' && !action) ||
   mode === 'restrictions' ||
   mode === 'settings' ||
@@ -302,7 +302,7 @@ export default function MapEditor({
     _setEditorState((editor) => {
       const shouldResetCondition =
         'mode' in newState &&
-        newState.mode !== 'conditions' &&
+        newState.mode !== 'objectives' &&
         editor.objective &&
         !newState.objective;
 
@@ -659,9 +659,9 @@ export default function MapEditor({
           setEditorState({
             mode: 'effects',
           });
-        } else if (event.code === 'KeyC') {
+        } else if (event.code === 'KeyO') {
           setEditorState({
-            mode: 'conditions',
+            mode: 'objectives',
           });
         } else if (event.code === 'KeyR') {
           setEditorState({
@@ -671,7 +671,7 @@ export default function MapEditor({
           setEditorState({
             mode: 'entity',
           });
-        } else if (event.code === 'KeyO') {
+        } else if (event.code === 'KeyC') {
           setEditorState({
             mode: 'decorators',
           });
@@ -1016,7 +1016,7 @@ export default function MapEditor({
               ? DesignBehavior
               : editor.mode === 'entity'
                 ? EntityBehavior
-                : (editor.mode === 'conditions' && editor.objective) ||
+                : (editor.mode === 'objectives' && editor.objective) ||
                     (editor.mode === 'effects' && editor.action)
                   ? VectorBehavior
                   : NullBehavior
