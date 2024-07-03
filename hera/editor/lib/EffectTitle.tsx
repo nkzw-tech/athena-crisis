@@ -47,19 +47,19 @@ export default memo(function EffectTitle({
 }) {
   const effectList = effects?.get(trigger);
   const hasMany = (effectList?.size || 1) > 1;
-  const index = effectList ? [...effectList].indexOf(effect) : -1;
-  const indexText = index >= 0 && hasMany ? ` #${index + 1}` : '';
+  const index = hasMany && effectList ? [...effectList].indexOf(effect) : -1;
+  const indexText = index >= 0 ? ` #${index + 1}` : '';
   const players = effect.players
     ? [...effect.players].map((id) => <MiniPlayerIcon id={id} key={id} />)
     : null;
 
   if (trigger === 'Start') {
     return (
-      <span className={cx(titleStyle, ellipsis)}>
+      <div className={cx(titleStyle, ellipsis)}>
         <fbt desc="Label for 'Start' effect">Start</fbt>
         {indexText}
         {players}
-      </span>
+      </div>
     );
   }
 
@@ -69,7 +69,7 @@ export default memo(function EffectTitle({
         condition.type === trigger,
     );
     return (
-      <span className={cx(titleStyle, ellipsis)}>
+      <div className={cx(titleStyle, ellipsis)}>
         {condition && (
           <span>
             {condition.type === 'GameEnd' ? (
@@ -91,16 +91,16 @@ export default memo(function EffectTitle({
             />
           </>
         )}
-      </span>
+      </div>
     );
   }
 
   return (
-    <span className={cx(titleStyle, ellipsis)}>
+    <div className={cx(titleStyle, ellipsis)}>
       {trigger}
       {indexText}
       {players}
-    </span>
+    </div>
   );
 });
 
