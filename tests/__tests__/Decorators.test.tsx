@@ -13,8 +13,8 @@ const map = withModifiers(
       blocklistedUnits: [],
       fog: false,
       multiplier: 1,
+      objectives: [[0, [0, 0]]],
       seedCapital: 500,
-      winConditions: [[0, 0]],
     },
     decorators: [
       [3, 3, 118],

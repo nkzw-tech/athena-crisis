@@ -1,11 +1,13 @@
-import { Effect, Effects } from '@deities/apollo/Effects.tsx';
+import { Effects } from '@deities/apollo/Effects.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
+import getNextObjectiveId from '@deities/athena/lib/getNextObjectiveId.tsx';
 import {
   Criteria,
   CriteriaList,
   getInitialObjective,
   Objective,
   objectiveHasVectors,
+  ObjectiveID,
   validateObjective,
 } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
@@ -13,7 +15,8 @@ import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import { useCallback, useState } from 'react';
+import ImmutableMap from '@nkzw/immutable-map';
+import { useCallback } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getCriteriaName from '../../lib/getCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -43,25 +46,6 @@ const maybeRemoveEffect = (
     const newEffects = new Map(effects).set(trigger, newList);
     if (!newList.size) {
       newEffects.delete(trigger);
-    }
-    for (const [effectTrigger, effectList] of newEffects) {
-      const newList = new Set<Effect>();
-      for (const effect of effectList) {
-        newList.add({
-          ...effect,
-          conditions: effect.conditions?.map((condition) =>
-            condition.type === trigger &&
-            typeof condition.value === 'number' &&
-            condition.value > index
-              ? {
-                  ...condition,
-                  value: condition.value - 1,
-                }
-              : condition,
-          ),
-        });
-      }
-      newEffects.set(effectTrigger, newList);
     }
     setEditorState({
       effects: newEffects,
@@ -145,41 +129,36 @@ export default function ObjectivePanel({
 }) {
   const { map } = state;
   const { config } = map;
-  const { winConditions: conditions } = config;
+  const { objectives } = config;
   const mapWithActivePlayers = dropInactivePlayers(map);
 
-  const [renders, setRenders] = useState(0);
   const validate = useCallback(
-    (objective: Objective) => validateObjective(map, objective),
+    (objective: Objective) => validateObjective(map, objective, 0),
     [map],
   );
 
-  const hasDefault = conditions.some(({ type }) => type === Criteria.Default);
+  const hasDefault = objectives.some(({ type }) => type === Criteria.Default);
 
-  const updateWinCondition = (objective: Objective | null, index: number) => {
-    const winConditions = [...conditions];
-    const existingCondition = winConditions[index];
+  const updateObjective = (id: ObjectiveID, objective: Objective | null) => {
+    const existingObjective = objectives.get(id);
+    if (!existingObjective) {
+      return;
+    }
+
     if (!objective) {
-      maybeRemoveEffect(
-        editor.effects,
-        existingCondition,
-        index,
-        setEditorState,
-      );
-      winConditions.splice(index, 1);
-      if (!winConditions.length) {
-        winConditions.push(getInitialObjective(map, Criteria.Default));
-      }
-      // Increment this counter to force re-rendering all list items which resets their state.
-      setRenders((renders) => renders + 1);
+      maybeRemoveEffect(editor.effects, existingObjective, id, setEditorState);
       actions.update({
         map: map.copy({
           config: map.config.copy({
-            winConditions,
+            objectives:
+              objectives.size === 1
+                ? ImmutableMap([
+                    [0, getInitialObjective(map, Criteria.Default)],
+                  ])
+                : objectives.delete(id),
           }),
         }),
       });
-
       return;
     }
 
@@ -187,16 +166,15 @@ export default function ObjectivePanel({
       maybeSwapEffect(
         editor.effects,
         objective,
-        existingCondition,
-        index,
+        existingObjective,
+        id,
         setEditorState,
       );
 
-      winConditions[index] = objective;
       actions.update({
         map: map.copy({
           config: map.config.copy({
-            winConditions,
+            objectives: objectives.set(id, objective),
           }),
         }),
       });
@@ -225,32 +203,36 @@ export default function ObjectivePanel({
 
   return (
     <Stack gap={24} vertical verticalPadding>
-      {conditions.map((condition, index) => (
-        <ObjectiveCard
-          canDelete={
-            conditions.length > 1 || condition.type !== Criteria.Default
-          }
-          hasContentRestrictions={hasContentRestrictions}
-          index={index}
-          isAdmin={isAdmin}
-          key={`${renders}-${index}`}
-          map={mapWithActivePlayers}
-          objective={condition}
-          onChange={(condition) => updateWinCondition(condition, index)}
-          selectEffect={() =>
-            setEditorState(selectObjectiveEffect(editor, index, condition))
-          }
-          selectLocation={() => {
-            if (objectiveHasVectors(condition)) {
-              setEditorState({
-                objective: [condition, index],
-              });
-            }
-          }}
-          user={user}
-          validate={validate}
-        />
-      ))}
+      {[
+        ...objectives
+          .map((objective, id) => (
+            <ObjectiveCard
+              canDelete={
+                objectives.size > 1 || objective.type !== Criteria.Default
+              }
+              hasContentRestrictions={hasContentRestrictions}
+              id={id}
+              isAdmin={isAdmin}
+              key={id}
+              map={mapWithActivePlayers}
+              objective={objective}
+              onChange={(objective) => updateObjective(id, objective)}
+              selectEffect={() =>
+                setEditorState(selectObjectiveEffect(editor, id, objective))
+              }
+              selectLocation={() => {
+                if (objectiveHasVectors(objective)) {
+                  setEditorState({
+                    objective: { objective, objectiveId: id },
+                  });
+                }
+              }}
+              user={user}
+              validate={validate}
+            />
+          ))
+          .values(),
+      ]}
       <Box gap={16} vertical>
         <h2>
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
@@ -266,10 +248,12 @@ export default function ObjectivePanel({
                 actions.update({
                   map: map.copy({
                     config: map.config.copy({
-                      winConditions: [
-                        ...conditions,
-                        getInitialObjective(map, type),
-                      ],
+                      objectives: objectives
+                        .set(
+                          getNextObjectiveId(objectives),
+                          getInitialObjective(map, type),
+                        )
+                        .sortBy((_, id) => id),
                     }),
                   }),
                 })

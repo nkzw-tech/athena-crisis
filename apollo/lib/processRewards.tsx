@@ -20,7 +20,7 @@ export function processRewards(
       [
         actionResponse.objective?.reward,
         actionResponse.type === 'GameEnd'
-          ? map.config.winConditions.find(
+          ? map.config.objectives.find(
               (objective) => objective.type === Criteria.Default,
             )?.reward
           : null,

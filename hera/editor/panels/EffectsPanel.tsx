@@ -19,7 +19,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
-import EffectTitle, { EffectWinConditionTitle } from '../lib/EffectTitle.tsx';
+import EffectTitle, { EffectObjectiveTitle } from '../lib/EffectTitle.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
 import {
@@ -62,7 +62,7 @@ export default function EffectsPanel({
   const { actions } = effect;
   const [showNewEffects, setShowNewEffects] = useState(false);
   const {
-    config: { biome, winConditions },
+    config: { biome, objectives },
   } = map;
 
   const conditionsByID = useMemo(() => {
@@ -88,7 +88,7 @@ export default function EffectsPanel({
   const possibleEffects = useMemo(
     () =>
       [
-        (['win', 'lose', 'draw'] as const).map((id) =>
+        ...(['win', 'lose', 'draw'] as const).map((id) =>
           conditionsByID?.has(id) ? null : (
             <InlineLink
               className={fitContentStyle}
@@ -98,48 +98,48 @@ export default function EffectsPanel({
                 setEditorState(selectObjectiveEffect(editor, id));
               }}
             >
-              <EffectWinConditionTitle id={id} />
+              <EffectObjectiveTitle id={id} />
             </InlineLink>
           ),
         ),
-        winConditions.map((condition, index) => {
-          if (
-            condition.type === Criteria.Default ||
-            conditionsByID?.has(index)
-          ) {
-            return null;
-          }
+        ...objectives
+          .map((condition, id) => {
+            if (
+              condition.type === Criteria.Default ||
+              conditionsByID?.has(id)
+            ) {
+              return null;
+            }
 
-          const type = condition.optional ? 'OptionalObjective' : 'GameEnd';
-          return (
-            <InlineLink
-              className={fitContentStyle}
-              key={index}
-              onClick={() => {
-                setShowNewEffects(false);
-                setEditorState(selectObjectiveEffect(editor, index, condition));
-              }}
-            >
-              <EffectTitle
-                effect={{
-                  actions: [],
-                  conditions: [
-                    {
-                      type,
-                      value: index,
-                    },
-                  ],
+            const type = condition.optional ? 'OptionalObjective' : 'GameEnd';
+            return (
+              <InlineLink
+                className={fitContentStyle}
+                key={id}
+                onClick={() => {
+                  setShowNewEffects(false);
+                  setEditorState(selectObjectiveEffect(editor, id, condition));
                 }}
-                trigger={type}
-                winConditions={winConditions}
-              />
-            </InlineLink>
-          );
-        }),
-      ]
-        .flat()
-        .filter(isPresent),
-    [conditionsByID, editor, setEditorState, winConditions],
+              >
+                <EffectTitle
+                  effect={{
+                    actions: [],
+                    conditions: [
+                      {
+                        type,
+                        value: id,
+                      },
+                    ],
+                  }}
+                  objectives={objectives}
+                  trigger={type}
+                />
+              </InlineLink>
+            );
+          })
+          .values(),
+      ].filter(isPresent),
+    [conditionsByID, editor, setEditorState, objectives],
   );
 
   const onChange: ActionChangeFn = useCallback(
@@ -258,9 +258,9 @@ export default function EffectsPanel({
         <Stack alignCenter gap={16} nowrap>
           <EffectSelector
             effects={effects}
+            objectives={objectives}
             scenario={scenario}
             setScenario={(scenario) => setScenario(scenario)}
-            winConditions={winConditions}
           />
           <Button
             className={cx(ellipsis, fitContentStyle, flexStyle)}

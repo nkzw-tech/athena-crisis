@@ -46,17 +46,17 @@ export default function getInterestingVectorsByAbilities(
     });
   }
 
-  for (const condition of map.config.winConditions) {
+  for (const [, objective] of map.config.objectives) {
     if (
-      condition.type !== Criteria.Default &&
-      (!condition.players || condition.players.includes(currentPlayer.id))
+      objective.type !== Criteria.Default &&
+      (!objective.players || objective.players.includes(currentPlayer.id))
     ) {
       if (
-        objectiveHasVectors(condition) &&
-        (!condition.label?.size ||
-          (label != null && condition.label.has(label)))
+        objectiveHasVectors(objective) &&
+        (!objective.label?.size ||
+          (label != null && objective.label.has(label)))
       ) {
-        vectors.push(...condition.vectors);
+        vectors.push(...objective.vectors);
       }
     }
   }

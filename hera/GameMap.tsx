@@ -190,23 +190,23 @@ const getEffectState = (map: MapData, effects: Effects | undefined) => {
   }
   return radius.length ? { extraUnits, radius } : null;
 };
-const getWinConditionRadius = (
-  { config: { winConditions } }: MapData,
+const getObjectiveRadius = (
+  { config: { objectives } }: MapData,
   currentViewer: PlayerID | null,
   isEditor: boolean,
 ) => {
   const radiusItems: Array<RadiusInfo> = [];
   let id = 0;
-  for (const condition of winConditions) {
+  for (const [, ojective] of objectives) {
     if (
-      (!isEditor && condition.hidden) ||
-      !objectiveHasVectors(condition) ||
-      (currentViewer != null && condition.completed?.has(currentViewer))
+      (!isEditor && ojective.hidden) ||
+      !objectiveHasVectors(ojective) ||
+      (currentViewer != null && ojective.completed?.has(currentViewer))
     ) {
       continue;
     }
 
-    radiusItems.push(toRadiusInfo([...condition.vectors], escortTypes[id]));
+    radiusItems.push(toRadiusInfo([...ojective.vectors], escortTypes[id]));
     id = (id + 1) % 3;
   }
   return radiusItems;
@@ -271,6 +271,7 @@ const getInitialState = (props: Props) => {
     mapName,
     namedPositions: null,
     navigationDirection: null,
+    objectiveRadius: getObjectiveRadius(map, currentViewer, isEditor),
     paused: paused || false,
     position: null,
     preventRemoteActions: false,
@@ -292,7 +293,6 @@ const getInitialState = (props: Props) => {
     timeout: timeout || null,
     unitSize,
     vision,
-    winConditionRadius: getWinConditionRadius(map, currentViewer, isEditor),
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
   return {
@@ -888,12 +888,11 @@ export default class GameMap extends Component<Props, State> {
           if (
             newState.map &&
             newState.map !== this.state.map &&
-            newState.map.config.winConditions !==
-              this.state.map.config.winConditions
+            newState.map.config.objectives !== this.state.map.config.objectives
           ) {
             newState = {
               ...newState,
-              winConditionRadius: getWinConditionRadius(
+              objectiveRadius: getObjectiveRadius(
                 newState.map,
                 newState.currentViewer ?? this.state.currentViewer,
                 !!this.props.editor,
@@ -1667,6 +1666,7 @@ export default class GameMap extends Component<Props, State> {
         gameInfoState,
         map,
         namedPositions,
+        objectiveRadius,
         paused,
         position,
         radius,
@@ -1677,7 +1677,6 @@ export default class GameMap extends Component<Props, State> {
         showCursor,
         tileSize,
         vision,
-        winConditionRadius,
         zIndex,
       },
     } = this;
@@ -1753,7 +1752,7 @@ export default class GameMap extends Component<Props, State> {
               tileSize={tileSize}
               vision={vision}
             />
-            {winConditionRadius?.map((radius, index) => (
+            {objectiveRadius?.map((radius, index) => (
               <Radius
                 currentViewer={currentViewer}
                 getLayer={() => getLayer(0, 'building')}

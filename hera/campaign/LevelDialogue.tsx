@@ -62,8 +62,8 @@ export default memo(function LevelDialogue({
                   <EffectTitle
                     effect={effect}
                     effects={effects}
+                    objectives={map.config.objectives}
                     trigger={trigger}
-                    winConditions={map.config.winConditions}
                   />
                   <Icon
                     className={cx(iconActiveStyle, SquareButtonStyle)}

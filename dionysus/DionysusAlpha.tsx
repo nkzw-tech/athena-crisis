@@ -147,7 +147,7 @@ export default class DionysusAlpha extends BaseAI {
     const currentPlayer = map.getCurrentPlayer();
     const vision = this.getVision(map);
     const labelsToPrioritize = getOpponentPriorityLabels(
-      map.config.winConditions,
+      map.config.objectives,
       currentPlayer.id,
     );
     let possibleAttacks = getPossibleAttacks(

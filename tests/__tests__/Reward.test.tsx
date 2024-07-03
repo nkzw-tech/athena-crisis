@@ -9,6 +9,7 @@ import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotGameState from '../snapshotGameState.tsx';
@@ -36,26 +37,31 @@ const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
-  const captureCondition = {
-    amount: 1,
-    hidden: false,
-    optional: false,
-    reward: {
-      skill: Skill.BuyUnitCannon,
-      type: 'Skill',
-    },
-    type: Criteria.CaptureAmount,
-  } as const;
   const currentMap = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
     config: map.config.copy({
-      winConditions: [
-        {
-          hidden: false,
-          type: Criteria.Default,
-        },
-        captureCondition,
-      ],
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            hidden: false,
+            type: Criteria.Default,
+          },
+        ],
+        [
+          1,
+          {
+            amount: 1,
+            hidden: false,
+            optional: false,
+            reward: {
+              skill: Skill.BuyUnitCannon,
+              type: 'Skill',
+            },
+            type: Criteria.CaptureAmount,
+          },
+        ],
+      ]),
     }),
     units: map.units
       .set(vecA, Pioneer.create(player1).capture())
@@ -126,24 +132,29 @@ test(`each skill is only received once`, () => {
     skill: Skill.BuyUnitCannon,
     type: 'Skill',
   } as const;
-  const captureCondition = {
-    amount: 1,
-    hidden: false,
-    optional: false,
-    reward,
-    type: Criteria.CaptureAmount,
-  } as const;
   const currentMap = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
     config: map.config.copy({
-      winConditions: [
-        {
-          hidden: false,
-          reward,
-          type: Criteria.Default,
-        },
-        captureCondition,
-      ],
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            hidden: false,
+            reward,
+            type: Criteria.Default,
+          },
+        ],
+        [
+          1,
+          {
+            amount: 1,
+            hidden: false,
+            optional: false,
+            reward,
+            type: Criteria.CaptureAmount,
+          },
+        ],
+      ]),
     }),
     units: map.units
       .set(vecA, Pioneer.create(player1).capture())

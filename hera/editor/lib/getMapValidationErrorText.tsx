@@ -27,6 +27,10 @@ export default function getValidationErrorText(error?: ErrorReason) {
       'There is a problem with this map. The tiles are not valid.',
       'Map validation error',
     ),
+    'invalid-objectives': fbt(
+      'There is a problem with this map. The objectives are not valid.',
+      'Map validation error',
+    ),
     'invalid-size': fbt(
       'There is a problem with this map. The size of the map is not valid',
       'Map validation error',
@@ -37,10 +41,6 @@ export default function getValidationErrorText(error?: ErrorReason) {
     ),
     'invalid-tiles': fbt(
       'There is a problem with this map. The tiles are not valid.',
-      'Map validation error',
-    ),
-    'invalid-win-conditions': fbt(
-      'There is a problem with this map. The win conditions are not valid.',
       'Map validation error',
     ),
     players: fbt(

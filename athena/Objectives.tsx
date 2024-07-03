@@ -1,5 +1,7 @@
 import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
+import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import {
   PlayerID,
   PlayerIDs,
@@ -334,8 +336,11 @@ export type PlainObjective =
       completed?: ReadonlyArray<number>,
     ];
 
-export type Objectives = ReadonlyArray<Objective>;
-export type PlainObjectives = ReadonlyArray<PlainObjective>;
+export type ObjectiveID = number;
+export type Objectives = ImmutableMap<ObjectiveID, Objective>;
+export type PlainObjectives = ReadonlyArray<
+  readonly [objectiveId: number, objective: PlainObjective]
+>;
 
 export function encodeObjective(objective: Objective): PlainObjective {
   const { hidden, type } = objective;
@@ -596,12 +601,25 @@ export function decodeObjective(objective: PlainObjective): Objective {
   }
 }
 
-export function encodeObjectives(objectives: Objectives) {
-  return objectives.map(encodeObjective);
+export function encodeObjectives(objectives: Objectives): PlainObjectives {
+  return sortBy([...objectives], ([id]) => id).map(([id, objective]) => [
+    id,
+    encodeObjective(objective),
+  ]);
 }
 
 export function decodeObjectives(objectives: PlainObjectives) {
-  return objectives.map(decodeObjective);
+  return ImmutableMap(
+    objectives.map(([id, objective]) => [id, decodeObjective(objective)]),
+  );
+}
+
+export function decodeLegacyWinConditions(
+  objectives: ReadonlyArray<PlainObjective>,
+): Objectives {
+  return ImmutableMap(
+    objectives.map((objective, index) => [index, decodeObjective(objective)]),
+  );
 }
 
 export function formatObjective(objective: Objective) {
@@ -673,16 +691,16 @@ export function objectiveHasRounds(
 }
 
 export function getOpponentPriorityLabels(
-  conditions: Objectives,
+  objectives: Objectives,
   player: PlayerID,
 ) {
   const labels = new Set<PlayerID>();
-  for (const condition of conditions) {
-    if (!objectiveHasLabel(condition) || !condition.label?.size) {
+  for (const [, objective] of objectives) {
+    if (!objectiveHasLabel(objective) || !objective.label?.size) {
       continue;
     }
 
-    const { label, players, type } = condition;
+    const { label, players, type } = objective;
     if (
       ((type === Criteria.DefeatLabel ||
         type === Criteria.DestroyLabel ||
@@ -730,7 +748,15 @@ const validatePlayers = (map: MapData, players: PlayerIDs) => {
 const validateAmount = (amount: number) =>
   isPositiveInteger(amount) && amount >= MIN_AMOUNT && amount <= MAX_AMOUNT;
 
-export function validateObjective(map: MapData, objective: Objective) {
+export function validateObjective(
+  map: MapData,
+  objective: Objective,
+  id: ObjectiveID,
+) {
+  if (typeof id !== 'number' || !Number.isInteger(id)) {
+    return false;
+  }
+
   const { hidden, type } = objective;
   if (
     (hidden !== false && hidden !== true) ||
@@ -818,57 +844,56 @@ export function validateObjective(map: MapData, objective: Objective) {
 }
 
 export function validateObjectives(map: MapData) {
-  const { winConditions } = map.config;
+  const { objectives } = map.config;
   if (
-    !Array.isArray(winConditions) ||
-    winConditions.length > 32 ||
-    winConditions.filter(({ type }) => type === Criteria.Default).length > 1
+    objectives.size > 32 ||
+    objectives.filter(({ type }) => type === Criteria.Default).size > 1
   ) {
     return false;
   }
 
   if (
-    winConditions.every(
-      (condition) => condition.type !== Criteria.Default && condition.optional,
+    objectives.every(
+      (objective) => objective.type !== Criteria.Default && objective.optional,
     )
   ) {
     return false;
   }
 
-  return winConditions.every(validateObjective.bind(null, map));
+  return objectives.every(validateObjective.bind(null, map));
 }
 
 export function resetObjectives(
-  conditions: Objectives,
+  objectives: Objectives,
   active: PlayerIDSet,
 ): Objectives {
-  return conditions.map((condition) =>
-    condition.type === Criteria.Default || !condition.players
-      ? { ...condition, completed: new Set() }
+  return objectives.map((objective) =>
+    objective.type === Criteria.Default || !objective.players
+      ? { ...objective, completed: new Set() }
       : ({
-          ...condition,
+          ...objective,
           completed: new Set(),
-          players: condition.players.filter((player) => active.has(player)),
+          players: objective.players.filter((player) => active.has(player)),
         } as const),
   );
 }
 
-export function onlyHasDefaultObjective(winConditions: Objectives) {
+export function onlyHasDefaultObjective(objectives: Objectives) {
   return (
-    winConditions.length === 0 ||
-    (winConditions.length === 1 && winConditions[0].type === Criteria.Default)
+    objectives.size === 0 ||
+    (objectives.size === 1 && objectives.first()?.type === Criteria.Default)
   );
 }
 
-export function getHiddenLabels(conditions: Objectives): PlayerIDSet | null {
-  if (onlyHasDefaultObjective(conditions)) {
+export function getHiddenLabels(objectives: Objectives): PlayerIDSet | null {
+  if (onlyHasDefaultObjective(objectives)) {
     return null;
   }
 
   let labels: Set<PlayerID> | null = null;
-  for (const condition of conditions) {
-    if (condition.hidden && objectiveHasLabel(condition) && condition.label) {
-      for (const label of condition.label) {
+  for (const [, objective] of objectives) {
+    if (objective.hidden && objectiveHasLabel(objective) && objective.label) {
+      for (const label of objective.label) {
         if (!labels) {
           labels = new Set();
         }

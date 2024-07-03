@@ -1,6 +1,6 @@
 import { Decorator } from '../info/Decorator.tsx';
 import { ModifierMap, TileMap } from '../MapData.tsx';
-import { PlainObjectives } from '../Objectives.tsx';
+import { PlainObjective, PlainObjectives } from '../Objectives.tsx';
 import { Biome } from './Biome.tsx';
 import { PlainBuilding } from './Building.tsx';
 import { PlainTeams } from './Team.tsx';
@@ -10,6 +10,8 @@ export type PlainEntitiesList<T> = ReadonlyArray<
   readonly [x: number, y: number, entity: T]
 >;
 
+type LegacyWinConditions = ReadonlyArray<PlainObjective>;
+
 export type PlainMapConfig = Readonly<{
   biome: Biome;
   blocklistedBuildings: ReadonlyArray<number>;
@@ -17,8 +19,9 @@ export type PlainMapConfig = Readonly<{
   blocklistedUnits: ReadonlyArray<number>;
   fog: boolean;
   multiplier: number;
+  objectives?: PlainObjectives;
   seedCapital: number;
-  winConditions?: PlainObjectives;
+  winConditions?: LegacyWinConditions;
 }>;
 
 export type PlainMap = Readonly<{

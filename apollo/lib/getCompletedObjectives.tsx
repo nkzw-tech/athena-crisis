@@ -8,7 +8,7 @@ export default function getCompletedObjectives(
 ): ReadonlyArray<number> {
   const list = [];
   const team = [...map.getTeam(player).players.keys()];
-  for (const [index, objective] of map.config.winConditions.entries()) {
+  for (const [index, objective] of map.config.objectives) {
     if (
       objective.type !== Criteria.Default &&
       team.some((playerID) => objective.completed?.has(playerID))

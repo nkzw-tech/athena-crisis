@@ -215,7 +215,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
   );
 });
 
-const objectivesPanel = Symbol('win-conditions');
+const objectivesPanel = Symbol('objectives');
 
 const GameInfoPanel = memo(function GameInfoPanel({
   endGame,
@@ -229,7 +229,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   map: MapData;
 }) {
   const {
-    config: { winConditions },
+    config: { objectives },
   } = map;
 
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
@@ -262,9 +262,9 @@ const GameInfoPanel = memo(function GameInfoPanel({
     'dialog',
   );
 
-  const visibleConditions = winConditions.filter(({ hidden }) => !hidden);
-  const partition = groupBy(visibleConditions, (condition) =>
-    condition.type === Criteria.Default || !condition.optional
+  const visibleConditions = objectives.filter(({ hidden }) => !hidden);
+  const partition = groupBy(visibleConditions, ([, objective]) =>
+    objective.type === Criteria.Default || !objective.optional
       ? 'required'
       : 'optional',
   );
@@ -280,7 +280,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
               <fbt desc="Headline for describing how to win">How to win</fbt>
             </h1>
             <p>
-              {visibleConditions.length ? (
+              {visibleConditions.size ? (
                 <fbt desc="Description of how to win">
                   Complete any objective to win the game.
                 </fbt>
@@ -290,11 +290,11 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 </fbt>
               )}
             </p>
-            {requiredObjectives?.map((condition, index) => (
+            {requiredObjectives?.map(([id, objective]) => (
               <ObjectiveDescription
                 factionNames={factionNames}
-                key={index}
-                objective={condition}
+                key={id}
+                objective={objective}
                 round={map.round}
               />
             ))}
@@ -305,11 +305,11 @@ const GameInfoPanel = memo(function GameInfoPanel({
                     Complete optional objectives for extra rewards:
                   </fbt>
                 </p>
-                {optionalObjectives.map((condition, index) => (
+                {optionalObjectives.map(([id, objective]) => (
                   <ObjectiveDescription
                     factionNames={factionNames}
-                    key={index}
-                    objective={condition}
+                    key={id}
+                    objective={objective}
                     round={map.round}
                   />
                 ))}

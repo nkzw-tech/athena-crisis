@@ -540,18 +540,24 @@ test('only one game end win effect is fired', () => {
   const initialMap = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
     config: map.config.copy({
-      winConditions: [
-        {
-          hidden: false,
-          type: Criteria.Default,
-        },
-        {
-          amount: 1,
-          hidden: false,
-          optional: false,
-          type: Criteria.CaptureAmount,
-        },
-      ],
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            hidden: false,
+            type: Criteria.Default,
+          },
+        ],
+        [
+          1,
+          {
+            amount: 1,
+            hidden: false,
+            optional: false,
+            type: Criteria.CaptureAmount,
+          },
+        ],
+      ]),
     }),
     units: map.units
       .set(vecA, Pioneer.create(player1).capture())

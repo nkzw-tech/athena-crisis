@@ -33,7 +33,11 @@ import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
-import { Criteria, validateObjectives } from '@deities/athena/Objectives.tsx';
+import {
+  Criteria,
+  Objective,
+  validateObjectives,
+} from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
@@ -60,16 +64,22 @@ const map = withModifiers(
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const player2 = HumanPlayer.from(map.getPlayer(2), '4');
 
+const defineObjectives = (objectives: ReadonlyArray<Objective>) =>
+  ImmutableMap(objectives.map((objective, index) => [index, objective]));
+
 const optional = (map: MapData) =>
   map.copy({
     config: map.config.copy({
-      winConditions: [
-        ...map.config.winConditions.map((condition) => ({
-          ...condition,
+      objectives: map.config.objectives
+        .map((objective) => ({
+          ...objective,
           optional: true,
-        })),
-        { hidden: false, type: Criteria.Default },
-      ],
+        }))
+        .set(map.config.objectives.size, {
+          hidden: false,
+          optional: false,
+          type: Criteria.Default,
+        }),
     }),
   });
 
@@ -137,14 +147,14 @@ test('capture amount win criteria', async () => {
 
   const mapWithConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 4,
           hidden: false,
           optional: false,
           type: Criteria.CaptureAmount,
         },
-      ],
+      ]),
     }),
   });
 
@@ -186,7 +196,7 @@ test('capture amount win criteria', async () => {
   // Conditions can be asymmetrical.
   const mapWithAsymmetricConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -194,7 +204,7 @@ test('capture amount win criteria', async () => {
           players: [2],
           type: Criteria.CaptureAmount,
         },
-      ],
+      ]),
     }),
   });
   const [, gameActionResponseC] = executeGameActions(
@@ -257,14 +267,14 @@ test('capture amount win criteria also works when creating buildings', async () 
       .set(v1, House.create(player2))
       .set(v2, House.create(player2)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 3,
           hidden: false,
           optional: false,
           type: Criteria.CaptureAmount,
         },
-      ],
+      ]),
     }),
     map: [1, 1, ConstructionSite.id, 1, 1, 1, 1, 1, 1],
     units: map.units
@@ -329,14 +339,14 @@ test('capture label win criteria', async () => {
       .set(v5, House.create(player2, { label: 4 }))
       .set(v6, House.create(player2)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 3]),
           optional: false,
           type: Criteria.CaptureLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player2).capture())
@@ -366,8 +376,8 @@ test('capture label win criteria', async () => {
 
   const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: initialMap.config.winConditions.map((condition) => ({
-        ...condition,
+      objectives: initialMap.config.objectives.map((objective) => ({
+        ...objective,
         optional: true,
       })),
     }),
@@ -406,7 +416,7 @@ test('capture label win criteria fails because building is destroyed', async () 
       House.create(0, { label: 1 }).setHealth(1),
     ),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -414,7 +424,7 @@ test('capture label win criteria fails because building is destroyed', async () 
           players: [1],
           type: Criteria.CaptureLabel,
         },
-      ],
+      ]),
     }),
     units: map.units.set(v2, HeavyTank.create(player1)),
   });
@@ -490,14 +500,14 @@ test('capture label win criteria (fail with missing label)', async () => {
       .set(v1, House.create(player2))
       .set(v2, House.create(player2)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 3]),
           optional: false,
           type: Criteria.CaptureLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1).capture())
@@ -562,14 +572,14 @@ test('destroy amount win criteria', async () => {
 
   const mapWithConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
           optional: false,
           type: Criteria.DestroyAmount,
         },
-      ],
+      ]),
     }),
   });
 
@@ -595,7 +605,7 @@ test('destroy amount win criteria', async () => {
       .set(v3, House.create(player2).setHealth(1))
       .set(v4, House.create(player2).setHealth(1)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
@@ -603,7 +613,7 @@ test('destroy amount win criteria', async () => {
           type: Criteria.DestroyAmount,
         },
         { hidden: false, type: Criteria.Default },
-      ],
+      ]),
     }),
     map: Array(3 * 4).fill(1),
     size: new SizeVector(3, 4),
@@ -643,7 +653,7 @@ test('destroy amount win criteria', async () => {
   // Conditions can be asymmetrical.
   const mapWithAsymmetricConditions = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -651,7 +661,7 @@ test('destroy amount win criteria', async () => {
           players: [2],
           type: Criteria.DestroyAmount,
         },
-      ],
+      ]),
     }),
   });
   const [, gameActionResponseC] = executeGameActions(
@@ -715,14 +725,14 @@ test('destroy label win criteria', async () => {
       .set(v4, House.create(player2, { label: 4 }).setHealth(1))
       .set(v5, House.create(player2).setHealth(1)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 3]),
           optional: false,
           type: Criteria.DestroyLabel,
         },
-      ],
+      ]),
     }),
     map: Array(4 * 3).fill(1),
     size: new SizeVector(4, 3),
@@ -788,14 +798,14 @@ test('destroy label does not fire without label', async () => {
       .set(v2, House.create(player2).setHealth(1))
       .set(v3, House.create(player2).setHealth(1)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 3]),
           optional: false,
           type: Criteria.DestroyLabel,
         },
-      ],
+      ]),
     }),
     map: Array(4 * 3).fill(1),
     size: new SizeVector(4, 3),
@@ -846,14 +856,14 @@ test('destroy label win criteria (neutral structure)', async () => {
       .set(v1, CrashedAirplane.create(0, { label: 3 }).setHealth(1))
       .set(v2, House.create(player2).setHealth(1)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([3]),
           optional: false,
           type: Criteria.DestroyLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1.right(), Bomber.create(player1))
@@ -906,14 +916,14 @@ test('defeat with label', async () => {
   const initialMap = map.copy({
     buildings: map.buildings.set(v1, House.create(player2, { label: 2 })),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 2]),
           optional: false,
           type: Criteria.DefeatLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -973,14 +983,14 @@ test('defeat one with label', async () => {
   const v5 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 2]),
           optional: false,
           type: Criteria.DefeatOneLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1033,14 +1043,14 @@ test('defeat by amount', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 3,
           hidden: false,
           optional: false,
           type: Criteria.DefeatAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1098,14 +1108,14 @@ test('defeat by amount through counter attack', async () => {
   const v3 = vec(1, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
           optional: false,
           type: Criteria.DefeatAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1).setHealth(1))
@@ -1152,14 +1162,14 @@ test('defeat with label and Zombie', async () => {
   const v3 = vec(1, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([2]),
           optional: false,
           type: Criteria.DefeatLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Zombie.create(player1))
@@ -1203,14 +1213,14 @@ test('defeat by amount and Zombie', async () => {
   const v3 = vec(2, 2);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
           optional: false,
           type: Criteria.DefeatAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Zombie.create(player1))
@@ -1256,14 +1266,14 @@ test('defeat with label (fail because label did not previously exist)', async ()
   const v5 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4]),
           optional: false,
           type: Criteria.DefeatLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1313,7 +1323,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
   const v9 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([4, 2]),
@@ -1321,7 +1331,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
           players: [1],
           type: Criteria.DefeatLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, SmallTank.create(player1))
@@ -1392,7 +1402,7 @@ test('win by survival', async () => {
   const v3 = vec(2, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           optional: false,
@@ -1400,7 +1410,7 @@ test('win by survival', async () => {
           rounds: 3,
           type: Criteria.Survival,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1458,7 +1468,7 @@ test('win by survival in one round', async () => {
   const v2 = vec(1, 2);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           optional: false,
@@ -1466,7 +1476,7 @@ test('win by survival in one round', async () => {
           rounds: 1,
           type: Criteria.Survival,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1477,7 +1487,7 @@ test('win by survival in one round', async () => {
     validateObjectives(
       initialMap.copy({
         config: initialMap.config.copy({
-          winConditions: [
+          objectives: defineObjectives([
             {
               hidden: false,
               optional: false,
@@ -1485,7 +1495,7 @@ test('win by survival in one round', async () => {
               rounds: 1,
               type: Criteria.Survival,
             } as const,
-          ],
+          ]),
         }),
       }),
     ),
@@ -1509,7 +1519,7 @@ test('win by survival in one round', async () => {
     validateObjectives(
       mapWithOptionalObjectives.copy({
         config: mapWithOptionalObjectives.config.copy({
-          winConditions: [
+          objectives: defineObjectives([
             { hidden: false, type: Criteria.Default },
             {
               hidden: false,
@@ -1518,7 +1528,7 @@ test('win by survival in one round', async () => {
               rounds: 1,
               type: Criteria.Survival,
             } as const,
-          ],
+          ]),
         }),
       }),
     ),
@@ -1545,7 +1555,7 @@ test('win by survival with optional survival', async () => {
   const v2 = vec(1, 2);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           optional: false,
@@ -1560,7 +1570,7 @@ test('win by survival with optional survival', async () => {
           rounds: 2,
           type: Criteria.Survival,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))
@@ -1596,7 +1606,7 @@ test('escort units', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1605,7 +1615,7 @@ test('escort units', async () => {
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -1654,7 +1664,7 @@ test('escort units by label without having units with that label (fails)', async
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1663,7 +1673,7 @@ test('escort units by label without having units with that label (fails)', async
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1))
@@ -1709,7 +1719,7 @@ test('escort units (transport)', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1718,7 +1728,7 @@ test('escort units (transport)', async () => {
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -1772,7 +1782,7 @@ test('escort units by drop (transport)', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1781,7 +1791,7 @@ test('escort units by drop (transport)', async () => {
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -1856,7 +1866,7 @@ test('escort units by label fails', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1865,7 +1875,7 @@ test('escort units by label fails', async () => {
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -1928,7 +1938,7 @@ test('escort units by label fails (transport)', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([1]),
@@ -1937,7 +1947,7 @@ test('escort units by label fails (transport)', async () => {
           type: Criteria.EscortLabel,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -2007,7 +2017,7 @@ test('escort units by amount', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
@@ -2016,7 +2026,7 @@ test('escort units by amount', async () => {
           type: Criteria.EscortAmount,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1))
@@ -2070,7 +2080,7 @@ test('escort units by amount (label)', async () => {
   const initialMap = map.copy({
     buildings: map.buildings.set(v4, House.create(player1)),
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -2097,7 +2107,7 @@ test('escort units by amount (label)', async () => {
           type: Criteria.EscortAmount,
           vectors: new Set([v8, v9]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1))
@@ -2121,7 +2131,7 @@ test('escort units by amount (label)', async () => {
 
   const mapWithOptionalObjectives = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -2149,7 +2159,7 @@ test('escort units by amount (label)', async () => {
           vectors: new Set([v8, v9]),
         },
         { hidden: false, type: Criteria.Default },
-      ],
+      ]),
     }),
   });
 
@@ -2188,7 +2198,7 @@ test('escort units by amount with label fails', async () => {
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
@@ -2198,7 +2208,7 @@ test('escort units by amount with label fails', async () => {
           type: Criteria.EscortAmount,
           vectors: new Set([v7, v6]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }))
@@ -2261,7 +2271,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -2271,7 +2281,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
           type: Criteria.EscortAmount,
           vectors: new Set([v7]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1, { label: 1 }).setHealth(1))
@@ -2335,7 +2345,7 @@ test('escort units by amount does not fail when the player has more units left',
   const v7 = vec(3, 1);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 1,
           hidden: false,
@@ -2344,7 +2354,7 @@ test('escort units by amount does not fail when the player has more units left',
           type: Criteria.EscortAmount,
           vectors: new Set([v7]),
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(player1))
@@ -2404,14 +2414,14 @@ test('rescue label win criteria', async () => {
   const v7 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([0, 3]),
           optional: false,
           type: Criteria.RescueLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(0, { label: 0 }))
@@ -2493,7 +2503,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   const v7 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           hidden: false,
           label: new Set([0, 3]),
@@ -2501,7 +2511,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
           players: [1],
           type: Criteria.RescueLabel,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(0, { label: 0 }))
@@ -2711,14 +2721,14 @@ test('rescue amount win criteria', async () => {
   const v7 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
           optional: false,
           type: Criteria.RescueAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(0, { label: 0 }))
@@ -2794,7 +2804,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
   const v5 = vec(2, 2);
   const mapA = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 3,
           hidden: false,
@@ -2802,7 +2812,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
           players: [1],
           type: Criteria.RescueAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(0))
@@ -2828,7 +2838,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
 
   const mapB = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 3,
           hidden: false,
@@ -2836,7 +2846,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
           players: [1],
           type: Criteria.RescueAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(0))
@@ -2875,7 +2885,7 @@ test('optional objectives should not be triggered multiple times for the same pl
   const v9 = vec(3, 3);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 2,
           hidden: false,
@@ -2883,7 +2893,7 @@ test('optional objectives should not be triggered multiple times for the same pl
           type: Criteria.DefeatAmount,
         },
         { hidden: false, type: Criteria.Default },
-      ],
+      ]),
     }),
     map: Array(3 * 4).fill(1),
     size: new SizeVector(3, 4),
@@ -2944,7 +2954,7 @@ test('optional objectives should not end the game, but non-optional one should w
   const v8 = vec(2, 4);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         {
           amount: 4,
           hidden: false,
@@ -2957,7 +2967,7 @@ test('optional objectives should not end the game, but non-optional one should w
           optional: true,
           type: Criteria.DefeatAmount,
         },
-      ],
+      ]),
     }),
     map: Array(3 * 4).fill(1),
     size: new SizeVector(3, 4),
@@ -3010,7 +3020,7 @@ test('optional objectives are processed before game end responses', async () => 
   const v2 = vec(1, 2);
   const initialMap = map.copy({
     config: map.config.copy({
-      winConditions: [
+      objectives: defineObjectives([
         { hidden: false, type: Criteria.Default },
         {
           amount: 1,
@@ -3022,7 +3032,7 @@ test('optional objectives are processed before game end responses', async () => 
           },
           type: Criteria.DefeatAmount,
         },
-      ],
+      ]),
     }),
     units: map.units
       .set(v1, Flamethrower.create(player1))

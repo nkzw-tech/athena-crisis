@@ -100,7 +100,7 @@ export const metadata: MapMetadata = {
     ],
   ]),
   name: 'Shrine',
-  tags: ['campaign', '1', 'reward'],
+  tags: ['campaign', '1', 'reward', '3'],
   teamPlay: false,
 };
 
@@ -134,11 +134,11 @@ export default withModifiers(
       blocklistedUnits: [4, 6, 7, 11, 12, 14, 16, 26, 37],
       fog: false,
       multiplier: 1,
-      seedCapital: 500,
-      winConditions: [
-        [0, 0, [0, 1]],
-        [1, 0, [1], [1], [0, 2]],
+      objectives: [
+        [0, [0, 0, [0, 1]]],
+        [1, [1, 0, [1], [1], [0, 2], 0, []]],
       ],
+      seedCapital: 500,
     },
     decorators: [
       [25, 13, 87],
@@ -350,7 +350,6 @@ export default withModifiers(
           g: 50,
           h: 100,
           i: 2,
-          n: -1,
           p: 1,
         },
       ],
@@ -394,6 +393,7 @@ export default withModifiers(
           g: 50,
           h: 100,
           i: 2,
+          n: -21,
           p: 1,
         },
       ],

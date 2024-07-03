@@ -1,22 +1,26 @@
-import { Criteria, Objective } from '@deities/athena/Objectives.tsx';
+import {
+  Criteria,
+  Objective,
+  ObjectiveID,
+} from '@deities/athena/Objectives.tsx';
 import { css, cx } from '@emotion/css';
 import getCriteriaName from '../lib/getCriteriaName.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 
 export default function ObjectiveTitle({
-  index,
+  id,
   objective,
   short,
 }: {
-  index?: number;
+  id?: ObjectiveID;
   objective: Objective;
   short?: true;
 }) {
-  const space = index != null ? (short ? ` ` : `: `) : '';
+  const space = id != null ? (short ? ` ` : `: `) : '';
   return (
     <span className={cx(titleStyle, short && nowrapStyle)}>
-      {index != null
-        ? `${objective.hidden ? 'S' : ''}${objective.type !== Criteria.Default && objective.optional ? 'O' : 'W'}${index + 1}`
+      {id != null
+        ? `${objective.hidden ? 'S' : ''}${objective.type !== Criteria.Default && objective.optional ? 'O' : 'W'}${id + 1}`
         : null}
       {short ? space : `${space}${getCriteriaName(objective.type)} `}
       {objective.type !== Criteria.Default &&

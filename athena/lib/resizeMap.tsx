@@ -76,12 +76,12 @@ export default function resizeMap(
     [] as PlainEntitiesList<Decorator>,
   );
 
-  const winConditions = map.config.winConditions.map((condition) =>
-    objectiveHasVectors(condition)
+  const objectives = map.config.objectives.map((objective) =>
+    objectiveHasVectors(objective)
       ? {
-          ...condition,
+          ...objective,
           vectors: new Set(
-            [...condition.vectors]
+            [...objective.vectors]
               .map((vector) =>
                 new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY),
               )
@@ -89,7 +89,7 @@ export default function resizeMap(
               .map((vector) => vec(vector.x, vector.y)),
           ),
         }
-      : condition,
+      : objective,
   );
 
   return [
@@ -97,7 +97,7 @@ export default function resizeMap(
       withModifiers(
         map.copy({
           buildings: updateEntities(map.buildings, size, offsetX, offsetY),
-          config: map.config.copy({ winConditions }),
+          config: map.config.copy({ objectives }),
           decorators: decodeDecorators(size, decorators),
           map: tiles,
           size,

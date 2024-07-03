@@ -5,7 +5,7 @@ import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 
 export default function getObjectiveVectors(map: MapData, unit: Unit) {
   const vectors = new Set<Vector>();
-  for (const objective of map.config.winConditions) {
+  for (const [, objective] of map.config.objectives) {
     if (
       objectiveHasVectors(objective) &&
       (!objective.players || objective.players.includes(unit.player)) &&

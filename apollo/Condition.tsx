@@ -158,16 +158,15 @@ export function validateCondition(map: MapData, condition: Condition) {
     }
     case 'OptionalObjective':
     case 'GameEnd': {
-      const {
-        config: { winConditions },
-      } = map;
       const { value } = condition;
-      return (
-        (type === 'GameEnd' && DynamicEffectObjectiveIDs.has(value)) ||
-        (typeof value === 'number' &&
-          winConditions[value] &&
-          winConditions[value].type !== Criteria.Default)
-      );
+
+      if (type === 'GameEnd' && DynamicEffectObjectiveIDs.has(value)) {
+        return true;
+      }
+
+      const objective =
+        typeof value === 'number' && map.config.objectives.get(value);
+      return objective && objective.type !== Criteria.Default;
     }
     default: {
       condition satisfies never;

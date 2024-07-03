@@ -19,6 +19,7 @@ import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -380,16 +381,19 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
       House.create(2, { label: 1 }).setHealth(1),
     ),
     config: initialMap.config.copy({
-      winConditions: [
-        { hidden: false, type: Criteria.Default },
-        {
-          hidden: false,
-          label: new Set([1]),
-          optional: false,
-          players: [1],
-          type: Criteria.CaptureLabel,
-        },
-      ],
+      objectives: ImmutableMap([
+        [0, { hidden: false, type: Criteria.Default }],
+        [
+          1,
+          {
+            hidden: false,
+            label: new Set([1]),
+            optional: false,
+            players: [1],
+            type: Criteria.CaptureLabel,
+          },
+        ],
+      ]),
     }),
     units: initialMap.units.set(from, APU.create(1)).set(to, Bomber.create(2)),
   });

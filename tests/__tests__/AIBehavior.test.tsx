@@ -46,6 +46,7 @@ import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../snapshotGameState.tsx';
 
@@ -893,18 +894,21 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
 
   const map = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
-        { hidden: false, type: Criteria.Default },
-        {
-          hidden: false,
-          label: new Set([2]),
-          optional: false,
-          players: [2],
-          reward: null,
-          type: Criteria.EscortLabel,
-          vectors: new Set([vec(5, 4)]),
-        },
-      ],
+      objectives: ImmutableMap([
+        [0, { hidden: false, type: Criteria.Default }],
+        [
+          1,
+          {
+            hidden: false,
+            label: new Set([2]),
+            optional: false,
+            players: [2],
+            reward: null,
+            type: Criteria.EscortLabel,
+            vectors: new Set([vec(5, 4)]),
+          },
+        ],
+      ]),
     }),
     units: initialMap.units
       .set(vec(5, 1), XFighter.create(2, { label: 2 }))
@@ -945,18 +949,21 @@ test('AI will prioritize units with labels associated with win conditions', () =
 
   const map = initialMap.copy({
     config: initialMap.config.copy({
-      winConditions: [
-        { hidden: false, type: Criteria.Default },
-        {
-          hidden: false,
-          label: new Set([1]),
-          optional: false,
-          players: [1],
-          reward: null,
-          type: Criteria.EscortLabel,
-          vectors: new Set([vec(1, 1)]),
-        },
-      ],
+      objectives: ImmutableMap([
+        [0, { hidden: false, type: Criteria.Default }],
+        [
+          1,
+          {
+            hidden: false,
+            label: new Set([1]),
+            optional: false,
+            players: [1],
+            reward: null,
+            type: Criteria.EscortLabel,
+            vectors: new Set([vec(1, 1)]),
+          },
+        ],
+      ]),
     }),
     units: initialMap.units
       .set(vec(1, 1), FighterJet.create(2))

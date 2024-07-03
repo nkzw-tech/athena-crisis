@@ -67,7 +67,7 @@ export default memo(function PlayerCard({
   wide?: boolean;
 }) {
   const { optimisticAction, showGameInfo, update } = actions;
-  const { winConditions } = map.config;
+  const { objectives } = map.config;
   const color = getColor(player.id);
 
   const shouldShow =
@@ -162,6 +162,30 @@ export default memo(function PlayerCard({
     }
   });
 
+  const objectiveList = useMemo(() => {
+    const list = [];
+    for (const [id, objective] of objectives) {
+      if (
+        !objective.hidden &&
+        (objectiveHasAmounts(objective) ||
+          objective.type === Criteria.Survival) &&
+        matchesPlayerList(objective.players, player.id) &&
+        !objective.completed?.has(player.id)
+      ) {
+        list.push(
+          <PlayerCardObjective
+            id={id}
+            key={id}
+            map={map}
+            objective={objective}
+            player={player}
+          />,
+        );
+      }
+    }
+    return list;
+  }, [map, objectives, player]);
+
   return (
     <div
       className={cx(playerStyle, wide && playerWideStyle)}
@@ -239,26 +263,7 @@ export default memo(function PlayerCard({
                 )}
                 value={shouldShow ? player.funds : '???'}
               />
-              <Stack gap>
-                {winConditions
-                  .filter(
-                    (condition) =>
-                      !condition.hidden &&
-                      (objectiveHasAmounts(condition) ||
-                        condition.type === Criteria.Survival) &&
-                      matchesPlayerList(condition.players, player.id) &&
-                      !condition.completed?.has(player.id),
-                  )
-                  .map((condition, index) => (
-                    <PlayerCardObjective
-                      index={index}
-                      key={index}
-                      map={map}
-                      objective={condition}
-                      player={player}
-                    />
-                  ))}
-              </Stack>
+              <Stack gap>{objectiveList}</Stack>
             </Stack>
             {wide && (
               <Stack className={offsetStyle} gap={16} nowrap>
@@ -342,12 +347,12 @@ export default memo(function PlayerCard({
 });
 
 const PlayerCardObjective = ({
-  index,
+  id,
   map,
   objective,
   player,
 }: {
-  index: number;
+  id: number;
   map: MapData;
   objective: Objective;
   player: Player;
@@ -389,7 +394,7 @@ const PlayerCardObjective = ({
 
   return (
     (icon && status != null && (
-      <Stack className={nowrapStyle} gap={2} key={index} nowrap>
+      <Stack className={nowrapStyle} gap={2} key={id} nowrap>
         <div>
           <Icon className={winConditionIconStyle} icon={icon} />
           {status}

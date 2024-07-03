@@ -148,7 +148,7 @@ export default function useClientGameAction(
             ),
           );
 
-          const hiddenLabels = getHiddenLabels(map.config.winConditions);
+          const hiddenLabels = getHiddenLabels(map.config.objectives);
           actionResponse = dropLabelsFromActionResponse(
             actionResponse,
             hiddenLabels,

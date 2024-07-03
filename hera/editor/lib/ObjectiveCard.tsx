@@ -36,7 +36,7 @@ import UnitSelector from './UnitSelector.tsx';
 export default function ObjectiveCard({
   canDelete,
   hasContentRestrictions,
-  index,
+  id,
   isAdmin,
   map,
   objective,
@@ -48,7 +48,7 @@ export default function ObjectiveCard({
 }: {
   canDelete?: boolean;
   hasContentRestrictions: boolean;
-  index: number;
+  id: number;
   isAdmin?: boolean;
   map: MapData;
   objective: Objective;
@@ -90,7 +90,7 @@ export default function ObjectiveCard({
         />
       )}
       <h2>
-        <ObjectiveTitle index={index} objective={objective} />
+        <ObjectiveTitle id={id} objective={objective} />
       </h2>
       <Form>
         <Stack gap={16} vertical>

@@ -23,25 +23,22 @@ export default class VectorBehavior {
   ): StateLike | null {
     const { map } = state;
     const { config } = map;
-    const { action, effects, objective, scenario } = editor;
-    if (objective) {
-      const [winCondition, index] = objective;
-      const winConditions = [...config.winConditions];
-
-      const vectors = new Set(winCondition.vectors);
+    const { action, effects, scenario } = editor;
+    if (editor.objective) {
+      const { objective, objectiveId } = editor.objective;
+      const vectors = new Set(objective.vectors);
       vectors[editor.isErasing ? 'delete' : 'add'](vector);
-      const newWinCondition = {
-        ...winCondition,
+      const newObjective = {
+        ...objective,
         vectors,
       };
-      winConditions[index] = newWinCondition;
       setEditorState({
-        objective: [newWinCondition, index],
+        objective: { objective: newObjective, objectiveId },
       });
       return {
         map: map.copy({
           config: config.copy({
-            winConditions,
+            objectives: config.objectives.set(objectiveId, newObjective),
           }),
         }),
       };

@@ -181,8 +181,8 @@ export default withModifiers(
       blocklistedUnits: [],
       fog: false,
       multiplier: 1,
+      objectives: [[0, [0, 0, null]]],
       seedCapital: 300,
-      winConditions: [[0, 0, null]],
     },
     decorators: [
       [10, 9, 92],

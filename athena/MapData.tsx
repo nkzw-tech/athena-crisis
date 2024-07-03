@@ -43,6 +43,7 @@ import Unit from './map/Unit.tsx';
 import Vector from './map/Vector.tsx';
 import {
   Criteria,
+  decodeLegacyWinConditions,
   decodeObjectives,
   encodeObjectives,
   Objectives,
@@ -88,7 +89,7 @@ export class MapConfig {
     public readonly blocklistedUnits: ReadonlySet<ID>,
     public readonly fog: boolean,
     public readonly biome: Biome,
-    public readonly winConditions: Objectives,
+    public readonly objectives: Objectives,
   ) {}
 
   copy({
@@ -98,8 +99,8 @@ export class MapConfig {
     blocklistedUnits,
     fog,
     multiplier,
+    objectives,
     seedCapital,
-    winConditions,
   }: Partial<MapConfig>) {
     return new MapConfig(
       multiplier ?? this.multiplier,
@@ -109,11 +110,11 @@ export class MapConfig {
       blocklistedUnits ?? this.blocklistedUnits,
       fog ?? this.fog,
       biome ?? this.biome,
-      winConditions ?? this.winConditions,
+      objectives ?? this.objectives,
     );
   }
 
-  toJSON() {
+  toJSON(): PlainMapConfig {
     const {
       biome,
       blocklistedBuildings,
@@ -121,8 +122,8 @@ export class MapConfig {
       blocklistedUnits,
       fog,
       multiplier,
+      objectives,
       seedCapital,
-      winConditions,
     } = this;
     return {
       biome,
@@ -131,8 +132,8 @@ export class MapConfig {
       blocklistedUnits: [...blocklistedUnits],
       fog,
       multiplier,
+      objectives: encodeObjectives(objectives),
       seedCapital,
-      winConditions: encodeObjectives(winConditions),
     };
   }
 }
@@ -575,9 +576,11 @@ export default class MapData {
         new Set(data.config.blocklistedUnits),
         data.config.fog,
         data.config.biome,
-        (data.config.winConditions
-          ? decodeObjectives(data.config.winConditions)
-          : null) || [{ hidden: false, type: Criteria.Default }],
+        data.config.objectives
+          ? decodeObjectives(data.config.objectives)
+          : data.config.winConditions
+            ? decodeLegacyWinConditions(data.config.winConditions)
+            : ImmutableMap([[0, { hidden: false, type: Criteria.Default }]]),
       ),
       size,
       toPlayerID(data.currentPlayer),

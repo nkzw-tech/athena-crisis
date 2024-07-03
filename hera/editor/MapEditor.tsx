@@ -743,7 +743,7 @@ export default function MapEditor({
         config: newMap.config.copy({
           blocklistedBuildings: map.config.blocklistedBuildings,
           blocklistedUnits: map.config.blocklistedUnits,
-          winConditions: map.config.winConditions,
+          objectives: map.config.objectives,
         }),
       }),
     );

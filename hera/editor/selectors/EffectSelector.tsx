@@ -6,14 +6,14 @@ import EffectTitle from '../lib/EffectTitle.tsx';
 
 export default function EffectSelector({
   effects,
+  objectives,
   scenario: { effect: currentEffect, trigger: currentTrigger },
   setScenario,
-  winConditions,
 }: {
   effects: Effects;
+  objectives: Objectives | undefined;
   scenario: Scenario;
   setScenario: (scenario: Scenario) => void;
-  winConditions: Objectives | undefined;
 }) {
   return (
     <Select
@@ -21,8 +21,8 @@ export default function EffectSelector({
         <EffectTitle
           effect={currentEffect}
           effects={effects}
+          objectives={objectives}
           trigger={currentTrigger}
-          winConditions={winConditions}
         />
       }
     >
@@ -38,8 +38,8 @@ export default function EffectSelector({
             <EffectTitle
               effect={effect}
               effects={effects}
+              objectives={objectives}
               trigger={trigger}
-              winConditions={winConditions}
             />
           </InlineLink>
         )),

@@ -108,7 +108,12 @@ export function applyObjectives(
   activeMap: MapData,
   lastActionResponse: ActionResponse,
 ): GameState | null {
-  const objective = checkObjectives(previousMap, activeMap, lastActionResponse);
+  const maybeObjective = checkObjectives(
+    previousMap,
+    activeMap,
+    lastActionResponse,
+  );
+  const [objectiveId, objective] = maybeObjective || [];
   const actionResponse =
     !objective || (objective.type !== Criteria.Default && objective.optional)
       ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
@@ -129,6 +134,7 @@ export function applyObjectives(
     : undefined;
 
   const optionalObjective: OptionalObjectiveActionResponse | null =
+    objectiveId != null &&
     objective?.type !== Criteria.Default &&
     objective?.optional === true &&
     player &&
@@ -138,7 +144,7 @@ export function applyObjectives(
             ...objective,
             completed: new Set([...(objective.completed || []), player]),
           },
-          objectiveId: map.config.winConditions.indexOf(objective),
+          objectiveId,
           toPlayer: player,
           type: 'OptionalObjective',
         } as const)
@@ -157,7 +163,7 @@ export function applyObjectives(
     objective?.type === Criteria.Default || objective?.optional === false
       ? ({
           objective,
-          objectiveId: map.config.winConditions.indexOf(objective),
+          objectiveId,
           toPlayer: player,
           type: 'GameEnd',
         } as const)
@@ -243,16 +249,18 @@ export function applyObjectiveActionResponse(
     case 'GameEnd':
       return map;
     case 'OptionalObjective': {
+      const { config } = map;
       const { objective, objectiveId } = actionResponse;
       if (objective.type === Criteria.Default) {
         return map;
       }
 
-      const winConditions = Array.from(map.config.winConditions);
-      winConditions[objectiveId] = { ...objective, hidden: false };
       return map.copy({
-        config: map.config.copy({
-          winConditions,
+        config: config.copy({
+          objectives: config.objectives.set(objectiveId, {
+            ...objective,
+            hidden: false,
+          }),
         }),
       });
     }

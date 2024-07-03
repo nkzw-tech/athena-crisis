@@ -268,34 +268,43 @@ test('escort radius with label', async () => {
   const initialMap = map.copy({
     buildings: map.buildings.set(v4, House.create(1)),
     config: map.config.copy({
-      winConditions: [
-        {
-          amount: 1,
-          hidden: false,
-          label: new Set([2]),
-          optional: false,
-          players: [1],
-          type: Criteria.EscortAmount,
-          vectors: new Set([v4, v5]),
-        },
-        {
-          amount: 7,
-          hidden: false,
-          label: new Set([1]),
-          optional: false,
-          players: [2],
-          type: Criteria.EscortAmount,
-          vectors: new Set([v6, v7]),
-        },
-        {
-          amount: 15,
-          hidden: false,
-          optional: false,
-          players: [1],
-          type: Criteria.EscortAmount,
-          vectors: new Set([v8, v9]),
-        },
-      ],
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            amount: 1,
+            hidden: false,
+            label: new Set([2]),
+            optional: false,
+            players: [1],
+            type: Criteria.EscortAmount,
+            vectors: new Set([v4, v5]),
+          },
+        ],
+        [
+          1,
+          {
+            amount: 7,
+            hidden: false,
+            label: new Set([1]),
+            optional: false,
+            players: [2],
+            type: Criteria.EscortAmount,
+            vectors: new Set([v6, v7]),
+          },
+        ],
+        [
+          2,
+          {
+            amount: 15,
+            hidden: false,
+            optional: false,
+            players: [1],
+            type: Criteria.EscortAmount,
+            vectors: new Set([v8, v9]),
+          },
+        ],
+      ]),
     }),
     units: map.units
       .set(v1, Pioneer.create(1))

@@ -11,12 +11,12 @@ import { memo } from 'react';
 import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
 import MiniPlayerIcon from '../../ui/MiniPlayerIcon.tsx';
 
-export const EffectWinConditionTitle = ({
+export const EffectObjectiveTitle = ({
   id,
-  winConditions,
+  objectives,
 }: {
   id: DynamicEffectObjectiveID;
-  winConditions?: Objectives;
+  objectives?: Objectives;
 }) => {
   switch (id) {
     case 'win':
@@ -26,9 +26,9 @@ export const EffectWinConditionTitle = ({
     case 'draw':
       return <fbt desc="Game end effect name for draw.">Draw</fbt>;
     default: {
-      const condition = winConditions?.[id];
-      return condition ? (
-        <ObjectiveTitle index={id} objective={condition} />
+      const objective = objectives?.get(id);
+      return objective ? (
+        <ObjectiveTitle id={id} objective={objective} />
       ) : null;
     }
   }
@@ -37,13 +37,13 @@ export const EffectWinConditionTitle = ({
 export default memo(function EffectTitle({
   effect,
   effects,
+  objectives,
   trigger,
-  winConditions,
 }: {
   effect: Effect;
   effects?: Effects;
+  objectives: Objectives | undefined;
   trigger: EffectTrigger;
-  winConditions: Objectives | undefined;
 }) {
   const effectList = effects?.get(trigger);
   const hasMany = (effectList?.size || 1) > 1;
@@ -85,9 +85,9 @@ export default memo(function EffectTitle({
         {condition && (
           <>
             <span>-</span>
-            <EffectWinConditionTitle
+            <EffectObjectiveTitle
               id={condition.value}
-              winConditions={winConditions}
+              objectives={objectives}
             />
           </>
         )}

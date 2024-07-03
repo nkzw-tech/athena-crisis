@@ -54,7 +54,7 @@ export type ErrorReason =
   | 'invalid-size'
   | 'invalid-teams'
   | 'invalid-tiles'
-  | 'invalid-win-conditions'
+  | 'invalid-objectives'
   | 'players';
 
 const validateMapConfig = (map: MapData) => {
@@ -402,7 +402,7 @@ export default function validateMap(
     active,
     buildings: map.buildings.map((entity) => entity.recover()),
     config: map.config.copy({
-      winConditions: resetObjectives(map.config.winConditions, new Set(active)),
+      objectives: resetObjectives(map.config.objectives, new Set(active)),
     }),
     currentPlayer: active[0],
     round: 1,
@@ -411,7 +411,7 @@ export default function validateMap(
   });
 
   if (!validateObjectives(newMap)) {
-    return [null, 'invalid-win-conditions'];
+    return [null, 'invalid-objectives'];
   }
 
   return validateTeams(newMap, newTeams || toTeamArray(map.teams));

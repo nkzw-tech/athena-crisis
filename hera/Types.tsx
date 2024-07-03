@@ -128,6 +128,7 @@ export type State = Readonly<{
   mapName?: string;
   namedPositions: ReadonlyArray<Vector> | null;
   navigationDirection: NavigationDirection | null;
+  objectiveRadius: ReadonlyArray<RadiusInfo> | null;
   paused: boolean;
   position: Vector | null;
   preventRemoteActions: boolean;
@@ -142,7 +143,6 @@ export type State = Readonly<{
   tileSize: number;
   timeout: number | null;
   vision: VisionT;
-  winConditionRadius: ReadonlyArray<RadiusInfo> | null;
   zIndex: number;
 }>;
 

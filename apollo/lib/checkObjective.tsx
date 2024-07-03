@@ -7,6 +7,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
   Objective,
+  ObjectiveID,
   onlyHasDefaultObjective,
 } from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
@@ -29,11 +30,11 @@ export function shouldCheckDefaultObjectives(
   map: MapData,
   actionResponse: ActionResponse,
 ) {
-  const { winConditions } = map.config;
+  const { objectives } = map.config;
   if (isDestructiveAction(actionResponse)) {
     return (
-      onlyHasDefaultObjective(winConditions) ||
-      winConditions.some(
+      onlyHasDefaultObjective(objectives) ||
+      objectives.some(
         (objective) =>
           objective.type === Criteria.Default ||
           (objective.type === Criteria.DefeatLabel &&
@@ -42,8 +43,8 @@ export function shouldCheckDefaultObjectives(
     );
   } else if (actionResponse.type === 'Capture' && actionResponse.building) {
     return (
-      onlyHasDefaultObjective(winConditions) ||
-      winConditions.some(
+      onlyHasDefaultObjective(objectives) ||
+      objectives.some(
         (objective) =>
           objective.type === Criteria.Default ||
           ((objective.type === Criteria.CaptureAmount ||
@@ -272,9 +273,9 @@ export default function checkObjectives(
   previousMap: MapData,
   map: MapData,
   actionResponse: ActionResponse,
-) {
-  const { winConditions } = map.config;
-  if (onlyHasDefaultObjective(winConditions)) {
+): [ObjectiveID, Objective] | null {
+  const { objectives } = map.config;
+  if (onlyHasDefaultObjective(objectives)) {
     return null;
   }
 
@@ -299,27 +300,27 @@ export default function checkObjectives(
       isRescue,
       isMove,
     );
-    if (winConditions.length === 1) {
-      const objective = winConditions[0];
-      if (check(objective)) {
-        return objective;
+    if (objectives.size === 1) {
+      const objective = objectives.first();
+      if (objective && check(objective)) {
+        return [0, objective];
       }
     }
 
-    if (winConditions.length === 2) {
-      const objectiveA = winConditions[0];
-      if (check(objectiveA)) {
-        return objectiveA;
+    if (objectives.size === 2) {
+      const objectiveA = objectives.first();
+      if (objectiveA && check(objectiveA)) {
+        return [0, objectiveA];
       }
 
-      const objectiveB = winConditions[1];
-      if (check(objectiveB)) {
-        return objectiveB;
+      const objectiveB = objectives.last();
+      if (objectiveB && check(objectiveB)) {
+        return [1, objectiveB];
       }
     } else {
-      for (const objective of winConditions) {
+      for (const [id, objective] of objectives) {
         if (check(objective)) {
-          return objective;
+          return [id, objective];
         }
       }
     }

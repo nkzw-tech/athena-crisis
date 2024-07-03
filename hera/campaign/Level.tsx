@@ -6,7 +6,11 @@ import {
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria, Objectives } from '@deities/athena/Objectives.tsx';
+import {
+  Criteria,
+  ObjectiveID,
+  Objectives,
+} from '@deities/athena/Objectives.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
@@ -56,9 +60,9 @@ export default memo(function Level({
   depthMap,
   grandParentLevel,
   level,
+  objectiveId,
+  objectives,
   parentLevel,
-  winConditionIndex,
-  winConditions,
   ...commonProps
 }: {
   dataSource: TypeaheadDataSource<MapNode>;
@@ -67,6 +71,8 @@ export default memo(function Level({
   grandParentLevel?: LevelT<ClientLevelID>;
   level: LevelT<ClientLevelID>;
   maps: ReadonlyMap<ClientLevelID, MapNode>;
+  objectiveId?: ObjectiveID;
+  objectives?: Objectives;
   parentLevel?: LevelT<ClientLevelID>;
   renderEntities?: boolean;
   replaceFirstLevel: (mapId: ClientLevelID) => void;
@@ -76,8 +82,6 @@ export default memo(function Level({
     level: PlainLevel<ClientLevelID> | ReadonlyArray<PlainLevel<ClientLevelID>>,
     newMap?: MapNode,
   ) => void;
-  winConditionIndex?: number;
-  winConditions?: Objectives;
   zoom?: number;
 }) {
   const {
@@ -94,8 +98,7 @@ export default memo(function Level({
   const ref = useRef(null);
   const isInView = useInView(ref);
 
-  const condition =
-    winConditionIndex != null && winConditions?.[winConditionIndex];
+  const objective = objectiveId != null && objectives?.get(objectiveId);
   const node = maps.get(level.mapId);
   const { alert } = useAlert();
   const map = useMapData(node?.state);
@@ -109,8 +112,8 @@ export default memo(function Level({
     trigger: 'Start',
   });
 
-  const updateWinCondition = useCallback(
-    (index: number | null) => {
+  const updateObjective = useCallback(
+    (objectiveId: ObjectiveID | null) => {
       if (parentLevel) {
         updateLevel({
           ...parentLevel,
@@ -119,7 +122,7 @@ export default memo(function Level({
             const { mapId } = isArray ? entry[1] : entry;
             // Only mutate if the level id matches.
             if (mapId === level.mapId) {
-              return index != null ? [index, mapId] : mapId;
+              return objectiveId != null ? [objectiveId, mapId] : mapId;
             }
             return isArray ? [entry[0], mapId] : mapId;
           }),
@@ -167,19 +170,13 @@ export default memo(function Level({
           ref={ref}
         >
           <Dropdown
-            dropdownClassName={winConditionSelectorStyle}
+            dropdownClassName={objectiveSelectorStyle}
             title={
-              condition && winConditionIndex != null ? (
-                <ObjectiveTitle
-                  index={winConditionIndex}
-                  objective={condition}
-                  short
-                />
+              objective && objectiveId != null ? (
+                <ObjectiveTitle id={objectiveId} objective={objective} short />
               ) : (
                 depth > 0 && (
-                  <fbt desc="Short description for 'any win condition'">
-                    Win
-                  </fbt>
+                  <fbt desc="Short description for 'any objective'">Win</fbt>
                 )
               )
             }
@@ -187,27 +184,27 @@ export default memo(function Level({
             {parentLevel && (
               <>
                 <InlineLink
-                  className={winConditionSelectorItemStyle}
-                  onClick={() => updateWinCondition(null)}
+                  className={objectiveSelectorItemStyle}
+                  onClick={() => updateObjective(null)}
                   selectedText={
-                    winConditionIndex == null ||
-                    (condition && condition.type === Criteria.Default)
+                    objectiveId == null ||
+                    (objective && objective.type === Criteria.Default)
                   }
                 >
-                  <fbt desc="Long description for 'any win condition'">
+                  <fbt desc="Long description for 'any objective'">
                     Win (in any way)
                   </fbt>
                 </InlineLink>
-                {winConditions
-                  ?.map((condition, index) =>
-                    condition.type !== Criteria.Default ? (
+                {objectives
+                  ?.map((objective, id) =>
+                    objective.type !== Criteria.Default ? (
                       <InlineLink
-                        className={winConditionSelectorItemStyle}
-                        key={index}
-                        onClick={() => updateWinCondition(index)}
-                        selectedText={index === winConditionIndex}
+                        className={objectiveSelectorItemStyle}
+                        key={id}
+                        onClick={() => updateObjective(id)}
+                        selectedText={id === objectiveId}
                       >
-                        <ObjectiveTitle index={index} objective={condition} />
+                        <ObjectiveTitle id={id} objective={objective} />
                       </InlineLink>
                     ) : null,
                   )
@@ -320,9 +317,9 @@ export default memo(function Level({
                     <Stack alignCenter gap={16} nowrap>
                       <EffectSelector
                         effects={effects}
+                        objectives={map.config.objectives}
                         scenario={scenario}
                         setScenario={(scenario) => setScenario(scenario)}
-                        winConditions={map.config.winConditions}
                       />
                       <Button
                         onClick={() => setMap(node.id, 'effects', scenario)}
@@ -385,13 +382,13 @@ export default memo(function Level({
                 depthMap={depthMap}
                 grandParentLevel={parentLevel}
                 key={(Array.isArray(entry) ? entry[1] : entry).mapId}
+                objectives={map.config.objectives}
                 parentLevel={level}
-                winConditions={map.config.winConditions}
                 {...commonProps}
                 {...(Array.isArray(entry)
                   ? {
                       level: entry[1],
-                      winConditionIndex: entry[0],
+                      objectiveId: entry[0],
                     }
                   : { level: entry })}
               />
@@ -469,7 +466,7 @@ const effectContainerStyle = css`
   }
 `;
 
-const winConditionSelectorStyle = css`
+const objectiveSelectorStyle = css`
   ${pixelBorder(applyVar('background-color-light'))}
 
   backdrop-filter: blur(2px);
@@ -480,7 +477,7 @@ const winConditionSelectorStyle = css`
   z-index: 102;
 `;
 
-const winConditionSelectorItemStyle = css`
+const objectiveSelectorItemStyle = css`
   margin: 4px;
   white-space: nowrap;
 `;
