@@ -610,6 +610,10 @@ async function processActionResponse(
       switch (rewardType) {
         case 'Skill': {
           if (isSkillRewardActionResponse(actionResponse)) {
+            if (map.getPlayer(actionResponse.player).skills.has(reward.skill)) {
+              break;
+            }
+
             return buySkillAction(actions, actionResponse);
           }
 
