@@ -33,7 +33,7 @@ jobs:
         run: npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
           version: 9.*
