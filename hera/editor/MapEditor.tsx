@@ -100,6 +100,7 @@ import {
   MapCreateFunction,
   MapEditorSaveState,
   MapObject,
+  MapPerformanceMetricsEstimationFunction,
   MapUpdateFunction,
   PreviousMapEditorState,
   SaveMapFunction,
@@ -227,6 +228,7 @@ export default function MapEditor({
   children,
   confirmActionStyle,
   createMap,
+  estimateMapPerformance,
   fogStyle,
   inset = 0,
   isAdmin,
@@ -242,6 +244,7 @@ export default function MapEditor({
   animationSpeed: AnimationSpeed | null;
   confirmActionStyle: 'always' | 'touch' | 'never';
   createMap: MapCreateFunction;
+  estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
   fogStyle: 'soft' | 'hard';
   isAdmin?: boolean;
   mapObject?: MapObject | null;
@@ -1047,6 +1050,7 @@ export default function MapEditor({
                   actions={actions}
                   drawerPosition={drawerPosition}
                   editor={editor}
+                  estimateMapPerformance={estimateMapPerformance}
                   expand={expand}
                   fillMap={fillMap}
                   inset={inset}

@@ -13,7 +13,7 @@ import {
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
@@ -21,6 +21,9 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
+import animateFireworks, {
+  getPossibleFireworksPositions,
+} from '../animations/animateFireworks.tsx';
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
@@ -64,8 +67,6 @@ import {
   AnimationConfigs,
   PlayerHasRewardFunction,
   State,
-  StateLike,
-  StateToStateLike,
 } from '../Types.tsx';
 import ActionResponseError from './ActionResponseError.tsx';
 
@@ -495,60 +496,24 @@ async function processActionResponse(
       }
 
       const winners = [...team.players.map(({ id }) => id).values()];
-      const possiblePositions = new Set<Vector>();
-      for (const [vector, building] of map.buildings) {
-        if (map.matchesTeam(building, toPlayer)) {
-          possiblePositions.add(vector);
-        }
-      }
-      for (const [vector, unit] of map.units) {
-        if (map.matchesTeam(unit, toPlayer)) {
-          possiblePositions.add(vector);
-        }
-      }
-
-      const animateFireworks = (
-        state: State,
-        positions: ReadonlyArray<Vector>,
-        onComplete: StateToStateLike,
-      ): StateLike | null => {
-        const position = positions?.[0];
-        return position
-          ? {
-              animations: state.animations.set(position, {
-                onComplete: (state: StateLike) =>
-                  animateFireworks(
-                    {
-                      ...state,
-                      animations: state.animations!.delete(position),
-                    } as State,
-                    positions.slice(1),
-                    onComplete,
-                  ),
-                type: 'fireworks',
-              }),
-            }
-          : onComplete(state);
-      };
-
-      const color = winners.slice();
       const winnerList = intlList(
         winners.map(getTranslatedFactionName.bind(null, factionNames)),
         Conjunctions.AND,
         Delimiters.COMMA,
       );
-
-      const count =
+      const fireworks =
         state.currentViewer && winners.includes(state.currentViewer) ? 7 : 3;
       await update((currentState) => ({
         ...state,
         animations: currentState.animations.set(new AnimationKey(), {
-          color,
+          color: winners,
           length: 'short',
           onComplete: (state) =>
             animateFireworks(
               state,
-              arrayShuffle([...possiblePositions]).slice(0, count),
+              arrayShuffle([
+                ...getPossibleFireworksPositions(map, toPlayer),
+              ]).slice(0, fireworks),
               (state) => {
                 resolve({
                   ...state,

@@ -146,3 +146,21 @@ export type MapEditorSaveState = Readonly<
       message: string;
     }
 >;
+
+export type MapPerformanceMetricsEstimation = Readonly<{
+  avgCapturedBuildings: number;
+  avgLostUnits: number;
+  avgOneShots: number;
+  avgPace: number;
+  avgPower: number;
+  capturedBuildings: number;
+  histogram: string;
+  lostUnits: number;
+  oneShots: number;
+  pace: number;
+  power: number;
+  won: number;
+}>;
+
+export type MapPerformanceMetricsEstimationFunction =
+  () => Promise<MapPerformanceMetricsEstimation | null>;

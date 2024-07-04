@@ -46,6 +46,8 @@ export type PlayerHasRewardFunction = (
   actionResponse: ReceiveRewardActionResponse,
 ) => boolean;
 
+export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
+
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
   animationConfig?: AnimationConfigs | AnimationConfig;
@@ -74,6 +76,7 @@ export type Props = Readonly<{
   onError?: (error: Error) => void;
   pan?: true;
   paused?: boolean;
+  playerAchievement?: PlayerAchievement | null;
   playerHasReward?: PlayerHasRewardFunction;
   scale: number;
   scroll?: boolean;

@@ -28,6 +28,7 @@ import replaceEffect from '../lib/replaceEffect.tsx';
 import {
   EditorState,
   MapObject,
+  MapPerformanceMetricsEstimationFunction,
   PreviousMapEditorState,
   SaveMapFunction,
   SetEditorStateFunction,
@@ -47,6 +48,7 @@ export default function MapEditorControlPanel({
   actions,
   drawerPosition,
   editor,
+  estimateMapPerformance,
   expand,
   fillMap,
   inset = 0,
@@ -71,6 +73,7 @@ export default function MapEditorControlPanel({
 }: StateWithActions & {
   drawerPosition: DrawerPosition;
   editor: EditorState;
+  estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
   expand: boolean;
   fillMap: () => void;
   inset?: number;
@@ -227,6 +230,8 @@ export default function MapEditorControlPanel({
             return (
               <MapEditorSettingsPanel
                 actions={actions}
+                canEditPerformance={!!mapObject?.campaigns.edges.length}
+                estimateMapPerformance={estimateMapPerformance}
                 isAdmin={isAdmin}
                 mapName={mapName}
                 mapObject={mapObject}

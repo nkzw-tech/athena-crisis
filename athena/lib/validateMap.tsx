@@ -30,6 +30,7 @@ import Player, {
   PlayerID,
   toPlayerID,
 } from '../map/Player.tsx';
+import { PerformanceStyleTypes } from '../map/PlayerPerformance.tsx';
 import Team, { toTeamArray } from '../map/Team.tsx';
 import Unit, { TransportedUnit } from '../map/Unit.tsx';
 import vec from '../map/vec.tsx';
@@ -64,6 +65,7 @@ const validateMapConfig = (map: MapData) => {
     blocklistedUnits,
     fog,
     multiplier,
+    performance,
     seedCapital,
   } = config;
   if (typeof fog !== 'boolean') {
@@ -90,6 +92,18 @@ const validateMapConfig = (map: MapData) => {
     if (!getUnitInfo(unitId)) {
       return false;
     }
+  }
+
+  const { pace, power, style } = performance;
+  if (
+    (pace != null && pace < 1) ||
+    (power != null && power < 0) ||
+    (style != null &&
+      (!PerformanceStyleTypes.includes(style[0]) ||
+        style[1] == null ||
+        style[1] < 0))
+  ) {
+    return false;
   }
 
   return true;

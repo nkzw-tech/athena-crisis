@@ -17,7 +17,6 @@ import {
   AnimationConfig,
   DoubleSize,
   FastAnimationConfig,
-  MaxHealth,
   MaxSize,
   SlowAnimationConfig,
   TileSize,
@@ -42,12 +41,8 @@ import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { ScrollRestore } from '@deities/ui/hooks/useScrollRestore.tsx';
-import Icon from '@deities/ui/Icon.tsx';
-import Heart from '@deities/ui/icons/Heart.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
@@ -58,7 +53,6 @@ import React, {
   PointerEvent as ReactPointerEvent,
 } from 'react';
 import processActionResponses from './action-response/processActionResponse.tsx';
-import getHealthColor from './behavior/attack/getHealthColor.tsx';
 import BaseBehavior from './behavior/Base.tsx';
 import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
@@ -90,9 +84,9 @@ import {
   TimerID,
   TimerState,
 } from './Types.tsx';
-import FlashFlyout from './ui/FlashFlyout.tsx';
-import { FlyoutItem } from './ui/Flyout.tsx';
 import GameDialog from './ui/GameDialog.tsx';
+import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
+import NamedPosition from './ui/NamedPosition.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -1650,6 +1644,7 @@ export default class GameMap extends Component<Props, State> {
         editor,
         fogStyle,
         margin,
+        playerAchievement,
         scale,
         showCursor: propsShowCursor,
         skipBanners,
@@ -1664,6 +1659,7 @@ export default class GameMap extends Component<Props, State> {
         currentViewer,
         effectState,
         gameInfoState,
+        lastActionResponse,
         map,
         namedPositions,
         objectiveRadius,
@@ -1822,7 +1818,6 @@ export default class GameMap extends Component<Props, State> {
                   )}
                 </>
               )}
-
             <MapAnimations
               actions={this._actions}
               animationComplete={this._animationComplete}
@@ -1862,52 +1857,17 @@ export default class GameMap extends Component<Props, State> {
             <div className={pointerStyle} ref={this._wrapperRef}>
               <AnimatePresence>
                 {!behavior || showNamedPositionsForBehavior.has(behavior.type)
-                  ? namedPositions?.map((vector) => {
-                      const unit = map.units.get(vector);
-                      const hasName =
-                        unit && unit.hasName() && unit.player !== 0;
-                      const showHealth = unit && unit.health < MaxHealth;
-                      return (
-                        (hasName || showHealth) && (
-                          <FlashFlyout
-                            align="top-lower"
-                            animationConfig={animationConfig}
-                            items={[
-                              <FlyoutItem color={unit.player} key="unit-name">
-                                <Stack gap={4} nowrap>
-                                  {hasName && (
-                                    <Stack gap={1} nowrap>
-                                      {unit.getName(currentViewer)}
-                                      {unit.isLeader() && <Icon icon={Magic} />}
-                                    </Stack>
-                                  )}
-                                  {showHealth ? (
-                                    <Stack
-                                      gap={1}
-                                      nowrap
-                                      style={{
-                                        color:
-                                          getHealthColor(unit.health) ||
-                                          applyVar('text-color'),
-                                      }}
-                                    >
-                                      {unit.health}
-                                      <Icon icon={Heart} />
-                                    </Stack>
-                                  ) : null}
-                                </Stack>
-                              </FlyoutItem>,
-                            ]}
-                            key={`named-position-${vector}`}
-                            mini
-                            position={vector}
-                            tileSize={tileSize}
-                            width={map.size.width}
-                            zIndex={zIndex}
-                          />
-                        )
-                      );
-                    })
+                  ? namedPositions?.map((vector) => (
+                      <NamedPosition
+                        animationConfig={animationConfig}
+                        currentViewer={currentViewer}
+                        key={`named-position-${vector}`}
+                        map={map}
+                        tileSize={tileSize}
+                        vector={vector}
+                        zIndex={zIndex}
+                      />
+                    ))
                   : null}
                 {StateComponent && (
                   <StateComponent
@@ -1922,6 +1882,19 @@ export default class GameMap extends Component<Props, State> {
               {children?.(this.state, this._actions)}
             </div>
           </div>
+          {lastActionResponse?.type === 'GameEnd' &&
+            lastActionResponse.toPlayer &&
+            currentViewer != null &&
+            map.matchesTeam(lastActionResponse.toPlayer, currentViewer) && (
+              <MapPerformanceMetrics
+                key="performance-metrics"
+                map={map}
+                player={currentViewer}
+                playerAchievement={playerAchievement || null}
+                scrollIntoView={this._scrollIntoView}
+                zIndex={zIndex}
+              />
+            )}
         </div>
         {gameInfoState && (
           <GameDialog

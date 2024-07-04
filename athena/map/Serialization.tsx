@@ -14,8 +14,8 @@ import Player, {
   PlayerID,
   toPlayerID,
 } from './Player.tsx';
+import { decodePlayerStatistics } from './PlayerStatistics.tsx';
 import SpriteVector from './SpriteVector.tsx';
-import { decodePlayerStatistics } from './Statistics.tsx';
 import Team, { PlainTeam, Teams } from './Team.tsx';
 import Unit, { PlainUnit } from './Unit.tsx';
 import vec from './vec.tsx';

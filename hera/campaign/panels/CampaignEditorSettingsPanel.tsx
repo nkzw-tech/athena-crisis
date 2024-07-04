@@ -72,9 +72,9 @@ export default function CampaignEditorSettingsPanel({
       <Box gap vertical>
         <label>
           <Stack gap start vertical>
-            <div>
-              <fbt desc="Campaign name label">Name</fbt>
-            </div>
+            <h2>
+              <fbt desc="Campaign name label">Campaign Name</fbt>
+            </h2>
             <input
               className={inputStyle}
               onBlur={(event) => event.target.classList.add('validate')}
@@ -91,9 +91,9 @@ export default function CampaignEditorSettingsPanel({
       </Box>
       <Box gap vertical>
         <Stack gap vertical>
-          <span>
+          <h2>
             <fbt desc="Label for campaign tags">Tags</fbt>
-          </span>
+          </h2>
           <TagInput
             dataSource={dataSource}
             emptySuggestions={emptySuggestions}
@@ -113,9 +113,9 @@ export default function CampaignEditorSettingsPanel({
         </Stack>
       </Box>
       <Box gap vertical>
-        <span>
+        <h2>
           <fbt desc="Label for campaign owners">Owners</fbt>
-        </span>
+        </h2>
         <TagInput
           dataSource={userDataSource}
           setTags={setUsers}
@@ -130,48 +130,53 @@ export default function CampaignEditorSettingsPanel({
         </div>
       </Box>
       <Box gap vertical>
-        <span>
+        <h2>
           <fbt desc="Label for campaign description">Description</fbt>
-        </span>
+        </h2>
         <textarea
           className={descriptionStyle}
           onChange={(event) => setDescription(event.target.value)}
           value={description}
         />
       </Box>
-      <Box alignCenter gap={16}>
-        <span>
-          <fbt desc="Label for campaign playstyle">Playstyle</fbt>
-        </span>
-        <Stack gap={16}>
-          <InlineLink
-            className={buttonStyle}
-            onClick={() => setPlayStyle(null)}
-            selected={playStyle == null}
-          >
-            <fbt desc="Button to allow the user to select their playstyle">
-              User Selectable
-            </fbt>
-          </InlineLink>
-          {Object.values(PlayStyle).map((currentPlayStyle) => (
+      <Box gap={16} vertical>
+        <h2>
+          <fbt desc="Label for campaign settings">Campaign Settings</fbt>
+        </h2>
+        <Stack alignCenter gap>
+          <span>
+            <fbt desc="Label for campaign playstyle">Playstyle</fbt>
+          </span>
+          <Stack gap={16}>
             <InlineLink
               className={buttonStyle}
-              key={currentPlayStyle}
-              onClick={() => setPlayStyle(currentPlayStyle)}
-              selected={currentPlayStyle === playStyle}
+              onClick={() => setPlayStyle(null)}
+              selected={playStyle == null}
             >
-              {getTranslatedPlayStyleName(currentPlayStyle)}
+              <fbt desc="Button to allow the user to select their playstyle">
+                User Selectable
+              </fbt>
             </InlineLink>
-          ))}
+            {Object.values(PlayStyle).map((currentPlayStyle) => (
+              <InlineLink
+                className={buttonStyle}
+                key={currentPlayStyle}
+                onClick={() => setPlayStyle(currentPlayStyle)}
+                selected={currentPlayStyle === playStyle}
+              >
+                {getTranslatedPlayStyleName(currentPlayStyle)}
+              </InlineLink>
+            ))}
+          </Stack>
         </Stack>
-      </Box>
-      <Box gap={16}>
-        <span>
-          <fbt desc="Label for campaign difficulty">
-            Campaign Difficulty Rating
-          </fbt>
-        </span>
-        <RangeSelector invert onSelect={setDifficulty} value={difficulty} />
+        <Stack alignCenter gap>
+          <span>
+            <fbt desc="Label for campaign difficulty">
+              Campaign Difficulty Rating
+            </fbt>
+          </span>
+          <RangeSelector invert onSelect={setDifficulty} value={difficulty} />
+        </Stack>
       </Box>
       <Box gap={16}>
         <InlineLink onClick={() => saveCampaign()}>

@@ -7,6 +7,7 @@ export type PlayerStatistics = Readonly<{
   destroyedUnits: number;
   lostBuildings: number;
   lostUnits: number;
+  oneShots: number;
   rescuedUnits: number;
 }>;
 
@@ -20,6 +21,7 @@ export type PlainPlayerStatistics = [
   lostBuildings: number,
   rescuedUnits: number,
   lostUnits: number,
+  oneShots: number,
 ];
 
 export const InitialPlayerStatistics = {
@@ -31,6 +33,7 @@ export const InitialPlayerStatistics = {
   destroyedUnits: 0,
   lostBuildings: 0,
   lostUnits: 0,
+  oneShots: 0,
   rescuedUnits: 0,
 } as const;
 
@@ -44,6 +47,7 @@ export const PlayerStatisticsEntries = [
   'lostBuildings',
   'lostUnits',
   'rescuedUnits',
+  'oneShots',
 ] as const;
 
 export function decodePlayerStatistics(
@@ -59,6 +63,7 @@ export function decodePlayerStatistics(
     destroyedUnits: stats?.[5] ?? InitialPlayerStatistics.destroyedUnits,
     lostBuildings: stats?.[6] ?? InitialPlayerStatistics.lostBuildings,
     lostUnits: stats?.[7] ?? InitialPlayerStatistics.lostUnits,
+    oneShots: stats?.[9] ?? InitialPlayerStatistics.oneShots,
     rescuedUnits: stats?.[8] ?? InitialPlayerStatistics.rescuedUnits,
   };
 }
@@ -77,6 +82,7 @@ export function encodePlayerStatistics(
         stats.lostBuildings,
         stats.lostUnits,
         stats.rescuedUnits,
+        stats.oneShots,
       ]
     : null;
 }
