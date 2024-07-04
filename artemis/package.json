@@ -20,7 +20,7 @@
     "@deities/i18n": "workspace:*",
     "@deities/zeus": "workspace:*",
     "@graphql-tools/utils": "^10.2.3",
-    "@nkzw/histogram": "^1.0.1",
+    "@nkzw/histogram": "^1.1.0",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/safe-word-list": "^2.1.0",
     "@pothos/core": "^3.41.2",
@@ -66,7 +66,7 @@
     "@types/passport-local": "^1.0.38",
     "@types/web-push": "^3.6.3",
     "glob": "10.4.2",
-    "p-limit": "^5.0.0",
+    "p-limit": "^6.0.0",
     "prisma": "~5.16.1",
     "prisma-json-types-generator": "^3.0.4",
     "terminal-link": "^3.0.0"

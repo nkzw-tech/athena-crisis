@@ -60,7 +60,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
     "@nkzw/eslint-config": "^1.17.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "1.6.7-nightly-20240703.4",
+    "@swc/core": "1.6.7",
     "@types/fbt": "^1.0.5",
     "@types/node": "^20.14.9",
     "@vitejs/plugin-react": "^4.3.1",
@@ -71,7 +71,7 @@
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "nodemon": "^3.1.4",
-    "npm-run-all2": "^6.2.0",
+    "npm-run-all2": "^6.2.2",
     "prettier": "4.0.0-alpha.8",
     "prettier-plugin-packagejson": "^2.5.0",
     "react-refresh": "^0.14.2",
@@ -109,12 +109,11 @@
       "rollup@^2.0.0": "^4.16.4"
     },
     "patchedDependencies": {
-      "@remix-run/router@1.17.0": "patches/@remix-run__router@1.17.0.patch",
+      "@remix-run/router@1.17.1": "patches/@remix-run__router@1.17.1.patch",
       "eslint-plugin-import@2.29.1": "patches/eslint-plugin-import@2.29.1.patch",
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
-      "p-limit@5.0.0": "patches/p-limit@5.0.0.patch",
       "resend@3.4.0": "patches/resend@3.4.0.patch"
     }
   }
