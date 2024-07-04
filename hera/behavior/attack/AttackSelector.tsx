@@ -130,6 +130,7 @@ export default function AttackSelector({
       const counterDamage =
         entities.unit &&
         unitB &&
+        unitB.player !== 0 &&
         playerB &&
         !unitB.isDead() &&
         unitB.canAttackAt(1, playerB) &&
