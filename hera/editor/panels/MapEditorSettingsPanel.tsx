@@ -338,7 +338,7 @@ export default function MapEditorSettingsPanel({
                         onClick={() => setMetric('pace', metrics.pace)}
                       >
                         <fbt desc="Button to apply the estimated metric">
-                          apply metric
+                          apply
                         </fbt>
                       </InlineLink>
                     </Stack>
@@ -363,7 +363,7 @@ export default function MapEditorSettingsPanel({
                         onClick={() => setMetric('power', metrics.power)}
                       >
                         <fbt desc="Button to apply the estimated metric">
-                          apply metric
+                          apply
                         </fbt>
                       </InlineLink>
                     </Stack>
@@ -393,7 +393,7 @@ export default function MapEditorSettingsPanel({
                         }
                       >
                         <fbt desc="Button to apply the estimated metric">
-                          apply metric
+                          apply
                         </fbt>
                       </InlineLink>
                     </Stack>
@@ -415,7 +415,7 @@ export default function MapEditorSettingsPanel({
                         }
                       >
                         <fbt desc="Button to apply the estimated metric">
-                          apply metric
+                          apply
                         </fbt>
                       </InlineLink>
                     </Stack>
@@ -437,7 +437,7 @@ export default function MapEditorSettingsPanel({
                         }
                       >
                         <fbt desc="Button to apply the estimated metric">
-                          apply metric
+                          apply
                         </fbt>
                       </InlineLink>
                     </Stack>
