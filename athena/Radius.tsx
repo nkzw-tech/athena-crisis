@@ -65,7 +65,7 @@ function isAccessibleBase(map: MapData, unit: Unit, vector: Vector) {
 }
 
 function isAccessible(map: MapData, unit: Unit, vector: Vector) {
-  const key = vector.valueOf();
+  const key = vector.toJSON();
   let accessible = cacheMap.get(key);
   if (accessible != null) {
     return accessible;
