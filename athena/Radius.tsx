@@ -11,7 +11,7 @@ import Vector from './map/Vector.tsx';
 import MapData from './MapData.tsx';
 
 type RadiusConfiguration = {
-  getCost(map: MapData, unit: Unit, vector: Vector): number;
+  getCost(map: MapData, unit: Unit, vector: Vector, index?: number): number;
   getResourceValue(unit: Unit): number;
   getTransitionCost(
     info: UnitInfo,
@@ -37,38 +37,54 @@ export const RadiusItem = (
   vector,
 });
 
-function isAccessibleBase(map: MapData, unit: Unit, vector: Vector) {
-  if (!map.contains(vector)) {
-    return false;
-  }
+const cacheMap = new Map();
 
+function getCostBase(map: MapData, unit: Unit, vector: Vector, index?: number) {
+  const tileInfo = map.maybeGetTileInfo(vector, undefined, index);
+  return tileInfo ? tileInfo.getMovementCost(unit.info) : -1;
+}
+
+function getTransitionCostBase(
+  info: UnitInfo,
+  current: TileInfo,
+  parent: TileInfo,
+) {
+  if (parent.group !== current.group) {
+    return parent.getTransitionCost(info) + current.getTransitionCost(info);
+  }
+  return 0;
+}
+
+function isAccessibleBase(map: MapData, unit: Unit, vector: Vector) {
   const unitB = map.units.get(vector);
   if (unitB && map.isOpponent(unitB, unit)) {
     return false;
   }
-
   const building = map.buildings.get(vector);
-  if (building && !building.info.isAccessibleBy(unit.info)) {
-    return false;
-  }
+  return !(building && !building.info.isAccessibleBy(unit.info));
+}
 
-  return true;
+function isAccessible(map: MapData, unit: Unit, vector: Vector) {
+  const key = vector.valueOf();
+  let accessible = cacheMap.get(key);
+  if (accessible != null) {
+    return accessible;
+  }
+  accessible = isAccessibleBase(map, unit, vector);
+  cacheMap.set(key, accessible);
+  return accessible;
 }
 
 export const MoveConfiguration = {
-  getCost: (map: MapData, unit: Unit, vector: Vector) =>
-    map.maybeGetTileInfo(vector)?.getMovementCost(unit.info) || -1,
+  getCost: getCostBase,
   getResourceValue: (unit: Unit) => unit.fuel,
-  getTransitionCost: (info: UnitInfo, current: TileInfo, parent: TileInfo) =>
-    (current.group !== parent.group &&
-      parent.getTransitionCost(info) + current.getTransitionCost(info)) ||
-    0,
-  isAccessible: isAccessibleBase,
+  getTransitionCost: getTransitionCostBase,
+  isAccessible,
 } as const;
 
 const VisionConfiguration = {
-  getCost: (map: MapData, unit: Unit, vector: Vector) =>
-    map.maybeGetTileInfo(vector)?.configuration.vision || -1,
+  getCost: (map: MapData, unit: Unit, vector: Vector, index?: number) =>
+    map.maybeGetTileInfo(vector, undefined, index)?.configuration.vision || -1,
   getResourceValue: () => Number.POSITIVE_INFINITY,
   getTransitionCost: () => 0,
   isAccessible: (map: MapData, unit: Unit, vector: Vector) =>
@@ -81,29 +97,29 @@ function calculateRadius(
   start: Vector,
   radius: number,
   {
-    getCost,
     getResourceValue,
     getTransitionCost,
     isAccessible,
   }: RadiusConfiguration = MoveConfiguration,
 ): Map<Vector, RadiusItem> {
-  const { info } = unit;
-  const closed = new Array(map.size.width * map.size.height);
+  const closed: { [key: number]: 1 } = {};
   const paths = new Map<Vector, RadiusItem>();
   const queue = new FastPriorityQueue<RadiusItem>((a, b) => a.cost < b.cost);
+  const minRadius = Math.min(radius, getResourceValue(unit));
   queue.add(RadiusItem(start));
 
-  while (!queue.isEmpty()) {
+  let index: number = map.getTileIndex(start);
+  do {
     const { cost: parentCost, vector } = queue.poll()!;
-    const index = map.getTileIndex(vector);
+    index = map.getTileIndex(vector);
     if (closed[index]) {
       continue;
     }
-    closed[index] = true;
+    closed[index] = 1;
 
     const vectors = vector.adjacent();
-    for (let i = 0; i < vectors.length; i++) {
-      const currentVector = vectors[i];
+    const parentTileInfo = map.getTileInfo(vector, undefined, index);
+    for (const currentVector of vectors) {
       if (!map.contains(currentVector)) {
         continue;
       }
@@ -111,37 +127,33 @@ function calculateRadius(
       if (closed[currentIndex]) {
         continue;
       }
-      const cost = getCost(map, unit, currentVector);
+      const currentTileInfo = map.getTileInfo(
+        currentVector,
+        undefined,
+        currentIndex,
+      );
+      const cost = currentTileInfo.getMovementCost(unit.info);
       if (cost < 0 || !isAccessible(map, unit, currentVector)) {
-        closed[currentIndex] = true;
+        closed[currentIndex] = 1;
         continue;
       }
       const nextCost =
         parentCost +
         cost +
-        getTransitionCost(
-          info,
-          map.getTileInfo(vector),
-          map.getTileInfo(currentVector),
-        );
+        getTransitionCost(unit.info, parentTileInfo, currentTileInfo);
+      if (nextCost > minRadius) {
+        continue;
+      }
       const previousPath = paths.get(currentVector);
-      if (
-        nextCost <= radius &&
-        (!previousPath || nextCost < previousPath.cost) &&
-        nextCost <= getResourceValue(unit)
-      ) {
-        const item = {
-          cost: nextCost,
-          parent: vector,
-          vector: currentVector,
-        };
+      if (!previousPath || nextCost < previousPath.cost) {
+        const item = RadiusItem(currentVector, nextCost, vector);
         paths.set(currentVector, item);
         if (nextCost < radius) {
           queue.add(item);
         }
       }
     }
-  }
+  } while (!queue.isEmpty());
   return paths;
 }
 
@@ -177,6 +189,7 @@ export function getPathCost(
   const seen = new Set([start]);
   let previousVector = start;
   let totalCost = 0;
+  const previousVectorTileInfo = map.getTileInfo(previousVector);
 
   for (const vector of path) {
     if (seen.has(vector) || !map.contains(vector)) {
@@ -195,11 +208,7 @@ export function getPathCost(
 
     totalCost +=
       cost +
-      getTransitionCost(
-        info,
-        map.getTileInfo(vector),
-        map.getTileInfo(previousVector),
-      );
+      getTransitionCost(info, map.getTileInfo(vector), previousVectorTileInfo);
 
     if (totalCost > radius || totalCost > getResourceValue(unit)) {
       return -1;
@@ -212,21 +221,28 @@ export function getPathCost(
   return !unitB || canLoad(map, unitB, unit, previousVector) ? totalCost : -1;
 }
 
+function getVisionRange(
+  map: MapData,
+  unit: Unit,
+  start: Vector,
+  radius: number,
+) {
+  const range = unit.isUnfolded()
+    ? 2
+    : unit.info.type === EntityType.Infantry &&
+        map.getTileInfo(start).type & TileTypes.Mountain
+      ? 1
+      : 0;
+  return radius + range;
+}
+
 export function visible(
   map: MapData,
   unit: Unit,
   start: Vector,
   radius: number = unit.info.configuration.vision,
 ): ReadonlyMap<Vector, RadiusItem> {
-  const vision =
-    radius +
-    (unit.isUnfolded()
-      ? 2
-      : unit.info.type === EntityType.Infantry &&
-          map.getTileInfo(start).type & TileTypes.Mountain
-        ? 1
-        : 0);
-
+  const vision = getVisionRange(map, unit, start, radius);
   const visible = calculateRadius(
     map,
     unit,
@@ -234,7 +250,6 @@ export function visible(
     vision,
     VisionConfiguration,
   );
-
   const player = map.getPlayer(unit);
   const canSeeHiddenFields =
     player.activeSkills.size &&
@@ -339,7 +354,8 @@ export function attackable(
         }
 
         const vectors = parent.vector.adjacent();
-        for (let i = 0; i < vectors.length; i++) {
+        const len = vectors.length;
+        for (let i = 0; i < len; i++) {
           const vector = vectors[i];
           if (map.contains(vector)) {
             const itemB = attackable.get(vector);

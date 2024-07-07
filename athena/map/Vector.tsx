@@ -40,7 +40,7 @@ export default abstract class Vector {
 
   adjacent() {
     return (
-      this.vectors ||
+      this.vectors ??
       (this.vectors = [
         this.up(),
         this.right(),
@@ -130,7 +130,8 @@ export function decodeVectorArray(
   array: ReadonlyArray<number>,
 ): ReadonlyArray<Vector> {
   const result = [];
-  for (let i = 0; i < array.length; i += 2) {
+  const len = array.length;
+  for (let i = 0; i < len; i += 2) {
     result.push(vec(array[i], array[i + 1]));
   }
   return result;

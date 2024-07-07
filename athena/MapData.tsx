@@ -271,19 +271,18 @@ export default class MapData {
       : null;
   }
 
-  getTileInfo(vector: Vector, layer?: TileLayer) {
+  getTileInfo(vector: Vector, layer?: TileLayer, index?: number) {
     if (!this.contains(vector)) {
       throw new Error(
         `getTileInfo: Vector '${vector.x},${vector.y}' is not within the map limits of width '${this.size.width}' and height '${this.size.height}'.`,
       );
     }
-
-    return getTileInfo(this.map[this.getTileIndex(vector)], layer);
+    return getTileInfo(this.map[index ?? this.getTileIndex(vector)], layer);
   }
 
-  maybeGetTileInfo(vector: Vector, layer?: TileLayer) {
+  maybeGetTileInfo(vector: Vector, layer?: TileLayer, index?: number) {
     if (this.contains(vector)) {
-      return getTileInfo(this.map[this.getTileIndex(vector)], layer);
+      return getTileInfo(this.map[index ?? this.getTileIndex(vector)], layer);
     }
   }
 
