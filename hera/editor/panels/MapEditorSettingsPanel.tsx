@@ -348,9 +348,9 @@ export default function MapEditorSettingsPanel({
                         Distribution
                       </fbt>
                     </Stack>
-                    <div className={wideColumnStyle}>
+                    <Stack className={wideColumnStyle} nowrap>
                       <Histogram histogram={metrics.histogram} />
-                    </div>
+                    </Stack>
 
                     <Stack alignCenter gap start>
                       <Icon icon={Zap} />
@@ -704,4 +704,5 @@ const paddingStyle = css`
 
 const wideColumnStyle = css`
   grid-column: 2 / 5;
+  white-space: nowrap;
 `;
