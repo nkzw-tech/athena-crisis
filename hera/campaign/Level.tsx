@@ -195,20 +195,23 @@ export default memo(function Level({
                     Win (in any way)
                   </fbt>
                 </InlineLink>
-                {objectives
-                  ?.map((objective, id) =>
-                    objective.type !== Criteria.Default ? (
-                      <InlineLink
-                        className={objectiveSelectorItemStyle}
-                        key={id}
-                        onClick={() => updateObjective(id)}
-                        selectedText={id === objectiveId}
-                      >
-                        <ObjectiveTitle id={id} objective={objective} />
-                      </InlineLink>
-                    ) : null,
-                  )
-                  .filter(isPresent)}
+                {[
+                  ...(objectives
+                    ?.map((objective, id) =>
+                      objective.type !== Criteria.Default ? (
+                        <InlineLink
+                          className={objectiveSelectorItemStyle}
+                          key={id}
+                          onClick={() => updateObjective(id)}
+                          selectedText={id === objectiveId}
+                        >
+                          <ObjectiveTitle id={id} objective={objective} />
+                        </InlineLink>
+                      ) : null,
+                    )
+                    .filter(isPresent)
+                    .values() || []),
+                ]}
               </>
             )}
           </Dropdown>
