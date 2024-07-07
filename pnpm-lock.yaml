@@ -201,8 +201,8 @@ importers:
         specifier: ^4.7.5
         version: 4.7.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       tinybase:
-        specifier: 5.0.0
-        version: 5.0.0(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        specifier: 5.0.1
+        version: 5.0.1(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       workbox-core:
         specifier: ^7.1.0
         version: 7.1.0
@@ -2988,17 +2988,17 @@ packages:
     resolution: {integrity: sha512-IOYAJRcV+Uqn0EL8rxcoCvE77PbtGzKjP+B6iIgDZ229AWbpfbpWY8zHCcufwdDzb5PtgOhWWHT74iAsNyij/A==}
     engines: {node: '>= 14'}
 
-  '@shikijs/core@1.10.1':
-    resolution: {integrity: sha512-qdiJS5a/QGCff7VUFIqd0hDdWly9rDp8lhVmXVrS11aazX8LOTRLHAXkkEeONNsS43EcCd7gax9LLoOz4vlFQA==}
+  '@shikijs/core@1.10.2':
+    resolution: {integrity: sha512-hCtKSC0PNmidU+TVBUiddE0sF1QsOPVbBBRQlugsKy0QJBfSj9aIQQ/pNEIv58wwM/9cAlWG1yihi+5ovZfYmA==}
 
-  '@shikijs/rehype@1.10.1':
-    resolution: {integrity: sha512-K3yEmB9HYs39mzLvXuCVDavt7RP2jtp7C8ZsMNotH6MyzQ3Gk02sFvkIqu3kSn3th+Ke/AxqShUpEVTDJ/kNbw==}
+  '@shikijs/rehype@1.10.2':
+    resolution: {integrity: sha512-TwzZ3aX34UD7QYFz18CW3uIYKsvFcP6IXoW2I9cdfq2d6IKh+zRD0A2P+tqhS5paBF00KR1xfpo+SWkDcKUnQQ==}
 
-  '@shikijs/transformers@1.10.1':
-    resolution: {integrity: sha512-0gLtcFyi6R6zcUkFajUEp1Qiv7lHBSFgOz4tQvS8nFsYCQSLI1/9pM+Me8jEIPXv7XLKAoUjw6InL+Sv+BHw/A==}
+  '@shikijs/transformers@1.10.2':
+    resolution: {integrity: sha512-gSx8Z4ZIxP0iJlnm8gNolAf3Yxd0KYHJ0OFcT5RFGcZ73/ZhFBJgCfL9OQskHya74qlp3ExpGbrPm7zf7CSidw==}
 
-  '@shikijs/twoslash@1.10.1':
-    resolution: {integrity: sha512-BtB7TnpZEHFAVhVU9yPLOhWznJ5NFtHX1b8AEr4UXxYBGAqsM2b0VkjAlfJ32gQxVyr121G8q4g0ZT5eV5bi9w==}
+  '@shikijs/twoslash@1.10.2':
+    resolution: {integrity: sha512-jFKYwFPKmJ2ie6xowAPuR1DY//Ve+CzP+mTZYKatxyCP/nR5AS1nzZ7pKwr+pzn0QG+2EaWBJqymwtzOXL3zLg==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -6973,8 +6973,8 @@ packages:
   shell-quote@1.8.1:
     resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
 
-  shiki@1.10.1:
-    resolution: {integrity: sha512-uafV7WCgN4YYrccH6yxpnps6k38sSTlFRrwc4jycWmhWxJIm9dPrk+XkY1hZ2t0I7jmacMNb15Lf2fspa/Y3lg==}
+  shiki@1.10.2:
+    resolution: {integrity: sha512-wrddjiCJ6D8zB1MuAGZ37G37rGw+6Ntnqqbl2uXh3P8g5JxneJRRhccPnex/gqorJoXkbpTRC2x54QIsdx2b1Q==}
 
   side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
@@ -7320,8 +7320,8 @@ packages:
   tiny-updater@3.5.2:
     resolution: {integrity: sha512-5EjK01h0rvgv+Eb0XaiTZJZR+ujdjCDHZ1ZCVCu+1h4+MyOYZ+za8UKuKdNOOOSKhkkC9B08o6ZhF4JnQg7ZLg==}
 
-  tinybase@5.0.0:
-    resolution: {integrity: sha512-0PUWgVSXk349hux9FP/a+1OutsfA7Ep4N4f9eXANIptmyG4/RaP3USXLDmTgMGZnMn+5Prmlj2NGFjmdvn5kGQ==}
+  tinybase@5.0.1:
+    resolution: {integrity: sha512-jv8WfYhLbYldCfJYIfn0/a+6qWjVhWhym7Ui2qofZOBildU4IfXwLnfDDxklgFDnWY2b3vkJAsgmB/b0SDYzvg==}
     hasBin: true
     peerDependencies:
       '@automerge/automerge-repo': ^1.2.0
@@ -10599,24 +10599,26 @@ snapshots:
       - encoding
       - supports-color
 
-  '@shikijs/core@1.10.1': {}
-
-  '@shikijs/rehype@1.10.1':
+  '@shikijs/core@1.10.2':
     dependencies:
-      '@shikijs/transformers': 1.10.1
+      '@types/hast': 3.0.4
+
+  '@shikijs/rehype@1.10.2':
+    dependencies:
+      '@shikijs/transformers': 1.10.2
       '@types/hast': 3.0.4
       hast-util-to-string: 3.0.0
-      shiki: 1.10.1
+      shiki: 1.10.2
       unified: 11.0.5
       unist-util-visit: 5.0.0
 
-  '@shikijs/transformers@1.10.1':
+  '@shikijs/transformers@1.10.2':
     dependencies:
-      shiki: 1.10.1
+      shiki: 1.10.2
 
-  '@shikijs/twoslash@1.10.1(typescript@5.5.3)':
+  '@shikijs/twoslash@1.10.2(typescript@5.5.3)':
     dependencies:
-      '@shikijs/core': 1.10.1
+      '@shikijs/core': 1.10.2
       twoslash: 0.2.9(typescript@5.5.3)
     transitivePeerDependencies:
       - supports-color
@@ -15556,9 +15558,10 @@ snapshots:
 
   shell-quote@1.8.1: {}
 
-  shiki@1.10.1:
+  shiki@1.10.2:
     dependencies:
-      '@shikijs/core': 1.10.1
+      '@shikijs/core': 1.10.2
+      '@types/hast': 3.0.4
 
   side-channel@1.0.6:
     dependencies:
@@ -15991,7 +15994,7 @@ snapshots:
       tiny-colors: 2.2.1
       when-exit: 2.1.3
 
-  tinybase@5.0.0(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
+  tinybase@5.0.1(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
     optionalDependencies:
       prettier: 4.0.0-alpha.8
       react: 19.0.0-rc.0
@@ -16430,9 +16433,9 @@ snapshots:
       '@radix-ui/react-navigation-menu': 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)
       '@radix-ui/react-popover': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)
       '@radix-ui/react-tabs': 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)
-      '@shikijs/rehype': 1.10.1
-      '@shikijs/transformers': 1.10.1
-      '@shikijs/twoslash': 1.10.1(typescript@5.5.3)
+      '@shikijs/rehype': 1.10.2
+      '@shikijs/transformers': 1.10.2
+      '@shikijs/twoslash': 1.10.2(typescript@5.5.3)
       '@vanilla-extract/css': 1.15.3(babel-plugin-macros@3.1.0)
       '@vanilla-extract/dynamic': 2.1.1
       '@vanilla-extract/vite-plugin': 3.9.5(@types/node@20.14.10)(babel-plugin-macros@3.1.0)(terser@5.31.1)(ts-node@10.9.2(@swc/core@1.6.13)(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10)(terser@5.31.1))
@@ -16472,7 +16475,7 @@ snapshots:
       remark-mdx-frontmatter: 4.0.0
       remark-parse: 11.0.0
       serve-static: 1.15.0
-      shiki: 1.10.1
+      shiki: 1.10.2
       tailwindcss: 3.4.4(ts-node@10.9.2(@swc/core@1.6.13)(@types/node@20.14.10)(typescript@5.5.3))
       toml: 3.0.0
       twoslash: 0.2.9(typescript@5.5.3)
