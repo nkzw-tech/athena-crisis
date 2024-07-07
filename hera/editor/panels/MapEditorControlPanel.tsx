@@ -184,6 +184,7 @@ export default function MapEditorControlPanel({
                 editor={editor}
                 hasContentRestrictions={!isAdmin}
                 map={state.map}
+                position={drawerPosition}
                 scenario={editor.scenario}
                 scrollRef={ref}
                 setEditorState={setEditorState}

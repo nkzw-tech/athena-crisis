@@ -34,6 +34,7 @@ import { useInView } from 'framer-motion';
 import { memo, RefObject, useRef, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
+import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import Tick from '../../Tick.tsx';
 import { FactionNames } from '../../Types.tsx';
@@ -103,6 +104,7 @@ export default memo(function ActionCard({
   last,
   map,
   onChange,
+  position = 'bottom',
   scrollRef,
   setMap,
   trigger,
@@ -121,6 +123,7 @@ export default memo(function ActionCard({
   last?: boolean;
   map?: MapData;
   onChange?: ActionChangeFn;
+  position?: DrawerPosition;
   scrollRef: RefObject<HTMLElement> | null;
   setMap?: SetMapFunction;
   trigger?: EffectTrigger;
@@ -172,7 +175,11 @@ export default memo(function ActionCard({
           className={portraitStyle}
           dropdownClassName={cx(
             portraitSelectorStyle,
-            portrait.variants > 3 && portraitWithManyVariantsStyle,
+            position === 'bottom' &&
+              cx(
+                bottomPortraitSelectorStyle,
+                portrait.variants > 3 && portraitWithManyVariantsStyle,
+              ),
           )}
           shouldRenderControls={!!(canChange && shouldRenderControls)}
           title={
@@ -454,7 +461,9 @@ const portraitSelectorStyle = css`
   padding: 2px 4px;
   top: -2px;
   transform-origin: left center;
+`;
 
+const bottomPortraitSelectorStyle = css`
   ${Breakpoints.lg} {
     transform-origin: center center;
     left: calc(
