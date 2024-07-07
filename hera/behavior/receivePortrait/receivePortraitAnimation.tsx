@@ -77,6 +77,7 @@ export default async function receivePortraitAnimation(
           );
           return null;
         },
+        padding: 'small',
         player,
         sound: 'UI/Start',
         style: 'flashy',
@@ -98,8 +99,7 @@ export default async function receivePortraitAnimation(
 }
 
 const portraitContainerStyle = css`
-  margin-bottom: -24px;
-  padding-top: 32px;
+  padding: 32px 0 12px;
 
   gap: 24px;
   ${Breakpoints.sm} {

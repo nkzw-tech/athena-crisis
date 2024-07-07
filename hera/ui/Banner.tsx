@@ -37,6 +37,7 @@ export default function Banner(
     direction: initialDirection,
     length,
     onComplete,
+    padding,
     player,
     rate,
     scheduleTimer,
@@ -125,7 +126,11 @@ export default function Banner(
       >
         <motion.div
           animate="visible"
-          className={cx(innerStyle, isFlashy && flashyInnerStyle)}
+          className={cx(
+            innerStyle,
+            isFlashy && flashyInnerStyle,
+            padding !== 'small' && largePaddingStyle,
+          )}
           initial="hidden"
           variants={{
             hidden: {
@@ -242,8 +247,17 @@ const innerStyle = css`
 
 const flashyInnerStyle = css`
   backdrop-filter: blur(4px);
-  padding: 36px ${sizes.padding}px 38px;
   text-transform: uppercase;
+
+  padding: 12px ${sizes.padding}px 14px;
+
+  ${Breakpoints.sm} {
+    padding: 16px ${sizes.padding}px 18px;
+  }
+`;
+
+const largePaddingStyle = css`
+  padding: 36px ${sizes.padding}px 38px;
 
   ${Breakpoints.sm} {
     padding: 48px ${sizes.padding}px 54px;

@@ -214,6 +214,7 @@ export type BannerAnimation = Readonly<{
   direction?: 'up';
   length: 'short' | 'medium' | 'long';
   onComplete?: StateToStateLike;
+  padding?: 'small';
   player: PlayerID;
   sound: SoundName | null;
   style?: 'regular' | 'flashy';
