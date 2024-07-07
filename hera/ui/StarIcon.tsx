@@ -18,13 +18,17 @@ export default function StarIcon({
   return (
     <div className={cx(relativeStyle, className)}>
       <Icon
-        className={cx(achieved ? achievedStyle : missedStyle, starClassName)}
+        className={cx(
+          starStyle,
+          achieved ? achievedStyle : missedStyle,
+          starClassName,
+        )}
         height={size}
         icon={StarFull}
         width={size}
       />
       <Icon
-        className={outlineStyle}
+        className={cx(starStyle, outlineStyle)}
         height={size}
         icon={StarEmpty}
         width={size}
@@ -35,6 +39,10 @@ export default function StarIcon({
 
 const relativeStyle = css`
   position: relative;
+`;
+
+const starStyle = css`
+  display: block;
 `;
 
 const outlineStyle = css`

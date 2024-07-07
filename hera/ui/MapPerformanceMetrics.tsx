@@ -14,10 +14,12 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
+import Close from '@iconify-icons/pixelarticons/close.js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import usePerformanceResult from '../hooks/usePerformanceResult.tsx';
@@ -359,22 +361,19 @@ export default function MapPerformanceMetrics({
             </AnimatePresence>
             {isDone && (
               <>
-                <Stack
-                  center
+                <InlineLink
                   className={cx(
                     fadeStyle,
+                    hideButtonStyle,
                     hasPreviousResult && !wasHidden && delayHideButtonStyle,
                   )}
+                  onClick={() => {
+                    setWasHidden(true);
+                    setHide(true);
+                  }}
                 >
-                  <InlineLink
-                    onClick={() => {
-                      setWasHidden(true);
-                      setHide(true);
-                    }}
-                  >
-                    <fbt desc="Button to hide a dialog">Hide</fbt>
-                  </InlineLink>
-                </Stack>
+                  <Icon icon={Close} />
+                </InlineLink>
                 {hasPreviousResult ? (
                   <Stack
                     alignCenter
@@ -579,6 +578,13 @@ const fadeStyle = css`
   opacity: 0;
 `;
 
+const hideButtonStyle = css`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: ${applyVar('text-color')};
+`;
+
 const delayHideButtonStyle = css`
   animation-delay: ${starDuration}ms;
 `;
@@ -635,9 +641,5 @@ const previousStarStyle = css`
   &:nth-child(4) {
     animation-delay: ${starDuration * 0.6}ms;
     margin-left: -14px;
-  }
-
-  > svg:nth-child(2) {
-    top: 1px;
   }
 `;
