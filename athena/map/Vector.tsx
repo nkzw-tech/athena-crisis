@@ -130,8 +130,8 @@ export function decodeVectorArray(
   array: ReadonlyArray<number>,
 ): ReadonlyArray<Vector> {
   const result = [];
-  const len = array.length;
-  for (let i = 0; i < len; i += 2) {
+  const length = array.length;
+  for (let i = 0; i < length; i += 2) {
     result.push(vec(array[i], array[i + 1]));
   }
   return result;

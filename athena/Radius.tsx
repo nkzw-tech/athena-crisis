@@ -354,8 +354,8 @@ export function attackable(
         }
 
         const vectors = parent.vector.adjacent();
-        const len = vectors.length;
-        for (let i = 0; i < len; i++) {
+        const length = vectors.length;
+        for (let i = 0; i < length; i++) {
           const vector = vectors[i];
           if (map.contains(vector)) {
             const itemB = attackable.get(vector);

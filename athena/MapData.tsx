@@ -416,8 +416,8 @@ export default class MapData {
     value: T,
   ): T {
     const { map, size } = this;
-    const len = map.length;
-    for (let i = 0; i < len; i++) {
+    const length = map.length;
+    for (let i = 0; i < length; i++) {
       value = fn.call(this, value, indexToVector(i, size.width), i);
     }
     return value;
@@ -451,8 +451,8 @@ export default class MapData {
     value: T,
   ): T {
     const { map, modifiers, size } = this;
-    const len = map.length;
-    for (let i = 0; i < len; i++) {
+    const length = map.length;
+    for (let i = 0; i < length; i++) {
       const field = map[i];
       if (typeof field === 'number') {
         value = fn.call(
@@ -504,8 +504,8 @@ export default class MapData {
     value: T,
   ): T {
     const { decorators, size } = this;
-    const len = decorators.length;
-    for (let i = 0; i < len; i++) {
+    const length = decorators.length;
+    for (let i = 0; i < length; i++) {
       const decorator = getDecorator(decorators[i]);
       if (decorator) {
         value = fn.call(
