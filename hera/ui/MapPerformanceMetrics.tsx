@@ -209,7 +209,7 @@ const SummaryCard = ({
         setTimeout(() => onComplete(), starDuration * 1.5)
       }
       transition={{
-        delay: instant ? 0 : cardDuration / 1000,
+        delay: instant ? 0 : (cardDuration * 1.5) / 1000,
         duration: instant ? 0 : cardDuration / 1000 / 2,
         ease: [0.34, 1.26, 0.64, 1],
       }}
