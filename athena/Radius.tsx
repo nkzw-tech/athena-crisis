@@ -189,7 +189,7 @@ export function getPathCost(
   const seen = new Set([start]);
   let previousVector = start;
   let totalCost = 0;
-  const previousVectorTileInfo = map.getTileInfo(previousVector);
+  const previousTileInfo = map.getTileInfo(previousVector);
 
   for (const vector of path) {
     if (seen.has(vector) || !map.contains(vector)) {
@@ -208,7 +208,7 @@ export function getPathCost(
 
     totalCost +=
       cost +
-      getTransitionCost(info, map.getTileInfo(vector), previousVectorTileInfo);
+      getTransitionCost(info, map.getTileInfo(vector), previousTileInfo);
 
     if (totalCost > radius || totalCost > getResourceValue(unit)) {
       return -1;
