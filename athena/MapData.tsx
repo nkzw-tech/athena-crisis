@@ -173,6 +173,7 @@ const toPlayer = (object: AnyEntity): PlayerID =>
       : object.id;
 
 export default class MapData {
+  protected id: string;
   private players: Map<PlayerID, Player>;
   private playerToTeam: Map<PlayerID, number>;
   private _firstPlayer: PlayerID = 0;
@@ -193,6 +194,7 @@ export default class MapData {
     public readonly buildings: ImmutableMap<Vector, Building>,
     public readonly units: ImmutableMap<Vector, Unit>,
   ) {
+    this.id = JSON.stringify(this.buildings.toJSON());
     this.players = new Map(
       teams.flatMap((team) => team.players).sortBy(({ id }) => id),
     );
@@ -206,6 +208,10 @@ export default class MapData {
       }),
     );
     this.playerToTeam.set(0, -1);
+  }
+
+  getId() {
+    return this.id;
   }
 
   contains(size: { x: number; y: number }) {

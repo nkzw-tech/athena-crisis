@@ -1,4 +1,5 @@
 import FastPriorityQueue from 'fastpriorityqueue';
+import LRUCache from 'mnemonist/lru-cache';
 import { Skill } from './info/Skill.tsx';
 import { TileInfo, TileTypes } from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
@@ -37,7 +38,18 @@ export const RadiusItem = (
   vector,
 });
 
-const cacheMap = new Map();
+let lruCacheMap: LRUCache<string | number, boolean>;
+let currentMapId: string;
+
+function getCache(map: MapData) {
+  // Reinstantiate the cache if the map changes
+  if (currentMapId !== map.getId()) {
+    const cacheCapacity = (map.size.width * map.size.height) / 2; // No need to cache the entire map
+    lruCacheMap = new LRUCache(cacheCapacity);
+    currentMapId = map.getId();
+  }
+  return lruCacheMap;
+}
 
 function getCostBase(map: MapData, unit: Unit, vector: Vector, index?: number) {
   const tileInfo = map.maybeGetTileInfo(vector, undefined, index);
@@ -65,13 +77,14 @@ function isAccessibleBase(map: MapData, unit: Unit, vector: Vector) {
 }
 
 function isAccessible(map: MapData, unit: Unit, vector: Vector) {
-  const key = vector.toJSON();
-  let accessible = cacheMap.get(key);
+  const cache = getCache(map);
+  const key = vector.hashCode();
+  let accessible = cache.get(key);
   if (accessible != null) {
     return accessible;
   }
   accessible = isAccessibleBase(map, unit, vector);
-  cacheMap.set(key, accessible);
+  cache.set(key, accessible);
   return accessible;
 }
 
