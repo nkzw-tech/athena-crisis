@@ -5,6 +5,11 @@ import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import {
+  hasPerformanceExpectation,
+  PerformanceStyleComparators,
+  PerformanceStyleTypeShortName,
+} from '@deities/athena/map/PlayerPerformance.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
@@ -37,6 +42,9 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import EmptyDialogueIcon from '@iconify-icons/pixelarticons/message.js';
+import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
+import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
+import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
 import { memo, MouseEvent, useCallback, useRef, useState } from 'react';
@@ -295,7 +303,43 @@ export default memo(function Level({
               slug={node.slug}
               zoom={zoom}
             />
-            <Stack className={mapBottomStyle} gap={16}>
+            <Stack className={mapDetailStyle} gap vertical>
+              {hasPerformanceExpectation(map) && (
+                <Stack alignCenter gap={16} start>
+                  {map.config.performance.pace != null && (
+                    <Stack gap start>
+                      <Icon icon={Pace} />
+                      <div>{map.config.performance.pace}</div>
+                    </Stack>
+                  )}
+                  {map.config.performance.power != null && (
+                    <Stack gap start>
+                      <Icon icon={Zap} />
+                      <div>{map.config.performance.power}</div>
+                    </Stack>
+                  )}
+                  {map.config.performance.style != null && (
+                    <Stack gap start>
+                      <Icon icon={Subscriptions} />
+                      <span>
+                        {
+                          PerformanceStyleTypeShortName[
+                            map.config.performance.style[0]
+                          ]
+                        }{' '}
+                        <span className={comparatorStyle}>
+                          {
+                            PerformanceStyleComparators[
+                              map.config.performance.style[0]
+                            ]
+                          }
+                        </span>{' '}
+                        {map.config.performance.style[1]}
+                      </span>
+                    </Stack>
+                  )}
+                </Stack>
+              )}
               {characters.length ? (
                 <Dropdown
                   className={effectContainerStyle}
@@ -451,8 +495,8 @@ const mapCardStyle = css`
   min-width: 240px;
 `;
 
-const mapBottomStyle = css`
-  margin-top: 8px;
+const mapDetailStyle = css`
+  padding-top: 8px;
 `;
 
 const arrowStyle = css`
@@ -512,4 +556,11 @@ const iconStyle = css`
 
 const dialogueIconStyle = css`
   margin-top: 1px;
+`;
+
+const comparatorStyle = css`
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 200;
+  text-align: center;
+  width: 16px;
 `;

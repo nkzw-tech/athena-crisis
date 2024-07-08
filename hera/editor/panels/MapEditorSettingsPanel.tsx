@@ -25,7 +25,7 @@ import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
 import { css, cx } from '@emotion/css';
 import Check from '@iconify-icons/pixelarticons/checkbox.js';
-import Close from '@iconify-icons/pixelarticons/close-box.js';
+import CloseBox from '@iconify-icons/pixelarticons/close-box.js';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
@@ -290,7 +290,7 @@ export default function MapEditorSettingsPanel({
             <Stack alignCenter gap nowrap start>
               <Icon
                 className={iconStyle}
-                icon={_hasBonusObjective ? Check : Close}
+                icon={_hasBonusObjective ? Check : CloseBox}
               />
               <fbt desc="Label for a map's bonus objective">
                 Bonus Objective
@@ -327,9 +327,7 @@ export default function MapEditorSettingsPanel({
 
                     <Stack alignCenter gap start>
                       <Icon icon={Pace} />
-                      <div>
-                        <div>{getTranslatedPerformanceTypeName('pace')}</div>
-                      </div>
+                      <div>{getTranslatedPerformanceTypeName('pace')}</div>
                     </Stack>
                     <div>{metrics.pace}</div>
                     <div>{metrics.avgPace}</div>
@@ -370,7 +368,7 @@ export default function MapEditorSettingsPanel({
 
                     <Stack alignCenter gap start>
                       <Icon icon={Subscriptions} />
-                      {getTranslatedPerformanceTypeName('style')}
+                      <div>{getTranslatedPerformanceTypeName('style')}</div>
                     </Stack>
                     <div />
                     <div />

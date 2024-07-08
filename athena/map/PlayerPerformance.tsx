@@ -29,6 +29,15 @@ export const PerformanceStyleComparators = {
   [PerformanceStyleType.OneShots]: Comparators['≥'],
 } as const;
 
+export const PerformanceStyleTypeShortName: Record<
+  PerformanceStyleType,
+  string
+> = {
+  [PerformanceStyleType.LostUnits]: 'LU',
+  [PerformanceStyleType.CapturedBuildings]: 'C',
+  [PerformanceStyleType.OneShots]: 'OS',
+} as const;
+
 const StatsValues: Record<PerformanceStyleType, keyof PlayerStatistics> = {
   [PerformanceStyleType.LostUnits]: 'lostUnits',
   [PerformanceStyleType.CapturedBuildings]: 'captured',
@@ -101,17 +110,20 @@ export function evaluatePlayerPerformance(
   };
 }
 
-export function shouldEvaluatePlayerPerformance(
-  map: MapData,
-  playerId: PlayerID,
-) {
+export function hasPerformanceExpectation(map: MapData) {
   const { performance } = map.config;
   return (
     performance.pace != null ||
     performance.power != null ||
-    performance.style != null ||
-    hasBonusObjective(map, playerId)
+    performance.style != null
   );
+}
+
+export function shouldEvaluatePlayerPerformance(
+  map: MapData,
+  playerId: PlayerID,
+) {
+  return hasPerformanceExpectation(map) || hasBonusObjective(map, playerId);
 }
 
 export function decodePlayerPerformance(
