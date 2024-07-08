@@ -5,19 +5,23 @@ import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   hasPerformanceExpectation,
   PerformanceStyleComparators,
   PerformanceStyleTypeShortName,
 } from '@deities/athena/map/PlayerPerformance.tsx';
+import { Reward } from '@deities/athena/map/Reward.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
+  Objective,
   ObjectiveID,
   Objectives,
 } from '@deities/athena/Objectives.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
 import {
   ClientLevelID,
@@ -55,6 +59,7 @@ import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
+import { SkillIcon } from '../ui/SkillDialog.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
 import {
@@ -165,6 +170,15 @@ export default memo(function Level({
   if (!node || !map) {
     return null;
   }
+
+  const rewardObjectives = [
+    ...map.config.objectives
+      .filter(
+        (objective): objective is Objective & Readonly<{ reward: Reward }> =>
+          !!objective.reward,
+      )
+      .values(),
+  ];
 
   const next = level.next;
   return (
@@ -340,6 +354,24 @@ export default memo(function Level({
                   )}
                 </Stack>
               )}
+              {rewardObjectives.length ? (
+                <Stack alignCenter gap start>
+                  {rewardObjectives.length === 1 ? (
+                    <fbt desc="Label for reward">Reward</fbt>
+                  ) : (
+                    <fbt desc="Label for rewards">Rewards</fbt>
+                  )}
+                  <Stack gap={16} start>
+                    {rewardObjectives.map((objective, index) => (
+                      <RewardDetail
+                        key={index}
+                        player={map.getFirstPlayerID()}
+                        reward={objective.reward}
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+              ) : null}
               {characters.length ? (
                 <Dropdown
                   className={effectContainerStyle}
@@ -490,6 +522,34 @@ const MiniMap = memo(function MiniMap({
     </Link>
   );
 });
+
+const RewardDetail = ({
+  player,
+  reward,
+}: {
+  player: PlayerID;
+  reward: Reward;
+}) => {
+  const { type: rewardType } = reward;
+  switch (rewardType) {
+    case 'Skill':
+      return <SkillIcon skill={reward.skill} />;
+    case 'UnitPortraits':
+      return (
+        <Portrait
+          clip
+          player={player}
+          scale={0.5}
+          unit={reward.unit}
+          variant={0}
+        />
+      );
+    default: {
+      rewardType satisfies never;
+      throw new UnknownTypeError('Level::Reward', rewardType);
+    }
+  }
+};
 
 const mapCardStyle = css`
   min-width: 240px;
