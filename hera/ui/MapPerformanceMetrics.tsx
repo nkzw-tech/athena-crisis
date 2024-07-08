@@ -329,6 +329,7 @@ export default function MapPerformanceMetrics({
       }}
       style={{
         transformOrigin: 'center center',
+        zIndex: zIndex + 1,
       }}
       transition={{
         duration: cardDuration / 1000,
@@ -337,7 +338,7 @@ export default function MapPerformanceMetrics({
     >
       <Box
         className={cx(fullStyle, mapPerformanceStyle)}
-        style={{ zIndex }}
+        style={{ zIndex: zIndex + 2 }}
         vertical
       >
         {hide ? (
