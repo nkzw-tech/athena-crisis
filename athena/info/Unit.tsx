@@ -3394,8 +3394,16 @@ export const Zombie = new UnitInfo(
     type: AttackType.ShortRange,
     weapons: [
       new Weapon(
-        'Bite',
-        buff(Weapons.Bite.damage, -50),
+        'Zombie Bite',
+        buff(
+          new Map([
+            ...Weapons.Bite.damage,
+            [EntityType.LowAltitude, 100],
+            [EntityType.Rail, 80],
+            [EntityType.Ship, 80],
+          ]),
+          -50,
+        ),
         BiteAnimation.withSound('Attack/ZombieBite'),
         BiteHitAnimation,
         5,
