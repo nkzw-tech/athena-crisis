@@ -182,6 +182,7 @@ export type SetViewerActionResponse = Readonly<{
 }>;
 
 export type ReceiveRewardActionResponse = Readonly<{
+  permanent?: boolean;
   player: PlayerID;
   reward: Reward;
   type: 'ReceiveReward';

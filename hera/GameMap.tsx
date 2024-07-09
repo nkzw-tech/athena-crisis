@@ -228,6 +228,7 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout,
     unitSize,
+    userDisplayName,
   } = props;
   const isEditor = !!editor;
   const currentViewer = map.getPlayerByUserId(currentUserId)?.id || null;
@@ -286,6 +287,7 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout: timeout || null,
     unitSize,
+    userDisplayName,
     vision,
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
@@ -1824,7 +1826,6 @@ export default class GameMap extends Component<Props, State> {
               getLayer={getLayer}
               skipBanners={skipBanners}
               state={this.state}
-              userDisplayName={this.props.userDisplayName}
             />
             {editor?.selected?.decorator ||
             editor?.selected?.eraseDecorators ? (

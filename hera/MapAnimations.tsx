@@ -685,16 +685,15 @@ export function MapAnimations({
       size: { width },
     },
     tileSize,
+    userDisplayName,
     zIndex,
   },
-  userDisplayName,
 }: {
   actions: Actions;
   animationComplete: (position: Vector, animation: Animation) => void;
   getLayer: GetLayerFunction;
   skipBanners?: boolean;
   state: State;
-  userDisplayName: string;
 }) {
   const animationsWithTransitions: Array<JSX.Element> = [];
   const mainAnimations: Array<JSX.Element> = [];

@@ -145,6 +145,7 @@ export type State = Readonly<{
   showCursor: boolean;
   tileSize: number;
   timeout: number | null;
+  userDisplayName: string;
   vision: VisionT;
   zIndex: number;
 }>;

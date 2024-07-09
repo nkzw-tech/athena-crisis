@@ -179,7 +179,7 @@ export default function Banner(
                                     ? 1
                                     : length === 'medium'
                                       ? 3
-                                      : 5) *
+                                      : 6) *
                                   (Component ? 4.5 : 1),
                               );
                             }

@@ -4,6 +4,7 @@ import getNextObjectiveId from '@deities/athena/lib/getNextObjectiveId.tsx';
 import {
   Criteria,
   CriteriaList,
+  CriteriaListWithoutDefault,
   getInitialObjective,
   Objective,
   objectiveHasVectors,
@@ -67,20 +68,26 @@ const maybeSwapEffect = (
   existingObjective: Objective,
   index: number,
   setEditorState: SetEditorStateFunction,
+  isAdmin?: boolean,
 ) => {
   if (
     objective.type === Criteria.Default ||
     existingObjective.type === Criteria.Default ||
     existingObjective.optional === objective.optional
   ) {
-    return;
+    return objective;
   }
 
   const trigger = existingObjective.optional ? 'OptionalObjective' : 'GameEnd';
   const newTrigger = trigger === 'GameEnd' ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
+
+  if (newTrigger === 'GameEnd' && objective.reward) {
+    objective = { ...objective, reward: undefined };
+  }
+
   if (!list) {
-    return;
+    return objective;
   }
 
   const partition = groupBy(list, ({ conditions }) =>
@@ -118,6 +125,8 @@ const maybeSwapEffect = (
   setEditorState({
     effects: newEffects,
   });
+
+  return objective;
 };
 
 export default function ObjectivePanel({
@@ -166,49 +175,64 @@ export default function ObjectivePanel({
     [campaignEdges, mapId],
   );
 
-  const hasDefault = objectives.some(({ type }) => type === Criteria.Default);
+  const updateObjective = useCallback(
+    (id: ObjectiveID, objective: Objective | null) => {
+      const existingObjective = objectives.get(id);
+      if (!existingObjective) {
+        return;
+      }
 
-  const updateObjective = (id: ObjectiveID, objective: Objective | null) => {
-    const existingObjective = objectives.get(id);
-    if (!existingObjective) {
-      return;
-    }
-
-    if (!objective) {
-      maybeRemoveEffect(editor.effects, existingObjective, id, setEditorState);
-      actions.update({
-        map: map.copy({
-          config: map.config.copy({
-            objectives:
-              objectives.size === 1
-                ? ImmutableMap([
-                    [0, getInitialObjective(map, Criteria.Default)],
-                  ])
-                : objectives.delete(id),
+      if (!objective) {
+        maybeRemoveEffect(
+          editor.effects,
+          existingObjective,
+          id,
+          setEditorState,
+        );
+        actions.update({
+          map: map.copy({
+            config: map.config.copy({
+              objectives:
+                objectives.size === 1
+                  ? ImmutableMap([
+                      [0, getInitialObjective(map, Criteria.Default)],
+                    ])
+                  : objectives.delete(id),
+            }),
           }),
-        }),
-      });
-      return;
-    }
+        });
+        return;
+      }
 
-    if (validate(objective)) {
-      maybeSwapEffect(
-        editor.effects,
-        objective,
-        existingObjective,
-        id,
-        setEditorState,
-      );
+      if (validate(objective)) {
+        objective = maybeSwapEffect(
+          editor.effects,
+          objective,
+          existingObjective,
+          id,
+          setEditorState,
+          isAdmin,
+        );
 
-      actions.update({
-        map: map.copy({
-          config: map.config.copy({
-            objectives: objectives.set(id, objective),
+        actions.update({
+          map: map.copy({
+            config: map.config.copy({
+              objectives: objectives.set(id, objective),
+            }),
           }),
-        }),
-      });
-    }
-  };
+        });
+      }
+    },
+    [
+      actions,
+      editor.effects,
+      isAdmin,
+      map,
+      objectives,
+      setEditorState,
+      validate,
+    ],
+  );
 
   if (editor?.objective) {
     return (
@@ -272,8 +296,9 @@ export default function ObjectivePanel({
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
         </h2>
         <Stack gap vertical>
-          {CriteriaList.filter(
-            (type) => type !== Criteria.Default || !hasDefault,
+          {(objectives.some(({ type }) => type === Criteria.Default)
+            ? CriteriaListWithoutDefault
+            : CriteriaList
           ).map((type, index) => (
             <InlineLink
               className={linkStyle}

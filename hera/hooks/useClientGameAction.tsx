@@ -56,7 +56,7 @@ export default function useClientGameAction(
         gameState: GameState | null,
         activeMap: MapData,
         actionResponse: ActionResponse,
-      ) => Promise<void>)
+      ) => Promise<GameState | null>)
     | null,
   mutateAction?: MutateActionResponseFnName | null,
 ) {
@@ -136,7 +136,11 @@ export default function useClientGameAction(
             initialActiveMap,
           ];
 
-          await onGameAction?.(gameState, lastEntry[1], lastEntry[0]);
+          if (onGameAction) {
+            gameState =
+              (await onGameAction(gameState, lastEntry[1], lastEntry[0])) ||
+              gameState;
+          }
 
           setGame(
             toClientGame(
