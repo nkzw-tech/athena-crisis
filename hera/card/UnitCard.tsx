@@ -578,7 +578,7 @@ const Weapon = memo(function WeaponAttack({
 
             return unitGroups.length ? (
               <TileBox key={strength}>
-                {strength === 1 ? (
+                {strength <= 1 ? (
                   <fbt desc="Label for attack strength">Weak</fbt>
                 ) : strength === 2 ? (
                   <fbt desc="Label for attack strength">Marginal</fbt>
