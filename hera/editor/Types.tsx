@@ -116,6 +116,7 @@ export type CampaignEdge = Edges<
 
 export type MapObject = Readonly<{
   campaigns: CampaignEdge;
+  canEdit: boolean;
   creator: MapCreator;
   effects: string;
   id: string;

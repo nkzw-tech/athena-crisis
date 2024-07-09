@@ -3074,7 +3074,7 @@ test('optional objectives are processed before game end responses', async () => 
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       OptionalObjective { objective: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'Skill' }, type: 9 }, objectiveId: 1, toPlayer: 1 }
       CharacterMessage { message: 'FIRE!', player: 'self', unitId: 15, variant: 2 }
-      ReceiveReward { player: 1, reward: 'Reward { skill: 12 }' }
+      ReceiveReward { player: 1, reward: 'Reward { skill: 12 }', permanent: false }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
 });

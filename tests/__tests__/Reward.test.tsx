@@ -120,7 +120,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     "SetViewer
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-    ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
+    ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
   `);
 });
@@ -213,7 +213,7 @@ test(`each skill is only received once`, () => {
     "SetViewer
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-    ReceiveReward { player: 1, reward: 'Reward { skill: 4 }' }
+    ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
   `);
 });
