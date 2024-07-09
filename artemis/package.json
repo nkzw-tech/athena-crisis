@@ -65,8 +65,8 @@
     "@types/passport": "^1.0.16",
     "@types/passport-local": "^1.0.38",
     "@types/web-push": "^3.6.3",
-    "glob": "10.4.3",
-    "p-limit": "^6.0.0",
+    "glob": "11.0.0",
+    "p-limit": "^6.1.0",
     "prisma": "~5.16.1",
     "prisma-json-types-generator": "^3.0.4",
     "terminal-link": "^3.0.0"

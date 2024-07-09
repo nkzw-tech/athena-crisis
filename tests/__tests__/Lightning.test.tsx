@@ -7,6 +7,7 @@ import { Charge } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import stripAnsi from 'strip-ansi';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -78,9 +79,15 @@ test('can turn lightning barriers on and off', async () => {
       .set(toC, Helicopter.create(player2)),
   });
 
-  expect(() =>
-    executeGameActions(initialMap, [ToggleLightningAction(fromA, toB)]),
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => {
+    try {
+      executeGameActions(initialMap, [ToggleLightningAction(fromA, toB)]);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(stripAnsi(error.message));
+      }
+    }
+  }).toThrowErrorMatchingInlineSnapshot(
     `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
   );
 
