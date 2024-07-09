@@ -24,11 +24,21 @@ export default function MovementBox({
       {cost === -1 ? (
         <fbt desc="Label for inaccessible tiles">Inaccessible</fbt>
       ) : cost === 1 ? (
-        <fbt desc="Label for normal movement speed">Easy</fbt>
+        <fbt desc="Label for normal movement speed">
+          Easy: <fbt:param name="cost">{'1'}</fbt:param>
+        </fbt>
       ) : cost < 1 ? (
-        <fbt desc="Label for fast movement speed">Double Speed</fbt>
+        <fbt desc="Label for fast movement speed">
+          Double Speed: <fbt:param name="cost">{'0.5'}</fbt:param>
+        </fbt>
+      ) : cost === 2 ? (
+        <fbt desc="Label for strenuous movement speed">
+          Strenuous: <fbt:param name="cost">{'2'}</fbt:param>
+        </fbt>
       ) : (
-        <fbt desc="Label for strenuous movement speed">Strenuous</fbt>
+        <fbt desc="Label for strenuous movement speed">
+          Exhausting: <fbt:param name="cost">{'3'}</fbt:param>
+        </fbt>
       )}
       <InlineTileList
         biome={biome}

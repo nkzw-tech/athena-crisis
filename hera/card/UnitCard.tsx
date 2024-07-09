@@ -865,29 +865,31 @@ const UnitMovement = memo(function UnitMovement({
   return (
     <Stack gap vertical>
       <CardInfoHeading style={{ color: getColor(player) }}>
-        <fbt desc="Headline for movement information">
-          Movement:{' '}
-          <fbt:param name="movement-type">{movementType.name}</fbt:param>
-        </fbt>
+        <fbt desc="Headline for movement costs">Movement Costs</fbt>
       </CardInfoHeading>
-      <Stack gap start>
-        {tileList?.map(([cost, tiles]) => (
-          <MovementBox
-            biome={biome}
-            cost={cost}
-            key={cost}
-            size={
-              tiles.some((tile) => tileFieldHasDecorator(tile.id, biome))
-                ? 'medium'
-                : undefined
-            }
-            tiles={tiles}
-          />
-        )) || (
-          <fbt desc="Text for no movement restriction">
-            No movement restrictions.
-          </fbt>
-        )}
+      <Stack gap={16} vertical>
+        <fbt desc="Label for movement type">
+          Type: <fbt:param name="movementType">{movementType.name}</fbt:param>
+        </fbt>
+        <Stack gap start>
+          {tileList?.map(([cost, tiles]) => (
+            <MovementBox
+              biome={biome}
+              cost={cost}
+              key={cost}
+              size={
+                tiles.some((tile) => tileFieldHasDecorator(tile.id, biome))
+                  ? 'medium'
+                  : undefined
+              }
+              tiles={tiles}
+            />
+          )) || (
+            <fbt desc="Text for no movement restriction">
+              No movement restrictions.
+            </fbt>
+          )}
+        </Stack>
       </Stack>
     </Stack>
   );
