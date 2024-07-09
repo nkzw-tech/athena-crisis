@@ -17,6 +17,7 @@ import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import Select from '@deities/ui/Select.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -255,7 +256,7 @@ export default function ObjectivePanel({
   }
 
   return (
-    <Stack gap={24} vertical verticalPadding>
+    <Stack className={paddingStyle} gap={24} vertical>
       {[
         ...objectives
           .map((objective, id) => (
@@ -291,11 +292,12 @@ export default function ObjectivePanel({
           ))
           .values(),
       ]}
-      <Box gap={16} vertical>
-        <h2>
+      <Select
+        selectedItem={
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
-        </h2>
-        <Stack gap vertical>
+        }
+      >
+        <Stack gap={4} vertical>
           {(objectives.some(({ type }) => type === Criteria.Default)
             ? CriteriaListWithoutDefault
             : CriteriaList
@@ -322,11 +324,15 @@ export default function ObjectivePanel({
             </InlineLink>
           ))}
         </Stack>
-      </Box>
+      </Select>
     </Stack>
   );
 }
 
 const linkStyle = css`
-  width: fit-content;
+  padding: 8px;
+`;
+
+const paddingStyle = css`
+  padding: 24px 0 520px;
 `;

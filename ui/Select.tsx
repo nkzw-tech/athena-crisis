@@ -18,6 +18,7 @@ export default function Select({
   return (
     <Dropdown
       className={cx(BoxStyle, dropdownStyle)}
+      closeOnSelect
       dropdownClassName={cx(BoxStyle, selectorStyle)}
       title={
         <Stack gap nowrap stretch>
