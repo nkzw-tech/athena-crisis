@@ -54,6 +54,7 @@ import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
 import addPlayerLoseAnimation from '../lib/addPlayerLoseAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
+import getCurrentAnimationConfig from '../lib/getCurrentAnimationConfig.tsx';
 import getPlayerDefeatedMessage from '../lib/getPlayerDefeatedMessage.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import isFakeEndTurn from '../lib/isFakeEndTurn.tsx';
@@ -64,7 +65,7 @@ import startGameAnimation from '../lib/startGameAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
 import {
   Actions,
-  AnimationConfigs,
+  AnimationSpeed,
   PlayerHasRewardFunction,
   State,
 } from '../Types.tsx';
@@ -632,8 +633,7 @@ export default async function processActionResponses(
   state: State,
   actions: Actions,
   gameActionResponses: GameActionResponses,
-  animationConfigs: AnimationConfigs,
-  fastButtonIsPressed: { current: boolean },
+  animationSpeed: AnimationSpeed,
   playerHasReward: PlayerHasRewardFunction,
 ): Promise<State> {
   let lastActionResponse: ActionResponse | null = null;
@@ -691,15 +691,10 @@ export default async function processActionResponses(
           : null),
         ...(nextResponse?.type === 'EndTurn'
           ? {
-              animationConfig: fastButtonIsPressed.current
-                ? newState.animationConfig || state.animationConfig
-                : animationConfigs[
-                    (newState.map || state.map)
-                      .getPlayer(nextResponse.next.player)
-                      .isHumanPlayer()
-                      ? 1
-                      : 0
-                  ],
+              animationConfig: getCurrentAnimationConfig(
+                (newState.map || state.map).getPlayer(nextResponse.next.player),
+                animationSpeed,
+              ),
               selectedPosition: null,
               selectedUnit: null,
             }

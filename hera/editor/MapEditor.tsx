@@ -372,7 +372,7 @@ export default function MapEditor({
   const [tilted, setIsTilted] = useState(true);
   const [menuIsExpanded, setMenuIsExpanded] = useState(false);
   const [actAsEveryPlayer, setActAsEveryPlayer] = useState(false);
-  const animationConfig = useAnimationSpeed(animationSpeed);
+  const mapAnimationSpeed = useAnimationSpeed(animationSpeed);
   const [previousState, setPreviousState] =
     useState<PreviousMapEditorState | null>(() => {
       try {
@@ -844,7 +844,7 @@ export default function MapEditor({
   if (isPlayTesting) {
     return (
       <GameMap
-        animationConfig={animationConfig}
+        animationSpeed={mapAnimationSpeed}
         confirmActionStyle={confirmActionStyle}
         currentUserId={user.id}
         dangerouslyApplyExternalState={

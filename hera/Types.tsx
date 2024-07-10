@@ -33,12 +33,10 @@ export type Size = Readonly<{
   width: number;
 }>;
 
-export type AnimationConfigs = readonly [
-  normal: AnimationConfig,
-  player: AnimationConfig,
-  fast: AnimationConfig,
-  fastPlayer: AnimationConfig,
-];
+export type AnimationSpeed = Readonly<{
+  human: AnimationConfig;
+  regular: AnimationConfig;
+}>;
 
 export type PlayerHasRewardFunction = (
   map: MapData,
@@ -50,7 +48,7 @@ export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
 
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
-  animationConfig?: AnimationConfigs | AnimationConfig;
+  animationSpeed?: AnimationSpeed;
   behavior?: MapBehaviorConstructor | null;
   buildingSize: number;
   children?: (state: State, actions: Actions) => ReactNode;
@@ -228,7 +226,6 @@ export type Actions = Readonly<{
     action: Action,
   ) => [Promise<GameActionResponse>, MapData, ActionResponse];
   clearTimer: ClearTimerFunction;
-  fastForward: () => () => void;
   optimisticAction: (state: State, action: Action) => ActionResponse;
   pauseReplay: () => Promise<void>;
   processGameActionResponse: (

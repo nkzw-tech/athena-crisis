@@ -27,8 +27,6 @@ export type Events = Readonly<{
   save: undefined;
   secondary: undefined;
   select: { modifier: boolean };
-  slow: undefined;
-  'slow:released': undefined;
   tertiary: undefined;
   'tertiary:released': undefined;
   undo: undefined;

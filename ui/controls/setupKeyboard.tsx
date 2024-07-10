@@ -104,10 +104,7 @@ const keydownListener = (event: KeyboardEvent) => {
     navigateSecondary(secondaryDirection);
   }
 
-  if (isMeta && key === 'AltLeft') {
-    event.preventDefault();
-    Input.fire('slow');
-  } else if (key === 'Tab') {
+  if (key === 'Tab') {
     event.preventDefault();
     if (event.shiftKey) {
       previous();
@@ -149,9 +146,7 @@ const keyupListener = (event: KeyboardEvent) => {
     pressed[key as PressedKey] = false;
   }
 
-  if (key === 'AltLeft') {
-    Input.fire('slow:released');
-  } else if (key === 'ShiftLeft') {
+  if (key === 'ShiftLeft') {
     Input.fire('tertiary:released');
   }
 };

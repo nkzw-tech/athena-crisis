@@ -16,9 +16,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
   DoubleSize,
-  FastAnimationConfig,
   MaxSize,
-  SlowAnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import {
@@ -62,6 +60,7 @@ import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import ActionError from './lib/ActionError.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
+import getCurrentAnimationConfig from './lib/getCurrentAnimationConfig.tsx';
 import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
@@ -73,7 +72,7 @@ import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
-  AnimationConfigs,
+  AnimationSpeed,
   GameInfoState,
   GetLayerFunction,
   MapBehavior,
@@ -244,10 +243,10 @@ const getInitialState = (props: Props) => {
   const vision = getVision(map, currentViewer, spectatorCodes);
   const newState = {
     additionalRadius: null,
-    animationConfig:
-      (Array.isArray(props.animationConfig)
-        ? props.animationConfig[map.getCurrentPlayer().isHumanPlayer() ? 1 : 0]
-        : props.animationConfig) || AnimationConfig,
+    animationConfig: getCurrentAnimationConfig(
+      map.getCurrentPlayer(),
+      props.animationSpeed,
+    ),
     animations: ImmutableMap() as Animations,
     attackable: null,
     behavior,
@@ -316,9 +315,8 @@ export default class GameMap extends Component<Props, State> {
 
   private _actionQueue: Promise<void> | null = null;
   private _actions: Actions;
-  private _animationConfigs: AnimationConfigs;
+  private _animationSpeed: AnimationSpeed;
   private _controlListeners: Array<() => void> = [];
-  private _isFastForward = { current: false };
   private _isTouch = { current: false };
   private _lastEnteredPosition: Vector | null = null;
   private _liveTimer: NativeTimeout = null;
@@ -341,21 +339,15 @@ export default class GameMap extends Component<Props, State> {
     super(props);
 
     this.state = getInitialState(props);
-    const animationConfig = props.animationConfig as AnimationConfig;
-    this._animationConfigs = Array.isArray(props.animationConfig)
-      ? (props.animationConfig as AnimationConfigs)
-      : [
-          animationConfig || AnimationConfig,
-          animationConfig || AnimationConfig,
-          animationConfig || FastAnimationConfig,
-          animationConfig || FastAnimationConfig,
-        ];
+    this._animationSpeed = props.animationSpeed || {
+      human: AnimationConfig,
+      regular: AnimationConfig,
+    };
     this._timers = new Set();
     this._resolvers = [];
     this._actions = {
       action: this._action,
       clearTimer: this._clearTimer,
-      fastForward: this._fastForward,
       optimisticAction: this._optimisticAction,
       pauseReplay: this._pauseReplay,
       processGameActionResponse: this.processGameActionResponse,
@@ -516,30 +508,6 @@ export default class GameMap extends Component<Props, State> {
         'dialog',
       ),
     ];
-
-    if (!this.props.editor) {
-      this._controlListeners.push(
-        Input.register('tertiary', this._fastForward),
-        Input.register('tertiary:released', this._releaseFastForward),
-        Input.register('slow', () => {
-          if (this.state.animationConfig !== SlowAnimationConfig) {
-            this.setState({
-              animationConfig: SlowAnimationConfig,
-            });
-          }
-        }),
-        Input.register('slow:released', () => {
-          if (this.state.animationConfig === SlowAnimationConfig) {
-            const isHumanPlayer = this.state.map
-              .getCurrentPlayer()
-              .isHumanPlayer();
-            this.setState({
-              animationConfig: this._animationConfigs[isHumanPlayer ? 1 : 0],
-            });
-          }
-        }),
-      );
-    }
 
     document.addEventListener('pointermove', this._pointerMove);
     document.addEventListener('mousedown', this._mouseDown);
@@ -1072,9 +1040,10 @@ export default class GameMap extends Component<Props, State> {
       this.setState(
         {
           ...this._resetGameInfoState(),
-          animationConfig: this._isFastForward.current
-            ? this.state.animationConfig
-            : this._animationConfigs[currentPlayer.isHumanPlayer() ? 1 : 0],
+          animationConfig: getCurrentAnimationConfig(
+            currentPlayer,
+            this._animationSpeed,
+          ),
           preventRemoteActions: true,
           replayState: {
             isLive,
@@ -1092,8 +1061,7 @@ export default class GameMap extends Component<Props, State> {
               this.state,
               this._actions,
               gameActionResponses,
-              this._animationConfigs,
-              this._isFastForward,
+              this._animationSpeed,
               this.props.playerHasReward || (() => false),
             );
           } catch (error) {
@@ -1120,9 +1088,10 @@ export default class GameMap extends Component<Props, State> {
           this.setState(
             {
               ...(resetBehavior(this.props.behavior) as State),
-              animationConfig: this._isFastForward.current
-                ? this.state.animationConfig
-                : this._animationConfigs[currentPlayer.isHumanPlayer() ? 1 : 0],
+              animationConfig: getCurrentAnimationConfig(
+                currentPlayer,
+                this._animationSpeed,
+              ),
               behavior:
                 lastActionResponse.type === 'GameEnd'
                   ? new NullBehavior()
@@ -1322,33 +1291,6 @@ export default class GameMap extends Component<Props, State> {
       timers.add(timerObject);
     }
     this._timers = timers;
-  };
-
-  private _fastForward = () => {
-    if (!this._isFastForward.current) {
-      this._isFastForward.current = true;
-      const { map } = this.state;
-      const animationConfig =
-        this._animationConfigs[map.getCurrentPlayer().isHumanPlayer() ? 3 : 2];
-      if (this.state.animationConfig !== animationConfig) {
-        this.setState({
-          animationConfig,
-        });
-      }
-    }
-
-    return this._releaseFastForward;
-  };
-
-  private _releaseFastForward = () => {
-    this._isFastForward.current = false;
-    const isHumanPlayer = this.state.map.getCurrentPlayer().isHumanPlayer();
-    const animationConfig = this._animationConfigs[isHumanPlayer ? 3 : 2];
-    if (this.state.animationConfig === animationConfig) {
-      this.setState({
-        animationConfig: this._animationConfigs[isHumanPlayer ? 1 : 0],
-      });
-    }
   };
 
   private _clearTimer = (timer: number | TimerID) => {
