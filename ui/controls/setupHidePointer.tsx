@@ -2,14 +2,18 @@ let pointerEnabled = true;
 
 const showPointer = () => {
   if (!pointerEnabled) {
-    document.exitPointerLock();
+    if (document.pointerLockElement) {
+      document.exitPointerLock();
+    }
     pointerEnabled = true;
   }
 };
 
 export function hidePointer() {
   if (pointerEnabled) {
-    document.body.requestPointerLock();
+    if (!document.pointerLockElement) {
+      document.body.requestPointerLock();
+    }
     pointerEnabled = false;
   }
 }
