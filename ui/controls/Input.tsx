@@ -1,3 +1,5 @@
+import { hidePointer } from './setupHidePointer.tsx';
+
 type Direction = -1 | 0 | 1;
 
 export type NavigationDirection = {
@@ -49,6 +51,8 @@ class Input {
       ? [type: T]
       : [type: T, detail: Events[T]]
   ) {
+    hidePointer();
+
     const [type, detail] = args;
     const event = new CustomEvent(type, {
       cancelable: true,

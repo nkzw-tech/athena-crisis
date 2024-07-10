@@ -613,7 +613,6 @@ export default class GameMap extends Component<Props, State> {
     if (this._pointerEnabled) {
       this._pointerEnabled = false;
       this._maskRef.current?.classList.remove(MaskPointerClassName);
-      this._wrapperRef.current?.classList.add('pointerNone');
     }
   };
 
@@ -621,7 +620,6 @@ export default class GameMap extends Component<Props, State> {
     if (!this._pointerEnabled) {
       this._pointerEnabled = true;
       this._maskRef.current?.classList.add(MaskPointerClassName);
-      this._wrapperRef.current?.classList.remove('pointerNone');
     }
   };
 
@@ -1855,7 +1853,7 @@ export default class GameMap extends Component<Props, State> {
                 zIndex={zIndex - 2}
               />
             )}
-            <div className={pointerStyle} ref={this._wrapperRef}>
+            <div ref={this._wrapperRef}>
               <AnimatePresence>
                 {!behavior || showNamedPositionsForBehavior.has(behavior.type)
                   ? namedPositions?.map((vector) => (
@@ -1939,13 +1937,6 @@ const tiltedStyle = css`
 const pausedStyle = css`
   * {
     animation-play-state: paused !important;
-  }
-`;
-
-const pointerStyle = css`
-  &.pointerNone * {
-    cursor: none !important;
-    pointer-events: none !important;
   }
 `;
 
