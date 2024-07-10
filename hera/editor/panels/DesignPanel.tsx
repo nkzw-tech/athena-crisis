@@ -39,16 +39,16 @@ import Fill from '@iconify-icons/pixelarticons/fill-half.js';
 import { fbt } from 'fbt';
 import { useCallback, useMemo } from 'react';
 import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
+import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
+import navigate from '../../lib/navigate.tsx';
 import Tick from '../../Tick.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
 import canFillTile from '../lib/canFillTile.tsx';
 import DeleteTile from '../lib/DeleteTile.tsx';
-import navigate from '../lib/navigate.tsx';
-import useGridNavigation from '../lib/useGridNavigation.tsx';
 import EditorPlayerSelector from '../selectors/EditorPlayerSelector.tsx';
 import { EditorState } from '../Types.tsx';
 
@@ -150,6 +150,7 @@ export default function DesignPanel({
   );
 
   useGridNavigation(
+    'navigateSecondary',
     useCallback(
       (direction) => {
         const columns = getColumns();

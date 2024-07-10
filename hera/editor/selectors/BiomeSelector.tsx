@@ -7,8 +7,8 @@ import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import { fbt } from 'fbt';
 import React, { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
+import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { State } from '../../Types.tsx';
-import useGridNavigation from '../lib/useGridNavigation.tsx';
 
 const biomes = new Set(Biomes);
 biomes.delete(Biome.Spaceship);
@@ -58,6 +58,7 @@ export default function BiomeSelector({
   );
 
   useGridNavigation(
+    'navigateSecondary',
     useCallback(
       (direction) => {
         const maybeBiome =

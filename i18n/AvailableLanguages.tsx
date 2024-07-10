@@ -1,4 +1,4 @@
-export default new Map([
+const AvailableLanguages = new Map([
   ['en_US', 'English'],
   ['de_DE', 'Deutsch (German)'],
   ['es_ES', 'Español (Spanish)'],
@@ -10,4 +10,13 @@ export default new Map([
   ['pt_BR', 'Português (Brazilian Portuguese)'],
   ['ru_RU', 'Русский (Russian)'],
   ['zh_CN', '简体中文 (Simplified Chinese)'],
-]);
+] as const);
+
+export type AvailableLanguage = typeof AvailableLanguages extends Map<
+  infer K,
+  unknown
+>
+  ? K
+  : never;
+
+export default AvailableLanguages;

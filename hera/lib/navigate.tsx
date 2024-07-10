@@ -1,13 +1,13 @@
-import { Direction } from './useGridNavigation.tsx';
+import { Direction } from '../hooks/useGridNavigation.tsx';
 
 export default function navigate(
   direction: Direction,
   columns: number,
   index: number | null,
   list: ReadonlyArray<unknown>,
-  [select, selectErase, selectPrevious, selectNext]: [
+  [select, selectLast, selectPrevious, selectNext]: [
     select: (index: number) => void,
-    selectErase: () => void,
+    selectLast?: () => void,
     selectPrevious?: (index: number, columns: number) => void,
     selectNext?: (index: number) => void,
   ],
@@ -26,7 +26,7 @@ export default function navigate(
     if (list[nextIndex]) {
       select(nextIndex);
     } else if (nextIndex === list.length) {
-      selectErase();
+      selectLast?.();
     } else if (nextIndex > list.length) {
       selectNext?.(nextIndex % columns);
     } else if (nextIndex < 0) {

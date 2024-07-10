@@ -356,6 +356,7 @@ export default function Typeahead<T>({
       },
       [down, up],
     ),
+    results.length > 0,
     'dialog',
   );
 

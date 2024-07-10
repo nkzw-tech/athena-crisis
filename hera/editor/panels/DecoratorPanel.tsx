@@ -9,11 +9,11 @@ import Box from '@deities/ui/Box.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
+import useGridNavigation from '../../hooks/useGridNavigation.tsx';
+import navigate from '../../lib/navigate.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
 import DeleteTile from '../lib/DeleteTile.tsx';
-import navigate from '../lib/navigate.tsx';
-import useGridNavigation from '../lib/useGridNavigation.tsx';
 import { EditorState } from '../Types.tsx';
 
 const decorators = getAllDecorators();
@@ -57,6 +57,7 @@ export default function DecoratorPanel({
   );
 
   useGridNavigation(
+    'navigateSecondary',
     useCallback(
       (direction) => {
         const columns = getColumns();

@@ -9,6 +9,7 @@ export default function Dropdown({
   className,
   closeOnSelect,
   dropdownClassName,
+  forceOpen,
   shouldRenderControls = true,
   title,
 }: {
@@ -16,6 +17,7 @@ export default function Dropdown({
   className?: string;
   closeOnSelect?: true;
   dropdownClassName?: string;
+  forceOpen?: boolean;
   shouldRenderControls?: boolean;
   title: ReactNode;
 }) {
@@ -36,6 +38,7 @@ export default function Dropdown({
           className={cx(
             selectorStyle,
             dropdownClassName,
+            forceOpen && forceOpenStyle,
             closed && hiddenStyle,
           )}
           nowrap
@@ -65,6 +68,13 @@ const openStyle = css`
     transform: scale(1);
     transition-delay: 0ms;
   }
+`;
+
+const forceOpenStyle = css`
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  transition-delay: 0ms;
 `;
 
 const hiddenStyle = css`
