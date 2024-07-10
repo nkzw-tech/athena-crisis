@@ -113,8 +113,6 @@ const keydownListener = (event: KeyboardEvent) => {
     }
   } else if (key === 'ShiftLeft') {
     Input.fire('tertiary');
-  } else if (key === 'KeyA') {
-    Input.fire('quaternary');
   } else if (key === 'Enter' || key === 'Space') {
     event.preventDefault();
     Input.fire('accept');
@@ -144,10 +142,6 @@ const keyupListener = (event: KeyboardEvent) => {
   const { code: key } = event;
   if (key in pressed) {
     pressed[key as PressedKey] = false;
-  }
-
-  if (key === 'ShiftLeft') {
-    Input.fire('tertiary:released');
   }
 };
 

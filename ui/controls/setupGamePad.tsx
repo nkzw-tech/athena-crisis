@@ -41,7 +41,6 @@ export default function setupGamePad() {
   const next = throttle(() => Input.fire('next'), 250);
   const previous = throttle(() => Input.fire('previous'), 250);
   let needsThrottleReset = false;
-  let tertiaryPressed = false;
   let detailPressed = false;
 
   const handleInputs = (controller: QueryModule) => {
@@ -152,28 +151,17 @@ export default function setupGamePad() {
     }
 
     if (singlePress(Y)) {
-      tertiaryPressed = true;
       Input.fire('tertiary');
-      Input.fire('gamepad-tertiary');
-    }
-
-    if (tertiaryPressed && !pressed(Y)) {
-      tertiaryPressed = false;
-      Input.fire('tertiary:released');
     }
 
     const l1Pressed = pressed(L1);
     const r1Pressed = pressed(R1);
-    if (l1Pressed && r1Pressed) {
-      Input.fire('undo');
-    } else {
-      if (l1Pressed) {
-        previous();
-      }
+    if (l1Pressed) {
+      previous();
+    }
 
-      if (r1Pressed) {
-        next();
-      }
+    if (r1Pressed) {
+      next();
     }
 
     const l2pressed = pressed(L2);
@@ -202,7 +190,7 @@ export default function setupGamePad() {
     }
 
     if (singlePress(L3)) {
-      Input.fire('quaternary');
+      Input.fire('undo');
     }
 
     if (pressed(B) && pressed(A) && l1Pressed && r1Pressed) {

@@ -382,7 +382,7 @@ export default class Menu {
       );
 
     useInput(
-      'gamepad-tertiary',
+      'tertiary',
       (event) => {
         if (availableActions) {
           event.preventDefault();

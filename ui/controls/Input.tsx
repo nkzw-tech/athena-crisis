@@ -14,7 +14,6 @@ export type Events = Readonly<{
   cancel: { isEscape: boolean } | null;
   detail: undefined;
   'detail:released': undefined;
-  'gamepad-tertiary': undefined;
   info: undefined;
   menu: undefined;
   navigate: NavigationDirection;
@@ -22,13 +21,11 @@ export type Events = Readonly<{
   next: undefined;
   point: undefined;
   previous: undefined;
-  quaternary: undefined;
   reset: undefined;
   save: undefined;
   secondary: undefined;
   select: { modifier: boolean };
   tertiary: undefined;
-  'tertiary:released': undefined;
   undo: undefined;
   zoom: undefined;
 }>;
