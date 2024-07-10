@@ -157,7 +157,7 @@ export default memo(function PlayerCard({
   );
 
   useInput('info', () => {
-    if (currentViewer === player.id && player.skills.size > 0) {
+    if (wide && currentViewer === player.id && player.skills.size > 0) {
       showSkillDialog(player.skills.values().next().value, null);
     }
   });
@@ -240,7 +240,7 @@ export default memo(function PlayerCard({
           wide && widePlayerInfoStyle,
         )}
       >
-        <Stack alignCenter nowrap>
+        <Stack nowrap>
           <Stack vertical>
             <div
               className={cx(
@@ -507,7 +507,7 @@ const winConditionIconStyle = css`
 `;
 
 const skillStyle = css`
-  padding: 8px 0 0 8px;
+  padding: 13px 0 0 8px;
   gap: 12px;
 `;
 
