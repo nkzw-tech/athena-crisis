@@ -665,7 +665,7 @@ export const Ruins = new TileInfo(
   'Ruins',
   `Crumbled structures providing some cover. They are an active area of research where scientists learn more about the history of the current conflict.`,
   TileTypes.Plain,
-  { cover: 20, movement: PlainMovementCosts },
+  { cover: 10, movement: PlainMovementCosts },
   {
     noClip: Biome.Volcano,
     position: sprite(2, 2),
