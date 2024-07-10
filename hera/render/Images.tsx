@@ -94,6 +94,8 @@ const ExplosionSprite = 'https://art.athenacrisis.com/v10/assets/Explosion.png';
 
 const FireworksSprite = 'https://art.athenacrisis.com/v10/assets/Fireworks.png';
 
+const GamepadSprite = 'https://art.athenacrisis.com/v10/assets/Gamepad.png';
+
 const HealSprite = 'https://art.athenacrisis.com/v10/assets/Heal.png';
 
 const NoiseSprite =
@@ -335,6 +337,7 @@ export const Sprites = {
   Delete: DeleteSprite,
   Explosion: ExplosionSprite,
   Fireworks: FireworksSprite,
+  Gamepad: GamepadSprite,
   Heal: HealSprite,
   Noise: NoiseSprite,
   Sabotage: SabotageSprite,
@@ -423,6 +426,7 @@ export default [
   DeleteSprite,
   ExplosionSprite,
   FireworksSprite,
+  GamepadSprite,
   HealSprite,
   NoiseSprite,
   SabotageSprite,
