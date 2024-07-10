@@ -46,8 +46,6 @@ class Input {
       ? [type: T]
       : [type: T, detail: Events[T]]
   ) {
-    hidePointer();
-
     const [type, detail] = args;
     const event = new CustomEvent(type, {
       cancelable: true,
@@ -70,6 +68,16 @@ class Input {
     }
 
     this.base.dispatchEvent(event);
+  }
+
+  fireWithPointerLock<T extends EventName>(
+    ...args: Events[T] extends undefined
+      ? [type: T]
+      : [type: T, detail: Events[T]]
+  ) {
+    hidePointer();
+    // @ts-expect-error
+    this.fire(...args);
   }
 
   block(layer: InputLayer) {

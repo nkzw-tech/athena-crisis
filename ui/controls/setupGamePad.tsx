@@ -30,7 +30,7 @@ export default function setupGamePad() {
 
   const navigate = dynamicThrottle(
     (direction: { x: -1 | 0 | 1; y: -1 | 0 | 1 }) => {
-      Input.fire(
+      Input.fireWithPointerLock(
         useSecondaryNavigation ? 'navigateSecondary' : 'navigate',
         direction,
       );
@@ -38,8 +38,8 @@ export default function setupGamePad() {
     [200, 140, 80, 40],
   );
 
-  const next = throttle(() => Input.fire('next'), 250);
-  const previous = throttle(() => Input.fire('previous'), 250);
+  const next = throttle(() => Input.fireWithPointerLock('next'), 250);
+  const previous = throttle(() => Input.fireWithPointerLock('previous'), 250);
   let needsThrottleReset = false;
   let detailPressed = false;
 
@@ -125,33 +125,33 @@ export default function setupGamePad() {
         stickRight.value[0] * 16,
         stickRight.value[1] * 16,
       );
-      Input.fire('point');
+      Input.fireWithPointerLock('point');
     }
 
     if (singlePress(start) || singlePress(home)) {
-      Input.fire('menu');
+      Input.fireWithPointerLock('menu');
     }
 
     if (singlePress(A)) {
       navigate.reset();
-      Input.fire('accept');
+      Input.fireWithPointerLock('accept');
     }
 
     if (singlePress(select)) {
-      Input.fire('select', { modifier: A?.pressed });
+      Input.fireWithPointerLock('select', { modifier: A?.pressed });
     }
 
     if (singlePress(B)) {
       navigate.reset();
-      Input.fire('cancel', null);
+      Input.fireWithPointerLock('cancel', null);
     }
 
     if (singlePress(X)) {
-      Input.fire('secondary');
+      Input.fireWithPointerLock('secondary');
     }
 
     if (singlePress(Y)) {
-      Input.fire('tertiary');
+      Input.fireWithPointerLock('tertiary');
     }
 
     const l1Pressed = pressed(L1);
@@ -171,30 +171,30 @@ export default function setupGamePad() {
     } else {
       useSecondaryNavigation = false;
       if (singlePress(L2)) {
-        Input.fire('info');
+        Input.fireWithPointerLock('info');
       }
 
       if (singlePress(R2)) {
         detailPressed = true;
-        Input.fire('detail');
+        Input.fireWithPointerLock('detail');
       }
 
       if (detailPressed && !r2pressed) {
         detailPressed = false;
-        Input.fire('detail:released');
+        Input.fireWithPointerLock('detail:released');
       }
     }
 
     if (singlePress(R3)) {
-      Input.fire('zoom');
+      Input.fireWithPointerLock('zoom');
     }
 
     if (singlePress(L3)) {
-      Input.fire('undo');
+      Input.fireWithPointerLock('undo');
     }
 
     if (pressed(B) && pressed(A) && l1Pressed && r1Pressed) {
-      Input.fire('reset');
+      Input.fireWithPointerLock('reset');
     }
   };
 
