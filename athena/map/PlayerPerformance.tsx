@@ -119,6 +119,16 @@ export function hasPerformanceExpectation(map: MapData) {
   );
 }
 
+export function getPerformanceExpectationCount(map: MapData, player: PlayerID) {
+  const { performance } = map.config;
+  return (
+    (performance.pace != null ? 1 : 0) +
+    (performance.power != null ? 1 : 0) +
+    (performance.style != null ? 1 : 0) +
+    (hasBonusObjective(map, player) ? 1 : 0)
+  );
+}
+
 export function shouldEvaluatePlayerPerformance(
   map: MapData,
   playerId: PlayerID,
