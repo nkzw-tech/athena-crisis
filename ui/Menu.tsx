@@ -1,13 +1,8 @@
-import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import CloseIcon from '@iconify-icons/pixelarticons/close.js';
 import DragAndDrop from '@iconify-icons/pixelarticons/drag-and-drop.js';
-import Edit from '@iconify-icons/pixelarticons/edit.js';
-import Home from '@iconify-icons/pixelarticons/home.js';
-import Map from '@iconify-icons/pixelarticons/map.js';
 import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
-import User from '@iconify-icons/pixelarticons/user.js';
 import { motion } from 'framer-motion';
 import {
   ReactNode,
@@ -17,7 +12,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import ActiveLink from './ActiveLink.tsx';
 import { App } from './App.tsx';
 import Breakpoints from './Breakpoints.tsx';
 import { rumbleEffect } from './controls/setupGamePad.tsx';
@@ -36,12 +30,10 @@ export default function Menu({
   children,
   controls,
   hide,
-  viewer,
 }: {
   children?: ((close: () => void) => ReactNode) | null;
   controls?: (isOpen: boolean) => ReactNode;
   hide?: boolean;
-  viewer?: { username: string };
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const close = useCallback(() => setIsOpen(false), []);
@@ -161,22 +153,7 @@ export default function Menu({
           stretch
           vertical
         >
-          <Stack gap={16} vertical>
-            <ActiveLink onClick={close} to="/">
-              <Icon button icon={Home} />
-            </ActiveLink>
-            <ActiveLink onClick={close} to="/editor">
-              <Icon button icon={Map} />
-            </ActiveLink>
-            <ActiveLink onClick={close} to="/settings">
-              <Icon button icon={Edit} />
-            </ActiveLink>
-            {viewer && (
-              <ActiveLink onClick={close} to={getUserRoute(viewer.username)}>
-                <Icon button icon={User} />
-              </ActiveLink>
-            )}
-          </Stack>
+          <div />
           {canToggleFullScreen && (
             <Stack gap vertical>
               <a onClick={toggleFullscreen}>
@@ -332,24 +309,6 @@ const openLinkContainerStyle = css`
       transform 300ms ease,
       opacity 300ms 100ms ease;
     visibility: visible;
-  }
-
-  > div:nth-child(1) > a {
-    &:nth-child(1) {
-      transition-delay: 100ms;
-    }
-
-    &:nth-child(2) {
-      transition-delay: 140ms;
-    }
-
-    &:nth-child(3) {
-      transition-delay: 180ms;
-    }
-
-    &:nth-child(4) {
-      transition-delay: 220ms;
-    }
   }
 
   > div:nth-child(2) > a {
