@@ -599,6 +599,7 @@ const MapAnimation = ({
             tileSize={tileSize}
             width={width}
             {...props}
+            animationConfig={AnimationConfig}
           />
         );
       case 'health':
