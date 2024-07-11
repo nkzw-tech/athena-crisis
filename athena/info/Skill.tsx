@@ -1,7 +1,7 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import matchesActiveType from '../lib/matchesActiveType.tsx';
 import { HealAmount } from '../map/Configuration.tsx';
-import { EntityType, isUnitInfo } from '../map/Entity.tsx';
+import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
@@ -35,6 +35,7 @@ export enum Skill {
   UnitInfantryForestDefenseIncrease = 20,
   UnitRailDefenseIncreasePowerAttackIncrease = 21,
   BuyUnitAIU = 22,
+  BuyUnitCommander = 23,
 }
 
 export const Skills = new Set<Skill>([
@@ -60,6 +61,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitInfantryForestDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.BuyUnitAIU,
+  Skill.BuyUnitCommander,
 ]);
 
 const skillConfig: Record<
@@ -94,6 +96,7 @@ const skillConfig: Record<
     cost: 1500,
   },
   [Skill.BuyUnitAIU]: { cost: 1500 },
+  [Skill.BuyUnitCommander]: { charges: 3, cost: 1500 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set(
@@ -194,6 +197,10 @@ const attackTilePowerStatusEffects: TileMovementSkillMap = new Map([
       ],
     ]),
   ],
+]);
+
+const attackLeaderPowerStatusEffects: SkillMap = new Map([
+  [Skill.BuyUnitCommander, 1],
 ]);
 
 const defenseStatusEffects: SkillMap = new Map([
@@ -304,6 +311,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Brute, new Map([[Skill.BuyUnitBrute, 600]])],
   [UnitID.Zombie, new Map([[Skill.BuyUnitZombieDefenseDecreaseMajor, 250]])],
   [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 300]])],
+  [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 300]])],
 ]);
 
 const buildingUnlocks = new Map<ID, Set<Skill>>([
@@ -339,11 +347,13 @@ export function getSkillConfig(skill: Skill) {
 
 const getUnitStatusEffect = (
   unitStatusEffects: UnitSkillMap | null,
+  leaderStatusEffects: SkillMap | null,
   skill: Skill,
-  entity: Readonly<{ type: EntityType }> | UnitInfo,
+  entity: Entity,
 ) =>
-  unitStatusEffects && isUnitInfo(entity)
-    ? unitStatusEffects.get(skill)?.get(entity.id) ?? 0
+  unitStatusEffects && isUnit(entity)
+    ? (unitStatusEffects.get(skill)?.get(entity.id) || 0) +
+        ((entity.isLeader() && leaderStatusEffects?.get(skill)) || 0) || 0
     : 0;
 
 const getMovementStatusEffect = (
@@ -371,15 +381,23 @@ const someOneSkill = (
   unitStatusEffects: UnitSkillMap | null,
   movementStatusEffects: MovementSkillMap | null,
   tileStatusEffects: TileMovementSkillMap | null,
-  entity: Readonly<{ type: EntityType }> | UnitInfo,
+  leaderStatusEffects: SkillMap | null,
+  entity: Entity | null,
   tile: TileInfo | null,
   skill: Skill | undefined,
 ) =>
   skill
     ? (statusEffects.get(skill) ?? 0) +
-      getUnitStatusEffect(unitStatusEffects, skill, entity) +
-      getMovementStatusEffect(movementStatusEffects, skill, entity) +
-      getTileStatusEffect(tileStatusEffects, skill, entity, tile)
+      (entity
+        ? getUnitStatusEffect(
+            unitStatusEffects,
+            leaderStatusEffects,
+            skill,
+            entity,
+          ) +
+          getMovementStatusEffect(movementStatusEffects, skill, entity.info) +
+          getTileStatusEffect(tileStatusEffects, skill, entity.info, tile)
+        : 0)
     : 0;
 
 const sum = (
@@ -387,7 +405,8 @@ const sum = (
   unitStatusEffects: UnitSkillMap | null,
   movementStatusEffects: MovementSkillMap | null,
   tileStatusEffects: TileMovementSkillMap | null,
-  entity: Readonly<{ type: EntityType }> | UnitInfo,
+  leaderStatusEffects: SkillMap | null,
+  entity: Entity | null,
   tile: TileInfo | null,
   skills: ReadonlySet<Skill>,
 ) => {
@@ -401,6 +420,7 @@ const sum = (
     unitStatusEffects,
     movementStatusEffects,
     tileStatusEffects,
+    leaderStatusEffects,
     entity,
     tile,
   );
@@ -430,7 +450,9 @@ const sumAll = (
   activeMovementStatusEffects: MovementSkillMap | null,
   tileStatusEffects: TileMovementSkillMap | null,
   activeTileStatusEffects: TileMovementSkillMap | null,
-  entity: Readonly<{ type: EntityType }> | UnitInfo,
+  leaderStatusEffects: SkillMap | null,
+  activeLeaderStatusEffects: SkillMap | null,
+  entity: Entity | null,
   tile: TileInfo | null,
   skills: ReadonlySet<Skill>,
   activeSkills: ReadonlySet<Skill>,
@@ -440,6 +462,7 @@ const sumAll = (
     unitStatusEffects,
     movementStatusEffects,
     tileStatusEffects,
+    leaderStatusEffects,
     entity,
     tile,
     skills,
@@ -449,6 +472,7 @@ const sumAll = (
     activeUnitStatusEffects,
     activeMovementStatusEffects,
     activeTileStatusEffects,
+    activeLeaderStatusEffects,
     entity,
     tile,
     activeSkills,
@@ -464,6 +488,8 @@ export const getSkillAttackStatusEffects = sumAll.bind(
   attackMovementTypePowerStatusEffects,
   null,
   attackTilePowerStatusEffects,
+  null,
+  attackLeaderPowerStatusEffects,
 );
 
 export const getSkillDefenseStatusEffects = sumAll.bind(
@@ -476,6 +502,8 @@ export const getSkillDefenseStatusEffects = sumAll.bind(
   null,
   defenseTileStatusEffects,
   null,
+  null,
+  null,
 );
 
 export const getSkillUnitCostEffects = sumAll.bind(
@@ -484,6 +512,10 @@ export const getSkillUnitCostEffects = sumAll.bind(
   null,
   null,
   unitCostPowerEffects,
+  null,
+  null,
+  null,
+  null,
   null,
   null,
   null,
@@ -507,8 +539,7 @@ export function getUnitCost(
     return cost;
   }
 
-  const modifier =
-    1 + getSkillUnitCostEffects(unit, null, skills, activeSkills);
+  const modifier = 1 + getSkillUnitCostEffects(skills, activeSkills);
   const costs = unitCosts.get(unit.id);
   let min = cost;
   if (skills.size === 1) {
@@ -695,6 +726,15 @@ export function getSkillAttackUnitStatusEffect(
     : attackUnitPowerStatusEffects.get(skill) || null;
 }
 
+export function getSkillAttackLeaderUnitStatusEffect(
+  skill: Skill,
+  type: SkillActivationType,
+) {
+  return type === 'regular'
+    ? null
+    : attackLeaderPowerStatusEffects.get(skill) || null;
+}
+
 export function getSkillAttackMovementTypeStatusEffect(
   skill: Skill,
   type: SkillActivationType,
@@ -769,6 +809,15 @@ const getSkillActiveUnitTypes = (
   }
 
   const list = [];
+
+  if (skill === Skill.BuyUnitCommander) {
+    for (const [vector, unit] of map.units) {
+      if (unit.isLeader() && map.matchesPlayer(unit, player)) {
+        list.push(vector);
+      }
+    }
+    return list;
+  }
 
   const units = attackUnitPowerStatusEffects.get(skill);
   if (units) {

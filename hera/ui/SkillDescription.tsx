@@ -4,6 +4,7 @@ import {
   ActiveUnitTypes,
   getBlockedUnits,
   getHealUnitTypes,
+  getSkillAttackLeaderUnitStatusEffect,
   getSkillAttackMovementTypeStatusEffect,
   getSkillAttackUnitStatusEffect,
   getSkillDefenseMovementTypeStatusEffect,
@@ -108,6 +109,17 @@ const formatEffect = (effect: number) =>
 export const AttackStatusEffect = ({ effect }: { effect: number }) => (
   <fbt desc="Attack status effect description">
     <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack
+  </fbt>
+);
+
+export const UnitAttackLeaderStatusEffect = ({
+  effect,
+}: {
+  effect: number;
+}) => (
+  <fbt desc="Leader unit attack status effect description">
+    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for
+    leader units
   </fbt>
 );
 
@@ -650,6 +662,7 @@ export default memo(function SkillDescription({
   );
   const tileAttack = getSkillTileAttackStatusEffect(skill, type);
   const tileDefense = getSkillTileDefenseStatusEffect(skill, type);
+  const unitAttackLeader = getSkillAttackLeaderUnitStatusEffect(skill, type);
 
   const unitCosts = getSkillUnitCosts(skill, type);
   const blockedUnits = type === 'regular' ? getBlockedUnits(skill) : null;
@@ -658,6 +671,9 @@ export default memo(function SkillDescription({
   const healTypes = type === 'power' ? getHealUnitTypes(skill) : null;
   const effects = [
     attack ? <AttackStatusEffect effect={attack} /> : null,
+    unitAttackLeader ? (
+      <UnitAttackLeaderStatusEffect effect={unitAttackLeader} />
+    ) : null,
     unitAttack ? (
       <UnitStatusEffects color={color} effects={unitAttack} type="attack" />
     ) : null,

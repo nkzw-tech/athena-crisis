@@ -3568,7 +3568,7 @@ export const Brute = new UnitInfo(
 );
 
 export const Commander = new UnitInfo(
-  50,
+  UnitID.Commander,
   'Commander',
   'Kane',
   'male',
