@@ -29,7 +29,7 @@
     "@emotion/css": "^11.11.2",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.16.0",
+    "@sentry/browser": "^8.17.0",
     "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^4.1.0",
     "fbt": "^1.0.2",
@@ -51,7 +51,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.7",
     "@emotion/babel-plugin": "^11.11.0",
-    "@sentry/vite-plugin": "^2.20.1",
+    "@sentry/vite-plugin": "^2.21.0",
     "@types/babel__core": "^7.20.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
