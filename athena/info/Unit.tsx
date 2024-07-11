@@ -35,11 +35,13 @@ export enum Ability {
   Sabotage,
   Supply,
   Unfold,
+  Convert,
 }
 
 export const Abilities = [
   Ability.AccessBuildings,
   Ability.Capture,
+  Ability.Convert,
   Ability.CreateBuildings,
   Ability.CreateTracks,
   Ability.Heal,
@@ -101,6 +103,7 @@ type SpriteConfig = {
 class UnitAbilities {
   private readonly accessBuildings: boolean;
   private readonly capture: boolean;
+  private readonly convert: boolean;
   private readonly createBuildings: boolean;
   private readonly createTracks: boolean;
   private readonly heal: boolean;
@@ -113,6 +116,7 @@ class UnitAbilities {
   constructor({
     accessBuildings,
     capture,
+    convert,
     createBuildings,
     createTracks,
     heal,
@@ -124,6 +128,7 @@ class UnitAbilities {
   }: {
     accessBuildings?: boolean;
     capture?: boolean;
+    convert?: boolean;
     createBuildings?: boolean;
     createTracks?: boolean;
     heal?: boolean;
@@ -139,6 +144,7 @@ class UnitAbilities {
     this.createTracks = createTracks ?? false;
     this.heal = heal ?? false;
     this.moveAndAct = moveAndAct ?? false;
+    this.convert = convert ?? false;
     this.rescue = rescue ?? false;
     this.sabotage = sabotage ?? false;
     this.supply = supply ?? false;
@@ -155,6 +161,8 @@ class UnitAbilities {
         return this.createBuildings;
       case Ability.CreateTracks:
         return this.createTracks;
+      case Ability.Convert:
+        return this.convert;
       case Ability.Heal:
         return this.heal;
       case Ability.MoveAndAct:
@@ -1555,6 +1563,15 @@ const DefaultUnitAbilities = new UnitAbilities({
 const PioneerUnitAbilities = new UnitAbilities({
   accessBuildings: true,
   capture: true,
+  createBuildings: true,
+  createTracks: true,
+  moveAndAct: true,
+  rescue: true,
+});
+const ZombieUnitAbilities = new UnitAbilities({
+  accessBuildings: true,
+  capture: true,
+  convert: true,
   createBuildings: true,
   createTracks: true,
   moveAndAct: true,
@@ -3396,7 +3413,7 @@ export const Zombie = new UnitInfo(
     radius: 3,
     vision: 1,
   },
-  PioneerUnitAbilities,
+  ZombieUnitAbilities,
   {
     type: AttackType.ShortRange,
     weapons: [

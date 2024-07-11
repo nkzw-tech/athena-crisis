@@ -1,4 +1,4 @@
-import { Zombie } from '../info/Unit.tsx';
+import { Ability } from '../info/Unit.tsx';
 import Unit from '../map/Unit.tsx';
 
 export default function maybeConvertPlayer(
@@ -6,7 +6,7 @@ export default function maybeConvertPlayer(
   attackingUnit: Unit | null | undefined,
   state: 'recover' | 'complete',
 ) {
-  return attackingUnit && attackingUnit.id === Zombie.id
+  return attackingUnit?.info.hasAbility(Ability.Convert)
     ? unit.setPlayer(attackingUnit.player)[state]()
     : unit;
 }

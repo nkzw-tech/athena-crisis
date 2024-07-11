@@ -64,6 +64,7 @@ import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
+import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
@@ -716,6 +717,12 @@ const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
                   <fbt desc="Unit capture ability">Capture</fbt>
                 </UnitAbility>
               );
+            case Ability.Convert:
+              return (
+                <UnitAbility ability={ability} icon={Repeat} key={ability}>
+                  <fbt desc="Unit convert ability">Convert</fbt>
+                </UnitAbility>
+              );
             case Ability.CreateBuildings:
               return (
                 <UnitAbility ability={ability} icon={Buildings} key={ability}>
@@ -906,6 +913,7 @@ const iconStyle = css`
 
 const tagStyle = css`
   ${clipBorder(2)}
+
   padding: 3px 6px 4px;
   width: fit-content;
 `;
