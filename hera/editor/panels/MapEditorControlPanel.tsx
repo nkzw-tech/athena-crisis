@@ -231,7 +231,7 @@ export default function MapEditorControlPanel({
             return (
               <MapEditorSettingsPanel
                 actions={actions}
-                canEditPerformance={!!mapObject?.campaigns.edges.length}
+                canEditPerformance={!!mapObject?.campaigns.edges?.length}
                 estimateMapPerformance={estimateMapPerformance}
                 isAdmin={isAdmin}
                 mapName={mapName}

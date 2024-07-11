@@ -27,7 +27,7 @@ export default function useUserMap(
   map?: MapData | null,
   nodes?: ReadonlyArray<
     | {
-        node: UserLikeWithID;
+        node?: UserLikeWithID | null;
       }
     | null
     | undefined
@@ -44,7 +44,8 @@ export default function useUserMap(
               [
                 player.id,
                 player.isHumanPlayer()
-                  ? nodes?.find((edge) => edge?.node.id === player.userId)?.node
+                  ? nodes?.find((edge) => edge?.node?.id === player.userId)
+                      ?.node || undefined
                   : player.isBot()
                     ? botToUser(player)
                     : undefined,

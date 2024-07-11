@@ -30,7 +30,6 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
@@ -73,6 +72,7 @@ import useAnimationSpeed, {
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
+import filterNodes from '../lib/filterNodes.tsx';
 import { hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
@@ -972,7 +972,7 @@ export default function MapEditor({
                     <fbt desc="Title for campaigns">Campaigns</fbt>
                   </h2>
                   {mapObject?.campaigns.edges
-                    .filter(isPresent)
+                    ?.filter(filterNodes)
                     .map(({ node: { name, slug } }) => (
                       <InlineLink
                         className={ellipsis}
