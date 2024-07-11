@@ -11,7 +11,10 @@ const temporarilyHealUnit = (map: MapData, position: Vector): MapData => {
   const unit = map.units.get(position);
   return unit
     ? map.copy({
-        units: map.units.set(position, unit.refill().modifyHealth(HealAmount)),
+        units: map.units.set(
+          position,
+          unit.refill().modifyHealth(HealAmount).removeStatusEffect(),
+        ),
       })
     : map;
 };

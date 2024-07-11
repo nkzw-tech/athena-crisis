@@ -53,6 +53,7 @@ import DropUnit from '@deities/ui/icons/DropUnit.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
+import Poison from '@deities/ui/icons/Poison.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Sabotage from '@deities/ui/icons/Sabotage.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
@@ -750,6 +751,12 @@ const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
               return (
                 <UnitAbility ability={ability} icon={Volume} key={ability}>
                   <fbt desc="Unit morale ability">Morale Boost</fbt>
+                </UnitAbility>
+              );
+            case Ability.Poison:
+              return (
+                <UnitAbility ability={ability} icon={Poison} key={ability}>
+                  <fbt desc="Unit poison ability">Poison</fbt>
                 </UnitAbility>
               );
             case Ability.Rescue:

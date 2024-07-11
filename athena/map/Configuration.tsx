@@ -53,3 +53,4 @@ export const Charge = 1500;
 export const MaxCharges = 10;
 export const AllowedMisses = 2;
 export const DefaultMapSkillSlots = 2;
+export const PoisonDamage = 20;

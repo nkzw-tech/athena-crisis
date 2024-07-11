@@ -9,14 +9,15 @@ import {
   TileInfo,
   TileLayer,
 } from './info/Tile.tsx';
+import applyBeginTurnStatusEffects from './lib/applyBeginTurnStatusEffects.tsx';
 import getAllUnitsToRefill from './lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from './lib/getUnitsByPositions.tsx';
 import indexToSpriteVector from './lib/indexToSpriteVector.tsx';
 import indexToVector from './lib/indexToVector.tsx';
-import isFuelConsumingUnit from './lib/isFuelConsumingUnit.tsx';
 import { Modifier } from './lib/Modifier.tsx';
 import refillUnits from './lib/refillUnits.tsx';
 import shouldRemoveUnit from './lib/shouldRemoveUnit.tsx';
+import subtractFuel from './lib/subtractFuel.tsx';
 import { Biome } from './map/Biome.tsx';
 import Building from './map/Building.tsx';
 import { DecoratorsPerSide } from './map/Configuration.tsx';
@@ -380,7 +381,7 @@ export default class MapData {
   }
 
   refill(player: Player, extraPositions?: ReadonlyArray<Vector>) {
-    let map = this.subtractFuel(player);
+    let map = applyBeginTurnStatusEffects(subtractFuel(this, player), player);
     const units = getAllUnitsToRefill(map, new Vision(player.id), player);
     map = refillUnits(
       map,
@@ -392,17 +393,6 @@ export default class MapData {
     return map.copy({
       units: map.units.filter(
         (unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id),
-      ),
-    });
-  }
-
-  subtractFuel(player: PlayerOrPlayerID, amount = -1) {
-    return this.copy({
-      units: this.units.map((unit, vector) =>
-        this.matchesPlayer(player, unit) &&
-        isFuelConsumingUnit(unit, this.getTileInfo(vector))
-          ? unit.modifyFuel(amount)
-          : unit,
       ),
     });
   }

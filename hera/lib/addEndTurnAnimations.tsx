@@ -1,8 +1,12 @@
 import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import applyBeginTurnStatusEffects, {
+  isPoisoned,
+} from '@deities/athena/lib/applyBeginTurnStatusEffects.tsx';
 import getAllUnitsToRefill from '@deities/athena/lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
 import getUnitsToHealOnBuildings from '@deities/athena/lib/getUnitsToHealOnBuildings.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
+import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector, {
@@ -14,6 +18,7 @@ import { fbt } from 'fbt';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { Actions, State, StateToStateLike } from '../Types.tsx';
 import animateHeal from './animateHeal.tsx';
+import animatePoison from './animatePoison.tsx';
 import animateSupply from './animateSupply.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import explodeUnits from './explodeUnits.tsx';
@@ -55,11 +60,18 @@ export default function addEndTurnAnimations(
       onComplete: (state) => {
         requestFrame(async () => {
           const { map, vision } = state;
-          const newMap = map.subtractFuel(nextPlayer);
+          const newMap = applyBeginTurnStatusEffects(
+            subtractFuel(map, nextPlayer),
+            nextPlayer,
+          );
           const [unitsToHeal, unitsToRefill] = isFake
             ? [emptyUnitMap, emptyUnitMap]
             : partitionUnitsToHeal(getUnitsToHealOnBuildings(map, nextPlayer));
 
+          const poisonedUnits = map.units.filter(
+            (unit, vector) =>
+              !unitsToHeal.has(vector) && isPoisoned(map, nextPlayer, unit),
+          );
           const extraPositions = await maybeExtraPositions;
           const unitsToSupply = new Map([
             ...(isFake
@@ -73,7 +85,7 @@ export default function addEndTurnAnimations(
             ...unitsToRefill,
           ]);
 
-          const explodeUnitsWithoutFuel = (state: State) =>
+          const removeUnits = (state: State) =>
             explodeUnits(
               actions,
               state,
@@ -92,15 +104,24 @@ export default function addEndTurnAnimations(
               onComplete,
             );
 
+          const animatePoisonedUnits = (state: State) =>
+            poisonedUnits.size
+              ? animatePoison(
+                  state,
+                  sortByVectorKey(poisonedUnits),
+                  removeUnits,
+                )
+              : removeUnits(state);
+
           await update(
             animateHeal(state, sortByVectorKey(unitsToHeal), (state) =>
               unitsToSupply.size
                 ? animateSupply(
                     state,
                     sortByVectorKey(unitsToSupply),
-                    explodeUnitsWithoutFuel,
+                    animatePoisonedUnits,
                   )
-                : explodeUnitsWithoutFuel(state),
+                : animatePoisonedUnits(state),
             ),
           );
         });

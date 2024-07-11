@@ -16,6 +16,7 @@ declare module 'athena-crisis:images' {
     Gamepad: string;
     Heal: string;
     Noise: string;
+    Poison: string;
     Sabotage: string;
     Structures: string;
     TileDecorators: string;

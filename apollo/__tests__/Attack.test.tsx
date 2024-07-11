@@ -1,11 +1,22 @@
-import { ResearchLab } from '@deities/athena/info/Building.tsx';
-import { Commander, Infantry } from '@deities/athena/info/Unit.tsx';
+import { ResearchLab, Shelter } from '@deities/athena/info/Building.tsx';
+import {
+  Alien,
+  Brute,
+  Commander,
+  Infantry,
+  Medic,
+} from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
-import { AttackUnitAction } from '../action-mutators/ActionMutators.tsx';
+import {
+  AttackUnitAction,
+  EndTurnAction,
+  HealAction,
+} from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
 
 const map = withModifiers(
@@ -15,7 +26,7 @@ const map = withModifiers(
     size: { height: 3, width: 3 },
     teams: [
       { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
-      { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'AI' }] },
+      { id: 2, name: '', players: [{ funds: 1000, id: 2, name: 'AI' }] },
     ],
     units: [
       [1, 1, Infantry.create(2).capture().toJSON()],
@@ -32,7 +43,7 @@ const map = withModifiers(
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const vision = map.createVisionObject(player1);
 
-test('commander units improve morale of nearby units', async () => {
+test('Commander units improve morale of nearby units', async () => {
   const vecA = vec(2, 1);
   const vecB = vec(1, 1);
   const vecC = vec(3, 2);
@@ -50,4 +61,42 @@ test('commander units improve morale of nearby units', async () => {
   // vecA is only next to one commander unit, but vecC is next to two commander units.
   expect(unitA1.health).toBeGreaterThan(unitA2.health);
   expect(unitA3.health).toBeGreaterThan(unitA1.health);
+});
+
+test('Alien units poison opponents on attack', async () => {
+  const vecA = vec(2, 1);
+  const vecB = vec(1, 1);
+  const vecC = vec(1, 2);
+  const [, stateA] = execute(
+    map.copy({
+      units: map.units
+        .set(vecA, Alien.create(1))
+        .set(vecB, Brute.create(2))
+        .set(vecC, Medic.create(2)),
+    }),
+    vision,
+    AttackUnitAction(vecA, vecB),
+  )!;
+
+  expect(stateA.units.get(vecB)?.statusEffect).toBe(UnitStatusEffect.Poison);
+
+  const [, stateB] = execute(
+    stateA.copy({
+      currentPlayer: 2,
+    }),
+    vision,
+    HealAction(vecC, vecB),
+  )!;
+
+  expect(stateB.units.get(vecB)?.statusEffect).toBeNull();
+
+  const [, stateC] = execute(
+    stateA.copy({
+      buildings: stateA.buildings.set(vecB, Shelter.create(2)),
+    }),
+    vision,
+    EndTurnAction(),
+  )!;
+
+  expect(stateC.units.get(vecB)?.statusEffect).toBeNull();
 });

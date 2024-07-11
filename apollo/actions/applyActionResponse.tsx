@@ -413,7 +413,10 @@ export default function applyActionResponse(
       const unitA = from && map.units.get(from);
       const unitB = map.units.get(to)!;
       const player = map.getPlayer(unitB);
-      const units = map.units.set(to, unitB.modifyHealth(HealAmount));
+      const units = map.units.set(
+        to,
+        unitB.modifyHealth(HealAmount).removeStatusEffect(),
+      );
       return map.copy({
         teams: updatePlayer(
           map.teams,

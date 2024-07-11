@@ -37,6 +37,7 @@ export enum Ability {
   Unfold = 9,
   Convert = 10,
   Morale = 11,
+  Poison = 12,
 }
 
 export const Abilities = [
@@ -52,6 +53,7 @@ export const Abilities = [
   Ability.Sabotage,
   Ability.Supply,
   Ability.Unfold,
+  Ability.Poison,
 ] as const;
 
 export enum AttackType {
@@ -102,6 +104,22 @@ type SpriteConfig = {
   withNavalExplosion?: boolean;
 };
 
+type UnitAbilityConfiguration = Readonly<{
+  accessBuildings?: boolean;
+  capture?: boolean;
+  convert?: boolean;
+  createBuildings?: boolean;
+  createTracks?: boolean;
+  heal?: boolean;
+  morale?: boolean;
+  moveAndAct?: boolean;
+  poison?: boolean;
+  rescue?: boolean;
+  sabotage?: boolean;
+  supply?: boolean;
+  unfold?: boolean;
+}>;
+
 class UnitAbilities {
   private readonly accessBuildings: boolean;
   private readonly capture: boolean;
@@ -111,6 +129,7 @@ class UnitAbilities {
   private readonly heal: boolean;
   private readonly morale: boolean;
   private readonly moveAndAct: boolean;
+  private readonly poison: boolean;
   private readonly rescue: boolean;
   private readonly sabotage: boolean;
   private readonly supply: boolean;
@@ -125,24 +144,12 @@ class UnitAbilities {
     heal,
     morale,
     moveAndAct,
+    poison,
     rescue,
     sabotage,
     supply,
     unfold,
-  }: {
-    accessBuildings?: boolean;
-    capture?: boolean;
-    convert?: boolean;
-    createBuildings?: boolean;
-    createTracks?: boolean;
-    heal?: boolean;
-    morale?: boolean;
-    moveAndAct?: boolean;
-    rescue?: boolean;
-    sabotage?: boolean;
-    supply?: boolean;
-    unfold?: boolean;
-  } = {}) {
+  }: UnitAbilityConfiguration = {}) {
     this.accessBuildings = accessBuildings ?? false;
     this.capture = capture ?? false;
     this.createBuildings = createBuildings ?? false;
@@ -150,6 +157,7 @@ class UnitAbilities {
     this.morale = morale ?? false;
     this.heal = heal ?? false;
     this.moveAndAct = moveAndAct ?? false;
+    this.poison = poison ?? false;
     this.convert = convert ?? false;
     this.rescue = rescue ?? false;
     this.sabotage = sabotage ?? false;
@@ -175,6 +183,8 @@ class UnitAbilities {
         return this.morale;
       case Ability.MoveAndAct:
         return this.moveAndAct;
+      case Ability.Poison:
+        return this.poison;
       case Ability.Rescue:
         return this.rescue;
       case Ability.Sabotage:
@@ -199,24 +209,12 @@ class UnitAbilities {
     heal,
     morale,
     moveAndAct,
+    poison,
     rescue,
     sabotage,
     supply,
     unfold,
-  }: {
-    accessBuildings?: boolean;
-    capture?: boolean;
-    convert?: boolean;
-    createBuildings?: boolean;
-    createTracks?: boolean;
-    heal?: boolean;
-    morale?: boolean;
-    moveAndAct?: boolean;
-    rescue?: boolean;
-    sabotage?: boolean;
-    supply?: boolean;
-    unfold?: boolean;
-  }) {
+  }: UnitAbilityConfiguration) {
     return new UnitAbilities({
       accessBuildings: accessBuildings ?? this.accessBuildings,
       capture: capture ?? this.capture,
@@ -226,6 +224,7 @@ class UnitAbilities {
       heal: heal ?? this.heal,
       morale: morale ?? this.morale,
       moveAndAct: moveAndAct ?? this.moveAndAct,
+      poison: poison ?? this.poison,
       rescue: rescue ?? this.rescue,
       sabotage: sabotage ?? this.sabotage,
       supply: supply ?? this.supply,
@@ -748,6 +747,7 @@ export class UnitInfo {
       config?.label != null ? config.label : null,
       config?.name ?? null,
       config?.behavior || null,
+      null,
     );
   }
 
@@ -3414,10 +3414,10 @@ export const Alien = new UnitInfo(
     sabotageTypes: DefaultSabotageTypes,
     vision: 1,
   },
-  SaboteurUnitAbilities,
+  SaboteurUnitAbilities.copy({ poison: true }),
   {
     type: AttackType.ShortRange,
-    weapons: [Weapons.Bite],
+    weapons: [Weapons.Bite.withDamage(buff(Weapons.Bite.damage, -70))],
   },
   null,
   {
