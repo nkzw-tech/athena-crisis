@@ -25,17 +25,18 @@ let _unitClass: typeof Unit;
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
 
 export enum Ability {
-  AccessBuildings,
-  Capture,
-  CreateBuildings,
-  CreateTracks,
-  Heal,
-  MoveAndAct,
-  Rescue,
-  Sabotage,
-  Supply,
-  Unfold,
-  Convert,
+  AccessBuildings = 0,
+  Capture = 1,
+  CreateBuildings = 2,
+  CreateTracks = 3,
+  Heal = 4,
+  MoveAndAct = 5,
+  Rescue = 6,
+  Sabotage = 7,
+  Supply = 8,
+  Unfold = 9,
+  Convert = 10,
+  Morale = 11,
 }
 
 export const Abilities = [
@@ -45,6 +46,7 @@ export const Abilities = [
   Ability.CreateBuildings,
   Ability.CreateTracks,
   Ability.Heal,
+  Ability.Morale,
   Ability.MoveAndAct,
   Ability.Rescue,
   Ability.Sabotage,
@@ -107,6 +109,7 @@ class UnitAbilities {
   private readonly createBuildings: boolean;
   private readonly createTracks: boolean;
   private readonly heal: boolean;
+  private readonly morale: boolean;
   private readonly moveAndAct: boolean;
   private readonly rescue: boolean;
   private readonly sabotage: boolean;
@@ -120,6 +123,7 @@ class UnitAbilities {
     createBuildings,
     createTracks,
     heal,
+    morale,
     moveAndAct,
     rescue,
     sabotage,
@@ -132,6 +136,7 @@ class UnitAbilities {
     createBuildings?: boolean;
     createTracks?: boolean;
     heal?: boolean;
+    morale?: boolean;
     moveAndAct?: boolean;
     rescue?: boolean;
     sabotage?: boolean;
@@ -142,6 +147,7 @@ class UnitAbilities {
     this.capture = capture ?? false;
     this.createBuildings = createBuildings ?? false;
     this.createTracks = createTracks ?? false;
+    this.morale = morale ?? false;
     this.heal = heal ?? false;
     this.moveAndAct = moveAndAct ?? false;
     this.convert = convert ?? false;
@@ -165,6 +171,8 @@ class UnitAbilities {
         return this.convert;
       case Ability.Heal:
         return this.heal;
+      case Ability.Morale:
+        return this.morale;
       case Ability.MoveAndAct:
         return this.moveAndAct;
       case Ability.Rescue:
@@ -180,6 +188,49 @@ class UnitAbilities {
         throw new UnknownTypeError('UnitBehaviors.has', ability);
       }
     }
+  }
+
+  copy({
+    accessBuildings,
+    capture,
+    convert,
+    createBuildings,
+    createTracks,
+    heal,
+    morale,
+    moveAndAct,
+    rescue,
+    sabotage,
+    supply,
+    unfold,
+  }: {
+    accessBuildings?: boolean;
+    capture?: boolean;
+    convert?: boolean;
+    createBuildings?: boolean;
+    createTracks?: boolean;
+    heal?: boolean;
+    morale?: boolean;
+    moveAndAct?: boolean;
+    rescue?: boolean;
+    sabotage?: boolean;
+    supply?: boolean;
+    unfold?: boolean;
+  }) {
+    return new UnitAbilities({
+      accessBuildings: accessBuildings ?? this.accessBuildings,
+      capture: capture ?? this.capture,
+      convert: convert ?? this.convert,
+      createBuildings: createBuildings ?? this.createBuildings,
+      createTracks: createTracks ?? this.createTracks,
+      heal: heal ?? this.heal,
+      morale: morale ?? this.morale,
+      moveAndAct: moveAndAct ?? this.moveAndAct,
+      rescue: rescue ?? this.rescue,
+      sabotage: sabotage ?? this.sabotage,
+      supply: supply ?? this.supply,
+      unfold: unfold ?? this.unfold,
+    });
   }
 }
 
@@ -1560,39 +1611,28 @@ const DefaultUnitAbilities = new UnitAbilities({
   accessBuildings: true,
   moveAndAct: true,
 });
-const PioneerUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
+const PioneerUnitAbilities = DefaultUnitAbilities.copy({
   capture: true,
   createBuildings: true,
   createTracks: true,
-  moveAndAct: true,
   rescue: true,
 });
-const ZombieUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
+
+const ZombieUnitAbilities = PioneerUnitAbilities.copy({ convert: true });
+
+const DefaultUnitAbilitiesWithCapture = DefaultUnitAbilities.copy({
   capture: true,
-  convert: true,
-  createBuildings: true,
-  createTracks: true,
-  moveAndAct: true,
-  rescue: true,
 });
-const DefaultUnitAbilitiesWithCapture = new UnitAbilities({
-  accessBuildings: true,
-  capture: true,
-  moveAndAct: true,
-});
-const HealUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
+
+const HealUnitAbilities = DefaultUnitAbilities.copy({
   heal: true,
-  moveAndAct: true,
 });
-const SaboteurUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
-  moveAndAct: true,
+
+const SaboteurUnitAbilities = DefaultUnitAbilities.copy({
   rescue: true,
   sabotage: true,
 });
+
 const DefaultSabotageTypes = new Set([
   EntityType.AirInfantry,
   EntityType.Amphibious,
@@ -3543,7 +3583,7 @@ export const Commander = new UnitInfo(
     radius: 2,
     vision: 3,
   },
-  DefaultUnitAbilitiesWithCapture,
+  DefaultUnitAbilitiesWithCapture.copy({ morale: true }),
   { type: AttackType.ShortRange, weapons: [Weapons.Pistol.withSupply(5)] },
   null,
   {

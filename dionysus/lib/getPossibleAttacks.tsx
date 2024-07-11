@@ -42,7 +42,12 @@ export default function getPossibleAttacks(
   units.forEach(([position, unitA]) => {
     let attackCount = 0;
     const originTile = map.getTileInfo(position);
-    const attackStatusEffect = getAttackStatusEffect(map, unitA, originTile);
+    const attackStatusEffect = getAttackStatusEffect(
+      map,
+      unitA,
+      position,
+      originTile,
+    );
     const fields = attackable(
       mapWithVision,
       unitA,
@@ -173,7 +178,7 @@ export default function getPossibleAttacks(
           map,
           vector,
           parent || position,
-          getAttackStatusEffect(map, entityB, targetTile),
+          getAttackStatusEffect(map, entityB, vector, targetTile),
           getDefenseStatusEffect(
             map,
             unitA,

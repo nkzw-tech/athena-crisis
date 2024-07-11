@@ -223,7 +223,7 @@ test('Research Lab status effects are available even in fog', () => {
     units: initialMap.units.set(vec(1, 1), Pioneer.create(1)),
   });
 
-  expect(getAttackStatusEffect(map, SmallTank.create(2), Plain)).toEqual(
-    getAttackStatusEffect(vision.apply(map), SmallTank.create(2), Plain),
+  expect(getAttackStatusEffect(map, SmallTank.create(2), null, Plain)).toEqual(
+    getAttackStatusEffect(vision.apply(map), SmallTank.create(2), null, Plain),
   );
 });

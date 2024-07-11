@@ -316,7 +316,7 @@ function _attackUnit(
           (map.buildings.has(vectorA) ? BuildingCover : 0),
         tileInfoB.configuration.cover +
           (map.buildings.has(vectorB) ? BuildingCover : 0),
-        getAttackStatusEffect(map, unitA, tileInfoA),
+        getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
         getDefenseStatusEffect(map, unitB, tileInfoB),
         luck,
       ) * modifier,
@@ -344,7 +344,7 @@ function _attackBuilding(
       tileInfoA.configuration.cover +
         (map.buildings.has(vectorA) ? BuildingCover : 0),
       tileInfoB.configuration.cover + BuildingCover,
-      getAttackStatusEffect(map, unitA, tileInfoA),
+      getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
       getDefenseStatusEffect(map, buildingB, tileInfoB),
       luck,
     ),

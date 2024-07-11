@@ -68,6 +68,7 @@ import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
+import Volume from '@iconify-icons/pixelarticons/volume-3.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
@@ -490,7 +491,7 @@ const Weapon = memo(function WeaponAttack({
     allSkills,
   );
   const isLeader = unit.isLeader();
-  const attackStatusEffect = getAttackStatusEffect(map, unit, tile);
+  const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
   const damageRange = getAttributeRange(
     [...weapon.damage],
     ([, damage]) => damage,
@@ -520,7 +521,7 @@ const Weapon = memo(function WeaponAttack({
         map,
         vector,
         vector,
-        getAttackStatusEffect(map, unit, tile),
+        getAttackStatusEffect(map, unit, vector, tile),
         getDefenseStatusEffect(map, entityB, null),
         1,
         weapon,
@@ -743,6 +744,12 @@ const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
               return (
                 <UnitAbility ability={ability} icon={Heart} key={ability}>
                   <fbt desc="Unit heal ability">Heal</fbt>
+                </UnitAbility>
+              );
+            case Ability.Morale:
+              return (
+                <UnitAbility ability={ability} icon={Volume} key={ability}>
+                  <fbt desc="Unit morale ability">Morale Boost</fbt>
                 </UnitAbility>
               );
             case Ability.Rescue:
