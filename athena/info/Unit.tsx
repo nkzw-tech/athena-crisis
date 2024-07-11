@@ -1180,6 +1180,8 @@ export const Weapons = {
       [EntityType.Amphibious, 100],
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
+      [EntityType.LowAltitude, 100],
+
       [EntityType.Infantry, 120],
     ]),
     BiteAnimation,
@@ -1474,8 +1476,9 @@ export const Weapons = {
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
       [EntityType.Infantry, 120],
-      [EntityType.Ship, 120],
+      [EntityType.LowAltitude, 100],
       [EntityType.Rail, 100],
+      [EntityType.Ship, 120],
     ]),
     EmptyAnimation.withSound('Attack/TentacleWhip'),
     [
@@ -3261,7 +3264,11 @@ export const Dragon = new UnitInfo(
     weapons: [
       Weapons.Flamethrower.withDamage(
         buff(
-          new Map([...Weapons.Flamethrower.damage, [EntityType.Ship, 70]]),
+          new Map([
+            ...Weapons.Flamethrower.damage,
+            [EntityType.Ship, 70],
+            [EntityType.LowAltitude, 90],
+          ]),
           40,
         ),
       )
@@ -3398,7 +3405,6 @@ export const Zombie = new UnitInfo(
         buff(
           new Map([
             ...Weapons.Bite.damage,
-            [EntityType.LowAltitude, 100],
             [EntityType.Rail, 80],
             [EntityType.Ship, 80],
           ]),
