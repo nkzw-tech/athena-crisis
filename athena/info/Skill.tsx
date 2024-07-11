@@ -72,7 +72,7 @@ const skillConfig: Record<
   [Skill.BuyUnitCannon]: { cost: 1000 },
   [Skill.BuyUnitBrute]: { charges: 5, cost: 1000 },
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
-    charges: 5,
+    charges: 3,
     cost: 600,
   },
   [Skill.UnitAbilitySniperImmediateAction]: { cost: 2000 },
