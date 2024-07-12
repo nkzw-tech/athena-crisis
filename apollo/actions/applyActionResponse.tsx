@@ -88,7 +88,9 @@ export default function applyActionResponse(
           ? units.set(
               from,
               maybeConvertPlayer(
+                map,
                 originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                from,
                 hasCounterAttack ? originalUnitB : null,
                 'recover',
               ),
@@ -99,7 +101,9 @@ export default function applyActionResponse(
           ? units.set(
               to,
               maybeConvertPlayer(
+                map,
                 originalUnitB.copy(unitB).maybeUpdateAIBehavior(),
+                to,
                 originalUnitA,
                 'complete',
               ),
@@ -178,7 +182,9 @@ export default function applyActionResponse(
           ? units.set(
               from,
               maybeConvertPlayer(
+                map,
                 originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                from,
                 hasCounterAttack ? originalUnitC : null,
                 'recover',
               ),
