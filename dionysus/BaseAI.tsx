@@ -7,6 +7,7 @@ import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
+import getActivatePowerMessage from './lib/getActivatePowerMessage.tsx';
 
 class AIInterruptException {
   public readonly name = 'AIInterruptException';
@@ -49,6 +50,19 @@ export default abstract class BaseAI {
     previousMap: MapData,
     currentMap: MapData,
   ): void {
+    if (actionResponse.type === 'ActivatePower') {
+      const response = getActivatePowerMessage(
+        previousMap,
+        currentMap,
+        this.getVision(currentMap),
+        actionResponse,
+      );
+      if (response) {
+        this.gameState = this.gameState.concat([response]);
+        currentMap = response[1];
+      }
+    }
+
     this.gameState = this.gameState.concat([[actionResponse, currentMap]]);
 
     const [gameState, effects] = applyConditions(

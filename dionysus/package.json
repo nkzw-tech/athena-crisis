@@ -12,6 +12,7 @@
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hephaestus": "workspace:*",
+    "@deities/hermes": "workspace:*",
     "@nkzw/immutable-map": "^1.2.2"
   }
 }

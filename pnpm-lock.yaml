@@ -576,6 +576,9 @@ importers:
       '@deities/hephaestus':
         specifier: workspace:*
         version: link:../hephaestus
+      '@deities/hermes':
+        specifier: workspace:*
+        version: link:../hermes
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
