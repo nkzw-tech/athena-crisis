@@ -37,6 +37,7 @@ import {
   SuperTank,
   TransportHelicopter,
   XFighter,
+  Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
@@ -983,5 +984,27 @@ test('AI will prioritize units with labels associated with win conditions', () =
     "Move (1,1 → 5,4) { fuel: 42, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4 → 5,4] }
     AttackUnit (5,4 → 5,5) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
     GameEnd { objective: { hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '1,1' ] }, objectiveId: 1, toPlayer: 2 }"
+  `);
+});
+
+test('AI Zombies are aggressive', async () => {
+  const map = initialMap.copy({
+    units: initialMap.units
+      .set(vec(1, 1), SuperTank.create(1))
+      .set(vec(2, 1), Zombie.create(2)),
+  });
+
+  const [, , gameStateA] = executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 34, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, chargeA: 293, chargeB: 90 }
+    AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
   `);
 });

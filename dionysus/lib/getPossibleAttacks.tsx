@@ -191,7 +191,8 @@ export default function getPossibleAttacks(
         if (
           counterDamage &&
           counterDamage > 0 &&
-          (counterDamage * 0.75 > damage || counterDamage > unitA.health)
+          (counterDamage * 0.75 > damage || counterDamage > unitA.health) &&
+          !unitA.info.hasAbility(Ability.Convert)
         ) {
           return;
         }
