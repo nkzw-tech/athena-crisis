@@ -3574,7 +3574,7 @@ export const Commander = new UnitInfo(
   'male',
   `Armies are composed of master strategists and troops on the ground executing orders. Then there's the Commander unit, who can neither strategize nor execute effectively. They excel in scheduling unnecessary meetings and perpetuating confusion under the guise of "alignment". Equipped only with a pistol, one has to wonder: What exactly is their purpose?`,
   `Even if it appears {name} is one step behind, he invariably ends up five steps ahead. He seems to be the only Commander unit with actual tactical and strategic abilities, perceiving the multiverse as a complex chessboard of possibilities where everyone but him is a pawn. Unlike his counterparts, who often get lost in bureaucracy and confusion, {name} navigates these complexities with unmatched foresight and precision, masterfully turning tough situations to his advantage.`,
-  10,
+  20,
   EntityType.Infantry,
   MovementTypes.Soldier,
   {

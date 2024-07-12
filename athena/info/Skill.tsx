@@ -311,7 +311,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Brute, new Map([[Skill.BuyUnitBrute, 600]])],
   [UnitID.Zombie, new Map([[Skill.BuyUnitZombieDefenseDecreaseMajor, 250]])],
   [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 300]])],
-  [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 300]])],
+  [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
 ]);
 
 const buildingUnlocks = new Map<ID, Set<Skill>>([
