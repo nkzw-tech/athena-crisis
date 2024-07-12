@@ -1,10 +1,12 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
 import { motion } from 'framer-motion';
 import Portrait, { PortraitHeight } from '../../character/Portrait.tsx';
@@ -29,6 +31,7 @@ export default async function receivePortraitAnimation(
     return state;
   }
 
+  const ids = arrayShuffle(PlayerIDs);
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
@@ -58,7 +61,7 @@ export default async function receivePortraitAnimation(
                 <Portrait
                   animate
                   clip={false}
-                  player={player}
+                  player={ids[variant]}
                   unit={unit}
                   variant={variant}
                 />
