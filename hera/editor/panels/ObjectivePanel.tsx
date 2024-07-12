@@ -139,6 +139,7 @@ export default function ObjectivePanel({
   mapId,
   setEditorState,
   state,
+  tags,
   user,
 }: StateWithActions & {
   campaignEdges: CampaignEdge['edges'] | undefined;
@@ -147,6 +148,7 @@ export default function ObjectivePanel({
   isAdmin?: boolean;
   mapId: string | undefined;
   setEditorState: SetEditorStateFunction;
+  tags: ReadonlyArray<string>;
   user: UserWithFactionNameAndSkills;
 }) {
   const { map } = state;
@@ -286,6 +288,7 @@ export default function ObjectivePanel({
                   });
                 }
               }}
+              tags={tags}
               user={user}
               validate={validate}
             />

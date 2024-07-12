@@ -48,6 +48,7 @@ export default function ObjectiveCard({
   onChange,
   selectEffect,
   selectLocation,
+  tags,
   user,
   validate,
 }: {
@@ -61,6 +62,7 @@ export default function ObjectiveCard({
   onChange: (objective: Objective | null) => void;
   selectEffect: () => void;
   selectLocation: () => void;
+  tags: ReadonlyArray<string>;
   user: UserWithFactionNameAndSkills;
   validate: (objective: Objective) => boolean;
 }) {
@@ -375,13 +377,15 @@ export default function ObjectiveCard({
                       Players receive the reward if they achieve this objective.
                     </fbt>
                   )}{' '}
-                  <fbt desc="Reward tags">
-                    To permanently receive the reward, the map must have the
-                    <fbt:param name="tag">
-                      <Tag tag="reward" />
-                    </fbt:param>{' '}
-                    tag which can only be added by an Athena Crisis admin.
-                  </fbt>
+                  {!tags.includes('reward') && (
+                    <fbt desc="Reward tags">
+                      To permanently receive the reward, the map must have the
+                      <fbt:param name="tag">
+                        <Tag tag="reward" />
+                      </fbt:param>{' '}
+                      tag which can only be added by an Athena Crisis admin.
+                    </fbt>
+                  )}
                 </p>
               )}
             </Stack>

@@ -205,6 +205,7 @@ export default function MapEditorControlPanel({
                 mapId={mapObject?.id}
                 setEditorState={setEditorState}
                 state={state}
+                tags={tags}
                 user={user}
               />
             );
