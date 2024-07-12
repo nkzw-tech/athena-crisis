@@ -57,7 +57,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "^7.24.7",
     "@deities/eslint-plugin": "workspace:*",
-    "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@nkzw/eslint-config": "^1.17.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "1.6.13",
