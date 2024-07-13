@@ -429,7 +429,7 @@ export default memo(function UnitCard({
           )}
         </AttributeGridBox>
         {!unit.info.canAct(currentPlayer) && (
-          <Stack alignCenter gap={4} nowrap start>
+          <Stack alignCenter gap nowrap start>
             <Icon className={errorStyle} icon={WarningBox} />
             <p className={errorStyle}>
               <fbt desc="Label for a unit that can only move or attack">

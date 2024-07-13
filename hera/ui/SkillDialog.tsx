@@ -465,7 +465,7 @@ const SkillListItem = ({
         ) : null}
       </Stack>
       {showCost && (
-        <Stack className={costStyle} gap={4} nowrap start>
+        <Stack className={costStyle} gap nowrap start>
           <Icon className={coinIconStyle} icon={Coin} />
           {getSkillConfig(skill).cost}
         </Stack>
