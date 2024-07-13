@@ -34,6 +34,11 @@ window.renderMap = (url: string) => {
   root.render(<DisplayMap url={url} />);
 };
 
+const animationSpeed = {
+  human: InstantAnimationConfig,
+  regular: InstantAnimationConfig,
+};
+
 const ErrorComponent = ({ error }: { error: Error }) => (
   <>
     {Object.keys(window.MapHasRendered).map((key) => {
@@ -98,7 +103,7 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
           <div key={index}>
             <div className={inlineStyle} data-testid={`map-${index}`}>
               <GameMap
-                animationConfig={InstantAnimationConfig}
+                animationSpeed={animationSpeed}
                 behavior={NullBehavior}
                 confirmActionStyle="never"
                 currentUserId={viewers[index]}

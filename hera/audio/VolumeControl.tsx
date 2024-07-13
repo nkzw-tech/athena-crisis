@@ -1,6 +1,7 @@
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer, { AudioVolumeType } from '@deities/ui/AudioPlayer.tsx';
-import useInput from '@deities/ui/controls/useInput.tsx';
+import { InputLayer } from '@deities/ui/controls/Input.tsx';
+import { useOptionalInput } from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Volume1Icon from '@deities/ui/icons/Volume1.tsx';
@@ -12,13 +13,15 @@ import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 export default function VolumeControl({
+  enableInputControls,
   invert,
-  menuIsOpen,
+  layer,
   showPauseButton = true,
   type = 'master',
 }: {
+  enableInputControls?: boolean;
   invert?: boolean;
-  menuIsOpen?: boolean;
+  layer?: InputLayer;
   showPauseButton?: boolean;
   type?: AudioVolumeType;
 }) {
@@ -43,24 +46,22 @@ export default function VolumeControl({
     [showPauseButton, type],
   );
 
-  useInput(
-    'info',
-    useCallback(() => {
-      if (menuIsOpen && type === 'master') {
-        setVolume(volume - 0.1);
-      }
-    }, [menuIsOpen, setVolume, type, volume]),
-    'top',
-  );
-
-  useInput(
-    'detail',
-    useCallback(() => {
-      if (menuIsOpen && type === 'master') {
-        setVolume(volume + 0.1);
-      }
-    }, [menuIsOpen, setVolume, type, volume]),
-    'top',
+  useOptionalInput(
+    'navigate',
+    useCallback(
+      ({ detail: { x } }) => {
+        if (enableInputControls) {
+          if (x === -1) {
+            setVolume(volume - 0.1);
+          } else if (x === 1) {
+            setVolume(volume + 0.1);
+          }
+        }
+      },
+      [enableInputControls, setVolume, volume],
+    ),
+    !!enableInputControls,
+    layer || 'menu',
   );
 
   return (

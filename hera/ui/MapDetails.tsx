@@ -87,28 +87,28 @@ export default function MapDetails({
           </div>
         ) : null}
         {rating && rating > 0 ? (
-          <Stack alignCenter gap={4} start>
+          <Stack alignCenter gap start>
             <Icon icon={Timeline} /> {rating.toFixed(1)}
           </Stack>
         ) : null}
-        <Stack alignCenter gap={4} start>
+        <Stack alignCenter gap start>
           <Icon icon={User} /> {map.active.length}
           {' - '}
           {map.teams.map(({ players }) => players.size).join('v')}
         </Stack>
-        <Stack alignCenter gap={4} start>
+        <Stack alignCenter gap start>
           <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))}{' '}
           {map.size.width}x{map.size.height}
         </Stack>
-        <Stack alignCenter gap={4} start>
+        <Stack alignCenter gap start>
           <Icon className={iconOffsetStyle} icon={Coin} />{' '}
           {map.config.seedCapital}
         </Stack>
-        <Stack alignCenter gap={4} start>
+        <Stack alignCenter gap start>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
         </Stack>
         {teamPlay && (
-          <Stack alignCenter gap={4} start>
+          <Stack alignCenter gap start>
             <Icon icon={Users} />{' '}
             <fbt desc="Label for teamplay maps">Teamplay</fbt>
           </Stack>
@@ -116,11 +116,11 @@ export default function MapDetails({
         {showGameState && (
           <>
             {timer !== undefined && isValidTimer(timer) ? (
-              <Stack alignCenter gap={4} start>
+              <Stack alignCenter gap start>
                 <Icon icon={Watch} /> {getTranslatedTimerName(timer)}
               </Stack>
             ) : null}
-            <Stack alignCenter gap={4} start>
+            <Stack alignCenter gap start>
               <Icon icon={hasSkills ? Skills : NoSkill} />{' '}
               {hasSkills ? (
                 <fbt desc="Label for a game with skills">Skills</fbt>
@@ -129,7 +129,7 @@ export default function MapDetails({
               )}
             </Stack>
             {!isCampaign && (
-              <Stack alignCenter gap={4} start>
+              <Stack alignCenter gap start>
                 <Icon icon={Tournament} />{' '}
                 {isRanked ? (
                   <fbt desc="Label for ranked game">Ranked</fbt>
@@ -141,7 +141,7 @@ export default function MapDetails({
           </>
         )}
         {showRound && (
-          <Stack alignCenter gap={4} start>
+          <Stack alignCenter gap start>
             <Icon className={iconOffsetStyle} icon={Hourglass} />{' '}
             <fbt desc="Description for map rounds">
               <fbt:param name="round">{map.round}</fbt:param>{' '}

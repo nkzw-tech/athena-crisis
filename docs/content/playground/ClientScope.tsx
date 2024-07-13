@@ -1,6 +1,7 @@
 import { HideContext } from '@deities/hera/hooks/useHide.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import setupGamePad from '@deities/ui/controls/setupGamePad.tsx';
+import setupHidePointer from '@deities/ui/controls/setupHidePointer.tsx';
 import setupKeyboard from '@deities/ui/controls/setupKeyboard.tsx';
 import { getScopedCSSDefinitions } from '@deities/ui/CSS.tsx';
 import { applyVar, initializeCSSVariables } from '@deities/ui/cssVar.tsx';
@@ -59,8 +60,9 @@ if (!document.querySelector('body > div.background')) {
 }
 
 AudioPlayer.pause();
-setupKeyboard();
 setupGamePad();
+setupHidePointer();
+setupKeyboard();
 
 if (import.meta.env.DEV) {
   import('@deities/hera/ui/fps/Fps.tsx');

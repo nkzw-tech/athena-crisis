@@ -1,13 +1,14 @@
 import { useCallback } from 'react';
 import AudioPlayer from '../AudioPlayer.tsx';
 import { InputLayer } from './Input.tsx';
-import useInput from './useInput.tsx';
+import { useOptionalInput } from './useInput.tsx';
 
 export default function useDirectionalNavigation(
   select: (change: 1 | -1) => boolean,
+  condition: boolean,
   layer: InputLayer = 'menu',
 ) {
-  useInput(
+  useOptionalInput(
     'navigate',
     useCallback(
       (event) => {
@@ -22,10 +23,11 @@ export default function useDirectionalNavigation(
       },
       [select],
     ),
+    condition,
     layer,
   );
 
-  useInput(
+  useOptionalInput(
     'next',
     useCallback(
       (event) => {
@@ -36,10 +38,11 @@ export default function useDirectionalNavigation(
       },
       [select],
     ),
+    condition,
     layer,
   );
 
-  useInput(
+  useOptionalInput(
     'previous',
     useCallback(
       (event) => {
@@ -50,6 +53,7 @@ export default function useDirectionalNavigation(
       },
       [select],
     ),
+    condition,
     layer,
   );
 }

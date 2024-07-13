@@ -104,10 +104,7 @@ const keydownListener = (event: KeyboardEvent) => {
     navigateSecondary(secondaryDirection);
   }
 
-  if (isMeta && key === 'AltLeft') {
-    event.preventDefault();
-    Input.fire('slow');
-  } else if (key === 'Tab') {
+  if (key === 'Tab') {
     event.preventDefault();
     if (event.shiftKey) {
       previous();
@@ -116,8 +113,6 @@ const keydownListener = (event: KeyboardEvent) => {
     }
   } else if (key === 'ShiftLeft') {
     Input.fire('tertiary');
-  } else if (key === 'KeyA') {
-    Input.fire('quaternary');
   } else if (key === 'Enter' || key === 'Space') {
     event.preventDefault();
     Input.fire('accept');
@@ -147,12 +142,6 @@ const keyupListener = (event: KeyboardEvent) => {
   const { code: key } = event;
   if (key in pressed) {
     pressed[key as PressedKey] = false;
-  }
-
-  if (key === 'AltLeft') {
-    Input.fire('slow:released');
-  } else if (key === 'ShiftLeft') {
-    Input.fire('tertiary:released');
   }
 };
 

@@ -17,6 +17,7 @@ import { css, cx } from '@emotion/css';
 import Plus from '@iconify-icons/pixelarticons/plus.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { RefObject, useCallback, useMemo, useState } from 'react';
+import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
 import EffectTitle, { EffectObjectiveTitle } from '../lib/EffectTitle.tsx';
@@ -38,6 +39,7 @@ export default function EffectsPanel({
   editor,
   hasContentRestrictions,
   map,
+  position,
   scenario,
   scrollRef,
   setEditorState,
@@ -49,6 +51,7 @@ export default function EffectsPanel({
   editor: EditorState;
   hasContentRestrictions: boolean;
   map: MapData;
+  position: DrawerPosition;
   scenario: Scenario;
   scrollRef: RefObject<HTMLElement>;
   setEditorState: SetEditorStateFunction;
@@ -243,6 +246,7 @@ export default function EffectsPanel({
           index={currentAction.actionId}
           map={map}
           onChange={onChange}
+          position={position}
           scrollRef={scrollRef}
           setMap={setMap}
           trigger={trigger}
@@ -281,6 +285,7 @@ export default function EffectsPanel({
               last={index === actions.length - 1}
               map={map}
               onChange={onChange}
+              position={position}
               scrollRef={scrollRef}
               setMap={setMap}
               trigger={trigger}

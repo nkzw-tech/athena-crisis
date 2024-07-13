@@ -23,15 +23,6 @@ export const FastAnimationConfig: AnimationConfig = {
   UnitMoveDuration: AnimationConfig.UnitMoveDuration / 2,
 };
 
-export const SlowAnimationConfig: AnimationConfig = {
-  AnimationDuration: AnimationConfig.AnimationDuration * 4,
-  ExplosionStep: AnimationConfig.ExplosionStep * 4,
-  Instant: false,
-  MessageSpeed: AnimationConfig.AnimationDuration * 2,
-  UnitAnimationStep: AnimationConfig.UnitAnimationStep * 4,
-  UnitMoveDuration: AnimationConfig.UnitMoveDuration * 4,
-};
-
 export const InstantAnimationConfig: AnimationConfig = {
   AnimationDuration: 0,
   ExplosionStep: 0,
@@ -62,3 +53,4 @@ export const Charge = 1500;
 export const MaxCharges = 10;
 export const AllowedMisses = 2;
 export const DefaultMapSkillSlots = 2;
+export const PoisonDamage = 20;

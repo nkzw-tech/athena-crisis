@@ -13,7 +13,7 @@ import {
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
+import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
@@ -21,6 +21,9 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
+import animateFireworks, {
+  getPossibleFireworksPositions,
+} from '../animations/animateFireworks.tsx';
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
@@ -51,6 +54,7 @@ import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
 import addPlayerLoseAnimation from '../lib/addPlayerLoseAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
+import getCurrentAnimationConfig from '../lib/getCurrentAnimationConfig.tsx';
 import getPlayerDefeatedMessage from '../lib/getPlayerDefeatedMessage.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import isFakeEndTurn from '../lib/isFakeEndTurn.tsx';
@@ -61,11 +65,9 @@ import startGameAnimation from '../lib/startGameAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
 import {
   Actions,
-  AnimationConfigs,
+  AnimationSpeed,
   PlayerHasRewardFunction,
   State,
-  StateLike,
-  StateToStateLike,
 } from '../Types.tsx';
 import ActionResponseError from './ActionResponseError.tsx';
 
@@ -495,60 +497,24 @@ async function processActionResponse(
       }
 
       const winners = [...team.players.map(({ id }) => id).values()];
-      const possiblePositions = new Set<Vector>();
-      for (const [vector, building] of map.buildings) {
-        if (map.matchesTeam(building, toPlayer)) {
-          possiblePositions.add(vector);
-        }
-      }
-      for (const [vector, unit] of map.units) {
-        if (map.matchesTeam(unit, toPlayer)) {
-          possiblePositions.add(vector);
-        }
-      }
-
-      const animateFireworks = (
-        state: State,
-        positions: ReadonlyArray<Vector>,
-        onComplete: StateToStateLike,
-      ): StateLike | null => {
-        const position = positions?.[0];
-        return position
-          ? {
-              animations: state.animations.set(position, {
-                onComplete: (state: StateLike) =>
-                  animateFireworks(
-                    {
-                      ...state,
-                      animations: state.animations!.delete(position),
-                    } as State,
-                    positions.slice(1),
-                    onComplete,
-                  ),
-                type: 'fireworks',
-              }),
-            }
-          : onComplete(state);
-      };
-
-      const color = winners.slice();
       const winnerList = intlList(
         winners.map(getTranslatedFactionName.bind(null, factionNames)),
         Conjunctions.AND,
         Delimiters.COMMA,
       );
-
-      const count =
+      const fireworks =
         state.currentViewer && winners.includes(state.currentViewer) ? 7 : 3;
       await update((currentState) => ({
         ...state,
         animations: currentState.animations.set(new AnimationKey(), {
-          color,
+          color: winners,
           length: 'short',
           onComplete: (state) =>
             animateFireworks(
               state,
-              arrayShuffle([...possiblePositions]).slice(0, count),
+              arrayShuffle([
+                ...getPossibleFireworksPositions(map, toPlayer),
+              ]).slice(0, fireworks),
               (state) => {
                 resolve({
                   ...state,
@@ -667,8 +633,7 @@ export default async function processActionResponses(
   state: State,
   actions: Actions,
   gameActionResponses: GameActionResponses,
-  animationConfigs: AnimationConfigs,
-  fastButtonIsPressed: { current: boolean },
+  animationSpeed: AnimationSpeed,
   playerHasReward: PlayerHasRewardFunction,
 ): Promise<State> {
   let lastActionResponse: ActionResponse | null = null;
@@ -726,15 +691,10 @@ export default async function processActionResponses(
           : null),
         ...(nextResponse?.type === 'EndTurn'
           ? {
-              animationConfig: fastButtonIsPressed.current
-                ? newState.animationConfig || state.animationConfig
-                : animationConfigs[
-                    (newState.map || state.map)
-                      .getPlayer(nextResponse.next.player)
-                      .isHumanPlayer()
-                      ? 1
-                      : 0
-                  ],
+              animationConfig: getCurrentAnimationConfig(
+                (newState.map || state.map).getPlayer(nextResponse.next.player),
+                animationSpeed,
+              ),
               selectedPosition: null,
               selectedUnit: null,
             }

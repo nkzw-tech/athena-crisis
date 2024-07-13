@@ -4,6 +4,7 @@ import {
   InputHTMLAttributes,
   memo,
   MouseEvent,
+  MutableRefObject,
   useRef,
 } from 'react';
 
@@ -11,23 +12,39 @@ export default memo(function ClearableInput({
   className,
   hidden,
   onClear,
+  ref,
   ...props
 }: DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
-> & { hidden?: boolean; onClear?: () => string }) {
-  const ref = useRef<HTMLInputElement | null>(null);
+> & {
+  hidden?: boolean;
+  onClear?: () => string;
+  ref?: MutableRefObject<HTMLInputElement | null>;
+}) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className={containerStyle}>
-      <input {...props} className={cx(clearableStyle, className)} ref={ref} />
+      <input
+        {...props}
+        className={cx(clearableStyle, className)}
+        ref={(element) => {
+          inputRef.current = element;
+          if (typeof ref === 'function') {
+            ref(element);
+          } else if (ref && typeof ref !== 'string') {
+            ref.current = element;
+          }
+        }}
+      />
       <div
         className={cx(buttonStyle, hidden && hiddenStyle)}
         onClick={(event) => {
-          if (ref.current) {
-            ref.current.value = onClear?.() || '';
+          if (inputRef.current) {
+            inputRef.current.value = onClear?.() || '';
             props.onChange?.({
               ...(event as MouseEvent<HTMLInputElement>),
-              target: ref.current,
+              target: inputRef.current,
             });
           }
         }}

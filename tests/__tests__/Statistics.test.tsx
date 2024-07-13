@@ -10,16 +10,21 @@ import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { Barracks, House } from '@deities/athena/info/Building.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
+  APU,
+  Flamethrower,
   HeavyArtillery,
   HeavyTank,
   Helicopter,
   Humvee,
+  Infantry,
   Pioneer,
   Sniper,
 } from '@deities/athena/info/Unit.tsx';
 import indexToVector from '@deities/athena/lib/indexToSpriteVector.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
@@ -64,8 +69,8 @@ test('collects statistics on attacks', async () => {
       .set(toA, Helicopter.create(player2).setHealth(20))
       .set(fromB, Helicopter.create(player1).setHealth(10))
       .set(toB, Helicopter.create(player2))
-      .set(fromC, Helicopter.create(player1))
-      .set(toC, Pioneer.create(player2).setHealth(10))
+      .set(fromC, Flamethrower.create(player1))
+      .set(toC, Pioneer.create(player2))
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
@@ -90,6 +95,7 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 2,
       "lostBuildings": 0,
       "lostUnits": 1,
+      "oneShots": 1,
       "rescuedUnits": 0,
     }
   `);
@@ -103,6 +109,7 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 1,
       "lostBuildings": 0,
       "lostUnits": 2,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);
@@ -120,6 +127,7 @@ test('collects statistics on attacks', async () => {
         "destroyedUnits": 2,
         "lostBuildings": 0,
         "lostUnits": 1,
+        "oneShots": 1,
         "rescuedUnits": 0,
       }
     `);
@@ -133,6 +141,63 @@ test('collects statistics on attacks', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+});
+
+test('one shots work through counter attacks', async () => {
+  const fromA = vec(1, 1);
+  const toA = vec(1, 2);
+  const skills = new Set([Skill.UnitAPUAttackIncreaseMajorPower]);
+  const initialMap = map.copy({
+    teams: updatePlayer(
+      map.teams,
+      map.getPlayer(2).copy({
+        activeSkills: skills,
+        skills,
+      }),
+    ),
+    units: map.units
+      .set(fromA, Infantry.create(player1))
+      .set(toA, APU.create(player2)),
+  });
+
+  const [gameState] = executeGameActions(initialMap, [
+    AttackUnitAction(fromA, toA),
+  ]);
+
+  const lastMap = gameState.at(-1)![1];
+  const statsA = lastMap.getPlayer(player1.id).stats;
+  const statsB = lastMap.getPlayer(player2.id).stats;
+
+  expect(statsA.damage).toBeGreaterThan(1);
+  expect({ ...statsA, damage: 0 }).toMatchInlineSnapshot(`
+    {
+      "captured": 0,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 0,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 0,
+      "lostBuildings": 0,
+      "lostUnits": 1,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+  expect(statsB).toMatchInlineSnapshot(`
+    {
+      "captured": 0,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 100,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 1,
+      "lostBuildings": 0,
+      "lostUnits": 0,
+      "oneShots": 1,
       "rescuedUnits": 0,
     }
   `);
@@ -196,6 +261,7 @@ test('collects statistics when attacking buildings', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "oneShots": 1,
       "rescuedUnits": 0,
     }
   `);
@@ -211,6 +277,7 @@ test('collects statistics when attacking buildings', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 1,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);
@@ -256,6 +323,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);
@@ -270,6 +338,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);
@@ -283,6 +352,7 @@ test('collects statistics on captures and creating units', async () => {
       "destroyedUnits": 0,
       "lostBuildings": 0,
       "lostUnits": 0,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);

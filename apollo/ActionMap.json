@@ -167,7 +167,7 @@
   ["SetViewer", [35, ["type"]]],
   ["BeginGame", [36, ["type"]]],
   ["Rescue", [37, ["type", "from", "to", "player", "name"]]],
-  ["ReceiveReward", [38, ["type", "player", "reward"]]],
+  ["ReceiveReward", [38, ["type", "player", "reward", "permanent"]]],
   ["BuySkill", [39, ["type", "from", "skill", "player"]]],
   ["ActivatePower", [40, ["type", "skill"]]],
   ["PreviousTurnGameOver", [41, ["type", "fromPlayer"]]],

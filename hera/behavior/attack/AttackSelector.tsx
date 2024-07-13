@@ -271,7 +271,7 @@ const getDamageInformation = (
     map,
     from,
     to,
-    getAttackStatusEffect(map, unitA, map.getTileInfo(from)),
+    getAttackStatusEffect(map, unitA, from, map.getTileInfo(from)),
     getDefenseStatusEffect(map, entityB, map.getTileInfo(to)),
     modifier,
   );

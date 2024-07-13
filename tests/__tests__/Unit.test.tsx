@@ -1,11 +1,15 @@
-import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Barracks, House } from '@deities/athena/info/Building.tsx';
+import {
+  AttackUnitAction,
+  MoveAction,
+} from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { Barracks, House, HQ } from '@deities/athena/info/Building.tsx';
 import { findTile, Plain, Sea } from '@deities/athena/info/Tile.tsx';
 import {
   Ability,
   AmphibiousTank,
   Battleship,
   Dragon,
+  Flamethrower,
   Frigate,
   Helicopter,
   Jeep,
@@ -13,6 +17,7 @@ import {
   Octopus,
   Pioneer,
   SupportShip,
+  Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
@@ -83,16 +88,8 @@ test('displays all units and all possible states correctly', async () => {
       map: Array(size.height * size.width).fill(Plain.id),
       size,
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, name: 'AI' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'AI' }] },
       ],
     }),
   ).copy({
@@ -130,16 +127,8 @@ test('correctly palette swaps water on naval units', async () => {
       map: Array(size.height * size.width).fill(Sea.id),
       size,
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, name: 'AI' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'AI' }] },
       ],
     }),
   ).copy({
@@ -170,16 +159,8 @@ test('renders Dragons differently on water', async () => {
       map: tileMap,
       size,
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, name: 'AI' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'AI' }] },
       ],
     }),
   ).copy({
@@ -203,16 +184,8 @@ test('displays labels correctly', async () => {
       map: Array(9).fill(1),
       size: { height: 3, width: 3 },
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, name: 'AI' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, name: 'AI' }] },
       ],
     }),
   );
@@ -251,16 +224,8 @@ test('escort radius with label', async () => {
       map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
       size: { height: 3, width: 3 },
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, userId: '4' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '4' }] },
       ],
     }),
   );
@@ -327,4 +292,75 @@ test('escort radius with label', async () => {
   const screenshot = await captureOne(initialMap, '1');
   printGameState('Escort Radius', screenshot);
   expect(screenshot).toMatchImageSnapshot();
+});
+
+test('capture might be stopped when a unit is converted to another faction', async () => {
+  const initialMap = MapData.createMap({
+    map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    size: { height: 3, width: 3 },
+  });
+
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const vecC = vec(3, 1);
+  const map = initialMap.copy({
+    buildings: initialMap.buildings.set(vecB, HQ.create(1)),
+    units: initialMap.units
+      .set(vecA, Zombie.create(1))
+      .set(vecB, Flamethrower.create(2).capture())
+      .set(vecC, Flamethrower.create(2)),
+  });
+
+  const [gameState, gameActionResponseA] = executeGameActions(map, [
+    AttackUnitAction(vecA, vecB),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(
+    `"AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 47, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 30, ammo: [ [ 1, 3 ] ] }, chargeA: 304, chargeB: 280 }"`,
+  );
+
+  const lastMap = gameState.at(-1)![1];
+  const unit = lastMap.units.get(vecB);
+  expect(unit?.isCapturing()).toBe(false);
+  expect(unit?.player).toEqual(1);
+});
+
+test('capture does not stop when a unit is converted to another faction and they can still capture the building', async () => {
+  const initialMap = MapData.createMap({
+    map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    size: { height: 3, width: 3 },
+    teams: [
+      { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+      { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '4' }] },
+      { id: 3, name: '', players: [{ funds: 500, id: 3, userId: '4' }] },
+    ],
+  });
+
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const vecC = vec(3, 1);
+  const map = initialMap.copy({
+    buildings: initialMap.buildings.set(vecB, HQ.create(3)),
+    units: initialMap.units
+      .set(vecA, Zombie.create(2))
+      .set(vecB, Flamethrower.create(1).setHealth(60).capture())
+      .set(vecC, Flamethrower.create(1)),
+  });
+
+  const [gameState, gameActionResponseA] = executeGameActions(map, [
+    AttackUnitAction(vecB, vecA),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(
+    `"AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 42, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 2, ammo: [ [ 1, 4 ] ] }, chargeA: 201, chargeB: 392 }"`,
+  );
+
+  const lastMap = gameState.at(-1)![1];
+  const unit = lastMap.units.get(vecB);
+  expect(unit?.isCapturing()).toBe(true);
+  expect(unit?.player).toEqual(2);
 });

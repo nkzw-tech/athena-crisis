@@ -25,29 +25,35 @@ let _unitClass: typeof Unit;
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
 
 export enum Ability {
-  AccessBuildings,
-  Capture,
-  CreateBuildings,
-  CreateTracks,
-  Heal,
-  MoveAndAct,
-  Rescue,
-  Sabotage,
-  Supply,
-  Unfold,
+  AccessBuildings = 0,
+  Capture = 1,
+  CreateBuildings = 2,
+  CreateTracks = 3,
+  Heal = 4,
+  MoveAndAct = 5,
+  Rescue = 6,
+  Sabotage = 7,
+  Supply = 8,
+  Unfold = 9,
+  Convert = 10,
+  Morale = 11,
+  Poison = 12,
 }
 
 export const Abilities = [
   Ability.AccessBuildings,
   Ability.Capture,
+  Ability.Convert,
   Ability.CreateBuildings,
   Ability.CreateTracks,
   Ability.Heal,
+  Ability.Morale,
   Ability.MoveAndAct,
   Ability.Rescue,
   Ability.Sabotage,
   Ability.Supply,
   Ability.Unfold,
+  Ability.Poison,
 ] as const;
 
 export enum AttackType {
@@ -98,13 +104,32 @@ type SpriteConfig = {
   withNavalExplosion?: boolean;
 };
 
+type UnitAbilityConfiguration = Readonly<{
+  accessBuildings?: boolean;
+  capture?: boolean;
+  convert?: boolean;
+  createBuildings?: boolean;
+  createTracks?: boolean;
+  heal?: boolean;
+  morale?: boolean;
+  moveAndAct?: boolean;
+  poison?: boolean;
+  rescue?: boolean;
+  sabotage?: boolean;
+  supply?: boolean;
+  unfold?: boolean;
+}>;
+
 class UnitAbilities {
   private readonly accessBuildings: boolean;
   private readonly capture: boolean;
+  private readonly convert: boolean;
   private readonly createBuildings: boolean;
   private readonly createTracks: boolean;
   private readonly heal: boolean;
+  private readonly morale: boolean;
   private readonly moveAndAct: boolean;
+  private readonly poison: boolean;
   private readonly rescue: boolean;
   private readonly sabotage: boolean;
   private readonly supply: boolean;
@@ -113,32 +138,27 @@ class UnitAbilities {
   constructor({
     accessBuildings,
     capture,
+    convert,
     createBuildings,
     createTracks,
     heal,
+    morale,
     moveAndAct,
+    poison,
     rescue,
     sabotage,
     supply,
     unfold,
-  }: {
-    accessBuildings?: boolean;
-    capture?: boolean;
-    createBuildings?: boolean;
-    createTracks?: boolean;
-    heal?: boolean;
-    moveAndAct?: boolean;
-    rescue?: boolean;
-    sabotage?: boolean;
-    supply?: boolean;
-    unfold?: boolean;
-  } = {}) {
+  }: UnitAbilityConfiguration = {}) {
     this.accessBuildings = accessBuildings ?? false;
     this.capture = capture ?? false;
     this.createBuildings = createBuildings ?? false;
     this.createTracks = createTracks ?? false;
+    this.morale = morale ?? false;
     this.heal = heal ?? false;
     this.moveAndAct = moveAndAct ?? false;
+    this.poison = poison ?? false;
+    this.convert = convert ?? false;
     this.rescue = rescue ?? false;
     this.sabotage = sabotage ?? false;
     this.supply = supply ?? false;
@@ -155,10 +175,16 @@ class UnitAbilities {
         return this.createBuildings;
       case Ability.CreateTracks:
         return this.createTracks;
+      case Ability.Convert:
+        return this.convert;
       case Ability.Heal:
         return this.heal;
+      case Ability.Morale:
+        return this.morale;
       case Ability.MoveAndAct:
         return this.moveAndAct;
+      case Ability.Poison:
+        return this.poison;
       case Ability.Rescue:
         return this.rescue;
       case Ability.Sabotage:
@@ -172,6 +198,38 @@ class UnitAbilities {
         throw new UnknownTypeError('UnitBehaviors.has', ability);
       }
     }
+  }
+
+  copy({
+    accessBuildings,
+    capture,
+    convert,
+    createBuildings,
+    createTracks,
+    heal,
+    morale,
+    moveAndAct,
+    poison,
+    rescue,
+    sabotage,
+    supply,
+    unfold,
+  }: UnitAbilityConfiguration) {
+    return new UnitAbilities({
+      accessBuildings: accessBuildings ?? this.accessBuildings,
+      capture: capture ?? this.capture,
+      convert: convert ?? this.convert,
+      createBuildings: createBuildings ?? this.createBuildings,
+      createTracks: createTracks ?? this.createTracks,
+      heal: heal ?? this.heal,
+      morale: morale ?? this.morale,
+      moveAndAct: moveAndAct ?? this.moveAndAct,
+      poison: poison ?? this.poison,
+      rescue: rescue ?? this.rescue,
+      sabotage: sabotage ?? this.sabotage,
+      supply: supply ?? this.supply,
+      unfold: unfold ?? this.unfold,
+    });
   }
 }
 
@@ -689,6 +747,7 @@ export class UnitInfo {
       config?.label != null ? config.label : null,
       config?.name ?? null,
       config?.behavior || null,
+      null,
     );
   }
 
@@ -1180,6 +1239,8 @@ export const Weapons = {
       [EntityType.Amphibious, 100],
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
+      [EntityType.LowAltitude, 100],
+
       [EntityType.Infantry, 120],
     ]),
     BiteAnimation,
@@ -1474,8 +1535,9 @@ export const Weapons = {
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
       [EntityType.Infantry, 120],
-      [EntityType.Ship, 120],
+      [EntityType.LowAltitude, 100],
       [EntityType.Rail, 100],
+      [EntityType.Ship, 120],
     ]),
     EmptyAnimation.withSound('Attack/TentacleWhip'),
     [
@@ -1549,30 +1611,28 @@ const DefaultUnitAbilities = new UnitAbilities({
   accessBuildings: true,
   moveAndAct: true,
 });
-const PioneerUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
+const PioneerUnitAbilities = DefaultUnitAbilities.copy({
   capture: true,
   createBuildings: true,
   createTracks: true,
-  moveAndAct: true,
   rescue: true,
 });
-const DefaultUnitAbilitiesWithCapture = new UnitAbilities({
-  accessBuildings: true,
+
+const ZombieUnitAbilities = PioneerUnitAbilities.copy({ convert: true });
+
+const DefaultUnitAbilitiesWithCapture = DefaultUnitAbilities.copy({
   capture: true,
-  moveAndAct: true,
 });
-const HealUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
+
+const HealUnitAbilities = DefaultUnitAbilities.copy({
   heal: true,
-  moveAndAct: true,
 });
-const SaboteurUnitAbilities = new UnitAbilities({
-  accessBuildings: true,
-  moveAndAct: true,
+
+const SaboteurUnitAbilities = DefaultUnitAbilities.copy({
   rescue: true,
   sabotage: true,
 });
+
 const DefaultSabotageTypes = new Set([
   EntityType.AirInfantry,
   EntityType.Amphibious,
@@ -3261,7 +3321,11 @@ export const Dragon = new UnitInfo(
     weapons: [
       Weapons.Flamethrower.withDamage(
         buff(
-          new Map([...Weapons.Flamethrower.damage, [EntityType.Ship, 70]]),
+          new Map([
+            ...Weapons.Flamethrower.damage,
+            [EntityType.Ship, 70],
+            [EntityType.LowAltitude, 90],
+          ]),
           40,
         ),
       )
@@ -3350,10 +3414,10 @@ export const Alien = new UnitInfo(
     sabotageTypes: DefaultSabotageTypes,
     vision: 1,
   },
-  SaboteurUnitAbilities,
+  SaboteurUnitAbilities.copy({ poison: true }),
   {
     type: AttackType.ShortRange,
-    weapons: [Weapons.Bite],
+    weapons: [Weapons.Bite.withDamage(buff(Weapons.Bite.damage, -70))],
   },
   null,
   {
@@ -3389,13 +3453,20 @@ export const Zombie = new UnitInfo(
     radius: 3,
     vision: 1,
   },
-  PioneerUnitAbilities,
+  ZombieUnitAbilities,
   {
     type: AttackType.ShortRange,
     weapons: [
       new Weapon(
-        'Bite',
-        buff(Weapons.Bite.damage, -50),
+        'Zombie Bite',
+        buff(
+          new Map([
+            ...Weapons.Bite.damage,
+            [EntityType.Rail, 80],
+            [EntityType.Ship, 80],
+          ]),
+          -50,
+        ),
         BiteAnimation.withSound('Attack/ZombieBite'),
         BiteHitAnimation,
         5,
@@ -3497,13 +3568,13 @@ export const Brute = new UnitInfo(
 );
 
 export const Commander = new UnitInfo(
-  50,
+  UnitID.Commander,
   'Commander',
-  'Unknown',
+  'Kane',
   'male',
   `Armies are composed of master strategists and troops on the ground executing orders. Then there's the Commander unit, who can neither strategize nor execute effectively. They excel in scheduling unnecessary meetings and perpetuating confusion under the guise of "alignment". Equipped only with a pistol, one has to wonder: What exactly is their purpose?`,
   `Even if it appears {name} is one step behind, he invariably ends up five steps ahead. He seems to be the only Commander unit with actual tactical and strategic abilities, perceiving the multiverse as a complex chessboard of possibilities where everyone but him is a pawn. Unlike his counterparts, who often get lost in bureaucracy and confusion, {name} navigates these complexities with unmatched foresight and precision, masterfully turning tough situations to his advantage.`,
-  10,
+  20,
   EntityType.Infantry,
   MovementTypes.Soldier,
   {
@@ -3512,7 +3583,7 @@ export const Commander = new UnitInfo(
     radius: 2,
     vision: 3,
   },
-  DefaultUnitAbilitiesWithCapture,
+  DefaultUnitAbilitiesWithCapture.copy({ morale: true }),
   { type: AttackType.ShortRange, weapons: [Weapons.Pistol.withSupply(5)] },
   null,
   {

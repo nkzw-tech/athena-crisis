@@ -49,6 +49,7 @@ export default function useMenuNavigation(
       },
       [count, selected, nowrap],
     ),
+    count > 0,
     layer,
   );
 

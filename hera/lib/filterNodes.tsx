@@ -1,10 +1,10 @@
-export default function filterNodes<T extends { id: string }>(
+export default function filterNodes<T, S extends Record<string, unknown>>(
   edge:
-    | {
-        node: T | null | undefined;
-      }
+    | (S & {
+        readonly node: T | null | undefined;
+      })
     | null
     | undefined,
-): edge is { node: T } {
-  return !!edge?.node;
+): edge is S & { readonly node: T } {
+  return edge != null && edge?.node != null;
 }

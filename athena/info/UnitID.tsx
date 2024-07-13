@@ -7,6 +7,7 @@ export default {
   Medic: 26,
   Zombie: 47,
   Brute: 49,
+  Commander: 50,
   Cannon: 51,
   BazookaBear: 53,
   AIU: 54,

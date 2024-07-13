@@ -33,12 +33,10 @@ export type Size = Readonly<{
   width: number;
 }>;
 
-export type AnimationConfigs = readonly [
-  normal: AnimationConfig,
-  player: AnimationConfig,
-  fast: AnimationConfig,
-  fastPlayer: AnimationConfig,
-];
+export type AnimationSpeed = Readonly<{
+  human: AnimationConfig;
+  regular: AnimationConfig;
+}>;
 
 export type PlayerHasRewardFunction = (
   map: MapData,
@@ -46,9 +44,11 @@ export type PlayerHasRewardFunction = (
   actionResponse: ReceiveRewardActionResponse,
 ) => boolean;
 
+export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
+
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
-  animationConfig?: AnimationConfigs | AnimationConfig;
+  animationSpeed?: AnimationSpeed;
   behavior?: MapBehaviorConstructor | null;
   buildingSize: number;
   children?: (state: State, actions: Actions) => ReactNode;
@@ -74,6 +74,7 @@ export type Props = Readonly<{
   onError?: (error: Error) => void;
   pan?: true;
   paused?: boolean;
+  playerAchievement?: PlayerAchievement | null;
   playerHasReward?: PlayerHasRewardFunction;
   scale: number;
   scroll?: boolean;
@@ -142,6 +143,7 @@ export type State = Readonly<{
   showCursor: boolean;
   tileSize: number;
   timeout: number | null;
+  userDisplayName: string;
   vision: VisionT;
   zIndex: number;
 }>;
@@ -224,7 +226,6 @@ export type Actions = Readonly<{
     action: Action,
   ) => [Promise<GameActionResponse>, MapData, ActionResponse];
   clearTimer: ClearTimerFunction;
-  fastForward: () => () => void;
   optimisticAction: (state: State, action: Action) => ActionResponse;
   pauseReplay: () => Promise<void>;
   processGameActionResponse: (

@@ -57,12 +57,12 @@
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "^7.24.7",
     "@deities/eslint-plugin": "workspace:*",
-    "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@nkzw/eslint-config": "^1.17.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "1.6.7",
+    "@swc/core": "1.6.13",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^20.14.9",
+    "@types/node": "^20.14.10",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -78,7 +78,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.2"
   },
   "engines": {
     "node": ">=20.0.0",

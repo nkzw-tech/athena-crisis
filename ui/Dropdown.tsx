@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { applyVar } from './cssVar.tsx';
 import pixelBorder from './pixelBorder.tsx';
 import Stack from './Stack.tsx';
@@ -7,21 +7,44 @@ import Stack from './Stack.tsx';
 export default function Dropdown({
   children,
   className,
+  closeOnSelect,
   dropdownClassName,
+  forceOpen,
   shouldRenderControls = true,
   title,
 }: {
   children: ReactNode;
   className?: string;
+  closeOnSelect?: true;
   dropdownClassName?: string;
+  forceOpen?: boolean;
   shouldRenderControls?: boolean;
   title: ReactNode;
 }) {
+  const [closed, setClosed] = useState(false);
+
+  const close = useCallback(() => {
+    setClosed(true);
+    setTimeout(() => setClosed(false), 300);
+  }, []);
+
   return (
-    <Stack className={cx(selectorContainerStyle, className)}>
+    <Stack
+      className={cx(selectorContainerStyle, !closed && openStyle, className)}
+    >
       {title}
       {shouldRenderControls && (
-        <Stack className={cx(selectorStyle, dropdownClassName)} nowrap vertical>
+        <Stack
+          className={cx(
+            selectorStyle,
+            dropdownClassName,
+            forceOpen && forceOpenStyle,
+            closed && hiddenStyle,
+          )}
+          nowrap
+          onClick={closeOnSelect ? close : undefined}
+          vertical
+        >
           {children}
         </Stack>
       )}
@@ -32,16 +55,30 @@ export default function Dropdown({
 const selectorContainerStyle = css`
   cursor: pointer;
   position: relative;
+`;
 
+const openStyle = css`
   & > div {
     transition-delay: 150ms;
   }
+
   &:hover > div {
     opacity: 1;
     pointer-events: auto;
     transform: scale(1);
     transition-delay: 0ms;
   }
+`;
+
+const forceOpenStyle = css`
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  transition-delay: 0ms;
+`;
+
+const hiddenStyle = css`
+  display: none;
 `;
 
 const selectorStyle = css`

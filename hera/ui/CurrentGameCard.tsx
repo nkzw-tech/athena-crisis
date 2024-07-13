@@ -5,6 +5,7 @@ import type MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import useInput from '@deities/ui/controls/useInput.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import { css } from '@emotion/css';
@@ -44,34 +45,31 @@ const TeamItem = ({
   users: ImmutableMap<number, UserLike>;
   vision: VisionT;
   wide: boolean;
-}) => (
-  <>
-    {sortBy([...team.players.values()], ({ id }) => id)
-      .map((player: Player) => {
-        if (focusPlayer && focusPlayer.id !== player.id) {
-          return null;
-        }
+}) =>
+  sortBy([...team.players.values()], ({ id }) => id)
+    .map((player: Player) => {
+      if (focusPlayer && focusPlayer.id !== player.id) {
+        return null;
+      }
 
-        const user = users.get(player.id);
-        return (
-          user && (
-            <PlayerCard
-              actions={actions}
-              animate={!!(focusPlayer && animate)}
-              currentViewer={currentViewer}
-              key={player.id}
-              map={map}
-              player={player}
-              user={user}
-              vision={vision}
-              wide={wide && !focusPlayer}
-            />
-          )
-        );
-      })
-      .filter(isPresent)}
-  </>
-);
+      const user = users.get(player.id);
+      return (
+        user && (
+          <PlayerCard
+            actions={actions}
+            animate={!!(focusPlayer && animate)}
+            currentViewer={currentViewer}
+            key={player.id}
+            map={map}
+            player={player}
+            user={user}
+            vision={vision}
+            wide={wide && !focusPlayer}
+          />
+        )
+      );
+    })
+    .filter(isPresent);
 
 const arrangeTeams = (focusPlayer: Player | null, teams: TeamList) => {
   if (focusPlayer) {
@@ -160,6 +158,23 @@ export default memo(function CurrentGameCard({
   const toggleExpanded = useCallback(
     () => setIsExpanded((isExpanded) => !isExpanded),
     [],
+  );
+
+  useInput(
+    'info',
+    useCallback(() => {
+      if (!isExpanded) {
+        setIsExpanded(true);
+      }
+    }, [isExpanded]),
+  );
+  useInput(
+    'cancel',
+    useCallback(() => {
+      if (isExpanded) {
+        setIsExpanded(false);
+      }
+    }, [isExpanded]),
   );
 
   const content = (

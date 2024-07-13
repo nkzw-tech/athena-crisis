@@ -20,6 +20,7 @@ import {
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import ActivatePowerMessages from '@deities/hermes/ActivatePowerMessages.tsx';
 import { CampaignModule, MapModule } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import chalk from 'chalk';
@@ -188,6 +189,17 @@ const characterMessages = campaignMaps.flatMap(
     return actions;
   },
 );
+
+for (const [skill, messages] of ActivatePowerMessages) {
+  for (const [message] of messages) {
+    characterMessages.push({
+      description: `Activate Power Message for skill ${skill}`,
+      key: getMessageKey(message),
+      message: message.message,
+      unitId: message.unitId,
+    });
+  }
+}
 
 const extractName = ({ name }: { name: string }) => name;
 const sort = (a: string, b: string) => a.localeCompare(b);

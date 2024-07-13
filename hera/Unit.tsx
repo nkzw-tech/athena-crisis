@@ -11,7 +11,7 @@ import {
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -185,6 +185,45 @@ const Health = ({
     />
   ) : null;
 };
+
+const StatusEffect = ({ hide, unit }: { hide: boolean; unit: Unit }) => {
+  return unit.statusEffect ? (
+    <div
+      className={cx(
+        absoluteStyle,
+        hide && hideStyle,
+        unit.statusEffect === UnitStatusEffect.Poison && poisonStyle,
+      )}
+    />
+  ) : null;
+};
+
+const poisonStyle = css`
+  animation: ${keyframes`
+    0% {
+      background-position-y: 0;
+      opacity: 1;
+    }
+    49% {
+      opacity: 1;
+    }
+    50% {
+      background-position-y: -286px;
+      opacity: 0;
+    }
+    51%, 100% {
+      background-position-y: -286px;
+      opacity: 0;
+    }
+  `} 6s steps(11) infinite;
+
+  background-image: url(${Sprites.Poison});
+  height: 26px;
+  left: -1px;
+  pointer-events: none;
+  right: -1px;
+  top: 4px;
+`;
 
 const getSpritePosition = (
   unit: Unit,
@@ -850,6 +889,7 @@ export default function UnitTile({
         ref={innerElementRef}
         style={innerStyle}
       />
+      {unit.statusEffect ? <StatusEffect hide={hide} unit={unit} /> : null}
       <Status
         actionStyle={actionStyle}
         ammoStyle={ammoStyle}

@@ -10,15 +10,19 @@ import Stack from './Stack.tsx';
 
 export default function Select({
   children,
+  forceOpen,
   selectedItem,
 }: {
   children: ReactNode;
+  forceOpen?: boolean;
   selectedItem: ReactNode;
 }) {
   return (
     <Dropdown
-      className={cx(BoxStyle, dropdownStyle)}
+      className={cx(BoxStyle, dropdownStyle, forceOpen && selectedStyle)}
+      closeOnSelect
       dropdownClassName={cx(BoxStyle, selectorStyle)}
+      forceOpen={forceOpen}
       title={
         <Stack gap nowrap stretch>
           {selectedItem}
@@ -49,4 +53,8 @@ const selectorStyle = css`
   padding: 12px;
   top: calc(100% - 20px);
   width: 100%;
+`;
+
+const selectedStyle = css`
+  ${pixelBorder(undefined, 2)}
 `;

@@ -16,6 +16,7 @@ export default async function buySkillAction(
   const { player } = actionResponse;
   const isBuy = actionResponse.type === 'BuySkill';
   const skill = isBuy ? actionResponse.skill : actionResponse.reward.skill;
+  const isPermanent = !isBuy && actionResponse.permanent;
 
   const { colors, name } = getSkillConfigForDisplay(skill);
   return new Promise((resolve) =>
@@ -48,16 +49,24 @@ export default async function buySkillAction(
                   '!',
                 'Receive reward message',
               )
-            : fbt(
-                fbt.param(
-                  'player',
-                  getTranslatedFactionName(state.factionNames, player),
-                ) +
-                  ' received the skill ' +
-                  fbt.param('skill', name) +
-                  '!',
-                'Receive reward message',
-              ),
+            : isPermanent
+              ? fbt(
+                  fbt.param('user', state.userDisplayName) +
+                    ' received the skill ' +
+                    fbt.param('skill', name) +
+                    '!',
+                  'Receive reward message',
+                )
+              : fbt(
+                  fbt.param(
+                    'player',
+                    getTranslatedFactionName(state.factionNames, player),
+                  ) +
+                    ' temporarily received the skill ' +
+                    fbt.param('skill', name) +
+                    ' for this game!',
+                  'Receive reward message',
+                ),
         ),
         type: 'banner',
       }),

@@ -2,8 +2,8 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "fabiospampinato.vscode-open-in-github",
     "styled-components.vscode-styled-components",
-    "sysoev.vscode-open-in-github",
     "usernamehw.errorlens",
     "wix.vscode-import-cost"
   ]

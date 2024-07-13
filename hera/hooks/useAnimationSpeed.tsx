@@ -17,19 +17,12 @@ export default function useAnimationSpeed(
   return useMemo(
     () =>
       animationSpeed === AnimationSpeed.FastAll
-        ? ([
-            FastAnimationConfig,
-            FastAnimationConfig,
-            AnimationConfig,
-            AnimationConfig,
-          ] as const)
+        ? ({
+            human: FastAnimationConfig,
+            regular: FastAnimationConfig,
+          } as const)
         : animationSpeed === AnimationSpeed.FastAI
-          ? ([
-              FastAnimationConfig,
-              AnimationConfig,
-              AnimationConfig,
-              FastAnimationConfig,
-            ] as const)
+          ? ({ human: AnimationConfig, regular: FastAnimationConfig } as const)
           : undefined,
     [animationSpeed],
   );

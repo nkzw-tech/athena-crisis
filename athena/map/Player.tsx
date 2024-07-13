@@ -6,7 +6,7 @@ import {
   InitialPlayerStatistics,
   PlainPlayerStatistics,
   PlayerStatistics,
-} from './Statistics.tsx';
+} from './PlayerStatistics.tsx';
 
 export type PlainPlayerID = number;
 export type PlayerID = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -138,6 +138,7 @@ export default abstract class Player {
           this.stats.lostBuildings + (stats.lostBuildings || 0),
         ),
         lostUnits: Math.max(0, this.stats.lostUnits + (stats.lostUnits || 0)),
+        oneShots: Math.max(0, this.stats.oneShots + (stats.oneShots || 0)),
         rescuedUnits: Math.max(
           0,
           this.stats.rescuedUnits + (stats.rescuedUnits || 0),

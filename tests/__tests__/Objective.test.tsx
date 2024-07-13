@@ -4,10 +4,11 @@ import {
   CaptureAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { House, HQ } from '@deities/athena/info/Building.tsx';
+import { House, HQ, Shelter } from '@deities/athena/info/Building.tsx';
 import {
   APU,
   Bomber,
+  Flamethrower,
   Helicopter,
   Infantry,
   Pioneer,
@@ -15,7 +16,9 @@ import {
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { PoisonDamage } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
@@ -406,5 +409,58 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
     .toMatchInlineSnapshot(`
       "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 2000 }
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 1, toPlayer: 2 }"
+    `);
+});
+
+test('game over through poison status effects', async () => {
+  const initialMap = map.copy({
+    units: map.units
+      .set(
+        vec(2, 2),
+        Flamethrower.create(player1)
+          .setStatusEffect(UnitStatusEffect.Poison)
+          .setHealth(PoisonDamage + 10),
+      )
+      .set(vec(4, 4), Helicopter.create(player2)),
+  });
+
+  const [gameStateA, gameActionResponseA] = executeGameActions(initialMap, [
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
+      BeginTurnGameOver
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+    `);
+
+  const initialState = await captureOne(initialMap, player1.userId);
+  printGameState('Base State', initialState);
+  expect(initialState).toMatchImageSnapshot();
+
+  const finalState = await captureOne(gameStateA.at(-1)![1], player1.userId);
+  printGameState('Final State', finalState);
+  expect(finalState).toMatchImageSnapshot();
+
+  const [, gameActionResponseB] = executeGameActions(
+    initialMap.copy({
+      buildings: initialMap.buildings.set(vec(2, 2), Shelter.create(1)),
+    }),
+    [EndTurnAction(), EndTurnAction(), EndTurnAction(), EndTurnAction()],
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 550, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 550, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 600, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }"
     `);
 });

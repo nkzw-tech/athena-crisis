@@ -1,4 +1,9 @@
-import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import {
+  ActionResponse,
+  AttackBuildingActionResponse,
+  AttackUnitActionResponse,
+} from '@deities/apollo/ActionResponse.tsx';
+import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getAttackDirection from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
@@ -12,6 +17,12 @@ import { resetBehavior } from '../Behavior.tsx';
 import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
+const isAttackAction = (
+  actionResponse: ActionResponse | undefined,
+): actionResponse is AttackUnitActionResponse | AttackBuildingActionResponse =>
+  actionResponse?.type === 'AttackUnit' ||
+  actionResponse?.type === 'AttackBuilding';
+
 export default async function clientAttackAction(
   actions: Actions,
   remoteAction: Promise<GameActionResponse>,
@@ -24,7 +35,7 @@ export default async function clientAttackAction(
   state: State,
 ): Promise<State> {
   const { scheduleTimer, update } = actions;
-  const { map: previousMap } = state;
+  const { map: previousMap, vision } = state;
   const entityIsBuilding = isBuilding(entityB);
 
   // First, hide the attack/moveable radius.
@@ -36,7 +47,7 @@ export default async function clientAttackAction(
 
   const directions = getAttackDirection(from, to);
   const hasCounterAttack =
-    'hasCounterAttack' in actionResponse && actionResponse.hasCounterAttack;
+    isAttackAction(actionResponse) && actionResponse.hasCounterAttack;
   const previousUnitB = previousMap.units.get(to);
 
   const newUnitB = newMap.units.get(to);
@@ -78,7 +89,12 @@ export default async function clientAttackAction(
 
     return new Promise((resolve) =>
       scheduleTimer(async (state: State) => {
-        const newUnitA = 'unitA' in actionResponse && actionResponse.unitA;
+        const response = await remoteAction;
+        if (isAttackAction(response.self?.actionResponse)) {
+          actionResponse = response.self.actionResponse;
+          newMap = applyActionResponse(previousMap, vision, actionResponse);
+        }
+        const newUnitA = isAttackAction(actionResponse) && actionResponse.unitA;
         const directions = getAttackDirection(to, from);
         state = await attackActionAnimation(actions, state, {
           attackStance: unitB.info.sprite.attackStance,

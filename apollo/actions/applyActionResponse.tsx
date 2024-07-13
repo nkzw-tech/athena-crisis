@@ -88,7 +88,9 @@ export default function applyActionResponse(
           ? units.set(
               from,
               maybeConvertPlayer(
+                map,
                 originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                from,
                 hasCounterAttack ? originalUnitB : null,
                 'recover',
               ),
@@ -99,7 +101,9 @@ export default function applyActionResponse(
           ? units.set(
               to,
               maybeConvertPlayer(
+                map,
                 originalUnitB.copy(unitB).maybeUpdateAIBehavior(),
+                to,
                 originalUnitA,
                 'complete',
               ),
@@ -118,6 +122,10 @@ export default function applyActionResponse(
         units.get(to)?.player === originalUnitB?.player
           ? 0
           : 1;
+      const oneShotB =
+        originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
+      const oneShotA =
+        originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
       return map.copy({
         teams: updatePlayers(map.teams, [
           map
@@ -128,6 +136,7 @@ export default function applyActionResponse(
                 : 0,
               destroyedUnits,
               lostUnits,
+              oneShots: oneShotB,
             })
             .maybeSetCharge(chargeA),
           playerB !== 0
@@ -142,6 +151,7 @@ export default function applyActionResponse(
                   ),
                   destroyedUnits: lostUnits,
                   lostUnits: destroyedUnits,
+                  oneShots: oneShotA,
                 })
                 .maybeSetCharge(chargeB)
             : null,
@@ -172,7 +182,9 @@ export default function applyActionResponse(
           ? units.set(
               from,
               maybeConvertPlayer(
+                map,
                 originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                from,
                 hasCounterAttack ? originalUnitC : null,
                 'recover',
               ),
@@ -191,6 +203,13 @@ export default function applyActionResponse(
         units.get(from)?.player === originalUnitA?.player
           ? 0
           : 1;
+      const oneShotC =
+        originalUnitC &&
+        ((originalUnitC?.health >= MaxHealth && !unitC) || !building)
+          ? 1
+          : 0;
+      const oneShotA =
+        originalUnitA && originalUnitA?.health >= MaxHealth && !unitA ? 1 : 0;
       // Update `playerA` and `playerB` first, then update `playerC` which might equal `playerB`.
       const teams = originalBuilding
         ? updatePlayers(map.teams, [
@@ -203,6 +222,7 @@ export default function applyActionResponse(
                 ),
                 destroyedBuildings: building ? 0 : 1,
                 lostUnits,
+                oneShots: oneShotC,
               })
               .maybeSetCharge(chargeA),
             originalBuilding.player > 0
@@ -236,6 +256,7 @@ export default function applyActionResponse(
                         : 0,
                     destroyedUnits: lostUnits,
                     lostUnits: unitC ? 0 : 1,
+                    oneShots: oneShotA,
                   })
                   .maybeSetCharge(chargeC),
               )
@@ -398,7 +419,10 @@ export default function applyActionResponse(
       const unitA = from && map.units.get(from);
       const unitB = map.units.get(to)!;
       const player = map.getPlayer(unitB);
-      const units = map.units.set(to, unitB.modifyHealth(HealAmount));
+      const units = map.units.set(
+        to,
+        unitB.modifyHealth(HealAmount).removeStatusEffect(),
+      );
       return map.copy({
         teams: updatePlayer(
           map.teams,
@@ -472,6 +496,7 @@ export default function applyActionResponse(
           player.setCharge(player.charge - Charge).modifyStatistics({
             damage: unit ? unit.health : 0,
             destroyedUnits: unit ? 1 : 0,
+            oneShots: unit && unit.health >= MaxHealth ? 1 : 0,
           }),
           unit
             ? map.getPlayer(unit.player).modifyStatistic('lostUnits', 1)

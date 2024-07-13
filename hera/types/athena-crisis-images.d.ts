@@ -13,8 +13,10 @@ declare module 'athena-crisis:images' {
     Delete: string;
     Explosion: string;
     Fireworks: string;
+    Gamepad: string;
     Heal: string;
     Noise: string;
+    Poison: string;
     Sabotage: string;
     Structures: string;
     TileDecorators: string;

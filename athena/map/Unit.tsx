@@ -1,4 +1,5 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { Skill } from '../info/Skill.tsx';
 import {
   Ability,
@@ -18,9 +19,31 @@ import Player, { PlayerID, PlayerIDSet, toPlayerID } from './Player.tsx';
 
 type PlainAmmo = ReadonlyArray<[number, number]>;
 
-export type PlainDryUnit = number | [number, PlainAmmo];
+export type PlainDryUnit =
+  | number
+  | [health: number, ammo: PlainAmmo]
+  | [health: number, ammo: PlainAmmo | null, statusEffect: UnitStatusEffect];
 
 type Ammo = ReadonlyMap<WeaponID, Supply>;
+
+export enum UnitStatusEffect {
+  Poison = 1,
+}
+
+const formatStatusEffect = (statusEffect: UnitStatusEffect | null) => {
+  if (statusEffect) {
+    switch (statusEffect) {
+      case UnitStatusEffect.Poison:
+        return 'Poison';
+      default: {
+        statusEffect satisfies never;
+        throw new UnknownTypeError('formatStatusEffect', statusEffect);
+      }
+    }
+  }
+
+  return null;
+};
 
 export type PlainTransportedUnit = Readonly<
   Omit<PlainEntity, 'f'> & {
@@ -29,6 +52,7 @@ export type PlainTransportedUnit = Readonly<
     g: number;
     m?: 1 | null;
     n?: number | null;
+    s?: UnitStatusEffect | null;
     t?: ReadonlyArray<PlainTransportedUnit> | null;
   }
 >;
@@ -43,6 +67,7 @@ export type PlainUnit = Readonly<
     m?: 1 | null;
     n?: number | null;
     r?: PlayerID | null;
+    s?: UnitStatusEffect | null;
     t?: ReadonlyArray<PlainTransportedUnit> | null;
     u?: 1 | null;
   }
@@ -55,27 +80,42 @@ export class DryUnit {
   constructor(
     public readonly health: number,
     public readonly ammo: Ammo | null,
+    public readonly statusEffect: UnitStatusEffect | null,
   ) {}
 
   static fromJSON(dryUnit: PlainDryUnit): DryUnit {
     if (typeof dryUnit === 'number') {
-      return new DryUnit(dryUnit, null);
+      return new DryUnit(dryUnit, null, null);
     }
-    const [health, ammo] = dryUnit;
-    return new DryUnit(health, ammo ? new Map(ammo) : null);
+    const [health, ammo, statusEffect] = dryUnit;
+    return new DryUnit(
+      health,
+      ammo ? new Map(ammo) : null,
+      statusEffect || null,
+    );
   }
 
   toJSON(): PlainDryUnit {
-    const { ammo: a, health: h } = this;
+    const { ammo: a, health, statusEffect } = this;
     const ammo = a?.size ? [...a] : null;
-    return ammo ? [h, ammo] : h;
+    return statusEffect
+      ? [health, ammo, statusEffect]
+      : ammo
+        ? [health, ammo]
+        : health;
   }
 
   format() {
-    const { ammo: a, health } = this;
-    const ammo = a?.size ? [...a] : null;
+    const { ammo: a, health, statusEffect } = this;
+    const ammo = a?.size ? { ammo: [...a] } : null;
     // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-    return ammo ? { health, ammo } : { health };
+    return {
+      health,
+      ...ammo,
+      ...(statusEffect
+        ? { statusEffect: formatStatusEffect(statusEffect) }
+        : null),
+    };
   }
 }
 
@@ -93,6 +133,7 @@ export class TransportedUnit {
     public readonly label: PlayerID | null,
     private readonly name: number | null,
     private readonly behavior: AIBehavior | null,
+    public readonly statusEffect: UnitStatusEffect | null,
   ) {
     const unitInfo = getUnitInfo(id);
     if (!unitInfo) {
@@ -102,7 +143,7 @@ export class TransportedUnit {
   }
 
   static fromJSON(unit: PlainTransportedUnit): TransportedUnit {
-    const { a, b, g, h, i, l, m, n, p, t } = unit;
+    const { a, b, g, h, i, l, m, n, p, s, t } = unit;
     return new TransportedUnit(
       i,
       h,
@@ -114,6 +155,7 @@ export class TransportedUnit {
       l != null ? toPlayerID(l) : null,
       n ?? null,
       b || null,
+      s || null,
     );
   }
 
@@ -133,6 +175,7 @@ export class TransportedUnit {
       this.label,
       this.name,
       this.behavior,
+      this.statusEffect,
     );
   }
 
@@ -232,6 +275,7 @@ export class TransportedUnit {
       moved,
       name: n,
       player: p,
+      statusEffect: s,
       transports,
     } = this;
     const a = ammo?.size ? [...ammo] : null;
@@ -246,6 +290,7 @@ export class TransportedUnit {
       m: moved ? 1 : null,
       n,
       p,
+      s,
       t,
     });
   }
@@ -260,6 +305,7 @@ export class TransportedUnit {
       label,
       moved,
       player,
+      statusEffect,
       transports: t,
     } = this;
     const ammo = a?.size ? [...a] : null;
@@ -274,6 +320,7 @@ export class TransportedUnit {
       moved,
       name: this.getName(player),
       player,
+      statusEffect: formatStatusEffect(statusEffect),
       transports,
     });
   }
@@ -288,6 +335,7 @@ export class TransportedUnit {
     moved,
     name,
     player,
+    statusEffect,
     transports,
   }: {
     ammo?: Ammo | null;
@@ -299,6 +347,7 @@ export class TransportedUnit {
     moved?: true | null;
     name?: number | null;
     player?: PlayerID;
+    statusEffect?: UnitStatusEffect | null;
     transports?: ReadonlyArray<TransportedUnit> | null;
   }): this {
     return new TransportedUnit(
@@ -312,6 +361,7 @@ export class TransportedUnit {
       label !== undefined ? label : this.label,
       name !== undefined ? name : this.name,
       behavior !== undefined ? behavior : this.behavior,
+      statusEffect !== undefined ? statusEffect : this.statusEffect,
     ) as this;
   }
 }
@@ -334,6 +384,7 @@ export default class Unit extends Entity {
     label: PlayerID | null,
     private readonly name: number | null,
     private readonly behavior: AIBehavior | null,
+    public readonly statusEffect: UnitStatusEffect | null,
   ) {
     super(id, health, player, completed, label);
     const unitInfo = getUnitInfo(id);
@@ -350,7 +401,7 @@ export default class Unit extends Entity {
   }
 
   static fromJSON(unit: PlainUnit): Unit {
-    const { a, b, c, f, g, h, i, l, m, n, p, r, t, u } = unit;
+    const { a, b, c, f, g, h, i, l, m, n, p, r, s, t, u } = unit;
     return new Unit(
       i,
       h,
@@ -366,6 +417,7 @@ export default class Unit extends Entity {
       l != null ? toPlayerID(l) : null,
       n ?? null,
       b || null,
+      s || null,
     );
   }
 
@@ -616,11 +668,12 @@ export default class Unit extends Entity {
       this.label,
       this.name,
       this.behavior,
+      this.statusEffect,
     );
   }
 
   dry(): DryUnit {
-    return new DryUnit(this.health, this.ammo);
+    return new DryUnit(this.health, this.ammo, this.statusEffect);
   }
 
   hasValidBehavior() {
@@ -685,6 +738,16 @@ export default class Unit extends Entity {
       : this;
   }
 
+  setStatusEffect(statusEffect: UnitStatusEffect | null): this {
+    return this.statusEffect !== statusEffect
+      ? this.copy({ statusEffect })
+      : this;
+  }
+
+  removeStatusEffect(): this {
+    return this.statusEffect ? this.copy({ statusEffect: null }) : this;
+  }
+
   ensureValidAttributes() {
     const { info } = this;
     let unit = this;
@@ -744,6 +807,7 @@ export default class Unit extends Entity {
       name: n,
       player: p,
       rescuing: r,
+      statusEffect: s,
       transports,
       unfolded,
     } = this;
@@ -760,6 +824,7 @@ export default class Unit extends Entity {
       n,
       p,
       r: r != null ? r : null,
+      s,
       t: transports ? transports.map((unit) => unit.toJSON()) : null,
       u: unfolded ? 1 : null,
     });
@@ -778,6 +843,7 @@ export default class Unit extends Entity {
       moved,
       player,
       rescuing,
+      statusEffect,
       transports,
       unfolded,
     } = this;
@@ -794,6 +860,7 @@ export default class Unit extends Entity {
       capturing,
       rescuing,
       unfolded,
+      statusEffect: formatStatusEffect(statusEffect),
       completed,
       label,
       behavior,
@@ -814,6 +881,7 @@ export default class Unit extends Entity {
     name,
     player,
     rescuing,
+    statusEffect,
     transports,
     unfolded,
   }: {
@@ -829,6 +897,7 @@ export default class Unit extends Entity {
     name?: number | null;
     player?: PlayerID;
     rescuing?: PlayerID | null;
+    statusEffect?: UnitStatusEffect | null;
     transports?: ReadonlyArray<TransportedUnit> | null;
     unfolded?: true | null;
   }): this {
@@ -847,6 +916,7 @@ export default class Unit extends Entity {
       label !== undefined ? label : this.label,
       name !== undefined ? name : this.name,
       behavior !== undefined ? behavior : this.behavior,
+      statusEffect !== undefined ? statusEffect : this.statusEffect,
     ) as this;
   }
 }

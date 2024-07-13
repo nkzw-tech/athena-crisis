@@ -280,7 +280,7 @@ const PlayerItem = ({
         }
       : null;
     return (
-      <Stack gap={16} nowrap start>
+      <Stack gap nowrap start>
         <Component
           className={itemStyle}
           onClick={!bot ? onClick : undefined}

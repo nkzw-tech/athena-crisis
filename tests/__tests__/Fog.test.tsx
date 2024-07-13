@@ -8,6 +8,7 @@ import { House, HQ } from '@deities/athena/info/Building.tsx';
 import {
   APU,
   Helicopter,
+  Infantry,
   Pioneer,
   Sniper,
   TransportHelicopter,
@@ -17,6 +18,7 @@ import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { Criteria } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
@@ -52,14 +54,13 @@ const map = withModifiers(
   }),
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
-const player2 = map.getPlayer(2);
 
 test('units that will be supplied by a hidden adjacent supply unit are not destroyed on the client', async () => {
   const initialMap: MapData | null = map.copy({
     units: map.units
-      .set(vec(2, 4), Pioneer.create(player1))
-      .set(vec(4, 4), Helicopter.create(player2).setFuel(1))
-      .set(vec(5, 4), TransportHelicopter.create(player2).setFuel(10)),
+      .set(vec(2, 4), Pioneer.create(1))
+      .set(vec(4, 4), Helicopter.create(2).setFuel(1))
+      .set(vec(5, 4), TransportHelicopter.create(2).setFuel(10)),
   });
   const [, gameActionResponse] = executeGameActions(initialMap, [
     EndTurnAction(),
@@ -115,8 +116,8 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
     ),
     units: map.units
       .set(helicopterVec, Helicopter.create(3))
-      .set(vec(5, 5), Pioneer.create(player1).capture())
-      .set(vec(4, 4), Helicopter.create(player2)),
+      .set(vec(5, 5), Pioneer.create(1).capture())
+      .set(vec(4, 4), Helicopter.create(2)),
   });
   const [gameState, gameActionResponse] = executeGameActions(initialMap, [
     CaptureAction(vec(5, 5)),
@@ -201,9 +202,9 @@ test('neutralizes the opponent HQ when it is no longer visible', async () => {
   const to = vec(5, 5);
   const initialMap = map.copy({
     units: map.units
-      .set(vec(1, 1), Pioneer.create(player1))
-      .set(from, Helicopter.create(player2))
-      .set(to, Pioneer.create(player1).setHealth(1)),
+      .set(vec(1, 1), Pioneer.create(1))
+      .set(from, Helicopter.create(2))
+      .set(to, Pioneer.create(1).setHealth(1)),
   });
 
   const [, gameActionResponse] = executeGameActions(initialMap, [
@@ -229,7 +230,7 @@ test('neutralizes the opponent HQ when it is no longer visible', async () => {
 
 test('nearby tiles are always visible regardless of vision cost', () => {
   const initialMap: MapData | null = map.copy({
-    units: map.units.set(vec(3, 1), Sniper.create(player1)),
+    units: map.units.set(vec(3, 1), Sniper.create(1)),
   });
 
   const vision = initialMap.createVisionObject(player1);
@@ -241,7 +242,7 @@ test('nearby tiles are always visible regardless of vision cost', () => {
 
 test(`visible radius doesn't wrap around the map`, async () => {
   const initialMap: MapData | null = map.copy({
-    units: map.units.set(vec(5, 2), APU.create(player1)),
+    units: map.units.set(vec(5, 2), APU.create(1)),
   });
 
   const vision = initialMap.createVisionObject(player1);
@@ -252,9 +253,7 @@ test(`a unit that gets blocked and issues a 'HiddenMove' action is marked as com
   const from = vec(4, 4);
   const to = vec(2, 3);
   const initialMap: MapData | null = map.copy({
-    units: map.units
-      .set(to, Pioneer.create(player1))
-      .set(from, Helicopter.create(player2)),
+    units: map.units.set(to, Pioneer.create(1)).set(from, Helicopter.create(2)),
   });
   const [, gameActionResponse] = executeGameActions(initialMap, [
     EndTurnAction(),
@@ -274,4 +273,43 @@ test(`a unit that gets blocked and issues a 'HiddenMove' action is marked as com
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       HiddenMove { path: [4,4 → 3,4 → 2,4], completed: true, fuel: 37, unit: Helicopter { id: 9, health: 100, player: 2, fuel: 39, ammo: [ [ 1, 8 ] ] } }"
     `);
+});
+
+test(`hidden labels are dropped from buildings and units`, async () => {
+  const from = vec(2, 2);
+  const to = vec(3, 3);
+  const vecA = vec(4, 3);
+  const vecB = vec(3, 4);
+  const initialMap: MapData | null = map.copy({
+    buildings: map.buildings.set(vecB, House.create(2, { label: 2 })),
+    config: map.config.copy({
+      objectives: map.config.objectives
+        .set(1, {
+          hidden: true,
+          label: new Set([2]),
+          optional: false,
+          type: Criteria.CaptureLabel,
+        })
+        .set(2, {
+          hidden: true,
+          label: new Set([2]),
+          optional: false,
+          type: Criteria.DefeatLabel,
+        }),
+    }),
+    units: map.units
+      .set(from, Infantry.create(1))
+      .set(vecA, Helicopter.create(2, { label: 2 })),
+  });
+  const [, gameActionResponse] = executeGameActions(initialMap, [
+    MoveAction(from, to),
+  ]);
+  const screenshot = await captureGameActionResponse(
+    initialMap,
+    gameActionResponse,
+    player1.userId,
+  );
+
+  printGameState('Last State', screenshot);
+  expect(screenshot).toMatchImageSnapshot();
 });

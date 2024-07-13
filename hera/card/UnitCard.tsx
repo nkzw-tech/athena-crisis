@@ -53,6 +53,7 @@ import DropUnit from '@deities/ui/icons/DropUnit.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
+import Poison from '@deities/ui/icons/Poison.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Sabotage from '@deities/ui/icons/Sabotage.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
@@ -64,9 +65,11 @@ import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
+import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
+import Volume from '@iconify-icons/pixelarticons/volume-3.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
@@ -426,7 +429,7 @@ export default memo(function UnitCard({
           )}
         </AttributeGridBox>
         {!unit.info.canAct(currentPlayer) && (
-          <Stack alignCenter gap={4} nowrap start>
+          <Stack alignCenter gap nowrap start>
             <Icon className={errorStyle} icon={WarningBox} />
             <p className={errorStyle}>
               <fbt desc="Label for a unit that can only move or attack">
@@ -489,7 +492,7 @@ const Weapon = memo(function WeaponAttack({
     allSkills,
   );
   const isLeader = unit.isLeader();
-  const attackStatusEffect = getAttackStatusEffect(map, unit, tile);
+  const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
   const damageRange = getAttributeRange(
     [...weapon.damage],
     ([, damage]) => damage,
@@ -519,7 +522,7 @@ const Weapon = memo(function WeaponAttack({
         map,
         vector,
         vector,
-        getAttackStatusEffect(map, unit, tile),
+        getAttackStatusEffect(map, unit, vector, tile),
         getDefenseStatusEffect(map, entityB, null),
         1,
         weapon,
@@ -578,7 +581,7 @@ const Weapon = memo(function WeaponAttack({
 
             return unitGroups.length ? (
               <TileBox key={strength}>
-                {strength === 1 ? (
+                {strength <= 1 ? (
                   <fbt desc="Label for attack strength">Weak</fbt>
                 ) : strength === 2 ? (
                   <fbt desc="Label for attack strength">Marginal</fbt>
@@ -716,6 +719,12 @@ const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
                   <fbt desc="Unit capture ability">Capture</fbt>
                 </UnitAbility>
               );
+            case Ability.Convert:
+              return (
+                <UnitAbility ability={ability} icon={Repeat} key={ability}>
+                  <fbt desc="Unit convert ability">Convert</fbt>
+                </UnitAbility>
+              );
             case Ability.CreateBuildings:
               return (
                 <UnitAbility ability={ability} icon={Buildings} key={ability}>
@@ -736,6 +745,18 @@ const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
               return (
                 <UnitAbility ability={ability} icon={Heart} key={ability}>
                   <fbt desc="Unit heal ability">Heal</fbt>
+                </UnitAbility>
+              );
+            case Ability.Morale:
+              return (
+                <UnitAbility ability={ability} icon={Volume} key={ability}>
+                  <fbt desc="Unit morale ability">Morale Boost</fbt>
+                </UnitAbility>
+              );
+            case Ability.Poison:
+              return (
+                <UnitAbility ability={ability} icon={Poison} key={ability}>
+                  <fbt desc="Unit poison ability">Poison</fbt>
                 </UnitAbility>
               );
             case Ability.Rescue:
@@ -865,29 +886,31 @@ const UnitMovement = memo(function UnitMovement({
   return (
     <Stack gap vertical>
       <CardInfoHeading style={{ color: getColor(player) }}>
-        <fbt desc="Headline for movement information">
-          Movement:{' '}
-          <fbt:param name="movement-type">{movementType.name}</fbt:param>
-        </fbt>
+        <fbt desc="Headline for movement costs">Movement Costs</fbt>
       </CardInfoHeading>
-      <Stack gap start>
-        {tileList?.map(([cost, tiles]) => (
-          <MovementBox
-            biome={biome}
-            cost={cost}
-            key={cost}
-            size={
-              tiles.some((tile) => tileFieldHasDecorator(tile.id, biome))
-                ? 'medium'
-                : undefined
-            }
-            tiles={tiles}
-          />
-        )) || (
-          <fbt desc="Text for no movement restriction">
-            No movement restrictions.
-          </fbt>
-        )}
+      <Stack gap={16} vertical>
+        <fbt desc="Label for movement type">
+          Type: <fbt:param name="movementType">{movementType.name}</fbt:param>
+        </fbt>
+        <Stack gap start>
+          {tileList?.map(([cost, tiles]) => (
+            <MovementBox
+              biome={biome}
+              cost={cost}
+              key={cost}
+              size={
+                tiles.some((tile) => tileFieldHasDecorator(tile.id, biome))
+                  ? 'medium'
+                  : undefined
+              }
+              tiles={tiles}
+            />
+          )) || (
+            <fbt desc="Text for no movement restriction">
+              No movement restrictions.
+            </fbt>
+          )}
+        </Stack>
       </Stack>
     </Stack>
   );
@@ -904,6 +927,7 @@ const iconStyle = css`
 
 const tagStyle = css`
   ${clipBorder(2)}
+
   padding: 3px 6px 4px;
   width: fit-content;
 `;

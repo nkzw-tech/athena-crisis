@@ -4,6 +4,7 @@ import getNextObjectiveId from '@deities/athena/lib/getNextObjectiveId.tsx';
 import {
   Criteria,
   CriteriaList,
+  CriteriaListWithoutDefault,
   getInitialObjective,
   Objective,
   objectiveHasVectors,
@@ -16,6 +17,7 @@ import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import Select from '@deities/ui/Select.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -67,20 +69,26 @@ const maybeSwapEffect = (
   existingObjective: Objective,
   index: number,
   setEditorState: SetEditorStateFunction,
+  isAdmin?: boolean,
 ) => {
   if (
     objective.type === Criteria.Default ||
     existingObjective.type === Criteria.Default ||
     existingObjective.optional === objective.optional
   ) {
-    return;
+    return objective;
   }
 
   const trigger = existingObjective.optional ? 'OptionalObjective' : 'GameEnd';
   const newTrigger = trigger === 'GameEnd' ? 'OptionalObjective' : 'GameEnd';
   const list = effects.get(trigger);
+
+  if (newTrigger === 'GameEnd' && objective.reward) {
+    objective = { ...objective, reward: undefined };
+  }
+
   if (!list) {
-    return;
+    return objective;
   }
 
   const partition = groupBy(list, ({ conditions }) =>
@@ -118,6 +126,8 @@ const maybeSwapEffect = (
   setEditorState({
     effects: newEffects,
   });
+
+  return objective;
 };
 
 export default function ObjectivePanel({
@@ -129,6 +139,7 @@ export default function ObjectivePanel({
   mapId,
   setEditorState,
   state,
+  tags,
   user,
 }: StateWithActions & {
   campaignEdges: CampaignEdge['edges'] | undefined;
@@ -137,6 +148,7 @@ export default function ObjectivePanel({
   isAdmin?: boolean;
   mapId: string | undefined;
   setEditorState: SetEditorStateFunction;
+  tags: ReadonlyArray<string>;
   user: UserWithFactionNameAndSkills;
 }) {
   const { map } = state;
@@ -166,49 +178,64 @@ export default function ObjectivePanel({
     [campaignEdges, mapId],
   );
 
-  const hasDefault = objectives.some(({ type }) => type === Criteria.Default);
+  const updateObjective = useCallback(
+    (id: ObjectiveID, objective: Objective | null) => {
+      const existingObjective = objectives.get(id);
+      if (!existingObjective) {
+        return;
+      }
 
-  const updateObjective = (id: ObjectiveID, objective: Objective | null) => {
-    const existingObjective = objectives.get(id);
-    if (!existingObjective) {
-      return;
-    }
-
-    if (!objective) {
-      maybeRemoveEffect(editor.effects, existingObjective, id, setEditorState);
-      actions.update({
-        map: map.copy({
-          config: map.config.copy({
-            objectives:
-              objectives.size === 1
-                ? ImmutableMap([
-                    [0, getInitialObjective(map, Criteria.Default)],
-                  ])
-                : objectives.delete(id),
+      if (!objective) {
+        maybeRemoveEffect(
+          editor.effects,
+          existingObjective,
+          id,
+          setEditorState,
+        );
+        actions.update({
+          map: map.copy({
+            config: map.config.copy({
+              objectives:
+                objectives.size === 1
+                  ? ImmutableMap([
+                      [0, getInitialObjective(map, Criteria.Default)],
+                    ])
+                  : objectives.delete(id),
+            }),
           }),
-        }),
-      });
-      return;
-    }
+        });
+        return;
+      }
 
-    if (validate(objective)) {
-      maybeSwapEffect(
-        editor.effects,
-        objective,
-        existingObjective,
-        id,
-        setEditorState,
-      );
+      if (validate(objective)) {
+        objective = maybeSwapEffect(
+          editor.effects,
+          objective,
+          existingObjective,
+          id,
+          setEditorState,
+          isAdmin,
+        );
 
-      actions.update({
-        map: map.copy({
-          config: map.config.copy({
-            objectives: objectives.set(id, objective),
+        actions.update({
+          map: map.copy({
+            config: map.config.copy({
+              objectives: objectives.set(id, objective),
+            }),
           }),
-        }),
-      });
-    }
-  };
+        });
+      }
+    },
+    [
+      actions,
+      editor.effects,
+      isAdmin,
+      map,
+      objectives,
+      setEditorState,
+      validate,
+    ],
+  );
 
   if (editor?.objective) {
     return (
@@ -231,7 +258,7 @@ export default function ObjectivePanel({
   }
 
   return (
-    <Stack gap={24} vertical verticalPadding>
+    <Stack className={paddingStyle} gap={24} vertical>
       {[
         ...objectives
           .map((objective, id) => (
@@ -261,19 +288,22 @@ export default function ObjectivePanel({
                   });
                 }
               }}
+              tags={tags}
               user={user}
               validate={validate}
             />
           ))
           .values(),
       ]}
-      <Box gap={16} vertical>
-        <h2>
+      <Select
+        selectedItem={
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
-        </h2>
-        <Stack gap vertical>
-          {CriteriaList.filter(
-            (type) => type !== Criteria.Default || !hasDefault,
+        }
+      >
+        <Stack gap={4} vertical>
+          {(objectives.some(({ type }) => type === Criteria.Default)
+            ? CriteriaListWithoutDefault
+            : CriteriaList
           ).map((type, index) => (
             <InlineLink
               className={linkStyle}
@@ -297,11 +327,15 @@ export default function ObjectivePanel({
             </InlineLink>
           ))}
         </Stack>
-      </Box>
+      </Select>
     </Stack>
   );
 }
 
 const linkStyle = css`
-  width: fit-content;
+  padding: 8px;
+`;
+
+const paddingStyle = css`
+  padding: 24px 0 520px;
 `;

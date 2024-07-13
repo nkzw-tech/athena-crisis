@@ -112,7 +112,7 @@ const AttackRadiusButton = ({
     }
   }, [behavior?.type, fields, playerCanEndTurn, update]);
 
-  useInput('quaternary', show);
+  useInput('tertiary', show);
 
   return (
     <MenuButton className={cx(actionButtonStyle, attackRadiusButtonStyle)}>
@@ -277,16 +277,12 @@ const EndTurnButton = ({
   canEndTurn: boolean;
   subscribe?: (map: MapData) => Promise<void>;
 }) => {
-  const { fastForward, scrollIntoView, update } = actions;
+  const { scrollIntoView, update } = actions;
   const { currentViewer, lastActionResponse, map, vision } = state;
   const [endTurnIsExpanded, setEndTurnIsExpanded] = useState<boolean>(false);
   const [cooldown, setCooldown] = useState(false);
   const timerRef = useRef<TimerID>();
   const highlightTimerRef = useRef<TimerID>();
-  const fastForwardTimer = useRef<TimerID>();
-  const [releaseFastForward, setReleaseFastForward] = useState<
-    (() => void) | undefined
-  >(undefined);
 
   useEffect(() => {
     if (cooldown) {
@@ -311,7 +307,7 @@ const EndTurnButton = ({
 
   const endTurn = useCallback(
     async (event: MouseEvent<SVGElement> | CustomEvent<number>) => {
-      if (!canEndTurn || releaseFastForward) {
+      if (!canEndTurn) {
         return;
       }
 
@@ -363,7 +359,6 @@ const EndTurnButton = ({
     },
     [
       canEndTurn,
-      releaseFastForward,
       cooldown,
       endTurnIsExpanded,
       fastEndTurn,
@@ -375,30 +370,6 @@ const EndTurnButton = ({
       scrollIntoView,
     ],
   );
-
-  const onPointerDown = useCallback(() => {
-    clearTimeout(fastForwardTimer.current);
-    fastForwardTimer.current = setTimeout(() => {
-      if (!canEndTurn && !releaseFastForward) {
-        setReleaseFastForward(fastForward);
-      }
-    }, 200);
-  }, [canEndTurn, fastForward, releaseFastForward]);
-
-  const onReleaseFastForward = useCallback(() => {
-    clearTimeout(fastForwardTimer.current);
-    if (releaseFastForward) {
-      releaseFastForward();
-      // Wait until after the click event fires.
-      setTimeout(() => setReleaseFastForward(undefined), 100);
-    }
-  }, [releaseFastForward]);
-
-  useEffect(() => {
-    document.addEventListener('pointerup', onReleaseFastForward);
-    return () =>
-      document.removeEventListener('pointerup', onReleaseFastForward);
-  }, [onReleaseFastForward]);
 
   useEffect(() => {
     if (endTurnIsExpanded) {
@@ -464,7 +435,7 @@ const EndTurnButton = ({
         button
         className={cx(
           iconStyle,
-          (!canEndTurn || releaseFastForward) && disabledButtonStyle,
+          !canEndTurn && disabledButtonStyle,
           !!(
             map.round === 1 &&
             fastEndTurn &&
@@ -475,7 +446,6 @@ const EndTurnButton = ({
         horizontalFlip
         icon={EndTurn}
         onClick={endTurn}
-        onPointerDown={onPointerDown}
       />
     </MenuButton>
   );

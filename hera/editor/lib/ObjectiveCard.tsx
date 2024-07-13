@@ -48,6 +48,7 @@ export default function ObjectiveCard({
   onChange,
   selectEffect,
   selectLocation,
+  tags,
   user,
   validate,
 }: {
@@ -61,6 +62,7 @@ export default function ObjectiveCard({
   onChange: (objective: Objective | null) => void;
   selectEffect: () => void;
   selectLocation: () => void;
+  tags: ReadonlyArray<string>;
   user: UserWithFactionNameAndSkills;
   validate: (objective: Objective) => boolean;
 }) {
@@ -122,7 +124,9 @@ export default function ObjectiveCard({
     });
   }, [alert, campaigns, canDelete, onChange]);
 
-  const hasPlayers = objective.type !== Criteria.Default;
+  const isDefaultObjective = objective.type === Criteria.Default;
+  const hasPlayers = !isDefaultObjective;
+  const isOptional = !isDefaultObjective && objective.optional;
   const hasLabel = objectiveHasLabel(objective);
   const { reward } = objective;
   const selectedUnit = reward?.type === 'UnitPortraits' ? reward.unit : null;
@@ -282,7 +286,7 @@ export default function ObjectiveCard({
               </p>
             )}
           </Stack>
-          {objective.type !== Criteria.Default && (
+          {!isDefaultObjective && (
             <Stack gap>
               <label>
                 <Stack gap start>
@@ -292,7 +296,7 @@ export default function ObjectiveCard({
                     </fbt>
                   </span>
                   <input
-                    checked={objective.optional}
+                    checked={isOptional}
                     onChange={(event) =>
                       onChange({
                         ...objective,
@@ -303,7 +307,7 @@ export default function ObjectiveCard({
                   />
                 </Stack>
               </label>
-              {objective.optional && (
+              {isOptional && (
                 <p className={lightStyle}>
                   <fbt desc="Description for optional objectives">
                     Achieving optional objectives does not end the game.
@@ -312,74 +316,80 @@ export default function ObjectiveCard({
               )}
             </Stack>
           )}
-          <Stack gap={16} vertical>
-            <Stack alignCenter gap start>
-              <span className={labelWidthStyle}>
-                <fbt desc="Label for objective reward">Reward</fbt>
-              </span>
-              <Stack alignCenter gap={16} start>
-                <SkillSelector
-                  availableSkills={Skills}
-                  currentSkill={reward?.type === 'Skill' ? reward.skill : null}
-                  onSelect={(skill) =>
-                    onChange({
-                      ...objective,
-                      reward: skill ? { skill, type: 'Skill' } : undefined,
-                    })
-                  }
-                />
-                {isAdmin && (
-                  <UnitSelector
-                    border
-                    hasContentRestrictions={hasContentRestrictions}
-                    highlight={!!selectedUnit}
-                    isVisible
-                    onSelect={(unit) =>
+          {(isAdmin || isOptional) && (
+            <Stack gap={16} vertical>
+              <Stack alignCenter gap start>
+                <span className={labelWidthStyle}>
+                  <fbt desc="Label for objective reward">Reward</fbt>
+                </span>
+                <Stack alignCenter gap={16} start>
+                  <SkillSelector
+                    availableSkills={Skills}
+                    currentSkill={
+                      reward?.type === 'Skill' ? reward.skill : null
+                    }
+                    onSelect={(skill) =>
                       onChange({
                         ...objective,
-                        reward: { type: 'UnitPortraits', unit },
+                        reward: skill ? { skill, type: 'Skill' } : undefined,
                       })
                     }
-                    selectedPlayer="self"
-                    selectedUnit={selectedUnit}
-                    user={user}
-                    width="auto"
                   />
-                )}
-                {reward && (
-                  <Icon
-                    button
-                    className={iconStyle}
-                    icon={Close}
-                    onClick={() =>
-                      onChange({ ...objective, reward: undefined })
-                    }
-                  />
-                )}
+                  {isAdmin && (
+                    <UnitSelector
+                      border
+                      hasContentRestrictions={hasContentRestrictions}
+                      highlight={!!selectedUnit}
+                      isVisible
+                      onSelect={(unit) =>
+                        onChange({
+                          ...objective,
+                          reward: { type: 'UnitPortraits', unit },
+                        })
+                      }
+                      selectedPlayer="self"
+                      selectedUnit={selectedUnit}
+                      user={user}
+                      width="auto"
+                    />
+                  )}
+                  {reward && (
+                    <Icon
+                      button
+                      className={iconStyle}
+                      icon={Close}
+                      onClick={() =>
+                        onChange({ ...objective, reward: undefined })
+                      }
+                    />
+                  )}
+                </Stack>
               </Stack>
+              {reward && (
+                <p className={noteBoxStyle}>
+                  {objective.type === Criteria.Default ? (
+                    <fbt desc="Explanation in the map editor of how rewards work for the default objective">
+                      Players receive the reward for the default objective if
+                      they win in any way.
+                    </fbt>
+                  ) : (
+                    <fbt desc="Explanation in the map editor for how rewards work">
+                      Players receive the reward if they achieve this objective.
+                    </fbt>
+                  )}{' '}
+                  {!tags.includes('reward') && (
+                    <fbt desc="Reward tags">
+                      To permanently receive the reward, the map must have the
+                      <fbt:param name="tag">
+                        <Tag tag="reward" />
+                      </fbt:param>{' '}
+                      tag which can only be added by an Athena Crisis admin.
+                    </fbt>
+                  )}
+                </p>
+              )}
             </Stack>
-            {reward && (
-              <p className={noteBoxStyle}>
-                {objective.type === Criteria.Default ? (
-                  <fbt desc="Explanation in the map editor of how rewards work for the default objective">
-                    Players receive the reward for the default objective if they
-                    win in any way.
-                  </fbt>
-                ) : (
-                  <fbt desc="Explanation in the map editor for how rewards work">
-                    Players receive the reward if they achieve this objective.
-                  </fbt>
-                )}{' '}
-                <fbt desc="Reward tags">
-                  The map must have the
-                  <fbt:param name="tag">
-                    <Tag tag="reward" />
-                  </fbt:param>{' '}
-                  tag which can only be added by an Athena Crisis admin.
-                </fbt>
-              </p>
-            )}
-          </Stack>
+          )}
           <Stack reverse>
             <InlineLink onClick={selectEffect}>
               {

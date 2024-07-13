@@ -43,7 +43,7 @@ import {
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import { Teams } from '@deities/athena/map/Team.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
@@ -316,13 +316,17 @@ function _attackUnit(
           (map.buildings.has(vectorA) ? BuildingCover : 0),
         tileInfoB.configuration.cover +
           (map.buildings.has(vectorB) ? BuildingCover : 0),
-        getAttackStatusEffect(map, unitA, tileInfoA),
+        getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
         getDefenseStatusEffect(map, unitB, tileInfoB),
         luck,
       ) * modifier,
     ),
   );
-  return [unitA.subtractAmmo(weapon), unitB.modifyHealth(-damage)];
+  unitB = unitB.modifyHealth(-damage);
+  if (unitA.info.hasAbility(Ability.Poison)) {
+    unitB = unitB.setStatusEffect(UnitStatusEffect.Poison);
+  }
+  return [unitA.subtractAmmo(weapon), unitB];
 }
 
 function _attackBuilding(
@@ -344,7 +348,7 @@ function _attackBuilding(
       tileInfoA.configuration.cover +
         (map.buildings.has(vectorA) ? BuildingCover : 0),
       tileInfoB.configuration.cover + BuildingCover,
-      getAttackStatusEffect(map, unitA, tileInfoA),
+      getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
       getDefenseStatusEffect(map, buildingB, tileInfoB),
       luck,
     ),

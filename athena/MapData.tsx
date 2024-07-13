@@ -9,14 +9,15 @@ import {
   TileInfo,
   TileLayer,
 } from './info/Tile.tsx';
+import applyBeginTurnStatusEffects from './lib/applyBeginTurnStatusEffects.tsx';
 import getAllUnitsToRefill from './lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from './lib/getUnitsByPositions.tsx';
 import indexToSpriteVector from './lib/indexToSpriteVector.tsx';
 import indexToVector from './lib/indexToVector.tsx';
-import isFuelConsumingUnit from './lib/isFuelConsumingUnit.tsx';
 import { Modifier } from './lib/Modifier.tsx';
 import refillUnits from './lib/refillUnits.tsx';
 import shouldRemoveUnit from './lib/shouldRemoveUnit.tsx';
+import subtractFuel from './lib/subtractFuel.tsx';
 import { Biome } from './map/Biome.tsx';
 import Building from './map/Building.tsx';
 import { DecoratorsPerSide } from './map/Configuration.tsx';
@@ -29,6 +30,7 @@ import Player, {
   toPlayerID,
   toPlayerIDs,
 } from './map/Player.tsx';
+import { PerformanceExpectation } from './map/PlayerPerformance.tsx';
 import {
   decodeBuildings,
   decodeDecorators,
@@ -90,6 +92,7 @@ export class MapConfig {
     public readonly fog: boolean,
     public readonly biome: Biome,
     public readonly objectives: Objectives,
+    public readonly performance: PerformanceExpectation,
   ) {}
 
   copy({
@@ -100,6 +103,7 @@ export class MapConfig {
     fog,
     multiplier,
     objectives,
+    performance,
     seedCapital,
   }: Partial<MapConfig>) {
     return new MapConfig(
@@ -111,6 +115,7 @@ export class MapConfig {
       fog ?? this.fog,
       biome ?? this.biome,
       objectives ?? this.objectives,
+      performance ?? this.performance,
     );
   }
 
@@ -123,6 +128,7 @@ export class MapConfig {
       fog,
       multiplier,
       objectives,
+      performance,
       seedCapital,
     } = this;
     return {
@@ -133,6 +139,7 @@ export class MapConfig {
       fog,
       multiplier,
       objectives: encodeObjectives(objectives),
+      performance: [performance.pace, performance.power, performance.style],
       seedCapital,
     };
   }
@@ -379,7 +386,7 @@ export default class MapData {
   }
 
   refill(player: Player, extraPositions?: ReadonlyArray<Vector>) {
-    let map = this.subtractFuel(player);
+    let map = applyBeginTurnStatusEffects(subtractFuel(this, player), player);
     const units = getAllUnitsToRefill(map, new Vision(player.id), player);
     map = refillUnits(
       map,
@@ -391,17 +398,6 @@ export default class MapData {
     return map.copy({
       units: map.units.filter(
         (unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id),
-      ),
-    });
-  }
-
-  subtractFuel(player: PlayerOrPlayerID, amount = -1) {
-    return this.copy({
-      units: this.units.map((unit, vector) =>
-        this.matchesPlayer(player, unit) &&
-        isFuelConsumingUnit(unit, this.getTileInfo(vector))
-          ? unit.modifyFuel(amount)
-          : unit,
       ),
     });
   }
@@ -571,24 +567,32 @@ export default class MapData {
   }
 
   static fromObject(data: PlainMap) {
+    const { config } = data;
     const size = new SizeVector(data.size.width, data.size.height);
     return new MapData(
       data.map,
       data.modifiers,
       decodeDecorators(size, data.decorators),
       new MapConfig(
-        data.config.multiplier,
-        data.config.seedCapital,
-        new Set(data.config.blocklistedBuildings),
-        new Set(data.config.blocklistedSkills),
-        new Set(data.config.blocklistedUnits),
-        data.config.fog,
-        data.config.biome,
-        data.config.objectives
-          ? decodeObjectives(data.config.objectives)
-          : data.config.winConditions
-            ? decodeLegacyWinConditions(data.config.winConditions)
+        config.multiplier,
+        config.seedCapital,
+        new Set(config.blocklistedBuildings),
+        new Set(config.blocklistedSkills),
+        new Set(config.blocklistedUnits),
+        config.fog,
+        config.biome,
+        config.objectives
+          ? decodeObjectives(config.objectives)
+          : config.winConditions
+            ? decodeLegacyWinConditions(config.winConditions)
             : ImmutableMap([[0, { hidden: false, type: Criteria.Default }]]),
+        config.performance
+          ? {
+              pace: config.performance[0] || null,
+              power: config.performance[1] || null,
+              style: config.performance[2] || null,
+            }
+          : { pace: null, power: null, style: null },
       ),
       size,
       toPlayerID(data.currentPlayer),

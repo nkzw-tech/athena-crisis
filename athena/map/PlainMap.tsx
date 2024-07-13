@@ -3,6 +3,7 @@ import { ModifierMap, TileMap } from '../MapData.tsx';
 import { PlainObjective, PlainObjectives } from '../Objectives.tsx';
 import { Biome } from './Biome.tsx';
 import { PlainBuilding } from './Building.tsx';
+import { PerformanceStyle } from './PlayerPerformance.tsx';
 import { PlainTeams } from './Team.tsx';
 import { PlainUnit } from './Unit.tsx';
 
@@ -20,6 +21,11 @@ export type PlainMapConfig = Readonly<{
   fog: boolean;
   multiplier: number;
   objectives?: PlainObjectives;
+  performance?: [
+    pace: number | null,
+    power: number | null,
+    style: PerformanceStyle | null,
+  ];
   seedCapital: number;
   winConditions?: LegacyWinConditions;
 }>;

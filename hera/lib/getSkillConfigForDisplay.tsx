@@ -4,6 +4,7 @@ import { BaseColor } from '@deities/ui/getColor.tsx';
 import { SVGIcon } from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
+import Medal from '@deities/ui/icons/Medal.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
@@ -15,6 +16,7 @@ import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Loader from '@iconify-icons/pixelarticons/loader.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
+import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
 import { fbt } from 'fbt';
 
@@ -97,7 +99,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'move',
         colors: 'orange',
-        icon: Crosshair,
+        icon: Ship,
         name: fbt('Hit Hard, Hit Fast, Hit Often', 'Skill name'),
       };
     case Skill.UnitAPUAttackIncreaseMajorPower:
@@ -203,6 +205,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: ['green', 'cyan'],
         icon: Skull,
         name: fbt('Determined Termination', 'Skill name'),
+      };
+    case Skill.BuyUnitCommander:
+      return {
+        alpha: 0.35,
+        borderStyle: 'coin',
+        colors: ['purple', 'red'],
+        icon: Medal,
+        name: fbt('Commanding Force', 'Skill name'),
       };
     default: {
       skill satisfies never;

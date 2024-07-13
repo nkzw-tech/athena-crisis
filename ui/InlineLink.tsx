@@ -22,6 +22,7 @@ export const InlineLinkColor = 'InlineLink-color';
 
 type InlineLinkProps = Readonly<{
   active?: boolean;
+  alignCenter?: true;
   className?: string;
   gap?: Gap;
   hover?: boolean;
@@ -38,6 +39,7 @@ type InlineLinkProps = Readonly<{
 
 export const useInlineLink = ({
   active, // Do not pass `active` to the link element.
+  alignCenter,
   className: initialClassName,
   gap: _gap,
   hover,
@@ -54,6 +56,7 @@ export const useInlineLink = ({
     hover && 'hover',
     selected && 'selected',
     selectedText && 'selected-text',
+    alignCenter && alignCenterStyle,
   );
   const gap = _gap === true ? defaultGap : _gap;
 
@@ -164,6 +167,10 @@ const linkStyle = css`
       filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.3));
     }
   }
+`;
+
+const alignCenterStyle = css`
+  align-items: center;
 `;
 
 export const KeyboardShortcut = ({

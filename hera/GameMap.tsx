@@ -16,10 +16,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
   DoubleSize,
-  FastAnimationConfig,
-  MaxHealth,
   MaxSize,
-  SlowAnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import {
@@ -42,12 +39,8 @@ import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { ScrollRestore } from '@deities/ui/hooks/useScrollRestore.tsx';
-import Icon from '@deities/ui/Icon.tsx';
-import Heart from '@deities/ui/icons/Heart.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
@@ -58,7 +51,6 @@ import React, {
   PointerEvent as ReactPointerEvent,
 } from 'react';
 import processActionResponses from './action-response/processActionResponse.tsx';
-import getHealthColor from './behavior/attack/getHealthColor.tsx';
 import BaseBehavior from './behavior/Base.tsx';
 import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
@@ -68,6 +60,7 @@ import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import ActionError from './lib/ActionError.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
+import getCurrentAnimationConfig from './lib/getCurrentAnimationConfig.tsx';
 import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
@@ -79,7 +72,7 @@ import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
-  AnimationConfigs,
+  AnimationSpeed,
   GameInfoState,
   GetLayerFunction,
   MapBehavior,
@@ -90,9 +83,9 @@ import {
   TimerID,
   TimerState,
 } from './Types.tsx';
-import FlashFlyout from './ui/FlashFlyout.tsx';
-import { FlyoutItem } from './ui/Flyout.tsx';
 import GameDialog from './ui/GameDialog.tsx';
+import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
+import NamedPosition from './ui/NamedPosition.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -234,6 +227,7 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout,
     unitSize,
+    userDisplayName,
   } = props;
   const isEditor = !!editor;
   const currentViewer = map.getPlayerByUserId(currentUserId)?.id || null;
@@ -249,10 +243,10 @@ const getInitialState = (props: Props) => {
   const vision = getVision(map, currentViewer, spectatorCodes);
   const newState = {
     additionalRadius: null,
-    animationConfig:
-      (Array.isArray(props.animationConfig)
-        ? props.animationConfig[map.getCurrentPlayer().isHumanPlayer() ? 1 : 0]
-        : props.animationConfig) || AnimationConfig,
+    animationConfig: getCurrentAnimationConfig(
+      map.getCurrentPlayer(),
+      props.animationSpeed,
+    ),
     animations: ImmutableMap() as Animations,
     attackable: null,
     behavior,
@@ -292,6 +286,7 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout: timeout || null,
     unitSize,
+    userDisplayName,
     vision,
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
@@ -320,9 +315,8 @@ export default class GameMap extends Component<Props, State> {
 
   private _actionQueue: Promise<void> | null = null;
   private _actions: Actions;
-  private _animationConfigs: AnimationConfigs;
+  private _animationSpeed: AnimationSpeed;
   private _controlListeners: Array<() => void> = [];
-  private _isFastForward = { current: false };
   private _isTouch = { current: false };
   private _lastEnteredPosition: Vector | null = null;
   private _liveTimer: NativeTimeout = null;
@@ -345,21 +339,15 @@ export default class GameMap extends Component<Props, State> {
     super(props);
 
     this.state = getInitialState(props);
-    const animationConfig = props.animationConfig as AnimationConfig;
-    this._animationConfigs = Array.isArray(props.animationConfig)
-      ? (props.animationConfig as AnimationConfigs)
-      : [
-          animationConfig || AnimationConfig,
-          animationConfig || AnimationConfig,
-          animationConfig || FastAnimationConfig,
-          animationConfig || FastAnimationConfig,
-        ];
+    this._animationSpeed = props.animationSpeed || {
+      human: AnimationConfig,
+      regular: AnimationConfig,
+    };
     this._timers = new Set();
     this._resolvers = [];
     this._actions = {
       action: this._action,
       clearTimer: this._clearTimer,
-      fastForward: this._fastForward,
       optimisticAction: this._optimisticAction,
       pauseReplay: this._pauseReplay,
       processGameActionResponse: this.processGameActionResponse,
@@ -521,30 +509,6 @@ export default class GameMap extends Component<Props, State> {
       ),
     ];
 
-    if (!this.props.editor) {
-      this._controlListeners.push(
-        Input.register('tertiary', this._fastForward),
-        Input.register('tertiary:released', this._releaseFastForward),
-        Input.register('slow', () => {
-          if (this.state.animationConfig !== SlowAnimationConfig) {
-            this.setState({
-              animationConfig: SlowAnimationConfig,
-            });
-          }
-        }),
-        Input.register('slow:released', () => {
-          if (this.state.animationConfig === SlowAnimationConfig) {
-            const isHumanPlayer = this.state.map
-              .getCurrentPlayer()
-              .isHumanPlayer();
-            this.setState({
-              animationConfig: this._animationConfigs[isHumanPlayer ? 1 : 0],
-            });
-          }
-        }),
-      );
-    }
-
     document.addEventListener('pointermove', this._pointerMove);
     document.addEventListener('mousedown', this._mouseDown);
     document.addEventListener('mouseup', this._mouseUp);
@@ -617,7 +581,6 @@ export default class GameMap extends Component<Props, State> {
     if (this._pointerEnabled) {
       this._pointerEnabled = false;
       this._maskRef.current?.classList.remove(MaskPointerClassName);
-      this._wrapperRef.current?.classList.add('pointerNone');
     }
   };
 
@@ -625,7 +588,6 @@ export default class GameMap extends Component<Props, State> {
     if (!this._pointerEnabled) {
       this._pointerEnabled = true;
       this._maskRef.current?.classList.add(MaskPointerClassName);
-      this._wrapperRef.current?.classList.remove('pointerNone');
     }
   };
 
@@ -1078,9 +1040,10 @@ export default class GameMap extends Component<Props, State> {
       this.setState(
         {
           ...this._resetGameInfoState(),
-          animationConfig: this._isFastForward.current
-            ? this.state.animationConfig
-            : this._animationConfigs[currentPlayer.isHumanPlayer() ? 1 : 0],
+          animationConfig: getCurrentAnimationConfig(
+            currentPlayer,
+            this._animationSpeed,
+          ),
           preventRemoteActions: true,
           replayState: {
             isLive,
@@ -1098,8 +1061,7 @@ export default class GameMap extends Component<Props, State> {
               this.state,
               this._actions,
               gameActionResponses,
-              this._animationConfigs,
-              this._isFastForward,
+              this._animationSpeed,
               this.props.playerHasReward || (() => false),
             );
           } catch (error) {
@@ -1126,9 +1088,10 @@ export default class GameMap extends Component<Props, State> {
           this.setState(
             {
               ...(resetBehavior(this.props.behavior) as State),
-              animationConfig: this._isFastForward.current
-                ? this.state.animationConfig
-                : this._animationConfigs[currentPlayer.isHumanPlayer() ? 1 : 0],
+              animationConfig: getCurrentAnimationConfig(
+                currentPlayer,
+                this._animationSpeed,
+              ),
               behavior:
                 lastActionResponse.type === 'GameEnd'
                   ? new NullBehavior()
@@ -1328,33 +1291,6 @@ export default class GameMap extends Component<Props, State> {
       timers.add(timerObject);
     }
     this._timers = timers;
-  };
-
-  private _fastForward = () => {
-    if (!this._isFastForward.current) {
-      this._isFastForward.current = true;
-      const { map } = this.state;
-      const animationConfig =
-        this._animationConfigs[map.getCurrentPlayer().isHumanPlayer() ? 3 : 2];
-      if (this.state.animationConfig !== animationConfig) {
-        this.setState({
-          animationConfig,
-        });
-      }
-    }
-
-    return this._releaseFastForward;
-  };
-
-  private _releaseFastForward = () => {
-    this._isFastForward.current = false;
-    const isHumanPlayer = this.state.map.getCurrentPlayer().isHumanPlayer();
-    const animationConfig = this._animationConfigs[isHumanPlayer ? 3 : 2];
-    if (this.state.animationConfig === animationConfig) {
-      this.setState({
-        animationConfig: this._animationConfigs[isHumanPlayer ? 1 : 0],
-      });
-    }
   };
 
   private _clearTimer = (timer: number | TimerID) => {
@@ -1650,6 +1586,7 @@ export default class GameMap extends Component<Props, State> {
         editor,
         fogStyle,
         margin,
+        playerAchievement,
         scale,
         showCursor: propsShowCursor,
         skipBanners,
@@ -1664,6 +1601,7 @@ export default class GameMap extends Component<Props, State> {
         currentViewer,
         effectState,
         gameInfoState,
+        lastActionResponse,
         map,
         namedPositions,
         objectiveRadius,
@@ -1822,14 +1760,12 @@ export default class GameMap extends Component<Props, State> {
                   )}
                 </>
               )}
-
             <MapAnimations
               actions={this._actions}
               animationComplete={this._animationComplete}
               getLayer={getLayer}
               skipBanners={skipBanners}
               state={this.state}
-              userDisplayName={this.props.userDisplayName}
             />
             {editor?.selected?.decorator ||
             editor?.selected?.eraseDecorators ? (
@@ -1859,55 +1795,20 @@ export default class GameMap extends Component<Props, State> {
                 zIndex={zIndex - 2}
               />
             )}
-            <div className={pointerStyle} ref={this._wrapperRef}>
+            <div ref={this._wrapperRef}>
               <AnimatePresence>
                 {!behavior || showNamedPositionsForBehavior.has(behavior.type)
-                  ? namedPositions?.map((vector) => {
-                      const unit = map.units.get(vector);
-                      const hasName =
-                        unit && unit.hasName() && unit.player !== 0;
-                      const showHealth = unit && unit.health < MaxHealth;
-                      return (
-                        (hasName || showHealth) && (
-                          <FlashFlyout
-                            align="top-lower"
-                            animationConfig={animationConfig}
-                            items={[
-                              <FlyoutItem color={unit.player} key="unit-name">
-                                <Stack gap={4} nowrap>
-                                  {hasName && (
-                                    <Stack gap={1} nowrap>
-                                      {unit.getName(currentViewer)}
-                                      {unit.isLeader() && <Icon icon={Magic} />}
-                                    </Stack>
-                                  )}
-                                  {showHealth ? (
-                                    <Stack
-                                      gap={1}
-                                      nowrap
-                                      style={{
-                                        color:
-                                          getHealthColor(unit.health) ||
-                                          applyVar('text-color'),
-                                      }}
-                                    >
-                                      {unit.health}
-                                      <Icon icon={Heart} />
-                                    </Stack>
-                                  ) : null}
-                                </Stack>
-                              </FlyoutItem>,
-                            ]}
-                            key={`named-position-${vector}`}
-                            mini
-                            position={vector}
-                            tileSize={tileSize}
-                            width={map.size.width}
-                            zIndex={zIndex}
-                          />
-                        )
-                      );
-                    })
+                  ? namedPositions?.map((vector) => (
+                      <NamedPosition
+                        animationConfig={animationConfig}
+                        currentViewer={currentViewer}
+                        key={`named-position-${vector}`}
+                        map={map}
+                        tileSize={tileSize}
+                        vector={vector}
+                        zIndex={zIndex}
+                      />
+                    ))
                   : null}
                 {StateComponent && (
                   <StateComponent
@@ -1922,6 +1823,19 @@ export default class GameMap extends Component<Props, State> {
               {children?.(this.state, this._actions)}
             </div>
           </div>
+          {lastActionResponse?.type === 'GameEnd' &&
+            lastActionResponse.toPlayer &&
+            currentViewer != null &&
+            map.matchesTeam(lastActionResponse.toPlayer, currentViewer) && (
+              <MapPerformanceMetrics
+                key="performance-metrics"
+                map={map}
+                player={currentViewer}
+                playerAchievement={playerAchievement || null}
+                scrollIntoView={this._scrollIntoView}
+                zIndex={zIndex}
+              />
+            )}
         </div>
         {gameInfoState && (
           <GameDialog
@@ -1965,13 +1879,6 @@ const tiltedStyle = css`
 const pausedStyle = css`
   * {
     animation-play-state: paused !important;
-  }
-`;
-
-const pointerStyle = css`
-  &.pointerNone * {
-    cursor: none !important;
-    pointer-events: none !important;
   }
 `;
 

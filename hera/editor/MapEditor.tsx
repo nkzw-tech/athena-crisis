@@ -30,7 +30,6 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
@@ -73,6 +72,7 @@ import useAnimationSpeed, {
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
+import filterNodes from '../lib/filterNodes.tsx';
 import { hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
@@ -100,6 +100,7 @@ import {
   MapCreateFunction,
   MapEditorSaveState,
   MapObject,
+  MapPerformanceMetricsEstimationFunction,
   MapUpdateFunction,
   PreviousMapEditorState,
   SaveMapFunction,
@@ -227,6 +228,7 @@ export default function MapEditor({
   children,
   confirmActionStyle,
   createMap,
+  estimateMapPerformance,
   fogStyle,
   inset = 0,
   isAdmin,
@@ -242,6 +244,7 @@ export default function MapEditor({
   animationSpeed: AnimationSpeed | null;
   confirmActionStyle: 'always' | 'touch' | 'never';
   createMap: MapCreateFunction;
+  estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
   fogStyle: 'soft' | 'hard';
   isAdmin?: boolean;
   mapObject?: MapObject | null;
@@ -369,7 +372,7 @@ export default function MapEditor({
   const [tilted, setIsTilted] = useState(true);
   const [menuIsExpanded, setMenuIsExpanded] = useState(false);
   const [actAsEveryPlayer, setActAsEveryPlayer] = useState(false);
-  const animationConfig = useAnimationSpeed(animationSpeed);
+  const mapAnimationSpeed = useAnimationSpeed(animationSpeed);
   const [previousState, setPreviousState] =
     useState<PreviousMapEditorState | null>(() => {
       try {
@@ -841,7 +844,7 @@ export default function MapEditor({
   if (isPlayTesting) {
     return (
       <GameMap
-        animationConfig={animationConfig}
+        animationSpeed={mapAnimationSpeed}
         confirmActionStyle={confirmActionStyle}
         currentUserId={user.id}
         dangerouslyApplyExternalState={
@@ -969,7 +972,7 @@ export default function MapEditor({
                     <fbt desc="Title for campaigns">Campaigns</fbt>
                   </h2>
                   {mapObject?.campaigns.edges
-                    .filter(isPresent)
+                    ?.filter(filterNodes)
                     .map(({ node: { name, slug } }) => (
                       <InlineLink
                         className={ellipsis}
@@ -1047,6 +1050,7 @@ export default function MapEditor({
                   actions={actions}
                   drawerPosition={drawerPosition}
                   editor={editor}
+                  estimateMapPerformance={estimateMapPerformance}
                   expand={expand}
                   fillMap={fillMap}
                   inset={inset}

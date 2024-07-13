@@ -5,14 +5,23 @@ import {
   AnimationConfig,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import { PlayerID } from '@deities/athena/map/Player.tsx';
+import {
+  hasPerformanceExpectation,
+  PerformanceStyleComparators,
+  PerformanceStyleTypeShortName,
+} from '@deities/athena/map/PlayerPerformance.tsx';
+import { Reward } from '@deities/athena/map/Reward.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
+  Objective,
   ObjectiveID,
   Objectives,
 } from '@deities/athena/Objectives.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
 import {
   ClientLevelID,
@@ -37,6 +46,9 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import EmptyDialogueIcon from '@iconify-icons/pixelarticons/message.js';
+import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
+import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
+import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
 import { memo, MouseEvent, useCallback, useRef, useState } from 'react';
@@ -47,6 +59,7 @@ import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
+import { SkillIcon } from '../ui/SkillDialog.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
 import {
@@ -158,6 +171,15 @@ export default memo(function Level({
     return null;
   }
 
+  const rewardObjectives = [
+    ...map.config.objectives
+      .filter(
+        (objective): objective is Objective & Readonly<{ reward: Reward }> =>
+          !!objective.reward,
+      )
+      .values(),
+  ];
+
   const next = level.next;
   return (
     <Stack alignCenter nowrap start>
@@ -195,20 +217,23 @@ export default memo(function Level({
                     Win (in any way)
                   </fbt>
                 </InlineLink>
-                {objectives
-                  ?.map((objective, id) =>
-                    objective.type !== Criteria.Default ? (
-                      <InlineLink
-                        className={objectiveSelectorItemStyle}
-                        key={id}
-                        onClick={() => updateObjective(id)}
-                        selectedText={id === objectiveId}
-                      >
-                        <ObjectiveTitle id={id} objective={objective} />
-                      </InlineLink>
-                    ) : null,
-                  )
-                  .filter(isPresent)}
+                {[
+                  ...(objectives
+                    ?.map((objective, id) =>
+                      objective.type !== Criteria.Default ? (
+                        <InlineLink
+                          className={objectiveSelectorItemStyle}
+                          key={id}
+                          onClick={() => updateObjective(id)}
+                          selectedText={id === objectiveId}
+                        >
+                          <ObjectiveTitle id={id} objective={objective} />
+                        </InlineLink>
+                      ) : null,
+                    )
+                    .filter(isPresent)
+                    .values() || []),
+                ]}
               </>
             )}
           </Dropdown>
@@ -292,7 +317,61 @@ export default memo(function Level({
               slug={node.slug}
               zoom={zoom}
             />
-            <Stack className={mapBottomStyle} gap={16}>
+            <Stack className={mapDetailStyle} gap vertical>
+              {hasPerformanceExpectation(map) && (
+                <Stack alignCenter gap={16} start>
+                  {map.config.performance.pace != null && (
+                    <Stack gap start>
+                      <Icon icon={Pace} />
+                      <div>{map.config.performance.pace}</div>
+                    </Stack>
+                  )}
+                  {map.config.performance.power != null && (
+                    <Stack gap start>
+                      <Icon icon={Zap} />
+                      <div>{map.config.performance.power}</div>
+                    </Stack>
+                  )}
+                  {map.config.performance.style != null && (
+                    <Stack gap start>
+                      <Icon icon={Subscriptions} />
+                      <span>
+                        {
+                          PerformanceStyleTypeShortName[
+                            map.config.performance.style[0]
+                          ]
+                        }{' '}
+                        <span className={comparatorStyle}>
+                          {
+                            PerformanceStyleComparators[
+                              map.config.performance.style[0]
+                            ]
+                          }
+                        </span>{' '}
+                        {map.config.performance.style[1]}
+                      </span>
+                    </Stack>
+                  )}
+                </Stack>
+              )}
+              {rewardObjectives.length ? (
+                <Stack alignCenter gap start>
+                  {rewardObjectives.length === 1 ? (
+                    <fbt desc="Label for reward">Reward</fbt>
+                  ) : (
+                    <fbt desc="Label for rewards">Rewards</fbt>
+                  )}
+                  <Stack gap={16} start>
+                    {rewardObjectives.map((objective, index) => (
+                      <RewardDetail
+                        key={index}
+                        player={map.getFirstPlayerID()}
+                        reward={objective.reward}
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+              ) : null}
               {characters.length ? (
                 <Dropdown
                   className={effectContainerStyle}
@@ -444,12 +523,40 @@ const MiniMap = memo(function MiniMap({
   );
 });
 
+const RewardDetail = ({
+  player,
+  reward,
+}: {
+  player: PlayerID;
+  reward: Reward;
+}) => {
+  const { type: rewardType } = reward;
+  switch (rewardType) {
+    case 'Skill':
+      return <SkillIcon skill={reward.skill} />;
+    case 'UnitPortraits':
+      return (
+        <Portrait
+          clip
+          player={player}
+          scale={0.5}
+          unit={reward.unit}
+          variant={0}
+        />
+      );
+    default: {
+      rewardType satisfies never;
+      throw new UnknownTypeError('Level::Reward', rewardType);
+    }
+  }
+};
+
 const mapCardStyle = css`
   min-width: 240px;
 `;
 
-const mapBottomStyle = css`
-  margin-top: 8px;
+const mapDetailStyle = css`
+  padding-top: 8px;
 `;
 
 const arrowStyle = css`
@@ -509,4 +616,11 @@ const iconStyle = css`
 
 const dialogueIconStyle = css`
   margin-top: 1px;
+`;
+
+const comparatorStyle = css`
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 200;
+  text-align: center;
+  width: 16px;
 `;

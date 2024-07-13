@@ -37,6 +37,7 @@ const decodeMapObject = (data: string | null): MapObject | null => {
       campaigns: {
         edges: [],
       },
+      canEdit: true,
       creator: maybeCreator
         ? {
             displayName:
@@ -86,6 +87,7 @@ export default function MapEditorExample() {
         campaigns: {
           edges: [],
         },
+        canEdit: true,
         creator: {
           displayName: viewer.displayName,
           id: viewer.id,

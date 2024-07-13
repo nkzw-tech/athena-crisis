@@ -1,3 +1,5 @@
+import { hidePointer } from './setupHidePointer.tsx';
+
 type Direction = -1 | 0 | 1;
 
 export type NavigationDirection = {
@@ -12,7 +14,6 @@ export type Events = Readonly<{
   cancel: { isEscape: boolean } | null;
   detail: undefined;
   'detail:released': undefined;
-  'gamepad-tertiary': undefined;
   info: undefined;
   menu: undefined;
   navigate: NavigationDirection;
@@ -20,15 +21,11 @@ export type Events = Readonly<{
   next: undefined;
   point: undefined;
   previous: undefined;
-  quaternary: undefined;
   reset: undefined;
   save: undefined;
   secondary: undefined;
   select: { modifier: boolean };
-  slow: undefined;
-  'slow:released': undefined;
   tertiary: undefined;
-  'tertiary:released': undefined;
   undo: undefined;
   zoom: undefined;
 }>;
@@ -71,6 +68,16 @@ class Input {
     }
 
     this.base.dispatchEvent(event);
+  }
+
+  fireWithPointerLock<T extends EventName>(
+    ...args: Events[T] extends undefined
+      ? [type: T]
+      : [type: T, detail: Events[T]]
+  ) {
+    hidePointer();
+    // @ts-expect-error
+    this.fire(...args);
   }
 
   block(layer: InputLayer) {
