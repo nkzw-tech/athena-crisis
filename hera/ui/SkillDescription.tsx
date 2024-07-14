@@ -625,6 +625,12 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Hidden fields in regular vision range are uncovered in fog.
         </fbt>
       );
+    case Skill.RecoverAirUnits:
+      return (
+        <fbt desc="Additional skill description">
+          All air units recover and can act again.
+        </fbt>
+      );
   }
 
   return null;

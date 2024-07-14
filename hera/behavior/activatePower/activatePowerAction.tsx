@@ -1,6 +1,10 @@
 import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
+import {
+  getHealUnitTypes,
+  onPowerUnitUpgrade,
+  Skill,
+} from '@deities/athena/info/Skill.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
@@ -34,7 +38,7 @@ export default async function activatePowerAction(
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { skill } = actionResponse;
-  const player = state.map.getCurrentPlayer().id;
+  const player = state.map.getCurrentPlayer();
   const { colors, name } = getSkillConfigForDisplay(skill);
   return new Promise((resolve) =>
     update((state) => ({
@@ -47,32 +51,42 @@ export default async function activatePowerAction(
             state.vision,
             actionResponse,
           );
-          const unitTypes = map.getActiveUnitTypes().get(player);
-          const unitsToHeal = getUnitsToHeal(state.map, player, skill);
+
+          const unitTypes = state.map
+            .copy({
+              teams: updatePlayer(state.map.teams, map.getPlayer(player.id)),
+            })
+            .getActiveUnitTypes()
+            .get(player.id);
+
+          const unitsToHeal = getUnitsToHeal(state.map, player.id, skill);
           const healVectors = new Set(
             unitsToHeal ? [...unitsToHeal.keys()] : [],
           );
           const units = state.map.units.filter(
             (unit, vector) =>
               !healVectors.has(vector) &&
-              !unit.isCompleted() &&
-              map.matchesPlayer(unit, player) &&
+              (!unit.isCompleted() || skill === Skill.RecoverAirUnits) &&
+              state.map.matchesPlayer(unit, player) &&
               matchesActiveType(unitTypes, unit, vector),
           );
 
           const getUpgradeAnimations = (state: State) =>
             upgradeUnits(
               actions,
-              {
-                ...state,
-                map,
-              },
+              state,
               sortVectors([...units.keys()]),
               (state) => {
                 requestFrame(() =>
                   resolve({ ...state, map, ...resetBehavior() }),
                 );
                 return null;
+              },
+              ({ map }, vector) => {
+                const unit = map.units.get(vector);
+                const newMap =
+                  unit && onPowerUnitUpgrade(skill, map, vector, unit);
+                return newMap ? { map: newMap } : null;
               },
             );
 
@@ -88,13 +102,13 @@ export default async function activatePowerAction(
               teams: updatePlayer(
                 state.map.teams,
                 state.map
-                  .getPlayer(player)
-                  .setCharge(map.getPlayer(player).charge),
+                  .getPlayer(player.id)
+                  .setCharge(map.getPlayer(player.id).charge),
               ),
             }),
           };
         },
-        player,
+        player: player.id,
         sound: 'UI/Start',
         style: 'flashy',
         text: String(name),

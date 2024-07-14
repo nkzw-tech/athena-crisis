@@ -7,6 +7,7 @@ export default function upgradeUnits(
   state: State,
   unitsToUpgrade: ReadonlyArray<Vector>,
   onComplete: StateToStateLike,
+  onUpgrade: (state: State, vector: Vector) => StateLike | null,
 ): StateLike | null {
   const { requestFrame, scrollIntoView, update } = actions;
   const { animations, map, vision } = state;
@@ -21,17 +22,19 @@ export default function upgradeUnits(
                 remainingUnits.length ? state : onComplete(state),
               onUpgrade: () => {
                 requestFrame(async () => {
-                  const position = remainingUnits[0];
-                  if (position) {
-                    await scrollIntoView([position]);
+                  const newPosition = remainingUnits[0];
+                  if (newPosition) {
+                    await scrollIntoView([newPosition]);
                   }
 
+                  const newState = await update(null);
                   update(
                     upgradeUnits(
                       actions,
-                      await update(null),
+                      { ...newState, ...onUpgrade(newState, position) },
                       remainingUnits,
                       remainingUnits.length ? onComplete : (state) => state,
+                      onUpgrade,
                     ),
                   );
                 });

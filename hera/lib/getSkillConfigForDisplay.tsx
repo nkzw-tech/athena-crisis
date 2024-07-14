@@ -15,6 +15,7 @@ import BullseyeArrow from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Loader from '@iconify-icons/pixelarticons/loader.js';
+import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
@@ -213,6 +214,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: ['purple', 'red'],
         icon: Medal,
         name: fbt('Commanding Force', 'Skill name'),
+      };
+    case Skill.RecoverAirUnits:
+      return {
+        alpha: 0.5,
+        borderStyle: 'up',
+        colors: 'green',
+        icon: Repeat,
+        name: fbt('Eagle Eye', 'Skill name'),
       };
     default: {
       skill satisfies never;

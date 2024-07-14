@@ -1,8 +1,14 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import matchesActiveType from '../lib/matchesActiveType.tsx';
 import { HealAmount } from '../map/Configuration.tsx';
-import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
+import Entity, {
+  EntityType,
+  getEntityGroup,
+  isUnit,
+  isUnitInfo,
+} from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
 import { BuildingInfo } from './Building.tsx';
@@ -36,6 +42,7 @@ export enum Skill {
   UnitRailDefenseIncreasePowerAttackIncrease = 21,
   BuyUnitAIU = 22,
   BuyUnitCommander = 23,
+  RecoverAirUnits = 24,
 }
 
 export const Skills = new Set<Skill>([
@@ -62,6 +69,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.BuyUnitAIU,
   Skill.BuyUnitCommander,
+  Skill.RecoverAirUnits,
 ]);
 
 const skillConfig: Record<
@@ -97,6 +105,7 @@ const skillConfig: Record<
   },
   [Skill.BuyUnitAIU]: { cost: 1500 },
   [Skill.BuyUnitCommander]: { charges: 3, cost: 1500 },
+  [Skill.RecoverAirUnits]: { charges: 5, cost: 3000 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set(
@@ -152,6 +161,7 @@ const attackPowerStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMinor, 0.2],
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.35],
   [Skill.HealVehiclesAttackDecrease, 0.3],
+  [Skill.RecoverAirUnits, -0.3],
 ]);
 
 const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
@@ -795,17 +805,31 @@ export function getUnitRangeForSkill(skill: Skill, type: SkillActivationType) {
   return unitTypes;
 }
 
+const getAirUnitsToRecover = (map: MapData, player: Player) =>
+  map.units.filter(
+    (unit) =>
+      map.matchesPlayer(unit, player) &&
+      getEntityGroup(unit) === 'air' &&
+      (unit.isCompleted() || unit.hasMoved()),
+  );
+
 const getSkillActiveUnitTypes = (
   map: MapData,
   player: Player,
   skill: Skill,
 ): ReadonlyArray<MovementType | ID | Vector> | 'all' => {
+  const attackEffect = attackPowerStatusEffects.get(skill);
+  const defenseEffect = defensePowerStatusEffects.get(skill);
   if (
     skill === Skill.CounterAttackPower ||
-    attackPowerStatusEffects.has(skill) ||
-    defensePowerStatusEffects.has(skill)
+    (attackEffect != null && attackEffect > 0) ||
+    (defenseEffect != null && defenseEffect > 0)
   ) {
     return 'all';
+  }
+
+  if (skill === Skill.RecoverAirUnits) {
+    return [...getAirUnitsToRecover(map, player).keys()];
   }
 
   const list = [];
@@ -894,7 +918,7 @@ export function applyPower(skill: Skill, map: MapData) {
 
   if (healTypes) {
     const player = map.getCurrentPlayer();
-    return map.copy({
+    map = map.copy({
       units: map.units.map((unit) =>
         map.matchesPlayer(player, unit) &&
         matchesActiveType(healTypes, unit, null)
@@ -904,7 +928,32 @@ export function applyPower(skill: Skill, map: MapData) {
     });
   }
 
+  if (skill === Skill.RecoverAirUnits) {
+    map = map.copy({
+      units: map.units.merge(
+        getAirUnitsToRecover(map, map.getCurrentPlayer()).map((unit) =>
+          unit.recover(),
+        ),
+      ),
+    });
+  }
+
   return map;
+}
+
+export function onPowerUnitUpgrade(
+  skill: Skill,
+  map: MapData,
+  vector: Vector,
+  unit: Unit,
+) {
+  if (skill === Skill.RecoverAirUnits) {
+    return map.copy({
+      units: map.units.set(vector, unit.recover()),
+    });
+  }
+
+  return null;
 }
 
 export function hasCounterAttackSkill(skills: ReadonlySet<Skill>) {
