@@ -69,7 +69,7 @@ export default function Dialog({
 }: {
   children: ReactNode;
   onClose: () => void | Promise<void>;
-  size?: 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large';
   transformOrigin: string;
 }) {
   return (
@@ -98,12 +98,7 @@ export default function Dialog({
         }}
       >
         <Stack alignCenter center className={wrapperStyle}>
-          <div
-            className={cx(
-              containerStyle,
-              size === 'large' ? largeStyle : mediumStyle,
-            )}
-          >
+          <div className={cx(containerStyle, sizes[size])}>
             {children}
             <MenuButton
               className={cx(tabStyle, closeButtonStyle)}
@@ -190,29 +185,39 @@ const containerStyle = css`
   z-index: calc(${applyVar('inset-z')} + 30);
 `;
 
-const largeStyle = css`
-  max-width: min(93vw, 1000px);
-`;
+const sizes = {
+  large: css`
+    max-width: min(93vw, 1000px);
+  `,
+  medium: css`
+    ${Breakpoints.sm} {
+      width: min(90vw, 600px);
+    }
 
-const mediumStyle = css`
-  ${Breakpoints.sm} {
-    width: min(90vw, 600px);
-  }
+    ${Breakpoints.xl} {
+      width: 1000px;
+    }
 
-  ${Breakpoints.xl} {
-    width: 1000px;
-  }
+    ${Breakpoints.height.lg} {
+      top: unset;
+      bottom: unset;
+      height: min(75vh, 860px);
+    }
 
-  ${Breakpoints.height.lg} {
-    top: unset;
-    bottom: unset;
-    height: min(75vh, 860px);
-  }
+    ${Breakpoints.height.xl} {
+      height: 980px;
+    }
+  `,
+  small: css`
+    height: 30vh;
+    max-height: 320px;
+    top: calc(50vh - max(15vh, 160px));
 
-  ${Breakpoints.height.xl} {
-    height: 980px;
-  }
-`;
+    ${Breakpoints.sm} {
+      width: min(90vw, 600px);
+    }
+  `,
+};
 
 const scrollStyle = css`
   inset: 0;

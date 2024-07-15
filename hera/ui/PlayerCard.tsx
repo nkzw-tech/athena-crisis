@@ -118,7 +118,10 @@ export default memo(function PlayerCard({
       showGameInfo({
         action:
           currentViewer === player.id
-            ? async (skill: Skill) => {
+            ? async (skill: Skill | null) => {
+                if (!skill) {
+                  return;
+                }
                 const state = await update(resetBehavior());
                 const actionResponse = optimisticAction(
                   state,

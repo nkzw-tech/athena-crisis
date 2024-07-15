@@ -411,6 +411,14 @@ const GameSkillDialog = ({
     setCurrentSkill,
   );
 
+  const onAction = useCallback(
+    async (skill: Skill | null) => {
+      await onClose();
+      action?.(skill);
+    },
+    [action, onClose],
+  );
+
   return (
     <SkillDialog
       actionName={actionName}
@@ -418,17 +426,12 @@ const GameSkillDialog = ({
       canAction={canAction}
       currentSkill={currentSkill}
       focus
-      onAction={
-        action
-          ? async (skill: Skill) => {
-              await onClose();
-              action?.(skill);
-            }
-          : undefined
-      }
+      onAction={action ? onAction : undefined}
       onClose={onClose}
+      onSelect={action ? onAction : undefined}
       showAction={showAction}
       showCost={showCost}
+      size="small"
       tabs={skills?.map((skill, index) => (
         <DialogTab
           highlight={currentSkill === skill}

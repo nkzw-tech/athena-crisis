@@ -203,7 +203,7 @@ export type LeaderInfoState = Readonly<{
 }>;
 
 export type SkillInfoState = Readonly<{
-  action?: (skill: Skill) => void;
+  action?: (skill: Skill | null) => void;
   actionName?: ReactElement;
   canAction?: (skill: Skill) => boolean;
   currentSkill: Skill;

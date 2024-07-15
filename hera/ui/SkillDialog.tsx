@@ -177,6 +177,7 @@ export default function SkillDialog({
   selectedSkills,
   showAction,
   showCost,
+  size,
   tabs,
   toggleBlocklist,
   transformOrigin,
@@ -195,6 +196,7 @@ export default function SkillDialog({
   selectedSkills?: ReadonlySet<Skill> | null;
   showAction?: (skill: Skill) => boolean;
   showCost?: boolean;
+  size?: 'small';
   tabs?: ReactNode;
   toggleBlocklist?: boolean;
   transformOrigin?: string;
@@ -262,6 +264,7 @@ export default function SkillDialog({
   return (
     <Dialog
       onClose={onClose}
+      size={size}
       transformOrigin={transformOrigin || 'center center'}
     >
       <DialogScrollContainer>
