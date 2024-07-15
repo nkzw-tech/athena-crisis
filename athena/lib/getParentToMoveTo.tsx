@@ -6,46 +6,51 @@ import { RadiusItem } from '../Radius.tsx';
 export default function getParentToMoveTo(
   map: MapData,
   unit: Unit,
-  from: Vector,
-  to: RadiusItem | undefined,
+  origin: Vector,
+  target: RadiusItem | undefined,
   fields: ReadonlyMap<Vector, RadiusItem>,
 ) {
   const { info } = unit;
   const isLongRange = info.isLongRange();
   const player = map.getPlayer(unit);
-  const parent =
-    to?.parent ||
-    (isLongRange && to && unit.canAttackAt(from.distance(to.vector), player)
-      ? from
-      : null);
+  if (
+    isLongRange &&
+    target &&
+    unit.canAttackAt(origin.distance(target.vector), player)
+  ) {
+    return origin;
+  }
 
+  const parent = target?.parent;
   if (parent && isLongRange) {
     const range = info.getRangeFor(player);
     if (info.canAttackAt(1, range) && info.canAttackAt(2, range)) {
-      const grandparent = fields.get(parent)?.parent || from;
+      const grandparent = fields.get(parent)?.parent;
       if (grandparent && info.canAttackAt(3, range)) {
-        const greatgrandparent = fields.get(grandparent)?.parent || from;
-        if (canAttackFrom(map, from, greatgrandparent, to, 3)) {
+        const greatgrandparent = fields.get(grandparent)?.parent;
+        if (canAttackFrom(map, origin, greatgrandparent, target, 3)) {
           return greatgrandparent;
         }
       }
 
-      if (canAttackFrom(map, from, grandparent, to, 2)) {
+      if (canAttackFrom(map, origin, grandparent, target, 2)) {
         return grandparent;
       }
     }
   }
 
-  return parent;
+  return parent || null;
 }
 
 const canAttackFrom = (
   map: MapData,
-  from: Vector,
-  candidate: Vector,
+  origin: Vector,
+  candidate: Vector | null | undefined,
   field: RadiusItem | undefined,
   distance: number,
-) =>
-  candidate &&
-  (!field || candidate.distance(field.vector) <= distance) &&
-  (from.equals(candidate) || !map.units.has(candidate));
+): candidate is Vector =>
+  !!(
+    candidate &&
+    (!field || candidate.distance(field.vector) <= distance) &&
+    (origin.equals(candidate) || !map.units.has(candidate))
+  );

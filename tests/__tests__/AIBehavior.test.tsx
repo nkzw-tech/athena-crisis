@@ -1,4 +1,7 @@
-import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import {
+  EndTurnAction,
+  MoveAction,
+} from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   Airbase,
@@ -613,7 +616,9 @@ test('AI will prefer attacks over sabotage against weaker units', () => {
 test('AI does not crash when moving away from a unit which it can no longer see after the move', () => {
   const vecA = vec(2, 2);
   const vecB = vec(3, 2);
+  const vecC = vec(2, 3);
   const map = initialMap.copy({
+    currentPlayer: 2,
     map: [1, 1, 1, 1, 1, Forest.id, 1, 1, 1],
     units: initialMap.units
       .set(vecA, XFighter.create(2))
@@ -624,13 +629,12 @@ test('AI does not crash when moving away from a unit which it can no longer see 
     map,
     map.createVisionObject(player1),
     new Map(),
-    EndTurnAction(),
+    MoveAction(vecA, vecC),
     AIRegistry,
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (2,2 → 2,3) { fuel: 38, completed: null, path: [2,3] }
-    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+    "EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
 
@@ -1165,13 +1169,11 @@ test('activates skills where the unit ratio does not matter', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "ActivatePower { skill: 12 }
-    Move (2,3 → 1,3) { fuel: 99, completed: null, path: [1,3] }
-    AttackUnit (1,3 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 123, chargeB: 375 }
-    Move (1,2 → 2,2) { fuel: 99, completed: null, path: [2,2] }
-    AttackUnit (2,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 246, chargeB: 750 }
+    AttackUnit (2,3 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 123, chargeB: 375 }
+    AttackUnit (1,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 246, chargeB: 750 }
     AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49, ammo: [ [ 1, 6 ] ] }, chargeA: 346, chargeB: 941 }
-    CreateUnit (1,2 → 1,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Cameron', completed: true }, free: false, skipBehaviorRotation: false }
-    CreateUnit (2,3 → 2,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Kai', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (1,2 → 2,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Kelly', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (2,3 → 1,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Casey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
