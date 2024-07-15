@@ -2,6 +2,7 @@ import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.ts
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   Airbase,
+  Bar,
   Barracks,
   Factory,
   filterBuildings,
@@ -10,6 +11,7 @@ import {
   RepairShop,
   Shipyard,
 } from '@deities/athena/info/Building.tsx';
+import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import {
   Airfield,
   ConstructionSite,
@@ -43,6 +45,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
+import { Charge } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
@@ -74,6 +77,19 @@ const initialMap = MapData.createMap({
   ],
 });
 const player1 = initialMap.getPlayer(1);
+
+const setAISkill = (map: MapData, skill: Skill) => {
+  const { charges } = getSkillConfig(skill);
+  return map.copy({
+    teams: updatePlayer(
+      map.teams,
+      map.getPlayer(2).copy({
+        charge: Charge * (charges || 0),
+        skills: new Set([skill]),
+      }),
+    ),
+  });
+};
 
 test('attempt to attack new units when they are revealed after a move', async () => {
   const from = vec(1, 1);
@@ -1006,5 +1022,156 @@ test('AI Zombies are aggressive', async () => {
     "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 34, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, chargeA: 293, chargeB: 90 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
     GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+  `);
+});
+
+test('skills will only be activated if there are enough units that can be acted with', () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(1, 2);
+  const vecC = vec(2, 2);
+  const vecD = vec(2, 3);
+  const vecE = vec(3, 2);
+  const vecF = vec(3, 3);
+  const map = setAISkill(
+    initialMap.copy({
+      units: initialMap.units
+        .set(vecA, SmallTank.create(1))
+        .set(vecB, SmallTank.create(2))
+        .set(vecC, SmallTank.create(1))
+        .set(vecD, SmallTank.create(2))
+        .set(vecE, SmallTank.create(1))
+        .set(vecF, SmallTank.create(2)),
+    }),
+    Skill.AttackIncreaseMajorDefenseDecreaseMajor,
+  );
+
+  const [, , gameStateA] = executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "ActivatePower { skill: 3 }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 184, chargeB: 352 }
+    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 368, chargeB: 704 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 375, chargeB: 726 }
+    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+
+  const [, , gameStateB] = executeGameAction(
+    map.copy({
+      units: map.units
+        .set(vecB, SmallTank.create(2).complete())
+        .set(vecD, SmallTank.create(2).complete()),
+    }),
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
+    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 86, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 38, ammo: [ [ 1, 6 ] ] }, chargeA: 9136, chargeB: 232 }
+    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+
+  const mapB = setAISkill(
+    map.copy({
+      units: map.units
+        .set(vecA, FighterJet.create(1))
+        .set(vecB, FighterJet.create(2))
+        .set(vecC, FighterJet.create(1))
+        .set(vecD, FighterJet.create(2))
+        .set(vecE, FighterJet.create(1))
+        .set(vecF, FighterJet.create(2)),
+    }),
+    Skill.RecoverAirUnits,
+  );
+
+  const [, , gameStateC] = executeGameAction(
+    mapB,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
+    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7648, chargeB: 302 }
+    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7796, chargeB: 604 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7877, chargeB: 851 }
+    ActivatePower { skill: 24 }
+    Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1] }
+    AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 25, ammo: [ [ 1, 6 ] ] }, chargeA: 440, chargeB: 961 }
+    Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2] }
+    AttackUnit (2,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 86, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 10, ammo: [ [ 1, 5 ] ] }, chargeA: 494, chargeB: 1043 }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 512, chargeB: 1098 }
+    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+
+  const [, , gameStateD] = executeGameAction(
+    mapB.copy({
+      units: mapB.units
+        .set(vecB, FighterJet.create(2).complete())
+        .set(vecD, FighterJet.create(2).complete()),
+    }),
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
+    "ActivatePower { skill: 24 }
+    CompleteUnit (1,2)
+    Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3] }
+    Move (3,3 → 2,3) { fuel: 48, completed: null, path: [2,3] }
+    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});
+
+test('activates skills where the unit ratio does not matter', () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(1, 2);
+  const vecC = vec(2, 2);
+  const vecD = vec(2, 3);
+  const vecE = vec(3, 2);
+  const vecF = vec(3, 3);
+  const map = setAISkill(
+    initialMap.copy({
+      buildings: initialMap.buildings
+        .set(vecB, Bar.create(2))
+        .set(vecD, Bar.create(2))
+        .set(vecF, Bar.create(2)),
+      units: initialMap.units
+        .set(vecA, SmallTank.create(1))
+        .set(vecC, SmallTank.create(1))
+        .set(vecE, SmallTank.create(1))
+        .set(vecF, SmallTank.create(2)),
+    }),
+    Skill.BuyUnitBazookaBear,
+  );
+
+  const [, , gameStateA] = executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "ActivatePower { skill: 12 }
+    Move (2,3 → 1,3) { fuel: 99, completed: null, path: [1,3] }
+    AttackUnit (1,3 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 123, chargeB: 375 }
+    Move (1,2 → 2,2) { fuel: 99, completed: null, path: [2,2] }
+    AttackUnit (2,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 246, chargeB: 750 }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49, ammo: [ [ 1, 6 ] ] }, chargeA: 346, chargeB: 941 }
+    CreateUnit (1,2 → 1,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Cameron', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (2,3 → 2,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Kai', completed: true }, free: false, skipBehaviorRotation: false }
+    EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });

@@ -19,6 +19,7 @@ import {
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
   Battleship,
+  BazookaBear,
   getUnitInfoOrThrow,
   Sniper,
   SpecialUnits,
@@ -631,6 +632,19 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           All air units recover and can act again.
         </fbt>
       );
+    case Skill.BuyUnitBazookaBear:
+      return (
+        <fbt desc="Additional skill description">
+          Spawns{' '}
+          <fbt:param name="unitName">
+            <UnitName color={color} unit={BazookaBear} />
+          </fbt:param>{' '}
+          at each
+          <fbt:param name="buildingName">
+            <BuildingName building={Bar} color={color} />
+          </fbt:param>.
+        </fbt>
+      );
   }
 
   return null;
@@ -708,15 +722,15 @@ export default memo(function SkillDescription({
         </fbt>
       </span>
     ) : null,
+    isRegular
+      ? getExtraDescription(skill, color)
+      : getExtraPowerDescription(skill, color),
     unitCosts?.size ? <UnitCosts color={color} costs={unitCosts} /> : null,
     blockedUnits?.size ? (
       <UnitBlocks blocked={blockedUnits} color={color} />
     ) : null,
     unitMovement.size ? <MovementTypeRadius movement={unitMovement} /> : null,
     unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
-    isRegular
-      ? getExtraDescription(skill, color)
-      : getExtraPowerDescription(skill, color),
     effects.length ? (
       <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
     ) : null,

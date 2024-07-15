@@ -68,6 +68,7 @@ import getPossibleUnitAbilities, {
 } from './lib/getPossibleUnitAbilities.tsx';
 import getUnitInfosWithMaxVision from './lib/getUnitInfosWithMaxVision.tsx';
 import needsSupply from './lib/needsSupply.tsx';
+import shouldActivatePower from './lib/shouldActivatePower.tsx';
 import shouldAttack from './lib/shouldAttack.tsx';
 import shouldCaptureBuilding from './lib/shouldCaptureBuilding.tsx';
 import sortByDamage from './lib/sortByDamage.tsx';
@@ -109,7 +110,8 @@ export default class DionysusAlpha extends BaseAI {
   }
 
   private activatePower(map: MapData): MapData | null {
-    const { activeSkills, charge, skills } = map.getCurrentPlayer();
+    const player = map.getCurrentPlayer();
+    const { activeSkills, charge, skills } = player;
 
     if (!skills.size || charge < Charge) {
       return null;
@@ -122,7 +124,11 @@ export default class DionysusAlpha extends BaseAI {
       }
 
       const { charges } = getSkillConfig(skill);
-      if (charges && charges * Charge <= charge) {
+      if (
+        charges &&
+        charges * Charge <= charge &&
+        shouldActivatePower(map, skill)
+      ) {
         potentialSkills.push([skill, charges]);
       }
     }

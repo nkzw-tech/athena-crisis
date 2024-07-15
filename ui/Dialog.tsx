@@ -209,9 +209,9 @@ const sizes = {
     }
   `,
   small: css`
-    height: 30vh;
-    max-height: 320px;
-    top: calc(50vh - max(15vh, 160px));
+    height: 40vh;
+    max-height: 420px;
+    top: calc(50vh - max(20vh, 210px));
 
     ${Breakpoints.sm} {
       width: min(90vw, 600px);

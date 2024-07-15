@@ -1,12 +1,6 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import matchesActiveType from '../lib/matchesActiveType.tsx';
-import { HealAmount } from '../map/Configuration.tsx';
-import Entity, {
-  EntityType,
-  getEntityGroup,
-  isUnit,
-  isUnitInfo,
-} from '../map/Entity.tsx';
+import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
+import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
 import type Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
@@ -805,14 +799,6 @@ export function getUnitRangeForSkill(skill: Skill, type: SkillActivationType) {
   return unitTypes;
 }
 
-const getAirUnitsToRecover = (map: MapData, player: Player) =>
-  map.units.filter(
-    (unit) =>
-      map.matchesPlayer(unit, player) &&
-      getEntityGroup(unit) === 'air' &&
-      (unit.isCompleted() || unit.hasMoved()),
-  );
-
 const getSkillActiveUnitTypes = (
   map: MapData,
   player: Player,
@@ -913,34 +899,6 @@ export function getHealUnitTypes(skill: Skill) {
   return healPower.get(skill);
 }
 
-export function applyPower(skill: Skill, map: MapData) {
-  const healTypes = healPower.get(skill);
-
-  if (healTypes) {
-    const player = map.getCurrentPlayer();
-    map = map.copy({
-      units: map.units.map((unit) =>
-        map.matchesPlayer(player, unit) &&
-        matchesActiveType(healTypes, unit, null)
-          ? unit.modifyHealth(HealAmount)
-          : unit,
-      ),
-    });
-  }
-
-  if (skill === Skill.RecoverAirUnits) {
-    map = map.copy({
-      units: map.units.merge(
-        getAirUnitsToRecover(map, map.getCurrentPlayer()).map((unit) =>
-          unit.recover(),
-        ),
-      ),
-    });
-  }
-
-  return map;
-}
-
 export function onPowerUnitUpgrade(
   skill: Skill,
   map: MapData,
@@ -958,4 +916,8 @@ export function onPowerUnitUpgrade(
 
 export function hasCounterAttackSkill(skills: ReadonlySet<Skill>) {
   return skills.has(Skill.CounterAttackPower);
+}
+
+export function isRecoverySkill(skill: Skill) {
+  return skill === Skill.RecoverAirUnits;
 }

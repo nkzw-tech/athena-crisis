@@ -1,4 +1,4 @@
-import { applyPower, getSkillConfig } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { RailBridge, RailTrack, River } from '@deities/athena/info/Tile.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
@@ -24,6 +24,7 @@ import { ActionResponse } from '../ActionResponse.tsx';
 import { applyHiddenActionResponse } from '../HiddenAction.tsx';
 import { applyObjectiveActionResponse } from '../Objective.tsx';
 import applyEndTurnActionResponse from './applyEndTurnActionResponse.tsx';
+import applyPower from './applyPower.tsx';
 
 export default function applyActionResponse(
   map: MapData,
