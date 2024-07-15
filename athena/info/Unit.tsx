@@ -438,11 +438,14 @@ export class Weapon {
     );
   }
 
-  withAnimationPositions(positions: WeaponPositions): Weapon {
+  withAnimationPositions(positions: WeaponPositions, mirror?: boolean): Weapon {
     return new Weapon(
       this.internalName,
       this.damage,
-      this.animation.copy({ positions }),
+      this.animation.copy({
+        mirror: mirror ?? this.animation.mirror,
+        positions,
+      }),
       this.hitAnimation,
       this.supply,
       this.id,
@@ -1342,8 +1345,8 @@ export const Weapons = {
     )
     .withAnimationPositions({
       down: sprite(0, 0.55),
-      horizontal: sprite(-0.35, 0.2),
-      up: sprite(-0.03, -0.15),
+      horizontal: sprite(-0.15, 0.25),
+      up: sprite(-0.03, -0.2),
     }),
   LightGun,
   MG,
@@ -2327,7 +2330,17 @@ export const FighterJet = new UnitInfo(
   DefaultUnitAbilities,
   {
     type: AttackType.ShortRange,
-    weapons: [AirToAirMissile.withSupply(8)],
+    weapons: [
+      AirToAirMissile.withAnimationPositions(
+        {
+          down: sprite(0.2, 0.3),
+          horizontal: sprite(-0.15, 0.25),
+          horizontalAlternative: sprite(0.15, 0.05),
+          up: sprite(0.2, 0.1),
+        },
+        true,
+      ).withSupply(8),
+    ],
   },
   null,
   {
