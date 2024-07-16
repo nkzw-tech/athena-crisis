@@ -56,6 +56,7 @@ export const useInlineLink = ({
     hover && 'hover',
     selected && 'selected',
     selectedText && 'selected-text',
+    active && 'active',
     alignCenter && alignCenterStyle,
   );
   const gap = _gap === true ? defaultGap : _gap;
@@ -128,10 +129,6 @@ const linkStyle = css`
   display: inline-flex;
   align-content: center;
 
-  &:active {
-    transform: scaleX(0.95) scaleY(0.98);
-  }
-
   &.selected,
   &.selected:hover {
     ${pixelBorder(
@@ -145,6 +142,11 @@ const linkStyle = css`
   &.selected-text,
   &.selected-text:hover {
     color: ${applyVar('text-color-active')};
+  }
+
+  &:active,
+  &.active {
+    transform: scaleX(0.95) scaleY(0.98);
   }
 
   &:not(.active):not(.selected-text).hover,

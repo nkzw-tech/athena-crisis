@@ -64,9 +64,9 @@ export default memo(function Button({
     style,
     ButtonStyle,
     initialClassName,
-    active && 'active',
     selected && 'hover',
-    selected && PulseStyle,
+    !active && selected && PulseStyle,
+    active && 'active',
   );
 
   return to ? (
