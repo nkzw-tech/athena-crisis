@@ -1345,7 +1345,7 @@ const shouldBuildNavalUnits = (
   const opposingNavalUnits = opposingUnits.filter(isNavalUnit).size;
   return (
     !opposingUnits.size ||
-    opposingNavalUnits / opposingUnits.size > playerNavalRatio - 0.15
+    opposingNavalUnits / opposingUnits.size > playerNavalRatio - 0.2
   );
 };
 
