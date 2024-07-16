@@ -19,7 +19,7 @@
     "@deities/hermes": "workspace:*",
     "@deities/i18n": "workspace:*",
     "@deities/zeus": "workspace:*",
-    "@graphql-tools/utils": "^10.3.1",
+    "@graphql-tools/utils": "^10.3.2",
     "@nkzw/histogram": "^1.1.0",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/safe-word-list": "^2.1.0",
