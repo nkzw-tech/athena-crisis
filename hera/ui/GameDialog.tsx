@@ -1,3 +1,4 @@
+import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -36,6 +37,15 @@ import {
   State,
 } from '../Types.tsx';
 import SkillDialog, { SkillIcon } from './SkillDialog.tsx';
+
+type GameDialogState = Pick<
+  State,
+  | 'currentViewer'
+  | 'factionNames'
+  | 'gameInfoState'
+  | 'lastActionResponse'
+  | 'map'
+>;
 
 type MapInfoPanelState = Readonly<
   | { type: 'unit'; unit: Unit }
@@ -221,11 +231,13 @@ const GameInfoPanel = memo(function GameInfoPanel({
   endGame,
   factionNames,
   gameInfoState,
+  lastActionResponse,
   map,
 }: {
   endGame?: () => void;
   factionNames: FactionNames;
   gameInfoState: CurrentGameInfoState;
+  lastActionResponse: ActionResponse | null;
   map: MapData;
 }) {
   const {
@@ -270,11 +282,14 @@ const GameInfoPanel = memo(function GameInfoPanel({
   );
   const requiredObjectives = partition.get('required');
   const optionalObjectives = partition.get('optional');
+  const Component =
+    typeof panel === 'string' && gameInfoState.panels?.get(panel)?.content;
   return (
     <>
       <DialogScrollContainer>
-        {(typeof panel === 'string' &&
-          gameInfoState.panels?.get(panel)?.content) || (
+        {(Component && (
+          <Component lastActionResponse={lastActionResponse} map={map} />
+        )) || (
           <Stack gap={16} vertical>
             <h1>
               <fbt desc="Headline for describing how to win">How to win</fbt>
@@ -348,14 +363,11 @@ const GameInfoPanel = memo(function GameInfoPanel({
 const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
   gameInfoState,
-  state: { currentViewer, factionNames, map },
+  state: { currentViewer, factionNames, lastActionResponse, map },
 }: {
   endGame?: () => void;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
-  state: Pick<
-    State,
-    'currentViewer' | 'factionNames' | 'gameInfoState' | 'map'
-  >;
+  state: GameDialogState;
 }) {
   useBlockInput('dialog');
 
@@ -367,6 +379,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
           endGame={endGame}
           factionNames={factionNames}
           gameInfoState={gameInfoState}
+          lastActionResponse={lastActionResponse || null}
           map={map}
         />
       );
@@ -454,10 +467,7 @@ export default memo(function GameDialog({
 }: {
   endGame?: (type: 'Lose') => void;
   onClose: () => void | Promise<void>;
-  state: Pick<
-    State,
-    'currentViewer' | 'factionNames' | 'gameInfoState' | 'map'
-  >;
+  state: GameDialogState;
 }) {
   const { gameInfoState } = state;
   const create = gameInfoState?.type === 'map-info' && gameInfoState.create;

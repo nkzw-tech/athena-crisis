@@ -21,7 +21,7 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import type { ReactElement, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
 import { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
 import { Animations } from './MapAnimations.tsx';
@@ -171,7 +171,10 @@ export type LayerTypes =
 export type GameInfoPanels = Map<
   string,
   Readonly<{
-    content: ReactNode;
+    content: ComponentType<{
+      lastActionResponse: ActionResponse | null;
+      map: MapData;
+    }>;
     title: ReactNode;
   }>
 >;
@@ -257,7 +260,7 @@ export type MapBehavior = Readonly<{
     shouldConfirm?: boolean,
   ) => StateLike | null;
   readonly clearTimers?: () => void;
-  readonly component?: (props: StateWithActions) => JSX.Element | null;
+  readonly component?: ComponentType<StateWithActions>;
   readonly deactivate?: () => StateLike | null;
   readonly enter?: (
     vector: Vector,

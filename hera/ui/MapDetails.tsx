@@ -41,7 +41,7 @@ export type MapDetailsProps = Readonly<{
   map: MapData;
   rating?: number;
   showGameState?: boolean;
-  showRound?: boolean;
+  showRound?: 'ended' | 'ongoing';
   tags?: ReadonlyArray<string>;
   teamPlay?: boolean;
   timer?: number | null;
@@ -143,16 +143,22 @@ export default function MapDetails({
         {showRound && (
           <Stack alignCenter gap start>
             <Icon className={iconOffsetStyle} icon={Hourglass} />{' '}
-            <fbt desc="Description for map rounds">
-              <fbt:param name="round">{map.round}</fbt:param>{' '}
-              <fbt:plural
-                count={map.round}
-                many="Rounds"
-                name="number of rounds"
-              >
-                Round
-              </fbt:plural>
-            </fbt>
+            {showRound === 'ended' ? (
+              <fbt desc="Description for map rounds">
+                <fbt:param name="round">{map.round}</fbt:param>{' '}
+                <fbt:plural
+                  count={map.round}
+                  many="Rounds"
+                  name="number of rounds"
+                >
+                  Round
+                </fbt:plural>
+              </fbt>
+            ) : (
+              <fbt desc="Description for current map round of an ongoing game">
+                Round <fbt:param name="round">{map.round}</fbt:param>
+              </fbt>
+            )}
           </Stack>
         )}
       </Stack>

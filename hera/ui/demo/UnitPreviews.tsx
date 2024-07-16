@@ -114,6 +114,7 @@ export default function UnitPreviews() {
               currentViewer: gameInfoState.unit?.player || map.getPlayer(1).id,
               factionNames: new Map(),
               gameInfoState,
+              lastActionResponse: null,
               map,
             } as const
           }
