@@ -2,13 +2,17 @@ import { BuySkillAction } from '@deities/apollo/action-mutators/ActionMutators.t
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
 import { fbt } from 'fbt';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
-import toTransformOrigin from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin, {
+  ClientCoordinates,
+} from '../lib/toTransformOrigin.tsx';
 import { State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, {
   ActionWheelFunds,
@@ -91,6 +95,7 @@ export default class BuySkills {
         skillsToDisplay.length +
         (skillsToDisplay.length < skills.length ? 1 : 0);
       let position = 0;
+
       return (
         <ActionWheel
           actions={actions}
@@ -116,29 +121,50 @@ export default class BuySkills {
                 }
               }
             };
+
+            const showInfo = (
+              event:
+                | MouseEvent
+                | LongPressReactEvents<Element>
+                | ClientCoordinates,
+            ) =>
+              showGameInfo({
+                action: isDisabled ? undefined : buy,
+                actionName: <fbt desc="Button to buy a skill">Buy</fbt>,
+                currentSkill: skill,
+                origin: toTransformOrigin(event),
+                showCost: true,
+                type: 'skill',
+              });
+
             return (
               <LargeActionButton
                 detail={String(cost)}
                 disabled={isDisabled}
                 entityCount={entityCount}
                 icon={(highlight) => (
-                  <div className={skillIconStyle}>
-                    <SkillIcon disabled={isDisabled} hideDialog skill={skill} />
-                  </div>
+                  <>
+                    <div className={skillIconStyle}>
+                      <SkillIcon
+                        disabled={isDisabled}
+                        hideDialog
+                        skill={skill}
+                      />
+                    </div>
+                    <Icon
+                      className={infoIconStyle}
+                      icon={Info}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        showInfo(event);
+                      }}
+                    />
+                  </>
                 )}
                 key={skill}
                 navigationDirection={navigationDirection}
                 onClick={buy}
-                onLongPress={(event) =>
-                  showGameInfo({
-                    action: isDisabled ? undefined : buy,
-                    actionName: <fbt desc="Button to buy a skill">Buy</fbt>,
-                    currentSkill: skill,
-                    origin: toTransformOrigin(event),
-                    showCost: true,
-                    type: 'skill',
-                  })
-                }
+                onLongPress={showInfo}
                 position={position++}
               />
             );
@@ -171,4 +197,11 @@ export default class BuySkills {
 const skillIconStyle = css`
   color: ${applyVar('text-color')};
   transform: scale(0.5);
+`;
+
+const infoIconStyle = css`
+  color: ${applyVar('text-color-light')};
+  bottom: 1px;
+  position: absolute;
+  right: 0;
 `;

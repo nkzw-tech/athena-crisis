@@ -586,6 +586,7 @@ export function SkillSelector({
 export function SkillIcon({
   active,
   canActivate,
+  dialogSize,
   disabled,
   hideDialog,
   showName,
@@ -593,6 +594,7 @@ export function SkillIcon({
 }: {
   active?: boolean;
   canActivate?: boolean;
+  dialogSize?: 'small';
   disabled?: boolean;
   hideDialog?: boolean;
   showName?: boolean;
@@ -644,7 +646,11 @@ export function SkillIcon({
       </Stack>
       {showDialog && (
         <Portal>
-          <SkillDialog availableSkills={new Set([skill])} onClose={onClose} />
+          <SkillDialog
+            availableSkills={new Set([skill])}
+            onClose={onClose}
+            size={dialogSize}
+          />
         </Portal>
       )}
     </>
