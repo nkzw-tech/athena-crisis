@@ -140,5 +140,7 @@ export default function determineUnitsToCreate(
   ) {
     return buildableUnits.filter((info) => info.canTransportUnits());
   }
-  return buildableUnits;
+
+  const unitsWithAttack = buildableUnits.filter((info) => info.hasAttack());
+  return unitsWithAttack.length ? unitsWithAttack : buildableUnits;
 }
