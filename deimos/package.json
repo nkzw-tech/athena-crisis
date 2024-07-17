@@ -19,7 +19,7 @@
     "@emotion/css": "^11.11.2",
     "array-shuffle": "^3.0.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.3.2",
+    "framer-motion": "^11.3.6",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
     "react-error-boundary": "^4.0.13"
