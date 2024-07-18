@@ -588,7 +588,7 @@ export default function MapEditor({
   useEffect(() => {
     const keydownListener = (event: KeyboardEvent) => {
       const state = stateRef.current;
-      if (!state) {
+      if (!state || isPlayTesting) {
         return;
       }
 
@@ -703,7 +703,15 @@ export default function MapEditor({
       document.removeEventListener('keydown', keydownListener);
       document.removeEventListener('keyup', keyupListener);
     };
-  }, [editor, saveMap, setEditorState, setMap, tilted, toggleDeleteEntity]);
+  }, [
+    editor,
+    isPlayTesting,
+    saveMap,
+    setEditorState,
+    setMap,
+    tilted,
+    toggleDeleteEntity,
+  ]);
 
   useInput(
     'select',
