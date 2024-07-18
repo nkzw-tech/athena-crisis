@@ -123,7 +123,7 @@ const invalidSkills = (building: Building) =>
 const validEntity = (entity: Entity | TransportedUnit): boolean => {
   toPlayerID(entity.player);
 
-  if (entity.label) {
+  if (entity.label != null) {
     toPlayerID(entity.label);
   }
 

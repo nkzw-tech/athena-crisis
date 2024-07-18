@@ -189,7 +189,7 @@ export default class Building extends Entity {
       ...(f ? { f: 1 } : null),
       h,
       i,
-      ...(l ? { l } : null),
+      ...(l != null ? { l } : null),
       p,
     };
   }
