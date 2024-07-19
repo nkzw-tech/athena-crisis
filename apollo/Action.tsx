@@ -638,7 +638,7 @@ function createBuilding(map: MapData, { from, id }: CreateBuildingAction) {
     !unit.isCompleted() &&
     !map.buildings.has(from) &&
     unit.info.hasAbility(Ability.CreateBuildings) &&
-    player.funds >= infoB.configuration.cost &&
+    player.funds >= infoB.getCostFor(player) &&
     canBuild(map, infoB, unit.player, from) &&
     (infoB.canBuildUnits() || hasUnitsOrProductionBuildings(map, player))
   ) {

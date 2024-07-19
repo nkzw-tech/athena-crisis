@@ -364,7 +364,7 @@ export default function validateMap(
       (building) =>
         building.player !== 0 && building.info.configuration.funds > 0,
     ) &&
-    map.config.seedCapital < Pioneer.getCostFor(null) + House.configuration.cost
+    map.config.seedCapital < Pioneer.getCostFor(null) + House.getCostFor(null)
   ) {
     return [null, 'invalid-funds'];
   }

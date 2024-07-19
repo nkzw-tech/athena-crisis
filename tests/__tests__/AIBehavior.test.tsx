@@ -803,7 +803,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
       initialMap.teams,
       initialMap
         .getPlayers()
-        .map((player) => player.setFunds(Airbase.configuration.cost)),
+        .map((player) => player.setFunds(Airbase.getCostFor(null))),
     ),
     units: initialMap.units
       .set(vecA, Pioneer.create(2))

@@ -46,10 +46,10 @@ export default class CreateBuilding {
       const buildings = sortBy(
         filterBuildings(
           (building) =>
-            building.configuration.cost < Number.POSITIVE_INFINITY &&
+            building.getCostFor(player) < Number.POSITIVE_INFINITY &&
             canBuild(map, building, map.getCurrentPlayer(), selectedPosition),
         ),
-        ({ configuration: { cost } }) => cost,
+        (info) => info.getCostFor(player),
       );
       let position = 0;
       return (
@@ -65,7 +65,8 @@ export default class CreateBuilding {
           <ActionWheelFunds funds={funds} />
           {buildings.map((building, id) => {
             const isAllowed = allowAnyBuilding || building.canBuildUnits();
-            const hasFunds = funds >= building.configuration.cost;
+            const cost = building.getCostFor(player);
+            const hasFunds = funds >= cost;
             const isDisabled = !hasFunds;
             const entity = building.create(player);
             const create = () => {
@@ -103,7 +104,7 @@ export default class CreateBuilding {
 
             return (
               <LargeActionButton
-                detail={String(building.configuration.cost)}
+                detail={String(cost)}
                 disabled={isDisabled}
                 entityCount={buildings.length}
                 icon={(highlight) => (

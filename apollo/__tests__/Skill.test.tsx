@@ -1,4 +1,4 @@
-import { ResearchLab } from '@deities/athena/info/Building.tsx';
+import { Bar, ResearchLab } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Forest, Forest2, RailTrack } from '@deities/athena/info/Tile.tsx';
 import {
@@ -573,6 +573,11 @@ test('can modify the range of units using a skill', async () => {
       3,
     ]
   `);
+
+  expect(Bar.getCostFor(player)).toBe(Number.POSITIVE_INFINITY);
+  expect(Bar.getCostFor(playerWithSkill)).toBeLessThan(
+    Number.POSITIVE_INFINITY,
+  );
 });
 
 test('the counter attack skill makes counter attacks more powerful', () => {

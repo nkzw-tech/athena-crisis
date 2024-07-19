@@ -8,7 +8,7 @@ import Player, { PlayerID } from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import type { ID } from '../MapData.tsx';
 import { BarID } from './BuildingIDs.tsx';
-import { hasUnlockedBuilding, Skill } from './Skill.tsx';
+import { getBuildingCost, hasUnlockedBuilding, Skill } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
 import {
   Airfield,
@@ -73,29 +73,31 @@ class BuildingBehaviors {
   }
 }
 
+const defaultBehavior = new BuildingBehaviors();
+
 export type BuildingHeight = 'small' | 'medium' | 'tall';
 
-const defaultBehavior = new BuildingBehaviors();
+type BuildingConfiguration = {
+  attackStatusEffect: number;
+  behaviors: BuildingBehaviors;
+  canBeCreated: boolean;
+  editorPlaceOn: ReadonlySet<TileInfo>;
+  funds: number;
+  healTypes?: ReadonlySet<EntityType>;
+  isAccessible: boolean;
+  limit: number;
+  placeOn?: ReadonlySet<TileInfo>;
+  requiresUnlock: boolean;
+  restrictedUnits?: ReadonlySet<UnitInfo>;
+  sort: number;
+  unitTypes?: ReadonlySet<EntityType>;
+  units?: ReadonlySet<UnitInfo>;
+};
 
 export class BuildingInfo {
   private readonly buildableUnits: ReadonlySet<UnitInfo>;
-  public readonly configuration: {
-    attackStatusEffect: number;
-    behaviors: BuildingBehaviors;
-    canBeCreated: boolean;
-    cost: number;
-    editorPlaceOn: ReadonlySet<TileInfo>;
-    funds: number;
-    healTypes?: ReadonlySet<EntityType>;
-    isAccessible: boolean;
-    limit: number;
-    placeOn?: ReadonlySet<TileInfo>;
-    requiresUnlock: boolean;
-    restrictedUnits?: ReadonlySet<UnitInfo>;
-    sort: number;
-    unitTypes?: ReadonlySet<EntityType>;
-    units?: ReadonlySet<UnitInfo>;
-  };
+  private readonly cost: number;
+  public readonly configuration: BuildingConfiguration;
   public readonly defense: number;
   public readonly sprite: {
     biomeStyle?: Map<Biome, SpriteVector>;
@@ -138,11 +140,11 @@ export class BuildingInfo {
     const { defense, type, ...rest } = configuration;
     this.defense = defense || 0;
     this.type = type || EntityType.Building;
+    this.cost = configuration.cost || 0;
     this.configuration = {
       attackStatusEffect: 0,
       behaviors: defaultBehavior,
       canBeCreated: true,
-      cost: 0,
       editorPlaceOn: new Set(),
       funds: 0,
       isAccessible: true,
@@ -173,6 +175,14 @@ export class BuildingInfo {
       value: this.internalDescription,
     });
     return this.internalDescription;
+  }
+
+  getCostFor(player: Player | null) {
+    if (!player?.skills.size) {
+      return this.cost;
+    }
+
+    return getBuildingCost(this, this.cost, player.skills);
   }
 
   canBeCreatedOn(tileInfo: TileInfo) {
@@ -597,7 +607,7 @@ export function mapBuildingsWithContentRestriction<T>(
   return buildings
     .filter(
       (building) =>
-        building.configuration.cost < Number.POSITIVE_INFINITY ||
+        building.getCostFor(null) < Number.POSITIVE_INFINITY ||
         hasUnlockedBuilding(building, skills),
     )
     .map(fn);

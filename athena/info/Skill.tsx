@@ -318,8 +318,8 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
 ]);
 
-const buildingUnlocks = new Map<ID, Set<Skill>>([
-  [BarID, new Set([Skill.BuyUnitBazookaBear])],
+const buildingCosts = new Map<ID, Map<Skill, number>>([
+  [BarID, new Map([[Skill.BuyUnitBazookaBear, 600]])],
 ]);
 
 const blockedUnits = new Map<Skill, ReadonlySet<ID>>([
@@ -533,6 +533,32 @@ export function getBlockedUnits(skill: Skill) {
 const unitIsBlocked = (unit: UnitInfo, skill: Skill) =>
   blockedUnits.get(skill)?.has(unit.id);
 
+export function getBuildingCost(
+  building: BuildingInfo,
+  cost: number,
+  skills: ReadonlySet<Skill>,
+) {
+  if (skills.size === 0) {
+    return cost;
+  }
+
+  const costs = buildingCosts.get(building.id);
+  let min = cost;
+  if (skills.size === 1) {
+    const skill: Skill = skills.values().next().value;
+    return costs?.get(skill) || min;
+  }
+
+  for (const skill of skills) {
+    const cost = costs?.get(skill);
+    if (cost && (!min || cost < min)) {
+      min = cost;
+    }
+  }
+
+  return min;
+}
+
 export function getUnitCost(
   unit: UnitInfo,
   cost: number,
@@ -571,17 +597,13 @@ export function hasUnlockedBuilding(
   building: BuildingInfo,
   skills: ReadonlySet<Skill>,
 ) {
-  if (!building.configuration.requiresUnlock) {
-    return building.configuration.cost < Number.POSITIVE_INFINITY;
-  }
-
   if (skills.size === 0) {
     return false;
   }
 
-  const unlocks = buildingUnlocks.get(building.id);
+  const unlocks = buildingCosts.get(building.id);
   if (unlocks) {
-    for (const skill of unlocks) {
+    for (const [skill] of unlocks) {
       if (skills.has(skill)) {
         return true;
       }

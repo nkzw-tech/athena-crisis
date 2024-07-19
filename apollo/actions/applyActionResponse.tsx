@@ -337,13 +337,13 @@ export default function applyActionResponse(
     }
     case 'CreateBuilding': {
       const { building, from } = actionResponse;
+      const player = map.getPlayer(building);
       const teams = map.isNeutral(building)
         ? map.teams
         : updatePlayer(
             map.teams,
-            map
-              .getPlayer(building)
-              .modifyFunds(-building.info.configuration.cost)
+            player
+              .modifyFunds(-building.info.getCostFor(player))
               .modifyStatistic('createdBuildings', 1),
           );
       return map.copy({

@@ -60,13 +60,13 @@ const buildings = getAllBuildings();
 const createableBuildings = buildings.filter(
   ({ configuration: { canBeCreated } }) => canBeCreated,
 );
-const extractCost = ({ configuration: { cost } }: BuildingInfo) => cost;
+const extractCost = (info: BuildingInfo) => info.getCostFor(null);
 const costRange = getAttributeRange(
   createableBuildings.filter(
-    ({ configuration: { cost } }) => cost < Number.POSITIVE_INFINITY,
+    (info) => info.getCostFor(null) < Number.POSITIVE_INFINITY,
   ),
   extractCost,
-  minBy(createableBuildings, extractCost)?.configuration.cost || 0,
+  minBy(createableBuildings, extractCost)?.getCostFor(null) || 0,
 );
 const defenseRange = getAttributeRange(
   buildings,
@@ -88,9 +88,12 @@ export default memo(function BuildingCard({
   const { biome } = map.config;
   const { info, player } = building;
   const {
-    configuration: { canBeCreated, cost, funds, isAccessible, limit },
+    configuration: { canBeCreated, funds, isAccessible, limit },
     sprite: { size },
   } = info;
+  const currentPlayer = map.getPlayer(player);
+  const cost = info.getCostFor(currentPlayer);
+
   const [entity, previewMap] = useMemo(() => {
     const entity = building.copy({ label: null }).recover();
     return [

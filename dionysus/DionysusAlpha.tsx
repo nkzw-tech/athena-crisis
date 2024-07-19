@@ -484,7 +484,7 @@ export default class DionysusAlpha extends BaseAI {
           if (
             building.configuration.funds > 0 &&
             !map.config.blocklistedBuildings.has(building.id) &&
-            building.configuration.cost < Number.POSITIVE_INFINITY &&
+            building.getCostFor(player) < Number.POSITIVE_INFINITY &&
             canBuild(map, building, player, vector)
           ) {
             return true;
@@ -576,7 +576,7 @@ export default class DionysusAlpha extends BaseAI {
 
             const buildingInfos = filterBuildings(
               (info) =>
-                info.configuration.cost <= currentPlayer.funds &&
+                info.getCostFor(currentPlayer) <= currentPlayer.funds &&
                 canBuild(map, info, unit.player, item.vector) &&
                 shouldBuild(info),
             );

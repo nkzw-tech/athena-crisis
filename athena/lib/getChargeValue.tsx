@@ -11,15 +11,18 @@ export default function getChargeValue(
   modifier = 1,
 ) {
   if (!isUnit(entity)) {
-    return newEntity.isDead()
-      ? Math.floor(
-          (Charge * 2) / 3 +
-            (isBuilding(newEntity)
-              ? newEntity.info.configuration.cost
-              : MinFunds) *
-              2,
-        )
-      : 0;
+    if (!newEntity.isDead()) {
+      return 0;
+    }
+    let cost = isBuilding(newEntity)
+      ? newEntity.info.getCostFor(player)
+      : MinFunds;
+
+    if (cost === Number.POSITIVE_INFINITY) {
+      cost = MinFunds * 10;
+    }
+
+    return Math.floor((Charge * 2) / 3 + cost * 2);
   }
 
   const value = getUnitValue(entity, player);
