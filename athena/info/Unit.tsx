@@ -1221,13 +1221,11 @@ export const Weapons = {
         [EntityType.Airplane, 100],
         [EntityType.Amphibious, 110],
         [EntityType.Artillery, 110],
-        [EntityType.Building, 70],
         [EntityType.Ground, 110],
         [EntityType.LowAltitude, 110],
         [EntityType.Infantry, 110],
         [EntityType.Rail, 80],
         [EntityType.Ship, 80],
-        [EntityType.Structure, 80],
       ]),
     )
     .withAnimationPositions({
