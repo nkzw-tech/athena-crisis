@@ -12,7 +12,9 @@ import {
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
+import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
+import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
@@ -76,6 +78,8 @@ export default function DesignPanel({
   const building = selected?.building || null;
   const unit = selected?.unit || null;
   const biomeStyle = getBiomeStyle(biome);
+  const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
   const { alert } = useAlert();
   const tiles = useMemo(
     () =>
@@ -93,8 +97,15 @@ export default function DesignPanel({
           blocklistedBuildings.has(building.id)
             ? building.create(currentPlayer).complete()
             : building.create(currentPlayer),
-        ),
-    [blocklistedBuildings, currentPlayer, hasContentRestrictions, skills],
+        )
+        .filter((building) => !biomeBuildingRestrictions?.has(building.info)),
+    [
+      biomeBuildingRestrictions,
+      blocklistedBuildings,
+      currentPlayer,
+      hasContentRestrictions,
+      skills,
+    ],
   );
   const units = useMemo(
     () =>
@@ -104,8 +115,14 @@ export default function DesignPanel({
             ? unit.create(currentPlayer).complete()
             : unit.create(currentPlayer),
         skills,
-      ),
-    [blocklistedUnits, currentPlayer, hasContentRestrictions, skills],
+      ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
+    [
+      biomeUnitRestrictions,
+      blocklistedUnits,
+      currentPlayer,
+      hasContentRestrictions,
+      skills,
+    ],
   );
 
   const [setRef, getColumns] = useColumns();

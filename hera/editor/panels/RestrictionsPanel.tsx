@@ -8,6 +8,8 @@ import {
   mapUnits,
   mapUnitsWithContentRestriction,
 } from '@deities/athena/info/Unit.tsx';
+import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
+import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -49,6 +51,9 @@ export default function RestrictionsPanel({
   const { biome, blocklistedBuildings, blocklistedSkills, blocklistedUnits } =
     config;
 
+  const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
+
   const skills = useMemo(() => new Set(user.skills), [user.skills]);
   const buildings = useMemo(
     () =>
@@ -61,8 +66,14 @@ export default function RestrictionsPanel({
           return blocklistedBuildings.has(info.id)
             ? building.complete()
             : building;
-        }),
-    [blocklistedBuildings, hasContentRestrictions, skills],
+        })
+        .filter((building) => !biomeBuildingRestrictions?.has(building.info)),
+    [
+      biomeBuildingRestrictions,
+      blocklistedBuildings,
+      hasContentRestrictions,
+      skills,
+    ],
   );
 
   const units = useMemo(
@@ -73,8 +84,8 @@ export default function RestrictionsPanel({
           return blocklistedUnits.has(info.id) ? unit.complete() : unit;
         },
         skills,
-      ),
-    [blocklistedUnits, hasContentRestrictions, skills],
+      ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
+    [biomeUnitRestrictions, blocklistedUnits, hasContentRestrictions, skills],
   );
 
   const selectBuilding = useCallback(
@@ -167,25 +178,31 @@ export default function RestrictionsPanel({
         </Box>
         <Tick animationConfig={AnimationConfig}>
           <Stack gap={24} vertical>
-            <Box alignNormal>
-              <InlineTileList
-                biome={biome}
-                buildings={buildings}
-                onSelect={selectBuilding}
-                size="tall"
-                tiles={buildings.map((building) =>
-                  getTileInfo(getAnyBuildingTileField(building.info)),
-                )}
-              />
-            </Box>
-            <Box alignNormal>
-              <InlineTileList
-                biome={biome}
-                onSelect={selectUnit}
-                tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
-                units={units}
-              />
-            </Box>
+            {buildings.length ? (
+              <Box alignNormal>
+                <InlineTileList
+                  biome={biome}
+                  buildings={buildings}
+                  onSelect={selectBuilding}
+                  size="tall"
+                  tiles={buildings.map((building) =>
+                    getTileInfo(getAnyBuildingTileField(building.info)),
+                  )}
+                />
+              </Box>
+            ) : null}
+            {units.length ? (
+              <Box alignNormal>
+                <InlineTileList
+                  biome={biome}
+                  onSelect={selectUnit}
+                  tiles={units.map(
+                    (unit) => getAnyUnitTile(unit.info) || Plain,
+                  )}
+                  units={units}
+                />
+              </Box>
+            ) : null}
           </Stack>
         </Tick>
         <Box gap={24} vertical>

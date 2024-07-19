@@ -41,6 +41,8 @@ import canDeploy from './canDeploy.tsx';
 import canPlaceDecorator from './canPlaceDecorator.tsx';
 import canPlaceTile from './canPlaceTile.tsx';
 import getActivePlayers from './getActivePlayers.tsx';
+import getBiomeBuildingRestrictions from './getBiomeBuildingRestrictions.tsx';
+import getBiomeUnitRestrictions from './getBiomeUnitRestrictions.tsx';
 import indexToVector from './indexToVector.tsx';
 import validateTeams, { TeamsList } from './validateTeams.tsx';
 import withModifiers from './withModifiers.tsx';
@@ -61,6 +63,7 @@ export type ErrorReason =
 const validateMapConfig = (map: MapData) => {
   const { config } = map;
   const {
+    biome,
     blocklistedBuildings,
     blocklistedUnits,
     fog,
@@ -68,17 +71,20 @@ const validateMapConfig = (map: MapData) => {
     performance,
     seedCapital,
   } = config;
+
   if (typeof fog !== 'boolean') {
     return false;
   }
+
   if (!isPositiveInteger(multiplier)) {
     return false;
   }
+
   if (!isPositiveInteger(seedCapital) && seedCapital !== 0) {
     return false;
   }
 
-  if (!Biomes.includes(config.biome)) {
+  if (!Biomes.includes(biome)) {
     return false;
   }
 
@@ -301,16 +307,24 @@ export default function validateMap(
     return [null, 'invalid-decorators'];
   }
 
+  const { biome } = map.config;
+  const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
+
   const availableBuildings = new Set(
     (hasContentRestrictions
       ? mapBuildingsWithContentRestriction
-      : mapBuildings)(({ id }) => id, skills || new Set()),
+      : mapBuildings)((building) => building, skills || new Set())
+      .filter((building) => !biomeBuildingRestrictions?.has(building))
+      .map(({ id }) => id),
   );
   const availableUnits = new Set(
     (hasContentRestrictions ? mapUnitsWithContentRestriction : mapUnits)(
-      ({ id }) => id,
+      (unit) => unit,
       skills || new Set(),
-    ),
+    )
+      .filter((unit) => !biomeUnitRestrictions?.has(unit.type))
+      .map(({ id }) => id),
   );
 
   map = map.copy({
