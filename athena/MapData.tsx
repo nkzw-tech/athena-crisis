@@ -186,6 +186,7 @@ export default class MapData {
   private _hasNeutralUnits: boolean | null = null;
   private _activeUnitTypes: ReadonlyMap<PlayerID, ActiveUnitTypes> | null =
     null;
+  protected unitAccessibilityCache: Map<string | number, boolean>;
 
   constructor(
     public readonly map: TileMap,
@@ -213,6 +214,11 @@ export default class MapData {
       }),
     );
     this.playerToTeam.set(0, -1);
+    this.unitAccessibilityCache = new Map();
+  }
+
+  getCache() {
+    return this.unitAccessibilityCache;
   }
 
   contains(size: { x: number; y: number }) {
@@ -278,19 +284,18 @@ export default class MapData {
       : null;
   }
 
-  getTileInfo(vector: Vector, layer?: TileLayer) {
+  getTileInfo(vector: Vector, layer?: TileLayer, index?: number) {
     if (!this.contains(vector)) {
       throw new Error(
         `getTileInfo: Vector '${vector.x},${vector.y}' is not within the map limits of width '${this.size.width}' and height '${this.size.height}'.`,
       );
     }
-
-    return getTileInfo(this.map[this.getTileIndex(vector)], layer);
+    return getTileInfo(this.map[index ?? this.getTileIndex(vector)], layer);
   }
 
-  maybeGetTileInfo(vector: Vector, layer?: TileLayer) {
+  maybeGetTileInfo(vector: Vector, layer?: TileLayer, index?: number) {
     if (this.contains(vector)) {
-      return getTileInfo(this.map[this.getTileIndex(vector)], layer);
+      return getTileInfo(this.map[index ?? this.getTileIndex(vector)], layer);
     }
   }
 
@@ -413,7 +418,8 @@ export default class MapData {
     value: T,
   ): T {
     const { map, size } = this;
-    for (let i = 0; i < map.length; i++) {
+    const length = map.length;
+    for (let i = 0; i < length; i++) {
       value = fn.call(this, value, indexToVector(i, size.width), i);
     }
     return value;
@@ -447,7 +453,8 @@ export default class MapData {
     value: T,
   ): T {
     const { map, modifiers, size } = this;
-    for (let i = 0; i < map.length; i++) {
+    const length = map.length;
+    for (let i = 0; i < length; i++) {
       const field = map[i];
       if (typeof field === 'number') {
         value = fn.call(
@@ -499,7 +506,8 @@ export default class MapData {
     value: T,
   ): T {
     const { decorators, size } = this;
-    for (let i = 0; i < decorators.length; i++) {
+    const length = decorators.length;
+    for (let i = 0; i < length; i++) {
       const decorator = getDecorator(decorators[i]);
       if (decorator) {
         value = fn.call(

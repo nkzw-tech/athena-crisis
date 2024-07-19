@@ -1,7 +1,7 @@
 const toUtf8 = (str: string) => {
   const result = [];
-  const len = str.length;
-  for (let i = 0; i < len; i++) {
+  const length = str.length;
+  for (let i = 0; i < length; i++) {
     let charcode = str.charCodeAt(i);
     if (charcode < 0x80) {
       result.push(charcode);
@@ -36,8 +36,8 @@ const _jenkinsHash = (str: string): number => {
 
   const utf8 = toUtf8(str);
   let hash = 0;
-  const len = utf8.length;
-  for (let i = 0; i < len; i++) {
+  const length = utf8.length;
+  for (let i = 0; i < length; i++) {
     hash += utf8[i];
     hash = (hash + (hash << 10)) >>> 0;
     hash ^= hash >>> 6;

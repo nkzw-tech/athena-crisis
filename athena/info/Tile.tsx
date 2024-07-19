@@ -198,7 +198,7 @@ export class TileInfo {
   }
 
   getTransitionCost({ movementType }: { movementType: MovementType }): number {
-    return this.configuration.transitionCost?.get(movementType) || 0;
+    return this.configuration.transitionCost?.get(movementType) ?? 0;
   }
 
   isInaccessible() {
