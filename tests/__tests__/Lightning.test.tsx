@@ -120,3 +120,61 @@ test('can turn lightning barriers on and off', async () => {
     gameState.at(-1)![1].getPlayer(player1.id).charge,
   );
 });
+
+test('cannot turn lightning barriers on when self or team units are on the field', async () => {
+  const from = vec(1, 1);
+  const to = vec(2, 3);
+  const teamA = map.getTeam(1);
+  const mapA: MapData | null = map.copy({
+    buildings: map.buildings.set(from, RadarStation.create(1)),
+    units: map.units.set(to, Pioneer.create(1)),
+  });
+
+  expect(() => {
+    try {
+      executeGameActions(mapA, [ToggleLightningAction(from, to)]);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(stripAnsi(error.message));
+      }
+    }
+  }).toThrowErrorMatchingInlineSnapshot(
+    `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
+  );
+
+  const mapB: MapData | null = mapA.copy({
+    teams: mapA.teams.set(
+      1,
+      teamA.copy({
+        players: teamA.players.set(
+          3,
+          new HumanPlayer(
+            3,
+            '3',
+            1,
+            300,
+            undefined,
+            new Set(),
+            new Set(),
+            0,
+            null,
+            0,
+          ),
+        ),
+      }),
+    ),
+    units: mapA.units.set(to, Pioneer.create(3)),
+  });
+
+  expect(() => {
+    try {
+      executeGameActions(mapB, [ToggleLightningAction(from, to)]);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(stripAnsi(error.message));
+      }
+    }
+  }).toThrowErrorMatchingInlineSnapshot(
+    `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
+  );
+});

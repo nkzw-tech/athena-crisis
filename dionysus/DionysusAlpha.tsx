@@ -31,6 +31,7 @@ import calculateClusters from '@deities/athena/lib/calculateClusters.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
+import canPlaceLightning from '@deities/athena/lib/canPlaceLightning.tsx';
 import determineUnitsToCreate from '@deities/athena/lib/determineUnitsToCreate.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
@@ -1271,6 +1272,10 @@ export default class DionysusAlpha extends BaseAI {
 
   private toggleLightning(map: MapData) {
     const currentPlayer = map.getCurrentPlayer();
+    if (currentPlayer.charge < Charge) {
+      return false;
+    }
+
     const buildings = map.buildings.filter(
       (building) =>
         !building.isCompleted() &&
@@ -1283,17 +1288,26 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
-    const fields = map.reduceEachField<Array<Vector>>((fields, vector) => {
-      return map.getTileInfo(vector) === Lightning
-        ? [...fields, vector]
-        : fields;
-    }, []);
+    const fields = map.reduceEachField<{
+      off: Array<Vector>;
+      on: Array<Vector>;
+    }>(
+      (fields, vector) =>
+        map.getTileInfo(vector) === Lightning
+          ? { ...fields, off: [...fields.off, vector] }
+          : map.units.has(vector) && canPlaceLightning(map, vector)
+            ? { ...fields, on: [...fields.on, vector] }
+            : fields,
+      { off: [], on: [] },
+    );
 
-    if (!fields.length) {
-      return this.execute(map, CompleteBuildingAction(from));
+    if (fields.on.length) {
+      return this.execute(map, ToggleLightningAction(from, fields.on[0]));
+    } else if (fields.off.length) {
+      return this.execute(map, ToggleLightningAction(from, fields.off[0]));
     }
 
-    return this.execute(map, ToggleLightningAction(from, fields[0]));
+    return this.execute(map, CompleteBuildingAction(from));
   }
 }
 

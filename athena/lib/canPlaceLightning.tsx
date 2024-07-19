@@ -10,7 +10,7 @@ export default function canPlaceLightning(map: MapData, vector: Vector) {
     tile !== StormCloud &&
     tile !== Lightning &&
     !map.buildings.has(vector) &&
-    (!unit || !map.matchesPlayer(map.getCurrentPlayer(), unit)) &&
+    (!unit || !map.matchesTeam(map.getCurrentPlayer(), unit)) &&
     canPlaceTile(map, vector, Lightning)
   );
 }
