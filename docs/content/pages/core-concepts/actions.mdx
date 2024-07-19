@@ -164,4 +164,4 @@ After following the above steps, Athena Crisis should now have a new "Sleep" fea
 
 In the above example we called `optimisticAction(state, SleepUnitAction(from))` to update the game state on the client optimistically. Due to the elegance of immutable data structures and the Athena Crisis architecture, we can apply an Action on the client while sending the same action to the server at the same time, executing it, and sending the (visible) ActionResponse to each other player.
 
-The architecture of the game ensures that the server always has the final say on the game state, and the client will be updated with the server's response. This is a powerful feature that allows the game to feel responsive and smooth, even on slow connections, and it also allows hiding secrets like hidden win conditions from players.
+The architecture of the game ensures that the server always has the final say on the game state, and the client will be updated with the server's response. This is a powerful feature that allows the game to feel responsive and smooth, even on slow connections, and it also allows hiding secrets like hidden objectives from players.

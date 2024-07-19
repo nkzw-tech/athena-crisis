@@ -950,7 +950,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
   `);
 });
 
-test('AI will prioritize units with labels associated with win conditions', () => {
+test('AI will prioritize units with labels associated with objectives', () => {
   const initialMap = withModifiers(
     MapData.createMap({
       map: [

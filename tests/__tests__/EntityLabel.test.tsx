@@ -122,7 +122,7 @@ test('capture retains a label', () => {
   expect(label).not.toBeNull();
 });
 
-test('drops labels from hidden win conditions', () => {
+test('drops labels from hidden objectives', () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
   const vecC = vec(3, 3);

@@ -300,7 +300,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
                   Complete any objective to win the game.
                 </fbt>
               ) : (
-                <fbt desc="Win conditions are all secret">
+                <fbt desc="Objectives are all secret">
                   Objectives for this game are secret.
                 </fbt>
               )}
