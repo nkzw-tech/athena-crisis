@@ -1282,6 +1282,10 @@ export const Space = new TileInfo(
       [MovementTypes.Tires, -1],
       [MovementTypes.Tread, -1],
     ]),
+    transitionCost: new Map([
+      [MovementTypes.Air, Number.POSITIVE_INFINITY],
+      [MovementTypes.AirInfantry, Number.POSITIVE_INFINITY],
+    ]),
   },
   {
     modifiers: AreaModifiers,
@@ -1358,7 +1362,13 @@ export const SpaceBridge = new TileInfo(
     group: Bridge.group,
     type: TileTypes.Bridge | TileTypes.Joinable | TileTypes.ConnectWithEdge,
   },
-  Bridge.configuration,
+  {
+    ...Bridge.configuration,
+    transitionCost: new Map([
+      [MovementTypes.Air, -Number.POSITIVE_INFINITY],
+      [MovementTypes.AirInfantry, -Number.POSITIVE_INFINITY],
+    ]),
+  },
   Bridge.sprite,
   { connectsWith: Path, layer: 1 },
 );
