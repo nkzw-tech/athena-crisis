@@ -3413,7 +3413,7 @@ export const Bear = new UnitInfo(
 export const Alien = new UnitInfo(
   46,
   'Alien',
-  'Unknown',
+  'Styx',
   'unknown',
   `Alien units aren't really that special. They're just like any other soldier, except they come from another dimension. Rumored to possess advanced technology and abilities, and known to travel in spaceships — but other than that, they're just like any other soldier. Really.`,
   `Who hasn't been beamed up onto a spaceship and probed by aliens before? Well, anyway, it was definitely not {name}, because {name} is an interior decorator from another dimension. They're here to make sure the multiverse looks good, one universe at a time. Although… they are known to get into disagreements about style. To {name}, all the useless clutter from humans seems out of this world. Who needs it, really?`,
