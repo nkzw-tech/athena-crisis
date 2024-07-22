@@ -13,13 +13,14 @@ export function processRewards(
   map: MapData,
   actionResponse: GameEndActionResponse | OptionalObjectiveActionResponse,
 ): [GameState, MapData] {
+  const isGameEnd = actionResponse.type === 'GameEnd';
   const gameState: MutableGameState = [];
   const team = getMatchingTeam(map, actionResponse);
   if (team) {
     const rewards = new Set(
       [
         actionResponse.objective?.reward,
-        actionResponse.type === 'GameEnd'
+        isGameEnd
           ? map.config.objectives.find(
               (objective) => objective.type === Criteria.Default,
             )?.reward
@@ -31,6 +32,10 @@ export function processRewards(
       for (const reward of rewards) {
         for (const [, player] of team.players) {
           if (reward.type !== 'Skill' || !player.skills.has(reward.skill)) {
+            if (isGameEnd && player.isBot()) {
+              continue;
+            }
+
             const rewardActionResponse = {
               player: player.id,
               reward,

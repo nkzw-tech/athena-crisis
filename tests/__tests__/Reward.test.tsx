@@ -4,8 +4,9 @@ import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { Barracks } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
@@ -37,7 +38,7 @@ const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
-  const currentMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(vecA, Barracks.create(2)),
     config: map.config.copy({
       objectives: ImmutableMap([
@@ -110,17 +111,27 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     ],
   ]);
 
-  const [gameState] = executeGameActions(
-    currentMap,
-    [CaptureAction(vecA)],
-    effects,
-  );
+  const [gameStateA] = executeGameActions(mapA, [CaptureAction(vecA)], effects);
 
-  expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "SetViewer
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+  `);
+
+  // Bots do not receive rewards at the end of a game.
+  const mapB = mapA.copy({
+    teams: updatePlayer(map.teams, Bot.from(player1, 'Bot')),
+  });
+
+  const [gameStateB] = executeGameActions(mapB, [CaptureAction(vecA)], effects);
+
+  expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
+    "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
+    SetViewer
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
   `);
 });
