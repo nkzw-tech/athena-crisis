@@ -5,6 +5,7 @@ export default {
   Artillery: 7,
   HeavyArtillery: 12,
   Medic: 26,
+  Alien: 46,
   Zombie: 47,
   Brute: 49,
   Commander: 50,

@@ -198,6 +198,7 @@ export type BuySkillActionResponse = Readonly<{
 export type ActivatePowerActionResponse = Readonly<{
   skill: Skill;
   type: 'ActivatePower';
+  units?: ImmutableMap<Vector, Unit>;
 }>;
 
 export type SecretDiscoveredActionResponse = Readonly<{

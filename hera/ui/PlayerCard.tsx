@@ -39,6 +39,7 @@ import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback, useMemo } from 'react';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
+import handleRemoteAction from '../behavior/handleRemoteAction.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
@@ -66,7 +67,7 @@ export default memo(function PlayerCard({
   vision: VisionT;
   wide?: boolean;
 }) {
-  const { optimisticAction, showGameInfo, update } = actions;
+  const { action, showGameInfo, update } = actions;
   const { objectives } = map.config;
   const color = getColor(player.id);
 
@@ -123,18 +124,19 @@ export default memo(function PlayerCard({
                   return;
                 }
                 const state = await update(resetBehavior());
-                const actionResponse = optimisticAction(
+                const [remoteAction, , actionResponse] = action(
                   state,
                   ActivatePowerAction(skill),
                 );
                 if (actionResponse.type === 'ActivatePower') {
-                  update({
+                  await update({
                     ...(await activatePowerAction(
                       actions,
                       state,
                       actionResponse,
                     )),
                   });
+                  await handleRemoteAction(actions, remoteAction);
                 }
               }
             : undefined,
@@ -151,7 +153,7 @@ export default memo(function PlayerCard({
       actions,
       canAction,
       currentViewer,
-      optimisticAction,
+      action,
       player.id,
       player.skills,
       showGameInfo,

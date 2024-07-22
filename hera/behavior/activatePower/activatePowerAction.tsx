@@ -14,8 +14,9 @@ import MapData from '@deities/athena/MapData.tsx';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
+import spawn from '../../lib/spawn.tsx';
 import upgradeUnits from '../../lib/upgradeUnits.tsx';
-import { Actions, State } from '../../Types.tsx';
+import { Actions, State, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
@@ -37,16 +38,22 @@ export default async function activatePowerAction(
   actionResponse: ActivatePowerActionResponse,
 ): Promise<State> {
   const { requestFrame, update } = actions;
-  const { skill } = actionResponse;
+  const { skill, units: unitsToSpawn } = actionResponse;
   const player = state.map.getCurrentPlayer();
   const { colors, name } = getSkillConfigForDisplay(skill);
+
+  const spawnUnits = (state: State, onComplete: StateToStateLike) =>
+    unitsToSpawn?.size
+      ? spawn(actions, state, [...unitsToSpawn], null, 'slow', onComplete)
+      : onComplete(state);
+
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
         color: colors,
         length: 'long',
         onComplete: (state) => {
-          const map = applyActionResponse(
+          const finalMap = applyActionResponse(
             state.map,
             state.vision,
             actionResponse,
@@ -54,7 +61,10 @@ export default async function activatePowerAction(
 
           const unitTypes = state.map
             .copy({
-              teams: updatePlayer(state.map.teams, map.getPlayer(player.id)),
+              teams: updatePlayer(
+                state.map.teams,
+                finalMap.getPlayer(player.id),
+              ),
             })
             .getActiveUnitTypes()
             .get(player.id);
@@ -78,7 +88,7 @@ export default async function activatePowerAction(
               sortVectors([...units.keys()]),
               (state) => {
                 requestFrame(() =>
-                  resolve({ ...state, map, ...resetBehavior() }),
+                  resolve({ ...state, map: finalMap, ...resetBehavior() }),
                 );
                 return null;
               },
@@ -92,18 +102,18 @@ export default async function activatePowerAction(
 
           return {
             ...(unitsToHeal?.size
-              ? animateHeal(
-                  state,
-                  sortByVectorKey([...unitsToHeal]),
-                  (state) => (units.size ? getUpgradeAnimations(state) : state),
+              ? animateHeal(state, sortByVectorKey([...unitsToHeal]), (state) =>
+                  spawnUnits(state, () =>
+                    units.size ? getUpgradeAnimations(state) : state,
+                  ),
                 )
-              : getUpgradeAnimations(state)),
+              : spawnUnits(state, getUpgradeAnimations)),
             map: state.map.copy({
               teams: updatePlayer(
                 state.map.teams,
                 state.map
                   .getPlayer(player.id)
-                  .setCharge(map.getPlayer(player.id).charge),
+                  .setCharge(finalMap.getPlayer(player.id).charge),
               ),
             }),
           };

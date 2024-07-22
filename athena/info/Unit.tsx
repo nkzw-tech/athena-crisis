@@ -3409,7 +3409,7 @@ export const Bear = new UnitInfo(
 );
 
 export const Alien = new UnitInfo(
-  46,
+  UnitID.Alien,
   'Alien',
   'Styx',
   'unknown',
@@ -3835,7 +3835,6 @@ const Units = [
 export const InitialPortraits = new Set([Pioneer, Sniper, Flamethrower]);
 
 export const SpecialUnits = new Set([
-  Alien,
   BazookaBear,
   Bear,
   Dinosaur,

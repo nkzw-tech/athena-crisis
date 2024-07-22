@@ -2,6 +2,7 @@ import { Skill } from '@deities/athena/info/Skill.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import { SVGIcon } from '@deities/ui/Icon.tsx';
+import Alien from '@deities/ui/icons/Alien.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
@@ -222,6 +223,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'green',
         icon: Repeat,
         name: fbt('Eagle Eye', 'Skill name'),
+      };
+    case Skill.BuyUnitAlien:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'purple',
+        icon: Alien,
+        name: fbt('Alien Invasion', 'Skill name'),
       };
     default: {
       skill satisfies never;

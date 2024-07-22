@@ -1,4 +1,9 @@
-import { Bar, BuildingInfo } from '@deities/athena/info/Building.tsx';
+import {
+  Bar,
+  Barracks,
+  BuildingInfo,
+  HQ,
+} from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import {
   ActiveUnitTypes,
@@ -18,6 +23,7 @@ import {
 } from '@deities/athena/info/Skill.tsx';
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
+  Alien,
   Battleship,
   BazookaBear,
   getUnitInfoOrThrow,
@@ -642,6 +648,23 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           at each
           <fbt:param name="buildingName">
             <BuildingName building={Bar} color={color} />
+          </fbt:param>.
+        </fbt>
+      );
+    case Skill.BuyUnitAlien:
+      return (
+        <fbt desc="Additional skill description">
+          Spawns{' '}
+          <fbt:param name="unitName">
+            <UnitName color={color} unit={Alien} />
+          </fbt:param>{' '}
+          at each
+          <fbt:param name="buildingNameA">
+            <BuildingName building={Barracks} color={color} />
+          </fbt:param>{' '}
+          and{' '}
+          <fbt:param name="buildingNameB">
+            <BuildingName building={HQ} color={color} />
           </fbt:param>.
         </fbt>
       );

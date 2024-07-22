@@ -1058,7 +1058,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "ActivatePower { skill: 3 }
+    "ActivatePower { skill: 3, units: [] }
     AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 184, chargeB: 352 }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 368, chargeB: 704 }
     AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 375, chargeB: 726 }
@@ -1107,7 +1107,7 @@ test('skills will only be activated if there are enough units that can be acted 
     "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7648, chargeB: 302 }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7796, chargeB: 604 }
     AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7877, chargeB: 851 }
-    ActivatePower { skill: 24 }
+    ActivatePower { skill: 24, units: [] }
     Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1] }
     AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 25, ammo: [ [ 1, 6 ] ] }, chargeA: 440, chargeB: 961 }
     Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2] }
@@ -1129,7 +1129,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
-    "ActivatePower { skill: 24 }
+    "ActivatePower { skill: 24, units: [] }
     CompleteUnit (1,2)
     Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3] }
     Move (3,3 → 2,3) { fuel: 48, completed: null, path: [2,3] }
@@ -1168,7 +1168,7 @@ test('activates skills where the unit ratio does not matter', () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "ActivatePower { skill: 12 }
+    "ActivatePower { skill: 12, units: [1,2 → Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], name: 'Bazoo' }, 2,3 → Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], name: 'Taylor' }] }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 123, chargeB: 375 }
     AttackUnit (1,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 246, chargeB: 750 }
     AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49, ammo: [ [ 1, 6 ] ] }, chargeA: 346, chargeB: 941 }

@@ -307,7 +307,7 @@ const encodePropType = (
     }
 
     if (type === 'entities') {
-      return [...list, `${name}: PlainEntitiesList<Plain${value + suffix}>`];
+      return [...list, `${name}: PlainEntitiesList<Plain${value}>${suffix}`];
     }
 
     if (type === 'array') {
@@ -354,7 +354,12 @@ const encodeProps = (
       }
 
       if (type === 'entities') {
-        return [...list, `encodeEntities(${identifier})`];
+        return [
+          ...list,
+          optional
+            ? `${identifier} != null ? encodeEntities(${identifier}) : null`
+            : `encodeEntities(${identifier})`,
+        ];
       }
 
       if (type === 'array') {
@@ -431,13 +436,12 @@ const decodeProps = (
         }
 
         if (type === 'entities' && typeof value === 'string') {
+          const decode = `decodeEntities(action[${counter}], ${value.slice(0, 1).toUpperCase() + value.slice(1)}.fromJSON)`;
           return {
             counter: counter + 1,
             list: [
               ...list,
-              `${name}: decodeEntities(action[${counter}], ${
-                value.slice(0, 1).toUpperCase() + value.slice(1)
-              }.fromJSON)`,
+              `${name}: ${optional ? `action[${counter}] != null ? ${decode} : undefined` : decode}`,
             ],
           };
         }

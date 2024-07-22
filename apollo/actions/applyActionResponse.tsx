@@ -548,7 +548,7 @@ export default function applyActionResponse(
       });
     }
     case 'ActivatePower': {
-      const { skill } = actionResponse;
+      const { skill, units } = actionResponse;
       const playerA = map.getCurrentPlayer();
       const { charges } = getSkillConfig(skill);
 
@@ -561,6 +561,7 @@ export default function applyActionResponse(
               .activateSkill(skill)
               .setCharge(playerA.charge - (charges || 0) * Charge),
           ),
+          units: units ? map.units.merge(units) : map.units,
         }),
       );
     }

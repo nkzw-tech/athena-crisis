@@ -37,6 +37,7 @@ export enum Skill {
   BuyUnitAIU = 22,
   BuyUnitCommander = 23,
   RecoverAirUnits = 24,
+  BuyUnitAlien = 25,
 }
 
 export const Skills = new Set<Skill>([
@@ -64,6 +65,7 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitAIU,
   Skill.BuyUnitCommander,
   Skill.RecoverAirUnits,
+  Skill.BuyUnitAlien,
 ]);
 
 const skillConfig: Record<
@@ -100,6 +102,7 @@ const skillConfig: Record<
   [Skill.BuyUnitAIU]: { cost: 1500 },
   [Skill.BuyUnitCommander]: { charges: 3, cost: 1500 },
   [Skill.RecoverAirUnits]: { charges: 5, cost: 3000 },
+  [Skill.BuyUnitAlien]: { charges: 3, cost: 1500 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set(
@@ -316,6 +319,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Zombie, new Map([[Skill.BuyUnitZombieDefenseDecreaseMajor, 250]])],
   [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 300]])],
   [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
+  [UnitID.Alien, new Map([[Skill.BuyUnitAlien, 450]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([

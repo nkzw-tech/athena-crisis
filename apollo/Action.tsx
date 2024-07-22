@@ -27,6 +27,7 @@ import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.t
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
+import powerSpawnUnits from '@deities/athena/lib/powerSpawnUnits.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import {
@@ -905,6 +906,7 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
     return {
       skill,
       type: 'ActivatePower',
+      units: powerSpawnUnits(map, player.id, skill) || ImmutableMap(),
     } as const;
   }
 

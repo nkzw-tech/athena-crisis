@@ -7,9 +7,11 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import {
   ActionResponse,
   ActionResponses,
+  ActivatePowerActionResponse,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
   CaptureActionResponse,
@@ -63,6 +65,17 @@ const supplyActionWithDefault =
       : null;
   };
 
+const filterUnits = (
+  activeMap: MapData,
+  vision: VisionT,
+  actionResponse: SpawnActionResponse | ActivatePowerActionResponse,
+) =>
+  actionResponse.units
+    ?.filter((_, vector) => vision.isVisible(activeMap, vector))
+    .sortBy((unit) =>
+      activeMap.matchesTeam(unit, vision.currentViewer) ? -1 : 1,
+    );
+
 const getAttackWeapon = (
   map: MapData,
   from: Vector,
@@ -93,7 +106,15 @@ const VisibleActionModifiers: Record<
   ActionResponse['type'],
   VisibleModifier<never>
 > = {
-  ActivatePower: true,
+  ActivatePower: (
+    actionResponse: ActivatePowerActionResponse,
+    map: MapData,
+    activeMap: MapData,
+    vision: VisionT,
+  ): ActivatePowerActionResponse | null => ({
+    ...actionResponse,
+    units: filterUnits(activeMap, vision, actionResponse),
+  }),
   AttackBuilding: {
     Both: true,
     Hidden: ({
@@ -406,12 +427,11 @@ const VisibleActionModifiers: Record<
     activeMap: MapData,
     vision: VisionT,
   ): SpawnActionResponse | null => {
-    const units = actionResponse.units
-      .filter((_, vector) => vision.isVisible(activeMap, vector))
-      .sortBy((unit) =>
-        activeMap.matchesTeam(unit, vision.currentViewer) ? -1 : 1,
-      );
-    return units.size ? { ...actionResponse, units } : null;
+    const { teams } = actionResponse;
+    const units = filterUnits(activeMap, vision, actionResponse);
+    return units?.size || teams
+      ? { ...actionResponse, units: units || ImmutableMap() }
+      : null;
   },
   Start: true,
   Supply: {

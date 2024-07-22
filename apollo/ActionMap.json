@@ -169,7 +169,7 @@
   ["Rescue", [37, ["type", "from", "to", "player", "name"]]],
   ["ReceiveReward", [38, ["type", "player", "reward", "permanent"]]],
   ["BuySkill", [39, ["type", "from", "skill", "player"]]],
-  ["ActivatePower", [40, ["type", "skill"]]],
+  ["ActivatePower", [40, ["type", "skill", "units"]]],
   ["PreviousTurnGameOver", [41, ["type", "fromPlayer"]]],
   ["SecretDiscovered", [42, ["type", "objective", "toPlayer"]]],
   ["OptionalObjective", [43, ["type", "objective", "objectiveId", "toPlayer"]]]
