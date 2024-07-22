@@ -220,12 +220,11 @@ export function visible(
 ): ReadonlyMap<Vector, RadiusItem> {
   const vision =
     radius +
-    (unit.isUnfolded()
-      ? 2
-      : unit.info.type === EntityType.Infantry &&
-          map.getTileInfo(start).type & TileTypes.Mountain
-        ? 1
-        : 0);
+    (unit.isUnfolded() ? 2 : 0) +
+    (unit.info.type === EntityType.Infantry &&
+    map.getTileInfo(start).type & TileTypes.Mountain
+      ? 1
+      : 0);
 
   const visible = calculateRadius(
     map,
