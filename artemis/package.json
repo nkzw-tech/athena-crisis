@@ -11,7 +11,7 @@
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.614.0",
-    "@aws-sdk/s3-request-presigner": "^3.614.0",
+    "@aws-sdk/s3-request-presigner": "^3.616.0",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/dionysus": "workspace:*",
@@ -42,7 +42,7 @@
     "graphql-helix": "^1.13.0",
     "ioredis": "^5.4.1",
     "json-stable-stringify": "^1.1.1",
-    "openskill": "^4.0.2",
+    "openskill": "^4.0.3",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "prettier": "4.0.0-alpha.8",
@@ -54,8 +54,8 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-sso-oidc": "^3.614.0",
-    "@aws-sdk/client-sts": "^3.614.0",
+    "@aws-sdk/client-sso-oidc": "^3.616.0",
+    "@aws-sdk/client-sts": "^3.616.0",
     "@rollup/plugin-replace": "^5.0.7",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",

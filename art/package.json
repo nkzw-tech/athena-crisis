@@ -12,7 +12,7 @@
   "dependencies": {
     "@deities/athena": "workspace:*",
     "@deities/hephaestus": "workspace:*",
-    "@emotion/css": "^11.11.2",
+    "@emotion/css": "^11.13.0",
     "@nkzw/palette-swap": "^2.1.2"
   }
 }
