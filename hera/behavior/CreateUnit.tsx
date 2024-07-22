@@ -168,7 +168,7 @@ export default class CreateUnit {
                 selectedBuilding.player,
                 unit,
                 0,
-                hasLeader(selectedBuilding.player, unit.id),
+                hasLeader(selectedBuilding.player, unit),
               ),
             });
             const create = () => {

@@ -8,10 +8,10 @@ export default function assignUnitNames(map: MapData): MapData {
 
   const assignName = <T extends Unit | TransportedUnit>(unit: T): T => {
     if (!unit.hasName()) {
-      const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.id);
+      const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.info);
       const name = generateUnitName(isLeader);
       if (isLeader) {
-        addLeader(unit.player, unit.id);
+        addLeader(unit.player, unit.info);
       }
       unit = unit.withName(name) as T;
     }

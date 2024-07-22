@@ -17,7 +17,7 @@ export default function assignDeterministicUnitNames(
     additionalOffset: number = 0,
   ): T => {
     if (!unit.hasName()) {
-      const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.id);
+      const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.info);
       const name = getDeterministicUnitName(
         map,
         vector,
@@ -27,7 +27,7 @@ export default function assignDeterministicUnitNames(
       );
       offset += additionalOffset;
       if (isLeader) {
-        addLeader(unit.player, unit.id);
+        addLeader(unit.player, unit.info);
       }
       unit = unit.removeLeader().withName(name) as T;
     }

@@ -1,7 +1,9 @@
+import ImmutableMap from '@nkzw/immutable-map';
 import { Ability } from '../info/Unit.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
+import assignDeterministicUnitNames from './assignDeterministicUnitNames.tsx';
 
 export default function maybeConvertPlayer(
   map: MapData,
@@ -10,16 +12,21 @@ export default function maybeConvertPlayer(
   attackingUnit: Unit | null | undefined,
   state: 'recover' | 'complete',
 ) {
-  const newUnit = attackingUnit?.info.hasAbility(Ability.Convert)
-    ? unit.setPlayer(attackingUnit.player)[state]()
-    : unit;
+  if (!attackingUnit?.info.hasAbility(Ability.Convert)) {
+    return unit;
+  }
+
+  let newUnit = unit.withName(null).setPlayer(attackingUnit.player)[state]();
 
   if (newUnit.isCapturing()) {
     const building = map.buildings.get(vector);
     if (building && map.matchesTeam(building, newUnit)) {
-      return newUnit.stopCapture();
+      newUnit = newUnit.stopCapture();
     }
   }
 
-  return newUnit;
+  return assignDeterministicUnitNames(
+    map,
+    ImmutableMap<Vector, Unit>([[vector, newUnit]]),
+  ).get(vector)!;
 }

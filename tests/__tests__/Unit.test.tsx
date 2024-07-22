@@ -364,3 +364,31 @@ test('capture does not stop when a unit is converted to another faction and they
   expect(unit?.isCapturing()).toBe(true);
   expect(unit?.player).toEqual(2);
 });
+
+test('leaders are set correctly when a unit is converted to another faction', async () => {
+  const initialMap = MapData.createMap({
+    map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    size: { height: 3, width: 3 },
+  });
+
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const vecC = vec(3, 1);
+  const vecD = vec(3, 2);
+  const map = initialMap.copy({
+    units: initialMap.units
+      .set(vecA, Zombie.create(1))
+      .set(vecB, Flamethrower.create(2))
+      .set(vecC, Flamethrower.create(2))
+      .set(vecD, Zombie.create(1)),
+  });
+
+  const [gameState] = executeGameActions(map, [
+    AttackUnitAction(vecA, vecB),
+    AttackUnitAction(vecD, vecC),
+  ]);
+
+  const lastMap = gameState.at(-1)![1];
+  expect(lastMap.units.get(vecB)!.isLeader()).toBe(true);
+  expect(lastMap.units.get(vecC)!.isLeader()).toBe(false);
+});
