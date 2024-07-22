@@ -547,18 +547,23 @@ const RewardDetail = ({
       );
     case 'Biome':
       return (
-        <fbt desc="Biome unlock">
-          <fbt:param name="biomeName">
-            {getTranslatedBiomeName(reward.biome)}
-          </fbt:param>{' '}
-          Biome
-        </fbt>
+        <div>
+          <fbt desc="Biome unlock">
+            <fbt:param name="biomeName">
+              {getTranslatedBiomeName(reward.biome)}
+            </fbt:param>{' '}
+            Biome
+          </fbt>
+        </div>
       );
     case 'Keyart':
       return (
-        <fbt desc="Keyart unlock">
-          Keyart variant <fbt:param name="variant">{reward.variant}</fbt:param>
-        </fbt>
+        <div>
+          <fbt desc="Keyart unlock">
+            Keyart variant{' '}
+            <fbt:param name="variant">{reward.variant}</fbt:param>
+          </fbt>
+        </div>
       );
     default: {
       rewardType satisfies never;
