@@ -35,7 +35,7 @@ import { memo, RefObject, useRef, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import Tick from '../../Tick.tsx';
 import { FactionNames } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
@@ -127,7 +127,7 @@ export default memo(function ActionCard({
   scrollRef: RefObject<HTMLElement> | null;
   setMap?: SetMapFunction;
   trigger?: EffectTrigger;
-  user: UserWithFactionNameAndSkills | null;
+  user: UserWithFactionNameAndUnlocks | null;
   userDisplayName?: string;
 }) {
   const ref = useRef(null);

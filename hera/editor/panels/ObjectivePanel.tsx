@@ -22,7 +22,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { useCallback, useMemo } from 'react';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import filterNodes from '../../lib/filterNodes.tsx';
 import getCriteriaName from '../../lib/getCriteriaName.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -149,7 +149,7 @@ export default function ObjectivePanel({
   mapId: string | undefined;
   setEditorState: SetEditorStateFunction;
   tags: ReadonlyArray<string>;
-  user: UserWithFactionNameAndSkills;
+  user: UserWithFactionNameAndUnlocks;
 }) {
   const { map } = state;
   const { config } = map;

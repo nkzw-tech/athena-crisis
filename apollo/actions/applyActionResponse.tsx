@@ -580,6 +580,8 @@ export default function applyActionResponse(
             ),
           });
         }
+        case 'Biome':
+        case 'Keyart':
         case 'UnitPortraits':
           return map;
         default: {

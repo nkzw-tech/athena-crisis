@@ -1,5 +1,6 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -9,12 +10,12 @@ import { css } from '@emotion/css';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
 import { motion } from 'framer-motion';
-import Portrait, { PortraitHeight } from '../../character/Portrait.tsx';
-import AnimationKey from '../../lib/AnimationKey.tsx';
-import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
-import { Actions, State } from '../../Types.tsx';
-import { resetBehavior } from '../Behavior.tsx';
-import NullBehavior from '../NullBehavior.tsx';
+import { resetBehavior } from '../behavior/Behavior.tsx';
+import NullBehavior from '../behavior/NullBehavior.tsx';
+import Portrait, { PortraitHeight } from '../character/Portrait.tsx';
+import AnimationKey from '../lib/AnimationKey.tsx';
+import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
+import { Actions, State } from '../Types.tsx';
 
 export default async function receivePortraitAnimation(
   { requestFrame, update }: Actions,
@@ -104,9 +105,9 @@ export default async function receivePortraitAnimation(
 const portraitContainerStyle = css`
   padding: 32px 0 12px;
 
-  gap: 24px;
+  gap: ${TileSize}px;
   ${Breakpoints.sm} {
-    gap: 40px;
+    gap: ${TileSize * 1.5}px;
   }
 `;
 

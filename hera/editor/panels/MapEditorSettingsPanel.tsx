@@ -35,6 +35,7 @@ import { useCallback, useState } from 'react';
 import useTagDataSource, {
   DEFAULT_TAGS,
 } from '../../hooks/useTagDataSource.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getTranslatedPerformanceStyleTypeName from '../../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../../lib/getTranslatedPerformanceTypeName.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -61,6 +62,7 @@ export default function MapEditorSettingsPanel({
   setTags,
   state,
   tags,
+  user,
 }: StateWithActions & {
   canEditPerformance: boolean;
   estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
@@ -73,6 +75,7 @@ export default function MapEditorSettingsPanel({
   setMapName: (name: string) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
   tags: ReadonlyArray<string>;
+  user: UserWithFactionNameAndUnlocks;
 }) {
   const { update } = actions;
   const { map } = state;
@@ -123,6 +126,7 @@ export default function MapEditorSettingsPanel({
         hasContentRestrictions={!isAdmin}
         onBiomeChange={(map) => setMap('biome', map)}
         state={state}
+        user={user}
       />
       <Box gap={16} vertical>
         <h2>

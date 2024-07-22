@@ -18,19 +18,23 @@ import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import Dropdown from '@deities/ui/Dropdown.tsx';
 import Form from '@deities/ui/Form.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useCallback, useMemo, useState } from 'react';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import UnlockableBiomes from '../../../zeus/game/UnlockableBiomes.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
+import getTranslatedBiomeName from '../../lib/getTranslatedBiomeName.tsx';
 import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
@@ -63,7 +67,7 @@ export default function ObjectiveCard({
   selectEffect: () => void;
   selectLocation: () => void;
   tags: ReadonlyArray<string>;
-  user: UserWithFactionNameAndSkills;
+  user: UserWithFactionNameAndUnlocks;
   validate: (objective: Objective) => boolean;
 }) {
   const [rounds, setRounds] = useState<number | null>(
@@ -336,22 +340,104 @@ export default function ObjectiveCard({
                     }
                   />
                   {isAdmin && (
-                    <UnitSelector
-                      border
-                      hasContentRestrictions={hasContentRestrictions}
-                      highlight={!!selectedUnit}
-                      isVisible
-                      onSelect={(unit) =>
-                        onChange({
-                          ...objective,
-                          reward: { type: 'UnitPortraits', unit },
-                        })
-                      }
-                      selectedPlayer="self"
-                      selectedUnit={selectedUnit}
-                      user={user}
-                      width="auto"
-                    />
+                    <>
+                      <UnitSelector
+                        border
+                        hasContentRestrictions={hasContentRestrictions}
+                        highlight={!!selectedUnit}
+                        isVisible
+                        onSelect={(unit) =>
+                          onChange({
+                            ...objective,
+                            reward: { type: 'UnitPortraits', unit },
+                          })
+                        }
+                        selectedPlayer="self"
+                        selectedUnit={selectedUnit}
+                        user={user}
+                        width="auto"
+                      />
+                      <Dropdown
+                        title={
+                          reward?.type === 'Biome' ? (
+                            <div className={cx(borderStyle, highlightStyle)}>
+                              {getTranslatedBiomeName(reward.biome)}
+                            </div>
+                          ) : (
+                            <div className={borderStyle}>
+                              <fbt desc="Label to select a biome">
+                                Select a biome
+                              </fbt>
+                            </div>
+                          )
+                        }
+                      >
+                        <Stack className={selectorStyle} gap vertical>
+                          {[...UnlockableBiomes].map((biome) => (
+                            <InlineLink
+                              className={linkStyle}
+                              key={biome}
+                              onClick={() =>
+                                onChange({
+                                  ...objective,
+                                  reward: { biome, type: 'Biome' },
+                                })
+                              }
+                              selectedText={
+                                reward?.type === 'Biome' &&
+                                reward.biome === biome
+                              }
+                            >
+                              {getTranslatedBiomeName(biome)}
+                            </InlineLink>
+                          ))}
+                        </Stack>
+                      </Dropdown>
+                      <Dropdown
+                        title={
+                          reward?.type === 'Keyart' ? (
+                            <div className={cx(borderStyle, highlightStyle)}>
+                              <fbt desc="Keyart unlock">
+                                Variant{' '}
+                                <fbt:param name="variant">
+                                  {reward.variant}
+                                </fbt:param>
+                              </fbt>
+                            </div>
+                          ) : (
+                            <div className={borderStyle}>
+                              <fbt desc="Label to select a keyart">
+                                Select a keyart variant
+                              </fbt>
+                            </div>
+                          )
+                        }
+                      >
+                        <Stack className={selectorStyle} gap vertical>
+                          {([1, 2] as const).map((variant) => (
+                            <InlineLink
+                              className={linkStyle}
+                              key={variant}
+                              onClick={() =>
+                                onChange({
+                                  ...objective,
+                                  reward: { type: 'Keyart', variant },
+                                })
+                              }
+                              selectedText={
+                                reward?.type === 'Keyart' &&
+                                reward.variant === variant
+                              }
+                            >
+                              <fbt desc="Keyart unlock">
+                                Variant{' '}
+                                <fbt:param name="variant">{variant}</fbt:param>
+                              </fbt>
+                            </InlineLink>
+                          ))}
+                        </Stack>
+                      </Dropdown>
+                    </>
                   )}
                   {reward && (
                     <Icon
@@ -451,4 +537,25 @@ const lightStyle = css`
 
 const iconStyle = css`
   cursor: pointer;
+`;
+
+const borderStyle = css`
+  ${pixelBorder(undefined, 2)}
+
+  padding: 2px 8px;
+`;
+
+const highlightStyle = css`
+  ${pixelBorder(applyVar('highlight-color'), 2)}
+
+  background-color: ${applyVar('background-color')};
+`;
+
+const linkStyle = css`
+  padding: 8px;
+`;
+
+const selectorStyle = css`
+  padding: 2px;
+  width: 160px;
 `;

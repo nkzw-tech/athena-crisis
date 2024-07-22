@@ -1,16 +1,21 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { useCallback } from 'react';
 
 export default function usePlayerHasReward({
+  biomes,
   id,
+  keyart,
   portraits,
   skills,
 }: {
+  biomes: ReadonlyArray<Biome>;
   id: string;
+  keyart: ReadonlyArray<number>;
   portraits: ReadonlyArray<number>;
   skills: ReadonlyArray<Skill>;
 }) {
@@ -32,12 +37,16 @@ export default function usePlayerHasReward({
           return skills.includes(reward.skill);
         case 'UnitPortraits':
           return portraits.includes(reward.unit.id);
+        case 'Keyart':
+          return keyart.includes(reward.variant);
+        case 'Biome':
+          return biomes.includes(reward.biome);
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError('usePlayerHasReward', rewardType);
         }
       }
     },
-    [id, portraits, skills],
+    [biomes, id, keyart, portraits, skills],
   );
 }

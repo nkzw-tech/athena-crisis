@@ -6,8 +6,10 @@ import Box from '@deities/ui/Box.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import { fbt } from 'fbt';
 import React, { useCallback, useMemo } from 'react';
+import UnlockableBiomes from '../../../zeus/game/UnlockableBiomes.tsx';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import { State } from '../../Types.tsx';
 
 const biomes = new Set(Biomes);
@@ -18,10 +20,12 @@ export default function BiomeSelector({
   hasContentRestrictions,
   onBiomeChange,
   state,
+  user,
 }: {
   hasContentRestrictions: boolean;
   onBiomeChange: (map: MapData) => void;
   state: State;
+  user: UserWithFactionNameAndUnlocks;
 }) {
   const {
     map: {
@@ -51,10 +55,11 @@ export default function BiomeSelector({
     () =>
       hasContentRestrictions
         ? SortedBiomes.filter(
-            (biome) => biome !== Biome.Spaceship && biome !== Biome.Luna,
+            (biome) =>
+              !UnlockableBiomes.has(biome) || user.biomes.includes(biome),
           )
         : SortedBiomes,
-    [hasContentRestrictions],
+    [hasContentRestrictions, user.biomes],
   );
 
   useGridNavigation(

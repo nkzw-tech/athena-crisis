@@ -25,6 +25,8 @@ import animateFireworks, {
   getPossibleFireworksPositions,
 } from '../animations/animateFireworks.tsx';
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
+import receiveBiomeAnimation from '../animations/receiveBiomeAnimation.tsx';
+import receivePortraitAnimation from '../animations/receivePortraitAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
 import {
@@ -42,7 +44,6 @@ import clientMoveAction from '../behavior/move/clientMoveAction.tsx';
 import hiddenMoveAction from '../behavior/move/hiddenMoveAction.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { toggleLightningAnimation } from '../behavior/radar/toggleLightningAction.tsx';
-import receivePortraitAnimation from '../behavior/receivePortrait/receivePortraitAnimation.tsx';
 import rescueAction from '../behavior/rescue/rescueAction.tsx';
 import sabotageAction, {
   addSabotageAnimation,
@@ -588,16 +589,24 @@ async function processActionResponse(
             `${actionResponse.type} - ${rewardType}`,
           );
         }
+        case 'Biome':
         case 'UnitPortraits': {
           const player = map.getPlayer(actionResponse.player);
           if (
             player.isHumanPlayer() &&
             !playerHasReward(map, actionResponse.player, actionResponse)
           ) {
-            return receivePortraitAnimation(actions, state, actionResponse);
+            if (rewardType === 'Biome') {
+              return receiveBiomeAnimation(actions, state, actionResponse);
+            } else if (rewardType === 'UnitPortraits') {
+              return receivePortraitAnimation(actions, state, actionResponse);
+            }
           }
           break;
         }
+        case 'Keyart':
+          break;
+
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError(

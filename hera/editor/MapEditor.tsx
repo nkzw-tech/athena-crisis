@@ -71,7 +71,7 @@ import useAnimationSpeed, {
 } from '../hooks/useAnimationSpeed.tsx';
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
-import { UserWithFactionNameAndSkills } from '../hooks/useUserMap.tsx';
+import { UserWithFactionNameAndUnlocks } from '../hooks/useUserMap.tsx';
 import filterNodes from '../lib/filterNodes.tsx';
 import { hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
@@ -250,7 +250,7 @@ export default function MapEditor({
   mapObject?: MapObject | null;
   tiltStyle?: 'on' | 'off';
   updateMap: MapUpdateFunction;
-  user: UserWithFactionNameAndSkills;
+  user: UserWithFactionNameAndUnlocks;
 }) {
   const users = useMemo(() => new Map([[user.id, user]]), [user]);
   const withHumanPlayer = useCallback(

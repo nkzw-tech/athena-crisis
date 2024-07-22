@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 const viewer = {
   access: 'User',
+  biomes: [],
   character: {
     color: 1,
     unitId: Sniper.id,

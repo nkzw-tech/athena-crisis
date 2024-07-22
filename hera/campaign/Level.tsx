@@ -57,6 +57,7 @@ import ActionCard from '../editor/lib/ActionCard.tsx';
 import EffectSelector from '../editor/selectors/EffectSelector.tsx';
 import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
+import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
@@ -361,7 +362,7 @@ export default memo(function Level({
                   ) : (
                     <fbt desc="Label for rewards">Rewards</fbt>
                   )}
-                  <Stack gap={16} start>
+                  <Stack gap={16} nowrap start>
                     {rewardObjectives.map((objective, index) => (
                       <RewardDetail
                         key={index}
@@ -543,6 +544,21 @@ const RewardDetail = ({
           unit={reward.unit}
           variant={0}
         />
+      );
+    case 'Biome':
+      return (
+        <fbt desc="Biome unlock">
+          <fbt:param name="biomeName">
+            {getTranslatedBiomeName(reward.biome)}
+          </fbt:param>{' '}
+          Biome
+        </fbt>
+      );
+    case 'Keyart':
+      return (
+        <fbt desc="Keyart unlock">
+          Keyart variant <fbt:param name="variant">{reward.variant}</fbt:param>
+        </fbt>
       );
     default: {
       rewardType satisfies never;

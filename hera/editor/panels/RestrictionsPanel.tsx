@@ -20,7 +20,7 @@ import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useCallback, useMemo, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
-import { UserWithFactionNameAndSkills } from '../../hooks/useUserMap.tsx';
+import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import Tick from '../../Tick.tsx';
@@ -44,7 +44,7 @@ export default function RestrictionsPanel({
 }: StateWithActions & {
   hasContentRestrictions: boolean;
   setEditorState: (setEditorState: Partial<EditorState>) => void;
-  user: UserWithFactionNameAndSkills;
+  user: UserWithFactionNameAndUnlocks;
 }) {
   const currentPlayer = 1;
   const { config } = state.map;

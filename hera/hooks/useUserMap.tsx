@@ -1,3 +1,4 @@
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { useMemo } from 'react';
@@ -21,7 +22,11 @@ type FactionName = Readonly<{
   factionName: string;
 }>;
 export type UserWithIDAndFactionName = UserLikeWithID & FactionName;
-export type UserWithFactionNameAndSkills = UserWithSkills & FactionName;
+export type UserWithFactionNameAndUnlocks = UserWithSkills &
+  Readonly<{
+    biomes: ReadonlyArray<Biome>;
+  }> &
+  FactionName;
 
 export default function useUserMap(
   map?: MapData | null,
