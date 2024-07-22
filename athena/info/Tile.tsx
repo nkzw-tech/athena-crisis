@@ -1154,9 +1154,9 @@ export const Lightning = new TileInfo(
   { isolated: true, layer: 1 },
 );
 
-export const PoisonSwamp = new TileInfo(
+export const GasBubbles = new TileInfo(
   25,
-  'Poison Swamp',
+  'Gas Bubbles',
   `Unknown`,
   TileTypes.Sea,
   {
@@ -1615,7 +1615,7 @@ const Tiles = [
   Box2,
   Forest3,
   Lightning,
-  PoisonSwamp,
+  GasBubbles,
   Computer,
   Box,
   Platform,
@@ -1640,7 +1640,7 @@ export const PlainTileGroup = new Set(
 );
 export const SeaTileGroup = new Set(tiles.filter(({ id }) => isSea(id)));
 
-export const SwampBiome = new Set([Forest3, PoisonSwamp, Weeds]);
+export const SwampBiome = new Set([Forest3, GasBubbles, Weeds]);
 export const SpaceShipBiome = new Set([
   Box,
   Box2,

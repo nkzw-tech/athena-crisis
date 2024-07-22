@@ -1,6 +1,7 @@
 import {
   Beach,
   DeepSea,
+  GasBubbles,
   getTileInfo,
   Iceberg,
   Island,
@@ -9,7 +10,6 @@ import {
   MaybeTileID,
   Pier,
   Pipe,
-  PoisonSwamp,
   Reef,
   River,
   Sea,
@@ -75,7 +75,7 @@ export default function canPlaceTile(
     tile === Island ||
     tile === Iceberg ||
     tile === Weeds ||
-    tile == PoisonSwamp
+    tile == GasBubbles
   ) {
     if (
       tile === Island &&
