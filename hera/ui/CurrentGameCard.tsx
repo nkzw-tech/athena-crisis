@@ -159,6 +159,8 @@ export default memo(function CurrentGameCard({
     () => setIsExpanded((isExpanded) => !isExpanded),
     [],
   );
+  const players = map.getPlayers();
+  const hasSkills = players.some(({ skills }) => skills.size > 0);
 
   useInput(
     'info',
@@ -183,7 +185,8 @@ export default memo(function CurrentGameCard({
         gap={16}
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}
-        key={map.getPlayers().length}
+        key={players.length}
+        size={hasSkills ? 'large' : undefined}
         toggleExpanded={toggleExpanded}
       >
         <TeamsCard

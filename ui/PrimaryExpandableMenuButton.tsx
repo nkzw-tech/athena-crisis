@@ -8,9 +8,11 @@ import ExpandableMenuButton from './ExpandableMenuButton.tsx';
 export default function PrimaryExpandableMenuButton({
   className,
   inset,
+  size,
   ...props
 }: ComponentProps<typeof ExpandableMenuButton> & {
   inset: number;
+  size?: 'large';
 }) {
   const { isExpanded } = props;
   return (
@@ -18,6 +20,7 @@ export default function PrimaryExpandableMenuButton({
       {...props}
       className={cx(
         style,
+        size === 'large' && largeStyle,
         inset > 0 && withInsetStyle,
         isExpanded && expandedStyle,
         className,
@@ -41,6 +44,12 @@ const style = css`
 
   ${Breakpoints.xs} {
     width: 220px;
+  }
+`;
+
+const largeStyle = css`
+  ${Breakpoints.xs} {
+    width: 280px;
   }
 `;
 
