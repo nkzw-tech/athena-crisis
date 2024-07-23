@@ -76,9 +76,9 @@
     "prettier-plugin-packagejson": "^2.5.1",
     "react-refresh": "^0.14.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "vite": "^5.3.4",
-    "vitest": "^2.0.3"
+    "vitest": "^2.0.4"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -114,7 +114,7 @@
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
-      "resend@3.4.0": "patches/resend@3.4.0.patch"
+      "resend@3.5.0": "patches/resend@3.5.0.patch"
     }
   }
 }
