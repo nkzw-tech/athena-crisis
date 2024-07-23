@@ -4,6 +4,8 @@ import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
+import Stack from '@deities/ui/Stack.tsx';
+import { css, cx } from '@emotion/css';
 import { fbt } from 'fbt';
 import React, { useCallback, useMemo } from 'react';
 import UnlockableBiomes from '../../../zeus/game/UnlockableBiomes.tsx';
@@ -12,9 +14,9 @@ import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import { State } from '../../Types.tsx';
 
-const biomes = new Set(Biomes);
-biomes.delete(Biome.Spaceship);
-const SortedBiomes = [...biomes, Biome.Spaceship];
+const unsortedBiomes = new Set(Biomes);
+unsortedBiomes.delete(Biome.Spaceship);
+const biomes = [...unsortedBiomes, Biome.Spaceship];
 
 export default function BiomeSelector({
   hasContentRestrictions,
@@ -51,45 +53,75 @@ export default function BiomeSelector({
     [alert, onBiomeChange, state.map],
   );
 
-  const biomes = useMemo(
-    () =>
-      hasContentRestrictions
-        ? SortedBiomes.filter(
-            (biome) =>
-              !UnlockableBiomes.has(biome) || user.biomes.includes(biome),
-          )
-        : SortedBiomes,
-    [hasContentRestrictions, user.biomes],
-  );
+  const lockedBiomes = useMemo(() => {
+    if (!hasContentRestrictions) {
+      return new Set();
+    }
+
+    const unlockedBiomes = new Set(user.biomes);
+    return new Set(
+      [...UnlockableBiomes].filter((biome) => !unlockedBiomes.has(biome)),
+    );
+  }, [hasContentRestrictions, user.biomes]);
 
   useGridNavigation(
     'navigateSecondary',
     useCallback(
       (direction) => {
+        const maybeBiomes = biomes.filter((biome) => !lockedBiomes.has(biome));
         const maybeBiome =
-          biomes[
-            biomes.indexOf(currentBiome) +
+          maybeBiomes[
+            maybeBiomes.indexOf(currentBiome) +
               (direction === 'right' ? 1 : direction === 'left' ? -1 : 0)
           ];
         if (maybeBiome != null) {
           update(maybeBiome);
         }
       },
-      [biomes, currentBiome, update],
+      [currentBiome, lockedBiomes, update],
     ),
   );
 
   return (
     <Box center gap>
-      {biomes.map((biome) => (
-        <InlineTileList
-          biome={biome}
-          key={biome}
-          onSelect={() => update(biome)}
-          selected={currentBiome === biome ? 0 : undefined}
-          tiles={[Plain]}
-        />
-      ))}
+      {biomes.map((biome) => {
+        const isLocked = lockedBiomes.has(biome);
+        return (
+          <div className={relativeStyle} key={biome}>
+            <div className={cx(isLocked && lockedStyle)}>
+              <InlineTileList
+                biome={biome}
+                onSelect={isLocked ? undefined : () => update(biome)}
+                selected={currentBiome === biome ? 0 : undefined}
+                tiles={[Plain]}
+              />
+            </div>
+            {isLocked && (
+              <Stack alignCenter center className={unlockStyle}>
+                ?
+              </Stack>
+            )}
+          </div>
+        );
+      })}
     </Box>
   );
 }
+
+const relativeStyle = css`
+  position: relative;
+`;
+
+const lockedStyle = css`
+  filter: blur(1px) grayscale(0.5);
+`;
+
+const unlockStyle = css`
+  color: #fff;
+  font-size: 2em;
+  inset: 0;
+  opacity: 0.8;
+  padding-left: 5px;
+  position: absolute;
+  top: -2px;
+`;

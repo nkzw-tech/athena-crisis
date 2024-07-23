@@ -24,7 +24,7 @@ import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import validateMap, { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
+import { Biomes } from '@deities/athena/map/Biome.tsx';
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
@@ -62,6 +62,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import UnlockableBiomes from '../../zeus/game/UnlockableBiomes.tsx';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { DrawerPosition, getDrawerPaddingStyle } from '../drawer/Drawer.tsx';
@@ -278,14 +279,15 @@ export default function MapEditor({
                     ? Biomes
                     : Biomes.filter(
                         (biome) =>
-                          biome !== Biome.Spaceship && biome !== Biome.Luna,
+                          !UnlockableBiomes.has(biome) ||
+                          user.biomes.includes(biome),
                       ),
                 ),
               ),
             ),
       );
     },
-    [isAdmin, mapObject, withHumanPlayer],
+    [isAdmin, mapObject, user.biomes, withHumanPlayer],
   );
 
   const [eventEmitter] = useState(() => new EventTarget());
