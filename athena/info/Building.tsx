@@ -451,7 +451,7 @@ export const RadarStation = new BuildingInfo(
 export const PowerStation = new BuildingInfo(
   11,
   'Power Station',
-  `Unknown`,
+  `Power Stations increase the funds earned from all other buildings by 30%.`,
   {
     canBeCreated: false,
     cost: Number.POSITIVE_INFINITY,
