@@ -1,7 +1,7 @@
 import {
+  Barrel,
   Beach,
   Box,
-  Box2,
   Bridge,
   Forest,
   Forest2,
@@ -131,8 +131,8 @@ const style = {
       ['#4f9e1b', '#6d7488'],
     ]),
     tileConversions: new Map([
-      [Forest, Box],
-      [Forest2, Box2],
+      [Forest, Barrel],
+      [Forest2, Box],
       [Bridge, SpaceBridge],
       [Mountain, Platform],
       [Sea, Space],

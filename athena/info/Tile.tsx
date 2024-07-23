@@ -820,7 +820,7 @@ export const Campsite = new TileInfo(
 export const StormCloud = new TileInfo(
   13,
   'Storm Cloud',
-  `Unknown`,
+  `The 3000-year-old Ares Protocol states that units must not attempt to travel through Storm Clouds. Some say that Storm Clouds are the wrath of ancient gods that strike down anyone who enters, but there have been more than a few stories of daring pilots and reckless hot-heads who claim they passed through unscathed. However, whether we can believe those stories is another matter entirely.`,
   {
     group: TileTypes.StormCloud,
     type: TileTypes.Joinable | TileTypes.Inaccessible,
@@ -1132,7 +1132,7 @@ export const Airfield = new TileInfo(
 export const Lightning = new TileInfo(
   24,
   'Lightning Barrier',
-  `Unknown`,
+  `Lightning can connect between two Storm Clouds, creating an impassable barrier for any unit. Radar Stations can be used to map out lightning strike patterns, allowing units to navigate through safely.`,
   TileTypes.Inaccessible,
   {
     cover: Number.POSITIVE_INFINITY,
@@ -1157,7 +1157,7 @@ export const Lightning = new TileInfo(
 export const GasBubbles = new TileInfo(
   25,
   'Gas Bubbles',
-  `Unknown`,
+  `Gas Bubbles from below the ocean surface slow down movement for most units. When it is foggy, units hiding in gas bubbles are only visible to adjacent units.`,
   TileTypes.Sea,
   {
     cover: 0,
@@ -1173,7 +1173,7 @@ export const GasBubbles = new TileInfo(
 export const Computer = new TileInfo(
   26,
   'Computer',
-  `Unknown`,
+  `Spaceships rely on many advanced computer systems. Some handle navigation, others manage communication, and then there are some that ensure efficient waste management. Computers are everywhere, silently orchestrating the vessel's operations. We are lucky they don't have a mind of their own.`,
   TileTypes.Inaccessible,
   {
     cover: 0,
@@ -1187,10 +1187,10 @@ export const Computer = new TileInfo(
   { isolated: true },
 );
 
-export const Box = new TileInfo(
+export const Barrel = new TileInfo(
   27,
-  'Box',
-  `Unknown`,
+  'Barrel',
+  `On a spaceship, barrels are essential for storing all sorts of fluids. From water to fuel to mysterious alien liquids, these containers ensure that every drop is kept safe and ready for use. And rest assured, they never leak… probably.`,
   TileTypes.Forest,
   {
     cover: 20,
@@ -1223,23 +1223,23 @@ export const Box = new TileInfo(
   },
 );
 
-export const Box2 = new TileInfo(
+export const Box = new TileInfo(
   22,
   'Box',
-  `Unknown`,
-  Box.group,
-  Box.configuration,
+  `Boxes on a spaceship are packed with all the necessities for space travelers. Filled with everything from freeze-dried meals to gourmet snacks, they provide the sustenance needed for long journeys among the stars. Each box is a treasure trove of flavors, including the popular alien snack "Galactic Crunchies" – a hit among humans for its surprising burst of sweet and salty flavors. Aliens never mention the ingredients, so we have no idea what they're made of!`,
+  Barrel.group,
+  Barrel.configuration,
   {
-    ...Box.sprite,
+    ...Barrel.sprite,
     position: sprite(0, 21),
   },
-  Box.style,
+  Barrel.style,
 );
 
 export const Platform = new TileInfo(
   28,
   'Platform',
-  `Unknown`,
+  `Spaceships need endless amounts of maintenance to keep them operating. Platforms are used to make repairs to locations that are difficult to reach. In the heat of battle, platforms can be used for more cover.`,
   TileTypes.Mountain,
   {
     cover: 30,
@@ -1266,7 +1266,7 @@ export const Platform = new TileInfo(
 export const Space = new TileInfo(
   29,
   'Space',
-  `Unknown`,
+  `Vast and empty, space stretches infinitely beyond the confines of spaceships. It's a silent and hostile environment. The emptiness serves as a constant reminder of the isolation and danger lurking in the void.`,
   { group: TileTypes.Sea, type: TileTypes.Joinable | TileTypes.Area },
   {
     cover: 10,
@@ -1297,7 +1297,7 @@ export const Space = new TileInfo(
 export const Path = new TileInfo(
   30,
   'Path',
-  `Unknown`,
+  `A Path connects different areas of a spaceship, allowing units to move quickly between compartments.`,
   {
     group: TileTypes.Street,
     type: TileTypes.Joinable,
@@ -1315,7 +1315,7 @@ export const Path = new TileInfo(
 export const Wall = new TileInfo(
   31,
   'Wall',
-  `Unknown`,
+  `Spaceship walls are beautiful, but they are also delicate. Don't touch them unless you are prepared to deal with the consequences.`,
   TileTypes.Inaccessible,
   {
     cover: 0,
@@ -1338,7 +1338,7 @@ export const Wall = new TileInfo(
 export const Window = new TileInfo(
   32,
   'Window',
-  `Unknown`,
+  `Gaze into the endless expanse of space by peering through a Window. The stars shimmer like distant dreams, each one a whisper of possibilities and mysteries yet to be unraveled. It's a reminder of the vastness beyond, where the universe's secrets await discovery.`,
   TileTypes.Inaccessible,
   {
     cover: 0,
@@ -1357,7 +1357,7 @@ export const Window = new TileInfo(
 export const SpaceBridge = new TileInfo(
   33,
   'Bridge',
-  `Unknown`,
+  `Space Bridges extend into space, facilitating travel between different compartments of a spaceship or even between different spaceships. They also allow air units to enter and exit spaceships.`,
   {
     group: Bridge.group,
     type: TileTypes.Bridge | TileTypes.Joinable | TileTypes.ConnectWithEdge,
@@ -1376,7 +1376,7 @@ export const SpaceBridge = new TileInfo(
 export const Pipe = new TileInfo(
   34,
   'Pipe',
-  `Unknown`,
+  `Pipes are the veins of a spaceship, transporting essential resources between compartments or carrying waste away. Waste is usually released near a planet, burning up as it enters the atmosphere.`,
   {
     group: TileTypes.Pipe,
     type: TileTypes.Joinable | TileTypes.Inaccessible,
@@ -1406,7 +1406,7 @@ export const Pipe = new TileInfo(
 export const Teleporter = new TileInfo(
   35,
   'Teleporter',
-  `Unknown`,
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
   TileTypes.Teleporter,
   Forest.configuration,
   {
@@ -1422,7 +1422,7 @@ export const Teleporter = new TileInfo(
 export const Island = new TileInfo(
   36,
   'Island',
-  `Unknown`,
+  `Many Islands at sea are tiny. Yet, for many stranded adventurers, they become a hopeful place for survival. Between missions, crew members often use these islands for a much-needed beach day, offering a rare moment of relaxation amidst the chaos. They provide good cover.`,
   TileTypes.Sea,
   {
     cover: 25,
@@ -1448,7 +1448,7 @@ export const Island = new TileInfo(
 export const Iceberg = new TileInfo(
   37,
   'Iceberg',
-  `Unknown`,
+  `Isn't it interesting to stand on the shore and look out at icebergs? They are like floating mountains, with most of their mass hidden beneath the water's surface. Like many things, they appear beautiful on the surface but have so much depth hidden beneath.`,
   TileTypes.Sea,
   {
     cover: 30,
@@ -1476,7 +1476,7 @@ export const Iceberg = new TileInfo(
 export const Weeds = new TileInfo(
   38,
   'Weeds',
-  `Unknown`,
+  `Weeds grow everywhere, even in the ocean. They can be a nuisance, but they also provide cover for units. When it is foggy, units hiding in weeds are only visible to adjacent units.`,
   TileTypes.Sea,
   {
     cover: 0,
@@ -1497,7 +1497,7 @@ export const Weeds = new TileInfo(
 export const FloatingEdge = new TileInfo(
   100_000,
   'Floating Edge',
-  `Unknown`,
+  ``,
   TileTypes.Plain,
   {
     cover: 0,
@@ -1532,7 +1532,7 @@ export const FloatingEdge = new TileInfo(
 export const FloatingWaterEdge = new TileInfo(
   100_001,
   'Floating Water Edge',
-  `Unknown`,
+  ``,
   TileTypes.Plain,
   FloatingEdge.configuration,
   {
@@ -1612,12 +1612,12 @@ const Tiles = [
   Trench,
   Airfield,
   DeepSea,
-  Box2,
+  Box,
   Forest3,
   Lightning,
   GasBubbles,
   Computer,
-  Box,
+  Barrel,
   Platform,
   Space,
   Path,
@@ -1642,8 +1642,8 @@ export const SeaTileGroup = new Set(tiles.filter(({ id }) => isSea(id)));
 
 export const SwampBiome = new Set([Forest3, GasBubbles, Weeds]);
 export const SpaceShipBiome = new Set([
+  Barrel,
   Box,
-  Box2,
   Computer,
   Path,
   Platform,

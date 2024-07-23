@@ -1,6 +1,6 @@
 import {
+  Barrel,
   Box,
-  Box2,
   Computer,
   Forest3,
   getTileInfo,
@@ -191,7 +191,7 @@ export default function getModifier(
           : modulo === 3
             ? Modifier.Variant4
             : Modifier.None;
-  } else if (info === Box || info === Box2) {
+  } else if (info === Barrel || info === Box) {
     const modulo = (vector.x + vector.y) % 6;
     modifier =
       modulo === 1
