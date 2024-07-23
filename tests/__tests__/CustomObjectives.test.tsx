@@ -14,6 +14,7 @@ import {
   CrashedAirplane,
   Factory,
   House,
+  HQ,
 } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
@@ -3071,10 +3072,127 @@ test('optional objectives are processed before game end responses', async () => 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
-      AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       OptionalObjective { objective: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'Skill' }, type: 9 }, objectiveId: 1, toPlayer: 1 }
       CharacterMessage { message: 'FIRE!', player: 'self', unitId: 15, variant: 2 }
       ReceiveReward { player: 1, reward: 'Reward { skill: 12 }', permanent: false }
+      AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+    `);
+});
+
+test('multiple optional objectives can trigger at once', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([4]),
+          optional: true,
+          type: Criteria.CaptureLabel,
+        },
+        {
+          amount: 1,
+          hidden: false,
+          optional: true,
+          type: Criteria.CaptureAmount,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(player2))
+      .set(v2, Pioneer.create(player1).capture()),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    CaptureAction(v2),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
+    OptionalObjective { objective: { completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
+    OptionalObjective { objective: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, objectiveId: 2, toPlayer: 1 }"
+  `);
+});
+
+test('optional and game ending objectives might be triggered at the same time', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          hidden: false,
+          label: new Set([4]),
+          optional: true,
+          type: Criteria.CaptureLabel,
+        },
+        {
+          amount: 1,
+          hidden: false,
+          optional: false,
+          type: Criteria.CaptureAmount,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(player2))
+      .set(v2, Pioneer.create(player1).capture()),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    CaptureAction(v2),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
+    OptionalObjective { objective: { completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 0, toPlayer: 1 }
+    GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+  `);
+});
+
+test('optional and default game ending objectives might be triggered at the same time', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(v2, HQ.create(player2, { label: 4 })),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([4]),
+          optional: true,
+          type: Criteria.CaptureLabel,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(player2))
+      .set(v2, Pioneer.create(player1).capture()),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    CaptureAction(v2),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "Capture (1,2) { building: Barracks { id: 12, health: 100, player: 1, label: 4 }, player: 2 }
+      OptionalObjective { objective: { completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
+      CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
 });

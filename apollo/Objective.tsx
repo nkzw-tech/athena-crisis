@@ -103,17 +103,33 @@ const pickWinningPlayer = (
   return activeMap.currentPlayer;
 };
 
+const toOptionalObjective = (
+  objective: Objective | undefined,
+  objectiveId: number | undefined,
+  player: PlayerID | undefined,
+): OptionalObjectiveActionResponse | null =>
+  objectiveId != null &&
+  objective?.type !== Criteria.Default &&
+  objective?.optional === true &&
+  player
+    ? ({
+        objective: {
+          ...objective,
+          completed: new Set([...(objective.completed || []), player]),
+        },
+        objectiveId,
+        toPlayer: player,
+        type: 'OptionalObjective',
+      } as const)
+    : null;
+
 export function applyObjectives(
   previousMap: MapData,
   activeMap: MapData,
   lastActionResponse: ActionResponse,
 ): GameState | null {
-  const maybeObjective = checkObjectives(
-    previousMap,
-    activeMap,
-    lastActionResponse,
-  );
-  const [objectiveId, objective] = maybeObjective || [];
+  let [objectiveId, objective] =
+    checkObjectives(previousMap, activeMap, lastActionResponse) || [];
   const actionResponse =
     !objective || (objective.type !== Criteria.Default && objective.optional)
       ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
@@ -122,41 +138,43 @@ export function applyObjectives(
     return null;
   }
 
-  let map = actionResponse
-    ? applyObjectiveActionResponse(activeMap, actionResponse)
-    : activeMap;
-  const gameState: MutableGameState = actionResponse
-    ? [[actionResponse, map]]
-    : [];
+  const gameState: MutableGameState = [];
+  let map = activeMap;
 
-  const player = objective
-    ? pickWinningPlayer(previousMap, activeMap, lastActionResponse, objective)
-    : undefined;
+  const player =
+    objective &&
+    pickWinningPlayer(previousMap, activeMap, lastActionResponse, objective);
 
-  const optionalObjective: OptionalObjectiveActionResponse | null =
-    objectiveId != null &&
-    objective?.type !== Criteria.Default &&
-    objective?.optional === true &&
-    player &&
-    !objective.completed?.has(player)
-      ? ({
-          objective: {
-            ...objective,
-            completed: new Set([...(objective.completed || []), player]),
-          },
-          objectiveId,
-          toPlayer: player,
-          type: 'OptionalObjective',
-        } as const)
-      : null;
-
-  if (optionalObjective) {
+  let reevaluate = false;
+  let optionalObjective = toOptionalObjective(objective, objectiveId, player);
+  while (optionalObjective) {
     map = applyObjectiveActionResponse(map, optionalObjective);
     gameState.push([optionalObjective, map]);
 
     let newGameState: GameState = [];
     [newGameState, map] = processRewards(map, optionalObjective);
     gameState.push(...newGameState);
+
+    optionalObjective = null;
+    reevaluate = true;
+    map = gameState.at(-1)![1];
+
+    const [objectiveId, objective] =
+      checkObjectives(previousMap, map, lastActionResponse) || [];
+    const player =
+      objective &&
+      pickWinningPlayer(previousMap, map, lastActionResponse, objective);
+    optionalObjective = toOptionalObjective(objective, objectiveId, player);
+  }
+
+  if (!actionResponse && reevaluate) {
+    [objectiveId, objective] =
+      checkObjectives(previousMap, map, lastActionResponse) || [];
+  }
+
+  if (actionResponse) {
+    map = applyObjectiveActionResponse(activeMap, actionResponse);
+    gameState.push([actionResponse, map]);
   }
 
   const gameEndResponse =
