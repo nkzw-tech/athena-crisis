@@ -1153,6 +1153,37 @@ const RocketLauncherWeapon = new Weapon(
   }),
 );
 
+const Bite = new Weapon(
+  'Bite',
+  new Map([
+    [EntityType.AirInfantry, 100],
+    [EntityType.Amphibious, 100],
+    [EntityType.Artillery, 100],
+    [EntityType.Ground, 100],
+    [EntityType.LowAltitude, 100],
+
+    [EntityType.Infantry, 120],
+  ]),
+  BiteAnimation,
+  BiteHitAnimation,
+);
+
+const LightAirToAirMissile = AirToAirMissile.withName(
+  'Light Air To Air Missile',
+)
+  .withDamage(
+    new Map([
+      [EntityType.Airplane, 80],
+      [EntityType.AirInfantry, 90],
+      [EntityType.LowAltitude, 90],
+    ]),
+  )
+  .withAnimationPositions({
+    down: sprite(0, 0.55),
+    horizontal: sprite(-0.15, 0.25),
+    up: sprite(-0.03, -0.2),
+  });
+
 export const Weapons = {
   AIUMiniGun,
   AirToAirMissile,
@@ -1233,20 +1264,7 @@ export const Weapons = {
       horizontal: sprite(-0.97, 0.1),
       up: sprite(0.28, -0.8),
     }),
-  Bite: new Weapon(
-    'Bite',
-    new Map([
-      [EntityType.AirInfantry, 100],
-      [EntityType.Amphibious, 100],
-      [EntityType.Artillery, 100],
-      [EntityType.Ground, 100],
-      [EntityType.LowAltitude, 100],
-
-      [EntityType.Infantry, 120],
-    ]),
-    BiteAnimation,
-    BiteHitAnimation,
-  ),
+  Bite,
   Bomb,
   Cannon: new Weapon(
     'Cannon',
@@ -1275,6 +1293,36 @@ export const Weapons = {
     ]),
     EmptyAnimation.withSound('Attack/Club'),
     PowHitAnimation,
+  ),
+  CorrosiveAirToAirMissile: LightAirToAirMissile.withName(
+    'Corrosive Air Missile',
+  ),
+  CorrosiveBomb: new Weapon(
+    'Corrosive Bomb',
+    new Map([
+      [EntityType.Amphibious, 55],
+      [EntityType.Artillery, 40],
+      [EntityType.Ground, 50],
+      [EntityType.Infantry, 45],
+      [EntityType.Ship, 55],
+      [EntityType.Rail, 50],
+    ]),
+    new WeaponAnimation('Acid', 'Attack/Bomb', {
+      frames: 11,
+      positions: {
+        down: sprite(0, 1),
+        horizontal: sprite(-0.9, 0.5),
+        up: sprite(0, -0.5),
+      },
+      recoil: false,
+      size: 36,
+    }),
+    new WeaponAnimation('AcidCloud', null, {
+      frames: 8,
+      leadingFrames: 3,
+      recoil: false,
+      size: 36,
+    }),
   ),
   CruiseMissile,
   DroneBomb: Bomb.withName('Drone Bomb').withDamage(
@@ -1333,19 +1381,7 @@ export const Weapons = {
   ),
   HeavyGun,
   LightAirGun,
-  LightAirToAirMissile: AirToAirMissile.withName('Light Air To Air Missile')
-    .withDamage(
-      new Map([
-        [EntityType.Airplane, 80],
-        [EntityType.AirInfantry, 90],
-        [EntityType.LowAltitude, 90],
-      ]),
-    )
-    .withAnimationPositions({
-      down: sprite(0, 0.55),
-      horizontal: sprite(-0.15, 0.25),
-      up: sprite(-0.03, -0.2),
-    }),
+  LightAirToAirMissile,
   LightGun,
   MG,
   MiniGun,
@@ -1452,6 +1488,37 @@ export const Weapons = {
     }),
   ),
   RocketLauncher: RocketLauncherWeapon,
+  Rockets: new Weapon(
+    'Rockets',
+    new Map([
+      [EntityType.AirInfantry, 60],
+      [EntityType.Airplane, 60],
+      [EntityType.Amphibious, 90],
+      [EntityType.Artillery, 70],
+      [EntityType.Ground, 80],
+      [EntityType.LowAltitude, 60],
+      [EntityType.Infantry, 80],
+      [EntityType.Rail, 60],
+      [EntityType.Ship, 60],
+    ]),
+    new WeaponAnimation('Rockets', 'Attack/Rockets', {
+      frames: 9,
+      positions: {
+        down: sprite(0, 1.5),
+        horizontal: sprite(-0.9, 0.2),
+        up: sprite(0.35, -0.75),
+      },
+      recoil: true,
+      size: 48,
+      trailingFrames: 10,
+    }),
+    new WeaponAnimation('ExplosionImpact', 'ExplosionImpact', {
+      frames: 10,
+      leadingFrames: 9,
+      recoil: false,
+      size: 48,
+    }),
+  ),
   SAM: new Weapon(
     'SAM',
     new Map([
@@ -1593,6 +1660,16 @@ export const Weapons = {
       recoil: false,
       rotate: false,
     }),
+  ),
+  ZombieBite: new Weapon(
+    'Zombie Bite',
+    buff(
+      new Map([...Bite.damage, [EntityType.Rail, 80], [EntityType.Ship, 80]]),
+      -50,
+    ),
+    BiteAnimation.withSound('Attack/ZombieBite'),
+    BiteHitAnimation,
+    5,
   ),
 };
 
@@ -2482,8 +2559,8 @@ export const AcidBomber = new UnitInfo(
   'Acid Bomber',
   'Ada',
   'female',
-  `Unknown`,
-  `Unknown`,
+  `Acid Bombers excel in aerial assaults, deploying corrosive bombs that inflict poison damage over time. Their primary weapon, the Corrosive Bomb, can devastate ground and naval units alike. Equipped with Corrosive Air-to-Air Missiles, they can also engage enemy aircraft effectively. However, their chemical payloads are low, which means they have limited ammunition, making resupply crucial for sustained operations.`,
+  `Ada is known for her calculated precision in aerial assaults, always a step ahead in battle strategy. Rumor has it, her vibrant green hair is a result of an early childhood accident involving a large pot of mysterious liquid. This "mishap" granted her not only her distinctive look but also her unparalleled skill with corrosive weaponry. When she's not devising intricate attack plans, Ada enjoys concocting creative solutions to problems, much to the team's amusement and occasional bewilderment.`,
   50,
   EntityType.Airplane,
   MovementTypes.Air,
@@ -2493,8 +2570,14 @@ export const AcidBomber = new UnitInfo(
     radius: 4,
     vision: 1,
   },
-  DefaultUnitAbilities,
-  { type: AttackType.ShortRange, weapons: [Weapons.Bomb.withSupply(2)] },
+  DefaultUnitAbilities.copy({ poison: true }),
+  {
+    type: AttackType.ShortRange,
+    weapons: [
+      Weapons.CorrosiveBomb.withSupply(4),
+      Weapons.CorrosiveAirToAirMissile.withSupply(3),
+    ],
+  },
   null,
   {
     direction: 'right',
@@ -3113,39 +3196,7 @@ export const HumveeAvenger = new UnitInfo(
   DefaultUnitAbilities,
   {
     type: AttackType.ShortRange,
-    weapons: [
-      new Weapon(
-        'Rockets',
-        new Map([
-          [EntityType.AirInfantry, 60],
-          [EntityType.Airplane, 60],
-          [EntityType.Amphibious, 90],
-          [EntityType.Artillery, 70],
-          [EntityType.Ground, 80],
-          [EntityType.LowAltitude, 60],
-          [EntityType.Infantry, 80],
-          [EntityType.Rail, 60],
-          [EntityType.Ship, 60],
-        ]),
-        new WeaponAnimation('Rockets', 'Attack/Rockets', {
-          frames: 9,
-          positions: {
-            down: sprite(0, 1.5),
-            horizontal: sprite(-0.9, 0.2),
-            up: sprite(0.35, -0.75),
-          },
-          recoil: true,
-          size: 48,
-          trailingFrames: 10,
-        }),
-        new WeaponAnimation('ExplosionImpact', 'ExplosionImpact', {
-          frames: 10,
-          leadingFrames: 9,
-          recoil: false,
-          size: 48,
-        }),
-      ),
-    ],
+    weapons: [Weapons.Rockets],
   },
   null,
   {
@@ -3467,22 +3518,7 @@ export const Zombie = new UnitInfo(
   ZombieUnitAbilities,
   {
     type: AttackType.ShortRange,
-    weapons: [
-      new Weapon(
-        'Zombie Bite',
-        buff(
-          new Map([
-            ...Weapons.Bite.damage,
-            [EntityType.Rail, 80],
-            [EntityType.Ship, 80],
-          ]),
-          -50,
-        ),
-        BiteAnimation.withSound('Attack/ZombieBite'),
-        BiteHitAnimation,
-        5,
-      ),
-    ],
+    weapons: [Weapons.ZombieBite],
   },
   null,
   {

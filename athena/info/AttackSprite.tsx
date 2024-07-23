@@ -1,4 +1,6 @@
 export type AttackSprite =
+  | 'Acid'
+  | 'AcidCloud'
   | 'Amphibious'
   | 'AntiAir'
   | 'Artillery'

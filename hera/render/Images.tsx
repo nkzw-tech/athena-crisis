@@ -1,5 +1,11 @@
 import { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
 
+const AttackAcidSprite =
+  'https://art.athenacrisis.com/v10/assets/AttackAcid.png';
+
+const AttackAcidCloudSprite =
+  'https://art.athenacrisis.com/v10/assets/AttackAcidCloud.png';
+
 const AttackAmphibiousSprite =
   'https://art.athenacrisis.com/v10/assets/AttackAmphibious.png';
 
@@ -302,6 +308,8 @@ export const Tiles6 = (() => {
 })();
 
 export const AttackSprites: Record<AttackSprite, string> = {
+  Acid: AttackAcidSprite,
+  AcidCloud: AttackAcidCloudSprite,
   Amphibious: AttackAmphibiousSprite,
   AntiAir: AttackAntiAirSprite,
   Artillery: AttackArtillerySprite,
@@ -395,6 +403,8 @@ export const ShadowImages = new Map([
 ]);
 
 export default [
+  AttackAcidSprite,
+  AttackAcidCloudSprite,
   AttackAmphibiousSprite,
   AttackAntiAirSprite,
   AttackArtillerySprite,
