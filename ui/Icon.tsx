@@ -5,7 +5,6 @@ import { SquareButtonStyle } from './Button.tsx';
 export type SVGIcon = Readonly<{
   body: string;
   height?: number;
-  scale?: number;
   width?: number;
 }>;
 
@@ -14,7 +13,6 @@ const Icon = memo(function Icon({
   className,
   horizontalFlip,
   icon,
-  style,
   ...props
 }: SVGAttributes<SVGElement> & {
   button?: true;
@@ -30,9 +28,6 @@ const Icon = memo(function Icon({
       className={cx(button && SquareButtonStyle, className)}
       dangerouslySetInnerHTML={{ __html }}
       height="1em"
-      style={
-        icon.scale ? { ...style, transform: `scale(${icon.scale})` } : style
-      }
       viewBox={`0 0 ${icon.width} ${icon.height}`}
       width="1em"
       xmlns="http://www.w3.org/2000/svg"

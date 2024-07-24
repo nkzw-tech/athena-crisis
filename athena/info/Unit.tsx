@@ -3325,7 +3325,7 @@ export const Truck = new UnitInfo(
 );
 
 export const Octopus = new UnitInfo(
-  43,
+  UnitID.Octopus,
   'Octopus',
   'General Buccal',
   'unknown',

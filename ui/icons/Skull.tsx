@@ -1,6 +1,5 @@
 export default {
-  body: `<path fill="currentColor" d="M15 5h1v1h-1zM16 6h1v1h-1zM12 13h1v1h-1zM8 13h1v4H8zM16 13h1v4h-1zM8 6h1v1H8zM9 17h1v1H9zM10 18h1v1h-1zM11 19h3v1h-3zM17 7h1v6h-1zM7 7h1v6H7zM16 9h1v2h-1zM8 9h1v2H8zM10 10h2v2h-2zM13 10h2v2h-2z"/><path fill="currentColor" d="M14 11h2v2h-2zM9 11h2v2H9zM9 14h2v1H9zM10 15h5v1h-5zM11 16h3v1h-3zM14 14h2v1h-2zM9 5h1v1H9zM10 4h5v1h-5zM14 18h1v1h-1zM15 17h1v1h-1z"/>`,
+  body: `<path fill="currentColor" d="M11 10h2v2h-2zM3 10h2v8H3zM19 10h2v8h-2zM5 18h2v2H5zM7 20h2v2H7zM9 22h6v2H9zM21-2h2v12h-2zM1-2h2v12H1zM19 2h2v4h-2zM3 2h2v4H3zM7 4h4v4H7zM13 4h4v4h-4z"/><path fill="currentColor" d="M15 6h4v4h-4zM5 6h4v4H5zM5 12h4v2H5zM7 14h10v2H7zM9 16h6v2H9zM15 12h4v2h-4zM15 20h2v2h-2zM17 18h2v2h-2z"/>`,
   height: 24,
-  scale: 1.5,
   width: 24,
 };

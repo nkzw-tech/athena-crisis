@@ -6,6 +6,7 @@ export default {
   HeavyArtillery: 12,
   Sniper: 14,
   Medic: 26,
+  Octopus: 43,
   Alien: 46,
   Zombie: 47,
   Brute: 49,

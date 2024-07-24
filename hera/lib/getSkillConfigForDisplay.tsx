@@ -6,6 +6,7 @@ import Alien from '@deities/ui/icons/Alien.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
+import Octopus from '@deities/ui/icons/Octopus.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
@@ -231,6 +232,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'purple',
         icon: Alien,
         name: fbt('Alien Invasion', 'Skill name'),
+      };
+    case Skill.BuyUnitOctopus:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'cyan',
+        icon: Octopus,
+        name: fbt('Octo Command', 'Skill name'),
       };
     default: {
       skill satisfies never;
