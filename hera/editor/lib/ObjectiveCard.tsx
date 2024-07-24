@@ -365,9 +365,7 @@ export default function ObjectiveCard({
                             </div>
                           ) : (
                             <div className={borderStyle}>
-                              <fbt desc="Label to select a biome">
-                                Select a biome
-                              </fbt>
+                              <fbt desc="Label to select a biome">Biome</fbt>
                             </div>
                           )
                         }
@@ -406,9 +404,7 @@ export default function ObjectiveCard({
                             </div>
                           ) : (
                             <div className={borderStyle}>
-                              <fbt desc="Label to select a keyart">
-                                Select a keyart variant
-                              </fbt>
+                              <fbt desc="Label to select a keyart">Keyart</fbt>
                             </div>
                           )
                         }
@@ -432,6 +428,48 @@ export default function ObjectiveCard({
                               <fbt desc="Keyart unlock">
                                 Variant{' '}
                                 <fbt:param name="variant">{variant}</fbt:param>
+                              </fbt>
+                            </InlineLink>
+                          ))}
+                        </Stack>
+                      </Dropdown>
+                      <Dropdown
+                        title={
+                          reward?.type === 'SkillSlot' ? (
+                            <div className={cx(borderStyle, highlightStyle)}>
+                              <fbt desc="SkillSlot unlock">
+                                Skill Slot{' '}
+                                <fbt:param name="slot">{reward.slot}</fbt:param>
+                              </fbt>
+                            </div>
+                          ) : (
+                            <div className={borderStyle}>
+                              <fbt desc="Label to select a skillslot">
+                                Skill Slot
+                              </fbt>
+                            </div>
+                          )
+                        }
+                      >
+                        <Stack className={selectorStyle} gap vertical>
+                          {([2, 3, 4] as const).map((slot) => (
+                            <InlineLink
+                              className={linkStyle}
+                              key={slot}
+                              onClick={() =>
+                                onChange({
+                                  ...objective,
+                                  reward: { slot, type: 'SkillSlot' },
+                                })
+                              }
+                              selectedText={
+                                reward?.type === 'SkillSlot' &&
+                                reward.slot === slot
+                              }
+                            >
+                              <fbt desc="SkillSlot unlock">
+                                Skill Slot{' '}
+                                <fbt:param name="slot">{slot}</fbt:param>
                               </fbt>
                             </InlineLink>
                           ))}

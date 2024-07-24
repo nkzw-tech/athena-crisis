@@ -565,6 +565,14 @@ const RewardDetail = ({
           </fbt>
         </div>
       );
+    case 'SkillSlot':
+      return (
+        <div>
+          <fbt desc="Skill slot unlock">
+            Skill Slot <fbt:param name="slot">{reward.slot}</fbt:param>
+          </fbt>
+        </div>
+      );
     default: {
       rewardType satisfies never;
       throw new UnknownTypeError('Level::Reward', rewardType);

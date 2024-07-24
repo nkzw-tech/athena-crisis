@@ -12,12 +12,14 @@ export default function usePlayerHasReward({
   keyart,
   portraits,
   skills,
+  unlockedSkillSlots,
 }: {
   biomes: ReadonlyArray<Biome>;
   id: string;
   keyart: ReadonlyArray<number>;
   portraits: ReadonlyArray<number>;
   skills: ReadonlyArray<Skill>;
+  unlockedSkillSlots: ReadonlyArray<number>;
 }) {
   return useCallback(
     (
@@ -41,12 +43,14 @@ export default function usePlayerHasReward({
           return keyart.includes(reward.variant);
         case 'Biome':
           return biomes.includes(reward.biome);
+        case 'SkillSlot':
+          return unlockedSkillSlots.includes(reward.slot);
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError('usePlayerHasReward', rewardType);
         }
       }
     },
-    [biomes, id, keyart, portraits, skills],
+    [biomes, id, keyart, portraits, skills, unlockedSkillSlots],
   );
 }

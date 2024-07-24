@@ -27,6 +27,7 @@ import animateFireworks, {
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import receiveBiomeAnimation from '../animations/receiveBiomeAnimation.tsx';
 import receivePortraitAnimation from '../animations/receivePortraitAnimation.tsx';
+import receiveSkillSlotAnimation from '../animations/receiveSkillSlotAnimation.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
 import {
@@ -590,6 +591,7 @@ async function processActionResponse(
           );
         }
         case 'Biome':
+        case 'SkillSlot':
         case 'UnitPortraits': {
           const player = map.getPlayer(actionResponse.player);
           if (
@@ -598,6 +600,8 @@ async function processActionResponse(
           ) {
             if (rewardType === 'Biome') {
               return receiveBiomeAnimation(actions, state, actionResponse);
+            } else if (rewardType === 'SkillSlot') {
+              return receiveSkillSlotAnimation(actions, state, actionResponse);
             } else if (rewardType === 'UnitPortraits') {
               return receivePortraitAnimation(actions, state, actionResponse);
             }

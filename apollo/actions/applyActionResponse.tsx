@@ -582,6 +582,7 @@ export default function applyActionResponse(
         }
         case 'Biome':
         case 'Keyart':
+        case 'SkillSlot':
         case 'UnitPortraits':
           return map;
         default: {

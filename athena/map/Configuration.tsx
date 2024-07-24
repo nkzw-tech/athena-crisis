@@ -52,6 +52,6 @@ export const CreateTracksCost = 50;
 export const Charge = 1500;
 export const MaxCharges = 10;
 export const AllowedMisses = 2;
-export const DefaultMapSkillSlots = 2;
+export const DefaultMapSkillSlots = [1, 2];
 export const PoisonDamage = 20;
 export const PowerStationMultiplier = 0.3;

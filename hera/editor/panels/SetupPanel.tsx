@@ -106,7 +106,7 @@ export default function MapEditorSetupPanel({
         onSelect={null}
         onSelectAI={onSelectAI}
         onSelectSkills={onSelectSkills}
-        skillSlots={DefaultMapSkillSlots}
+        skillSlots={DefaultMapSkillSlots.length}
         users={placeholderUsers}
       >
         <p>

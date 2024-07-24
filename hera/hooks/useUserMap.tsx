@@ -14,8 +14,8 @@ export type UserLike = Readonly<{
 export type UserLikeWithID = UserLike & Readonly<{ id: string }>;
 export type UserWithSkills = UserLikeWithID &
   Readonly<{
-    skillSlots: number;
     skills: ReadonlyArray<number>;
+    unlockedSkillSlots: ReadonlyArray<number>;
   }>;
 
 type FactionName = Readonly<{

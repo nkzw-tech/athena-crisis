@@ -23,16 +23,23 @@ type BiomeReward = Readonly<{
   type: 'Biome';
 }>;
 
+type SkillSlot = Readonly<{
+  slot: number;
+  type: 'SkillSlot';
+}>;
+
 type EncodedSkillReward =
   | readonly [type: 0, skill: Skill]
   | readonly [type: 1, unit: number]
   | readonly [type: 2, variant: 1 | 2]
-  | readonly [type: 3, biome: Biome];
+  | readonly [type: 3, biome: Biome]
+  | readonly [type: 4, slot: number];
 
 export type Reward =
   | BiomeReward
   | KeyartReward
   | SkillReward
+  | SkillSlot
   | UnitPortraitsReward;
 
 export type EncodedReward = EncodedSkillReward;
@@ -49,6 +56,8 @@ export function encodeReward(reward: Reward): EncodedReward {
       return [2, reward.variant];
     case 'Biome':
       return [3, reward.biome];
+    case 'SkillSlot':
+      return [4, reward.slot];
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('encodeReward', rewardType);
@@ -65,6 +74,8 @@ export function decodeReward([rewardType, ...rest]: EncodedReward): Reward {
       return { type: 'Keyart', variant: rest[0] === 1 ? 1 : 2 };
     case 3:
       return { biome: rest[0], type: 'Biome' };
+    case 4:
+      return { slot: rest[0], type: 'SkillSlot' };
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('decodeReward', rewardType);
@@ -94,6 +105,8 @@ export function formatReward(reward: Reward): string {
       return `Reward { variant: ${reward.variant} }`;
     case 'Biome':
       return `Reward { biome: ${getBiomeName(reward.biome)} }`;
+    case 'SkillSlot':
+      return `Reward { slot: ${reward.slot} }`;
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('formatReward', rewardType);
@@ -110,6 +123,8 @@ export function validateReward(reward: Reward): boolean {
       return reward.variant === 1 || reward.variant === 2;
     case 'Biome':
       return Biomes.includes(reward.biome);
+    case 'SkillSlot':
+      return reward.slot >= 2 && reward.slot <= 4;
     default:
       return false;
   }

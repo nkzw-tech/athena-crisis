@@ -2,7 +2,10 @@ import { Skill, Skills } from '../info/Skill.tsx';
 import MapData from '../MapData.tsx';
 
 export default function validateSkills(
-  { skillSlots, skills }: { skillSlots: number; skills: Iterable<number> },
+  {
+    skills,
+    unlockedSkillSlots,
+  }: { skills: Iterable<number>; unlockedSkillSlots: ReadonlyArray<number> },
   playerSkills: Iterable<number> | null | undefined,
   map: MapData,
   hasSkills: boolean,
@@ -10,7 +13,11 @@ export default function validateSkills(
   const validatedSkills = new Set<Skill>();
   const skillSet = new Set(playerSkills);
 
-  if (!hasSkills || !skillSet.size || skillSet.size > skillSlots) {
+  if (
+    !hasSkills ||
+    !skillSet.size ||
+    skillSet.size > unlockedSkillSlots.length
+  ) {
     return validatedSkills;
   }
 
