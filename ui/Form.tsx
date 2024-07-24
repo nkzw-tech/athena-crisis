@@ -1,17 +1,18 @@
 import {
   DetailedHTMLProps,
+  FormEvent,
   FormHTMLAttributes,
   memo,
   useEffect,
   useRef,
 } from 'react';
 
-export default memo(function Form(
-  props: DetailedHTMLProps<
-    FormHTMLAttributes<HTMLFormElement>,
-    HTMLFormElement
-  >,
-) {
+const preventDefault = (event: FormEvent) => event.preventDefault();
+
+export default memo(function Form({
+  onSubmit,
+  ...props
+}: DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>) {
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     const form = formRef.current;
@@ -23,5 +24,7 @@ export default memo(function Form(
       return () => form.removeEventListener('blur', listener, true);
     }
   });
-  return <form ref={formRef} {...props} />;
+  return (
+    <form ref={formRef} {...props} onSubmit={onSubmit || preventDefault} />
+  );
 });
