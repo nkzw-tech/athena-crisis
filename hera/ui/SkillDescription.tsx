@@ -586,7 +586,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="pluralUnitName">
             <UnitName color={color} unit={Sniper} />
           </fbt:param>{' '}
-          can attack without positioning.
+          can attack without positioning and they receive the ability to capture
+          buildings.
         </fbt>
       );
     case Skill.NoUnitRestrictions:

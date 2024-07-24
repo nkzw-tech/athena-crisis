@@ -1,5 +1,4 @@
 import { Lightning } from '@deities/athena/info/Tile.tsx';
-import { Ability } from '@deities/athena/info/Unit.tsx';
 import getVectorRadius from '@deities/athena/lib/getVectorRadius.tsx';
 import { getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -57,7 +56,7 @@ const maybeOptimizeTargets = (
     return targets;
   }
 
-  if (unit.info.hasAbility(Ability.Capture)) {
+  if (unit.canCapture(map.getPlayer(unit))) {
     const sortedTargets = sortBy(
       targets.map((vector) => radius.get(vector)).filter(isPresent),
       minByCost,

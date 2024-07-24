@@ -443,6 +443,15 @@ export default class Unit extends Entity {
     );
   }
 
+  canCapture(player: Player) {
+    return (
+      this.info.hasAbility(Ability.Capture) ||
+      (this.info === Sniper &&
+        !this.isUnfolded() &&
+        player.skills.has(Skill.UnitAbilitySniperImmediateAction))
+    );
+  }
+
   canAttack(player: Player) {
     return (
       this.info.hasAttack() &&
@@ -533,9 +542,7 @@ export default class Unit extends Entity {
   }
 
   capture(): this {
-    return !this.capturing && this.info.abilities.has(Ability.Capture)
-      ? this.copy({ capturing: true })
-      : this;
+    return !this.capturing ? this.copy({ capturing: true }) : this;
   }
 
   stopCapture(): this {
@@ -552,7 +559,7 @@ export default class Unit extends Entity {
 
   unfold(): this {
     return !this.unfolded && this.info.abilities.has(Ability.Unfold)
-      ? this.copy({ unfolded: true })
+      ? this.stopCapture().copy({ unfolded: true })
       : this;
   }
 

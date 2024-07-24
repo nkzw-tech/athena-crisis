@@ -366,7 +366,8 @@ export default function validateMap(
           unit.info,
           vector,
           true,
-        ),
+        ) ||
+        (unit.isCapturing() && !unit.canCapture(map.getPlayer(unit))),
     )
   ) {
     return [null, 'invalid-entities'];

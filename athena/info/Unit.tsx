@@ -2214,7 +2214,7 @@ const Lander = new UnitInfo(
 );
 
 export const Sniper = new UnitInfo(
-  14,
+  UnitID.Sniper,
   'Sniper',
   'Maxima',
   'female',

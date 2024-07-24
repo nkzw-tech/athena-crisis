@@ -76,7 +76,7 @@ export default function getAvailableUnitActions(
   if (
     building &&
     map.isOpponent(unit, building) &&
-    info.hasAbility(Ability.Capture)
+    unit.canCapture(map.getCurrentPlayer())
   ) {
     actions.add('capture');
   }

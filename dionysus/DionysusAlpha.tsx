@@ -284,7 +284,7 @@ export default class DionysusAlpha extends BaseAI {
         !unit.isCompleted() &&
         !unit.isCapturing() &&
         map.matchesPlayer(currentPlayer, unit) &&
-        unit.info.hasAbility(Ability.Capture),
+        unit.canCapture(currentPlayer),
     );
 
     if (!units.size) {
@@ -1256,8 +1256,8 @@ export default class DionysusAlpha extends BaseAI {
     if (
       unit &&
       !unit.isCompleted() &&
-      unit.info.hasAbility(Ability.Capture) &&
-      !unit.info.hasAttack()
+      !unit.info.hasAttack() &&
+      unit.canCapture(currentMap.getCurrentPlayer())
     ) {
       // Mark units with the capture ability as completed so that `beginCapture`
       // will not attempt to process the same unit on every action.

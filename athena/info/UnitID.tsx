@@ -4,6 +4,7 @@ export default {
   Infantry: 2,
   Artillery: 7,
   HeavyArtillery: 12,
+  Sniper: 14,
   Medic: 26,
   Alien: 46,
   Zombie: 47,

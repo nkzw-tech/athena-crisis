@@ -81,7 +81,7 @@ const skillConfig: Record<
     charges: 3,
     cost: 600,
   },
-  [Skill.UnitAbilitySniperImmediateAction]: { cost: 2000 },
+  [Skill.UnitAbilitySniperImmediateAction]: { charges: 3, cost: 2000 },
   [Skill.MovementIncreaseGroundUnitDefenseDecrease]: { charges: 2, cost: 2500 },
   [Skill.UnitBattleShipMoveAndAct]: { charges: 5, cost: 2000 },
   [Skill.UnitAPUAttackIncreaseMajorPower]: { charges: 3, cost: 3000 },
@@ -274,6 +274,7 @@ const defenseTileStatusEffects: TileMovementSkillMap = new Map([
 const skillRangeEffects: RangeMap = new Map([]);
 
 const skillRangePowerEffects = new Map<number, RangeSkillMap>([
+  [UnitID.Sniper, new Map([[Skill.UnitAbilitySniperImmediateAction, [2, 5]]])],
   [UnitID.BazookaBear, new Map([[Skill.BuyUnitBazookaBear, [1, 3]]])],
   [UnitID.Cannon, new Map([[Skill.ArtilleryRangeIncrease, [2, 8]]])],
   [UnitID.HeavyArtillery, new Map([[Skill.ArtilleryRangeIncrease, [3, 7]]])],

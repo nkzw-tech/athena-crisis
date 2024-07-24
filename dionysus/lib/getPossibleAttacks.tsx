@@ -204,7 +204,7 @@ export default function getPossibleAttacks(
       } else {
         const building = map.buildings.get(vector);
         // If the attackable unit is capturing a building, increase the weight.
-        if (building && entityB.info.hasAbility(Ability.Capture)) {
+        if (building && entityB.canCapture(map.getPlayer(entityB))) {
           const { funds } = building.info.configuration;
           weight *=
             (entityB.isCapturing() ? 10 : 1) *

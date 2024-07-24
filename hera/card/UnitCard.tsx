@@ -28,7 +28,7 @@ import Entity, {
   EntityType,
   getEntityGroup,
 } from '@deities/athena/map/Entity.tsx';
-import {
+import Player, {
   numberToPlayerID,
   PlayerID,
   resolveDynamicPlayerID,
@@ -451,7 +451,7 @@ export default memo(function UnitCard({
           unit={unit}
           vector={vector}
         />
-        <UnitAbilities player={player} unit={unit} />
+        <UnitAbilities player={currentPlayer} unit={unit} />
         <UnitTransports biome={biome} player={player} unit={unit} />
         <UnitMovement
           biome={biome}
@@ -698,16 +698,17 @@ const UnitAbility = ({
   );
 };
 
-const UnitAbilities = ({ player, unit }: { player: PlayerID; unit: Unit }) => {
+const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
   const abilities = Abilities.filter(
     (ability) =>
       ability !== Ability.MoveAndAct &&
       ability !== Ability.AccessBuildings &&
-      unit.info.hasAbility(ability),
+      (unit.info.hasAbility(ability) ||
+        (ability === Ability.Capture && unit.canCapture(player))),
   );
   return abilities?.length ? (
     <Stack gap vertical>
-      <CardInfoHeading style={{ color: getColor(player) }}>
+      <CardInfoHeading style={{ color: getColor(player.id) }}>
         <fbt desc="Headline for unit special abilities">Special Abilities</fbt>
       </CardInfoHeading>
       <Stack adaptive gap start>

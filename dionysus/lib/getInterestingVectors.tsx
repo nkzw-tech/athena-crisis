@@ -18,12 +18,13 @@ export default function getInterestingVectors(
   const { info } = unit;
   const building = map.buildings.get(from);
   const isTransportingUnits = unit.isTransportingUnits();
+  const player = map.getPlayer(unit);
   const isDefensive =
     (unit.matchesBehavior(AIBehavior.Defense) ||
       unit.matchesBehavior(AIBehavior.Adaptive)) &&
     (!building ||
       !map.matchesTeam(building, unit) ||
-      !building?.canBuildUnits(map.getPlayer(unit)));
+      !building?.canBuildUnits(player));
   const isInDanger =
     !isTransportingUnits &&
     (info.isLongRange() ||
@@ -51,7 +52,7 @@ export default function getInterestingVectors(
     }
   }
 
-  if (info.hasAbility(Ability.Capture) && !isDefensive) {
+  if (unit.canCapture(player) && !isDefensive) {
     for (const [vector, building] of map.buildings) {
       if (shouldCaptureBuilding(map, unit.player, building, vector)) {
         vectors.push(vector);
@@ -76,7 +77,7 @@ export default function getInterestingVectors(
         map.matchesPlayer(unit, building) &&
         (building.info.isHQ() ||
           building.info.canHeal(unit.info) ||
-          building.canBuildUnits(map.getPlayer(unit)))
+          building.canBuildUnits(player))
       ) {
         vectors.push(vector);
       }

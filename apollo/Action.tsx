@@ -523,13 +523,14 @@ function attackBuilding(
 function capture(map: MapData, { from }: CaptureAction) {
   const unit = map.units.get(from);
   const buildingA = map.buildings.get(from);
+  const player = map.getCurrentPlayer();
   if (
     unit &&
     buildingA &&
-    map.isCurrentPlayer(unit) &&
+    map.matchesPlayer(unit, player) &&
     map.isOpponent(unit, buildingA) &&
     !unit.isCompleted() &&
-    unit.info.hasAbility(Ability.Capture)
+    unit.canCapture(player)
   ) {
     return unit.isCapturing()
       ? ({

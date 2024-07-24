@@ -412,6 +412,17 @@ test('snipers can attack without unfolding', async () => {
   expect(unit.unfold().canAttack(playerWithSkill)).toBeTruthy();
 });
 
+test('snipers can capture with a skill', async () => {
+  const player = map.getPlayer(1);
+  const playerWithSkill = player.copy({
+    skills: new Set([Skill.UnitAbilitySniperImmediateAction]),
+  });
+
+  const unit = Sniper.create(1);
+  expect(unit.canCapture(player)).toBeFalsy();
+  expect(unit.canCapture(playerWithSkill)).toBeTruthy();
+});
+
 test('skills can extend the range of units', async () => {
   const skills = new Set([Skill.MovementIncreaseGroundUnitDefenseDecrease]);
   const player = map.getPlayer(1);

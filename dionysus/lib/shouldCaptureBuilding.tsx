@@ -1,4 +1,3 @@
-import { Ability } from '@deities/athena/info/Unit.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -18,8 +17,8 @@ export default function shouldCaptureBuilding(
     const maybeUnit = map.units.get(vector);
     return (
       !maybeUnit ||
-      (!maybeUnit.info.hasAbility(Ability.Capture) &&
-        !map.matchesPlayer(maybeUnit, building))
+      (!map.matchesPlayer(maybeUnit, building) &&
+        !maybeUnit.canCapture(map.getPlayer(maybeUnit)))
     );
   }
 
