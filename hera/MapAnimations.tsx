@@ -17,6 +17,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 import AttackAnimation from './animations/AttackAnimation.tsx';
 import BuildingCreate from './animations/BuildingCreate.tsx';
+import DamageAnimation from './animations/DamageAnimation.tsx';
 import Explosion, { ExplosionStyle } from './animations/Explosion.tsx';
 import Fireworks from './animations/Fireworks.tsx';
 import Heal from './animations/Heal.tsx';
@@ -108,6 +109,11 @@ export type UpgradeAnimation = Readonly<{
   onComplete: StateToStateLike;
   onUpgrade: StateToStateLike;
   type: 'upgrade';
+}>;
+
+export type DamageAnimation = Readonly<{
+  onComplete: StateToStateLike;
+  type: 'damage';
 }>;
 
 export type ShakeAnimation = Readonly<{
@@ -273,6 +279,7 @@ export type Animation =
   | BuildingAnimation
   | BuildingAnimation
   | CharacterMessageAnimation
+  | DamageAnimation
   | ExplosionAnimation
   | FireworksAnimation
   | FlashAnimation
@@ -299,6 +306,7 @@ const unitAnimations = new Set([
   'attack',
   'attackUnitFlash',
   'capture',
+  'damage',
   'fold',
   'heal',
   'move',
@@ -306,8 +314,8 @@ const unitAnimations = new Set([
   'sabotage',
   'spawn',
   'unfold',
-  'unitHeal',
   'unitExplosion',
+  'unitHeal',
 ]);
 
 export function isUnitAnimation(
@@ -449,6 +457,18 @@ const MapAnimation = ({
             position={position}
             requestFrame={requestFrame}
             size={tileSize}
+            {...props}
+          />
+        );
+      case 'damage':
+        return (
+          <DamageAnimation
+            delay={animationConfig.ExplosionStep}
+            position={position}
+            requestFrame={requestFrame}
+            size={tileSize}
+            update={update}
+            {...animation}
             {...props}
           />
         );

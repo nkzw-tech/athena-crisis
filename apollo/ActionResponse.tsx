@@ -8,7 +8,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { Objective } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { HiddenActionResponse } from './HiddenAction.tsx';
-import { ObjectiveActionResponses } from './Objective.tsx';
+import { ObjectiveActionResponse } from './Objective.tsx';
 
 export type MoveActionResponse = Readonly<{
   completed?: boolean;
@@ -239,7 +239,7 @@ export type ActionResponse =
   | UnfoldActionResponse
   // List of further Action Responses.
   | HiddenActionResponse
-  | ObjectiveActionResponses;
+  | ObjectiveActionResponse;
 
 export type ActionResponses = ReadonlyArray<ActionResponse>;
 export type ActionResponseType = ActionResponse['type'];

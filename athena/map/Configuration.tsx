@@ -55,3 +55,4 @@ export const AllowedMisses = 2;
 export const DefaultMapSkillSlots = [1, 2];
 export const PoisonDamage = 20;
 export const PowerStationMultiplier = 0.3;
+export const OctopusPowerDamage = 20;

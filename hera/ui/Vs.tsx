@@ -14,7 +14,7 @@ export default function Vs() {
 const style = css`
   color: ${applyVar('text-color')};
   font-size: 1.25em;
-  margin: 0 16px 4px;
+  margin: 0 8px 4px;
   white-space: nowrap;
 
   &:before {

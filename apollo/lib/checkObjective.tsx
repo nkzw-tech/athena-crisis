@@ -14,8 +14,9 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 
 const destructiveActions = new Set([
-  'AttackUnit',
+  'ActivatePower',
   'AttackBuilding',
+  'AttackUnit',
   'EndTurn',
   'ToggleLightning',
 ]);

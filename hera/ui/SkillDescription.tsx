@@ -36,6 +36,7 @@ import {
   AnimationConfig,
   CounterAttack,
   HealAmount,
+  OctopusPowerDamage,
   RaisedCounterAttack,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
@@ -667,6 +668,15 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="buildingNameB">
             <BuildingName building={HQ} color={color} />
           </fbt:param>.
+        </fbt>
+      );
+
+    case Skill.BuyUnitOctopus:
+      return (
+        <fbt desc="Additional skill description">
+          Reduces the health of all opposing units by{' '}
+          <fbt:param name="amount">{OctopusPowerDamage}</fbt:param> health
+          points.
         </fbt>
       );
   }

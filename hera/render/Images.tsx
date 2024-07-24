@@ -94,6 +94,8 @@ const CraneSprite = 'https://art.athenacrisis.com/v10/assets/Crane.png';
 
 const CursorSprite = 'https://art.athenacrisis.com/v10/assets/Cursor.png';
 
+const DamageSprite = 'https://art.athenacrisis.com/v10/assets/Damage.png';
+
 const DeleteSprite = 'https://art.athenacrisis.com/v10/assets/Delete.png';
 
 const ExplosionSprite = 'https://art.athenacrisis.com/v10/assets/Explosion.png';
@@ -344,6 +346,7 @@ export const AttackSprites: Record<AttackSprite, string> = {
 export const Sprites = {
   Crane: CraneSprite,
   Cursor: CursorSprite,
+  Damage: DamageSprite,
   Delete: DeleteSprite,
   Explosion: ExplosionSprite,
   Fireworks: FireworksSprite,
@@ -436,6 +439,7 @@ export default [
   AttackTorpedoSprite,
   CraneSprite,
   CursorSprite,
+  DamageSprite,
   DeleteSprite,
   ExplosionSprite,
   FireworksSprite,

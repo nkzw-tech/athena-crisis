@@ -2,7 +2,6 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
 import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
-import type Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
 import { BuildingInfo } from './Building.tsx';
@@ -928,21 +927,6 @@ export function getActiveUnitTypes(
 
 export function getHealUnitTypes(skill: Skill) {
   return healPower.get(skill);
-}
-
-export function onPowerUnitUpgrade(
-  skill: Skill,
-  map: MapData,
-  vector: Vector,
-  unit: Unit,
-) {
-  if (skill === Skill.RecoverAirUnits) {
-    return map.copy({
-      units: map.units.set(vector, unit.recover()),
-    });
-  }
-
-  return null;
 }
 
 export function hasCounterAttackSkill(skills: ReadonlySet<Skill>) {

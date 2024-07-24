@@ -239,7 +239,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         borderStyle: 'coin',
         colors: 'cyan',
         icon: Octopus,
-        name: fbt('Octo Command', 'Skill name'),
+        name: fbt('Octo Wrath', 'Skill name'),
       };
     default: {
       skill satisfies never;

@@ -51,7 +51,7 @@ export default function HealthAnimation({
   }
 
   const color =
-    change == 0
+    change === 0
       ? 'error'
       : change > 0
         ? 'green'

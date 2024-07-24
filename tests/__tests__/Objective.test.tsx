@@ -1,10 +1,12 @@
 import {
+  ActivatePowerAction,
   AttackBuildingAction,
   AttackUnitAction,
   CaptureAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { House, HQ, Shelter } from '@deities/athena/info/Building.tsx';
+import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import {
   APU,
   Bomber,
@@ -15,9 +17,15 @@ import {
   SmallTank,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { PoisonDamage } from '@deities/athena/map/Configuration.tsx';
+import {
+  Charge,
+  OctopusPowerDamage,
+  PoisonDamage,
+} from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import Team from '@deities/athena/map/Team.tsx';
 import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -462,5 +470,140 @@ test('game over through poison status effects', async () => {
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 550, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 550, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 600, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }"
+    `);
+});
+
+test('game over through activating a power', async () => {
+  const skill = Skill.BuyUnitOctopus;
+  const skills = new Set([skill]);
+  const { charges } = getSkillConfig(skill);
+  const mapA = map.copy({
+    teams: updatePlayer(
+      map.teams,
+      map.getPlayer(2).copy({
+        charge: (charges || 0) * Charge,
+        skills,
+      }),
+    ),
+    units: map.units
+      .set(
+        vec(2, 2),
+        Flamethrower.create(player1).setHealth(OctopusPowerDamage - 1),
+      )
+      .set(vec(4, 4), Helicopter.create(player2)),
+  });
+
+  const [, gameActionResponseA] = executeGameActions(mapA, [
+    EndTurnAction(),
+    ActivatePowerAction(skill),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      ActivatePower { skill: 26, units: [] }
+      AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+    `);
+
+  const mapB = mapA.copy({
+    config: mapA.config.copy({
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            amount: 1,
+            hidden: false,
+            optional: false,
+            type: Criteria.DefeatAmount,
+          },
+        ],
+      ]),
+    }),
+  });
+
+  const [, gameActionResponseB] = executeGameActions(mapB, [
+    EndTurnAction(),
+    ActivatePowerAction(skill),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      ActivatePower { skill: 26, units: [] }
+      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }"
+    `);
+});
+
+test('game over through activating a power can beat more than one player', async () => {
+  const skill = Skill.BuyUnitOctopus;
+  const skills = new Set([skill]);
+  const { charges } = getSkillConfig(skill);
+  const mapA = map.copy({
+    active: [1, 2, 3],
+    teams: updatePlayer(
+      map.teams.set(
+        3,
+        new Team(
+          3,
+          '',
+          ImmutableMap([
+            [
+              3,
+              new HumanPlayer(
+                3,
+                '3',
+                3,
+                300,
+                undefined,
+                new Set(),
+                new Set(),
+                0,
+                null,
+                0,
+              ),
+            ],
+          ]),
+        ),
+      ),
+      map.getPlayer(2).copy({
+        charge: (charges || 0) * Charge,
+        skills,
+      }),
+    ),
+    units: map.units
+      .set(vec(2, 2), Flamethrower.create(player1).setHealth(1))
+      .set(vec(4, 4), Helicopter.create(player2))
+      .set(vec(1, 1), Flamethrower.create(3)),
+  });
+
+  const [, gameActionResponseA] = executeGameActions(mapA, [
+    EndTurnAction(),
+    ActivatePowerAction(skill),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      ActivatePower { skill: 26, units: [] }
+      AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }"
+    `);
+
+  const mapB = mapA.copy({
+    units: mapA.units.set(vec(1, 1), Flamethrower.create(3).setHealth(1)),
+  });
+
+  const [, gameActionResponseB] = executeGameActions(mapB, [
+    EndTurnAction(),
+    ActivatePowerAction(skill),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      ActivatePower { skill: 26, units: [] }
+      AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
+      AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
     `);
 });

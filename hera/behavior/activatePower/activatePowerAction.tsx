@@ -1,22 +1,27 @@
 import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import {
-  getHealUnitTypes,
+  onPowerUnitOpponentEffect,
   onPowerUnitUpgrade,
-  Skill,
-} from '@deities/athena/info/Skill.tsx';
+} from '@deities/apollo/actions/applyPower.tsx';
+import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
+import {
+  MaxHealth,
+  OctopusPowerDamage,
+} from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import isPresent from '@deities/hephaestus/isPresent.tsx';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
+import damageUnits from '../../lib/damageUnits.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import spawn from '../../lib/spawn.tsx';
 import upgradeUnits from '../../lib/upgradeUnits.tsx';
-import { Actions, State, StateToStateLike } from '../../Types.tsx';
+import { Actions, State, StateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
@@ -39,13 +44,9 @@ export default async function activatePowerAction(
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { skill, units: unitsToSpawn } = actionResponse;
-  const player = state.map.getCurrentPlayer();
   const { colors, name } = getSkillConfigForDisplay(skill);
-
-  const spawnUnits = (state: State, onComplete: StateToStateLike) =>
-    unitsToSpawn?.size
-      ? spawn(actions, state, [...unitsToSpawn], null, 'slow', onComplete)
-      : onComplete(state);
+  const { vision } = state;
+  const player = state.map.getCurrentPlayer();
 
   return new Promise((resolve) =>
     update((state) => ({
@@ -69,11 +70,43 @@ export default async function activatePowerAction(
             .getActiveUnitTypes()
             .get(player.id);
 
+          const unitsToDamage =
+            skill === Skill.BuyUnitOctopus
+              ? state.map.units.filter(
+                  (unit, vector) =>
+                    vision.isVisible(state.map, vector) &&
+                    state.map.isNonNeutralOpponent(player, unit),
+                )
+              : null;
           const unitsToHeal = getUnitsToHeal(state.map, player.id, skill);
           const healVectors = new Set(
             unitsToHeal ? [...unitsToHeal.keys()] : [],
           );
-          const units = state.map.units.filter(
+
+          const damage = unitsToDamage?.size
+            ? (state: State) =>
+                damageUnits(
+                  actions,
+                  state,
+                  OctopusPowerDamage,
+                  sortByVectorKey(unitsToDamage),
+                  next,
+                  ({ map }, vector) => {
+                    const unit = map.units.get(vector);
+                    const newMap =
+                      unit &&
+                      onPowerUnitOpponentEffect(skill, map, vector, unit);
+                    return newMap ? { map: newMap } : null;
+                  },
+                )
+            : null;
+
+          const healUnits = unitsToHeal?.size
+            ? (state: State) =>
+                animateHeal(state, sortByVectorKey(unitsToHeal), next)
+            : null;
+
+          const unitsToUpgrade = state.map.units.filter(
             (unit, vector) =>
               !healVectors.has(vector) &&
               (!unit.isCompleted() || skill === Skill.RecoverAirUnits) &&
@@ -81,39 +114,52 @@ export default async function activatePowerAction(
               matchesActiveType(unitTypes, unit, vector),
           );
 
-          const getUpgradeAnimations = (state: State) =>
-            upgradeUnits(
-              actions,
-              state,
-              sortVectors([...units.keys()]),
-              (state) => {
-                requestFrame(() =>
-                  resolve({ ...state, map: finalMap, ...resetBehavior() }),
-                );
-                return null;
-              },
-              ({ map }, vector) => {
-                const unit = map.units.get(vector);
-                const newMap =
-                  unit && onPowerUnitUpgrade(skill, map, vector, unit);
-                return newMap ? { map: newMap } : null;
-              },
+          const spawnUnits = unitsToSpawn?.size
+            ? (state: State) =>
+                spawn(actions, state, [...unitsToSpawn], null, 'slow', next)
+            : null;
+
+          const upgrade = unitsToUpgrade.size
+            ? (state: State) =>
+                upgradeUnits(
+                  actions,
+                  state,
+                  sortVectors([...unitsToUpgrade.keys()]),
+                  next,
+                  ({ map }, vector) => {
+                    const unit = map.units.get(vector);
+                    const newMap =
+                      unit && onPowerUnitUpgrade(skill, map, vector, unit);
+                    return newMap ? { map: newMap } : null;
+                  },
+                )
+            : null;
+
+          const queue = [damage, healUnits, spawnUnits, upgrade].filter(
+            isPresent,
+          );
+
+          const next = (state: State): StateLike | null => {
+            const fn = queue.shift();
+            if (fn) {
+              return fn(state);
+            }
+
+            requestFrame(() =>
+              resolve({ ...state, map: finalMap, ...resetBehavior() }),
             );
+            return null;
+          };
 
           return {
-            ...(unitsToHeal?.size
-              ? animateHeal(state, sortByVectorKey([...unitsToHeal]), (state) =>
-                  spawnUnits(state, () =>
-                    units.size ? getUpgradeAnimations(state) : state,
-                  ),
-                )
-              : spawnUnits(state, getUpgradeAnimations)),
+            ...next(state),
             map: state.map.copy({
               teams: updatePlayer(
                 state.map.teams,
                 state.map
                   .getPlayer(player.id)
-                  .setCharge(finalMap.getPlayer(player.id).charge),
+                  .setCharge(finalMap.getPlayer(player.id).charge)
+                  .activateSkill(skill),
               ),
             }),
           };

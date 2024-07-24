@@ -26,9 +26,10 @@ const getUnitRatio = (
 
 const shouldConsiderUnitRatio = (skill: Skill) => {
   switch (skill) {
-    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
-    case Skill.BuyUnitBazookaBear:
     case Skill.BuyUnitAlien:
+    case Skill.BuyUnitBazookaBear:
+    case Skill.BuyUnitOctopus:
+    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
       return false;
 
     case Skill.AttackIncreaseMinor:

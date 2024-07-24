@@ -10,6 +10,7 @@ declare module 'athena-crisis:images' {
   export const Sprites: {
     Crane: string;
     Cursor: string;
+    Damage: string;
     Delete: string;
     Explosion: string;
     Fireworks: string;

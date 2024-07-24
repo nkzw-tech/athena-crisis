@@ -59,7 +59,7 @@ export type OptionalObjectiveActionResponse = Readonly<{
   type: 'OptionalObjective';
 }>;
 
-export type ObjectiveActionResponses =
+export type ObjectiveActionResponse =
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
@@ -130,11 +130,11 @@ export function applyObjectives(
 ): GameState | null {
   let [objectiveId, objective] =
     checkObjectives(previousMap, activeMap, lastActionResponse) || [];
-  const actionResponse =
+  const actionResponses =
     !objective || (objective.type !== Criteria.Default && objective.optional)
       ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
       : null;
-  if (!actionResponse && !objective) {
+  if (!actionResponses && !objective) {
     return null;
   }
 
@@ -143,7 +143,7 @@ export function applyObjectives(
 
   const player =
     objective &&
-    pickWinningPlayer(previousMap, activeMap, lastActionResponse, objective);
+    pickWinningPlayer(previousMap, map, lastActionResponse, objective);
 
   let reevaluate = false;
   let optionalObjective = toOptionalObjective(objective, objectiveId, player);
@@ -167,14 +167,16 @@ export function applyObjectives(
     optionalObjective = toOptionalObjective(objective, objectiveId, player);
   }
 
-  if (!actionResponse && reevaluate) {
+  if (!actionResponses && reevaluate) {
     [objectiveId, objective] =
       checkObjectives(previousMap, map, lastActionResponse) || [];
   }
 
-  if (actionResponse) {
-    map = applyObjectiveActionResponse(activeMap, actionResponse);
-    gameState.push([actionResponse, map]);
+  if (actionResponses) {
+    for (const actionResponse of actionResponses) {
+      map = applyObjectiveActionResponse(map, actionResponse);
+      gameState.push([actionResponse, map]);
+    }
   }
 
   const gameEndResponse =
@@ -197,31 +199,33 @@ export function applyObjectives(
     ];
   }
 
-  if (
-    actionResponse?.type === 'AttackUnitGameOver' ||
-    actionResponse?.type === 'BeginTurnGameOver'
-  ) {
-    // If the user self-destructs, issue an `EndTurnAction`.
-    const fromPlayer =
-      actionResponse.type === 'AttackUnitGameOver'
-        ? map.getPlayer(actionResponse.fromPlayer)
-        : map.getCurrentPlayer();
-    if (map.isCurrentPlayer(fromPlayer)) {
-      const [endTurnActionResponse, newMap] =
-        execute(
-          map.copy({ active: activeMap.active }),
-          new Vision(fromPlayer.id),
-          EndTurnAction(),
-        ) || [];
+  if (actionResponses) {
+    for (const actionResponse of actionResponses) {
       if (
-        newMap &&
-        endTurnActionResponse &&
-        endTurnActionResponse.type == 'EndTurn'
+        actionResponse?.type === 'AttackUnitGameOver' ||
+        actionResponse?.type === 'BeginTurnGameOver'
       ) {
-        return [
-          ...gameState,
-          [endTurnActionResponse, newMap.copy({ active: map.active })],
-        ];
+        // If the user self-destructs, issue an `EndTurnAction`.
+        const fromPlayer =
+          actionResponse.type === 'AttackUnitGameOver'
+            ? map.getPlayer(actionResponse.fromPlayer)
+            : map.getCurrentPlayer();
+        if (map.isCurrentPlayer(fromPlayer)) {
+          const [endTurnActionResponse, newMap] =
+            execute(
+              map.copy({ active: activeMap.active }),
+              new Vision(fromPlayer.id),
+              EndTurnAction(),
+            ) || [];
+          if (
+            newMap &&
+            endTurnActionResponse &&
+            endTurnActionResponse.type == 'EndTurn'
+          ) {
+            map = newMap.copy({ active: map.active });
+            gameState.push([endTurnActionResponse, map]);
+          }
+        }
       }
     }
   }
@@ -231,7 +235,7 @@ export function applyObjectives(
 
 export function applyObjectiveActionResponse(
   map: MapData,
-  actionResponse: ObjectiveActionResponses,
+  actionResponse: ObjectiveActionResponse,
 ) {
   const { type } = actionResponse;
   switch (type) {
@@ -299,11 +303,13 @@ export function checkCapture(
     const building = map.buildings.get(action.from);
     const previousBuilding = previousMap.buildings.get(action.from);
     if (previousBuilding?.info.isHQ() && building && !building.info.isHQ()) {
-      return {
-        fromPlayer: fromPlayer.id,
-        toPlayer: map.getPlayer(building).id,
-        type: 'CaptureGameOver',
-      } as const;
+      return [
+        {
+          fromPlayer: fromPlayer.id,
+          toPlayer: map.getPlayer(building).id,
+          type: 'CaptureGameOver',
+        } as const,
+      ];
     }
   }
   return null;
@@ -333,9 +339,29 @@ export function checkAttackUnit(
   );
 }
 
+export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
+  const currentPlayer = activeMap.getCurrentPlayer();
+  const opponents = activeMap
+    .getPlayers()
+    .filter((player) => activeMap.isOpponent(player, currentPlayer));
+
+  const actionResponses = [];
+  for (const opponent of opponents) {
+    const opponentHasLost =
+      hasUnits(previousMap, opponent) &&
+      checkHasUnits(activeMap, opponent, currentPlayer)?.[0];
+
+    if (opponentHasLost) {
+      actionResponses.push(opponentHasLost);
+    }
+  }
+
+  return actionResponses.length ? actionResponses : null;
+}
+
 export function checkToggleLightning(
   previousMap: MapData,
-  map: MapData,
+  activeMap: MapData,
   { from, player, to }: ToggleLightningActionResponse,
 ) {
   const playerA = player || (from && previousMap.buildings.get(from)?.player);
@@ -344,9 +370,9 @@ export function checkToggleLightning(
     return null;
   }
 
-  return !map.units.has(to)
+  return !activeMap.units.has(to)
     ? checkHasUnits(
-        map,
+        activeMap,
         previousMap.getPlayer(unitB.player),
         previousMap.getPlayer(playerA),
       )
@@ -382,9 +408,11 @@ const checkDefaultObjectives = (
   previousMap: MapData,
   activeMap: MapData,
   actionResponse: ActionResponse,
-) => {
+): ReadonlyArray<ObjectiveActionResponse> | null => {
   if (shouldCheckDefaultObjectives(previousMap, actionResponse)) {
     switch (actionResponse.type) {
+      case 'ActivatePower':
+        return checkActivatePower(previousMap, activeMap);
       case 'AttackUnit':
         return checkAttackUnit(activeMap, actionResponse);
       case 'AttackBuilding':
@@ -403,26 +431,30 @@ const checkDefaultObjectives = (
 const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   const previousPlayer = activeMap.getPlayer(previousMap.getCurrentPlayer().id);
   if (previousPlayer.misses >= AllowedMisses) {
-    return {
-      fromPlayer: previousPlayer.id,
-      type: 'PreviousTurnGameOver',
-    } as const;
+    return [
+      {
+        fromPlayer: previousPlayer.id,
+        type: 'PreviousTurnGameOver',
+      } as const,
+    ];
   }
 
   const currentPlayer = activeMap.getCurrentPlayer();
   return hasUnits(previousMap, currentPlayer) &&
     !hasUnits(activeMap, currentPlayer)
-    ? ({ type: 'BeginTurnGameOver' } as const)
+    ? [{ type: 'BeginTurnGameOver' } as const]
     : null;
 };
 
 const checkHasUnits = (map: MapData, fromPlayer: Player, toPlayer: Player) => {
   return !hasUnits(map, fromPlayer)
-    ? ({
-        fromPlayer: fromPlayer.id,
-        toPlayer: toPlayer.id,
-        type: 'AttackUnitGameOver',
-      } as const)
+    ? [
+        {
+          fromPlayer: fromPlayer.id,
+          toPlayer: toPlayer.id,
+          type: 'AttackUnitGameOver',
+        } as const,
+      ]
     : null;
 };
 
