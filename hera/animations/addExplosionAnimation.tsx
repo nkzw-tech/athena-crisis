@@ -1,5 +1,10 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { Beach, isSea, MaybeTileID } from '@deities/athena/info/Tile.tsx';
+import {
+  Beach,
+  isSea,
+  MaybeTileID,
+  Space,
+} from '@deities/athena/info/Tile.tsx';
 import isAmphibiousOnLand from '@deities/athena/lib/isAmphibiousOnLand.tsx';
 import Entity, { getEntityGroup, isUnit } from '@deities/athena/map/Entity.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -8,7 +13,7 @@ import { Animations } from '../MapAnimations.tsx';
 import { State, StateToStateLike } from '../Types.tsx';
 
 const isSeaExceptBeach = (id: MaybeTileID | null) =>
-  !id || (isSea(id) && id !== Beach.id);
+  !id || (isSea(id) && id !== Beach.id && id !== Space.id);
 
 export default function addExplosionAnimation(
   state: State,
