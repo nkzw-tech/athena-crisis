@@ -3,7 +3,7 @@ let pointerEnabled = true;
 const showPointer = () => {
   if (!pointerEnabled) {
     if (document.pointerLockElement) {
-      document.exitPointerLock();
+      document.exitPointerLock?.();
     }
     pointerEnabled = true;
   }
@@ -12,7 +12,7 @@ const showPointer = () => {
 export function hidePointer() {
   if (pointerEnabled) {
     if (!document.pointerLockElement) {
-      document.body.requestPointerLock();
+      document.body.requestPointerLock?.();
     }
     pointerEnabled = false;
   }
