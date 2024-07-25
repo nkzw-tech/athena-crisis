@@ -836,7 +836,17 @@ function spawnEffect(
       .find((vector) => canDeploy(map, unit.info, vector, true));
 
     if (deployVector) {
-      const newUnit = player != null ? unit.setPlayer(player) : unit;
+      let newUnit = player != null ? unit.setPlayer(player) : unit;
+      if (newUnit.isCapturing()) {
+        const building = map.buildings.get(deployVector);
+        if (
+          !newUnit.canCapture(map.getPlayer(newUnit)) ||
+          !building ||
+          map.matchesTeam(building, newUnit)
+        ) {
+          newUnit = newUnit.stopCapture();
+        }
+      }
       map = map.copy({ units: map.units.set(deployVector, newUnit) });
       newUnits = newUnits.set(deployVector, newUnit);
     }

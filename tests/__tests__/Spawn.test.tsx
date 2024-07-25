@@ -4,6 +4,7 @@ import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
 import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
+import { House } from '@deities/athena/info/Building.tsx';
 import {
   Bomber,
   FighterJet,
@@ -217,4 +218,80 @@ test('drops a spawn if no adjacent field is available', async () => {
       CompleteUnit (1,1)
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
+});
+
+test('stops capturing if there is nothing to capture on that field', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 2);
+  const mapA = map.copy({
+    buildings: map.buildings.set(vecB, House.create(1)),
+    units: map.units.set(vecA, Pioneer.create(1)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'EndTurn',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vecB, Pioneer.create(2).capture()]]),
+            },
+          ],
+          occurrence: 'once',
+        },
+      ]),
+    ],
+  ]);
+
+  const [, gameActionResponseA] = executeGameActions(
+    mapA,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam', capturing: true }], teams: null }
+    Capture (2,2) { building: House { id: 2, health: 100, player: 2 }, player: 1 }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
+
+  const mapB = mapA.copy({
+    buildings: map.buildings.delete(vecB),
+  });
+
+  const [, gameActionResponseB] = executeGameActions(
+    mapB,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam' }], teams: null }
+    CompleteUnit (2,2)
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
+
+  const mapC = mapA.copy({
+    buildings: map.buildings.set(vecB, House.create(2)),
+  });
+
+  const [, gameActionResponseC] = executeGameActions(
+    mapC,
+    [EndTurnAction()],
+    effects,
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseC))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 600, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam' }], teams: null }
+    CompleteUnit (2,2)
+    EndTurn { current: { funds: 600, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 });
