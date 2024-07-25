@@ -353,7 +353,7 @@ export default function ObjectiveDescription({
       {objective.type === Criteria.Survival && (
         <div>
           <fbt desc="Current round description">
-            Current round: <fbt:param name="round">{round}</fbt:param>.
+            Current round: <fbt:param name="round">{round}</fbt:param>
           </fbt>
         </div>
       )}
