@@ -66,11 +66,17 @@ export default function addEndTurnAnimations(
           );
           const [unitsToHeal, unitsToRefill] = isFake
             ? [emptyUnitMap, emptyUnitMap]
-            : partitionUnitsToHeal(getUnitsToHealOnBuildings(map, nextPlayer));
+            : partitionUnitsToHeal(
+                getUnitsToHealOnBuildings(map, nextPlayer).filter((_, vector) =>
+                  vision.isVisible(map, vector),
+                ),
+              );
 
           const poisonedUnits = map.units.filter(
             (unit, vector) =>
-              !unitsToHeal.has(vector) && isPoisoned(map, nextPlayer, unit),
+              !unitsToHeal.has(vector) &&
+              isPoisoned(map, nextPlayer, unit) &&
+              vision.isVisible(map, vector),
           );
           const extraPositions = await maybeExtraPositions;
           const unitsToSupply = new Map([
@@ -97,6 +103,7 @@ export default function addEndTurnAnimations(
                     (unit, vector) =>
                       !unitsToSupply.has(vector) &&
                       !unitsToHeal.has(vector) &&
+                      vision.isVisible(map, vector) &&
                       shouldRemoveUnit(newMap, vector, unit, nextPlayer),
                   )
                   .keys(),
