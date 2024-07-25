@@ -1,6 +1,7 @@
 import { BuildingInfo } from '../info/Building.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData, { PlayerOrPlayerID } from '../MapData.tsx';
+import getBiomeBuildingRestrictions from './getBiomeBuildingRestrictions.tsx';
 
 export default function canBuild(
   map: MapData,
@@ -20,6 +21,7 @@ export default function canBuild(
       map.buildings.filter(
         (building) =>
           building.id == info.id && map.matchesPlayer(building, player),
-      ).size < info.configuration.limit)
+      ).size < info.configuration.limit) &&
+    !getBiomeBuildingRestrictions(map.config.biome).has(info)
   );
 }

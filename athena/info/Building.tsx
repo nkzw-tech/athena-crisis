@@ -309,7 +309,7 @@ const AirUnitTypes = new Set([
 export const Airbase = new BuildingInfo(
   4,
   'Airbase',
-  `This building is used to build air units like helicopters and airplanes. They automatically repair damaged air units at this location at the beginning of each turn.`,
+  `This building is used to build air units like helicopters and airplanes. They automatically repair and resupply damaged air units at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -484,7 +484,7 @@ export const Barracks = new BuildingInfo(
 export const Shelter = new BuildingInfo(
   13,
   'Shelter',
-  `Shelters automatically heal infantry units at this location at the beginning of each turn.`,
+  `Shelters automatically heal and resupply infantry units at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -530,7 +530,7 @@ export const OilRig = new BuildingInfo(
 export const RepairShop = new BuildingInfo(
   17,
   'Repair Shop',
-  `This building automatically repairs damaged ground units and amphibious units at this location at the beginning of each turn.`,
+  `Repair Shops automatically repair and resupply damaged ground and amphibious units at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 300,
@@ -545,6 +545,22 @@ export const RepairShop = new BuildingInfo(
     sort: 4,
   },
   { name: 'Buildings', position: new SpriteVector(18, 0) },
+);
+
+export const Medbay = new BuildingInfo(
+  18,
+  'Medbay',
+  `Medays automatically heal and resupply infantry units at the beginning of each turn.`,
+  {
+    behaviors: new BuildingBehaviors({ heal: true }),
+    canBeCreated: false,
+    cost: Number.POSITIVE_INFINITY,
+    defense: 50,
+    editorPlaceOn: new Set([Plain]),
+    healTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    sort: 4,
+  },
+  { name: 'Buildings', position: new SpriteVector(21, 0) },
 );
 
 // The order of buildings must not be changed.
@@ -566,6 +582,7 @@ const Buildings = [
   Bar,
   OilRig,
   RepairShop,
+  Medbay,
 ];
 
 export function getBuildingInfo(id: number): BuildingInfo | null {

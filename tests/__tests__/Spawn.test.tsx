@@ -236,7 +236,9 @@ test('stops capturing if there is nothing to capture on that field', async () =>
           actions: [
             {
               type: 'SpawnEffect',
-              units: ImmutableMap([[vecB, Pioneer.create(2).capture()]]),
+              units: ImmutableMap([
+                [vecB, Pioneer.create(2).setFuel(0).capture()],
+              ]),
             },
           ],
           occurrence: 'once',
@@ -254,7 +256,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam', capturing: true }], teams: null }
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam', capturing: true }], teams: null }
     Capture (2,2) { building: House { id: 2, health: 100, player: 2 }, player: 1 }
     EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
   `);
@@ -272,8 +274,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam' }], teams: null }
-    CompleteUnit (2,2)
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam' }], teams: null }
     EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
   `);
 
@@ -290,8 +291,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
   expect(snapshotEncodedActionResponse(gameActionResponseC))
     .toMatchInlineSnapshot(`
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 600, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 40, name: 'Sam' }], teams: null }
-    CompleteUnit (2,2)
+    Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam' }], teams: null }
     EndTurn { current: { funds: 600, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
   `);
 });
