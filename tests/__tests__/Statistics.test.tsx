@@ -28,6 +28,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
+import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Fog } from '@deities/athena/Vision.tsx';
@@ -490,4 +491,58 @@ test('increases the `destroyedUnits` count of other players when a unit self-des
   expect(statsA.destroyedUnits).toBe(1);
   expect(statsB.destroyedUnits).toBe(0);
   expect(statsC.destroyedUnits).toBe(0);
+});
+
+test('increases the `lostUnits` count of a player when a unit self-destructs', async () => {
+  const fromA = vec(1, 1);
+  const toA = vec(1, 2);
+  const fromB = vec(1, 3);
+  const toB = vec(2, 3);
+  const initialMap = map.copy({
+    teams: map.teams.set(
+      3,
+      new Team(
+        3,
+        '',
+        ImmutableMap([
+          [
+            3,
+            new Bot(
+              3,
+              'Bot',
+              3,
+              300,
+              undefined,
+              new Set(),
+              new Set(),
+              0,
+              null,
+              0,
+            ),
+          ],
+        ]),
+      ),
+    ),
+    units: map.units
+      .set(fromA, Helicopter.create(player1))
+      .set(
+        toA,
+        Helicopter.create(player2)
+          .setHealth(1)
+          .setStatusEffect(UnitStatusEffect.Poison),
+      )
+      .set(fromB, Helicopter.create(player2))
+      .set(toB, Helicopter.create(3)),
+  });
+
+  const [gameState] = executeGameActions(initialMap, [EndTurnAction()]);
+
+  const lastMap = gameState.at(-1)![1];
+  const statsA = lastMap.getPlayer(player1.id).stats;
+  const statsB = lastMap.getPlayer(player2.id).stats;
+  const statsC = lastMap.getPlayer(3).stats;
+
+  expect(statsA.lostUnits).toBe(0);
+  expect(statsB.lostUnits).toBe(1);
+  expect(statsC.lostUnits).toBe(0);
 });

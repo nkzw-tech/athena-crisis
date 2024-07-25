@@ -3,7 +3,6 @@ import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import getUnitsToHealOnBuildings from '@deities/athena/lib/getUnitsToHealOnBuildings.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
-import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { HealAmount } from '@deities/athena/map/Configuration.tsx';
 import {
@@ -42,15 +41,17 @@ export default function applyEndTurnActionResponse(
   ).size;
 
   if (destroyedUnits > 0) {
-    teams = updatePlayer(
-      teams,
-      map
-        .copy({ teams })
+    const mapB = map.copy({ teams });
+    teams = updatePlayers(teams, [
+      mapB
         .getPlayer(resolveDynamicPlayerID(map, 'opponent', nextPlayer.id))
         .modifyStatistics({
           destroyedUnits,
         }),
-    );
+      mapB.getPlayer(nextPlayer.id).modifyStatistics({
+        lostUnits: destroyedUnits,
+      }),
+    ]);
   }
 
   if (rotatePlayers && isHumanPlayer(currentPlayer)) {
