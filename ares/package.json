@@ -42,7 +42,7 @@
     "react-router-dom": "^6.25.1",
     "relay-runtime": "^17.0.0",
     "socket.io-client": "^4.7.5",
-    "tinybase": "5.1.0",
+    "tinybase": "5.1.1",
     "workbox-core": "^7.1.0",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
@@ -62,7 +62,7 @@
     "glob": "11.0.0",
     "relay-compiler": "^17.0.0",
     "vite-plugin-minify": "^1.5.2",
-    "vite-plugin-pwa": "^0.20.0",
+    "vite-plugin-pwa": "^0.20.1",
     "vite-plugin-restart": "^0.4.1"
   }
 }
