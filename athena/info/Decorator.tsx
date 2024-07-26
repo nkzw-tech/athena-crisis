@@ -7,6 +7,7 @@ import {
   SeaTileGroup,
   TileAnimation,
   TileInfo,
+  Trench,
 } from './Tile.tsx';
 
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
@@ -38,7 +39,7 @@ enum DecoratorGroup {
   Ladder,
   Plank,
   Shipwreck,
-  Sandbag,
+  Trench,
 }
 
 export type Decorator = number;
@@ -99,6 +100,8 @@ export class DecoratorInfo {
     return this.copy({ position: this.position.up(n) });
   }
 }
+
+const TrenchTileGroup = new Set([Trench]);
 
 const seaAnimation = {
   frames: 4,
@@ -333,9 +336,23 @@ const Shipwreck = new DecoratorInfo(
 
 const Sandbag = new DecoratorInfo(
   'Sandbag',
-  DecoratorGroup.Sandbag,
+  DecoratorGroup.Trench,
   sprite(18, 0),
-  PlainTileGroup,
+  TrenchTileGroup,
+);
+
+const TrenchGate = new DecoratorInfo(
+  'Trench Gate',
+  DecoratorGroup.Trench,
+  sprite(18, 3),
+  TrenchTileGroup,
+);
+
+const TrenchPlank = new DecoratorInfo(
+  'Trench Plank',
+  DecoratorGroup.Trench,
+  sprite(18, 4),
+  TrenchTileGroup,
 );
 
 // The order of decorators must not be changed.
@@ -438,6 +455,11 @@ const Decorators = [
   Sandbag,
   Sandbag.down(1),
   Sandbag.down(2),
+  TrenchGate,
+  TrenchPlank,
+  TrenchPlank.down(1),
+  TrenchPlank.down(2),
+  TrenchPlank.down(3),
 ].map((decorator, index) => decorator.copy({ id: index + 1 }));
 
 export const Bush = Decorators[0];

@@ -84,6 +84,7 @@ const style = {
       ['#27810d', '#e09455'],
       ['#4f9e1b', '#fbc774'],
       ['#743d26', '#8c490e'],
+      ['#4c1610', '#551912'],
     ]),
     tileConversions,
     tileRestrictions,
@@ -148,6 +149,7 @@ const style = {
       ['#4f9e1b', '#6b5b54'],
       ['#854c30', '#544440'],
       ['#743d26', '#553a36'],
+      ['#4c1610', '#2f1c1a'],
     ]),
     tileConversions: new Map([
       [Iceberg, Weeds],
@@ -169,6 +171,7 @@ const style = {
       ['#4f9e1b', '#385e5d'],
       ['#854c30', '#28454c'],
       ['#743d26', '#2a434d'],
+      ['#4c1610', '#0d191c'],
     ]),
     tileConversions: new Map([...tileConversions, [Forest2, Forest3]]),
     tileRestrictions: LunaTileRestrictions,
