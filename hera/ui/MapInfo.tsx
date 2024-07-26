@@ -103,7 +103,7 @@ const Tile = ({
           <div>{info.name}</div>
           <Stack gap nowrap start>
             <fbt desc="Tile cover">Cover: </fbt>
-            <div className={rangeStyle}>
+            <div className={iconStyle}>
               <LargeRange
                 end
                 value={getLargeAttributeRangeValue(CoverRange, cover)}
@@ -147,12 +147,12 @@ const renderUnit = (
         <div className={textStyle}>
           <div>{info.name}</div>
           <Stack gap>
-            <Stack start>
+            <Stack alignCenter gap={4} start>
               <Icon className={iconStyle} icon={Supply} />
               {unit.fuel}/{info.configuration.fuel}
             </Stack>
             {ammo && (
-              <Stack start>
+              <Stack alignCenter gap={4} start>
                 <Icon className={iconStyle} icon={Ammo} />
                 {ammo.join(', ')}
               </Stack>
@@ -189,7 +189,7 @@ const renderBuilding = (
         />
         <div className={textStyle}>
           <div>{building.info.name}</div>
-          <Stack start>
+          <Stack alignCenter gap={4} start>
             <Icon className={iconStyle} icon={Heart} />
             {building.health}/{MaxHealth}
           </Stack>
@@ -388,9 +388,5 @@ const textStyle = css`
 `;
 
 const iconStyle = css`
-  margin: 3px 4px 0 0;
-`;
-
-const rangeStyle = css`
   margin-top: 2px;
 `;

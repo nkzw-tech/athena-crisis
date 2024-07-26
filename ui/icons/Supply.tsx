@@ -1,5 +1,5 @@
 export default {
-  body: `<path clip-rule="evenodd" d="M5 9v8h2V9h8V7h2v10H7v2h10v-2h2V7h-2V5h-2v2H7v2H5Zm4 6v-4h2v2h2v-2h2v4H9Z" fill-rule="evenodd" fill="currentColor"/>`,
+  body: `<path fill="currentColor" fill-rule="evenodd" d="M3 7v12h2V7h12V5h2v14H5v2h14v-2h2V5h-2V3h-2v2H5v2H3Zm5 9v-6h2v4h4v-4h2v6H8Z" clip-rule="evenodd"/>`,
   height: 24,
   width: 24,
 };
