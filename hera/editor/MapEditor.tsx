@@ -808,6 +808,7 @@ export default function MapEditor({
     game,
     setGame,
     null,
+    null,
     actAsEveryPlayer ? 'actAsEveryPlayer' : null,
   );
 
