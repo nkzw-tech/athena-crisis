@@ -15,6 +15,7 @@ import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import getActivatePowerMessage from '@deities/hermes/messages/getActivatePowerMessage.tsx';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import damageUnits from '../../lib/damageUnits.tsx';
@@ -47,6 +48,22 @@ export default async function activatePowerAction(
   const { colors, name } = getSkillConfigForDisplay(skill);
   const { vision } = state;
   const player = state.map.getCurrentPlayer();
+
+  const message =
+    getActivatePowerMessage(
+      state.map,
+      state.map,
+      vision,
+      actionResponse.skill,
+    ) || getActivatePowerMessage(state.map, state.map, vision, -1);
+
+  if (message) {
+    const [actionResponse] = message;
+    await actions.processGameActionResponse({
+      others: [{ actionResponse }],
+      self: null,
+    });
+  }
 
   return new Promise((resolve) =>
     update((state) => ({

@@ -1,17 +1,17 @@
 import { executeEffect } from '@deities/apollo/Action.tsx';
-import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import pickItem from '@deities/hephaestus/pickItem.tsx';
-import ActivatePowerMessages from '../../hermes/ActivatePowerMessages.tsx';
+import ActivatePowerMessages from './ActivatePowerMessages.tsx';
 
 export default function getActivatePowerMessage(
   previousMap: MapData,
   currentMap: MapData,
   vision: VisionT,
-  actionResponse: ActivatePowerActionResponse,
+  skill: -1 | Skill,
 ) {
-  const messages = ActivatePowerMessages.get(actionResponse.skill);
+  const messages = ActivatePowerMessages.get(skill);
   if (!messages) {
     return null;
   }

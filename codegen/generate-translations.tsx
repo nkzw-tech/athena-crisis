@@ -20,7 +20,7 @@ import {
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
-import ActivatePowerMessages from '@deities/hermes/ActivatePowerMessages.tsx';
+import ActivatePowerMessages from '@deities/hermes/messages/ActivatePowerMessages.tsx';
 import { CampaignModule, MapModule } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import chalk from 'chalk';

@@ -850,6 +850,15 @@ const getSkillActiveUnitTypes = (
 
   const list = [];
 
+  for (const [vector, unit] of map.units) {
+    if (
+      map.matchesPlayer(unit, player) &&
+      skillRangePowerEffects.get(unit.id)?.get(skill)
+    ) {
+      list.push(vector);
+    }
+  }
+
   if (skill === Skill.BuyUnitCommander) {
     for (const [vector, unit] of map.units) {
       if (unit.isLeader() && map.matchesPlayer(unit, player)) {

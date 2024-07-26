@@ -286,7 +286,11 @@ export default function SkillDialog({
                 blocklistedSkills={blocklistedSkills}
                 currentSkill={!focus ? currentSkill : undefined}
                 key={skill}
-                onSelect={onSelect}
+                onSelect={
+                  !hasAction || !canAction || canAction(skill)
+                    ? onSelect
+                    : undefined
+                }
                 selected={selected === index}
                 showCost={showCost}
                 skill={skill}

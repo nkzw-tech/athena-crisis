@@ -7,7 +7,7 @@ import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
-import getActivatePowerMessage from './lib/getActivatePowerMessage.tsx';
+import getActivatePowerMessage from '../hermes/messages/getActivatePowerMessage.tsx';
 
 class AIInterruptException {
   public readonly name = 'AIInterruptException';
@@ -55,7 +55,7 @@ export default abstract class BaseAI {
         previousMap,
         currentMap,
         this.getVision(currentMap),
-        actionResponse,
+        actionResponse.skill,
       );
       if (response) {
         this.gameState = this.gameState.concat([response]);
