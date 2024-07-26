@@ -44,7 +44,7 @@ export default function DecoratorPanel({
   );
 
   const selectDecorator = useCallback(
-    ({ decorator }: { decorator?: DecoratorInfo }) => {
+    (event: unknown, { decorator }: { decorator?: DecoratorInfo }) => {
       if (decorator) {
         setEditorState({
           selected: {
@@ -70,7 +70,8 @@ export default function DecoratorPanel({
           (selected?.eraseDecorators ? decorators.length : null);
 
         navigate(direction, columns, index, decorators, [
-          (index: number) => selectDecorator({ decorator: decorators[index] }),
+          (index: number) =>
+            selectDecorator(undefined, { decorator: decorators[index] }),
           () => setEditorState({ selected: { eraseDecorators: true } }),
         ]);
       },

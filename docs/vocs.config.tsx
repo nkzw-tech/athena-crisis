@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import React from 'react';
 import { defineConfig } from 'vocs';
 import babelPlugins from '../infra/babelPlugins.tsx';
-import resolver from '../infra/resolver.tsx';
+import createResolver from '../infra/createResolver.tsx';
 
 const Licht = JSON.parse(
   readFileSync('./node_modules/licht-theme/licht.json', 'utf8'),
@@ -153,7 +153,7 @@ export default defineConfig({
       }),
     ],
     resolve: {
-      alias: [resolver],
+      alias: [createResolver()],
     },
   },
 });

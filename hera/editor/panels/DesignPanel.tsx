@@ -46,6 +46,7 @@ import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import navigate from '../../lib/navigate.tsx';
+import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
 import Tick from '../../Tick.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
@@ -263,10 +264,10 @@ export default function DesignPanel({
   );
 
   const onLongPress: SelectTileFn = useCallback(
-    ({ building, tile, unit }) => {
+    (event, { building, tile, unit }) => {
       actions.showGameInfo({
         building,
-        origin,
+        origin: toTransformOrigin(event),
         tile: unit || building ? null : tile,
         type: 'map-info',
         unit,
@@ -284,7 +285,7 @@ export default function DesignPanel({
             <InlineTileList
               biome={biome}
               onLongPress={onLongPress}
-              onSelect={({ tile }) => selectTile(tile)}
+              onSelect={(_, { tile }) => selectTile(tile)}
               selected={
                 tile
                   ? tiles.findIndex((currentTile) => currentTile.id === tile.id)
@@ -324,7 +325,7 @@ export default function DesignPanel({
               biome={biome}
               buildings={buildings}
               onLongPress={onLongPress}
-              onSelect={({ building }) => selectBuilding(building)}
+              onSelect={(_, { building }) => selectBuilding(building)}
               selected={
                 building
                   ? buildings.findIndex((entity) => entity.id === building.id)
@@ -351,7 +352,7 @@ export default function DesignPanel({
             <InlineTileList
               biome={biome}
               onLongPress={onLongPress}
-              onSelect={({ unit }) => selectUnit(unit)}
+              onSelect={(_, { unit }) => selectUnit(unit)}
               selected={
                 unit
                   ? units.findIndex((entity) => entity.id === unit.id)

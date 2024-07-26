@@ -12,7 +12,6 @@ import React, { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
-import { State } from '../../Types.tsx';
 
 const unsortedBiomes = new Set(Biomes);
 unsortedBiomes.delete(Biome.Spaceship);
@@ -20,24 +19,20 @@ const biomes = [...unsortedBiomes, Biome.Spaceship];
 
 export default function BiomeSelector({
   hasContentRestrictions,
+  map,
   onBiomeChange,
-  state,
   user,
 }: {
   hasContentRestrictions: boolean;
+  map: MapData;
   onBiomeChange: (map: MapData) => void;
-  state: State;
   user: UserWithFactionNameAndUnlocks;
 }) {
-  const {
-    map: {
-      config: { biome: currentBiome },
-    },
-  } = state;
+  const currentBiome = map.config.biome;
   const { alert } = useAlert();
   const update = useCallback(
     (biome: Biome) => {
-      const select = () => onBiomeChange(convertBiome(state.map, biome));
+      const select = () => onBiomeChange(convertBiome(map, biome));
       if (biome === Biome.Spaceship) {
         alert({
           onAccept: select,
@@ -50,7 +45,7 @@ export default function BiomeSelector({
         select();
       }
     },
-    [alert, onBiomeChange, state.map],
+    [alert, onBiomeChange, map],
   );
 
   const lockedBiomes = useMemo(() => {

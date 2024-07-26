@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'vitest/config';
-import resolver from './infra/resolver.tsx';
+import createResolver from './infra/createResolver.tsx';
 
 export default defineConfig({
   resolve: {
-    alias: [resolver],
+    alias: [createResolver()],
   },
   test: {
     globalSetup: ['./tests/viteServer', './tests/playwrightServer'],

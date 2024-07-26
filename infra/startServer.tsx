@@ -8,7 +8,7 @@ export default async function startServer({
   root,
   silent,
 }: {
-  name: 'Ares' | 'Deimos' | 'Tests';
+  name: string;
   port: number;
   root: string;
   silent?: boolean;

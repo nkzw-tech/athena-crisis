@@ -89,7 +89,7 @@ export default function RestrictionsPanel({
   );
 
   const selectBuilding = useCallback(
-    ({ building }: { building?: Building }) => {
+    (event: unknown, { building }: { building?: Building }) => {
       if (building) {
         update({
           map: state.map.copy({
@@ -117,7 +117,7 @@ export default function RestrictionsPanel({
   );
 
   const selectUnit = useCallback(
-    ({ unit }: { unit?: Unit }) => {
+    (event: unknown, { unit }: { unit?: Unit }) => {
       if (unit) {
         update({
           map: state.map.copy({

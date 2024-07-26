@@ -323,7 +323,7 @@ export default memo(function ActionCard({
                 biome={biome}
                 onSelect={
                   canChange && setMap && map
-                    ? ({ index: unitIndex }) => {
+                    ? (_, { index: unitIndex }) => {
                         const units = [...action.units];
                         const [vector, unit] = units[unitIndex];
 

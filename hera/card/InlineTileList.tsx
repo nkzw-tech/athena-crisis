@@ -19,12 +19,13 @@ import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
-import usePress from '@deities/ui/hooks/usePress.tsx';
+import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { useInView } from 'framer-motion';
 import {
+  MouseEvent,
   ReactNode,
   useCallback,
   useEffect,
@@ -42,13 +43,18 @@ import Tiles from '../Tiles.tsx';
 import { TimerFunction } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 
-export type SelectTileFn = (selection: {
+export type TileSelection = Readonly<{
   building?: Building;
   decorator?: DecoratorInfo;
   index: number;
   tile: TileInfo;
   unit?: Unit;
-}) => void;
+}>;
+
+export type SelectTileFn = (
+  event: MouseEvent | LongPressReactEvents<Element>,
+  selection: TileSelection,
+) => void;
 
 const vision = new Vision(1);
 const vector = vec(1, 1);
@@ -204,11 +210,12 @@ const InlineTile = ({
 
   const props = usePress({
     onLongPress: useCallback(
-      () => onLongPress?.({ building, decorator, index, tile, unit }),
+      (event) =>
+        onLongPress?.(event, { building, decorator, index, tile, unit }),
       [building, decorator, index, onLongPress, tile, unit],
     ),
     onPress: useCallback(
-      () => onSelect?.({ building, decorator, index, tile, unit }),
+      (event) => onSelect?.(event, { building, decorator, index, tile, unit }),
       [building, decorator, onSelect, tile, unit, index],
     ),
   });

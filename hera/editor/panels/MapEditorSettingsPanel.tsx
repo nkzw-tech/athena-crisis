@@ -124,8 +124,8 @@ export default function MapEditorSettingsPanel({
     <Stack className={marginStyle} gap={24} vertical verticalPadding>
       <BiomeSelector
         hasContentRestrictions={!isAdmin}
+        map={state.map}
         onBiomeChange={(map) => setMap('biome', map)}
-        state={state}
         user={user}
       />
       <Box gap={16} vertical>
