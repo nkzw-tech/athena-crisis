@@ -3196,3 +3196,76 @@ test('optional and default game ending objectives might be triggered at the same
       GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
 });
+
+test('multiple optional objectives have their effects applied correctly', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const v3 = vec(1, 3);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([4]),
+          optional: true,
+          type: Criteria.CaptureLabel,
+        },
+        {
+          amount: 1,
+          hidden: false,
+          optional: true,
+          type: Criteria.CaptureAmount,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(player2))
+      .set(v2, Pioneer.create(player1).capture()),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [gameState, gameActionResponseA] = executeGameActions(
+    initialMap,
+    [CaptureAction(v2)],
+    new Map([
+      [
+        'OptionalObjective',
+        new Set<Effect>([
+          {
+            actions: [
+              {
+                player: 0,
+                type: 'SpawnEffect',
+                units: ImmutableMap([[v3, Flamethrower.create(0)]]),
+              },
+            ],
+            conditions: [
+              {
+                type: 'OptionalObjective',
+                value: 1,
+              },
+            ],
+            occurrence: 'once',
+          },
+        ]),
+      ],
+    ]),
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
+      OptionalObjective { objective: { completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
+      Spawn { units: [1,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Uli' }], teams: null }
+      OptionalObjective { objective: { amount: 1, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, objectiveId: 2, toPlayer: 1 }"
+    `);
+
+  const lastMap = gameState.at(-1)![1];
+  const unit = lastMap.units.get(v3);
+  expect(unit).toBeDefined();
+  expect(unit?.id).toBe(Flamethrower.id);
+  expect(unit?.player).toBe(0);
+});

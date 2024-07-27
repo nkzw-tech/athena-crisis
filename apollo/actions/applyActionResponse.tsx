@@ -36,6 +36,7 @@ export default function applyActionResponse(
   const currentPlayer = map.getCurrentPlayer();
   if (
     currentPlayer.misses > 0 &&
+    type !== 'PreviousTurnGameOver' &&
     (type !== 'EndTurn' ||
       (actionResponse.current.player === currentPlayer.id &&
         !actionResponse.miss))

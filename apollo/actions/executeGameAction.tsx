@@ -90,12 +90,7 @@ export default function executeGameAction(
     return [null, null, null, null];
   }
   const [actionResponse, activeMap] = actionResult;
-  const [gameState, newEffects] = applyConditions(
-    map,
-    activeMap,
-    effects,
-    actionResponse,
-  );
+  const [gameState, newEffects] = applyConditions(map, effects, actionResponse);
   const lastMap = gameState.at(-1)?.[1] || activeMap;
   const shouldInvokeAI = !!(
     AIRegistry &&

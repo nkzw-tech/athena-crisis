@@ -67,7 +67,6 @@ export default abstract class BaseAI {
 
     const [gameState, effects] = applyConditions(
       previousMap,
-      currentMap,
       this.effects,
       actionResponse,
     );

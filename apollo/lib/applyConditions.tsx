@@ -1,58 +1,55 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
+import applyActionResponse from '../actions/applyActionResponse.tsx';
 import { applyEffects, Effects } from '../Effects.tsx';
 import { applyObjectives } from '../Objective.tsx';
 import { GameState, GameStateWithEffects } from '../Types.tsx';
 
-const getLosingPlayer = (gameState: GameState): PlayerID | null => {
-  for (const [actionResponse, map] of gameState) {
-    switch (actionResponse.type) {
-      case 'AttackUnitGameOver':
-      case 'CaptureGameOver':
-        return actionResponse.fromPlayer;
-      case 'BeginTurnGameOver':
-        return map.currentPlayer;
-    }
+const getLosingPlayer = (
+  map: MapData,
+  actionResponse: ActionResponse,
+): PlayerID | null => {
+  switch (actionResponse.type) {
+    case 'AttackUnitGameOver':
+    case 'CaptureGameOver':
+      return actionResponse.fromPlayer;
+    case 'BeginTurnGameOver':
+      return map.currentPlayer;
   }
   return null;
 };
 
 export default function applyConditions(
-  previousMap: MapData,
-  activeMap: MapData,
+  currentMap: MapData,
   effects: Effects,
   lastActionResponse: ActionResponse,
 ): [GameState, Effects] {
   let gameState: GameStateWithEffects = [];
   const queue: Array<
-    [
-      previousMap: MapData,
-      activeMap: MapData,
-      lastActionResponse: ActionResponse,
-      addToGameState: boolean,
-    ]
-  > = [[previousMap, activeMap, lastActionResponse, false]];
+    readonly [lastActionResponse: ActionResponse, addToGameState: boolean]
+  > = [[lastActionResponse, false]];
 
   while (queue.length) {
-    const [previousMap, activeMap, lastActionResponse, _addToGameState] =
-      queue.shift()!;
+    const previousMap = currentMap;
+    const [actionResponse, _addToGameState] = queue.shift()!;
     const currentEffects = gameState.at(-1)?.[2] || effects;
-    let addToGameState = _addToGameState;
+    const activeMap = applyActionResponse(
+      previousMap,
+      previousMap.createVisionObject(previousMap.currentPlayer),
+      actionResponse,
+    );
+    currentMap = activeMap;
 
+    let addToGameState = _addToGameState;
     // `GameEnd` effects are player-specific and handled in `onGameEnd`.
     let effectGameState =
-      lastActionResponse.type === 'GameEnd'
+      actionResponse.type === 'GameEnd'
         ? null
-        : applyEffects(
-            previousMap,
-            activeMap,
-            currentEffects,
-            lastActionResponse,
-          );
+        : applyEffects(previousMap, activeMap, currentEffects, actionResponse);
 
     // If a `Spawn` effect was issued in response to a player that just lost, revert the player gameover event.
-    const lostPlayer = getLosingPlayer([[lastActionResponse, activeMap]]);
+    const lostPlayer = getLosingPlayer(activeMap, actionResponse);
     if (
       lostPlayer &&
       effectGameState?.length &&
@@ -73,43 +70,39 @@ export default function applyConditions(
         previousMap,
         previousMap,
         currentEffects,
-        lastActionResponse,
+        actionResponse,
       );
     }
 
     if (addToGameState) {
-      gameState = [
-        ...gameState,
-        [lastActionResponse, activeMap, currentEffects],
-      ];
+      gameState = [...gameState, [actionResponse, activeMap, currentEffects]];
     }
 
     const objectiveState = applyObjectives(
       previousMap,
       activeMap,
-      lastActionResponse,
+      actionResponse,
     );
 
     if (objectiveState?.length) {
-      let currentMap = activeMap;
-      for (const [actionResponse, currentActiveMap] of objectiveState) {
-        queue.push([currentMap, currentActiveMap, actionResponse, true]);
-        currentMap = currentActiveMap;
-      }
+      queue.push(
+        ...objectiveState.map(
+          ([actionResponse]) => [actionResponse, true] as const,
+        ),
+      );
       continue;
     }
 
     if (effectGameState?.length) {
       gameState = [...gameState, ...effectGameState];
+      currentMap = effectGameState.at(-1)![1];
     }
   }
 
   const lastEntry = gameState?.at(-1);
   return lastEntry
     ? [
-        gameState.map(
-          ([actionResponse, map]) => [actionResponse, map] as const,
-        ),
+        gameState.map(([actionResponse, map]) => [actionResponse, map]),
         lastEntry[2],
       ]
     : [[], effects];
