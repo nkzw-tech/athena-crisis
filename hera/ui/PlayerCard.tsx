@@ -37,7 +37,7 @@ import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback, useMemo } from 'react';
-import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
+import clientActivatePowerAction from '../behavior/activatePower/clientActivatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import handleRemoteAction from '../behavior/handleRemoteAction.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
@@ -130,7 +130,7 @@ export default memo(function PlayerCard({
                 );
                 if (actionResponse.type === 'ActivatePower') {
                   await update({
-                    ...(await activatePowerAction(
+                    ...(await clientActivatePowerAction(
                       actions,
                       state,
                       actionResponse,
