@@ -1,2 +1,2 @@
 export const AssetDomain = 'https://art.athenacrisis.com';
-export const AssetVersion = 'v11';
+export const AssetVersion = 'v12';

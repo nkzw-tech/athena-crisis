@@ -29,6 +29,11 @@ enum DecoratorGroup {
   Arch,
   Flower,
   Lantern,
+  StoneLantern,
+  Mailbox,
+  FireHydrant,
+  Snowman,
+  Sign,
   PowerTransformer,
   Gravestone,
   Bones,
@@ -36,10 +41,13 @@ enum DecoratorGroup {
   Shovel,
   Mask,
   Bucket,
+  Trench,
+  Fence,
+  Pipe,
   Ladder,
   Plank,
   Shipwreck,
-  Trench,
+  Buoy,
 }
 
 export type Decorator = number;
@@ -355,6 +363,63 @@ const TrenchPlank = new DecoratorInfo(
   TrenchTileGroup,
 );
 
+const StoneLantern = new DecoratorInfo(
+  'Stone Lantern',
+  DecoratorGroup.StoneLantern,
+  sprite(19, 0),
+  PlainTileGroup,
+);
+
+const Mailbox = new DecoratorInfo(
+  'Mailbox',
+  DecoratorGroup.Mailbox,
+  sprite(21, 0),
+  PlainTileGroup,
+);
+
+const FireHydrant = new DecoratorInfo(
+  'Fire Hydrant',
+  DecoratorGroup.FireHydrant,
+  sprite(19, 1),
+  PlainTileGroup,
+);
+
+const Snowman = new DecoratorInfo(
+  'Snowman',
+  DecoratorGroup.Snowman,
+  sprite(22, 1),
+  PlainTileGroup,
+);
+
+const Sign = new DecoratorInfo(
+  'Sign',
+  DecoratorGroup.Sign,
+  sprite(24, 1),
+  PlainTileGroup,
+);
+
+const Buoy = new DecoratorInfo(
+  'Buoy',
+  DecoratorGroup.Buoy,
+  sprite(20, 10),
+  SeaTileGroup,
+  seaAnimation,
+);
+
+const Fence = new DecoratorInfo(
+  'Fence',
+  DecoratorGroup.Fence,
+  sprite(19, 2),
+  PlainTileGroup,
+);
+
+const Pipe = new DecoratorInfo(
+  'Pipe',
+  DecoratorGroup.Pipe,
+  sprite(23, 2),
+  PlainTileGroup,
+);
+
 // The order of decorators must not be changed.
 const Decorators = [
   _Bush,
@@ -460,6 +525,46 @@ const Decorators = [
   TrenchPlank.down(1),
   TrenchPlank.down(2),
   TrenchPlank.down(3),
+  StoneLantern,
+  StoneLantern.right(),
+  Mailbox,
+  Mailbox.right(1),
+  Mailbox.right(2),
+  Mailbox.right(3),
+  Lantern.copy({
+    position: new SpriteVector(25, 0),
+  }),
+  Lantern.copy({
+    position: new SpriteVector(26, 0),
+  }),
+  FireHydrant,
+  Snowman,
+  Snowman.right(),
+  Sign,
+  Sign.right(),
+  Buoy,
+  Fence,
+  Fence.right(1),
+  Fence.right(2),
+  Fence.right(3),
+  Fence.down(1),
+  Fence.down(1).right(1),
+  Fence.down(2),
+  Fence.down(2).right(1),
+  Fence.down(3),
+  Fence.down(3).right(1),
+  Fence.down(4),
+  Fence.down(4).right(1),
+  Fence.down(4).right(2),
+  Fence.down(5),
+  Fence.down(5).right(1),
+  Fence.down(6),
+  Fence.down(6).right(1),
+  Fence.down(7),
+  Fence.down(7).right(1),
+  Pipe,
+  Pipe.right(1),
+  Pipe.right(2),
 ].map((decorator, index) => decorator.copy({ id: index + 1 }));
 
 export const Bush = Decorators[0];
