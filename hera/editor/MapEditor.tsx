@@ -20,6 +20,7 @@ import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import resizeMap, { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
+import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import validateMap, { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
@@ -62,7 +63,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import UnlockableBiomes from '../../zeus/game/UnlockableBiomes.tsx';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { DrawerPosition, getDrawerPaddingStyle } from '../drawer/Drawer.tsx';

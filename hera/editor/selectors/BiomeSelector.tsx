@@ -1,5 +1,6 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
+import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -8,7 +9,6 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { fbt } from 'fbt';
 import React, { useCallback, useMemo } from 'react';
-import UnlockableBiomes from '../../../zeus/game/UnlockableBiomes.tsx';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';

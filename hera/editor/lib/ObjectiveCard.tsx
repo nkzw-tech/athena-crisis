@@ -1,5 +1,6 @@
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import { Skills } from '@deities/athena/info/Skill.tsx';
+import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
@@ -30,7 +31,6 @@ import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useCallback, useMemo, useState } from 'react';
-import UnlockableBiomes from '../../../zeus/game/UnlockableBiomes.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
