@@ -1,4 +1,4 @@
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import { Biome } from '../map/Biome.tsx';
 
 export default new Set([
   Biome.Snow,
