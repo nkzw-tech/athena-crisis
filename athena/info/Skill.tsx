@@ -38,35 +38,41 @@ export enum Skill {
   RecoverAirUnits = 24,
   BuyUnitAlien = 25,
   BuyUnitOctopus = 26,
+  BuyUnitSuperTank = 27,
+  BuyUnitAcidBomber = 28,
+  BuyUnitDinosaur = 29,
 }
 
 export const Skills = new Set<Skill>([
   Skill.AttackIncreaseMinor,
   Skill.DefenseIncreaseMinor,
   Skill.AttackIncreaseMajorDefenseDecreaseMajor,
-  Skill.BuyUnitCannon,
-  Skill.BuyUnitBrute,
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
-  Skill.UnitAbilitySniperImmediateAction,
   Skill.MovementIncreaseGroundUnitDefenseDecrease,
-  Skill.UnitBattleShipMoveAndAct,
-  Skill.UnitAPUAttackIncreaseMajorPower,
-  Skill.BuyUnitZombieDefenseDecreaseMajor,
-  Skill.BuyUnitBazookaBear,
-  Skill.AttackAndDefenseIncreaseHard,
   Skill.HealVehiclesAttackDecrease,
+  Skill.UnitAPUAttackIncreaseMajorPower,
   Skill.ArtilleryRangeIncrease,
   Skill.HealInfantryMedicPower,
-  Skill.NoUnitRestrictions,
   Skill.CounterAttackPower,
-  Skill.AttackAndDefenseDecreaseEasy,
+  Skill.UnitBattleShipMoveAndAct,
+  Skill.UnitAbilitySniperImmediateAction,
   Skill.UnitInfantryForestDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
-  Skill.BuyUnitAIU,
-  Skill.BuyUnitCommander,
   Skill.RecoverAirUnits,
-  Skill.BuyUnitAlien,
+  Skill.BuyUnitBrute,
+  Skill.BuyUnitCommander,
+  Skill.BuyUnitCannon,
+  Skill.BuyUnitSuperTank,
+  Skill.BuyUnitAcidBomber,
+  Skill.BuyUnitBazookaBear,
+  Skill.BuyUnitZombieDefenseDecreaseMajor,
   Skill.BuyUnitOctopus,
+  Skill.BuyUnitAlien,
+  Skill.BuyUnitDinosaur,
+  Skill.BuyUnitAIU,
+  Skill.NoUnitRestrictions,
+  Skill.AttackAndDefenseIncreaseHard,
+  Skill.AttackAndDefenseDecreaseEasy,
 ]);
 
 const skillConfig: Record<
@@ -88,7 +94,7 @@ const skillConfig: Record<
   [Skill.UnitAPUAttackIncreaseMajorPower]: { charges: 3, cost: 3000 },
   [Skill.BuyUnitZombieDefenseDecreaseMajor]: { cost: 1500 },
   [Skill.BuyUnitBazookaBear]: { charges: 3, cost: 2000 },
-  [Skill.AttackAndDefenseIncreaseHard]: { cost: 1500 },
+  [Skill.AttackAndDefenseIncreaseHard]: { cost: null },
   [Skill.HealVehiclesAttackDecrease]: { charges: 3, cost: 1000 },
   [Skill.ArtilleryRangeIncrease]: { charges: 3, cost: 1500 },
   [Skill.HealInfantryMedicPower]: { charges: 4, cost: 1000 },
@@ -105,6 +111,9 @@ const skillConfig: Record<
   [Skill.RecoverAirUnits]: { charges: 5, cost: 3000 },
   [Skill.BuyUnitAlien]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500 },
+  [Skill.BuyUnitSuperTank]: { cost: 1500 },
+  [Skill.BuyUnitAcidBomber]: { cost: 1500 },
+  [Skill.BuyUnitDinosaur]: { cost: 1500 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set(
@@ -324,6 +333,9 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
   [UnitID.Alien, new Map([[Skill.BuyUnitAlien, 450]])],
   [UnitID.Octopus, new Map([[Skill.BuyUnitOctopus, 600]])],
+  [UnitID.SuperTank, new Map([[Skill.BuyUnitSuperTank, 900]])],
+  [UnitID.AcidBomber, new Map([[Skill.BuyUnitAcidBomber, 750]])],
+  [UnitID.Dinosaur, new Map([[Skill.BuyUnitDinosaur, 600]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([

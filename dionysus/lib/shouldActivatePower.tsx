@@ -32,28 +32,31 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
       return false;
 
-    case Skill.AttackIncreaseMinor:
-    case Skill.DefenseIncreaseMinor:
-    case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
-    case Skill.BuyUnitCannon:
-    case Skill.BuyUnitBrute:
-    case Skill.UnitAbilitySniperImmediateAction:
-    case Skill.MovementIncreaseGroundUnitDefenseDecrease:
-    case Skill.UnitBattleShipMoveAndAct:
-    case Skill.UnitAPUAttackIncreaseMajorPower:
-    case Skill.BuyUnitZombieDefenseDecreaseMajor:
-    case Skill.AttackAndDefenseIncreaseHard:
-    case Skill.HealVehiclesAttackDecrease:
     case Skill.ArtilleryRangeIncrease:
-    case Skill.HealInfantryMedicPower:
-    case Skill.NoUnitRestrictions:
-    case Skill.CounterAttackPower:
     case Skill.AttackAndDefenseDecreaseEasy:
+    case Skill.AttackAndDefenseIncreaseHard:
+    case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
+    case Skill.AttackIncreaseMinor:
+    case Skill.BuyUnitAcidBomber:
+    case Skill.BuyUnitDinosaur:
+    case Skill.BuyUnitAIU:
+    case Skill.BuyUnitBrute:
+    case Skill.BuyUnitCannon:
+    case Skill.BuyUnitCommander:
+    case Skill.BuyUnitSuperTank:
+    case Skill.BuyUnitZombieDefenseDecreaseMajor:
+    case Skill.CounterAttackPower:
+    case Skill.DefenseIncreaseMinor:
+    case Skill.HealInfantryMedicPower:
+    case Skill.HealVehiclesAttackDecrease:
+    case Skill.MovementIncreaseGroundUnitDefenseDecrease:
+    case Skill.NoUnitRestrictions:
+    case Skill.RecoverAirUnits:
+    case Skill.UnitAbilitySniperImmediateAction:
+    case Skill.UnitAPUAttackIncreaseMajorPower:
+    case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
-    case Skill.BuyUnitAIU:
-    case Skill.BuyUnitCommander:
-    case Skill.RecoverAirUnits:
       return true;
     default: {
       skill satisfies never;

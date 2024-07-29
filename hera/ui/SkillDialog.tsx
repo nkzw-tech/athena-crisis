@@ -1,4 +1,8 @@
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import {
+  Skills as AllSkills,
+  getSkillConfig,
+  Skill,
+} from '@deities/athena/info/Skill.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
@@ -203,7 +207,9 @@ export default function SkillDialog({
 }) {
   const hasAction = onAction && actionName && currentSkill;
   const partition = groupBy(
-    sortBy([...availableSkills], (skill) => skill),
+    availableSkills === AllSkills
+      ? availableSkills
+      : sortBy([...availableSkills], (skill) => skill),
     (skill) =>
       selectedSkills?.has(skill)
         ? 'selected'

@@ -2555,7 +2555,7 @@ export const SeaPatrol = new UnitInfo(
 );
 
 export const AcidBomber = new UnitInfo(
-  22,
+  UnitID.AcidBomber,
   'Acid Bomber',
   'Ada',
   'female',
@@ -3065,7 +3065,7 @@ export const TransportTrain = new UnitInfo(
 );
 
 export const Dinosaur = new UnitInfo(
-  36,
+  UnitID.Dinosaur,
   'Dinosaur',
   'Dion',
   'unknown',
@@ -3142,7 +3142,7 @@ export const HeavyTank = new UnitInfo(
 );
 
 export const SuperTank = new UnitInfo(
-  38,
+  UnitID.SuperTank,
   'Super Tank',
   'Olaf',
   'male',

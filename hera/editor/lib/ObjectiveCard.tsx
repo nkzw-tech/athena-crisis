@@ -113,7 +113,7 @@ export default function ObjectiveCard({
               Conjunctions.AND,
               Delimiters.COMMA,
             )}
-          </fbt:param>
+          </fbt:param>{' '}
           <fbt:plural count={campaigns.length} many="campaigns">
             campaign
           </fbt:plural>. If you want to delete the objective, you must first

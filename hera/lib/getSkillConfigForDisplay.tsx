@@ -8,6 +8,7 @@ import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
 import Octopus from '@deities/ui/icons/Octopus.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
+import Poison from '@deities/ui/icons/Poison.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
@@ -16,6 +17,8 @@ import Zombie from '@deities/ui/icons/Zombie.tsx';
 import BullseyeArrow from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
+import Dinosaur from '@iconify-icons/pixelarticons/downasaur.js';
+import SuperTank from '@iconify-icons/pixelarticons/label-alt-multiple.js';
 import Loader from '@iconify-icons/pixelarticons/loader.js';
 import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
@@ -205,7 +208,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
       return {
         alpha: 0.5,
         borderStyle: 'coin',
-        colors: ['green', 'cyan'],
+        colors: ['red', 'pink'],
         icon: Skull,
         name: fbt('Determined Termination', 'Skill name'),
       };
@@ -240,6 +243,30 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'cyan',
         icon: Octopus,
         name: fbt('Octo Wrath', 'Skill name'),
+      };
+    case Skill.BuyUnitAcidBomber:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'cyan',
+        icon: Poison,
+        name: fbt('Acid Rain', 'Skill name'),
+      };
+    case Skill.BuyUnitSuperTank:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'red',
+        icon: SuperTank,
+        name: fbt('Super Tank', 'Skill name'),
+      };
+    case Skill.BuyUnitDinosaur:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'green',
+        icon: Dinosaur,
+        name: fbt('Dino Rampage', 'Skill name'),
       };
     default: {
       skill satisfies never;
