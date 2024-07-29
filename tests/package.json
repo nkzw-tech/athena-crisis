@@ -35,6 +35,6 @@
     "react-dom": "19.0.0-rc.0",
     "react-error-boundary": "^4.0.13",
     "strip-ansi": "^7.1.0",
-    "term-img": "^6.0.0"
+    "term-img": "^7.0.0"
   }
 }
