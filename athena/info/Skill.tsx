@@ -107,7 +107,7 @@ const skillConfig: Record<
     cost: 1500,
   },
   [Skill.BuyUnitAIU]: { cost: 1500 },
-  [Skill.BuyUnitCommander]: { charges: 3, cost: 1500 },
+  [Skill.BuyUnitCommander]: { charges: 4, cost: 1500 },
   [Skill.RecoverAirUnits]: { charges: 5, cost: 3000 },
   [Skill.BuyUnitAlien]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500 },
