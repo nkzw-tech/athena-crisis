@@ -14,7 +14,6 @@ import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import Portrait, { PortraitHeight } from '../character/Portrait.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
-import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function receivePortraitAnimation(
@@ -87,10 +86,8 @@ export default async function receivePortraitAnimation(
         style: 'flashy',
         text: String(
           fbt(
-            fbt.param(
-              'player',
-              getTranslatedFactionName(state.factionNames, player),
-            ) + ' unlocked new unit portraits!',
+            fbt.param('user', state.userDisplayName) +
+              ' unlocked new unit portraits!',
             'Receive reward message',
           ),
         ),
