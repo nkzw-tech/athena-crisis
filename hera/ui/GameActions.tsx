@@ -48,8 +48,9 @@ type TimerID = ReturnType<typeof setTimeout>;
 
 const InfoButton = ({
   actions: { showGameInfo },
+  bottom,
   state: { gameInfoState, preventRemoteActions },
-}: StateWithActions) => {
+}: StateWithActions & Readonly<{ bottom?: true }>) => {
   useInput('detail', () => {
     if (!preventRemoteActions && !gameInfoState) {
       showGameInfo({
@@ -58,8 +59,14 @@ const InfoButton = ({
       });
     }
   });
+
   return (
-    <MenuButton className={cx(actionButtonStyle, infoButtonStyle)}>
+    <MenuButton
+      className={cx(
+        actionButtonStyle,
+        bottom ? bottomButtonStyle : infoButtonStyle,
+      )}
+    >
       <Icon
         button
         className={cx(iconStyle, preventRemoteActions && disabledButtonStyle)}
@@ -480,6 +487,9 @@ export default function GameActions({
     preventRemoteActions,
     zIndex,
   } = state;
+
+  const hasEnded = lastActionResponse?.type === 'GameEnd';
+
   const maxZoom = useScale() + 1;
   const playerCanEndTurn =
     !preventRemoteActions && !paused && canEndTurn(state);
@@ -508,51 +518,61 @@ export default function GameActions({
   );
 
   const content = (
-    <div
-      className={cx(maybeFade(hide), containerStyle)}
-      style={!inlineUI ? insetStyle(inset) : undefined}
-    >
-      {undoTurn && (
-        <MenuButton className={cx(actionButtonStyle, undoButtonStyle)}>
-          <Icon
-            button
-            className={cx(iconStyle, !canUndo && disabledButtonStyle)}
-            horizontalFlip
-            icon={Forward}
-            onClick={undo}
+    <>
+      <div
+        className={cx(maybeFade(hide), containerStyle)}
+        style={!inlineUI ? insetStyle(inset) : undefined}
+      >
+        {undoTurn && (
+          <MenuButton className={cx(actionButtonStyle, undoButtonStyle)}>
+            <Icon
+              button
+              className={cx(iconStyle, !canUndo && disabledButtonStyle)}
+              horizontalFlip
+              icon={Forward}
+              onClick={undo}
+            />
+          </MenuButton>
+        )}
+        {setZoom && (
+          <ZoomButton
+            className={cx(
+              inlineUI && (undoTurn ? inlineZoomButtonStyle : undoButtonStyle),
+            )}
+            hide={false}
+            max={maxZoom}
+            setZoom={setZoom}
+            zoom={zoom}
           />
-        </MenuButton>
-      )}
-      {setZoom && (
-        <ZoomButton
-          className={cx(
-            inlineUI && (undoTurn ? inlineZoomButtonStyle : undoButtonStyle),
-          )}
-          hide={false}
-          max={maxZoom}
-          setZoom={setZoom}
-          zoom={zoom}
+        )}
+        <InfoButton actions={actions} state={state} />
+        <EndTurnButton
+          actions={actions}
+          canEndTurn={playerCanEndTurn}
+          state={state}
+          subscribe={subscribe}
         />
+        <AttackRadiusButton
+          actions={actions}
+          playerCanEndTurn={playerCanEndTurn}
+          state={state}
+        />
+        <NextButton
+          actions={actions}
+          playerCanEndTurn={playerCanEndTurn}
+          state={state}
+        />
+        {children}
+      </div>
+      {hide && hasEnded && (
+        <div
+          className={containerStyle}
+          style={!inlineUI ? insetStyle(inset) : undefined}
+        >
+          <InfoButton actions={actions} bottom state={state} />
+        </div>
       )}
-      <InfoButton actions={actions} state={state} />
-      <EndTurnButton
-        actions={actions}
-        canEndTurn={playerCanEndTurn}
-        state={state}
-        subscribe={subscribe}
-      />
-      <AttackRadiusButton
-        actions={actions}
-        playerCanEndTurn={playerCanEndTurn}
-        state={state}
-      />
-      <NextButton
-        actions={actions}
-        playerCanEndTurn={playerCanEndTurn}
-        state={state}
-      />
-      {children}
-    </div>
+    </>
   );
 
   return inlineUI ? (
@@ -596,6 +616,10 @@ const containerStyle = css`
   ${Breakpoints.height.sm} {
     ${vars.set('multiplier', 1)}
   }
+`;
+
+const bottomButtonStyle = css`
+  bottom: calc(${applyVar('inset')});
 `;
 
 const endTurnButtonStyle = css`

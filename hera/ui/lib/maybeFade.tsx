@@ -11,4 +11,9 @@ const style = css`
 
 const fadeStyle = css`
   opacity: 0 !important;
+  pointer-events: none;
+
+  > * {
+    pointer-events: none;
+  }
 `;
