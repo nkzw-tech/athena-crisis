@@ -20,8 +20,8 @@ export default function calculateFunds(
     }
   }
 
-  return (
-    sum * map.config.multiplier * (1 + PowerStationMultiplier * powerStations)
+  return Math.floor(
+    sum * map.config.multiplier * (1 + PowerStationMultiplier * powerStations),
   );
 }
 
