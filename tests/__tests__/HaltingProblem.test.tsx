@@ -218,16 +218,9 @@ const randomMap = withModifiers(
   ),
 );
 
-test(
-  'AI plays on a random map and the game terminates',
-  () => play(randomMap),
-  20_000,
-);
+test('AI plays on a random map and the game terminates', () => play(randomMap));
 
 // Currently a game in the fog is not guaranteed to terminate because the AI
 // might not have enough visiblity.
-test(
-  'AI plays on a random map in fog and the game terminates',
-  () => play(randomMap.copy({ config: randomMap.config.copy({ fog: true }) })),
-  20_000,
-);
+test('AI plays on a random map in fog and the game terminates', () =>
+  play(randomMap.copy({ config: randomMap.config.copy({ fog: true }) })));
