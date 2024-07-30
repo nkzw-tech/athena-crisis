@@ -139,7 +139,8 @@ function applyHiddenSourceAttackUnitAction(
             map
               .getPlayer(existingUnit)
               .modifyStatistics({
-                lostUnits: unitB && newPlayerB == null ? 0 : 1,
+                lostUnits:
+                  unitB && newPlayerB == null ? 0 : existingUnit.count(),
               })
               .maybeSetCharge(chargeB),
           )
@@ -197,7 +198,7 @@ function applyHiddenSourceAttackBuildingAction(
               map
                 .getPlayer(existingUnit)
                 .modifyStatistics({
-                  lostUnits: 1,
+                  lostUnits: existingUnit.count(),
                 })
                 .maybeSetCharge(chargeC),
             )
@@ -237,7 +238,7 @@ function applyHiddenTargetAttackUnitAction(
                 map
                   .getPlayer(unit)
                   .modifyStatistics({
-                    lostUnits: 1,
+                    lostUnits: unit.count(),
                   })
                   .maybeSetCharge(chargeA),
               ),
@@ -297,7 +298,7 @@ function applyHiddenTargetAttackBuildingAction(
             map
               .getPlayer(unit)
               .modifyStatistics({
-                lostUnits: 1,
+                lostUnits: unit.count(),
               })
               .maybeSetCharge(chargeA),
           ),

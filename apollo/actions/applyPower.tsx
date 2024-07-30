@@ -34,14 +34,15 @@ export function onPowerUnitOpponentEffect(
   if (skill === Skill.BuyUnitOctopus) {
     const newUnit = unit.modifyHealth(-OctopusPowerDamage);
     const isDead = newUnit.isDead();
+    const count = isDead ? newUnit.count() : 0;
     return map.copy({
       teams: updatePlayers(map.teams, [
         map.getCurrentPlayer().modifyStatistics({
           damage: OctopusPowerDamage,
-          destroyedUnits: isDead ? 1 : 0,
+          destroyedUnits: count,
         }),
         map.getPlayer(unit).modifyStatistics({
-          lostUnits: isDead ? 1 : 0,
+          lostUnits: count,
         }),
       ]),
       units: isDead ? map.units.delete(vector) : map.units.set(vector, newUnit),
@@ -79,14 +80,15 @@ export default function applyPower(skill: Skill, map: MapData) {
       if (map.isNonNeutralOpponent(player, unit)) {
         const newUnit = unit.modifyHealth(-OctopusPowerDamage);
         const isDead = newUnit.isDead();
+        const count = isDead ? newUnit.count() : 0;
         map = map.copy({
           teams: updatePlayers(map.teams, [
             map.getPlayer(player.id).modifyStatistics({
               damage: OctopusPowerDamage,
-              destroyedUnits: isDead ? 1 : 0,
+              destroyedUnits: count,
             }),
             map.getPlayer(unit).modifyStatistics({
-              lostUnits: isDead ? 1 : 0,
+              lostUnits: count,
             }),
           ]),
           units: isDead

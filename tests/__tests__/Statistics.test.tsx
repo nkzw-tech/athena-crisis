@@ -20,6 +20,7 @@ import {
   Helicopter,
   Humvee,
   Infantry,
+  Jeep,
   Pioneer,
   Sniper,
 } from '@deities/athena/info/Unit.tsx';
@@ -545,4 +546,60 @@ test('increases the `lostUnits` count of a player when a unit self-destructs', a
   expect(statsA.lostUnits).toBe(0);
   expect(statsB.lostUnits).toBe(1);
   expect(statsC.lostUnits).toBe(0);
+});
+
+test('counts transported units correctly', async () => {
+  const fromA = vec(1, 1);
+  const toA = vec(1, 2);
+  const initialMap = map.copy({
+    units: map.units
+      .set(fromA, Helicopter.create(player1))
+      .set(
+        toA,
+        Jeep.create(2)
+          .copy({
+            transports: [Flamethrower.create(2).transport()],
+          })
+          .setHealth(2),
+      )
+      .set(vec(3, 3), Helicopter.create(player2)),
+  });
+
+  const [gameState] = executeGameActions(initialMap, [
+    AttackUnitAction(fromA, toA),
+  ]);
+
+  const lastMap = gameState.at(-1)![1];
+  const statsA = lastMap.getPlayer(player1.id).stats;
+  const statsB = lastMap.getPlayer(player2.id).stats;
+
+  expect(statsA.damage).toBeGreaterThan(1);
+  expect(statsA).toMatchInlineSnapshot(`
+    {
+      "captured": 0,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 2,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 2,
+      "lostBuildings": 0,
+      "lostUnits": 0,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+  expect(statsB).toMatchInlineSnapshot(`
+    {
+      "captured": 0,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 0,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 0,
+      "lostBuildings": 0,
+      "lostUnits": 2,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
 });

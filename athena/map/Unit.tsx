@@ -179,6 +179,12 @@ export class TransportedUnit {
     );
   }
 
+  count(): number {
+    return (
+      1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0)
+    );
+  }
+
   hasValidBehavior() {
     return !this.behavior || AIBehaviors.has(this.behavior);
   }
@@ -681,6 +687,12 @@ export default class Unit extends Entity {
 
   dry(): DryUnit {
     return new DryUnit(this.health, this.ammo, this.statusEffect);
+  }
+
+  count(): number {
+    return (
+      1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0)
+    );
   }
 
   hasValidBehavior() {

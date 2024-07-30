@@ -33,12 +33,16 @@ export default function applyEndTurnActionResponse(
   const destroyedUnits = applyBeginTurnStatusEffects(
     subtractFuel(map, nextPlayer),
     nextPlayer,
-  ).units.filter(
-    (unit, vector) =>
-      !supplyVectors.has(vector) &&
+  ).units.reduce(
+    (sum, unit, vector) =>
+      sum +
+      (!supplyVectors.has(vector) &&
       !unitsToHeal.has(vector) &&
-      shouldRemoveUnit(map, vector, unit, nextPlayer.id),
-  ).size;
+      shouldRemoveUnit(map, vector, unit, nextPlayer.id)
+        ? unit.count()
+        : 0),
+    0,
+  );
 
   if (destroyedUnits > 0) {
     const mapB = map.copy({ teams });

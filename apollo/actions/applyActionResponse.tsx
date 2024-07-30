@@ -117,13 +117,13 @@ export default function applyActionResponse(
         originalUnitA &&
         units.get(from)?.player === originalUnitA?.player
           ? 0
-          : 1;
+          : originalUnitA?.count() || 1;
       const destroyedUnits =
         unitB &&
         originalUnitB &&
         units.get(to)?.player === originalUnitB?.player
           ? 0
-          : 1;
+          : originalUnitB?.count() || 1;
       const oneShotB =
         originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
       const oneShotA =
@@ -204,7 +204,7 @@ export default function applyActionResponse(
         originalUnitA &&
         units.get(from)?.player === originalUnitA?.player
           ? 0
-          : 1;
+          : originalUnitA?.count() || 1;
       const oneShotC =
         originalUnitC &&
         ((originalUnitC?.health >= MaxHealth && !unitC) || !building)
@@ -257,7 +257,7 @@ export default function applyActionResponse(
                           )
                         : 0,
                     destroyedUnits: lostUnits,
-                    lostUnits: unitC ? 0 : 1,
+                    lostUnits: unitC ? 0 : originalUnitC?.count() || 1,
                     oneShots: oneShotA,
                   })
                   .maybeSetCharge(chargeC),
@@ -497,11 +497,13 @@ export default function applyActionResponse(
         teams: updatePlayers(map.teams, [
           player.setCharge(player.charge - Charge).modifyStatistics({
             damage: unit ? unit.health : 0,
-            destroyedUnits: unit ? 1 : 0,
+            destroyedUnits: unit ? unit.count() : 0,
             oneShots: unit && unit.health >= MaxHealth ? 1 : 0,
           }),
           unit
-            ? map.getPlayer(unit.player).modifyStatistic('lostUnits', 1)
+            ? map
+                .getPlayer(unit.player)
+                .modifyStatistic('lostUnits', unit.count())
             : null,
         ]),
         units: unit ? map.units.delete(to) : map.units,
