@@ -258,7 +258,7 @@ export default memo(function PlayerCard({
               <span style={{ color }}>{player.id}.</span> {user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
-            <Stack className={offsetStyle} gap={16} nowrap stretch>
+            <Stack className={offsetStyle} gap={16} nowrap start>
               <Funds
                 className={cx(
                   ellipsis,
@@ -271,7 +271,7 @@ export default memo(function PlayerCard({
               <Stack gap>{objectiveList}</Stack>
             </Stack>
             {wide && (
-              <Stack className={offsetStyle} gap={16} nowrap>
+              <Stack className={offsetStyle} gap={16} nowrap start>
                 <Stack className={cx(playerStatsStyle, nowrapStyle)}>
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
