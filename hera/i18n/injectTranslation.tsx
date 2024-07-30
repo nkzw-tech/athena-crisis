@@ -1,4 +1,4 @@
-import { UnitInfo } from '@deities/athena/info/Unit.tsx';
+import { getAllUnits, UnitInfo } from '@deities/athena/info/Unit.tsx';
 
 type FieldMap = Readonly<{
   characterDescription: string;
@@ -46,7 +46,7 @@ export default function injectTranslation<
 
 export function injectCharacterNameTranslation<
   Prototype extends Omit<UnitInfo, 'internalCharacterName'> & {
-    internalCharacterName: string | UnitInfo;
+    internalCharacterName: string;
   },
 >(
   object: {
@@ -54,19 +54,17 @@ export function injectCharacterNameTranslation<
   },
   entityMap: Record<string, () => string>,
 ) {
+  for (const unit of getAllUnits()) {
+    unit.removeCustomCharacterName();
+  }
+
   Object.defineProperty(object.prototype, 'characterName', {
     configurable: true,
     get(this: Prototype) {
-      if (typeof this.internalCharacterName !== 'string') {
-        return this.internalCharacterName.characterName;
-      }
-
-      const value = this.internalCharacterName;
-      if (value) {
-        const name = entityMap[value] || (() => this.internalCharacterName);
-        this.setCharacterName(name);
-        return name();
-      }
+      const maybeName = entityMap[this.internalCharacterName];
+      const name = maybeName ? maybeName() : this.internalCharacterName;
+      this.setCharacterName(name);
+      return name;
     },
   });
 }

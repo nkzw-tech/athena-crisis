@@ -495,7 +495,7 @@ export class UnitInfo {
   constructor(
     public readonly id: ID,
     private readonly internalName: string,
-    private internalCharacterName: string | UnitInfo,
+    private internalCharacterName: string,
     public readonly gender: Gender,
     private readonly internalDescription: string,
     private readonly internalCharacterDescription: string,
@@ -553,11 +553,8 @@ export class UnitInfo {
   }
 
   get characterName(): string {
-    if (typeof this.internalCharacterName !== 'string') {
-      return this.internalCharacterName.characterName;
-    }
-
     Object.defineProperty(this, 'characterName', {
+      configurable: true,
       value: this.internalCharacterName,
       writable: true,
     });
@@ -565,30 +562,22 @@ export class UnitInfo {
   }
 
   getOriginalCharacterName(): string {
-    return typeof this.internalCharacterName === 'string'
-      ? this.internalCharacterName
-      : this.internalCharacterName.getOriginalCharacterName();
+    return this.internalCharacterName;
   }
 
-  hasLinkedCharacterName() {
-    return typeof this.internalCharacterName !== 'string';
-  }
-
-  setCharacterName(name: string | (() => string)) {
-    if (!this.hasLinkedCharacterName()) {
-      if (typeof name === 'string') {
-        Object.defineProperty(this, 'characterName', {
-          configurable: true,
-          value: name,
-          writable: true,
-        });
-      } else {
-        Object.defineProperty(this, 'characterName', {
-          configurable: true,
-          get: name,
-        });
-      }
+  removeCustomCharacterName() {
+    if (Object.prototype.hasOwnProperty.call(this, 'characterName')) {
+      // @ts-expect-error
+      delete this.characterName;
     }
+  }
+
+  setCharacterName(name: string) {
+    Object.defineProperty(this, 'characterName', {
+      configurable: true,
+      value: name,
+      writable: true,
+    });
   }
 
   get description(): string {
@@ -3699,7 +3688,7 @@ export const Cannon = new UnitInfo(
 export const SuperAPU = new UnitInfo(
   52,
   'Super APU',
-  Brute,
+  'Super Blaine',
   'male',
   `The Super APU, the original version of the APU, is equipped with a powerful minigun and has higher defense compared to the regular APU. It can tear through enemy units with ease and requires a concerted effort to be taken down.`,
   `{name} emerged from a war-torn upbringing to become a revered military figure known for solving problems with brute force. His legendary status was cemented during a standoff where he single-handedly defended against an enemy encampment. Despite his fearsome reputation, whispers circulate among his closest allies about his secretive support for war orphans—a stark contrast to his ruthless battlefield persona. {name} continues to navigate the fine line between brutal authority and unexpected compassion, leaving many to question his true intentions.`,
