@@ -317,7 +317,7 @@ export default new Map<
       [
         CharacterMessage(
           Commander,
-          'Your moves were predictable. Mine are unstoppable.',
+          'Your moves were predictable. Ours are unstoppable.',
           'self',
           2,
         ),
