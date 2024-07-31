@@ -473,7 +473,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
               {title}
             </MapInfoTab>
           ))}
-        {endGame && (
+        {lastActionResponse?.type !== 'GameEnd' && endGame && (
           <MapInfoTab end onClick={onGiveUp}>
             <fbt desc="Button to give up">Give Up</fbt>
           </MapInfoTab>
