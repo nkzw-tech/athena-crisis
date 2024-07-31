@@ -49,7 +49,7 @@
     "workbox-window": "^7.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.9",
+    "@babel/core": "^7.25.2",
     "@emotion/babel-plugin": "^11.12.0",
     "@sentry/vite-plugin": "^2.21.1",
     "@types/babel__core": "^7.20.5",
