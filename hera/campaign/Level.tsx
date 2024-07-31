@@ -8,7 +8,6 @@ import {
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   hasPerformanceExpectation,
-  PerformanceStyleComparators,
   PerformanceStyleTypeShortName,
 } from '@deities/athena/map/PlayerPerformance.tsx';
 import { Reward } from '@deities/athena/map/Reward.tsx';
@@ -60,6 +59,7 @@ import useMapData from '../hooks/useMapData.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
+import Comparator from '../ui/Comparator.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
@@ -171,6 +171,8 @@ export default memo(function Level({
   if (!node || !map) {
     return null;
   }
+
+  const { performance } = map.config;
 
   const rewardObjectives = [
     ...map.config.objectives
@@ -321,35 +323,25 @@ export default memo(function Level({
             <Stack className={mapDetailStyle} gap vertical>
               {hasPerformanceExpectation(map) && (
                 <Stack alignCenter gap={16} start>
-                  {map.config.performance.pace != null && (
+                  {performance.pace != null && (
                     <Stack gap start>
                       <Icon icon={Pace} />
-                      <div>{map.config.performance.pace}</div>
+                      <div>{performance.pace}</div>
                     </Stack>
                   )}
-                  {map.config.performance.power != null && (
+                  {performance.power != null && (
                     <Stack gap start>
                       <Icon icon={Zap} />
-                      <div>{map.config.performance.power}</div>
+                      <div>{performance.power}</div>
                     </Stack>
                   )}
-                  {map.config.performance.style != null && (
+                  {performance.style != null && (
                     <Stack gap start>
                       <Icon icon={Subscriptions} />
                       <span>
-                        {
-                          PerformanceStyleTypeShortName[
-                            map.config.performance.style[0]
-                          ]
-                        }{' '}
-                        <span className={comparatorStyle}>
-                          {
-                            PerformanceStyleComparators[
-                              map.config.performance.style[0]
-                            ]
-                          }
-                        </span>{' '}
-                        {map.config.performance.style[1]}
+                        {PerformanceStyleTypeShortName[performance.style[0]]}{' '}
+                        <Comparator type={performance.style[0]} />{' '}
+                        {performance.style[1]}
                       </span>
                     </Stack>
                   )}
@@ -645,11 +637,4 @@ const iconStyle = css`
 
 const dialogueIconStyle = css`
   margin-top: 1px;
-`;
-
-const comparatorStyle = css`
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200;
-  text-align: center;
-  width: 16px;
 `;

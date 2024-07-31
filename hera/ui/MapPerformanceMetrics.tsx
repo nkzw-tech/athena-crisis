@@ -4,7 +4,6 @@ import {
   getPowerValue,
   getStyleValue,
   maybeDecodePlayerPerformance,
-  PerformanceStyleComparators,
   PerformanceType,
 } from '@deities/athena/map/PlayerPerformance.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -26,6 +25,7 @@ import usePerformanceResult from '../hooks/usePerformanceResult.tsx';
 import getTranslatedPerformanceStyleTypeName from '../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../lib/getTranslatedPerformanceTypeName.tsx';
 import { PlayerAchievement } from '../Types.tsx';
+import Comparator from './Comparator.tsx';
 import StarIcon from './StarIcon.tsx';
 
 const starDuration = 1600;
@@ -88,10 +88,7 @@ const Description = ({
         return (
           <>
             {getTranslatedPerformanceStyleTypeName(styleType)}{' '}
-            {getStyleValue(styleType, stats)}{' '}
-            <span className={comparatorStyle}>
-              {PerformanceStyleComparators[styleType]}
-            </span>{' '}
+            {getStyleValue(styleType, stats)} <Comparator type={styleType} />{' '}
             {value}
           </>
         );
@@ -604,13 +601,6 @@ const bottomStyle = css`
   left: 0;
   position: absolute;
   right: 0;
-`;
-
-const comparatorStyle = css`
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200;
-  text-align: center;
-  width: 16px;
 `;
 
 const previousStarStyle = css`

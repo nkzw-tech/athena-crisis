@@ -69,10 +69,12 @@ export function getPowerValue({ destroyedUnits, lostUnits }: PlayerStatistics) {
     : Math.max(0, Math.min(10, destroyedUnits / lostUnits));
 }
 
-export const getStyleValue = (
+export function getStyleValue(
   style: PerformanceStyleType,
   stats: PlayerStatistics,
-) => stats[StatsValues[style]];
+) {
+  return stats[StatsValues[style]];
+}
 
 const achievedStyleMetric = (
   [style, value]: PerformanceStyle,

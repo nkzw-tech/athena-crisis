@@ -3,23 +3,38 @@ import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
+import {
+  evaluatePlayerPerformance,
+  getPowerValue,
+  getStyleValue,
+  hasPerformanceExpectation,
+} from '@deities/athena/map/PlayerPerformance.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import clipBorder from '@deities/ui/clipBorder.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
+import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dialog, {
   DialogScrollContainer,
   DialogTab,
   DialogTabBar,
   useDialogNavigation,
 } from '@deities/ui/Dialog.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
+import Icon from '@deities/ui/Icon.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
+import { css, cx } from '@emotion/css';
+import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
+import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
+import Trophy from '@iconify-icons/pixelarticons/trophy.js';
+import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbt';
 import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import BuildingCard from '../card/BuildingCard.tsx';
@@ -27,6 +42,8 @@ import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
 import TileCard from '../card/TileCard.tsx';
 import UnitCard from '../card/UnitCard.tsx';
+import getTranslatedPerformanceStyleTypeName from '../lib/getTranslatedPerformanceStyleTypeName.tsx';
+import getTranslatedPerformanceTypeName from '../lib/getTranslatedPerformanceTypeName.tsx';
 import ObjectiveDescription from '../objectives/ObjectiveDescription.tsx';
 import {
   CurrentGameInfoState,
@@ -36,6 +53,7 @@ import {
   SkillInfoState,
   State,
 } from '../Types.tsx';
+import Comparator from './Comparator.tsx';
 import SkillDialog, { SkillIcon } from './SkillDialog.tsx';
 
 type GameDialogState = Pick<
@@ -225,15 +243,117 @@ const MapInfoPanel = memo(function MapInfoPanel({
   );
 });
 
+const MapPerformance = ({
+  currentViewer,
+  map,
+}: {
+  currentViewer: PlayerID | null;
+  map: MapData;
+}) => {
+  if (!hasPerformanceExpectation(map)) {
+    return null;
+  }
+
+  const currentPlayer =
+    currentViewer != null && map.maybeGetPlayer(currentViewer);
+  const { performance } = map.config;
+  const evaluation = currentPlayer
+    ? evaluatePlayerPerformance(map, currentPlayer.id)
+    : null;
+
+  return (
+    <Stack gap={16} vertical>
+      <h2>
+        <fbt desc="Headline for performance evaluation">Challenges</fbt>
+      </h2>
+      <p>
+        <fbt desc="Description of performance evaluation">
+          Accomplish these goals to collect stars.
+        </fbt>
+      </p>
+      <div className={gridStyle}>
+        <Stack alignCenter gap start>
+          <Icon className={iconStyle} icon={Trophy} />{' '}
+          <fbt desc="Label for map performance goal">Goal</fbt>
+        </Stack>
+        <div className={alignCenter}>
+          <fbt desc="Label for expected performance metric">Expected</fbt>
+        </div>
+        <div className={alignCenter}>
+          <fbt desc="Label for current performance value">Current</fbt>
+        </div>
+        {performance.pace != null && (
+          <>
+            <Stack alignCenter gap start>
+              <Icon icon={Pace} />
+              <div>{getTranslatedPerformanceTypeName('pace')}</div>
+            </Stack>
+            <div className={alignCenter}>{performance.pace}</div>
+            <div
+              className={cx(
+                alignCenter,
+                evaluation?.pace ? achievedStyle : failedStyle,
+              )}
+            >
+              {currentPlayer ? map.round : null}
+            </div>
+          </>
+        )}
+        {performance.power != null && (
+          <>
+            <Stack alignCenter gap start>
+              <Icon icon={Zap} />
+              <div>{getTranslatedPerformanceTypeName('power')}</div>
+            </Stack>
+            <div className={alignCenter}>{performance.power}</div>
+            <div
+              className={cx(
+                alignCenter,
+                evaluation?.power ? achievedStyle : failedStyle,
+              )}
+            >
+              {currentPlayer ? getPowerValue(currentPlayer.stats) : null}
+            </div>
+          </>
+        )}
+        {performance.style != null && (
+          <>
+            <Stack alignCenter gap start>
+              <Icon icon={Subscriptions} />
+              <div>{getTranslatedPerformanceTypeName('style')}</div>
+            </Stack>
+            <div className={alignCenter}>
+              {getTranslatedPerformanceStyleTypeName(performance.style[0])}{' '}
+              <Comparator type={performance.style[0]} /> {performance.style[1]}
+            </div>
+            <div
+              className={cx(
+                alignCenter,
+                evaluation?.style ? achievedStyle : failedStyle,
+              )}
+            >
+              {currentPlayer
+                ? getStyleValue(performance.style[0], currentPlayer.stats)
+                : null}
+            </div>
+          </>
+        )}
+      </div>
+    </Stack>
+  );
+};
+
 const objectivesPanel = Symbol('objectives');
 
 const GameInfoPanel = memo(function GameInfoPanel({
+  currentViewer,
   endGame,
   factionNames,
   gameInfoState,
   lastActionResponse,
   map,
 }: {
+  currentViewer: PlayerID | null;
   endGame?: () => void;
   factionNames: FactionNames;
   gameInfoState: CurrentGameInfoState;
@@ -290,46 +410,49 @@ const GameInfoPanel = memo(function GameInfoPanel({
         {(Component && (
           <Component lastActionResponse={lastActionResponse} map={map} />
         )) || (
-          <Stack gap={16} vertical>
-            <h1>
-              <fbt desc="Headline for describing how to win">How to win</fbt>
-            </h1>
-            <p>
-              {visibleConditions.size ? (
-                <fbt desc="Description of how to win">
-                  Complete any objective to win the game.
-                </fbt>
-              ) : (
-                <fbt desc="Objectives are all secret">
-                  Objectives for this game are secret.
-                </fbt>
-              )}
-            </p>
-            {requiredObjectives?.map(([id, objective]) => (
-              <ObjectiveDescription
-                factionNames={factionNames}
-                key={id}
-                objective={objective}
-                round={map.round}
-              />
-            ))}
-            {optionalObjectives && optionalObjectives.length > 0 && (
-              <>
-                <p>
+          <Stack gap={24} vertical>
+            <Stack gap={16} vertical>
+              <h1>
+                <fbt desc="Headline for describing how to win">How to win</fbt>
+              </h1>
+              <p>
+                {visibleConditions.size ? (
                   <fbt desc="Description of how to win">
-                    Complete optional objectives for extra rewards:
+                    Complete any objective to win the game.
                   </fbt>
-                </p>
-                {optionalObjectives.map(([id, objective]) => (
-                  <ObjectiveDescription
-                    factionNames={factionNames}
-                    key={id}
-                    objective={objective}
-                    round={map.round}
-                  />
-                ))}
-              </>
-            )}
+                ) : (
+                  <fbt desc="Objectives are all secret">
+                    Objectives for this game are secret.
+                  </fbt>
+                )}
+              </p>
+              {requiredObjectives?.map(([id, objective]) => (
+                <ObjectiveDescription
+                  factionNames={factionNames}
+                  key={id}
+                  objective={objective}
+                  round={map.round}
+                />
+              ))}
+              {optionalObjectives && optionalObjectives.length > 0 && (
+                <>
+                  <p>
+                    <fbt desc="Description of how to win">
+                      Complete optional objectives for extra rewards:
+                    </fbt>
+                  </p>
+                  {optionalObjectives.map(([id, objective]) => (
+                    <ObjectiveDescription
+                      factionNames={factionNames}
+                      key={id}
+                      objective={objective}
+                      round={map.round}
+                    />
+                  ))}
+                </>
+              )}
+            </Stack>
+            <MapPerformance currentViewer={currentViewer} map={map} />
           </Stack>
         )}
       </DialogScrollContainer>
@@ -376,6 +499,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
     case 'game-info': {
       return (
         <GameInfoPanel
+          currentViewer={currentViewer}
           endGame={endGame}
           factionNames={factionNames}
           gameInfoState={gameInfoState}
@@ -504,3 +628,30 @@ export default memo(function GameDialog({
     </Portal>
   ) : null;
 });
+
+const gridStyle = css`
+  ${clipBorder()}
+
+  background-color: ${applyVar('background-color')};
+  column-gap: 8px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 12px;
+  row-gap: 12px;
+`;
+
+const alignCenter = css`
+  text-align: center;
+`;
+
+const iconStyle = css`
+  margin: 1px 0 -1px 0;
+`;
+
+const achievedStyle = css`
+  color: ${getColor('green')};
+`;
+
+const failedStyle = css`
+  color: ${getColor('red')};
+`;
