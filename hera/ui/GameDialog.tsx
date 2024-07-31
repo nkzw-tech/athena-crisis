@@ -364,6 +364,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
     config: { objectives },
   } = map;
 
+  const hasEnded = lastActionResponse?.type === 'GameEnd';
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
 
   const states = useMemo(
@@ -374,7 +375,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const { alert } = useAlert();
   const onGiveUp = useCallback(() => {
-    if (endGame) {
+    if (!hasEnded && endGame) {
       alert({
         onAccept: endGame,
         text: fbt(
@@ -383,7 +384,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
         ),
       });
     }
-  }, [endGame, alert]);
+  }, [hasEnded, endGame, alert]);
 
   useInput(
     'secondary',
@@ -473,7 +474,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
               {title}
             </MapInfoTab>
           ))}
-        {lastActionResponse?.type !== 'GameEnd' && endGame && (
+        {!hasEnded && endGame && (
           <MapInfoTab end onClick={onGiveUp}>
             <fbt desc="Button to give up">Give Up</fbt>
           </MapInfoTab>
