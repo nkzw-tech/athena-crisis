@@ -36,7 +36,8 @@ export type Effect = Readonly<{
 
 export type EffectTrigger = ActionResponseType;
 export type Scenario = Readonly<{ effect: Effect; trigger: EffectTrigger }>;
-export type Effects = ReadonlyMap<EffectTrigger, ReadonlySet<Effect>>;
+export type EffectList = ReadonlySet<Effect>;
+export type Effects = ReadonlyMap<EffectTrigger, EffectList>;
 
 type EncodedEffect = [
   actions: EncodedActions,

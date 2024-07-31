@@ -139,7 +139,17 @@ export class MapConfig {
       fog,
       multiplier,
       objectives: encodeObjectives(objectives),
-      performance: [performance.pace, performance.power, performance.style],
+      ...(performance.pace != null ||
+      performance.power != null ||
+      performance.style != null
+        ? {
+            performance: [
+              performance.pace,
+              performance.power,
+              performance.style,
+            ],
+          }
+        : null),
       seedCapital,
     };
   }

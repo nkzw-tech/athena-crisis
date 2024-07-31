@@ -1,10 +1,11 @@
 import CharacterMessage from '@deities/apollo/CharacterMessage.tsx';
+import { EffectList, EffectTrigger } from '@deities/apollo/Effects.tsx';
 import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 
 export const metadata: MapMetadata = {
-  effects: new Map([
+  effects: new Map<EffectTrigger, EffectList>([
     [
       'GameEnd',
       new Set([
