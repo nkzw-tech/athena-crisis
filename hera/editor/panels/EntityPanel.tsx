@@ -28,7 +28,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
 import { fbt } from 'fbt';
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -199,8 +199,9 @@ export default function EntityPanel({
     return () => document.body.removeEventListener('keydown', listener);
   }, [editor, entity, isStructure, selectedPosition, updatePlayer]);
 
-  const [skills, setSkills] = useState<ReadonlyArray<Skill | null>>(() =>
-    entityIsBuilding ? [...(entity.skills || [])] : [],
+  const skills: ReadonlyArray<Skill | null> = useMemo(
+    () => (entityIsBuilding ? [...(entity.skills || [])] : []),
+    [entity, entityIsBuilding],
   );
 
   if (
@@ -378,8 +379,6 @@ export default function EntityPanel({
                     onSelect={(skill: Skill | null) => {
                       const newSkills = [...skills];
                       newSkills[index] = skill || null;
-                      setSkills(newSkills);
-
                       updateEntity(
                         `skill-${index}`,
                         entity.withSkills(new Set(newSkills.filter(isPresent))),
