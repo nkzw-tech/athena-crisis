@@ -26,7 +26,7 @@ import Supply from '@deities/ui/icons/Supply.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
-import { css, cx } from '@emotion/css';
+import { css, cx, keyframes } from '@emotion/css';
 import ChargeIcon from '@iconify-icons/pixelarticons/ac.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Complete from '@iconify-icons/pixelarticons/clock.js';
@@ -133,6 +133,7 @@ const icons = {
   capture: Flag,
   close: Close,
   complete: Complete,
+  completeOffset: Complete,
   confirm: DropUnit,
   createBuildings: Buildings,
   createTracks: Track,
@@ -556,11 +557,33 @@ const rightStyle = css`
   width: ${size - 3}px;
 `;
 
+const topRightStyle = css`
+  animation: ${keyframes`
+    0% {
+      right: ${size}px;
+      top: 3px;
+    }
+    50% {
+      top: -2px;
+    }
+    100% {
+      right: 3px;
+      top: 3px;
+    }
+  `} 250ms 1 ease-in-out 40ms forwards;
+
+  align-items: end;
+  height: ${size - 3}px;
+  right: ${size}px;
+  top: 3px;
+`;
+
 const positions: Record<ActionButtonType, string> = {
   attack: bottomStyle,
   capture: rightStyle,
   close: leftStyle,
   complete: topStyle,
+  completeOffset: topRightStyle,
   confirm: rightStyle,
   createBuildings: bottomStyle,
   createTracks: rightStyle,
@@ -585,6 +608,7 @@ const navigationPositions: Record<ActionButtonType, Vector> = {
   capture: right,
   close: left,
   complete: top,
+  completeOffset: vec(1, -1),
   confirm: right,
   createBuildings: bottom,
   createTracks: right,

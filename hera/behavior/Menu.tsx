@@ -393,6 +393,10 @@ export default class Menu {
     );
 
     if (availableActions) {
+      const offset =
+        availableActions.has('attack') &&
+        attackable?.has(selectedPosition.up());
+
       return (
         <ActionWheel
           actions={actions}
@@ -404,7 +408,7 @@ export default class Menu {
           <ActionButton
             navigationDirection={navigationDirection}
             onClick={() => completeAction(actions, state)}
-            type="complete"
+            type={offset ? 'completeOffset' : 'complete'}
           />
           <AttackButton
             actions={actions}
