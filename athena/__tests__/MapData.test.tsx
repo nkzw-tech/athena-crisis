@@ -17,7 +17,7 @@ test('serializing to JSON', () => {
 });
 
 test('allow entity lookups through vectors', () => {
-  const unit = map.units.get(vec(7, 5))!;
+  const unit = map.units.get(vec(11, 5))!;
 
   expect(unit.id).toBe(4);
   expect(unit.health).toBe(100);
@@ -26,19 +26,19 @@ test('allow entity lookups through vectors', () => {
 });
 
 test('support for basic queries', () => {
-  const unitA = map.units.get(vec(5, 6))!;
-  const unitB = map.units.get(vec(7, 5))!;
+  const unitA = map.units.get(vec(9, 6))!;
+  const unitB = map.units.get(vec(11, 5))!;
 
   expect(map.contains(vec(-1, -1))).toBe(false);
   expect(map.contains(vec(5, 4))).toBe(true);
   expect(map.contains(vec(15, 10))).toBe(true);
-  expect(map.contains(vec(16, 10))).toBe(false);
+  expect(map.contains(vec(25, 10))).toBe(false);
   expect(map.contains(vec(15, 11))).toBe(false);
 
-  expect(canDeploy(map, Pioneer, vec(7, 5), false)).toBe(false);
-  expect(canDeploy(map, Pioneer, vec(7, 7), false)).toBe(true);
-  expect(canDeploy(map, Pioneer, vec(11, 17), false)).toBe(false);
-  expect(canDeploy(map, Pioneer, vec(1, 1), false)).toBe(false);
+  expect(canDeploy(map, Pioneer, vec(11, 5), false)).toBe(false);
+  expect(canDeploy(map, Pioneer, vec(11, 7), false)).toBe(true);
+  expect(canDeploy(map, Pioneer, vec(15, 17), false)).toBe(false);
+  expect(canDeploy(map, Pioneer, vec(5, 1), false)).toBe(false);
 
   expect(map.matchesPlayer(1, 1)).toBe(true);
   expect(map.matchesPlayer(map.getPlayer(1), 1)).toBe(true);
