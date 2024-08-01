@@ -76,7 +76,7 @@ export default new Map<
       ],
       [CharacterMessage(Flamethrower, 'FIRE!', 'self', 2), 0.3],
       [
-        CharacterMessage(SmallTank, "You'll see our full power", 'self', 2),
+        CharacterMessage(SmallTank, "You'll see our full power!", 'self', 2),
         0.3,
       ],
       [CharacterMessage(APU, 'This is fun!', 'self', 1), 0.3],
