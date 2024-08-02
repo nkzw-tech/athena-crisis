@@ -1,4 +1,5 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { fbt } from 'fbt';
 import { FactionNames } from '../Types.tsx';
 import getTranslatedColorName from './getTranslatedColorName.tsx';
@@ -23,7 +24,7 @@ const toFactionName = (player: PlayerID) => {
       return 'Cyan Iris';
     default:
       player satisfies never;
-      throw new Error('');
+      throw new UnknownTypeError('toFactionName', player);
   }
 };
 

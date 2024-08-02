@@ -42,6 +42,7 @@ import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
 import TileCard from '../card/TileCard.tsx';
 import UnitCard from '../card/UnitCard.tsx';
+import getClientViewer from '../lib/getClientViewer.tsx';
 import getTranslatedPerformanceStyleTypeName from '../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../lib/getTranslatedPerformanceTypeName.tsx';
 import ObjectiveDescription from '../objectives/ObjectiveDescription.tsx';
@@ -487,10 +488,12 @@ const GameInfoPanel = memo(function GameInfoPanel({
 const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
   gameInfoState,
+  spectatorCodes,
   state: { currentViewer, factionNames, lastActionResponse, map },
 }: {
   endGame?: () => void;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
+  spectatorCodes?: ReadonlyArray<string>;
   state: GameDialogState;
 }) {
   useBlockInput('dialog');
@@ -500,7 +503,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
     case 'game-info': {
       return (
         <GameInfoPanel
-          currentViewer={currentViewer}
+          currentViewer={getClientViewer(map, currentViewer, spectatorCodes)}
           endGame={endGame}
           factionNames={factionNames}
           gameInfoState={gameInfoState}
@@ -588,10 +591,12 @@ const GameSkillDialog = ({
 export default memo(function GameDialog({
   endGame,
   onClose,
+  spectatorCodes,
   state,
 }: {
   endGame?: (type: 'Lose') => void;
   onClose: () => void | Promise<void>;
+  spectatorCodes?: ReadonlyArray<string>;
   state: GameDialogState;
 }) {
   const { gameInfoState } = state;
@@ -622,6 +627,7 @@ export default memo(function GameDialog({
                   }
                 : gameInfoState
             }
+            spectatorCodes={spectatorCodes}
             state={state}
           />
         </Dialog>

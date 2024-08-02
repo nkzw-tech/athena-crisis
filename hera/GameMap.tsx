@@ -10,8 +10,6 @@ import {
 import dropLabels from '@deities/athena/lib/dropLabels.tsx';
 import getAverageVector from '@deities/athena/lib/getAverageVector.tsx';
 import getDecoratorsAtField from '@deities/athena/lib/getDecoratorsAtField.tsx';
-import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
-import isPvP from '@deities/athena/lib/isPvP.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
@@ -22,7 +20,6 @@ import {
 import {
   PlayerID,
   resolveDynamicPlayerID,
-  toPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -60,6 +57,7 @@ import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
 import { EditorState } from './editor/Types.tsx';
 import ActionError from './lib/ActionError.tsx';
 import addEndTurnAnimations from './lib/addEndTurnAnimations.tsx';
+import getClientViewer from './lib/getClientViewer.tsx';
 import getCurrentAnimationConfig from './lib/getCurrentAnimationConfig.tsx';
 import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
@@ -111,22 +109,12 @@ const getLayer: GetLayerFunction = (y, type) =>
 const hasShake = (animations: Animations) =>
   animations.some(({ type }) => type === 'shake');
 
-const spectatorCodeToPlayerID = (spectatorCode: string) => {
-  const maybePlayerID = parseInteger(spectatorCode.split('-')[0]);
-  return maybePlayerID ? toPlayerID(maybePlayerID) : null;
-};
-
 const getVision = (
   map: MapData,
   currentViewer: PlayerID | null,
   spectatorCodes: ReadonlyArray<string> | undefined,
 ) =>
-  map.createVisionObject(
-    currentViewer ||
-      (spectatorCodes?.length && spectatorCodeToPlayerID(spectatorCodes[0])) ||
-      (!isPvP(map) && getFirstHumanPlayer(map)?.id) ||
-      0,
-  );
+  map.createVisionObject(getClientViewer(map, currentViewer, spectatorCodes));
 
 const showNamedPositionsForBehavior = new Set([
   'base',
@@ -1841,6 +1829,7 @@ export default class GameMap extends Component<Props, State> {
           <GameDialog
             endGame={this.props.endGame ? this._endGame : undefined}
             onClose={this._hideGameInfo}
+            spectatorCodes={this.props.spectatorCodes}
             state={this.state}
           />
         )}

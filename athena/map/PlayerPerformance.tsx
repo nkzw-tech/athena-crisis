@@ -66,7 +66,8 @@ export type PlainPlayerPerformance = [
 export function getPowerValue({ destroyedUnits, lostUnits }: PlayerStatistics) {
   return destroyedUnits === 0
     ? 0
-    : Math.max(0, Math.min(10, destroyedUnits / lostUnits));
+    : Math.floor(Math.max(0, Math.min(10, destroyedUnits / lostUnits)) * 100) /
+        100;
 }
 
 export function getStyleValue(

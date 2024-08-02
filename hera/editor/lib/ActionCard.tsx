@@ -145,7 +145,7 @@ export default memo(function ActionCard({
     const portrait = unit?.sprite.portrait;
     const player = hasCurrentPlayer
       ? resolveDynamicPlayerID(map, action.player, currentPlayer)
-      : action.player;
+      : 0;
     const message =
       formatText && factionNames && map && userDisplayName
         ? formatCharacterText(
@@ -156,7 +156,7 @@ export default memo(function ActionCard({
               : 'name',
             map,
             userDisplayName,
-            player as PlayerID,
+            player,
             factionNames,
           )
         : action.message;
