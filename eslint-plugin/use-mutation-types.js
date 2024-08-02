@@ -7,7 +7,7 @@ module.exports.meta = {
 module.exports.create = function requireUseMutationType(context) {
   return {
     CallExpression(node) {
-      if (node.callee.name === 'useMutation' && !node.typeParameters) {
+      if (node.callee.name === 'useMutation' && !node.typeArguments) {
         context.report({
           message: '`useMutation` calls must have type parameters.',
           node,

@@ -59,7 +59,7 @@
     "@babel/plugin-syntax-typescript": "^7.24.7",
     "@deities/eslint-plugin": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
-    "@nkzw/eslint-config": "^1.17.0",
+    "@nkzw/eslint-config": "^1.18.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "1.7.4",
     "@types/fbt": "^1.0.5",
@@ -110,7 +110,7 @@
       "rollup@^2.0.0": "^4.16.4"
     },
     "patchedDependencies": {
-      "@remix-run/router@1.18.0": "patches/@remix-run__router@1.18.0.patch",
+      "@remix-run/router@1.19.0": "patches/@remix-run__router@1.19.0.patch",
       "eslint-plugin-import@2.29.1": "patches/eslint-plugin-import@2.29.1.patch",
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",

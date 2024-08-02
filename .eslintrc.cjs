@@ -44,6 +44,16 @@ module.exports = {
         'no-console': [2, { allow: ['error'] }],
       },
     },
+    {
+      files: [
+        'eslint-plugin/index.js',
+        'i18n/Common.cjs',
+        'infra/babelPlugins.tsx',
+      ],
+      rules: {
+        '@typescript-eslint/no-require-imports': 0,
+      },
+    },
   ],
   plugins: ['@deities'],
   rules: {

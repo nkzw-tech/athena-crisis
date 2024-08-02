@@ -1,7 +1,7 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { AIBehavior } from '../map/AIBehavior.tsx';
 import { Biome } from '../map/Biome.tsx';
-import Building from '../map/Building.tsx';
+import type Building from '../map/Building.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
 import { EntityType } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';

@@ -1,8 +1,8 @@
 diff --git a/dist/router.cjs.js b/dist/router.cjs.js
-index 0fbf253e0406175b56dfd0b413b699982db6dc93..6276f3a31e678dcba49f2eb983f9328e91320298 100644
+index 2c5f2caef84227edd0a91d2a667d21b3af444109..e27df42a829695edf21dcd0c817c0b55ee0c7737 100644
 --- a/dist/router.cjs.js
 +++ b/dist/router.cjs.js
-@@ -3932,7 +3932,7 @@ function createStaticHandler(routes, opts) {
+@@ -3970,7 +3970,7 @@ function createStaticHandler(routes, opts) {
        let results = await callDataStrategy("action", request, [actionMatch], matches, isRouteRequest, requestContext, unstable_dataStrategy);
        result = results[0];
        if (request.signal.aborted) {
@@ -11,7 +11,7 @@ index 0fbf253e0406175b56dfd0b413b699982db6dc93..6276f3a31e678dcba49f2eb983f9328e
        }
      }
      if (isRedirectResult(result)) {
-@@ -4047,7 +4047,7 @@ function createStaticHandler(routes, opts) {
+@@ -4085,7 +4085,7 @@ function createStaticHandler(routes, opts) {
      }
      let results = await callDataStrategy("loader", request, matchesToLoad, matches, isRouteRequest, requestContext, unstable_dataStrategy);
      if (request.signal.aborted) {
