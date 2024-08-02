@@ -304,7 +304,7 @@ export default memo(function UnitCard({
             position={defaultVector}
             requestFrame={requestAnimationFrame}
             scheduleTimer={(fn, delay) =>
-              Promise.resolve(setTimeout(fn, delay))
+              Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
             size={TileSize}
             tile={previewMap.getTileInfo(defaultVector)}

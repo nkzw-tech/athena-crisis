@@ -1273,7 +1273,7 @@ export default class GameMap extends Component<Props, State> {
         start: dateNow(),
         timer: window.setTimeout(() => {
           this._timers.delete(timerObject);
-          this._update(fn.call(null, this.state));
+          fn();
         }, delay),
       };
       timers.add(timerObject);
@@ -1294,8 +1294,7 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _scheduleTimer = async (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    fn: Function,
+    fn: () => void,
     delay: number,
   ): Promise<number> => {
     const { replayState } = this.state;
@@ -1310,12 +1309,7 @@ export default class GameMap extends Component<Props, State> {
 
     const timer = window.setTimeout(() => {
       this._timers.delete(timerObject);
-      this._update({
-        ...fn.call(null, this.state),
-        replayState: {
-          ...this.state.replayState,
-        },
-      });
+      fn();
     }, delay);
     const timerObject = {
       delay,

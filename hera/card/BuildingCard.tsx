@@ -123,7 +123,7 @@ export default memo(function BuildingCard({
             position={vector}
             requestFrame={requestAnimationFrame}
             scheduleTimer={(fn, delay) =>
-              Promise.resolve(setTimeout(fn, delay))
+              Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
             size={TileSize}
           />

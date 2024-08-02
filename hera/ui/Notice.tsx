@@ -34,10 +34,7 @@ export default function Notice(
           transform: 'scale(0.9) translate3d(0, 100%, 0)',
         }}
         onAnimationComplete={() =>
-          scheduleTimer(
-            () => onComplete(),
-            animationConfig.AnimationDuration * 10,
-          )
+          scheduleTimer(onComplete, animationConfig.AnimationDuration * 10)
         }
         style={{
           ...(color

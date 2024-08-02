@@ -88,7 +88,7 @@ export default async function clientAttackAction(
     });
 
     return new Promise((resolve) =>
-      scheduleTimer(async (state: State) => {
+      scheduleTimer(async () => {
         const response = await remoteAction;
         if (isAttackAction(response.self?.actionResponse)) {
           actionResponse = response.self.actionResponse;
@@ -96,6 +96,7 @@ export default async function clientAttackAction(
         }
         const newUnitA = isAttackAction(actionResponse) && actionResponse.unitA;
         const directions = getAttackDirection(to, from);
+        let state = await update(null);
         state = await attackActionAnimation(actions, state, {
           attackStance: unitB.info.sprite.attackStance,
           damage: unitA.health - ((newUnitA && newUnitA?.health) || 0),

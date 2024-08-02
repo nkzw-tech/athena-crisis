@@ -59,7 +59,7 @@ export type SelectTileFn = (
 const vision = new Vision(1);
 const vector = vec(1, 1);
 const scheduleTimer: TimerFunction = (fn, delay) =>
-  Promise.resolve(setTimeout(fn, delay));
+  Promise.resolve(setTimeout(fn, delay) as unknown as number);
 
 export default function InlineTileList({
   biome,

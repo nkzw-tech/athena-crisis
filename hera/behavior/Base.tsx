@@ -51,15 +51,19 @@ export default class Base extends AbstractSelectBehavior {
     }
   }
 
-  private async showInfo(vector: Vector, state: State, actions: Actions) {
+  private async showInfo(
+    vector: Vector,
+    state: State,
+    { scheduleTimer, update }: Actions,
+  ) {
     const { map, selectedPosition, vision } = state;
     const unit = map.units.get(vector);
     const info = unit?.info;
     if (unit && !selectedPosition && vision.isVisible(map, vector)) {
       const showAttackRadius = !unit.isCompleted() && info?.hasAttack();
-      this.infoTimer = await actions.scheduleTimer(
-        (state: State): StateLike | null => {
-          return {
+      this.infoTimer = await scheduleTimer(
+        () =>
+          update((state) => ({
             namedPositions: [vector],
             ...(showAttackRadius && !state.radius
               ? {
@@ -72,8 +76,7 @@ export default class Base extends AbstractSelectBehavior {
                   },
                 }
               : null),
-          };
-        },
+          })),
         AnimationConfig.AnimationDuration * 2.5,
       );
     }

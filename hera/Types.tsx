@@ -92,8 +92,7 @@ export type Props = Readonly<{
 
 export type TimerState = Readonly<{
   delay: number;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  fn: Function;
+  fn: () => void;
   start: number;
   timer: number;
 }>;
@@ -152,8 +151,7 @@ export type StateLike = Partial<State>;
 
 export type FactionNames = ReadonlyMap<PlayerID, string>;
 export type TimerID = Promise<number>;
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type TimerFunction = (fn: Function, delay: number) => TimerID;
+export type TimerFunction = (fn: () => void, delay: number) => TimerID;
 export type RequestFrameFunction = (fn: (timestamp: number) => void) => void;
 export type ClearTimerFunction = (timer: number | TimerID) => void;
 export type UpdateFunction = (
