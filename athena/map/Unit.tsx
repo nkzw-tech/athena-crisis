@@ -4,6 +4,7 @@ import { Skill } from '../info/Skill.tsx';
 import {
   Ability,
   getUnitInfo,
+  Saboteur,
   Sniper,
   Supply,
   UnitInfo,
@@ -472,6 +473,13 @@ export default class Unit extends Entity {
     return (
       this.canAttack(player) &&
       this.info.canAttackAt(distance, this.info.getRangeFor(player))
+    );
+  }
+
+  canConvert(player: Player) {
+    return (
+      this.info.hasAbility(Ability.Convert) ||
+      (this.info === Saboteur && player.activeSkills.has(Skill.Sabotage))
     );
   }
 

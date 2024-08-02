@@ -192,7 +192,7 @@ export default function getPossibleAttacks(
           counterDamage &&
           counterDamage > 0 &&
           (counterDamage * 0.75 > damage || counterDamage > unitA.health) &&
-          !unitA.info.hasAbility(Ability.Convert)
+          !unitA.canConvert(map.getPlayer(unitA))
         ) {
           return;
         }

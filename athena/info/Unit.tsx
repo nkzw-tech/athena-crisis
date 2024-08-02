@@ -2295,7 +2295,7 @@ export const Flamethrower = new UnitInfo(
 );
 
 export const Saboteur = new UnitInfo(
-  16,
+  UnitID.Saboteur,
   'Saboteur',
   'Arvid',
   'male',

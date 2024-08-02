@@ -5,6 +5,7 @@ export default {
   Artillery: 7,
   HeavyArtillery: 12,
   Sniper: 14,
+  Saboteur: 16,
   AcidBomber: 22,
   Medic: 26,
   Dinosaur: 36,

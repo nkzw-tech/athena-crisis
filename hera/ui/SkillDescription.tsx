@@ -27,6 +27,7 @@ import {
   Battleship,
   BazookaBear,
   getUnitInfoOrThrow,
+  Saboteur,
   Sniper,
   SpecialUnits,
   UnitInfo,
@@ -670,13 +671,21 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           </fbt:param>.
         </fbt>
       );
-
     case Skill.BuyUnitOctopus:
       return (
         <fbt desc="Additional skill description">
           Reduces the health of all opposing units by{' '}
           <fbt:param name="amount">{OctopusPowerDamage}</fbt:param> health
           points.
+        </fbt>
+      );
+    case Skill.Sabotage:
+      return (
+        <fbt desc="Additional skill description">
+          <fbt:param name="unitName">
+            <UnitName color={color} unit={Saboteur} />
+          </fbt:param>{' '}
+          convert opponents after attacking.
         </fbt>
       );
   }

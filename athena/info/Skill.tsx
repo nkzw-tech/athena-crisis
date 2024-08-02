@@ -41,6 +41,7 @@ export enum Skill {
   BuyUnitSuperTank = 27,
   BuyUnitAcidBomber = 28,
   BuyUnitDinosaur = 29,
+  Sabotage = 30,
 }
 
 export const Skills = new Set<Skill>([
@@ -57,6 +58,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitAbilitySniperImmediateAction,
   Skill.UnitInfantryForestDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
+  Skill.Sabotage,
   Skill.RecoverAirUnits,
   Skill.BuyUnitBrute,
   Skill.BuyUnitSuperAPU,
@@ -114,6 +116,7 @@ const skillConfig: Record<
   [Skill.BuyUnitSuperTank]: { cost: 1500 },
   [Skill.BuyUnitAcidBomber]: { cost: 1500 },
   [Skill.BuyUnitDinosaur]: { cost: 1500 },
+  [Skill.Sabotage]: { charges: 5, cost: 1500 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set(
@@ -124,7 +127,8 @@ type ID = number;
 type Modifier = number;
 
 type SkillMap = ReadonlyMap<Skill, Modifier>;
-type UnitSkillMap = ReadonlyMap<Skill, ReadonlyMap<ID, Modifier>>;
+type UnitModifierMap = ReadonlyMap<ID, Modifier>;
+type UnitSkillMap = ReadonlyMap<Skill, UnitModifierMap>;
 type MovementSkillMap = ReadonlyMap<Skill, ReadonlyMap<MovementType, Modifier>>;
 
 type TileMovementSkillMap = ReadonlyMap<
@@ -154,7 +158,7 @@ const attackStatusEffects: SkillMap = new Map([
   [Skill.AttackAndDefenseDecreaseEasy, -0.1],
 ]);
 
-const attackUnitStatusEffects: UnitSkillMap = new Map([
+const attackUnitStatusEffects = new Map<Skill, UnitModifierMap>([
   [
     Skill.ArtilleryRangeIncrease,
     new Map([
@@ -163,6 +167,7 @@ const attackUnitStatusEffects: UnitSkillMap = new Map([
       [UnitID.Cannon, 0.1],
     ]),
   ],
+  [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.2]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -864,6 +869,15 @@ const getSkillActiveUnitTypes = (
     ) {
       list.push(vector);
     }
+  }
+
+  if (skill === Skill.Sabotage) {
+    for (const [vector, unit] of map.units) {
+      if (unit.id === UnitID.Saboteur && map.matchesPlayer(unit, player)) {
+        list.push(vector);
+      }
+    }
+    return list;
   }
 
   if (skill === Skill.BuyUnitCommander) {

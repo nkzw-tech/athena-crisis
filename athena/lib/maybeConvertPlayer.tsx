@@ -1,5 +1,4 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import { Ability } from '../info/Unit.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -12,7 +11,7 @@ export default function maybeConvertPlayer(
   attackingUnit: Unit | null | undefined,
   state: 'recover' | 'complete',
 ) {
-  if (!attackingUnit?.info.hasAbility(Ability.Convert)) {
+  if (!attackingUnit?.canConvert(map.getPlayer(attackingUnit.player))) {
     return unit;
   }
 

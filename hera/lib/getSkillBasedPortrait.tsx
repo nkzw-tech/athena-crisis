@@ -3,12 +3,15 @@ import {
   AcidBomber,
   AIU,
   Alien,
+  Battleship,
   BazookaBear,
   Brute,
   Cannon,
   Commander,
   Dinosaur,
   Octopus,
+  Saboteur,
+  Sniper,
   SuperAPU,
   SuperTank,
   Zombie,
@@ -41,6 +44,12 @@ export default function getSkillBasedPortrait(skill: Skill) {
       return SuperAPU;
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
       return Zombie;
+    case Skill.Sabotage:
+      return Saboteur;
+    case Skill.UnitAbilitySniperImmediateAction:
+      return Sniper;
+    case Skill.UnitBattleShipMoveAndAct:
+      return Battleship;
 
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.ArtilleryRangeIncrease:
@@ -55,8 +64,6 @@ export default function getSkillBasedPortrait(skill: Skill) {
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
-    case Skill.UnitAbilitySniperImmediateAction:
-    case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
       return null;

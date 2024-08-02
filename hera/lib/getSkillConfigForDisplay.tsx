@@ -268,6 +268,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Dinosaur,
         name: fbt('Dino Rampage', 'Skill name'),
       };
+    case Skill.Sabotage:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'purple',
+        icon: Repeat,
+        name: fbt('Sneaky Sabotage', 'Skill name'),
+      };
     default: {
       skill satisfies never;
       throw new UnknownTypeError('getSkillConfig', skill);
