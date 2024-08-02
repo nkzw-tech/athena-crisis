@@ -87,6 +87,7 @@ export default function BiomeSelector({
               <InlineTileList
                 biome={biome}
                 onSelect={isLocked ? undefined : () => update(biome)}
+                scrollIntoView={false}
                 selected={currentBiome === biome ? 0 : undefined}
                 tiles={[Plain]}
               />

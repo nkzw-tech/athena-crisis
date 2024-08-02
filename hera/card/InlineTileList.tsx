@@ -70,6 +70,7 @@ export default function InlineTileList({
   lazyDecorators,
   onLongPress,
   onSelect,
+  scrollIntoView = true,
   selected,
   size,
   tiles,
@@ -84,6 +85,7 @@ export default function InlineTileList({
   lazyDecorators?: boolean;
   onLongPress?: SelectTileFn;
   onSelect?: SelectTileFn;
+  scrollIntoView?: boolean;
   selected?: number;
   size?: 'medium' | 'tall';
   tiles: ReadonlyArray<TileInfo>;
@@ -108,6 +110,7 @@ export default function InlineTileList({
           lazyDecorators={lazyDecorators}
           onLongPress={onLongPress}
           onSelect={onSelect}
+          scrollIntoView={scrollIntoView}
           selected={selected}
           setShowCursor={setShowCursor}
           showCursor={showCursor}
@@ -134,6 +137,7 @@ const InlineTile = ({
   lazyDecorators,
   onLongPress,
   onSelect,
+  scrollIntoView,
   selected,
   setShowCursor,
   showCursor,
@@ -153,6 +157,7 @@ const InlineTile = ({
   lazyDecorators?: boolean;
   onLongPress?: SelectTileFn;
   onSelect?: SelectTileFn;
+  scrollIntoView: boolean;
   selected?: number;
   setShowCursor: (index: number) => void;
   showCursor: number | undefined;
@@ -206,7 +211,7 @@ const InlineTile = ({
     );
   }, [biome, building, decorator, tileField, unit]);
 
-  useScrollIntoView(ref, isSelected);
+  useScrollIntoView(ref, scrollIntoView ? isSelected : false);
 
   const props = usePress({
     onLongPress: useCallback(
