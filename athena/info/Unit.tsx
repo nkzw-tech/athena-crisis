@@ -3686,7 +3686,7 @@ export const Cannon = new UnitInfo(
 );
 
 export const SuperAPU = new UnitInfo(
-  52,
+  UnitID.SuperAPU,
   'Super APU',
   'Super Blaine',
   'male',

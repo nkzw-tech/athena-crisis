@@ -15,6 +15,7 @@ export default {
   Brute: 49,
   Commander: 50,
   Cannon: 51,
+  SuperAPU: 52,
   BazookaBear: 53,
   AIU: 54,
 } as const;

@@ -38,11 +38,12 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
     case Skill.AttackIncreaseMinor:
     case Skill.BuyUnitAcidBomber:
-    case Skill.BuyUnitDinosaur:
     case Skill.BuyUnitAIU:
     case Skill.BuyUnitBrute:
     case Skill.BuyUnitCannon:
     case Skill.BuyUnitCommander:
+    case Skill.BuyUnitDinosaur:
+    case Skill.BuyUnitSuperAPU:
     case Skill.BuyUnitSuperTank:
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
     case Skill.CounterAttackPower:
@@ -53,7 +54,6 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
     case Skill.UnitAbilitySniperImmediateAction:
-    case Skill.UnitAPUAttackIncreaseMajorPower:
     case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:

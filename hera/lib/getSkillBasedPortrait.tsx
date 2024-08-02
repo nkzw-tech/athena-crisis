@@ -9,6 +9,7 @@ import {
   Commander,
   Dinosaur,
   Octopus,
+  SuperAPU,
   SuperTank,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
@@ -36,6 +37,8 @@ export default function getSkillBasedPortrait(skill: Skill) {
       return Commander;
     case Skill.BuyUnitSuperTank:
       return SuperTank;
+    case Skill.BuyUnitSuperAPU:
+      return SuperAPU;
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
       return Zombie;
 
@@ -53,7 +56,6 @@ export default function getSkillBasedPortrait(skill: Skill) {
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
     case Skill.UnitAbilitySniperImmediateAction:
-    case Skill.UnitAPUAttackIncreaseMajorPower:
     case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:

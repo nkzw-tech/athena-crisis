@@ -152,7 +152,7 @@ test('collects statistics on attacks', async () => {
 test('one shots work through counter attacks', async () => {
   const fromA = vec(1, 1);
   const toA = vec(1, 2);
-  const skills = new Set([Skill.UnitAPUAttackIncreaseMajorPower]);
+  const skills = new Set([Skill.BuyUnitSuperAPU]);
   const initialMap = map.copy({
     teams: updatePlayer(
       map.teams,

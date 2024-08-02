@@ -108,11 +108,11 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Ship,
         name: fbt('Hit Hard, Hit Fast, Hit Often', 'Skill name'),
       };
-    case Skill.UnitAPUAttackIncreaseMajorPower:
+    case Skill.BuyUnitSuperAPU:
       return {
-        alpha: 0.3,
+        alpha: 0.5,
         borderStyle: 'up2x',
-        colors: ['red', 'purple'],
+        colors: ['orange', 'purple'],
         icon: Crosshair,
         name: fbt('Super APU', 'Skill name'),
       };

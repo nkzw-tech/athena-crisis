@@ -21,7 +21,7 @@ export enum Skill {
   MovementIncreaseGroundUnitDefenseDecrease = 7,
   UnitBattleShipMoveAndAct = 8,
   BuyUnitBrute = 9,
-  UnitAPUAttackIncreaseMajorPower = 10,
+  BuyUnitSuperAPU = 10,
   BuyUnitZombieDefenseDecreaseMajor = 11,
   BuyUnitBazookaBear = 12,
   AttackAndDefenseIncreaseHard = 13,
@@ -50,7 +50,6 @@ export const Skills = new Set<Skill>([
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
   Skill.MovementIncreaseGroundUnitDefenseDecrease,
   Skill.HealVehiclesAttackDecrease,
-  Skill.UnitAPUAttackIncreaseMajorPower,
   Skill.ArtilleryRangeIncrease,
   Skill.HealInfantryMedicPower,
   Skill.CounterAttackPower,
@@ -60,6 +59,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.RecoverAirUnits,
   Skill.BuyUnitBrute,
+  Skill.BuyUnitSuperAPU,
   Skill.BuyUnitCommander,
   Skill.BuyUnitCannon,
   Skill.BuyUnitSuperTank,
@@ -70,9 +70,9 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitAlien,
   Skill.BuyUnitDinosaur,
   Skill.BuyUnitAIU,
-  Skill.NoUnitRestrictions,
-  Skill.AttackAndDefenseIncreaseHard,
   Skill.AttackAndDefenseDecreaseEasy,
+  Skill.AttackAndDefenseIncreaseHard,
+  Skill.NoUnitRestrictions,
 ]);
 
 const skillConfig: Record<
@@ -91,7 +91,7 @@ const skillConfig: Record<
   [Skill.UnitAbilitySniperImmediateAction]: { charges: 3, cost: 2000 },
   [Skill.MovementIncreaseGroundUnitDefenseDecrease]: { charges: 2, cost: 2500 },
   [Skill.UnitBattleShipMoveAndAct]: { charges: 5, cost: 2000 },
-  [Skill.UnitAPUAttackIncreaseMajorPower]: { charges: 3, cost: 3000 },
+  [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000 },
   [Skill.BuyUnitZombieDefenseDecreaseMajor]: { cost: 1500 },
   [Skill.BuyUnitBazookaBear]: { charges: 3, cost: 2000 },
   [Skill.AttackAndDefenseIncreaseHard]: { cost: null },
@@ -188,10 +188,7 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
 const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
   [Skill.UnitBattleShipMoveAndAct, new Map([[MovementTypes.Ship, 0.5]])],
   [Skill.BuyUnitBrute, new Map([[MovementTypes.Soldier, 0.5]])],
-  [
-    Skill.UnitAPUAttackIncreaseMajorPower,
-    new Map([[MovementTypes.HeavySoldier, 3]]),
-  ],
+  [Skill.BuyUnitSuperAPU, new Map([[MovementTypes.HeavySoldier, 3]])],
   [
     Skill.HealInfantryMedicPower,
     new Map([
@@ -304,10 +301,7 @@ const skillMovementTypeRadiusEffects = new Map<
     MovementTypes.Tread,
     new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
   ],
-  [
-    MovementTypes.HeavySoldier,
-    new Map([[Skill.UnitAPUAttackIncreaseMajorPower, 1]]),
-  ],
+  [MovementTypes.HeavySoldier, new Map([[Skill.BuyUnitSuperAPU, 1]])],
 ]);
 
 const skillMovementTypeRadiusPowerEffects = new Map<
@@ -336,6 +330,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.SuperTank, new Map([[Skill.BuyUnitSuperTank, 900]])],
   [UnitID.AcidBomber, new Map([[Skill.BuyUnitAcidBomber, 750]])],
   [UnitID.Dinosaur, new Map([[Skill.BuyUnitDinosaur, 600]])],
+  [UnitID.SuperAPU, new Map([[Skill.BuyUnitSuperAPU, 650]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
