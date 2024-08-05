@@ -11,6 +11,7 @@ import {
 import {
   DynamicPlayerIDs,
   encodeDynamicPlayerID,
+  isDynamicPlayerID,
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
@@ -145,7 +146,7 @@ export default memo(function ActionCard({
     const portrait = unit?.sprite.portrait;
     const player = hasCurrentPlayer
       ? resolveDynamicPlayerID(map, action.player, currentPlayer)
-      : 0;
+      : action.player;
     const message =
       formatText && factionNames && map && userDisplayName
         ? formatCharacterText(
@@ -156,7 +157,7 @@ export default memo(function ActionCard({
               : 'name',
             map,
             userDisplayName,
-            player,
+            isDynamicPlayerID(player) ? 0 : player,
             factionNames,
           )
         : action.message;
