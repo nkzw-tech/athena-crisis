@@ -95,7 +95,7 @@ const skillConfig: Record<
   [Skill.UnitBattleShipMoveAndAct]: { charges: 5, cost: 2000 },
   [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000 },
   [Skill.BuyUnitZombieDefenseDecreaseMajor]: { cost: 1500 },
-  [Skill.BuyUnitBazookaBear]: { charges: 3, cost: 2000 },
+  [Skill.BuyUnitBazookaBear]: { charges: 6, cost: 2000 },
   [Skill.AttackAndDefenseIncreaseHard]: { cost: null },
   [Skill.HealVehiclesAttackDecrease]: { charges: 3, cost: 1000 },
   [Skill.ArtilleryRangeIncrease]: { charges: 3, cost: 1500 },
