@@ -550,7 +550,7 @@ export const RepairShop = new BuildingInfo(
 export const Medbay = new BuildingInfo(
   18,
   'Medbay',
-  `Medays automatically heal and resupply infantry units at the beginning of each turn.`,
+  `Medbays automatically heal and resupply infantry units at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     canBeCreated: false,
