@@ -119,7 +119,8 @@ const AttackRadiusButton = ({
     }
   }, [behavior?.type, fields, playerCanEndTurn, update]);
 
-  useInput('tertiary', show);
+  useInput('gamepad:tertiary', show);
+  useInput('keyboard:tertiary', show);
 
   return (
     <MenuButton className={cx(actionButtonStyle, attackRadiusButtonStyle)}>

@@ -381,16 +381,15 @@ export default class Menu {
         attackable,
       );
 
-    useInput(
-      'tertiary',
-      (event) => {
-        if (availableActions) {
-          event.preventDefault();
-          completeAction(actions, state);
-        }
-      },
-      'menu',
-    );
+    const complete = (event: CustomEvent) => {
+      if (availableActions) {
+        event.preventDefault();
+        completeAction(actions, state);
+      }
+    };
+
+    useInput('tertiary', complete, 'menu');
+    useInput('gamepad:tertiary', complete, 'menu');
 
     if (availableActions) {
       const offset =

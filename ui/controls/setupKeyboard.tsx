@@ -130,6 +130,8 @@ const keydownListener = (event: KeyboardEvent) => {
       Input.fire('info');
     } else if (key === 'KeyE') {
       Input.fire('detail');
+    } else if (key === 'KeyA') {
+      Input.fire('keyboard:tertiary');
     }
   }
 };

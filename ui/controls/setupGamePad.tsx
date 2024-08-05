@@ -151,7 +151,7 @@ export default function setupGamePad() {
     }
 
     if (singlePress(Y)) {
-      Input.fireWithPointerLock('tertiary');
+      Input.fireWithPointerLock('gamepad:tertiary');
     }
 
     const l1Pressed = pressed(L1);
