@@ -60,10 +60,12 @@ export default function addEndTurnAnimations(
       onComplete: (state) => {
         requestFrame(async () => {
           const { map, vision } = state;
-          const newMap = applyBeginTurnStatusEffects(
-            subtractFuel(map, nextPlayer),
-            nextPlayer,
-          );
+          const newMap = isFake
+            ? map
+            : applyBeginTurnStatusEffects(
+                subtractFuel(map, nextPlayer),
+                nextPlayer,
+              );
           const [unitsToHeal, unitsToRefill] = isFake
             ? [emptyUnitMap, emptyUnitMap]
             : partitionUnitsToHeal(
@@ -72,12 +74,14 @@ export default function addEndTurnAnimations(
                 ),
               );
 
-          const poisonedUnits = map.units.filter(
-            (unit, vector) =>
-              !unitsToHeal.has(vector) &&
-              isPoisoned(map, nextPlayer, unit) &&
-              vision.isVisible(map, vector),
-          );
+          const poisonedUnits = isFake
+            ? emptyUnitMap
+            : map.units.filter(
+                (unit, vector) =>
+                  !unitsToHeal.has(vector) &&
+                  isPoisoned(map, nextPlayer, unit) &&
+                  vision.isVisible(map, vector),
+              );
           const extraPositions = await maybeExtraPositions;
           const unitsToSupply = new Map([
             ...(isFake
