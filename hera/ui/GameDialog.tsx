@@ -36,7 +36,14 @@ import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbt';
-import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
+import {
+  Fragment,
+  memo,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import BuildingCard from '../card/BuildingCard.tsx';
 import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
@@ -262,6 +269,17 @@ const MapPerformance = ({
     ? evaluatePlayerPerformance(map, currentPlayer.id)
     : null;
 
+  const hasPowerChallenge = performance.power != null;
+  const hasAchievedPowerChallenge =
+    performance.power != null &&
+    evaluation != null &&
+    evaluation.power === true;
+  const powerNeed =
+    currentPlayer && hasPowerChallenge && !hasAchievedPowerChallenge
+      ? Math.ceil(currentPlayer.stats.lostUnits * performance.power) -
+        currentPlayer.stats.destroyedUnits
+      : null;
+
   return (
     <Stack gap={16} vertical>
       <h2>
@@ -300,7 +318,7 @@ const MapPerformance = ({
             </div>
           </>
         )}
-        {performance.power != null && (
+        {hasPowerChallenge && (
           <>
             <Stack alignCenter gap start>
               <Icon icon={Zap} />
@@ -310,7 +328,7 @@ const MapPerformance = ({
             <div
               className={cx(
                 alignCenter,
-                evaluation?.power ? achievedStyle : failedStyle,
+                hasAchievedPowerChallenge ? achievedStyle : failedStyle,
               )}
             >
               {currentPlayer ? getPowerValue(currentPlayer.stats) : null}
@@ -340,6 +358,31 @@ const MapPerformance = ({
           </>
         )}
       </div>
+      {powerNeed != null && powerNeed > 0 ? (
+        <p>
+          <fbt desc="Explanation for the power star">
+            Defeat
+            <fbt:plural
+              count={powerNeed}
+              many="more units"
+              name="number of units"
+              showCount="ifMany"
+            >
+              one more unit
+            </fbt:plural>{' '}
+            without losing a unit to secure the{' '}
+            <fbt:param name="starName">
+              {
+                <Fragment>
+                  <Icon className={zapStyle} icon={Zap} />
+                  <span>{getTranslatedPerformanceTypeName('power')}</span>
+                </Fragment>
+              }
+            </fbt:param>{' '}
+            star.
+          </fbt>
+        </p>
+      ) : null}
     </Stack>
   );
 };
@@ -661,4 +704,8 @@ const achievedStyle = css`
 
 const failedStyle = css`
   color: ${getColor('red')};
+`;
+
+const zapStyle = css`
+  margin: -2px 4px 2px 0;
 `;
