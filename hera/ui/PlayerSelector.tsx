@@ -322,11 +322,11 @@ const PlayerItem = ({
               skillSlots={skillSlots}
             />
           ) : (
-            <div className={cx(nameStyle, skillStyle)}>
+            <Stack className={cx(nameStyle, skillStyle)} gap={16} nowrap>
               {[...player.skills].map((skill) => (
                 <SkillIcon key={skill} skill={skill} />
               ))}
-            </div>
+            </Stack>
           )
         ) : null}
         {aiRegistry && (
