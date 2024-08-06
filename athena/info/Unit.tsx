@@ -1204,7 +1204,7 @@ export const Weapons = {
       [EntityType.Artillery, 65],
       [EntityType.Building, 70],
       [EntityType.Ground, 55],
-      [EntityType.LowAltitude, 145],
+      [EntityType.LowAltitude, 155],
       [EntityType.Infantry, 50],
       [EntityType.Structure, 20],
       [EntityType.Rail, 60],
@@ -2105,7 +2105,7 @@ export const AntiAir = new UnitInfo(
   'female',
   `Anti Air tanks are the only ground units that are highly effective against all types of air units. They need to be heavily protected by surrounding units due to their weak defense.`,
   `{name} is one of the smartest strategists in the defense force. She is known for her quick thinking and her ability to adapt to any situation. Despite her young age, {name} is constantly sought out for her wisdom about battlefield tactics. She quickly comes up with multiple strategies and lays out the tradeoffs in great detail. Some have said that {name} has a cosmic ability to see many possibilities play out in her mind – where might such a talent come from?`,
-  15,
+  30,
   EntityType.Ground,
   MovementTypes.Tread,
   {
@@ -2521,13 +2521,13 @@ export const SeaPatrol = new UnitInfo(
       LightAirGun.withDamage(
         new Map([
           [EntityType.AirInfantry, 100],
-          [EntityType.Amphibious, 60],
+          [EntityType.Amphibious, 70],
           [EntityType.Artillery, 55],
           [EntityType.Ground, 55],
           [EntityType.LowAltitude, 100],
           [EntityType.Infantry, 40],
           [EntityType.Rail, 55],
-          [EntityType.Ship, 75],
+          [EntityType.Ship, 85],
         ]),
       ).withSupply(5),
     ],
