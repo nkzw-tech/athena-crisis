@@ -88,6 +88,14 @@ const style = {
     ]),
     tileConversions,
     tileRestrictions,
+    waterSwap: new Map<HEX, HEX>([
+      ['#13a6e2', '#0ec4e7'],
+      ['#1ab7eb', '#15d6f0'],
+      ['#62d4f1', '#5ee9f4'],
+      ['#85e2f5', '#89f4f7'],
+      ['#8ce5f5', '#89f4f7'],
+      ['#d8fffd', '#d8fff8'],
+    ]),
   },
   [Biome.Snow]: {
     palette: new Map<HEX, HEX>([
@@ -103,6 +111,14 @@ const style = {
       Weeds,
       ...SwampBiome,
       ...SpaceShipBiome,
+    ]),
+    waterSwap: new Map<HEX, HEX>([
+      ['#13a6e2', '#088bed'],
+      ['#1ab7eb', '#0f9ef6'],
+      ['#62d4f1', '#5ac2f8'],
+      ['#85e2f5', '#86d8fa'],
+      ['#8ce5f5', '#86d8fa'],
+      ['#d8fffd', '#d8fcff'],
     ]),
   },
   [Biome.Swamp]: {
