@@ -1276,7 +1276,7 @@ export const Space = new TileInfo(
       [MovementTypes.Amphibious, -1],
       [MovementTypes.Soldier, -1],
       [MovementTypes.HeavySoldier, -1],
-      [MovementTypes.LowAltitude, -1],
+      [MovementTypes.LowAltitude, 1],
       [MovementTypes.Rail, -1],
       [MovementTypes.Ship, -1],
       [MovementTypes.Tires, -1],
