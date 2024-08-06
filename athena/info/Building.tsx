@@ -554,7 +554,6 @@ export const Medbay = new BuildingInfo(
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     canBeCreated: false,
-    cost: Number.POSITIVE_INFINITY,
     defense: 50,
     editorPlaceOn: new Set([Plain]),
     healTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),

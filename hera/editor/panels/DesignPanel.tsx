@@ -6,6 +6,7 @@ import {
   getAllTiles,
   getTileInfo,
   Plain,
+  Teleporter,
   TileInfo,
 } from '@deities/athena/info/Tile.tsx';
 import {
@@ -15,6 +16,7 @@ import {
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
@@ -82,11 +84,14 @@ export default function DesignPanel({
   const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
   const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
   const { alert } = useAlert();
-  const tiles = useMemo(
-    () =>
-      getAllTiles().filter((tile) => !biomeStyle.tileRestrictions?.has(tile)),
-    [biomeStyle.tileRestrictions],
-  );
+  const tiles = useMemo(() => {
+    const tiles = getAllTiles().filter(
+      (tile) => !biomeStyle.tileRestrictions?.has(tile),
+    );
+    return biome === Biome.Spaceship && hasContentRestrictions
+      ? tiles.filter((tile) => tile !== Teleporter)
+      : tiles;
+  }, [biome, biomeStyle.tileRestrictions, hasContentRestrictions]);
   const skills = useMemo(() => new Set(user.skills), [user.skills]);
   const buildings = useMemo(
     () =>
