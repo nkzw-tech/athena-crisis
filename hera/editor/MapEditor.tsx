@@ -6,6 +6,7 @@ import {
   encodeEffects,
   Scenario,
 } from '@deities/apollo/Effects.tsx';
+import resizeMap, { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import { Route } from '@deities/apollo/Routes.tsx';
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import {
@@ -18,7 +19,6 @@ import { Bush } from '@deities/athena/info/Decorator.tsx';
 import { getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
-import resizeMap, { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import startGame from '@deities/athena/lib/startGame.tsx';
 import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
@@ -30,6 +30,7 @@ import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
@@ -420,7 +421,11 @@ export default function MapEditor({
     (map: MapData, retainMap = false, actAsEveryPlayer = false) => {
       const playTest = !isPlayTesting;
       const [currentMap, error] = playTest
-        ? validateMap(map, toTeamArray(dropInactivePlayers(map).teams))
+        ? validateMap(
+            map,
+            AIRegistry,
+            toTeamArray(dropInactivePlayers(map).teams),
+          )
         : [map];
       if (!currentMap) {
         setSaveState({ message: getMapValidationErrorText(error) });
@@ -487,6 +492,7 @@ export default function MapEditor({
 
       const [map, error] = validateMap(
         currentMap,
+        AIRegistry,
         toTeamArray(dropInactivePlayers(currentMap).teams),
       );
       if (!map || error) {

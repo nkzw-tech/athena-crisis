@@ -1,4 +1,4 @@
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import {
   MaxSize,
   MinSize,

@@ -1,10 +1,10 @@
 import { BuildableTiles } from '@deities/athena/info/Building.tsx';
+import { PotentialUnitAbilities } from '@deities/athena/lib/getPossibleUnitAbilities.tsx';
+import needsSupply from '@deities/athena/lib/needsSupply.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria, objectiveHasVectors } from '@deities/athena/Objectives.tsx';
-import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
-import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
 
 export default function getInterestingVectorsByAbilities(

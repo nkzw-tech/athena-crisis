@@ -77,6 +77,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      eslint-plugin-workspaces:
+        specifier: ^0.10.1
+        version: 0.10.1
       nodemon:
         specifier: ^3.1.4
         version: 3.1.4
@@ -4742,6 +4745,9 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
 
+  eslint-plugin-workspaces@0.10.1:
+    resolution: {integrity: sha512-17p+ljQq2oYtN+cS6F52wRCV7xVh5fHiBOhQaYkSShRwRdiTvEkD6gvGysZjx08ckr9cozIFqI9SxdgTWDV9+g==}
+
   eslint-rule-composer@0.3.0:
     resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
     engines: {node: '>=4.0.0'}
@@ -4969,6 +4975,9 @@ packages:
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
+
+  find-workspaces@0.3.1:
+    resolution: {integrity: sha512-UDkGILGJSA1LN5Aa7McxCid4sqW3/e+UYsVwyxki3dDT0F8+ym0rAfnCkEfkL0rO7M+8/mvkim4t/s3IPHmg+w==}
 
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
@@ -12802,6 +12811,10 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.0.1(@typescript-eslint/parser@8.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
 
+  eslint-plugin-workspaces@0.10.1:
+    dependencies:
+      find-workspaces: 0.3.1
+
   eslint-rule-composer@0.3.0: {}
 
   eslint-scope@5.1.1:
@@ -13157,6 +13170,12 @@ snapshots:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
+
+  find-workspaces@0.3.1:
+    dependencies:
+      fast-glob: 3.3.2
+      pkg-types: 1.1.3
+      yaml: 2.5.0
 
   flat-cache@3.2.0:
     dependencies:

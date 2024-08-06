@@ -1,6 +1,5 @@
 import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import AIRegistry from '../../dionysus/AIRegistry.tsx';
 import {
   Behavior,
   getBuildingInfo,
@@ -215,6 +214,7 @@ export const validateUnit = (
 
 export default function validateMap(
   map: MapData,
+  AIRegistry: { has: (ai: number) => boolean },
   newTeams?: TeamsList,
   hasContentRestrictions?: boolean,
   skills?: ReadonlySet<Skill>,

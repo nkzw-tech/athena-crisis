@@ -1,6 +1,4 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import { PotentialUnitAbilities } from '../../dionysus/lib/getPossibleUnitAbilities.tsx';
-import needsSupply from '../../dionysus/lib/needsSupply.tsx';
 import { BuildableTiles, MinFunds } from '../info/Building.tsx';
 import { Ability, UnitInfo } from '../info/Unit.tsx';
 import Building from '../map/Building.tsx';
@@ -12,6 +10,8 @@ import MapData from '../MapData.tsx';
 import calculateFunds, {
   calculateTotalPossibleFunds,
 } from './calculateFunds.tsx';
+import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
+import needsSupply from './needsSupply.tsx';
 
 export default function determineUnitsToCreate(
   map: MapData,

@@ -7,6 +7,7 @@ import validateMap from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { expect, test } from 'vitest';
 import { printGameState } from '../printGameState.tsx';
@@ -21,7 +22,7 @@ test('creates valid maps', async () => {
         ),
       ),
     );
-    const validatedMap = validateMap(map);
+    const validatedMap = validateMap(map, AIRegistry);
     if (!validatedMap) {
       printGameState(
         `Invalid Map`,
@@ -29,6 +30,6 @@ test('creates valid maps', async () => {
       );
       console.log(JSON.stringify(map.toJSON(), null, 2));
     }
-    expect(validateMap(map)).not.toBeFalsy();
+    expect(validateMap(map, AIRegistry)).not.toBeFalsy();
   }
 });

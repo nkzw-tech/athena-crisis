@@ -1,5 +1,5 @@
+import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
 import {
   DoubleSize,
   MaxSize,

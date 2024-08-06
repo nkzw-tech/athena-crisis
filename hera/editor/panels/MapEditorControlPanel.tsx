@@ -1,5 +1,5 @@
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
-import { ResizeOrigin } from '@deities/athena/lib/resizeMap.tsx';
+import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';

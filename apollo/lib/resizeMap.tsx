@@ -1,19 +1,19 @@
+import { generateRandomMap } from '@deities/athena/generator/MapGenerator.tsx';
+import { Decorator } from '@deities/athena/info/Decorator.tsx';
+import { getTileInfo, TileTypes } from '@deities/athena/info/Tile.tsx';
+import { verifyMap } from '@deities/athena/lib/verifyTiles.tsx';
+import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
+import Entity from '@deities/athena/map/Entity.tsx';
+import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
+import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
+import vec from '@deities/athena/map/vec.tsx';
+import Vector from '@deities/athena/map/Vector.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
+import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Effects } from '../../apollo/Effects.tsx';
-import { generateRandomMap } from '../generator/MapGenerator.tsx';
-import { Decorator } from '../info/Decorator.tsx';
-import { getTileInfo, TileTypes } from '../info/Tile.tsx';
-import { DecoratorsPerSide } from '../map/Configuration.tsx';
-import Entity from '../map/Entity.tsx';
-import { PlainEntitiesList } from '../map/PlainMap.tsx';
-import { decodeDecorators } from '../map/Serialization.tsx';
-import SpriteVector from '../map/SpriteVector.tsx';
-import vec from '../map/vec.tsx';
-import Vector from '../map/Vector.tsx';
-import MapData, { SizeVector } from '../MapData.tsx';
-import { objectiveHasVectors } from '../Objectives.tsx';
-import { verifyMap } from './verifyTiles.tsx';
-import withModifiers from './withModifiers.tsx';
+import { Effects } from '../Effects.tsx';
 
 export type ResizeOrigin = 'top' | 'right' | 'bottom' | 'left';
 

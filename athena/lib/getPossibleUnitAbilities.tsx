@@ -1,6 +1,6 @@
-import { Ability, UnitInfo } from '@deities/athena/info/Unit.tsx';
-import Building from '@deities/athena/map/Building.tsx';
-import Player from '@deities/athena/map/Player.tsx';
+import { Ability, UnitInfo } from '../info/Unit.tsx';
+import Building from '../map/Building.tsx';
+import Player from '../map/Player.tsx';
 
 export type PotentialUnitAbilities = Readonly<{
   canCreateBuildUnits: boolean;

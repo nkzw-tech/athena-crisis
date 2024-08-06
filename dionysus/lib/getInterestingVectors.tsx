@@ -1,13 +1,13 @@
 import { BuildableTiles } from '@deities/athena/info/Building.tsx';
 import { Beach, isSeaTile } from '@deities/athena/info/Tile.tsx';
 import { Ability } from '@deities/athena/info/Unit.tsx';
+import needsSupply from '@deities/athena/lib/needsSupply.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { EntityType, getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import getObjectiveVectors from './getObjectiveVectors.tsx';
-import needsSupply from './needsSupply.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
 
 export default function getInterestingVectors(

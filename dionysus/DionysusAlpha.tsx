@@ -34,9 +34,13 @@ import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import canPlaceLightning from '@deities/athena/lib/canPlaceLightning.tsx';
 import determineUnitsToCreate from '@deities/athena/lib/determineUnitsToCreate.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
+import getPossibleUnitAbilities, {
+  getPossibleUnitAbilitiesForBuildings,
+} from '@deities/athena/lib/getPossibleUnitAbilities.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
+import needsSupply from '@deities/athena/lib/needsSupply.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
@@ -64,11 +68,7 @@ import getBuildingWeight from './lib/getBuildingWeight.tsx';
 import getInterestingVectors from './lib/getInterestingVectors.tsx';
 import getInterestingVectorsByAbilities from './lib/getInterestingVectorsByAbilities.tsx';
 import getPossibleAttacks from './lib/getPossibleAttacks.tsx';
-import getPossibleUnitAbilities, {
-  getPossibleUnitAbilitiesForBuildings,
-} from './lib/getPossibleUnitAbilities.tsx';
 import getUnitInfosWithMaxVision from './lib/getUnitInfosWithMaxVision.tsx';
-import needsSupply from './lib/needsSupply.tsx';
 import shouldActivatePower from './lib/shouldActivatePower.tsx';
 import shouldAttack from './lib/shouldAttack.tsx';
 import shouldCaptureBuilding from './lib/shouldCaptureBuilding.tsx';

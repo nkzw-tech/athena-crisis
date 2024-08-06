@@ -5,6 +5,7 @@ import startGame from '@deities/athena/lib/startGame.tsx';
 import updateActivePlayers from '@deities/athena/lib/updateActivePlayers.tsx';
 import validateMap from '@deities/athena/lib/validateMap.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
@@ -48,6 +49,7 @@ export default function EvaluationPanel({
   const currentMap = useMemo(() => {
     const [currentMap] = validateMap(
       state.map,
+      AIRegistry,
       toTeamArray(dropInactivePlayers(state.map).teams),
     );
 

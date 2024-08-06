@@ -7,7 +7,7 @@ import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
-import getActivatePowerMessage from '../hermes/messages/getActivatePowerMessage.tsx';
+import getActivatePowerMessage from '@deities/hermes/messages/getActivatePowerMessage.tsx';
 
 class AIInterruptException {
   public readonly name = 'AIInterruptException';

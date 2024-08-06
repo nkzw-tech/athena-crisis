@@ -46,6 +46,7 @@ module.exports = {
     },
     {
       files: [
+        '.eslintrc.cjs',
         'eslint-plugin/index.js',
         'i18n/Common.cjs',
         'infra/babelPlugins.tsx',
@@ -54,8 +55,14 @@ module.exports = {
         '@typescript-eslint/no-require-imports': 0,
       },
     },
+    {
+      files: ['**/__tests__/**/*.tsx'],
+      rules: {
+        'workspaces/no-relative-imports': 0,
+      },
+    },
   ],
-  plugins: ['@deities'],
+  plugins: ['@deities', 'workspaces'],
   rules: {
     '@typescript-eslint/array-type': [2, { default: 'generic' }],
     '@typescript-eslint/no-restricted-imports': [
@@ -116,5 +123,7 @@ module.exports = {
     ],
     'no-extra-parens': 0,
     'no-restricted-globals': [2, 'alert', 'confirm'],
+    'workspaces/no-absolute-imports': 2,
+    'workspaces/no-relative-imports': 2,
   },
 };
