@@ -16,7 +16,9 @@ import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx
 import getAttributeRange, {
   getAttributeRangeValue,
 } from '@deities/athena/lib/getAttributeRange.tsx';
+import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
+import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
@@ -487,10 +489,12 @@ const Weapon = memo(function WeaponAttack({
     () => new Set(map.getPlayers().flatMap(({ skills }) => [...skills])),
     [map],
   );
+  const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
   const availableUnits = mapUnitsWithContentRestriction(
     (unit) => unit.create(opponent),
     allSkills,
-  );
+  ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type));
   const isLeader = unit.isLeader();
   const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
   const damageRange = getAttributeRange(
@@ -561,12 +565,18 @@ const Weapon = memo(function WeaponAttack({
             );
 
             const buildings = [];
-            if (entities.has(EntityType.Building)) {
+            if (
+              entities.has(EntityType.Building) &&
+              !biomeBuildingRestrictions.has(House)
+            ) {
               const house = House.create(opponent);
               buildings.push(house);
               damage.push([getLikelyDamage(house, -1)]);
             }
-            if (entities.has(EntityType.Structure)) {
+            if (
+              entities.has(EntityType.Structure) &&
+              !biomeBuildingRestrictions.has(VerticalBarrier)
+            ) {
               const structure = VerticalBarrier.create(0);
               buildings.push(structure);
               damage.push([getLikelyDamage(structure, -1)]);

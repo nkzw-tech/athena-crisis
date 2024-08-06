@@ -10,6 +10,7 @@ import { mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import getAttributeRange, {
   getAttributeRangeValue,
 } from '@deities/athena/lib/getAttributeRange.tsx';
+import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
@@ -181,10 +182,11 @@ const TileMovement = memo(function TileMovement({
     return null;
   }
 
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
   const availableUnits = mapUnitsWithContentRestriction(
     (unit) => unit.create(player),
     allSkills,
-  );
+  ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type));
   const movementTypes = sortBy(
     [
       ...groupBy(Object.values(MovementTypes), (movementType) =>
