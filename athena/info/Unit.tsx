@@ -3491,7 +3491,7 @@ export const Alien = new UnitInfo(
 export const Zombie = new UnitInfo(
   UnitID.Zombie,
   'Zombie',
-  'Unknown',
+  'Gharf',
   'unknown',
   `Zombies are slow but extremely dangerous. A hit from a Zombie infects the opponent, converting them to the Zombie faction. A Zombie faction? Yes, that's right. They are a formidable faction, and they are coming for all of us.`,
   `We do not know where {name} comes from, what "it" is thinking, or even if "it" is capable of thought at all. What we do know is that {name}, along with other Zombies, is trying to convert us all, one by one, into their ranks. They want to eat our brains and are here to do it all very, very slowly.`,
