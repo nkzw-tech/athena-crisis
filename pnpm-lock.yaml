@@ -524,6 +524,9 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
+      '@deities/hephaestus':
+        specifier: workspace:*
+        version: link:../hephaestus
       '@deities/hera':
         specifier: workspace:*
         version: link:../hera
