@@ -3,6 +3,7 @@ import {
   HorizontalBarrier,
   HQ,
   Medbay,
+  SpawnPlatform,
   VerticalBarrier,
 } from '../info/Building.tsx';
 import { Biome } from '../map/Biome.tsx';
@@ -13,11 +14,12 @@ const spaceRestrictions = new Set(
       building !== HQ &&
       building !== VerticalBarrier &&
       building !== HorizontalBarrier &&
-      building !== Medbay,
+      building !== Medbay &&
+      building !== SpawnPlatform,
   ),
 );
 
-const defaultRestrictions = new Set([Medbay]);
+const defaultRestrictions = new Set([Medbay, SpawnPlatform]);
 
 export default function getBiomeBuildingRestrictions(biome: Biome) {
   if (biome === Biome.Spaceship) {

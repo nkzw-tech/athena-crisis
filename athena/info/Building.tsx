@@ -562,6 +562,25 @@ export const Medbay = new BuildingInfo(
   { name: 'Buildings', position: new SpriteVector(21, 0) },
 );
 
+export const SpawnPlatform = new BuildingInfo(
+  19,
+  'Spawn Platform',
+  `Spawn Platforms can be used to spawn infantry units.`,
+  {
+    canBeCreated: false,
+    defense: 20,
+    editorPlaceOn: new Set([Plain]),
+    restrictedUnits: SpecialUnits,
+    sort: 2,
+    unitTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+  },
+  {
+    name: 'Buildings',
+    position: new SpriteVector(13, 0),
+    size: 'medium',
+  },
+);
+
 // The order of buildings must not be changed.
 const Buildings = [
   HQ,
@@ -582,6 +601,7 @@ const Buildings = [
   OilRig,
   RepairShop,
   Medbay,
+  SpawnPlatform,
 ];
 
 export function getBuildingInfo(id: number): BuildingInfo | null {

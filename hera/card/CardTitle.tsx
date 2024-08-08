@@ -38,8 +38,6 @@ export function CardInfoHeading({
 }
 
 const h1Style = css`
-  word-break: break-all;
-
   ${Breakpoints.sm} {
     margin-right: ${TileSize * 5}px;
   }
