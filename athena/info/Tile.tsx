@@ -1,6 +1,6 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { Modifier } from '../lib/Modifier.tsx';
-import { Biome } from '../map/Biome.tsx';
+import { Biome, Biomes } from '../map/Biome.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import { isVector } from '../map/Vector.tsx';
 import { ID, TileMap } from '../MapData.tsx';
@@ -695,7 +695,14 @@ export const ConstructionSite = new TileInfo(
     noClip: true,
     position: sprite(0, 1),
   },
-  { decorator: new TileDecoratorInfo(sprite(0, 0)), isolated: true },
+  {
+    decorator: new TileDecoratorInfo(
+      sprite(0, 0),
+      null,
+      new Set(Biomes.filter((biome) => biome !== Biome.Spaceship)),
+    ),
+    isolated: true,
+  },
 );
 
 export const Reef = new TileInfo(

@@ -3,6 +3,7 @@ import {
   Beach,
   Box,
   Bridge,
+  ConstructionSite,
   Forest,
   Forest2,
   Forest3,
@@ -46,6 +47,7 @@ const SpaceShipTileRestrictions = new Set([
   Lightning,
 ]);
 SpaceShipTileRestrictions.delete(Plain);
+SpaceShipTileRestrictions.delete(ConstructionSite);
 for (const info of SpaceShipBiome) {
   SpaceShipTileRestrictions.delete(info);
 }

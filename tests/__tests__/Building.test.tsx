@@ -72,6 +72,16 @@ test('ensures the configuration for buildings and the units they can create is c
         "Saboteur",
         "Sniper",
       ],
+      "Spawn Platform" => [
+        "Flamethrower",
+        "Infantry",
+        "Jetpack",
+        "Medic",
+        "Pioneer",
+        "Rocket Launcher",
+        "Saboteur",
+        "Sniper",
+      ],
       "Factory" => [
         "APU",
         "Anti Air",
