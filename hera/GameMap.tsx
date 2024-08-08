@@ -722,6 +722,9 @@ export default class GameMap extends Component<Props, State> {
     isEscape: boolean,
   ) => {
     if (this.state.behavior?.type === 'null') {
+      if (this.state.gameInfoState) {
+        this._update(this._resetGameInfoState());
+      }
       return;
     }
 
