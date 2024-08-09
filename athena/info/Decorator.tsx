@@ -346,7 +346,7 @@ const Sandbag = new DecoratorInfo(
   'Sandbag',
   DecoratorGroup.Trench,
   sprite(18, 0),
-  TrenchTileGroup,
+  PlainTileGroup,
 );
 
 const TrenchGate = new DecoratorInfo(
