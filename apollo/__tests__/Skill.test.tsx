@@ -398,29 +398,33 @@ test('status effects from skills may lower unit costs', async () => {
   );
 });
 
-test('snipers can attack without unfolding', async () => {
+test('sniper leader units can attack without unfolding', async () => {
   const player = map.getPlayer(1);
   const playerWithSkill = player.copy({
     skills: new Set([Skill.UnitAbilitySniperImmediateAction]),
   });
 
-  const unit = Sniper.create(1);
-  expect(unit.canAttack(player)).toBeFalsy();
-  expect(unit.unfold().canAttack(player)).toBeTruthy();
+  const unitA = Sniper.create(1, { name: -1 });
+  const unitB = Sniper.create(1);
+  expect(unitA.canAttack(player)).toBeFalsy();
+  expect(unitA.unfold().canAttack(player)).toBeTruthy();
 
-  expect(unit.canAttack(playerWithSkill)).toBeTruthy();
-  expect(unit.unfold().canAttack(playerWithSkill)).toBeTruthy();
+  expect(unitA.canAttack(playerWithSkill)).toBeTruthy();
+  expect(unitA.unfold().canAttack(playerWithSkill)).toBeTruthy();
+  expect(unitB.canAttack(playerWithSkill)).toBeFalsy();
 });
 
-test('snipers can capture with a skill', async () => {
+test('sniper leader units can capture with a skill', async () => {
   const player = map.getPlayer(1);
   const playerWithSkill = player.copy({
     skills: new Set([Skill.UnitAbilitySniperImmediateAction]),
   });
 
-  const unit = Sniper.create(1);
-  expect(unit.canCapture(player)).toBeFalsy();
-  expect(unit.canCapture(playerWithSkill)).toBeTruthy();
+  const unitA = Sniper.create(1, { name: -1 });
+  const unitB = Sniper.create(1);
+  expect(unitA.canCapture(player)).toBeFalsy();
+  expect(unitA.canCapture(playerWithSkill)).toBeTruthy();
+  expect(unitB.canCapture(playerWithSkill)).toBeFalsy();
 });
 
 test('skills can extend the range of units', async () => {

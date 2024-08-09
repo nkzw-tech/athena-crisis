@@ -454,6 +454,7 @@ export default class Unit extends Entity {
     return (
       this.info.hasAbility(Ability.Capture) ||
       (this.info === Sniper &&
+        this.isLeader() &&
         !this.isUnfolded() &&
         player.skills.has(Skill.UnitAbilitySniperImmediateAction))
     );
@@ -465,6 +466,7 @@ export default class Unit extends Entity {
       (!this.info.hasAbility(Ability.Unfold) ||
         this.isUnfolded() ||
         (this.info === Sniper &&
+          this.isLeader() &&
           player.skills.has(Skill.UnitAbilitySniperImmediateAction)))
     );
   }
