@@ -50,7 +50,7 @@ const getWorker = () => {
 };
 
 export default function useClientGameAction(
-  getCurrentGame: (ClientGame | null) | (() => ClientGame | null),
+  game: ClientGame | null,
   setGame: (game: ClientGame) => void,
   onGameAction?:
     | ((
@@ -67,11 +67,6 @@ export default function useClientGameAction(
     (action: Action): Promise<GameActionResponse> =>
       (actionQueue.current = (actionQueue.current || Promise.resolve(null))
         .then(async () => {
-          const game =
-            typeof getCurrentGame === 'function'
-              ? getCurrentGame()
-              : getCurrentGame;
-
           if (!game) {
             throw new Error('Client Game: Map state is missing.');
           }
@@ -192,6 +187,6 @@ export default function useClientGameAction(
           onError?.(error);
           return { self: null };
         })),
-    [getCurrentGame, mutateAction, onError, onGameAction, setGame],
+    [game, mutateAction, onError, onGameAction, setGame],
   );
 }
