@@ -150,8 +150,8 @@ const style = {
       ['#4f9e1b', '#6d7488'],
     ]),
     tileConversions: new Map([
-      [Forest, Barrel],
-      [Forest2, Box],
+      [Forest, Box],
+      [Forest2, Barrel],
       [Bridge, SpaceBridge],
       [Mountain, Platform],
       [Sea, Space],

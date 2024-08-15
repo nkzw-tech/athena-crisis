@@ -191,7 +191,7 @@ export default function getModifier(
           : modulo === 3
             ? Modifier.Variant4
             : Modifier.None;
-  } else if (info === Barrel || info === Box) {
+  } else if (info === Box || info === Barrel) {
     const modulo = (vector.x + vector.y) % 6;
     modifier =
       modulo === 1

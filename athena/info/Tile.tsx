@@ -1194,10 +1194,10 @@ export const Computer = new TileInfo(
   { isolated: true },
 );
 
-export const Barrel = new TileInfo(
+export const Box = new TileInfo(
   27,
-  'Barrel',
-  `On a spaceship, barrels are essential for storing all sorts of fluids. From water to fuel to mysterious alien liquids, these containers ensure that every drop is kept safe and ready for use. And rest assured, they never leak… probably.`,
+  'Box',
+  `Boxes on a spaceship are packed with all the necessities for space travelers. Filled with everything from freeze-dried meals to gourmet snacks, they provide the sustenance needed for long journeys among the stars. Each box is a treasure trove of flavors, including the popular alien snack "Galactic Crunchies" – a hit among humans for its surprising burst of sweet and salty flavors. Aliens never mention the ingredients, so we have no idea what they're made of!`,
   TileTypes.Forest,
   {
     cover: 20,
@@ -1230,17 +1230,17 @@ export const Barrel = new TileInfo(
   },
 );
 
-export const Box = new TileInfo(
+export const Barrel = new TileInfo(
   22,
-  'Box',
-  `Boxes on a spaceship are packed with all the necessities for space travelers. Filled with everything from freeze-dried meals to gourmet snacks, they provide the sustenance needed for long journeys among the stars. Each box is a treasure trove of flavors, including the popular alien snack "Galactic Crunchies" – a hit among humans for its surprising burst of sweet and salty flavors. Aliens never mention the ingredients, so we have no idea what they're made of!`,
-  Barrel.group,
-  Barrel.configuration,
+  'Barrel',
+  `On a spaceship, barrels are essential for storing all sorts of fluids. From water to fuel to mysterious alien liquids, these containers ensure that every drop is kept safe and ready for use. And rest assured, they never leak… probably.`,
+  Box.group,
+  Box.configuration,
   {
-    ...Barrel.sprite,
+    ...Box.sprite,
     position: sprite(0, 21),
   },
-  Barrel.style,
+  Box.style,
 );
 
 export const Platform = new TileInfo(
@@ -1619,12 +1619,12 @@ const Tiles = [
   Trench,
   Airfield,
   DeepSea,
-  Box,
+  Barrel,
   Forest3,
   Lightning,
   GasBubbles,
   Computer,
-  Barrel,
+  Box,
   Platform,
   Space,
   Path,
@@ -1649,8 +1649,8 @@ export const SeaTileGroup = new Set(tiles.filter(({ id }) => isSea(id)));
 
 export const SwampBiome = new Set([Forest3, GasBubbles, Weeds]);
 export const SpaceShipBiome = new Set([
-  Barrel,
   Box,
+  Barrel,
   Computer,
   Path,
   Platform,
