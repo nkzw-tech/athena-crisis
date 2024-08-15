@@ -647,7 +647,8 @@ export function SkillIcon({
             className={tagStyle}
             style={{
               background,
-              color: alpha != null && alpha > 0.7 ? undefined : getColor(color),
+              color:
+                alpha != null && alpha >= 0.5 ? undefined : getColor(color),
             }}
           >
             {name}
