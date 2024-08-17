@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index 60e9daecc338cf028d988596adaed54337ae4525..24c66e02d3f8e4398767a02be97017ca5cfcb14b 100644
+index 6dc469d499266c0c6e0ec02d0682396eeca6a984..de32109eb72e92221880604ec7736ad8553cecb7 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -135,7 +135,6 @@ var Audiences = class {
@@ -41,9 +41,9 @@ index 60e9daecc338cf028d988596adaed54337ae4525..24c66e02d3f8e4398767a02be97017ca
 -      }
        const data = yield this.resend.post(
          "/emails",
-         payload,
+         {
 diff --git a/package.json b/package.json
-index b95778591d143d8c917fdda64ce68c9fe6fc47df..140a98367604d4be4ffa56017e2a8ecca93f3f4d 100644
+index fe39c8a6fa6cfc3805c870bbb04bceec0e0619fd..eaf5e7450beaf6ff081fe3fb79bb736f0db283f5 100644
 --- a/package.json
 +++ b/package.json
 @@ -41,9 +41,6 @@
@@ -51,8 +51,8 @@ index b95778591d143d8c917fdda64ce68c9fe6fc47df..140a98367604d4be4ffa56017e2a8ecc
    },
    "homepage": "https://github.com/resendlabs/resend-node#readme",
 -  "dependencies": {
--    "@react-email/render": "0.0.16"
+-    "@react-email/render": "0.0.17"
 -  },
    "devDependencies": {
-     "@biomejs/biome": "1.8.1",
+     "@biomejs/biome": "1.8.3",
      "@types/jest": "29.5.12",

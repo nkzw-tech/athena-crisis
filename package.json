@@ -63,7 +63,7 @@
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "1.7.11",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^22.3.0",
+    "@types/node": "^22.4.0",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -116,7 +116,7 @@
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
-      "resend@3.5.0": "patches/resend@3.5.0.patch"
+      "resend": "patches/resend.patch"
     }
   }
 }
