@@ -12,7 +12,11 @@ const showPointer = () => {
 export function hidePointer() {
   if (pointerEnabled) {
     if (!document.pointerLockElement) {
-      document.body.requestPointerLock?.();
+      try {
+        document.body.requestPointerLock?.();
+      } catch {
+        /* empty */
+      }
     }
     pointerEnabled = false;
   }
