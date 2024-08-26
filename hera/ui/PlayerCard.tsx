@@ -163,7 +163,7 @@ export default memo(function PlayerCard({
 
   useInput('info', () => {
     if (wide && currentViewer === player.id && player.skills.size > 0) {
-      showSkillDialog(player.skills.values().next().value, null);
+      showSkillDialog(player.skills.values().next().value!, null);
     }
   });
 

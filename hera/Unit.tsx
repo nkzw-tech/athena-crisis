@@ -68,7 +68,7 @@ const getAmmoStyle = (unit: Unit) => {
   const { ammo } = unit;
   if (ammo?.size) {
     if (ammo.size === 1) {
-      const [weaponA, supplyA] = ammo.entries().next().value;
+      const [weaponA, supplyA] = ammo.entries().next().value!;
       return supplyA === 0
         ? AmmoStyle.None
         : hasLowAmmoSupply(unit, weaponA, supplyA)
@@ -76,8 +76,8 @@ const getAmmoStyle = (unit: Unit) => {
           : null;
     } else if (ammo.size === 2) {
       const iterator = ammo.entries();
-      const [weaponA, supplyA] = iterator.next().value;
-      const [weaponB, supplyB] = iterator.next().value;
+      const [weaponA, supplyA] = iterator.next().value!;
+      const [weaponB, supplyB] = iterator.next().value!;
       return supplyA === 0 && supplyB === 0
         ? AmmoStyle.None
         : hasLowAmmoSupply(unit, weaponA, supplyA) ||

@@ -93,14 +93,16 @@ const AttackRadiusButton = ({
   const fields = useMemo(
     () =>
       currentViewer
-        ? map.units
-            .filter(
-              (unit) =>
-                map.isOpponent(unit, currentViewer) &&
-                unit.info.hasAttack() &&
-                (!unit.info.hasAbility(Ability.Unfold) || unit.isUnfolded()),
-            )
-            .flatMap((unit, vector) => attackable(map, unit, vector, 'cost'))
+        ? new Map(
+            map.units
+              .filter(
+                (unit) =>
+                  map.isOpponent(unit, currentViewer) &&
+                  unit.info.hasAttack() &&
+                  (!unit.info.hasAbility(Ability.Unfold) || unit.isUnfolded()),
+              )
+              .flatMap((unit, vector) => attackable(map, unit, vector, 'cost')),
+          )
         : null,
     [currentViewer, map],
   );

@@ -565,7 +565,7 @@ export function getBuildingCost(
   const costs = buildingCosts.get(building.id);
   let min = cost;
   if (skills.size === 1) {
-    const skill: Skill = skills.values().next().value;
+    const skill: Skill = skills.values().next().value!;
     return costs?.get(skill) || min;
   }
 
@@ -593,7 +593,7 @@ export function getUnitCost(
   const costs = unitCosts.get(unit.id);
   let min = cost;
   if (skills.size === 1) {
-    const skill: Skill = skills.values().next().value;
+    const skill: Skill = skills.values().next().value!;
     return unitIsBlocked(unit, skill)
       ? Number.POSITIVE_INFINITY
       : Math.floor((costs?.get(skill) || min) * modifier);
@@ -663,7 +663,7 @@ const getSkillUnitRadius = (
   const movement = skillRadiusEffects.get(unit.movementType);
   if (movement) {
     if (skills.size === 1) {
-      return radius + (movement.get(skills.values().next().value) || 0);
+      return radius + (movement.get(skills.values().next().value!) || 0);
     }
 
     for (const skill of skills) {
@@ -699,7 +699,7 @@ const getSkillUnitRange = (
   const rangeMap = effects.get(unit.id);
   if (rangeMap) {
     if (skills.size === 1) {
-      return rangeMap.get(skills.values().next().value);
+      return rangeMap.get(skills.values().next().value!);
     }
 
     for (const skill of skills) {
@@ -936,7 +936,7 @@ export function getActiveUnitTypes(
     const value = getSkillActiveUnitTypes(
       map,
       player,
-      skills.values().next().value,
+      skills.values().next().value!,
     );
     return value === 'all' ? value : new Set(value);
   }

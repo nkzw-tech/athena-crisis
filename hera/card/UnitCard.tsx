@@ -146,7 +146,7 @@ const attack = (unitState: UnitState, unit: Unit) => {
       style: unit.isUnfolded() ? 'unfold' : null,
       type: 'attack',
       variant: player,
-      weapon: info.attack.weapons?.values().next?.().value || null,
+      weapon: info.attack.weapons!.values().next().value!,
     },
     type: 'attack',
   } as const;
