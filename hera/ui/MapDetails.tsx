@@ -82,7 +82,7 @@ export default function MapDetails({
           </div>
         ) : null}
         {tags?.length ? (
-          <div className={containerStyle}>
+          <div className={cx(containerStyle, tagStyle)}>
             <TagList tags={[...tags].sort()} />
           </div>
         ) : null}
@@ -163,12 +163,7 @@ export default function MapDetails({
         )}
       </Stack>
       {buttons && (
-        <Stack
-          alignCenter
-          className={cx(containerStyle, buttonStyle)}
-          gap={32}
-          start
-        >
+        <Stack alignCenter gap={24} start>
           {buttons}
         </Stack>
       )}
@@ -182,8 +177,6 @@ const contentStyle = css`
 `;
 
 const containerStyle = css`
-  ${clipBorder()}
-
   backdrop-filter: blur(8px);
   background-color: ${applyVar('background-color-light')};
   margin: -4px;
@@ -191,10 +184,8 @@ const containerStyle = css`
   width: fit-content;
 `;
 
-// Avoid text from being cut off.
-const buttonStyle = css`
-  margin: -8px;
-  padding: 8px;
+const tagStyle = css`
+  ${clipBorder()};
 `;
 
 const iconOffsetStyle = css`
