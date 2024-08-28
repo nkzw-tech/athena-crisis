@@ -1217,6 +1217,7 @@ export const Weapons = {
     new Map([[EntityType.Artillery, 100]]),
     MGAnimation,
   ),
+  AntiShipMissile,
   Artillery: ArtilleryWeapon,
   Battery: new Weapon(
     'Artillery Battery',
@@ -2038,8 +2039,8 @@ export const Helicopter = new UnitInfo(
   {
     type: AttackType.ShortRange,
     weapons: [
-      LightAirGun.withSupply(8).withAnimationPositions({
-        ...LightAirGun.animation.positions,
+      Weapons.LightAirGun.withSupply(8).withAnimationPositions({
+        ...Weapons.LightAirGun.animation.positions,
         horizontal: sprite(-0.4, 0.4),
       }),
     ],
@@ -2395,7 +2396,7 @@ export const FighterJet = new UnitInfo(
   {
     type: AttackType.ShortRange,
     weapons: [
-      AirToAirMissile.withAnimationPositions(
+      Weapons.AirToAirMissile.withAnimationPositions(
         {
           down: sprite(0.2, 0.3),
           horizontal: sprite(-0.15, 0.25),
@@ -2798,7 +2799,7 @@ export const Frigate = new UnitInfo(
   {
     range: [1, 2],
     type: AttackType.LongRange,
-    weapons: [AntiShipMissile.withSupply(8)],
+    weapons: [Weapons.AntiShipMissile.withSupply(8)],
   },
   null,
   {
