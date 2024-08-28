@@ -1,4 +1,5 @@
 import { isSafari } from '@deities/ui/Browser.tsx';
+import { getCurrentFonts } from '../../i18n/getLocale.tsx';
 
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d')!;
@@ -15,7 +16,9 @@ export default function measure(
     context.letterSpacing = `${letterSpacing}px`;
   }
 
-  context.font = `${fontSize}px Athena`;
+  context.font = getCurrentFonts()
+    .map((font) => `${fontSize}px ${font}`)
+    .join(', ');
 
   const getLetterSpacing = (text: string) =>
     isSafari ? letterSpacing * (text.length - 1) : 0;

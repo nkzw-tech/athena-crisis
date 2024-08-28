@@ -5,6 +5,34 @@ import { applyVar, initializeCSSVariables } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import pixelBorder from './pixelBorder.tsx';
 
+const koreanOrChinese = [
+  'AthenaLatin',
+  'ui-sans-serif',
+  'system-ui',
+  'sans-serif',
+];
+const russianOrUkrainian = [
+  'Athena',
+  'PressStart2P',
+  'ui-sans-serif',
+  'system-ui',
+  'sans-serif',
+];
+
+export const Fonts = {
+  ja_JP: [
+    'Athena',
+    'MadouFutoMaru',
+    'ui-sans-serif',
+    'system-ui',
+    'sans-serif',
+  ],
+  ko_KR: koreanOrChinese,
+  ru_RU: russianOrUkrainian,
+  uk_UA: russianOrUkrainian,
+  zh_CN: koreanOrChinese,
+};
+
 const scope = `
 svg {
   vertical-align: middle;
@@ -237,46 +265,35 @@ body {
 }
 
 html[lang="ja_JP"] body, .locale-ja_JP {
-  font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
+  font-family: ${Fonts.ja_JP.join(', ')};
 
   & button,
   & input,
   & select,
   & textarea {
-    font-family: Athena, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
+    font-family: ${Fonts.ja_JP.join(', ')};
   }
 }
 
 html[lang="uk_UA"] body, html[lang="ru_RU"] body, .locale-uk_UA, .locale-ru_RU {
-  font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
+  font-family: ${Fonts.ru_RU.join(', ')};
 
   & button,
   & input,
   & select,
   & textarea {
-    font-family: Athena, PressStart2P, ui-sans-serif, system-ui, sans-serif;
+    font-family: ${Fonts.ru_RU.join(', ')};
   }
 }
 
-html[lang="ko_KR"] body, .locale-ko_KR {
-  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+html[lang="ko_KR"] body, .locale-ko_KR, html[lang="zh_CN"] body, .locale-zh_CN {
+  font-family: ${Fonts.ko_KR.join(', ')};
 
   & button,
   & input,
   & select,
   & textarea {
-    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-  }
-}
-
-html[lang="zh_CN"] body, .locale-zh_CN {
-  font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
-
-  & button,
-  & input,
-  & select,
-  & textarea {
-    font-family: AthenaLatin, ui-sans-serif, system-ui, sans-serif;
+    font-family: ${Fonts.ko_KR.join(', ')};
   }
 }
 

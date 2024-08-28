@@ -1,5 +1,6 @@
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
+import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
 import { TranslationDict } from 'fbt';
 
@@ -98,4 +99,11 @@ export async function maybeLoadLocale(
   ) {
     translations[locale] = await loadLocale(locale);
   }
+}
+
+export function getCurrentFonts() {
+  return (
+    (currentLanguage &&
+      Fonts[currentLanguage as unknown as keyof typeof Fonts]) || ['Athena']
+  );
 }
