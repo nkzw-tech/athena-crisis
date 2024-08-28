@@ -202,6 +202,7 @@ export default function Typeahead<T>({
   autoFocus,
   autoHide = true,
   dataSource,
+  emptyResult,
   emptySuggestions,
   freeform,
   ignoreList,
@@ -218,6 +219,7 @@ export default function Typeahead<T>({
   autoFocus?: boolean;
   autoHide?: boolean;
   dataSource: TypeaheadDataSource<T>;
+  emptyResult?: ReactNode;
   emptySuggestions?: ReadonlyArray<TypeaheadDataSourceEntry<T>>;
   freeform?: boolean;
   ignoreList?: ReadonlySet<string>;
@@ -362,6 +364,8 @@ export default function Typeahead<T>({
 
   const onKeydown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
+      setShowEmptyResult(false);
+
       if (event.key === 'Backspace' && input.current?.value === '') {
         onBackspace?.();
         return;
@@ -451,6 +455,19 @@ export default function Typeahead<T>({
     }
   }, [initialValue]);
 
+  const [showEmptyResult, setShowEmptyResult] = useState(false);
+  useEffect(() => {
+    if (
+      emptyResult &&
+      input.current?.value.length &&
+      !showEmptyResult &&
+      results.length === 0
+    ) {
+      const timer = setTimeout(() => setShowEmptyResult(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [emptyResult, results.length, showEmptyResult]);
+
   return (
     <div className={containerStyle}>
       <input
@@ -472,40 +489,44 @@ export default function Typeahead<T>({
         spellCheck="false"
         type="text"
       />
-      {results.length
-        ? (
-            renderResults ||
-            ((
-              results,
-              { isHighlighted, onSelect, renderItem, setHighlighted },
-            ) => (
-              <ul
-                className={cx(BoxStyle, resultStyle, resultClassName)}
-                onPointerLeave={() => setHighlighted(-1)}
-              >
-                {results.map((result, index) => (
-                  <li
-                    className={cx(
-                      resultItemStyle,
-                      ellipsis,
-                      isHighlighted(index) ? resultSelectedStyle : undefined,
-                    )}
-                    key={result.value}
-                    onClick={() => onSelect(result)}
-                    onPointerEnter={() => setHighlighted(index)}
-                  >
-                    {renderItem(result, isHighlighted(index))}
-                  </li>
-                ))}
-              </ul>
-            ))
-          )(results, {
-            isHighlighted: (index: number) => index === highlightedIndex,
-            onSelect: handleSelection,
-            renderItem,
-            setHighlighted: setHighlightedIndex,
-          })
-        : null}
+      {results.length ? (
+        (
+          renderResults ||
+          ((
+            results,
+            { isHighlighted, onSelect, renderItem, setHighlighted },
+          ) => (
+            <ul
+              className={cx(BoxStyle, resultStyle, resultClassName)}
+              onPointerLeave={() => setHighlighted(-1)}
+            >
+              {results.map((result, index) => (
+                <li
+                  className={cx(
+                    resultItemStyle,
+                    ellipsis,
+                    isHighlighted(index) ? resultSelectedStyle : undefined,
+                  )}
+                  key={result.value}
+                  onClick={() => onSelect(result)}
+                  onPointerEnter={() => setHighlighted(index)}
+                >
+                  {renderItem(result, isHighlighted(index))}
+                </li>
+              ))}
+            </ul>
+          ))
+        )(results, {
+          isHighlighted: (index: number) => index === highlightedIndex,
+          onSelect: handleSelection,
+          renderItem,
+          setHighlighted: setHighlightedIndex,
+        })
+      ) : showEmptyResult ? (
+        <ul className={cx(BoxStyle, resultStyle, resultClassName)}>
+          <li className={cx(resultItemStyle, ellipsis)}>{emptyResult}</li>
+        </ul>
+      ) : null}
     </div>
   );
 }
