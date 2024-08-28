@@ -56,6 +56,7 @@ import ActionCard from '../editor/lib/ActionCard.tsx';
 import EffectSelector from '../editor/selectors/EffectSelector.tsx';
 import useEffects from '../hooks/useEffects.tsx';
 import useMapData from '../hooks/useMapData.tsx';
+import getMapName from '../i18n/getMapName.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
@@ -242,7 +243,7 @@ export default memo(function Level({
           </Dropdown>
           <Stack gap vertical>
             <Stack>
-              <h2>{node.name}</h2>
+              <h2>{getMapName(node.name)}</h2>
               <Stack gap>
                 <InlineLink
                   className={iconStyle}
