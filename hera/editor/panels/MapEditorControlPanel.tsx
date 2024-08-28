@@ -530,4 +530,5 @@ const moreInnerStyle = css`
 
   max-height: 300px;
   overflow-y: auto;
+  white-space: nowrap;
 `;
