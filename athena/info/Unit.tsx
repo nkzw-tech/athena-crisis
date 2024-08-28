@@ -3353,7 +3353,7 @@ export const Octopus = new UnitInfo(
 export const Dragon = new UnitInfo(
   44,
   'Dragon',
-  'Unknown',
+  'Coco',
   'unknown',
   `Dragons are kind of like a multiversal Flamethrower unit, if you think about it. Except they can also fly, are huge, and people tend to freeze when they see a Dragon. So, not really like a Flamethrower unit at all. But they do breathe fire!`,
   `{name} is a solitary creature, preferring to keep to themselves and avoid conflict whenever possible. Unfortunately, they were pulled into the multiversal conflict and had no choice but to fight. Originally from a world where dragons were revered as wise and powerful beings, {name} is now seen as a terrifying force of nature. They long for the day when they can return to their peaceful existence.`,
