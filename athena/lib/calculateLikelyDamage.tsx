@@ -17,6 +17,8 @@ export default function calculateLikelyDamage(
   weapon = unitA.getAttackWeapon(entityB),
 ): number | null {
   if (weapon) {
+    const coverA = map.getTileInfo(from).configuration.cover;
+    const coverB = map.getTileInfo(to).configuration.cover;
     return Math.floor(
       Math.max(
         MinDamage,
@@ -24,9 +26,9 @@ export default function calculateLikelyDamage(
           unitA,
           entityB,
           weapon,
-          map.getTileInfo(from).configuration.cover +
+          (Number.isFinite(coverA) ? coverA : 0) +
             (map.buildings.has(from) ? BuildingCover : 0),
-          map.getTileInfo(to).configuration.cover +
+          (Number.isFinite(coverB) ? coverB : 0) +
             (map.buildings.has(to) ? BuildingCover : 0),
           attackStatusEffect,
           defenseStatusEffect,
