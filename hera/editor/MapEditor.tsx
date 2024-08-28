@@ -897,6 +897,7 @@ export default function MapEditor({
                 actions={actions}
                 animatePlayer={hasNotableAnimation(props.animations)}
                 currentViewer={props.currentViewer}
+                gameInfoState={props.gameInfoState}
                 hide={hidden}
                 inlineUI={props.inlineUI}
                 inset={inset}

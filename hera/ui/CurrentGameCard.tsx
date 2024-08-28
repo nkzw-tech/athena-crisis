@@ -13,7 +13,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import React, { memo, useCallback, useState } from 'react';
 import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
 import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
-import { Actions } from '../Types.tsx';
+import { Actions, GameInfoState } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import PlayerCard from './PlayerCard.tsx';
 import Vs from './Vs.tsx';
@@ -134,6 +134,7 @@ export default memo(function CurrentGameCard({
   actions,
   animatePlayer,
   currentViewer,
+  gameInfoState,
   hide,
   inlineUI,
   inset = 0,
@@ -145,6 +146,7 @@ export default memo(function CurrentGameCard({
   actions: Actions;
   animatePlayer: boolean;
   currentViewer: PlayerID | null;
+  gameInfoState: GameInfoState | null;
   hide?: boolean;
   inlineUI: boolean;
   inset?: number;
@@ -170,13 +172,19 @@ export default memo(function CurrentGameCard({
       }
     }, [isExpanded]),
   );
+
   useInput(
     'cancel',
-    useCallback(() => {
-      if (isExpanded) {
-        setIsExpanded(false);
-      }
-    }, [isExpanded]),
+    useCallback(
+      async (event) => {
+        if (isExpanded && !gameInfoState) {
+          event.preventDefault();
+          setIsExpanded(false);
+        }
+      },
+      [gameInfoState, isExpanded],
+    ),
+    'top',
   );
 
   const content = (
