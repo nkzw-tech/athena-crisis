@@ -214,7 +214,7 @@ const menuStyle = css`
     background-color 300ms ease,
     color 300ms ease,
     height 0ms 300ms ease;
-  z-index: 3000;
+  z-index: 4000;
 `;
 
 const dotStyle = css`
