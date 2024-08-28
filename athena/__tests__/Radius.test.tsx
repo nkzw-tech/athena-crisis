@@ -190,6 +190,170 @@ const radiusTestMap = MapData.createMap({
   ],
 });
 
+const spaceMap = MapData.createMap({
+  config: {
+    biome: 4,
+  },
+  map: [
+    29,
+    29,
+    29,
+    29,
+    29,
+    29,
+    29,
+    29,
+    29,
+    1,
+    1,
+    1,
+    29,
+    29,
+    29,
+    29,
+    30,
+    1,
+    30,
+    29,
+    29,
+    29,
+    29,
+    [29, 33],
+    29,
+    [29, 33],
+    29,
+    29,
+    29,
+    29,
+    [29, 33],
+    29,
+    [29, 33],
+    29,
+    29,
+    29,
+    31,
+    [29, 33],
+    31,
+    [29, 33],
+    31,
+    29,
+    29,
+    1,
+    1,
+    1,
+    1,
+    1,
+    29,
+    29,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+  ],
+  size: {
+    height: 8,
+    width: 7,
+  },
+  units: [
+    [
+      6,
+      8,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      2,
+      8,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      6,
+      4,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      1,
+      4,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      3,
+      2,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      5,
+      2,
+      {
+        a: [
+          [1, 5],
+          [2, 3],
+        ],
+        g: 30,
+        h: 100,
+        i: 20,
+        p: 1,
+      },
+    ],
+    [
+      7,
+      8,
+      {
+        g: 40,
+        h: 100,
+        i: 1,
+        p: 2,
+      },
+    ],
+  ],
+});
+
 test('calculate the moveable radius', () => {
   const vecA = vec(15, 7);
   const testMap = startMap.copy({
@@ -1625,4 +1789,59 @@ test('calculate the moveable radius for multiple units in the same location', ()
         ],
       ]
     `);
+});
+
+test('correctly cancels transition costs in the Space biome', () => {
+  const vecA = vec(2, 8);
+  const unitA = spaceMap.units.get(vecA);
+
+  if (!unitA) {
+    throw new Error(`Radius.test: 'unitA' not found at position ${vecA}.`);
+  }
+
+  expect(Array.from(moveable(spaceMap, unitA, vecA).keys()).sort())
+    .toMatchInlineSnapshot(`
+    [
+      [
+        2,
+        7,
+      ],
+      [
+        3,
+        5,
+      ],
+      [
+        3,
+        6,
+      ],
+      [
+        3,
+        7,
+      ],
+      [
+        3,
+        8,
+      ],
+      [
+        4,
+        7,
+      ],
+      [
+        4,
+        8,
+      ],
+      [
+        5,
+        7,
+      ],
+      [
+        5,
+        8,
+      ],
+      [
+        6,
+        8,
+      ],
+    ]
+  `);
 });

@@ -1,6 +1,6 @@
 import FastPriorityQueue from 'fastpriorityqueue';
 import { Skill } from './info/Skill.tsx';
-import { TileInfo, TileTypes } from './info/Tile.tsx';
+import { Bridge, TileInfo, TileTypes, TransitionCost } from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
 import canLoad from './lib/canLoad.tsx';
 import getVectorRadius from './lib/getVectorRadius.tsx';
@@ -59,10 +59,32 @@ export const MoveConfiguration = {
   getCost: (map: MapData, unit: Unit, vector: Vector) =>
     map.maybeGetTileInfo(vector)?.getMovementCost(unit.info) || -1,
   getResourceValue: (unit: Unit) => unit.fuel,
-  getTransitionCost: (info: UnitInfo, current: TileInfo, parent: TileInfo) =>
-    (current.group !== parent.group &&
-      parent.getTransitionCost(info) + current.getTransitionCost(info)) ||
-    0,
+  getTransitionCost: (
+    info: UnitInfo,
+    current: TileInfo,
+    parent: TileInfo,
+  ): number => {
+    if (current.group === parent.group) {
+      return 0;
+    }
+
+    const parentCost = parent.getTransitionCost(info);
+    const currentCost = current.getTransitionCost(info);
+    const maybeCancelTransitionCost =
+      parentCost === TransitionCost.Cancel ||
+      currentCost === TransitionCost.Cancel;
+
+    if (maybeCancelTransitionCost) {
+      return (parentCost === TransitionCost.Cancel &&
+        currentCost === TransitionCost.Cancel) ||
+        parent.group === Bridge.group ||
+        current.group === Bridge.group
+        ? 0
+        : Number.POSITIVE_INFINITY;
+    }
+
+    return parentCost + currentCost;
+  },
   isAccessible: isAccessibleBase,
 } as const;
 

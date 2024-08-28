@@ -54,6 +54,12 @@ export type TileAnimation = Readonly<{
   ticks: number;
 }>;
 
+export const TransitionCost = {
+  Cancel: 'Cancel',
+} as const;
+
+export type TransitionCost = keyof typeof TransitionCost | number;
+
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
 
 const composite = (
@@ -110,7 +116,7 @@ export class TileInfo {
   public readonly configuration: {
     cover: number;
     movement: ReadonlyMap<MovementType, number>;
-    transitionCost?: ReadonlyMap<MovementType, number>;
+    transitionCost?: ReadonlyMap<MovementType, TransitionCost>;
     vision: number;
   };
   public readonly group: TileType;
@@ -140,7 +146,7 @@ export class TileInfo {
     configuration: {
       cover: number;
       movement: ReadonlyMap<MovementType, number>;
-      transitionCost?: ReadonlyMap<MovementType, number>;
+      transitionCost?: ReadonlyMap<MovementType, TransitionCost>;
       vision?: number;
     },
     sprite:
@@ -197,7 +203,11 @@ export class TileInfo {
     return this.configuration.movement.get(movementType) || -1;
   }
 
-  getTransitionCost({ movementType }: { movementType: MovementType }): number {
+  getTransitionCost({
+    movementType,
+  }: {
+    movementType: MovementType;
+  }): TransitionCost {
     return this.configuration.transitionCost?.get(movementType) || 0;
   }
 
@@ -1290,8 +1300,8 @@ export const Space = new TileInfo(
       [MovementTypes.Tread, -1],
     ]),
     transitionCost: new Map([
-      [MovementTypes.Air, Number.POSITIVE_INFINITY],
-      [MovementTypes.AirInfantry, Number.POSITIVE_INFINITY],
+      [MovementTypes.Air, TransitionCost.Cancel],
+      [MovementTypes.AirInfantry, TransitionCost.Cancel],
     ]),
   },
   {
@@ -1372,8 +1382,8 @@ export const SpaceBridge = new TileInfo(
   {
     ...Bridge.configuration,
     transitionCost: new Map([
-      [MovementTypes.Air, -Number.POSITIVE_INFINITY],
-      [MovementTypes.AirInfantry, -Number.POSITIVE_INFINITY],
+      [MovementTypes.Air, TransitionCost.Cancel],
+      [MovementTypes.AirInfantry, TransitionCost.Cancel],
     ]),
   },
   Bridge.sprite,
