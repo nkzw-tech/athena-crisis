@@ -72,7 +72,7 @@ We welcome contributions to Athena Crisis. Some feature development is funded vi
 - The style guide is enforced through tests and linting. Please run `pnpm test` to run all checks. If they pass, you are good to send a Pull Request.
 - We suggest adding tests to Pull Requests. You can find many examples in the [`tests` folder](https://github.com/nkzw-tech/athena-crisis/tree/main/tests).
 - Check out [The Perfect Development Environment](https://cpojer.net/posts/the-perfect-development-environment) and [Fastest Frontend Tooling](https://cpojer.net/posts/fastest-frontend-tooling-in-2022) for tips on how to optimize your environment setup.
-- [Join the #tech channel on Discord](https://discord.gg/2VBCCep7Fk) if you run into issues.
+- [Join the #tech channel on Discord](https://discord.gg/athenacrisis) if you run into issues.
 
 We greatly appreciate contributions in the following areas:
 
@@ -123,7 +123,7 @@ If you'd like to use content from Athena Crisis for commercial or non-commercial
 
 Check out these links to learn more about the tech behind Athena Crisis:
 
-- [Join us on Discord](https://discord.gg/2VBCCep7Fk)
+- [Join us on Discord](https://discord.gg/athenacrisis)
 - [How NOT to Build a Video Game](https://www.youtube.com/watch?v=m8SmXOTM8Ec)
 - [Follow Athena Crisis on Twitter](https://twitter.com/TheAthenaCrisis)
 - [Building the AI for Athena Crisis](https://www.youtube.com/watch?v=0V9XaIK0xlQ)

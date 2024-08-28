@@ -110,7 +110,7 @@ export default defineConfig({
     },
     {
       icon: 'discord',
-      link: 'https://discord.gg/2VBCCep7Fk',
+      link: 'https://discord.gg/athenacrisis',
     },
     {
       icon: 'x',
