@@ -59,7 +59,12 @@ export default class Base extends AbstractSelectBehavior {
     const { map, selectedPosition, vision } = state;
     const unit = map.units.get(vector);
     const info = unit?.info;
-    if (unit && !selectedPosition && vision.isVisible(map, vector)) {
+    if (
+      unit &&
+      unit.player !== 0 &&
+      !selectedPosition &&
+      vision.isVisible(map, vector)
+    ) {
       const showAttackRadius = !unit.isCompleted() && info?.hasAttack();
       this.infoTimer = await scheduleTimer(
         () =>
@@ -199,7 +204,7 @@ export default class Base extends AbstractSelectBehavior {
       building = null;
     }
 
-    if (unit && unit.isCompleted()) {
+    if (unit && (unit.isCompleted() || unit.player === 0)) {
       unit = null;
     }
 
