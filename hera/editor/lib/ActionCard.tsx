@@ -302,6 +302,7 @@ export default memo(function ActionCard({
     );
   } else if (action.type === 'SpawnEffect') {
     const { player } = action;
+    const vectors = [...action.units.keys()];
     return (
       <Box className={boxStyle} gap={16} vertical>
         <Stack className={headlineStyle} nowrap>
@@ -322,6 +323,7 @@ export default memo(function ActionCard({
             <Tick animationConfig={AnimationConfig}>
               <InlineTileList
                 biome={biome}
+                buildings={vectors.map((vector) => map?.buildings.get(vector))}
                 onSelect={
                   canChange && setMap && map
                     ? (_, { index: unitIndex }) => {
@@ -353,7 +355,7 @@ export default memo(function ActionCard({
                       }
                     : undefined
                 }
-                tiles={[...action.units.keys()].map(
+                tiles={vectors.map(
                   (vector) => map?.getTileInfo(vector) || Plain,
                 )}
                 units={[...action.units.values()]}
