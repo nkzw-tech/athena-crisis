@@ -510,7 +510,7 @@ export default function GameActions({
   }, [canUndo, undoTurn]);
   useInput('undo', undo);
 
-  const replayBar = (
+  const replayBar = !hasEnded && (
     <ReplayBar
       actions={actions}
       currentPlayer={map.getCurrentPlayer()}
