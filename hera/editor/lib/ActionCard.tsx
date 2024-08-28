@@ -37,6 +37,7 @@ import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import getCampaignMessage from '../../i18n/getCampaignMessage.tsx';
 import Tick from '../../Tick.tsx';
 import { FactionNames } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
@@ -150,7 +151,7 @@ export default memo(function ActionCard({
     const message =
       formatText && factionNames && map && userDisplayName
         ? formatCharacterText(
-            action.message,
+            getCampaignMessage(action),
             unit,
             hasCurrentPlayer && currentPlayer === player
               ? 'characterName'
