@@ -18,45 +18,48 @@ export function useDialogNavigation<T>(
   currentState: number,
   setPanel: (panel: T) => void,
 ) {
+  const next = useCallback(
+    (event?: CustomEvent) => {
+      event?.preventDefault();
+      const newState =
+        states && currentState !== -1
+          ? states.at((currentState + 1) % states.length)
+          : null;
+      if (newState) {
+        AudioPlayer.playSound('UI/Next');
+        setPanel(newState);
+      }
+    },
+    [currentState, setPanel, states],
+  );
+
+  const previous = useCallback(
+    (event?: CustomEvent) => {
+      event?.preventDefault();
+      const newState =
+        states && currentState !== -1 ? states.at(currentState - 1) : null;
+      if (newState) {
+        AudioPlayer.playSound('UI/Previous');
+        setPanel(newState);
+      }
+    },
+    [currentState, setPanel, states],
+  );
+
+  useInput('next', next, 'dialog');
+  useInput('previous', previous, 'dialog');
   useInput(
     'navigate',
-    useCallback((event) => event.preventDefault(), []),
-    'dialog',
-  );
+    (event) => {
+      event.preventDefault();
 
-  useInput(
-    'next',
-    useCallback(
-      (event) => {
-        event.preventDefault();
-        const newState =
-          states && currentState !== -1
-            ? states.at((currentState + 1) % states.length)
-            : null;
-        if (newState) {
-          AudioPlayer.playSound('UI/Next');
-          setPanel(newState);
-        }
-      },
-      [currentState, setPanel, states],
-    ),
-    'dialog',
-  );
-
-  useInput(
-    'previous',
-    useCallback(
-      (event) => {
-        event.preventDefault();
-        const newState =
-          states && currentState !== -1 ? states.at(currentState - 1) : null;
-        if (newState) {
-          AudioPlayer.playSound('UI/Previous');
-          setPanel(newState);
-        }
-      },
-      [currentState, setPanel, states],
-    ),
+      const { x } = event.detail;
+      if (x < 0) {
+        previous();
+      } else if (x > 0) {
+        next();
+      }
+    },
     'dialog',
   );
 }
