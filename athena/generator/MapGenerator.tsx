@@ -37,6 +37,7 @@ import convertBiome from '../lib/convertBiome.tsx';
 import getBiomeStyle from '../lib/getBiomeStyle.tsx';
 import getMovementPath from '../lib/getMovementPath.tsx';
 import indexToVector from '../lib/indexToVector.tsx';
+import validateMap from '../lib/validateMap.tsx';
 import withModifiers from '../lib/withModifiers.tsx';
 import { Biome, Biomes } from '../map/Biome.tsx';
 import Building from '../map/Building.tsx';
@@ -296,10 +297,12 @@ export function generateBuildings(
       });
     }
   }
-  return convertBiome(
+
+  map = convertBiome(
     copyMap(map.copy({ buildings }), tiles),
     arrayShuffle(biomes)[0],
   );
+  return validateMap(map, { has: () => false })[0] || map;
 }
 
 export function generateSea(map: MapData): MapData {

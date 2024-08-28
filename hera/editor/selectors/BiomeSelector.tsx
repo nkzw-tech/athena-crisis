@@ -1,8 +1,10 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
 import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
+import validateMap from '@deities/athena/lib/validateMap.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import Box from '@deities/ui/Box.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -32,7 +34,12 @@ export default function BiomeSelector({
   const { alert } = useAlert();
   const update = useCallback(
     (biome: Biome) => {
-      const select = () => onBiomeChange(convertBiome(map, biome));
+      const select = () => {
+        const [newMap] = validateMap(convertBiome(map, biome), AIRegistry);
+        if (newMap) {
+          onBiomeChange(newMap);
+        }
+      };
       if (biome === Biome.Spaceship) {
         alert({
           onAccept: select,

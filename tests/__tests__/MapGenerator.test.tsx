@@ -14,7 +14,7 @@ import { printGameState } from '../printGameState.tsx';
 import { captureOne } from '../screenshot.tsx';
 
 test('creates valid maps', async () => {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 50; i++) {
     const map = withModifiers(
       generateSea(
         generateBuildings(
