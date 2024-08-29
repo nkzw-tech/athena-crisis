@@ -495,6 +495,11 @@ export default class GameMap extends Component<Props, State> {
           ),
         'dialog',
       ),
+      Input.register(
+        'field-info',
+        () => this._cancel(this.state.position, undefined, false),
+        'dialog',
+      ),
     ];
 
     document.addEventListener('pointermove', this._pointerMove);
@@ -1576,6 +1581,7 @@ export default class GameMap extends Component<Props, State> {
         animatedChildren,
         children,
         className,
+        disablePerformanceMetrics,
         editor,
         fogStyle,
         margin,
@@ -1816,7 +1822,8 @@ export default class GameMap extends Component<Props, State> {
               {children?.(this.state, this._actions)}
             </div>
           </div>
-          {lastActionResponse?.type === 'GameEnd' &&
+          {!disablePerformanceMetrics &&
+            lastActionResponse?.type === 'GameEnd' &&
             lastActionResponse.toPlayer &&
             currentViewer != null &&
             map.matchesTeam(lastActionResponse.toPlayer, currentViewer) && (

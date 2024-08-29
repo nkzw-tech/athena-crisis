@@ -61,7 +61,7 @@ export default function PlaygroundGame({
 
           return (
             <>
-              <MapInfo hide={hide} leftOffset {...props} />
+              <MapInfo hide={hide} {...props} />
               <GameActions
                 actions={actions}
                 hide={hide}

@@ -56,6 +56,7 @@ export type Props = Readonly<{
   confirmActionStyle: 'always' | 'touch' | 'never';
   currentUserId: string;
   dangerouslyApplyExternalState?: boolean;
+  disablePerformanceMetrics?: true;
   editor?: EditorState;
   effects?: Effects;
   endGame?: (type: 'Lose') => void;

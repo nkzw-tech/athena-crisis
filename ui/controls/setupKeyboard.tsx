@@ -118,6 +118,8 @@ const keydownListener = (event: KeyboardEvent) => {
     Input.fire('accept');
   } else if (key === 'Escape') {
     Input.fire('cancel', { isEscape: true });
+  } else if (key === 'KeyI') {
+    Input.fire('field-info');
   } else if (key === 'KeyP') {
     if (isMeta) {
       event.preventDefault();

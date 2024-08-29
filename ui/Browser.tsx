@@ -30,6 +30,7 @@ export const isSafari =
   ) ||
   isIOS;
 
+export const isLinux = /Linux/.test(navigator.userAgent);
 export const isWindows = /Win(dows|32|64|NT)/.test(navigator.userAgent);
 
 export const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');

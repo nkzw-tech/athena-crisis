@@ -38,9 +38,11 @@ type EntityDescription = Readonly<{
 
 const root = process.cwd();
 const isOpenSourceRepository = isOpenSource();
+
 const publishedCampaigns = new Map([
   ['proto-campaign', Number.POSITIVE_INFINITY],
   ['the-athena-crisis', Number.POSITIVE_INFINITY],
+  ['tutorial', Number.POSITIVE_INFINITY],
 ]);
 
 const COMMON_OUTPUT_FILE = join(root, 'i18n/Entities.cjs');

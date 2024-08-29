@@ -14,6 +14,7 @@ export type Events = Readonly<{
   cancel: { isEscape: boolean } | null;
   detail: undefined;
   'detail:released': undefined;
+  'field-info': undefined;
   'gamepad:tertiary': undefined;
   info: undefined;
   'keyboard:tertiary': undefined;

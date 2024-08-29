@@ -19,8 +19,8 @@ const controller2 = createQueryModule();
 let useSecondaryNavigation = false;
 let joymap: Joymap | null = null;
 
-export function hasGamePad() {
-  return joymap && joymap.getGamepads().length > 0;
+export function hasGamepad() {
+  return !!joymap && joymap.getGamepads().length > 0;
 }
 
 export default function setupGamePad() {

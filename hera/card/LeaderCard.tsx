@@ -66,16 +66,19 @@ export default memo(function LeaderCard({
                 />
               </div>
               {viewerIsPlayer ? <p>{info.characterDescription}</p> : null}
-              <CardInfoHeading className={marginTopStyle} player={player}>
-                <fbt desc="About leader unit buffs">Bonus</fbt>
-              </CardInfoHeading>
-              <div>
-                <fbt desc="Explanation for leader buffs">
-                  Leader units receive a{' '}
-                  <fbt:param name="buff">{LeaderStatusEffect * 100}</fbt:param>%
-                  attack and defense bonus.
-                </fbt>
-              </div>
+              <Stack gap vertical>
+                <CardInfoHeading className={marginTopStyle} player={player}>
+                  <fbt desc="About leader unit buffs">Bonus</fbt>
+                </CardInfoHeading>
+                <div className={descriptionStyle}>
+                  <fbt desc="Explanation for leader buffs">
+                    Leader units receive a{' '}
+                    <fbt:param name="buff">
+                      {LeaderStatusEffect * 100}
+                    </fbt:param>% attack and defense bonus.
+                  </fbt>
+                </div>
+              </Stack>
             </div>
           </Stack>
         </Stack>
