@@ -33,7 +33,7 @@
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.4.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.3.30",
+    "framer-motion": "^11.3.31",
     "p-limit": "^6.1.0",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
@@ -62,7 +62,7 @@
     "glob": "11.0.0",
     "relay-compiler": "^17.0.0",
     "vite-plugin-minify": "^2.0.0",
-    "vite-plugin-pwa": "^0.20.1",
+    "vite-plugin-pwa": "^0.20.2",
     "vite-plugin-restart": "^0.4.1"
   }
 }
