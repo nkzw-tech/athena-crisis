@@ -61,9 +61,9 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@nkzw/eslint-config": "^1.18.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "1.7.21",
+    "@swc/core": "1.7.23",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.5.4",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -79,7 +79,7 @@
     "react-refresh": "^0.14.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2",
+    "vite": "^5.4.3",
     "vitest": "^2.0.5"
   },
   "engines": {
@@ -112,7 +112,7 @@
     },
     "patchedDependencies": {
       "@remix-run/router": "patches/@remix-run__router.patch",
-      "eslint-plugin-import@2.29.1": "patches/eslint-plugin-import@2.29.1.patch",
+      "eslint-plugin-import": "patches/eslint-plugin-import.patch",
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",

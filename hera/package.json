@@ -24,13 +24,13 @@
     "@nkzw/use-relative-time": "^1.1.0",
     "array-shuffle": "^3.0.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.3.31",
+    "framer-motion": "^11.5.2",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
     "react-fps": "^1.0.6"
   },
   "devDependencies": {
-    "@types/react": "^18.3.4",
+    "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0"
   }
 }

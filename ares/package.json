@@ -29,11 +29,11 @@
     "@emotion/css": "^11.13.0",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.27.0",
+    "@sentry/browser": "^8.28.0",
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.4.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.3.31",
+    "framer-motion": "^11.5.2",
     "p-limit": "^6.1.0",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
@@ -42,7 +42,7 @@
     "react-router-dom": "^6.26.1",
     "relay-runtime": "^17.0.0",
     "socket.io-client": "^4.7.5",
-    "tinybase": "5.1.5",
+    "tinybase": "5.2.2",
     "workbox-core": "^7.1.0",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
@@ -51,9 +51,9 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@emotion/babel-plugin": "^11.12.0",
-    "@sentry/vite-plugin": "^2.22.3",
+    "@sentry/vite-plugin": "^2.22.4",
     "@types/babel__core": "^7.20.5",
-    "@types/react": "^18.3.4",
+    "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@types/react-relay": "^16.0.6",
     "@types/react-router-dom": "^5.3.3",
@@ -62,7 +62,7 @@
     "glob": "11.0.0",
     "relay-compiler": "^17.0.0",
     "vite-plugin-minify": "^2.0.0",
-    "vite-plugin-pwa": "^0.20.2",
+    "vite-plugin-pwa": "^0.20.5",
     "vite-plugin-restart": "^0.4.1"
   }
 }
