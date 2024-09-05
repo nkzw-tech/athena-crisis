@@ -1,8 +1,10 @@
 import { SongName } from '@deities/athena/info/Music.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import { App } from '@deities/ui/App.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
+import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import { createContext, ReactNode, useContext, useEffect } from 'react';
 
 type MusicContext = {
@@ -36,9 +38,25 @@ export default function useMusic(song: SongName) {
 const isPlaying = (video: HTMLVideoElement | null | undefined) =>
   video && !video.paused && !video.ended && video.currentTime > 0;
 
+let resume = false;
+const onVisibilityChange = (isVisible: boolean) => {
+  if (!App.canQuit) {
+    if (resume && isVisible) {
+      AudioPlayer.resume();
+      resume = false;
+    } else if (!isVisible && !AudioPlayer.isPaused()) {
+      AudioPlayer.pause();
+      resume = true;
+    }
+  }
+};
+
 export function usePlayMusic(dep?: unknown) {
   const { pathname } = useLocation();
   const context = useContext(Context);
+
+  useVisibilityState(onVisibilityChange);
+
   useEffect(() => {
     clearTimeout(context.timer);
     context.timer = setTimeout(

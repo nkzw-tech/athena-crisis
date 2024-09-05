@@ -134,12 +134,20 @@ class AudioPlayer {
   }
 
   pause() {
+    if (this.paused) {
+      return;
+    }
+
     this.paused = true;
     localStorage.setItem(pausedKey, String(1));
     this.currentInstance?.pause();
   }
 
   resume() {
+    if (!this.paused) {
+      return;
+    }
+
     this.paused = false;
     localStorage.removeItem(pausedKey);
     const instance = this.currentInstance;

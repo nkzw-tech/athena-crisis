@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 
-export default function useVisibilityState() {
+export default function useVisibilityState(
+  onVisibilityChange?: (isVisible: boolean) => void,
+) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const onChange = () => {
       const newState = document.visibilityState !== 'hidden';
       if (newState !== isVisible) {
+        onVisibilityChange?.(newState);
         setIsVisible(newState);
       }
     };
@@ -23,7 +26,7 @@ export default function useVisibilityState() {
       document.removeEventListener('mouseenter', setVisible);
       document.removeEventListener('keydown', setVisible);
     };
-  }, [isVisible]);
+  }, [isVisible, onVisibilityChange]);
 
   return isVisible;
 }
