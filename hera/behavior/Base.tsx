@@ -10,6 +10,7 @@ import { attackable, moveable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import AbstractSelectBehavior from './AbstractSelectBehavior.tsx';
+import { resetBehavior } from './Behavior.tsx';
 import BuySkills from './BuySkills.tsx';
 import CreateUnit from './CreateUnit.tsx';
 import Menu from './Menu.tsx';
@@ -85,6 +86,11 @@ export default class Base extends AbstractSelectBehavior {
         AnimationConfig.AnimationDuration * 2.5,
       );
     }
+  }
+
+  onCancel(state: State) {
+    const { selectedBuilding, selectedUnit } = state;
+    return selectedBuilding && selectedUnit ? resetBehavior() : null;
   }
 
   protected onSelect(

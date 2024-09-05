@@ -274,6 +274,7 @@ export type MapBehavior = Readonly<{
     editor: EditorState,
   ) => StateLike | null;
   readonly navigate?: boolean;
+  readonly onCancel?: (state: State) => StateLike | null;
   readonly select?: (
     vector: Vector,
     state: State,
