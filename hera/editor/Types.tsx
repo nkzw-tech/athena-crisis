@@ -156,6 +156,7 @@ export type MapPerformanceMetricsEstimation = Readonly<{
   avgPower: number;
   capturedBuildings: number;
   histogram: string;
+  lost: number;
   lostUnits: number;
   oneShots: number;
   pace: number;

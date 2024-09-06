@@ -449,8 +449,30 @@ export default function MapEditorSettingsPanel({
                     <div>
                       <fbt desc="Map metrics summary">
                         Total:
-                        <fbt:param name="won">{metrics.won}</fbt:param> won
-                        games
+                        <fbt:param name="won">{metrics.won}</fbt:param>{' '}
+                        <fbt:plural
+                          count={metrics.won}
+                          many="won games"
+                          name="number of games"
+                          showCount="no"
+                        >
+                          won game
+                        </fbt:plural>,{' '}
+                        <fbt:param name="lost">{metrics.lost}</fbt:param>{' '}
+                        <fbt:plural
+                          count={metrics.lost}
+                          many="lost games"
+                          name="number of games"
+                          showCount="no"
+                        >
+                          lost game
+                        </fbt:plural>,{' '}
+                        <fbt:param name="winRatio">
+                          {(metrics.won / (metrics.won + metrics.lost)).toFixed(
+                            2,
+                          )}
+                        </fbt:param>{' '}
+                        win ratio.
                       </fbt>
                     </div>
                   </Stack>
@@ -462,10 +484,9 @@ export default function MapEditorSettingsPanel({
             estimateMapPerformance && (
               <Stack start>
                 <InlineLink
-                  onClick={async () => {
-                    const metrics = await estimateMapPerformance();
-                    setMetrics(metrics);
-                  }}
+                  onClick={async () =>
+                    setMetrics(await estimateMapPerformance())
+                  }
                 >
                   <fbt desc="Button to estimate player performance metrics for this map">
                     Estimate performance metrics for this map
