@@ -1,5 +1,6 @@
 import { Lightning } from '../info/Tile.tsx';
 import getModifier from '../lib/getModifier.tsx';
+import withModifiers from '../lib/withModifiers.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 import writeTile from './writeTile.tsx';
@@ -16,8 +17,10 @@ export default function toggleLightningTile(map: MapData, vector: Vector) {
     getModifier(map, vector, Lightning, Lightning.style.layer),
   );
 
-  return map.copy({
-    map: newMap,
-    modifiers: newModifiers,
-  });
+  return withModifiers(
+    map.copy({
+      map: newMap,
+      modifiers: newModifiers,
+    }),
+  );
 }
