@@ -97,7 +97,7 @@ const AttackRadiusButton = ({
             map.units
               .filter(
                 (unit) =>
-                  map.isOpponent(unit, currentViewer) &&
+                  map.isNonNeutralOpponent(currentViewer, unit) &&
                   unit.info.hasAttack() &&
                   (!unit.info.hasAbility(Ability.Unfold) || unit.isUnfolded()),
               )
