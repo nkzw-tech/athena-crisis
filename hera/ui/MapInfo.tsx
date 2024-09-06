@@ -135,7 +135,7 @@ const renderUnit = (
           : '∞',
       );
     return (
-      <Box blur className={cx(boxStyle, unitStyle)}>
+      <Box blur className={boxStyle}>
         <UnitTile
           animationConfig={animationConfig}
           biome={biome}
@@ -291,7 +291,7 @@ export default function MapInfo({
   );
 }
 
-const vars = new CSSVariables<'left-offset' | 'width'>('mi');
+const vars = new CSSVariables<'left-offset'>('mi');
 const left = `calc(
   ${applyVar('inset')} + ${applyVar('mouse-position-left')} +
     ${vars.apply('left-offset')}
@@ -330,14 +330,12 @@ const style = css`
 `;
 
 const boxStyle = css`
-  ${vars.set('width', '240px')}
-
   font-size: 0.9em;
   height: ${DoubleSize}px;
   line-height: 1.1em;
   padding: 0 4px;
   position: relative;
-  width: ${vars.apply('width')};
+  width: 260px;
 
   > div:nth-child(1) {
     align-self: center;
@@ -347,10 +345,6 @@ const boxStyle = css`
   ${Breakpoints.sm} {
     align-self: flex-end;
   }
-`;
-
-const unitStyle = css`
-  ${vars.set('width', '260px')}
 `;
 
 const buildingStyle = css`
@@ -383,7 +377,7 @@ const textStyle = css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(${vars.apply('width')} - ${textPosition}px);
+    width: calc(260px - ${textPosition}px);
   }
 `;
 
