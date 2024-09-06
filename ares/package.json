@@ -33,7 +33,7 @@
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.4.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.5.2",
+    "framer-motion": "^11.5.4",
     "p-limit": "^6.1.0",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
