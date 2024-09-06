@@ -1,8 +1,10 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
+import dropInactivePlayers from '@deities/athena/lib/dropInactivePlayers.tsx';
 import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import validateMap from '@deities/athena/lib/validateMap.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
+import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -35,7 +37,11 @@ export default function BiomeSelector({
   const update = useCallback(
     (biome: Biome) => {
       const select = () => {
-        const [newMap] = validateMap(convertBiome(map, biome), AIRegistry);
+        const [newMap] = validateMap(
+          convertBiome(map, biome),
+          AIRegistry,
+          toTeamArray(dropInactivePlayers(map).teams),
+        );
         if (newMap) {
           onBiomeChange(newMap);
         }
