@@ -207,6 +207,7 @@ export type SkillInfoState = Readonly<{
   action?: (skill: Skill | null) => void;
   actionName?: ReactElement;
   canAction?: (skill: Skill) => boolean;
+  charges: number | null;
   currentSkill: Skill;
   origin: string;
   showAction?: (skill: Skill) => boolean;

@@ -131,6 +131,7 @@ export default class BuySkills {
               showGameInfo({
                 action: isDisabled ? undefined : buy,
                 actionName: <fbt desc="Button to buy a skill">Buy</fbt>,
+                charges: null,
                 currentSkill: skill,
                 origin: toTransformOrigin(event),
                 showCost: true,

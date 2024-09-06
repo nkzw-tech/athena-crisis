@@ -142,6 +142,7 @@ export default memo(function PlayerCard({
             : undefined,
         actionName: <fbt desc="Button to activate a skill">Activate</fbt>,
         canAction,
+        charges: availableCharges,
         currentSkill,
         origin: origin || 'center center',
         showAction: (skill: Skill) => !!getSkillConfig(skill).charges,
@@ -150,14 +151,15 @@ export default memo(function PlayerCard({
       });
     },
     [
-      actions,
-      canAction,
+      update,
+      showGameInfo,
       currentViewer,
-      action,
       player.id,
       player.skills,
-      showGameInfo,
-      update,
+      canAction,
+      availableCharges,
+      action,
+      actions,
     ],
   );
 

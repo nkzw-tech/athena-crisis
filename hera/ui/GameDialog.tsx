@@ -577,6 +577,7 @@ const GameSkillDialog = ({
     action,
     actionName,
     canAction,
+    charges,
     currentSkill: initialSkill,
     origin,
     showAction,
@@ -627,7 +628,25 @@ const GameSkillDialog = ({
         </DialogTab>
       ))}
       transformOrigin={origin}
-    />
+    >
+      {charges != null && (
+        <Stack className={boxStyle} gap vertical>
+          <p>
+            <fbt desc="Number of current available charges">
+              You currently have <fbt:param name="charges">{charges}</fbt:param>{' '}
+              <fbt:plural
+                count={charges}
+                many="charges"
+                name="number of charges"
+              >
+                charge
+              </fbt:plural>. Your charge bar fills up through attacks during
+              battle.
+            </fbt>
+          </p>
+        </Stack>
+      )}
+    </SkillDialog>
   );
 };
 
@@ -708,4 +727,11 @@ const failedStyle = css`
 
 const zapStyle = css`
   margin: -2px 4px 2px 0;
+`;
+
+const boxStyle = css`
+  ${clipBorder()}
+
+  background: ${applyVar('background-color')};
+  padding: 12px;
 `;
