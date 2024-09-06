@@ -74,6 +74,18 @@ export default class Radar {
     } = state;
     if (!this.radarType && selectedPosition) {
       const { charge, id } = map.getCurrentPlayer();
+      let canEnableLightning = false;
+      let canDisableLightning = false;
+
+      map.forEachField((vector) => {
+        const tile = map.getTileInfo(vector);
+        if (tile === Lightning) {
+          canDisableLightning = true;
+        } else if (canPlaceLightning(map, vector)) {
+          canEnableLightning = true;
+        }
+      });
+
       return (
         <ActionWheel
           actions={actions}
@@ -87,7 +99,7 @@ export default class Radar {
           <ActionWheelCharge charge={charge} requiredCharge={1} />
           <LargeActionButton
             detail={fbt('Off', 'Off button')}
-            disabled={charge < Charge}
+            disabled={!canDisableLightning || charge < Charge}
             entityCount={2}
             icon={(highlight, props) => <Icon icon={Zap} {...props} />}
             navigationDirection={navigationDirection}
@@ -96,7 +108,7 @@ export default class Radar {
           />
           <LargeActionButton
             detail={fbt('On', 'On button')}
-            disabled={charge < Charge}
+            disabled={!canEnableLightning || charge < Charge}
             entityCount={2}
             icon={(highlight, props) => <Icon icon={ZapOn} {...props} />}
             navigationDirection={navigationDirection}
