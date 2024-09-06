@@ -33,6 +33,7 @@ export function AttributeGridBox({ children }: { children: ReactNode }) {
 const defaultGap = 8;
 
 const gridStyle = css`
+  align-items: center;
   display: grid;
   grid-template-columns: auto auto auto;
   row-gap: 12px;

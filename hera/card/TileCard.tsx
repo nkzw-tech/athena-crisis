@@ -138,7 +138,9 @@ export default memo(function TileCard({
             <>
               <Stack nowrap start>
                 <Icon icon={Visible} />
-                <fbt desc="Label for vision cost">Vision Cost</fbt>
+                <div className={maxWidthStyle}>
+                  <fbt desc="Label for vision cost">Vision Cost</fbt>
+                </div>
               </Stack>
               <div>{vision}</div>
               <Range
@@ -325,4 +327,9 @@ const largeCoverStyle = css`
   ${Breakpoints.sm} {
     display: block;
   }
+`;
+
+const maxWidthStyle = css`
+  max-width: 140px;
+  white-space: normal;
 `;
