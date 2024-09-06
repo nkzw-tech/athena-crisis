@@ -272,7 +272,7 @@ export default memo(function PlayerCard({
             </Stack>
             {wide && (
               <Stack className={offsetStyle} gap={16} nowrap start>
-                <Stack className={cx(playerStatsStyle, nowrapStyle)}>
+                <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
                     {shouldShow ? calculateFunds(map, player) : '???'}
@@ -300,6 +300,7 @@ export default memo(function PlayerCard({
                     <Stack
                       className={cx(playerStatsStyle, nowrapStyle)}
                       key={index}
+                      nowrap
                     >
                       <Icon
                         className={playerStatsBeforeIconStyle}
