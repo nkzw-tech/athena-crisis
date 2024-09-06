@@ -16,9 +16,7 @@ export default function measure(
     context.letterSpacing = `${letterSpacing}px`;
   }
 
-  context.font = getCurrentFonts()
-    .map((font) => `${fontSize}px ${font}`)
-    .join(', ');
+  context.font = `${fontSize}px ${getCurrentFonts().join(', ')}`;
 
   const getLetterSpacing = (text: string) =>
     isSafari ? letterSpacing * (text.length - 1) : 0;
