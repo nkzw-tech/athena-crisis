@@ -16,6 +16,7 @@ import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
+import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
@@ -310,99 +311,103 @@ export default function MapPerformanceMetrics({
   );
 
   return (
-    <motion.div
-      animate={{
-        opacity: 1,
-        transform: 'scale(1)',
-      }}
-      className={cx(wrapperStyle, hide && wrapperHideStyle)}
-      exit={{
-        opacity: 0,
-        transform: 'scale(0)',
-      }}
-      initial={{
-        opacity: 0,
-        transform: 'scale(0)',
-      }}
-      style={{
-        transformOrigin: 'center center',
-        zIndex: zIndex + 1,
-      }}
-      transition={{
-        duration: cardDuration / 1000,
-        ease: [0.34, 1.26, 0.64, 1],
-      }}
-    >
-      <Box
-        className={cx(fullStyle, mapPerformanceStyle)}
-        style={{ zIndex: zIndex + 2 }}
-        vertical
+    <Portal>
+      <motion.div
+        animate={{
+          opacity: 1,
+          transform: 'scale(1)',
+        }}
+        className={cx(wrapperStyle, hide && wrapperHideStyle)}
+        exit={{
+          opacity: 0,
+          transform: 'scale(0)',
+        }}
+        initial={{
+          opacity: 0,
+          transform: 'scale(0)',
+        }}
+        style={{
+          transformOrigin: 'center center',
+          zIndex: zIndex + 1,
+        }}
+        transition={{
+          duration: cardDuration / 1000,
+          ease: [0.34, 1.26, 0.64, 1],
+        }}
       >
-        {hide ? (
-          <>
-            <Stack alignCenter center className={fadeStyle}>
-              <InlineLink onClick={() => setHide(false)}>
-                <fbt desc="Button to show a stats dialog">Show Stats</fbt>
-              </InlineLink>
-            </Stack>
-          </>
-        ) : (
-          <>
-            <AnimatePresence>
-              {cards[visibleCard] || (
-                <SummaryCard
-                  instant={isDone}
-                  onComplete={() => setIsDone(true)}
-                  result={result}
-                />
-              )}
-            </AnimatePresence>
-            {isDone && (
-              <>
-                <InlineLink
-                  className={cx(
-                    fadeStyle,
-                    hideButtonStyle,
-                    hasPreviousResult && !wasHidden && delayHideButtonStyle,
-                  )}
-                  onClick={() => {
-                    setWasHidden(true);
-                    setHide(true);
-                  }}
-                >
-                  <Icon icon={Close} />
+        <Box
+          className={cx(fullStyle, mapPerformanceStyle)}
+          style={{ zIndex: zIndex + 2 }}
+          vertical
+        >
+          {hide ? (
+            <>
+              <Stack alignCenter center className={fadeStyle}>
+                <InlineLink onClick={() => setHide(false)}>
+                  <fbt desc="Button to show a stats dialog">Show Stats</fbt>
                 </InlineLink>
-                {hasPreviousResult ? (
-                  <Stack
-                    alignCenter
-                    center
-                    className={cx(fadeStyle, bottomStyle)}
-                    gap={16}
+              </Stack>
+            </>
+          ) : (
+            <>
+              <AnimatePresence>
+                {cards[visibleCard] || (
+                  <SummaryCard
+                    instant={isDone}
+                    onComplete={() => setIsDone(true)}
+                    result={result}
+                  />
+                )}
+              </AnimatePresence>
+              {isDone && (
+                <>
+                  <InlineLink
+                    className={cx(
+                      fadeStyle,
+                      hideButtonStyle,
+                      hasPreviousResult && !wasHidden && delayHideButtonStyle,
+                    )}
+                    onClick={() => {
+                      setWasHidden(true);
+                      setHide(true);
+                    }}
                   >
-                    <div>
-                      <fbt desc="Label for previous result">Previous Best</fbt>
-                    </div>
-                    <Stack>
-                      {previousResult.map(([type, achieved]) => (
-                        <StarIcon
-                          achieved={achieved}
-                          className={cx(
-                            previousStarStyle,
-                            wasHidden && instantStyle,
-                          )}
-                          key={type}
-                          small
-                        />
-                      ))}
+                    <Icon icon={Close} />
+                  </InlineLink>
+                  {hasPreviousResult ? (
+                    <Stack
+                      alignCenter
+                      center
+                      className={cx(fadeStyle, bottomStyle)}
+                      gap={16}
+                    >
+                      <div>
+                        <fbt desc="Label for previous result">
+                          Previous Best
+                        </fbt>
+                      </div>
+                      <Stack>
+                        {previousResult.map(([type, achieved]) => (
+                          <StarIcon
+                            achieved={achieved}
+                            className={cx(
+                              previousStarStyle,
+                              wasHidden && instantStyle,
+                            )}
+                            key={type}
+                            small
+                          />
+                        ))}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                ) : null}
-              </>
-            )}
-          </>
-        )}
-      </Box>
-    </motion.div>
+                  ) : null}
+                </>
+              )}
+            </>
+          )}
+        </Box>
+      </motion.div>
+    </Portal>
   );
 }
 
@@ -412,7 +417,7 @@ const wrapperStyle = css`
   backdrop-filter: blur(4px);
   bottom: 45%;
   min-height: 192px;
-  position: absolute;
+  position: fixed;
   top: 35%;
 
   left: calc(50% - 240px);
