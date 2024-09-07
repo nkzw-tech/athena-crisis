@@ -250,13 +250,11 @@ export default function MapPerformanceMetrics({
   player,
   playerAchievement,
   scrollIntoView,
-  zIndex,
 }: {
   map: MapData;
   player: PlayerID;
   playerAchievement: PlayerAchievement | null;
   scrollIntoView: (vectors: ReadonlyArray<Vector>) => void;
-  zIndex: number;
 }) {
   const performance = evaluatePlayerPerformance(map, player);
   const [visibleCard, setVisibleCard] = useState<number>(0);
@@ -328,18 +326,13 @@ export default function MapPerformanceMetrics({
         }}
         style={{
           transformOrigin: 'center center',
-          zIndex: zIndex + 1,
         }}
         transition={{
           duration: cardDuration / 1000,
           ease: [0.34, 1.26, 0.64, 1],
         }}
       >
-        <Box
-          className={cx(fullStyle, mapPerformanceStyle)}
-          style={{ zIndex: zIndex + 2 }}
-          vertical
-        >
+        <Box className={cx(fullStyle, mapPerformanceStyle)} vertical>
           {hide ? (
             <>
               <Stack alignCenter center className={fadeStyle}>
@@ -435,9 +428,10 @@ const wrapperStyle = css`
 `;
 
 const wrapperHideStyle = css`
+  bottom: 72px;
   height: 42px;
   min-height: 42px;
-  top: calc(100% + 72px);
+  top: calc(100% - 114px);
 `;
 
 const mapPerformanceStyle = css`

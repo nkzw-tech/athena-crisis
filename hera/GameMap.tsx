@@ -1826,7 +1826,6 @@ export default class GameMap extends Component<Props, State> {
                 player={currentViewer}
                 playerAchievement={playerAchievement || null}
                 scrollIntoView={this._scrollIntoView}
-                zIndex={zIndex}
               />
             )}
         </div>
