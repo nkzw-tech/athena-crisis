@@ -316,7 +316,7 @@ const textStyle = css`
 const smallCoverStyle = css`
   display: block;
 
-  ${Breakpoints.sm} {
+  ${Breakpoints.xl} {
     display: none;
   }
 `;
@@ -324,7 +324,7 @@ const smallCoverStyle = css`
 const largeCoverStyle = css`
   display: none;
 
-  ${Breakpoints.sm} {
+  ${Breakpoints.xl} {
     display: block;
   }
 `;

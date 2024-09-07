@@ -204,7 +204,9 @@ export default memo(function BuildingCard({
             <>
               <Stack nowrap start>
                 <Icon icon={Coin} />
-                <fbt desc="Label for build cost">Build Cost</fbt>
+                <div className={maxWidthStyle}>
+                  <fbt desc="Label for build cost">Build Cost</fbt>
+                </div>
               </Stack>
               <div>{cost}</div>
               <Range
@@ -356,4 +358,9 @@ const wideColumnStyle = css`
 const iconStyle = css`
   margin-bottom: -2px;
   margin-top: 2px;
+`;
+
+const maxWidthStyle = css`
+  max-width: 140px;
+  white-space: normal;
 `;
