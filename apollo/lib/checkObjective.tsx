@@ -1,6 +1,10 @@
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
-import { PlayerID, PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import {
+  PlayerID,
+  PlayerIDSet,
+  resolveDynamicPlayerID,
+} from '@deities/athena/map/Player.tsx';
 import Unit, { TransportedUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -55,6 +59,44 @@ export function shouldCheckDefaultObjectives(
     );
   }
   return false;
+}
+
+export function pickWinningPlayer(
+  activeMap: MapData,
+  actionResponse: ActionResponse,
+  objective: Objective,
+) {
+  if (actionResponse.type === 'AttackUnit' && !actionResponse.unitA) {
+    return actionResponse.playerB;
+  }
+
+  if (objective.type === Criteria.DefeatAmount) {
+    return (
+      objective.players?.length ? objective.players : activeMap.active
+    ).find(
+      (playerID) =>
+        (!objective.optional || !objective.completed?.has(playerID)) &&
+        activeMap.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
+    );
+  }
+
+  if (actionResponse.type === 'EndTurn') {
+    return objective.type === Criteria.Survival
+      ? activeMap.currentPlayer
+      : resolveDynamicPlayerID(activeMap, 'opponent');
+  }
+
+  if (
+    (objective.type === Criteria.RescueLabel ||
+      objective.type === Criteria.RescueAmount ||
+      objective.type === Criteria.CaptureLabel) &&
+    isDestructiveAction(actionResponse) &&
+    matchesPlayerList(objective.players, activeMap.currentPlayer)
+  ) {
+    return resolveDynamicPlayerID(activeMap, 'opponent');
+  }
+
+  return activeMap.currentPlayer;
 }
 
 const filterByLabels = (label: PlayerIDSet) => (entity: Entity) =>
