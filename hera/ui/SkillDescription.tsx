@@ -584,7 +584,7 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
   switch (skill) {
     case Skill.UnitAbilitySniperImmediateAction:
       return (
-        <fbt desc="Additional skill description">
+        <fbt desc="Additional skill description. The leader unit in this case is female.">
           The leader of the{' '}
           <fbt:param name="pluralUnitName">
             <UnitName color={color} unit={Sniper} />
