@@ -30,19 +30,23 @@ export default function applyEndTurnActionResponse(
   let teams = updatePlayers(map.teams, [nextPlayer, currentPlayer]);
   const supplyVectors = new Set(supply);
   const unitsToHeal = getUnitsToHealOnBuildings(map, nextPlayer);
-  const destroyedUnits = applyBeginTurnStatusEffects(
+  const mapWithStatusEffects = applyBeginTurnStatusEffects(
     subtractFuel(map, nextPlayer),
     nextPlayer,
-  ).units.reduce(
-    (sum, unit, vector) =>
-      sum +
-      (!supplyVectors.has(vector) &&
-      !unitsToHeal.has(vector) &&
-      shouldRemoveUnit(map, vector, unit, nextPlayer.id)
-        ? unit.count()
-        : 0),
-    0,
   );
+  const destroyedUnits =
+    map.units.size -
+    mapWithStatusEffects.units.size +
+    mapWithStatusEffects.units.reduce(
+      (sum, unit, vector) =>
+        sum +
+        (!supplyVectors.has(vector) &&
+        !unitsToHeal.has(vector) &&
+        shouldRemoveUnit(map, vector, unit, nextPlayer.id)
+          ? unit.count()
+          : 0),
+      0,
+    );
 
   if (destroyedUnits > 0) {
     const mapB = map.copy({ teams });

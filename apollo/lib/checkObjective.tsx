@@ -141,6 +141,51 @@ function checkObjective(
   }
 
   if (isDestructive) {
+    if (!isDefault && isEndTurn) {
+      const matchesTargetPlayerList = matchesPlayerList(
+        objective.players,
+        targetPlayer,
+      );
+      if (
+        (objective.type === Criteria.DefeatAmount &&
+          !ignoreIfOptional &&
+          !matchesTargetPlayerList &&
+          (objective.players?.length ? objective.players : map.active).some(
+            (playerID) =>
+              map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
+          )) ||
+        (objective.type === Criteria.DefeatLabel &&
+          !ignoreIfOptional &&
+          !matchesTargetPlayerList &&
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterSelf(map, targetPlayer)).size === 0 &&
+          previousMap.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterSelf(previousMap, targetPlayer)).size > 0) ||
+        (objective.type === Criteria.DefeatOneLabel &&
+          !ignoreIfOptional &&
+          !matchesTargetPlayerList &&
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterSelf(map, targetPlayer)).size <
+            previousMap.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterSelf(map, targetPlayer)).size) ||
+        (objective.type === Criteria.EscortLabel &&
+          !ignoreIfOptional &&
+          matchesTargetPlayerList &&
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterSelf(map, targetPlayer)).size <
+            previousMap.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterSelf(map, targetPlayer)).size)
+      ) {
+        return objective;
+      }
+    }
+
     return (
       (objective.type === Criteria.DefeatLabel &&
         matchesPlayer &&
@@ -160,7 +205,7 @@ function checkObjective(
             .filter(filterEnemies(previousMap, player)).size) ||
       (objective.type === Criteria.DefeatAmount &&
         matchesPlayer &&
-        (objective.players?.length ? objective.players : map.active).find(
+        (objective.players?.length ? objective.players : map.active).some(
           (playerID) =>
             map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
         )) ||
@@ -199,35 +244,26 @@ function checkObjective(
         objective.type === Criteria.DestroyAmount &&
         matchesPlayer &&
         destroyedBuildingsByPlayer(map, player) >= objective.amount) ||
-      (isSurvivalAndEndTurn &&
-        objective.rounds <= actionResponse.round &&
-        matchesPlayerList(objective.players, targetPlayer)) ||
-      (objective.type === Criteria.EscortLabel &&
+      (!isEndTurn &&
+        objective.type === Criteria.EscortLabel &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
           .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size <
+          .filter(filterEnemies(map, targetPlayer)).size <
           previousMap.units
             .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)).size) ||
+            .filter(filterEnemies(map, targetPlayer)).size) ||
+      (isSurvivalAndEndTurn &&
+        objective.rounds <= actionResponse.round &&
+        matchesPlayerList(objective.players, targetPlayer)) ||
       (objective.type === Criteria.EscortAmount &&
         objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
           .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size < objective.amount) ||
-      (isEndTurn &&
-        objective.type === Criteria.DefeatOneLabel &&
-        !ignoreIfOptional &&
-        !matchesPlayerList(objective.players, targetPlayer) &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterSelf(map, targetPlayer)).size <
-          previousMap.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterSelf(map, targetPlayer)).size)
+          .filter(filterEnemies(map, player)).size < objective.amount)
     );
   }
 

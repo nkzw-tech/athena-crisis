@@ -192,20 +192,20 @@ importers:
         specifier: ^4.0.13
         version: 4.0.13(react@19.0.0-rc.0)
       react-relay:
-        specifier: ^17.0.0
-        version: 17.0.0(react@19.0.0-rc.0)
+        specifier: ^18.0.0
+        version: 18.0.0(react@19.0.0-rc.0)
       react-router-dom:
         specifier: ^6.26.1
         version: 6.26.1(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)
       relay-runtime:
-        specifier: ^17.0.0
-        version: 17.0.0
+        specifier: ^18.0.0
+        version: 18.0.0
       socket.io-client:
         specifier: ^4.7.5
         version: 4.7.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       tinybase:
-        specifier: 5.2.2
-        version: 5.2.2(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        specifier: 5.2.3
+        version: 5.2.3(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       workbox-core:
         specifier: ^7.1.0
         version: 7.1.0
@@ -247,14 +247,14 @@ importers:
         specifier: ^17.0.4
         version: 17.0.4
       babel-plugin-relay:
-        specifier: ^17.0.0
-        version: 17.0.0
+        specifier: ^18.0.0
+        version: 18.0.0
       glob:
         specifier: 11.0.0
         version: 11.0.0
       relay-compiler:
-        specifier: ^17.0.0
-        version: 17.0.0
+        specifier: ^18.0.0
+        version: 18.0.0
       vite-plugin-minify:
         specifier: ^2.0.0
         version: 2.0.0(vite@5.4.3(@types/node@22.5.4)(terser@5.31.6))
@@ -334,8 +334,8 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(@pothos/core@4.2.0(graphql@16.9.0))(@prisma/client@5.19.1(prisma@5.19.1))(graphql@16.9.0)(typescript@5.5.4)
       '@pothos/plugin-relay':
-        specifier: ^4.2.0
-        version: 4.2.0(@pothos/core@4.2.0(graphql@16.9.0))(graphql@16.9.0)
+        specifier: ^4.2.1
+        version: 4.2.1(@pothos/core@4.2.0(graphql@16.9.0))(graphql@16.9.0)
       '@prisma/client':
         specifier: ~5.19.1
         version: 5.19.1(prisma@5.19.1)
@@ -2384,8 +2384,8 @@ packages:
       graphql: '>=16.6.0'
       typescript: '>=4.7.2'
 
-  '@pothos/plugin-relay@4.2.0':
-    resolution: {integrity: sha512-wQBQ256MAV2ZMVc8NwBXpRaJszT+tozlqExAGZo0Wgxneau40UOHjLdM+9Yd7Fsx3KwLyRQCBdc82pYdVLnxvw==}
+  '@pothos/plugin-relay@4.2.1':
+    resolution: {integrity: sha512-6vUbiaayJ9RgVuvOZIWZv2OIfEIHpB9JgkxBsmUI4BxQd9geXp0qhE/AjUOxMyJ8agGQqa/Ynub2lDNby0EyGw==}
     peerDependencies:
       '@pothos/core': '*'
       graphql: '>=16.6.0'
@@ -3973,8 +3973,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
-  babel-plugin-relay@17.0.0:
-    resolution: {integrity: sha512-aBIEDp6jFOAO+CD+GGKv4/WOQ7cnS6hZysJI0dFbLRQXZ6XQar0lytxQ4zuqPU0RpGnUeN5htK3NTewu2TZ53A==}
+  babel-plugin-relay@18.0.0:
+    resolution: {integrity: sha512-MImO+Uea2nGDxFTlHXLj3+YnmFpDneZRi/p7u3De1Nwq+Rn3uEFhqTbkiiC1LC4GbHRFhwWyKl2RhLsfBVdY7w==}
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -4087,8 +4087,8 @@ packages:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001657:
-    resolution: {integrity: sha512-DPbJAlP8/BAXy3IgiWmZKItubb3TYGP0WscQQlVGIfT4s/YlFYVuJgyOsQNP7rJRChx/qdMeLJQJP0Sgg2yjNA==}
+  caniuse-lite@1.0.30001658:
+    resolution: {integrity: sha512-N2YVqWbJELVdrnsW5p+apoQyYt51aBMSsBZki1XZEfeBCexcM/sf4xiAHcXQBkuOwJBXtWF7aW1sYX6tKebPHw==}
 
   canvas@2.11.2:
     resolution: {integrity: sha512-ItanGBMrmRV7Py2Z+Xhs7cT+FNt5K0vPL4p9EZ/UX/Mu7hFbkxSjKF2KVtPwX7UYWp7dRKnrTvReflgrItJbdw==}
@@ -4557,8 +4557,8 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
-  electron-to-chromium@1.5.15:
-    resolution: {integrity: sha512-Z4rIDoImwEJW+YYKnPul4DzqsWVqYetYVN3XqDmRpgV0mjz0hYTaeeh+8/9CL1bk3AHYmF4freW/NTiVoXA2gA==}
+  electron-to-chromium@1.5.18:
+    resolution: {integrity: sha512-1OfuVACu+zKlmjsNdcJuVQuVE61sZOLbNM4JAQ1Rvh6EOj0/EUKhMJjRH73InPlXSh8HIJk1cVZ8pyOV/FMdUQ==}
 
   emmet@2.4.7:
     resolution: {integrity: sha512-O5O5QNqtdlnQM2bmKHtJgyChcrFMgQuulI+WdiOw2NArzprUqqxUW6bgYtKvzKgrsYpuLWalOkdhNP+1jluhCA==}
@@ -4686,8 +4686,8 @@ packages:
       eslint-plugin-import-x:
         optional: true
 
-  eslint-module-utils@2.10.0:
-    resolution: {integrity: sha512-/AXiipjFyfLIUj3E4FR5NEGWoGDZHDfcGzWZkwobRc8fwqUAcy9owTk2LIKwNmtYL8Ad9/XfjSXbGHZ9AJWDEg==}
+  eslint-module-utils@2.11.0:
+    resolution: {integrity: sha512-gbBE5Hitek/oG6MUVj6sFuzEjA/ClzNflVrLovHi/JgLdC7fiN5gLAY1WIPW1a0V5I999MnsrvVrCOGmmVqDBQ==}
     engines: {node: '>=4'}
     peerDependencies:
       '@typescript-eslint/parser': '*'
@@ -5851,8 +5851,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.0.0:
-    resolution: {integrity: sha512-Qv32eSV1RSCfhY3fpPE2GNZ8jgM9X7rdAfemLWqTUxwiyIC4jJ6Sy0fZ8H+oLWevO6i4/bizg7c8d8i6bxrzbA==}
+  lru-cache@11.0.1:
+    resolution: {integrity: sha512-CgeuL5uom6j/ZVrg7G/+1IXqRY8JXX4Hghfy5YE0EhoYQWvndP1kufu58cmZLNIDKnRhZrXfdS9urVWx98AipQ==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -6755,8 +6755,8 @@ packages:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
     engines: {node: '>=0.10.0'}
 
-  react-relay@17.0.0:
-    resolution: {integrity: sha512-Kn0CMiKZtWc+EisFPmzuZ53RtDeLlJO+EUVJwqxNkOs5g1jDjVi1v+k48kHeTyim2X43Rr0S2aeailllci5SgQ==}
+  react-relay@18.0.0:
+    resolution: {integrity: sha512-8JD6LFcWmrrRprAdYL0Q/UL8VpIkZwMzTXp/pF7P4s3V6mtmNpnb8PaME+0lVlbzF5dJTmdim4Pr+E+GP+oGqA==}
     peerDependencies:
       react: 19.0.0-rc.0
 
@@ -6893,12 +6893,12 @@ packages:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
     engines: {node: '>= 0.10'}
 
-  relay-compiler@17.0.0:
-    resolution: {integrity: sha512-U2e/R0o40HJOQ13pwkvToqWqk6J3ASMyHmcxixVMZKfcwcpsTTOiKob215ZRh+4bqPwkNy97+V9CuzJ5hJmGtw==}
+  relay-compiler@18.0.0:
+    resolution: {integrity: sha512-sl9g6c/qMJrAc8usIeRp6L86D8kKSJGd+xTgMlZh0zXPO6kB1hGYGjjy1W0rOg+NE/yqNeREJxwvz5VxSGU92g==}
     hasBin: true
 
-  relay-runtime@17.0.0:
-    resolution: {integrity: sha512-7b2R3G3DP7VHq7/1ltwQfYn3KkTHIB2NNt3KijIZoNQ73avwpOXBEL0MelSXwq8L+K8lcgAW5VAT7o0LUhnJPQ==}
+  relay-runtime@18.0.0:
+    resolution: {integrity: sha512-LmW6T0Wdm3VQgTB0OcCl6VJX8lx7x9faTIwUqzTYh0olYFQ3FfA2LEuUW/LcjRX13hWQUiWQE/i3hqTyjc9jAw==}
 
   remark-directive@3.0.0:
     resolution: {integrity: sha512-l1UyWJ6Eg1VPU7Hm/9tt0zKtReJQNOA4+iDMAxTyZNWnJnFlbS/7zhiel/rogTLQ2vMYwDzSJa4BiVNqGlqIMA==}
@@ -7417,8 +7417,8 @@ packages:
   tiny-updater@3.5.2:
     resolution: {integrity: sha512-5EjK01h0rvgv+Eb0XaiTZJZR+ujdjCDHZ1ZCVCu+1h4+MyOYZ+za8UKuKdNOOOSKhkkC9B08o6ZhF4JnQg7ZLg==}
 
-  tinybase@5.2.2:
-    resolution: {integrity: sha512-GOERsREzLqps+ZyF99+dfUyrErkh190FvcGfOFLQf4S2JoUlIYfJLHjhIso2bmNA5Pn88UdlNXfN/41MwWZu1w==}
+  tinybase@5.2.3:
+    resolution: {integrity: sha512-mSPNAP9LD4RqypubkqF6zb4KKJrghWyspvG92LbervkRuehc2OWoSIS7clo7kLLfeQvi9lXzWkbrrMBV65BilQ==}
     hasBin: true
     peerDependencies:
       '@automerge/automerge-repo': ^1.2.0
@@ -7578,11 +7578,11 @@ packages:
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
 
-  twoslash-protocol@0.2.10:
-    resolution: {integrity: sha512-9sFHqPUexUPKAZM2e0dbAh0Hwkxd5fqSKWWMQ8Ah+O6MeYEUDGuWUUw5aUfS6veAqo+24VfV3xF0Vj0ZbH7x3Q==}
+  twoslash-protocol@0.2.11:
+    resolution: {integrity: sha512-rp+nkOWbKfJnBTDZtnIaBGjnU+4CaMhqu6db2UU7byU96rH8X4hao4BOxYw6jdZc85Lhv5pOfcjgfHeQyLzndQ==}
 
-  twoslash@0.2.10:
-    resolution: {integrity: sha512-EBnFbGSD7VtPYCYe8tnx5wDzTfQ2wDS10J89BnTr97Zu2+wRD/CskNLPvvDEZofb37mLSce/YuTP8GgGj+vSOg==}
+  twoslash@0.2.11:
+    resolution: {integrity: sha512-392Qkcu5sD2hROLZ+XPywChreDGJ8Yu5nnK/Moxfti/R39q0Q39MaV7iHjz92B5qucyjsQFnKMdYIzafX5T8dg==}
     peerDependencies:
       typescript: '*'
 
@@ -10047,7 +10047,7 @@ snapshots:
       graphql: 16.9.0
       typescript: 5.5.4
 
-  '@pothos/plugin-relay@4.2.0(@pothos/core@4.2.0(graphql@16.9.0))(graphql@16.9.0)':
+  '@pothos/plugin-relay@4.2.1(@pothos/core@4.2.0(graphql@16.9.0))(graphql@16.9.0)':
     dependencies:
       '@pothos/core': 4.2.0(graphql@16.9.0)
       graphql: 16.9.0
@@ -10718,7 +10718,7 @@ snapshots:
   '@shikijs/twoslash@1.16.2(typescript@5.5.4)':
     dependencies:
       '@shikijs/core': 1.16.2
-      twoslash: 0.2.10(typescript@5.5.4)
+      twoslash: 0.2.11(typescript@5.5.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -11871,7 +11871,7 @@ snapshots:
   autoprefixer@10.4.20(postcss@8.4.45):
     dependencies:
       browserslist: 4.23.3
-      caniuse-lite: 1.0.30001657
+      caniuse-lite: 1.0.30001658
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.1.0
@@ -11947,7 +11947,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-relay@17.0.0:
+  babel-plugin-relay@18.0.0:
     dependencies:
       babel-plugin-macros: 2.8.0
       cosmiconfig: 5.2.1
@@ -12009,8 +12009,8 @@ snapshots:
 
   browserslist@4.23.3:
     dependencies:
-      caniuse-lite: 1.0.30001657
-      electron-to-chromium: 1.5.15
+      caniuse-lite: 1.0.30001658
+      electron-to-chromium: 1.5.18
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
 
@@ -12064,7 +12064,7 @@ snapshots:
 
   camelcase@5.3.1: {}
 
-  caniuse-lite@1.0.30001657: {}
+  caniuse-lite@1.0.30001658: {}
 
   canvas@2.11.2:
     dependencies:
@@ -12503,7 +12503,7 @@ snapshots:
     dependencies:
       jake: 10.9.2
 
-  electron-to-chromium@1.5.15: {}
+  electron-to-chromium@1.5.18: {}
 
   emmet@2.4.7:
     dependencies:
@@ -12734,7 +12734,7 @@ snapshots:
       debug: 4.3.7(supports-color@5.5.0)
       enhanced-resolve: 5.17.1
       eslint: 8.57.0
-      eslint-module-utils: 2.10.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.11.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.0
       is-bun-module: 1.1.0
@@ -12747,7 +12747,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.10.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.11.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -12769,7 +12769,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.10.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.11.0(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.4.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -14113,7 +14113,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.0.0: {}
+  lru-cache@11.0.1: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -15012,7 +15012,7 @@ snapshots:
 
   path-scurry@2.0.0:
     dependencies:
-      lru-cache: 11.0.0
+      lru-cache: 11.0.1
       minipass: 7.1.2
 
   path-to-regexp@0.1.7: {}
@@ -15265,14 +15265,14 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-relay@17.0.0(react@19.0.0-rc.0):
+  react-relay@18.0.0(react@19.0.0-rc.0):
     dependencies:
       '@babel/runtime': 7.25.6
       fbjs: 3.0.5
       invariant: 2.2.4
       nullthrows: 1.1.1
       react: 19.0.0-rc.0
-      relay-runtime: 17.0.0
+      relay-runtime: 18.0.0
     transitivePeerDependencies:
       - encoding
 
@@ -15434,9 +15434,9 @@ snapshots:
 
   relateurl@0.2.7: {}
 
-  relay-compiler@17.0.0: {}
+  relay-compiler@18.0.0: {}
 
-  relay-runtime@17.0.0:
+  relay-runtime@18.0.0:
     dependencies:
       '@babel/runtime': 7.25.6
       fbjs: 3.0.5
@@ -16122,7 +16122,7 @@ snapshots:
       tiny-colors: 2.2.1
       when-exit: 2.1.3
 
-  tinybase@5.2.2(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
+  tinybase@5.2.3(prettier@4.0.0-alpha.8)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
     optionalDependencies:
       prettier: 4.0.0-alpha.8
       react: 19.0.0-rc.0
@@ -16214,12 +16214,12 @@ snapshots:
       tslib: 1.14.1
       typescript: 5.5.4
 
-  twoslash-protocol@0.2.10: {}
+  twoslash-protocol@0.2.11: {}
 
-  twoslash@0.2.10(typescript@5.5.4):
+  twoslash@0.2.11(typescript@5.5.4):
     dependencies:
       '@typescript/vfs': 1.6.0(typescript@5.5.4)
-      twoslash-protocol: 0.2.10
+      twoslash-protocol: 0.2.11
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -16625,7 +16625,7 @@ snapshots:
       shiki: 1.16.2
       tailwindcss: 3.4.10(ts-node@10.9.2(@swc/core@1.7.23)(@types/node@22.5.4)(typescript@5.5.4))
       toml: 3.0.0
-      twoslash: 0.2.10(typescript@5.5.4)
+      twoslash: 0.2.11(typescript@5.5.4)
       ua-parser-js: 1.0.38
       unified: 11.0.5
       unist-util-visit: 5.0.0

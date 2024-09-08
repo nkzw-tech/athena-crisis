@@ -89,13 +89,13 @@ const optional = (map: MapData) =>
 test('default win criteria', async () => {
   const from = vec(1, 1);
   const to = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     units: map.units
       .set(from, Helicopter.create(player1))
       .set(to, Helicopter.create(player2).setHealth(1)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = executeGameActions(mapA, [
     AttackUnitAction(from, to),
   ]);
 
@@ -117,7 +117,7 @@ test('capture amount win criteria', async () => {
   const v4 = vec(2, 1);
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player1))
       .set(v2, House.create(player2))
@@ -133,7 +133,7 @@ test('capture amount win criteria', async () => {
       .set(v5, Pioneer.create(player1).capture()),
   });
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     CaptureAction(v2),
     CaptureAction(v3),
     CaptureAction(v4),
@@ -148,8 +148,8 @@ test('capture amount win criteria', async () => {
     Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
   `);
 
-  const mapWithConditions = initialMap.copy({
-    config: initialMap.config.copy({
+  const mapWithConditions = mapA.copy({
+    config: mapA.config.copy({
       objectives: defineObjectives([
         {
           amount: 4,
@@ -161,7 +161,7 @@ test('capture amount win criteria', async () => {
     }),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
   expect(validateObjectives(mapWithConditions)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(mapWithConditions, [
@@ -197,8 +197,8 @@ test('capture amount win criteria', async () => {
   expect(gameHasEnded(gameStateB_2)).toBe(false);
 
   // Conditions can be asymmetrical.
-  const mapWithAsymmetricConditions = initialMap.copy({
-    config: initialMap.config.copy({
+  const mapWithAsymmetricConditions = mapA.copy({
+    config: mapA.config.copy({
       objectives: defineObjectives([
         {
           amount: 1,
@@ -265,7 +265,7 @@ test('capture amount win criteria also works when creating buildings', async () 
   const v1 = vec(1, 1);
   const v2 = vec(2, 2);
   const v3 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2))
       .set(v2, House.create(player2)),
@@ -286,9 +286,9 @@ test('capture amount win criteria also works when creating buildings', async () 
       .set(v3, Pioneer.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     CaptureAction(v1),
     CaptureAction(v2),
     CreateBuildingAction(v3, Factory.id),
@@ -302,7 +302,7 @@ test('capture amount win criteria also works when creating buildings', async () 
       GameEnd { objective: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -333,7 +333,7 @@ test('capture label win criteria', async () => {
   const v4 = vec(2, 1);
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player1))
       .set(v2, House.create(player2))
@@ -359,9 +359,9 @@ test('capture label win criteria', async () => {
       .set(v5, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     CaptureAction(v2),
     CaptureAction(v3),
     CaptureAction(v4),
@@ -377,16 +377,16 @@ test('capture label win criteria', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 1 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
-      objectives: initialMap.config.objectives.map((objective) => ({
+  const mapWithOptionalObjectives = mapA.copy({
+    config: mapA.config.copy({
+      objectives: mapA.config.objectives.map((objective) => ({
         ...objective,
         optional: true,
       })),
     }),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
   const [gameStateB, gameActionResponseB] = executeGameActions(
     mapWithOptionalObjectives,
@@ -413,7 +413,7 @@ test('capture label win criteria', async () => {
 test('capture label win criteria fails because building is destroyed', async () => {
   const v1 = vec(1, 3);
   const v2 = vec(2, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(
       v1,
       House.create(0, { label: 1 }).setHealth(1),
@@ -432,9 +432,9 @@ test('capture label win criteria fails because building is destroyed', async () 
     units: map.units.set(v2, HeavyTank.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackBuildingAction(v2, v1),
   ]);
 
@@ -447,7 +447,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   `,
   );
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -465,7 +465,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
 
   const [, gameActionResponseB] = executeGameActions(
-    initialMap.copy({ units: map.units.set(v2, HeavyTank.create(player2)) }),
+    mapA.copy({ units: map.units.set(v2, HeavyTank.create(player2)) }),
     [EndTurnAction(), AttackBuildingAction(v2, v1)],
   );
 
@@ -498,7 +498,7 @@ test('capture label win criteria fails because building is destroyed', async () 
 test('capture label win criteria (fail with missing label)', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2))
       .set(v2, House.create(player2)),
@@ -517,9 +517,9 @@ test('capture label win criteria (fail with missing label)', async () => {
       .set(v2, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     CaptureAction(v1),
     CaptureAction(v2),
   ]);
@@ -530,7 +530,7 @@ test('capture label win criteria (fail with missing label)', async () => {
       Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -551,7 +551,7 @@ test('destroy amount win criteria', async () => {
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
   const v4 = vec(1, 4);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player1).setHealth(1))
       .set(v2, House.create(player2).setHealth(1))
@@ -562,7 +562,7 @@ test('destroy amount win criteria', async () => {
       .set(v3.right(), Bomber.create(player1).capture()),
   });
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v3.right(), v3),
   ]);
@@ -573,8 +573,8 @@ test('destroy amount win criteria', async () => {
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }"
     `);
 
-  const mapWithConditions = initialMap.copy({
-    config: initialMap.config.copy({
+  const mapWithConditions = mapA.copy({
+    config: mapA.config.copy({
       objectives: defineObjectives([
         {
           amount: 2,
@@ -586,7 +586,7 @@ test('destroy amount win criteria', async () => {
     }),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
   expect(validateObjectives(mapWithConditions)).toBe(true);
 
   const [, gameActionResponseB] = executeGameActions(mapWithConditions, [
@@ -654,8 +654,8 @@ test('destroy amount win criteria', async () => {
   expect(gameHasEnded(gameStateB_2)).toBe(false);
 
   // Conditions can be asymmetrical.
-  const mapWithAsymmetricConditions = initialMap.copy({
-    config: initialMap.config.copy({
+  const mapWithAsymmetricConditions = mapA.copy({
+    config: mapA.config.copy({
       objectives: defineObjectives([
         {
           amount: 1,
@@ -720,7 +720,7 @@ test('destroy label win criteria', async () => {
   const v3 = vec(1, 3);
   const v4 = vec(3, 1);
   const v5 = vec(3, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2).setHealth(1))
       .set(v2, House.create(player2, { label: 4 }).setHealth(1))
@@ -747,9 +747,9 @@ test('destroy label win criteria', async () => {
       .set(v5, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackBuildingAction(v1.right(), v1),
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v3.right(), v3),
@@ -765,7 +765,7 @@ test('destroy label win criteria', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -795,7 +795,7 @@ test('destroy label does not fire without label', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(3, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2).setHealth(1))
       .set(v2, House.create(player2).setHealth(1))
@@ -818,9 +818,9 @@ test('destroy label does not fire without label', async () => {
       .set(v3, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackBuildingAction(v1.right(), v1),
     AttackBuildingAction(v2.right(), v2),
   ]);
@@ -831,7 +831,7 @@ test('destroy label does not fire without label', async () => {
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -854,7 +854,7 @@ test('destroy label win criteria (neutral structure)', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings
       .set(v1, CrashedAirplane.create(0, { label: 3 }).setHealth(1))
       .set(v2, House.create(player2).setHealth(1)),
@@ -874,7 +874,7 @@ test('destroy label win criteria (neutral structure)', async () => {
       .set(v3, Pioneer.create(player2)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v1.right(), v1),
   ]);
@@ -886,7 +886,7 @@ test('destroy label win criteria (neutral structure)', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 3 ], optional: false, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -916,7 +916,7 @@ test('defeat with label', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v1, House.create(player2, { label: 2 })),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -938,9 +938,9 @@ test('defeat with label', async () => {
       .set(v7, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v6),
     AttackUnitAction(v5, v4),
@@ -954,7 +954,7 @@ test('defeat with label', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -984,7 +984,7 @@ test('defeat one with label', async () => {
   const v3 = vec(2, 2);
   const v4 = vec(2, 1);
   const v5 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1003,9 +1003,9 @@ test('defeat one with label', async () => {
       .set(v5, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v4),
   ]);
@@ -1017,7 +1017,7 @@ test('defeat one with label', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 10 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1044,7 +1044,7 @@ test('defeat by amount', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1065,9 +1065,9 @@ test('defeat by amount', async () => {
       .set(v7, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v6),
     AttackUnitAction(v5, v4),
@@ -1081,7 +1081,7 @@ test('defeat by amount', async () => {
       GameEnd { objective: { amount: 3, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1109,7 +1109,7 @@ test('defeat by amount through counter attack', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1126,9 +1126,9 @@ test('defeat by amount through counter attack', async () => {
       .set(v3, Flamethrower.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1138,7 +1138,7 @@ test('defeat by amount through counter attack', async () => {
       GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1163,7 +1163,7 @@ test('defeat with label and Zombie', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1180,9 +1180,9 @@ test('defeat with label and Zombie', async () => {
       .set(v3, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1192,7 +1192,7 @@ test('defeat with label and Zombie', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1214,7 +1214,7 @@ test('defeat by amount and Zombie', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(2, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1231,9 +1231,9 @@ test('defeat by amount and Zombie', async () => {
       .set(v3, Infantry.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1243,7 +1243,7 @@ test('defeat by amount and Zombie', async () => {
       GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1267,7 +1267,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
   const v3 = vec(1, 3);
   const v4 = vec(2, 3);
   const v5 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1286,9 +1286,9 @@ test('defeat with label (fail because label did not previously exist)', async ()
       .set(v5, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v4),
   ]);
@@ -1299,7 +1299,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1324,7 +1324,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
   const v9 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1347,9 +1347,9 @@ test('defeat with label and a unit hiding inside of another', async () => {
       .set(v9, Flamethrower.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     EndTurnAction(),
     MoveAction(v3, v2),
     EndTurnAction(),
@@ -1369,7 +1369,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [ 1 ], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1403,7 +1403,7 @@ test('win by survival', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(2, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1420,9 +1420,9 @@ test('win by survival', async () => {
       .set(v2, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     EndTurnAction(),
     EndTurnAction(),
     EndTurnAction(),
@@ -1438,7 +1438,7 @@ test('win by survival', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, rounds: 3, type: 5 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1469,7 +1469,7 @@ test('win by survival', async () => {
 test('win by survival in one round', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1488,8 +1488,8 @@ test('win by survival in one round', async () => {
 
   expect(
     validateObjectives(
-      initialMap.copy({
-        config: initialMap.config.copy({
+      mapA.copy({
+        config: mapA.config.copy({
           objectives: defineObjectives([
             {
               hidden: false,
@@ -1504,11 +1504,9 @@ test('win by survival in one round', async () => {
     ),
   ).toBe(false);
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(mapA, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -1516,7 +1514,7 @@ test('win by survival in one round', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, rounds: 1, type: 5 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(
     validateObjectives(
@@ -1556,7 +1554,7 @@ test('win by survival in one round', async () => {
 test('win by survival with optional survival', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1580,9 +1578,9 @@ test('win by survival with optional survival', async () => {
       .set(v2, Pioneer.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     EndTurnAction(),
     EndTurnAction(),
     EndTurnAction(),
@@ -1607,7 +1605,7 @@ test('escort units', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1626,9 +1624,9 @@ test('escort units', async () => {
       .set(v5, Pioneer.create(player1, { label: 1 })),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -1640,7 +1638,7 @@ test('escort units', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1665,7 +1663,7 @@ test('escort units by label without having units with that label (fails)', async
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1684,9 +1682,9 @@ test('escort units by label without having units with that label (fails)', async
       .set(v5, Pioneer.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -1697,7 +1695,7 @@ test('escort units by label without having units with that label (fails)', async
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1720,7 +1718,7 @@ test('escort units (transport)', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1740,9 +1738,9 @@ test('escort units (transport)', async () => {
       .set(v4, Jeep.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     MoveAction(v4, v7),
@@ -1756,7 +1754,7 @@ test('escort units (transport)', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1783,7 +1781,7 @@ test('escort units by drop (transport)', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1803,9 +1801,9 @@ test('escort units by drop (transport)', async () => {
       .set(v4, Jeep.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     DropUnitAction(v4, 0, v5),
@@ -1827,7 +1825,7 @@ test('escort units by drop (transport)', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1867,7 +1865,7 @@ test('escort units by label fails', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1888,9 +1886,9 @@ test('escort units by label fails', async () => {
       .set(v7, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -1906,7 +1904,7 @@ test('escort units by label fails', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -1939,7 +1937,7 @@ test('escort units by label fails (transport)', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -1961,9 +1959,9 @@ test('escort units by label fails (transport)', async () => {
       .set(v7, SmallTank.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -1983,7 +1981,7 @@ test('escort units by label fails (transport)', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2018,7 +2016,7 @@ test('escort units by amount', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2037,9 +2035,9 @@ test('escort units by amount', async () => {
       .set(v5, Pioneer.create(player1)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -2051,7 +2049,7 @@ test('escort units by amount', async () => {
       GameEnd { objective: { amount: 2, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2080,7 +2078,7 @@ test('escort units by amount (label)', async () => {
   const v7 = vec(3, 2);
   const v8 = vec(1, 3);
   const v9 = vec(2, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v4, House.create(player1)),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -2118,9 +2116,9 @@ test('escort units by amount (label)', async () => {
       .set(v3, Pioneer.create(player1, { label: 2 })),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v5),
     MoveAction(v3, v4),
   ]);
@@ -2132,8 +2130,8 @@ test('escort units by amount (label)', async () => {
       GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = initialMap.copy({
-    config: initialMap.config.copy({
+  const mapWithOptionalObjectives = mapA.copy({
+    config: mapA.config.copy({
       objectives: defineObjectives([
         {
           amount: 1,
@@ -2199,7 +2197,7 @@ test('escort units by amount with label fails', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2221,9 +2219,9 @@ test('escort units by amount with label fails', async () => {
       .set(v7, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2239,7 +2237,7 @@ test('escort units by amount with label fails', async () => {
       GameEnd { objective: { amount: 2, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2272,7 +2270,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2294,9 +2292,9 @@ test('escort units by amount does not fail when enough units are remaining', asy
       .set(v7, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2313,7 +2311,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
       AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2346,7 +2344,7 @@ test('escort units by amount does not fail when the player has more units left',
   const v5 = vec(2, 2);
   const v6 = vec(2, 3);
   const v7 = vec(3, 1);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2367,9 +2365,9 @@ test('escort units by amount does not fail when the player has more units left',
       .set(v7, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2384,7 +2382,7 @@ test('escort units by amount does not fail when the player has more units left',
       AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2415,7 +2413,7 @@ test('rescue label win criteria', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 1);
   const v7 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2436,9 +2434,9 @@ test('rescue label win criteria', async () => {
       .set(v7, Pioneer.create(0, { label: 4 })),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     RescueAction(v2, v1),
     RescueAction(v4, v3),
     RescueAction(v6, v5),
@@ -2462,7 +2460,7 @@ test('rescue label win criteria', async () => {
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [], reward: null, type: 8 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2504,7 +2502,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   const v5 = vec(2, 2);
   const v6 = vec(2, 1);
   const v7 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2526,9 +2524,9 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       .set(v7, Pioneer.create(0, { label: 4 })),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     RescueAction(v2, v1),
     AttackUnitAction(v4, v3),
   ]);
@@ -2540,7 +2538,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2558,8 +2556,8 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   expect(gameHasEnded(gameStateA_2)).toBe(false);
 
   const [, gameActionResponseB] = executeGameActions(
-    initialMap.copy({
-      units: initialMap.units.set(v4, SmallTank.create(2)),
+    mapA.copy({
+      units: mapA.units.set(v4, SmallTank.create(2)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
@@ -2589,7 +2587,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   expect(gameHasEnded(gameStateB_2)).toBe(false);
 
   const [, gameActionResponseC] = executeGameActions(
-    initialMap.copy({
+    mapA.copy({
       teams: ImmutableMap([
         ...map.teams,
         [
@@ -2617,9 +2615,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
           ),
         ],
       ]),
-      units: initialMap.units
-        .set(v4, SmallTank.create(2))
-        .set(v7, Pioneer.create(3)),
+      units: mapA.units.set(v4, SmallTank.create(2)).set(v7, Pioneer.create(3)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
@@ -2678,9 +2674,9 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
   expect(gameHasEnded(gameStateC_2)).toBe(false);
 
   const [, gameActionResponseD] = executeGameActions(
-    initialMap.copy({
-      buildings: initialMap.buildings.set(v3, House.create(1).setHealth(1)),
-      units: initialMap.units.set(v4, SmallTank.create(2)),
+    mapA.copy({
+      buildings: mapA.buildings.set(v3, House.create(1).setHealth(1)),
+      units: mapA.units.set(v4, SmallTank.create(2)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackBuildingAction(v4, v3)],
   );
@@ -2722,7 +2718,7 @@ test('rescue amount win criteria', async () => {
   const v5 = vec(2, 2);
   const v6 = vec(2, 1);
   const v7 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2743,9 +2739,9 @@ test('rescue amount win criteria', async () => {
       .set(v7, Pioneer.create(0, { label: 4 })),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     RescueAction(v2, v1),
     RescueAction(v4, v3),
     RescueAction(v6, v5),
@@ -2767,7 +2763,7 @@ test('rescue amount win criteria', async () => {
       GameEnd { objective: { amount: 2, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 13 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
-  const mapWithOptionalObjectives = optional(initialMap);
+  const mapWithOptionalObjectives = optional(mapA);
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
@@ -2886,7 +2882,7 @@ test('optional objectives should not be triggered multiple times for the same pl
   const v7 = vec(2, 3);
   const v8 = vec(2, 4);
   const v9 = vec(3, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2912,9 +2908,9 @@ test('optional objectives should not be triggered multiple times for the same pl
       .set(v9, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v5),
     AttackUnitAction(v2, v6),
     EndTurnAction(),
@@ -2955,7 +2951,7 @@ test('optional objectives should not end the game, but non-optional one should w
   const v6 = vec(2, 2);
   const v7 = vec(2, 3);
   const v8 = vec(2, 4);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -2985,9 +2981,9 @@ test('optional objectives should not end the game, but non-optional one should w
       .set(v8, Flamethrower.create(player2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = executeGameActions(mapA, [
     AttackUnitAction(v1, v5),
     AttackUnitAction(v2, v6),
     EndTurnAction(),
@@ -3021,7 +3017,7 @@ test('optional objectives should not end the game, but non-optional one should w
 test('optional objectives are processed before game end responses', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
         { hidden: false, type: Criteria.Default },
@@ -3043,7 +3039,7 @@ test('optional objectives are processed before game end responses', async () => 
   });
 
   const [, gameActionResponseA] = executeGameActions(
-    initialMap,
+    mapA,
     [AttackUnitAction(v1, v2)],
     new Map([
       [
@@ -3085,7 +3081,7 @@ test('optional objectives are processed before game end responses', async () => 
 test('multiple optional objectives can trigger at once', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -3109,11 +3105,9 @@ test('multiple optional objectives can trigger at once', async () => {
       .set(v2, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3126,7 +3120,7 @@ test('multiple optional objectives can trigger at once', async () => {
 test('optional and game ending objectives might be triggered at the same time', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -3149,11 +3143,9 @@ test('optional and game ending objectives might be triggered at the same time', 
       .set(v2, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3166,7 +3158,7 @@ test('optional and game ending objectives might be triggered at the same time', 
 test('optional and default game ending objectives might be triggered at the same time', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v2, HQ.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -3184,11 +3176,9 @@ test('optional and default game ending objectives might be triggered at the same
       .set(v2, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3203,7 +3193,7 @@ test('multiple optional objectives have their effects applied correctly', async 
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
   const v3 = vec(1, 3);
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -3227,10 +3217,10 @@ test('multiple optional objectives have their effects applied correctly', async 
       .set(v2, Pioneer.create(player1).capture()),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
   const [gameState, gameActionResponseA] = executeGameActions(
-    initialMap,
+    mapA,
     [CaptureAction(v2)],
     new Map([
       [
@@ -3296,7 +3286,7 @@ test('poison at the begin of a turn properly fires win conditions', async () => 
     ],
   });
 
-  const initialMap = map.copy({
+  const mapA = map.copy({
     buildings: map.buildings.set(v4, HQ.create(1)),
     config: map.config.copy({
       objectives: defineObjectives([
@@ -3318,11 +3308,9 @@ test('poison at the begin of a turn properly fires win conditions', async () => 
       .set(v3, Pioneer.create(2)),
   });
 
-  expect(validateObjectives(initialMap)).toBe(true);
+  expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseA] = executeGameActions(mapA, [EndTurnAction()]);
 
   expect(
     snapshotEncodedActionResponse(gameActionResponseA),
@@ -3339,4 +3327,101 @@ test('poison at the begin of a turn properly fires win conditions', async () => 
     GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 4 }"
   `,
   );
+
+  const mapB = mapA.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [4],
+          type: Criteria.DefeatLabel,
+        },
+      ]),
+    }),
+  });
+
+  expect(validateObjectives(mapB)).toBe(true);
+
+  const [, gameActionResponseB] = executeGameActions(mapB, [EndTurnAction()]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
+      AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 70 }, chargeA: 169, chargeB: 180 }
+      CompleteUnit (5,1)
+      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
+      EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 3 }, objectiveId: 1, toPlayer: 4 }"
+    `);
+
+  const mapC = mapA.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [2],
+          type: Criteria.EscortLabel,
+          vectors: new Set([v4]),
+        },
+      ]),
+    }),
+  });
+
+  expect(validateObjectives(mapC)).toBe(true);
+
+  const [, gameActionResponseC] = executeGameActions(mapC, [EndTurnAction()]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseC))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
+    AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 70 }, chargeA: 169, chargeB: 180 }
+    CompleteUnit (5,1)
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
+    EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '4,1' ] }, objectiveId: 1, toPlayer: 4 }"
+  `);
+
+  const mapD = mapA.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          amount: 1,
+          hidden: false,
+          optional: false,
+          players: [4],
+          type: Criteria.DefeatAmount,
+        },
+      ]),
+    }),
+  });
+
+  expect(validateObjectives(mapD)).toBe(true);
+
+  const [, gameActionResponseD] = executeGameActions(mapD, [EndTurnAction()]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseD))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
+      AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 70 }, chargeA: 169, chargeB: 180 }
+      CompleteUnit (5,1)
+      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
+      EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 4 ], reward: null, type: 9 }, objectiveId: 1, toPlayer: 4 }"
+    `);
 });
