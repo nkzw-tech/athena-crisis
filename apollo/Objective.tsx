@@ -83,11 +83,12 @@ const pickWinningPlayer = (
     );
   }
 
-  if (
-    actionResponse.type === 'EndTurn' &&
-    objective.type !== Criteria.Survival
-  ) {
-    return previousMap.currentPlayer;
+  if (actionResponse.type === 'EndTurn') {
+    if (objective.type === Criteria.DefeatOneLabel) {
+      return resolveDynamicPlayerID(activeMap, 'opponent');
+    } else if (objective.type !== Criteria.Survival) {
+      return previousMap.currentPlayer;
+    }
   }
 
   if (

@@ -19,7 +19,9 @@ import {
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
+  Alien,
   Bomber,
+  Brute,
   Flamethrower,
   HeavyTank,
   Helicopter,
@@ -3268,4 +3270,73 @@ test('multiple optional objectives have their effects applied correctly', async 
   expect(unit).toBeDefined();
   expect(unit?.id).toBe(Flamethrower.id);
   expect(unit?.player).toBe(0);
+});
+
+test('poison at the begin of a turn properly fires win conditions', async () => {
+  const v1 = vec(1, 3);
+  const v2 = vec(2, 4);
+  const v3 = vec(5, 1);
+  const v4 = vec(4, 1);
+
+  const map = MapData.createMap({
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [
+          { funds: 0, id: 1, name: 'Bot 1', skills: [] },
+          { funds: 0, id: 2, name: 'Bot 2', skills: [] },
+        ],
+      },
+      {
+        id: 4,
+        name: '',
+        players: [{ funds: 0, id: 4, name: 'Bot 4', skills: [] }],
+      },
+    ],
+  });
+
+  const initialMap = map.copy({
+    buildings: map.buildings.set(v4, HQ.create(1)),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [4],
+          type: Criteria.DefeatOneLabel,
+        },
+      ]),
+    }),
+    map: Array(5 * 5).fill(1),
+    size: new SizeVector(5, 5),
+    units: map.units
+      .set(v1, Brute.create(2, { label: 2 }).setHealth(25))
+      .set(v2, Alien.create(4))
+      .set(v3, Pioneer.create(2)),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(initialMap, [
+    EndTurnAction(),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(
+    `
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
+    AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 70 }, chargeA: 169, chargeB: 180 }
+    CompleteUnit (5,1)
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
+    EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 4 }"
+  `,
+  );
 });

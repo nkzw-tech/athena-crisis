@@ -77,6 +77,9 @@ const filterUnitsByLabels = (label: PlayerIDSet | undefined) => {
 
 const filterNeutral = (entity: Entity) => entity.player === 0;
 
+const filterSelf = (map: MapData, player: PlayerID) => (entity: Entity) =>
+  map.matchesPlayer(entity, player);
+
 const filterEnemies = (map: MapData, player: PlayerID) => (entity: Entity) =>
   map.isOpponent(entity, player);
 
@@ -122,16 +125,17 @@ function checkObjective(
   const isDefault = objective.type === Criteria.Default;
   const matchesPlayer =
     !isDefault && matchesPlayerList(objective.players, player);
+  const isEndTurn = actionResponse.type === 'EndTurn';
   const isSurvivalAndEndTurn =
-    objective.type === Criteria.Survival && actionResponse.type === 'EndTurn';
-  const targetPlayer = isSurvivalAndEndTurn
-    ? actionResponse.next.player
-    : player;
+    objective.type === Criteria.Survival && isEndTurn;
+  const targetPlayer = isEndTurn ? actionResponse.next.player : player;
   const ignoreIfOptional = !isDefault && objective.optional;
 
   if (
     objective.type !== Criteria.Default &&
-    objective.completed?.has(targetPlayer)
+    objective.completed?.has(
+      isSurvivalAndEndTurn ? actionResponse.next.player : player,
+    )
   ) {
     return false;
   }
@@ -160,22 +164,6 @@ function checkObjective(
           (playerID) =>
             map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
         )) ||
-      (objective.type === Criteria.EscortLabel &&
-        !matchesPlayer &&
-        !ignoreIfOptional &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size <
-          previousMap.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)).size) ||
-      (objective.type === Criteria.EscortAmount &&
-        objective.label?.size &&
-        !matchesPlayer &&
-        !ignoreIfOptional &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size < objective.amount) ||
       (objective.type === Criteria.CaptureLabel &&
         !ignoreIfOptional &&
         map.buildings
@@ -206,14 +194,40 @@ function checkObjective(
         map.units.filter(filterNeutral).size +
           rescuedUnitsByPlayer(map, player) <
           objective.amount) ||
-      (isSurvivalAndEndTurn &&
-        matchesPlayerList(objective.players, targetPlayer) &&
-        objective.rounds <= actionResponse.round) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
         objective.type === Criteria.DestroyAmount &&
         matchesPlayer &&
-        destroyedBuildingsByPlayer(map, player) >= objective.amount)
+        destroyedBuildingsByPlayer(map, player) >= objective.amount) ||
+      (isSurvivalAndEndTurn &&
+        objective.rounds <= actionResponse.round &&
+        matchesPlayerList(objective.players, targetPlayer)) ||
+      (objective.type === Criteria.EscortLabel &&
+        !matchesPlayer &&
+        !ignoreIfOptional &&
+        map.units
+          .filter(filterUnitsByLabels(objective.label))
+          .filter(filterEnemies(map, player)).size <
+          previousMap.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterEnemies(map, player)).size) ||
+      (objective.type === Criteria.EscortAmount &&
+        objective.label?.size &&
+        !matchesPlayer &&
+        !ignoreIfOptional &&
+        map.units
+          .filter(filterUnitsByLabels(objective.label))
+          .filter(filterEnemies(map, player)).size < objective.amount) ||
+      (isEndTurn &&
+        objective.type === Criteria.DefeatOneLabel &&
+        !ignoreIfOptional &&
+        !matchesPlayerList(objective.players, targetPlayer) &&
+        map.units
+          .filter(filterUnitsByLabels(objective.label))
+          .filter(filterSelf(map, targetPlayer)).size <
+          previousMap.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterSelf(map, targetPlayer)).size)
     );
   }
 
