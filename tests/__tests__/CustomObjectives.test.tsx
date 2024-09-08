@@ -29,6 +29,7 @@ import {
   Jeep,
   Pioneer,
   SmallTank,
+  SuperTank,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
@@ -3461,4 +3462,39 @@ test('counter attack triggers objectives correctly', async () => {
     "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 81 }, chargeA: 147, chargeB: 114 }
     GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2 }"
   `);
+
+  const mapB = map.copy({
+    buildings: mapA.buildings.set(v2, House.create(2)),
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [2],
+          type: Criteria.DefeatOneLabel,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, SmallTank.create(1, { label: 2 }).setHealth(5))
+      .set(v2, SuperTank.create(2))
+      .set(v3, Pioneer.create(1)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseB] = executeGameActions(mapB, [
+    AttackBuildingAction(v1, v2),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseB),
+  ).toMatchInlineSnapshot(
+    `
+    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 84, player: 2 }, playerC: 2, unitA: null, unitC: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, chargeA: 9, chargeB: 0, chargeC: 0 }
+    GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2 }"
+  `,
+  );
 });

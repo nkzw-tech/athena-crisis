@@ -70,6 +70,14 @@ export function pickWinningPlayer(
     return actionResponse.playerB;
   }
 
+  if (
+    actionResponse.type === 'AttackBuilding' &&
+    !actionResponse.unitA &&
+    actionResponse.playerC != null
+  ) {
+    return actionResponse.playerC;
+  }
+
   if (objective.type === Criteria.DefeatAmount) {
     return (
       objective.players?.length ? objective.players : activeMap.active
@@ -166,7 +174,11 @@ function checkObjective(
   const player =
     actionResponse.type === 'AttackUnit' && !actionResponse.unitA
       ? actionResponse.playerB
-      : previousMap.currentPlayer;
+      : actionResponse.type === 'AttackBuilding' &&
+          !actionResponse.unitA &&
+          actionResponse.playerC != null
+        ? actionResponse.playerC
+        : previousMap.currentPlayer;
   const isDefault = objective.type === Criteria.Default;
   const matchesPlayer =
     !isDefault && matchesPlayerList(objective.players, player);
