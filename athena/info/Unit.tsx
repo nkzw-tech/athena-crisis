@@ -2550,7 +2550,7 @@ export const AcidBomber = new UnitInfo(
   'Ada',
   'female',
   `Acid Bombers excel in aerial assaults, deploying corrosive bombs that inflict poison damage over time. Their primary weapon, the Corrosive Bomb, can devastate ground and naval units alike. Equipped with Corrosive Air-to-Air Missiles, they can also engage enemy aircraft effectively. However, their chemical payloads are low, which means they have limited ammunition, making resupply crucial for sustained operations.`,
-  `Ada is known for her calculated precision in aerial assaults, always a step ahead in battle strategy. Rumor has it, her vibrant green hair is a result of an early childhood accident involving a large pot of mysterious liquid. This "mishap" granted her not only her distinctive look but also her unparalleled skill with corrosive weaponry. When she's not devising intricate attack plans, Ada enjoys concocting creative solutions to problems, much to the team's amusement and occasional bewilderment.`,
+  `{name} is known for her calculated precision in aerial assaults, always a step ahead in battle strategy. Rumor has it, her vibrant green hair is a result of an early childhood accident involving a large pot of mysterious liquid. This "mishap" granted her not only her distinctive look but also her unparalleled skill with corrosive weaponry. When she's not devising intricate attack plans, {name} enjoys concocting creative solutions to problems, much to the team's amusement and occasional bewilderment.`,
   50,
   EntityType.Airplane,
   MovementTypes.Air,
