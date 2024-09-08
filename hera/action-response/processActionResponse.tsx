@@ -50,8 +50,8 @@ import sabotageAction, {
   addSabotageAnimation,
 } from '../behavior/sabotage/sabotageAction.tsx';
 import unfoldAction from '../behavior/unfold/unfoldAction.tsx';
-import getCampaignMessage from '../i18n/getCampaignMessage.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
+import translateMessage from '../i18n/translateMessage.tsx';
 import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
 import addPlayerLoseAnimation from '../lib/addPlayerLoseAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
@@ -301,7 +301,7 @@ async function processActionResponse(
           },
           player,
           position: messageState.count % 2 ? 'top' : 'bottom',
-          text: getCampaignMessage(actionResponse),
+          text: translateMessage(actionResponse),
           type: 'characterMessage',
           unitId,
           variant,

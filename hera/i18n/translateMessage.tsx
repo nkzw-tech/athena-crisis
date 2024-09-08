@@ -5,7 +5,7 @@ import CampaignMap from './CampaignMap.tsx';
 
 type MessageKey = keyof typeof CampaignMap;
 
-export default function getCampaignMessage(
+export default function translateMessage(
   action: CharacterMessageEffectAction | CharacterMessageActionResponse,
 ): string {
   // It's possible that a message is translated but was recently changed. If it dropped any params, `fbt` will throw an error.
