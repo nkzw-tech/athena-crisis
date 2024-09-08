@@ -3262,7 +3262,7 @@ test('multiple optional objectives have their effects applied correctly', async 
   expect(unit?.player).toBe(0);
 });
 
-test('poison at the begin of a turn properly fires win conditions', async () => {
+test('poison at the begin of a turn properly fires objectives', async () => {
   const v1 = vec(1, 3);
   const v2 = vec(2, 4);
   const v3 = vec(5, 1);
@@ -3424,4 +3424,41 @@ test('poison at the begin of a turn properly fires win conditions', async () => 
       EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [ 4 ], reward: null, type: 9 }, objectiveId: 1, toPlayer: 4 }"
     `);
+});
+
+test('counter attack triggers objectives correctly', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(2, 1);
+  const v3 = vec(3, 1);
+
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        { hidden: false, type: Criteria.Default },
+        {
+          hidden: false,
+          label: new Set([2]),
+          optional: false,
+          players: [2],
+          type: Criteria.DefeatOneLabel,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Brute.create(1, { label: 2 }).setHealth(5))
+      .set(v2, Alien.create(2))
+      .set(v3, Pioneer.create(1)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = executeGameActions(mapA, [
+    AttackUnitAction(v1, v2),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 81 }, chargeA: 147, chargeB: 114 }
+    GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2 }"
+  `);
 });

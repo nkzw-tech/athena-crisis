@@ -121,7 +121,10 @@ function checkObjective(
   isMove: boolean,
   objective: Objective,
 ) {
-  const player = previousMap.currentPlayer;
+  const player =
+    actionResponse.type === 'AttackUnit' && !actionResponse.unitA
+      ? actionResponse.playerB
+      : previousMap.currentPlayer;
   const isDefault = objective.type === Criteria.Default;
   const matchesPlayer =
     !isDefault && matchesPlayerList(objective.players, player);

@@ -68,11 +68,14 @@ export type ObjectiveActionResponse =
   | OptionalObjectiveActionResponse;
 
 const pickWinningPlayer = (
-  previousMap: MapData,
   activeMap: MapData,
   actionResponse: ActionResponse,
   objective: Objective,
 ) => {
+  if (actionResponse.type === 'AttackUnit' && !actionResponse.unitA) {
+    return actionResponse.playerB;
+  }
+
   if (objective.type === Criteria.DefeatAmount) {
     return (
       objective.players?.length ? objective.players : activeMap.active
@@ -141,8 +144,7 @@ export function applyObjectives(
   let map = activeMap;
 
   const player =
-    objective &&
-    pickWinningPlayer(previousMap, map, lastActionResponse, objective);
+    objective && pickWinningPlayer(map, lastActionResponse, objective);
 
   let reevaluate = false;
   let optionalObjective = toOptionalObjective(objective, objectiveId, player);
@@ -161,8 +163,7 @@ export function applyObjectives(
     const [objectiveId, objective] =
       checkObjectives(previousMap, map, lastActionResponse) || [];
     const player =
-      objective &&
-      pickWinningPlayer(previousMap, map, lastActionResponse, objective);
+      objective && pickWinningPlayer(map, lastActionResponse, objective);
     optionalObjective = toOptionalObjective(objective, objectiveId, player);
   }
 
