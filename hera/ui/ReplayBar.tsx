@@ -33,12 +33,14 @@ export default function ReplayBar({
   actions,
   currentPlayer,
   currentViewer,
+  inlineUI,
   replayState,
   timeout,
 }: {
   actions: Actions;
   currentPlayer: Player;
   currentViewer: PlayerID | null;
+  inlineUI: boolean;
   replayState: ReplayState;
   timeout: number | null;
 }) {
@@ -48,7 +50,10 @@ export default function ReplayBar({
     (isLive || isReplaying || isWaiting) && currentViewer !== currentPlayer.id;
 
   return (
-    <ActionBar visible={replayIsVisible || timeout !== null}>
+    <ActionBar
+      inlineUI={inlineUI}
+      visible={replayIsVisible || timeout !== null}
+    >
       <Stack flex1 gap vertical>
         {timeout ? <TurnTimer timeout={timeout} /> : null}
         {replayIsVisible && (

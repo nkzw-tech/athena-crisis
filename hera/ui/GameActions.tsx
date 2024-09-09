@@ -515,6 +515,7 @@ export default function GameActions({
       actions={actions}
       currentPlayer={map.getCurrentPlayer()}
       currentViewer={state.currentViewer}
+      inlineUI={inlineUI}
       replayState={state.replayState}
       timeout={state.timeout}
     />

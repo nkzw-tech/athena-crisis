@@ -5,15 +5,21 @@ import { css, cx } from '@emotion/css';
 import { ComponentProps } from 'react';
 
 export default function ActionBar({
-  visible = true,
+  inlineUI,
+  visible,
   ...props
 }: ComponentProps<typeof Box> & {
-  visible?: boolean;
+  inlineUI: boolean;
+  visible: boolean;
 }) {
   return (
     <Box
       blur
-      className={cx(actionBarStyle, visible && visibleStyle)}
+      className={cx(
+        actionBarStyle,
+        !inlineUI && regularStyle,
+        visible && visibleStyle,
+      )}
       {...props}
     />
   );
@@ -32,14 +38,16 @@ const actionBarStyle = css`
   pointer-events: none;
   position: fixed;
   right: 0;
+  top: ${DoubleSize * 1.3}px;
   transform: translate3d(${vars.apply('x')}, -100%, 0) scale(0.9);
   transition:
     opacity 150ms ease,
     margin 250ms ease,
     transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
   width: 25%;
+`;
 
-  top: ${DoubleSize * 1.3}px;
+const regularStyle = css`
   @media (min-width: 840px) {
     ${vars.set('x', '16px')}
     top: 8px;
