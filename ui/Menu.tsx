@@ -257,6 +257,7 @@ const openStyle = css`
 `;
 
 const overlayStyle = css`
+  align-self: center;
   display: flex;
   inset: 0;
   justify-content: center;
