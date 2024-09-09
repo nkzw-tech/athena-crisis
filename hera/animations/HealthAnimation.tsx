@@ -101,6 +101,7 @@ const style = css`
   display: flex;
   filter: drop-shadow(rgb(0, 0, 0, 0.2) 0 0 1px);
   font-size: ${isSafari && isIOS ? `0.9` : `0.45`}em;
+  height: 1em;
   justify-content: center;
   pointer-events: none;
   position: absolute;
