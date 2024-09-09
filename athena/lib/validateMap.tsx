@@ -4,18 +4,11 @@ import {
   Behavior,
   getBuildingInfo,
   House,
-  mapBuildings,
-  mapBuildingsWithContentRestriction,
   MaxSkills,
 } from '../info/Building.tsx';
 import { Skill, Skills } from '../info/Skill.tsx';
 import { getTileInfo } from '../info/Tile.tsx';
-import {
-  getUnitInfo,
-  mapUnits,
-  mapUnitsWithContentRestriction,
-  Pioneer,
-} from '../info/Unit.tsx';
+import { getUnitInfo, Pioneer } from '../info/Unit.tsx';
 import { Biomes } from '../map/Biome.tsx';
 import Building from '../map/Building.tsx';
 import {
@@ -39,9 +32,8 @@ import canBuild from './canBuild.tsx';
 import canDeploy from './canDeploy.tsx';
 import canPlaceDecorator from './canPlaceDecorator.tsx';
 import canPlaceTile from './canPlaceTile.tsx';
+import filterByBiomeRestriction from './filterByBiomeRestriction.tsx';
 import getActivePlayers from './getActivePlayers.tsx';
-import getBiomeBuildingRestrictions from './getBiomeBuildingRestrictions.tsx';
-import getBiomeUnitRestrictions from './getBiomeUnitRestrictions.tsx';
 import indexToVector from './indexToVector.tsx';
 import validateTeams, { TeamsList } from './validateTeams.tsx';
 import withModifiers from './withModifiers.tsx';
@@ -307,38 +299,14 @@ export default function validateMap(
     return [null, 'invalid-decorators'];
   }
 
-  const { biome } = map.config;
-  const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
-  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
+  map = filterByBiomeRestriction(map, !!hasContentRestrictions, skills);
 
-  const availableBuildings = new Set(
-    (hasContentRestrictions
-      ? mapBuildingsWithContentRestriction
-      : mapBuildings)((building) => building, skills || new Set())
-      .filter((building) => !biomeBuildingRestrictions?.has(building))
-      .map(({ id }) => id),
-  );
-  const availableUnits = new Set(
-    (hasContentRestrictions ? mapUnitsWithContentRestriction : mapUnits)(
-      (unit) => unit,
-      skills || new Set(),
-    )
-      .filter((unit) => !biomeUnitRestrictions?.has(unit.type))
-      .map(({ id }) => id),
-  );
-
-  map = map.copy({
-    buildings: map.buildings.filter((building) =>
-      availableBuildings.has(building.id),
-    ),
-    units: map.units.filter((unit) => availableUnits.has(unit.id)),
-  });
-
+  const leaders = new Map();
   const config = map.config.copy({
     blocklistedBuildings: new Set(),
     blocklistedUnits: new Set(),
   });
-  const leaders = new Map();
+
   if (
     map.buildings.some(
       (building, vector) =>
