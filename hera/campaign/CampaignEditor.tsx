@@ -569,7 +569,7 @@ export default function CampaignEditor({
         </AnimatePresence>
         {showAllDialogue && (
           <Dialog onClose={onClose} size="large" transformOrigin="90% top">
-            <DialogScrollContainer>
+            <DialogScrollContainer key="dialogue" navigate>
               <Stack gap={24} vertical>
                 <h1>
                   <fbt desc="Headline for all campaign dialogue">

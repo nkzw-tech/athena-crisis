@@ -273,7 +273,7 @@ export default function SkillDialog({
       size={size}
       transformOrigin={transformOrigin || 'center center'}
     >
-      <DialogScrollContainer>
+      <DialogScrollContainer key="skill" navigate={false}>
         <Stack gap={24} vertical>
           {!focus && (
             <h1>

@@ -1,8 +1,9 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import Reply from '@iconify-icons/pixelarticons/reply.js';
 import { motion } from 'framer-motion';
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useRef, useState } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import Breakpoints from './Breakpoints.tsx';
 import { isSafari } from './Browser.tsx';
@@ -10,6 +11,7 @@ import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
+import { FadePulseStyle } from './RainbowPulseStyle.tsx';
 import ScrollContainer from './ScrollContainer.tsx';
 import Stack from './Stack.tsx';
 
@@ -50,16 +52,17 @@ export function useDialogNavigation<T>(
   useInput('previous', previous, 'dialog');
   useInput(
     'navigate',
-    (event) => {
-      event.preventDefault();
-
-      const { x } = event.detail;
-      if (x < 0) {
-        previous();
-      } else if (x > 0) {
-        next();
-      }
-    },
+    useCallback(
+      (event) => {
+        const { x } = event.detail;
+        if (x < 0) {
+          previous();
+        } else if (x > 0) {
+          next();
+        }
+      },
+      [next, previous],
+    ),
     'dialog',
   );
 }
@@ -118,9 +121,116 @@ export default function Dialog({
 
 export const DialogScrollContainer = ({
   children,
+  navigate,
 }: {
   children: ReactNode;
-}) => <ScrollContainer className={scrollStyle}>{children}</ScrollContainer>;
+  key: string;
+  navigate: boolean;
+}) => {
+  const [showArrow, setShowArrow] = useState(false);
+  const ref = useRef<{
+    cleanup: () => void;
+    down: () => void;
+    up: () => void;
+  } | null>(null);
+
+  const setRef = useCallback(
+    (element: HTMLDivElement) => {
+      if (ref.current) {
+        ref.current.cleanup();
+        ref.current = null;
+      }
+
+      if (!element) {
+        return;
+      }
+
+      const onScroll = () => {
+        const shouldShow =
+          element.scrollTop + element.clientHeight <
+          element.scrollHeight - DoubleSize;
+        if (shouldShow !== showArrow) {
+          setShowArrow(shouldShow);
+        }
+      };
+
+      element.addEventListener('scroll', onScroll);
+      onScroll();
+      ref.current = {
+        cleanup: () => element.removeEventListener('scroll', onScroll),
+        down: () =>
+          element.scrollTo({
+            behavior: 'smooth',
+            top: element.scrollTop + TileSize * 10,
+          }),
+        up: () =>
+          element.scrollTo({
+            behavior: 'smooth',
+            top: element.scrollTop - TileSize * 10,
+          }),
+      };
+    },
+    [showArrow],
+  );
+
+  useInput(
+    'navigate',
+    useCallback(
+      (event) => {
+        if (!navigate || !ref.current) {
+          return;
+        }
+
+        const { y } = event.detail;
+        if (y < 0) {
+          ref.current.up();
+        } else if (y > 0) {
+          ref.current.down();
+        }
+      },
+      [navigate],
+    ),
+    'dialog',
+  );
+
+  return (
+    <ScrollContainer className={scrollStyle} ref={setRef}>
+      {children}
+
+      <div className={cx(scrollDownStyle, showArrow && arrowVisibleStyle)}>
+        <div className={scrollDownIconStyle}>
+          <Icon className={FadePulseStyle} icon={Reply} />
+        </div>
+      </div>
+    </ScrollContainer>
+  );
+};
+
+const scrollDownStyle = css`
+  background-image: linear-gradient(
+    0deg,
+    ${applyVar('background-color')} 10px,
+    rgba(255, 255, 255, 0) 30px
+  );
+  bottom: -1px;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 300ms ease;
+`;
+
+const scrollDownIconStyle = css`
+  bottom: 4px;
+  color: ${applyVar('border-color')};
+  position: absolute;
+  right: 4px;
+  transform: rotate(-90deg);
+`;
+
+const arrowVisibleStyle = css`
+  opacity: 1;
+`;
 
 export const DialogTabBar = ({ children }: { children: ReactNode }) => (
   <div className={tabBarStyle}>{children}</div>
@@ -197,8 +307,8 @@ const sizes = {
       width: min(90vw, 600px);
     }
 
-    ${Breakpoints.xl} {
-      width: 1000px;
+    ${Breakpoints.lg} {
+      width: min(90vw, 980px);
     }
 
     ${Breakpoints.height.lg} {
@@ -224,6 +334,7 @@ const sizes = {
 
 const scrollStyle = css`
   inset: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 16px;

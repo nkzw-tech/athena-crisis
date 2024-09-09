@@ -72,7 +72,6 @@ const mapContainerStyle = css`
 
   ${Breakpoints.xl} {
     zoom: 6;
-    right: 30px;
   }
 `;
 

@@ -171,7 +171,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
 
   return (
     <>
-      <DialogScrollContainer>
+      <DialogScrollContainer key={panel.type} navigate>
         <Stack gap={16} vertical>
           {panel.type === 'unit' ? (
             <UnitCard
@@ -451,7 +451,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
     typeof panel === 'string' && gameInfoState.panels?.get(panel)?.content;
   return (
     <>
-      <DialogScrollContainer>
+      <DialogScrollContainer key={panel.toString()} navigate>
         {(Component && (
           <Component lastActionResponse={lastActionResponse} map={map} />
         )) || (

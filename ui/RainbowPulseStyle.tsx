@@ -48,6 +48,17 @@ export const SquarePulseStyle = css`
   animation: ${pulse} 1.5s infinite;
 `;
 
+export const FadePulseStyle = css`
+  animation: ${keyframes`
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    `} 3s infinite;
+`;
+
 export const PulseStyle = css`
   animation: ${keyframes`
     0%, 100% {
