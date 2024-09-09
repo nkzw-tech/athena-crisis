@@ -15,6 +15,7 @@ import {
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
+import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -602,11 +603,15 @@ export default function MapEditorSettingsPanel({
             <fbt desc="Explanation for tags">
               Maps with the
               <fbt:param name="published-tag-name">
-                <Tag tag="published" />
+                <div className={tagBackgroundStyle}>
+                  <Tag tag="published" />
+                </div>
               </fbt:param>{' '}
               and{' '}
               <fbt:param name="pvp-tag-name">
-                <Tag tag="pvp" />
+                <div className={tagBackgroundStyle}>
+                  <Tag tag="pvp" />
+                </div>
               </fbt:param>{' '}
               tags will be visible in the community map list and on your
               profile.
@@ -728,4 +733,11 @@ const paddingStyle = css`
 const wideColumnStyle = css`
   grid-column: 2 / 5;
   white-space: nowrap;
+`;
+
+const tagBackgroundStyle = css`
+  ${clipBorder(2)}
+
+  display: inline-block;
+  background: ${applyVar('background-color-light')};
 `;

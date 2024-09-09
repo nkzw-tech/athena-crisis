@@ -5,6 +5,8 @@ import {
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import Box from '@deities/ui/Box.tsx';
+import clipBorder from '@deities/ui/clipBorder.tsx';
+import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
@@ -105,7 +107,9 @@ export default function CampaignEditorSettingsPanel({
             <fbt desc="Explanation for tags">
               Campaigns with the{' '}
               <fbt:param name="tag-name">
-                <Tag tag="published" />
+                <div className={tagBackgroundStyle}>
+                  <Tag tag="published" />
+                </div>
               </fbt:param>{' '}
               tag will be visible in the campaign list and on your profile.
             </fbt>
@@ -217,4 +221,11 @@ const marginStyle = css`
 
 const buttonStyle = css`
   padding: 4px;
+`;
+
+const tagBackgroundStyle = css`
+  ${clipBorder(2)}
+
+  display: inline-block;
+  background: ${applyVar('background-color-light')};
 `;
