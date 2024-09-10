@@ -1,49 +1,46 @@
 import { isLinux, isWindows } from '../Browser.tsx';
 import type { EventName } from './Input.tsx';
 
-const gamepadNames: Record<EventName, string> = {
+type ButtonNames = Exclude<
+  EventName,
+  'navigateSecondary' | 'detail:released' | 'point' | 'reset'
+>;
+
+const gamepadNames: Record<ButtonNames, string> = {
   accept: 'A',
   cancel: 'B',
-  detail: '',
-  'detail:released': '',
+  detail: 'R2',
   'field-info': 'B',
-  'gamepad:tertiary': '',
+  'gamepad:tertiary': 'Y',
   info: 'L2',
-  'keyboard:tertiary': 'XX',
-  menu: '',
-  navigate: '',
-  navigateSecondary: '',
-  next: '',
-  point: '',
-  previous: '',
-  reset: '',
+  'keyboard:tertiary': 'Y',
+  menu: 'Menu',
+  navigate: 'Left Stick',
+  next: 'R1',
+  previous: 'L1',
   save: '',
   secondary: 'X',
-  select: '',
+  select: 'Select',
   tertiary: 'Y',
-  undo: '',
-  zoom: '',
+  undo: 'L3',
+  zoom: 'R3',
 } as const;
 
-const keyboardNames: Record<EventName, string> = {
+const keyboardNames: Record<ButtonNames, string> = {
   accept: 'Enter',
   cancel: 'Escape',
-  detail: '',
-  'detail:released': '',
+  detail: 'E',
   'field-info': 'I',
-  'gamepad:tertiary': '',
+  'gamepad:tertiary': 'A',
   info: 'Q',
-  'keyboard:tertiary': '',
-  menu: '',
-  navigate: '',
-  navigateSecondary: '',
-  next: '',
-  point: '',
-  previous: '',
-  reset: '',
-  save: '',
-  secondary: isWindows || isLinux ? 'ctrl+e' : 'cmd+e',
-  select: '',
+  'keyboard:tertiary': 'A',
+  menu: 'M',
+  navigate: 'Arrow Keys',
+  next: 'Tab',
+  previous: 'Shift + Tab',
+  save: isWindows || isLinux ? 'CTRL + S' : 'CMD + S',
+  secondary: isWindows || isLinux ? 'CTRL + E' : 'CMD + E',
+  select: 'P',
   tertiary: 'Shift',
   undo: '',
   zoom: '',
@@ -53,7 +50,7 @@ export function formatInputNames(text: string, type: 'keyboard' | 'gamepad') {
   const buttons = type === 'gamepad' ? gamepadNames : keyboardNames;
 
   return text.replaceAll(/{button\.([\w:-]+)}/g, (_, button: string) => {
-    const buttonName = buttons[button as EventName];
+    const buttonName = buttons[button as ButtonNames];
     return buttonName ? `"${buttonName}"` : '';
   });
 }
