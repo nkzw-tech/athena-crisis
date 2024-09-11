@@ -6,7 +6,9 @@ import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { CSSVariables } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
+import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import { MenuClassName } from '@deities/ui/Menu.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, cx, keyframes } from '@emotion/css';
@@ -118,44 +120,80 @@ const MessageComponent = ({
   const done = useRef(false);
   const hasNext = lines.length > currentLine + 2;
 
-  const next = useCallback(() => {
-    const isComplete = currentComplete;
-    setCurrentComplete(false);
+  const next = useCallback(
+    (isComplete: boolean) => {
+      if (timer) {
+        clearTimer(timer);
+      }
 
-    if (timer) {
-      clearTimer(timer);
-    }
+      const menuIsOpen =
+        document.documentElement.style.getPropertyValue(
+          cssVar('ui-is-scaled'),
+        ) === '1';
+      if (menuIsOpen) {
+        return;
+      }
 
-    if (!animationComplete && !isComplete) {
-      AudioPlayer.stop(sound);
-      setAnimationComplete(true);
-    } else if (hasNext) {
-      AudioPlayer.playOrContinueSound(sound);
-      setAnimationComplete(false);
-      setCurrentLine(currentLine + 2);
-    } else if (!done.current) {
-      AudioPlayer.stop(sound);
-      done.current = true;
-      onComplete();
-    }
-  }, [
-    currentComplete,
-    timer,
-    animationComplete,
-    hasNext,
-    clearTimer,
-    sound,
-    currentLine,
-    onComplete,
-  ]);
+      setCurrentComplete(false);
+      if (!animationComplete && !isComplete) {
+        AudioPlayer.stop(sound);
+        setAnimationComplete(true);
+      } else if (hasNext) {
+        AudioPlayer.playOrContinueSound(sound);
+        setAnimationComplete(false);
+        setCurrentLine(currentLine + 2);
+      } else if (!done.current) {
+        AudioPlayer.stop(sound);
+        done.current = true;
+        onComplete();
+      }
+    },
+    [
+      timer,
+      animationComplete,
+      hasNext,
+      clearTimer,
+      sound,
+      currentLine,
+      onComplete,
+    ],
+  );
 
-  useInput('accept', next);
+  useInput(
+    'accept',
+    useCallback(() => next(currentComplete), [currentComplete, next]),
+  );
+
   useEffect(() => {
-    document.body.addEventListener('click', next);
-    return () => {
-      document.body.removeEventListener('click', next);
+    const listener = (event: MouseEvent) => {
+      const element = event.target as HTMLElement | null;
+      if (
+        element &&
+        (new Set(element.classList.values()).has(MenuClassName) ||
+          element.closest(`.${MenuClassName}`))
+      ) {
+        return;
+      }
+
+      next(currentComplete);
     };
-  }, [next]);
+
+    document.body.addEventListener('click', listener);
+    return () => {
+      document.body.removeEventListener('click', listener);
+    };
+  }, [currentComplete, next]);
+
+  useVisibilityState(
+    useCallback(
+      (isVisible: boolean) => {
+        if (timer != null && !isVisible) {
+          clearTimer(timer);
+        }
+      },
+      [clearTimer, timer],
+    ),
+  );
 
   useEffect(() => {
     const listener = throttle(() => {
@@ -269,7 +307,10 @@ const MessageComponent = ({
                           ? () => {
                               AudioPlayer.stop(sound);
                               setCurrentComplete(true);
-                              setTimer(scheduleTimer(next, 3500));
+                              if (timer != null) {
+                                clearTimer(timer);
+                              }
+                              setTimer(scheduleTimer(() => next(true), 2500));
                             }
                           : undefined
                       }

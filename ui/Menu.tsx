@@ -26,6 +26,8 @@ import MenuButton from './MenuButton.tsx';
 import Portal from './Portal.tsx';
 import Stack from './Stack.tsx';
 
+export const MenuClassName = 'menu-button';
+
 export default function Menu({
   children,
   controls,
@@ -110,7 +112,9 @@ export default function Menu({
 
   return (
     <Portal>
-      <div className={cx(menuStyle, isOpen && openStyle)}>
+      <div
+        className={cx(menuStyle, isOpen && openStyle, isOpen && MenuClassName)}
+      >
         <div
           className={dotStyle}
           style={{ left: -2, opacity: isOpen ? 1 : 0, top: -2 }}
@@ -133,7 +137,7 @@ export default function Menu({
               opacity: 1,
               transform: 'scale(1)',
             }}
-            className={overlayStyle}
+            className={cx(overlayStyle, MenuClassName)}
             initial={{
               opacity: 0,
               transform: 'scale(0)',
@@ -181,6 +185,7 @@ export default function Menu({
         </Stack>
         <MenuButton
           className={cx(
+            MenuClassName,
             buttonStyle,
             isOpen && openButtonStyle,
             isHidden && hiddenStyle,
@@ -259,6 +264,7 @@ const openStyle = css`
 const overlayStyle = css`
   align-self: center;
   display: flex;
+  height: 100%;
   inset: 0;
   justify-content: center;
   overflow: auto;
