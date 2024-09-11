@@ -14,7 +14,6 @@ export default function assignDeterministicUnitNames(
   const assignName = <T extends Unit | TransportedUnit>(
     unit: T,
     vector: Vector,
-    additionalOffset: number = 0,
   ): T => {
     if (!unit.hasName()) {
       const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.info);
@@ -25,7 +24,6 @@ export default function assignDeterministicUnitNames(
         unit.info,
         offset++,
       );
-      offset += additionalOffset;
       if (isLeader) {
         addLeader(unit.player, unit.info);
       }
@@ -34,9 +32,7 @@ export default function assignDeterministicUnitNames(
 
     if (unit.transports?.length) {
       unit = unit.copy({
-        transports: unit.transports.map((unit, index) =>
-          assignName(unit, vector, index + 1),
-        ),
+        transports: unit.transports.map((unit) => assignName(unit, vector)),
       }) as T;
     }
 
