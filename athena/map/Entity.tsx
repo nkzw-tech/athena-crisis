@@ -16,13 +16,13 @@ export type PlainEntity = Readonly<{
 
 export enum EntityType {
   Airplane,
-  AirInfantry,
+  AirSoldier,
   Amphibious,
   Artillery,
   Building,
   Ground,
   LowAltitude,
-  Infantry,
+  Soldier,
   Invincible,
   Ship,
   Structure,
@@ -106,7 +106,7 @@ export function getEntityInfoGroup(
   const { type: entityType } = entity;
   switch (entityType) {
     case EntityType.Artillery:
-    case EntityType.Infantry:
+    case EntityType.Soldier:
     case EntityType.Ground:
     case EntityType.Rail:
       return 'land';
@@ -115,7 +115,7 @@ export function getEntityInfoGroup(
     case EntityType.Structure:
       return 'building';
     case EntityType.Airplane:
-    case EntityType.AirInfantry:
+    case EntityType.AirSoldier:
     case EntityType.LowAltitude:
       return 'air';
     case EntityType.Amphibious:

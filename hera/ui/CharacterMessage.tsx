@@ -310,7 +310,7 @@ const MessageComponent = ({
                               if (timer != null) {
                                 clearTimer(timer);
                               }
-                              setTimer(scheduleTimer(() => next(true), 2500));
+                              setTimer(scheduleTimer(() => next(true), 3000));
                             }
                           : undefined
                       }

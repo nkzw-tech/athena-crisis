@@ -905,15 +905,15 @@ const SAMAnimation = new WeaponAnimation('SAM', 'Attack/SAM', {
 const LightGun = new Weapon(
   'Light Gun',
   new Map([
-    [EntityType.AirInfantry, 55],
+    [EntityType.AirSoldier, 55],
     [EntityType.Amphibious, 90],
     [EntityType.Artillery, 90],
     [EntityType.Building, 70],
     [EntityType.Ground, 90],
     [EntityType.LowAltitude, 55],
-    [EntityType.Infantry, 55],
     [EntityType.Rail, 75],
     [EntityType.Ship, 30],
+    [EntityType.Soldier, 55],
     [EntityType.Structure, 90],
   ]),
   LightGunAnimation,
@@ -926,9 +926,9 @@ const AntiShipMissile = new Weapon(
     [EntityType.Amphibious, 100],
     [EntityType.Artillery, 60],
     [EntityType.Ground, 60],
-    [EntityType.Infantry, 50],
     [EntityType.Rail, 50],
     [EntityType.Ship, 75],
+    [EntityType.Soldier, 50],
   ]),
   LightGunAnimation,
   ExplosionImpactAnimation,
@@ -944,9 +944,9 @@ const CruiseMissile = new Weapon(
     [EntityType.Amphibious, 80],
     [EntityType.Artillery, 90],
     [EntityType.Ground, 90],
-    [EntityType.Infantry, 80],
     [EntityType.Rail, 95],
     [EntityType.Ship, 40],
+    [EntityType.Soldier, 80],
   ]),
   SAMAnimation.withTrailingFrames(6),
   SmokeAnimation,
@@ -955,15 +955,15 @@ const CruiseMissile = new Weapon(
 const HeavyGun = new Weapon(
   'Heavy Gun',
   new Map([
-    [EntityType.AirInfantry, 55],
+    [EntityType.AirSoldier, 55],
     [EntityType.Amphibious, 115],
     [EntityType.Artillery, 115],
     [EntityType.Building, 70],
     [EntityType.Ground, 115],
     [EntityType.LowAltitude, 55],
-    [EntityType.Infantry, 65],
     [EntityType.Rail, 95],
     [EntityType.Ship, 50],
+    [EntityType.Soldier, 65],
     [EntityType.Structure, 110],
   ]),
   new WeaponAnimation('LightGun', 'Attack/HeavyGun', {
@@ -984,11 +984,11 @@ const HeavyGun = new Weapon(
 const MG = new Weapon(
   'MG',
   new Map([
-    [EntityType.AirInfantry, 65],
+    [EntityType.AirSoldier, 65],
     [EntityType.Amphibious, 35],
     [EntityType.Artillery, 35],
     [EntityType.Ground, 35],
-    [EntityType.Infantry, 80],
+    [EntityType.Soldier, 80],
   ]),
   MGAnimation,
   SparkMiniAnimation,
@@ -997,16 +997,16 @@ const MG = new Weapon(
 const MiniGun = new Weapon(
   'Mini Gun',
   new Map([
-    [EntityType.AirInfantry, 80],
+    [EntityType.AirSoldier, 80],
     [EntityType.Amphibious, 70],
     [EntityType.Artillery, 90],
     [EntityType.Building, 70],
     [EntityType.Ground, 70],
     [EntityType.LowAltitude, 80],
-    [EntityType.Infantry, 100],
-    [EntityType.Ship, 50],
-    [EntityType.Structure, 50],
     [EntityType.Rail, 50],
+    [EntityType.Ship, 50],
+    [EntityType.Soldier, 100],
+    [EntityType.Structure, 50],
   ]),
   new WeaponAnimation('Minigun', 'Attack/MiniGun', {
     frames: 11,
@@ -1041,14 +1041,14 @@ const AIUMiniGun = new Weapon(
 const ArtilleryWeapon = new Weapon(
   'Artillery',
   new Map([
-    [EntityType.AirInfantry, 80],
+    [EntityType.AirSoldier, 80],
     [EntityType.Amphibious, 100],
     [EntityType.Artillery, 90],
     [EntityType.Ground, 100],
     [EntityType.LowAltitude, 80],
-    [EntityType.Infantry, 100],
-    [EntityType.Ship, 60],
     [EntityType.Rail, 90],
+    [EntityType.Ship, 60],
+    [EntityType.Soldier, 100],
   ]),
   ArtilleryAnimation,
   SmokeAnimation,
@@ -1058,7 +1058,7 @@ const AirToAirMissile = new Weapon(
   'Air to Air Missile',
   new Map([
     [EntityType.Airplane, 115],
-    [EntityType.AirInfantry, 130],
+    [EntityType.AirSoldier, 130],
     [EntityType.LowAltitude, 130],
   ]),
   MGAnimation.withSound('Attack/AirToAirMissile'),
@@ -1068,14 +1068,14 @@ const AirToAirMissile = new Weapon(
 const LightAirGun = new Weapon(
   'Light Air Gun',
   new Map([
-    [EntityType.AirInfantry, 80],
+    [EntityType.AirSoldier, 80],
     [EntityType.Amphibious, 65],
     [EntityType.Artillery, 85],
     [EntityType.Ground, 85],
     [EntityType.LowAltitude, 80],
-    [EntityType.Infantry, 75],
     [EntityType.Rail, 75],
     [EntityType.Ship, 45],
+    [EntityType.Soldier, 75],
   ]),
   MGAnimation,
   SparkMiniAnimation,
@@ -1088,10 +1088,10 @@ const Bomb = new Weapon(
     [EntityType.Artillery, 100],
     [EntityType.Building, 70],
     [EntityType.Ground, 110],
-    [EntityType.Infantry, 105],
-    [EntityType.Ship, 115],
-    [EntityType.Structure, 80],
     [EntityType.Rail, 110],
+    [EntityType.Ship, 115],
+    [EntityType.Soldier, 105],
+    [EntityType.Structure, 80],
   ]),
   new WeaponAnimation('Bomb', 'Attack/Bomb', {
     frames: 9,
@@ -1108,12 +1108,12 @@ const Bomb = new Weapon(
 
 const SoldierMG = MG.withDamage(
   new Map([
-    [EntityType.AirInfantry, 65],
+    [EntityType.AirSoldier, 65],
     [EntityType.Amphibious, 35],
     [EntityType.Artillery, 35],
     [EntityType.Ground, 35],
-    [EntityType.Infantry, 60],
     [EntityType.LowAltitude, 65],
+    [EntityType.Soldier, 60],
   ]),
 ).withAnimationPositions({
   ...MGAnimation.positions,
@@ -1123,13 +1123,13 @@ const SoldierMG = MG.withDamage(
 const RocketLauncherWeapon = new Weapon(
   'Rocket Launcher',
   new Map([
-    [EntityType.AirInfantry, 55],
+    [EntityType.AirSoldier, 55],
     [EntityType.Amphibious, 100],
     [EntityType.Artillery, 100],
     [EntityType.Ground, 100],
     [EntityType.LowAltitude, 80],
-    [EntityType.Infantry, 35],
     [EntityType.Rail, 70],
+    [EntityType.Soldier, 35],
   ]),
   new WeaponAnimation('RocketLauncher', 'Attack/RocketLauncher', {
     frames: 11,
@@ -1145,13 +1145,12 @@ const RocketLauncherWeapon = new Weapon(
 const Bite = new Weapon(
   'Bite',
   new Map([
-    [EntityType.AirInfantry, 100],
+    [EntityType.AirSoldier, 100],
     [EntityType.Amphibious, 100],
     [EntityType.Artillery, 100],
     [EntityType.Ground, 100],
     [EntityType.LowAltitude, 100],
-
-    [EntityType.Infantry, 120],
+    [EntityType.Soldier, 120],
   ]),
   BiteAnimation,
   BiteHitAnimation,
@@ -1163,7 +1162,7 @@ const LightAirToAirMissile = AirToAirMissile.withName(
   .withDamage(
     new Map([
       [EntityType.Airplane, 80],
-      [EntityType.AirInfantry, 90],
+      [EntityType.AirSoldier, 90],
       [EntityType.LowAltitude, 90],
     ]),
   )
@@ -1199,15 +1198,15 @@ export const Weapons = {
     'Anti Air Gun',
     new Map([
       [EntityType.Airplane, 135],
-      [EntityType.AirInfantry, 145],
+      [EntityType.AirSoldier, 145],
       [EntityType.Amphibious, 65],
       [EntityType.Artillery, 65],
       [EntityType.Building, 70],
       [EntityType.Ground, 55],
       [EntityType.LowAltitude, 155],
-      [EntityType.Infantry, 50],
-      [EntityType.Structure, 20],
       [EntityType.Rail, 60],
+      [EntityType.Soldier, 50],
+      [EntityType.Structure, 20],
     ]),
     AntiAirAnimation.repeats(2),
     SparkMiniAnimation,
@@ -1222,14 +1221,14 @@ export const Weapons = {
   Battery: new Weapon(
     'Artillery Battery',
     new Map([
-      [EntityType.AirInfantry, 100],
+      [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 130],
       [EntityType.Artillery, 130],
       [EntityType.Ground, 130],
       [EntityType.LowAltitude, 100],
-      [EntityType.Infantry, 110],
       [EntityType.Rail, 90],
       [EntityType.Ship, 80],
+      [EntityType.Soldier, 110],
     ]),
     ArtilleryAnimation.withSound('Attack/ArtilleryBattery'),
   ),
@@ -1238,15 +1237,15 @@ export const Weapons = {
       new Map([
         ...RocketLauncherWeapon.damage,
 
-        [EntityType.AirInfantry, 110],
         [EntityType.Airplane, 100],
+        [EntityType.AirSoldier, 110],
         [EntityType.Amphibious, 110],
         [EntityType.Artillery, 110],
         [EntityType.Ground, 110],
         [EntityType.LowAltitude, 110],
-        [EntityType.Infantry, 110],
         [EntityType.Rail, 80],
         [EntityType.Ship, 80],
+        [EntityType.Soldier, 110],
       ]),
     )
     .withAnimationPositions({
@@ -1275,11 +1274,11 @@ export const Weapons = {
   Club: new Weapon(
     'Club',
     new Map([
-      [EntityType.AirInfantry, 100],
+      [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 100],
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
-      [EntityType.Infantry, 120],
+      [EntityType.Soldier, 120],
     ]),
     EmptyAnimation.withSound('Attack/Club'),
     PowHitAnimation,
@@ -1293,9 +1292,9 @@ export const Weapons = {
       [EntityType.Amphibious, 55],
       [EntityType.Artillery, 40],
       [EntityType.Ground, 50],
-      [EntityType.Infantry, 45],
-      [EntityType.Ship, 55],
       [EntityType.Rail, 50],
+      [EntityType.Ship, 55],
+      [EntityType.Soldier, 45],
     ]),
     new WeaponAnimation('Acid', 'Attack/Bomb', {
       frames: 11,
@@ -1317,24 +1316,24 @@ export const Weapons = {
   CruiseMissile,
   DroneBomb: Bomb.withName('Drone Bomb').withDamage(
     new Map([
-      [EntityType.AirInfantry, 100],
+      [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 50],
       [EntityType.Artillery, 50],
       [EntityType.Building, 70],
       [EntityType.Ground, 50],
-      [EntityType.Infantry, 115],
-      [EntityType.Structure, 50],
       [EntityType.Rail, 50],
+      [EntityType.Soldier, 115],
+      [EntityType.Structure, 50],
     ]),
   ),
   Flamethrower: new Weapon(
     'Flamethrower',
     new Map([
-      [EntityType.AirInfantry, 100],
+      [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 70],
       [EntityType.Artillery, 75],
       [EntityType.Ground, 70],
-      [EntityType.Infantry, 130],
+      [EntityType.Soldier, 130],
       [EntityType.Structure, 80],
     ]),
     new WeaponAnimation('Flamethrower', 'Attack/Flamethrower', {
@@ -1358,13 +1357,13 @@ export const Weapons = {
   HeavyArtillery: new Weapon(
     'Heavy Artillery',
     new Map([
-      [EntityType.AirInfantry, 120],
+      [EntityType.AirSoldier, 120],
       [EntityType.Amphibious, 120],
       [EntityType.Artillery, 80],
       [EntityType.Ground, 120],
-      [EntityType.Infantry, 120],
-      [EntityType.Ship, 80],
       [EntityType.Rail, 80],
+      [EntityType.Ship, 80],
+      [EntityType.Soldier, 120],
     ]),
     HeavyArtilleryAnimation,
     SmokeAnimation,
@@ -1392,11 +1391,11 @@ export const Weapons = {
   Punch: new Weapon(
     'Fist',
     new Map([
-      [EntityType.AirInfantry, 50],
+      [EntityType.AirSoldier, 50],
       [EntityType.Amphibious, 25],
       [EntityType.Artillery, 25],
       [EntityType.Ground, 25],
-      [EntityType.Infantry, 50],
+      [EntityType.Soldier, 50],
     ]),
     // UI/LongPress works great here, lol.
     new WeaponAnimation('Punch', 'UI/LongPress', {
@@ -1415,14 +1414,14 @@ export const Weapons = {
   Railgun: new Weapon(
     'Railgun',
     new Map([
-      [EntityType.AirInfantry, 90],
+      [EntityType.AirSoldier, 90],
       [EntityType.Amphibious, 130],
       [EntityType.Artillery, 90],
       [EntityType.Ground, 130],
       [EntityType.LowAltitude, 90],
-      [EntityType.Infantry, 130],
       [EntityType.Rail, 90],
       [EntityType.Ship, 90],
+      [EntityType.Soldier, 130],
     ]),
     new WeaponAnimation('Railgun', 'Attack/Railgun', {
       frames: 23,
@@ -1449,15 +1448,15 @@ export const Weapons = {
   Rocket: new Weapon(
     'Rocket',
     new Map([
-      [EntityType.AirInfantry, 60],
       [EntityType.Airplane, 60],
+      [EntityType.AirSoldier, 60],
       [EntityType.Amphibious, 90],
       [EntityType.Artillery, 70],
       [EntityType.Ground, 80],
       [EntityType.LowAltitude, 60],
-      [EntityType.Infantry, 80],
       [EntityType.Rail, 60],
       [EntityType.Ship, 60],
+      [EntityType.Soldier, 80],
     ]),
     new WeaponAnimation('Rocket', 'Attack/Rocket', {
       frames: 16,
@@ -1481,15 +1480,15 @@ export const Weapons = {
   Rockets: new Weapon(
     'Rockets',
     new Map([
-      [EntityType.AirInfantry, 60],
       [EntityType.Airplane, 60],
+      [EntityType.AirSoldier, 60],
       [EntityType.Amphibious, 90],
       [EntityType.Artillery, 70],
       [EntityType.Ground, 80],
       [EntityType.LowAltitude, 60],
-      [EntityType.Infantry, 80],
       [EntityType.Rail, 60],
       [EntityType.Ship, 60],
+      [EntityType.Soldier, 80],
     ]),
     new WeaponAnimation('Rockets', 'Attack/Rockets', {
       frames: 9,
@@ -1513,7 +1512,7 @@ export const Weapons = {
     'SAM',
     new Map([
       [EntityType.Airplane, 140],
-      [EntityType.AirInfantry, 150],
+      [EntityType.AirSoldier, 150],
       [EntityType.LowAltitude, 150],
     ]),
     SAMAnimation,
@@ -1529,13 +1528,13 @@ export const Weapons = {
   ),
   SeaMG: MG.withDamage(
     new Map([
-      [EntityType.AirInfantry, 80],
+      [EntityType.AirSoldier, 80],
       [EntityType.Amphibious, 35],
       [EntityType.Artillery, 35],
       [EntityType.Ground, 35],
       [EntityType.LowAltitude, 80],
-      [EntityType.Infantry, 80],
       [EntityType.Ship, 35],
+      [EntityType.Soldier, 80],
     ]),
   ).withAnimationPositions({
     down: sprite(0.05, 0.55),
@@ -1558,13 +1557,13 @@ export const Weapons = {
   SniperRifle: new Weapon(
     'Sniper Rifle',
     new Map([
-      [EntityType.AirInfantry, 120],
+      [EntityType.AirSoldier, 120],
       [EntityType.Amphibious, 70],
       [EntityType.Artillery, 100],
       [EntityType.Ground, 70],
       [EntityType.LowAltitude, 120],
-      [EntityType.Infantry, 120],
       [EntityType.Rail, 50],
+      [EntityType.Soldier, 120],
     ]),
     new WeaponAnimation('SniperRifle', 'Attack/SniperRifle', {
       frames: 14,
@@ -1588,14 +1587,14 @@ export const Weapons = {
   TentacleWhip: new Weapon(
     'Tentacle Whip',
     new Map([
-      [EntityType.AirInfantry, 100],
+      [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 100],
       [EntityType.Artillery, 100],
       [EntityType.Ground, 100],
-      [EntityType.Infantry, 120],
       [EntityType.LowAltitude, 100],
       [EntityType.Rail, 100],
       [EntityType.Ship, 120],
+      [EntityType.Soldier, 120],
     ]),
     EmptyAnimation.withSound('Attack/TentacleWhip'),
     [
@@ -1702,12 +1701,12 @@ const SaboteurUnitAbilities = DefaultUnitAbilities.copy({
 });
 
 const DefaultSabotageTypes = new Set([
-  EntityType.AirInfantry,
+  EntityType.AirSoldier,
   EntityType.Amphibious,
   EntityType.Artillery,
   EntityType.Building,
   EntityType.Ground,
-  EntityType.Infantry,
+  EntityType.Soldier,
   EntityType.Invincible,
   EntityType.LowAltitude,
   EntityType.Rail,
@@ -1723,7 +1722,7 @@ export const Pioneer = new UnitInfo(
   `Pioneers are an essential utility unit capable of building and capturing structures as well as laying rail tracks. They lack an attack and are therefore vulnerable on the battlefield.`,
   `Joining the defense forces to become a pioneer from the countryside, {name} went through training with others in his unit as a junior recruit. Since then, he's been using his determination and growing courage to battle the enemy, often surprising himself with what he can accomplish and build on the battlefield.`,
   0,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 100,
@@ -1758,7 +1757,7 @@ export const Infantry = new UnitInfo(
   `Infantry units are standard foot soldiers, capable of capturing buildings. With minimal defense and a standard movement range, it is a balanced yet cheap unit. While Infantry is effective against all other foot soldiers, their ability to defend against stronger units is limited.`,
   `Always wanting to be a soldier, {name} enjoys showing off his skills as Infantry on the battlefield. Coming up through the ranks of the defense forces together with Pioneers, {name} sees his duty to always press forward especially when the odds are against him. Together with his friends, he’s eager to leap into the next conflict with a battlecry.`,
   5,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 200,
@@ -1794,7 +1793,7 @@ export const RocketLauncher = new UnitInfo(
   `The Rocket Launcher excels in short-range combat with strong firepower against tanks and other ground units. It is limited by its slow movement and high cost, but is invaluable when defending against a barrage of tanks in your territory.`,
   `Tanks? Not a problem. Hailing from the chilly north, {name} leads the Rocket Launcher division of the defense force.`,
   20,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 275,
@@ -1895,11 +1894,11 @@ export const SmallTank = new UnitInfo(
 );
 
 const GroundSupplyTypes = new Set([
-  EntityType.AirInfantry,
+  EntityType.AirSoldier,
   EntityType.Amphibious,
   EntityType.Artillery,
   EntityType.Ground,
-  EntityType.Infantry,
+  EntityType.Soldier,
   EntityType.Rail,
   EntityType.Ship,
 ]);
@@ -1929,7 +1928,7 @@ export const Jeep = new UnitInfo(
   null,
   {
     limit: 2,
-    types: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    types: new Set([EntityType.Soldier, EntityType.AirSoldier]),
   },
   {
     direction: 'left',
@@ -2189,7 +2188,7 @@ const Lander = new UnitInfo(
   {
     limit: 2,
     tiles: new Set([10]),
-    types: new Set([EntityType.AirInfantry, EntityType.Infantry]),
+    types: new Set([EntityType.AirSoldier, EntityType.Soldier]),
   },
   {
     direction: 'left',
@@ -2211,7 +2210,7 @@ export const Sniper = new UnitInfo(
   `Snipers stand out as the only soldiers capable of long-range attacks. Though costly and requiring positioning to attack, they can make the necessary difference in securing strategic locations.`,
   `{name} was raised in the desert region but left with her sister to join the defense forces. Calm and collected, {name} excels at long range attacks while being able to spot threats on the battlefield from far away. Her intelligence carries weight in the conflict and everyone listens when she has a plan.`,
   15,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 375,
@@ -2265,7 +2264,7 @@ export const Flamethrower = new UnitInfo(
   `Flamethrowers specialize in close combat, wielding immense firepower effective against soldiers and light ground units. Howeveer, carrying a volatile gas tank on their backs results in low defense and makes them susceptible to attacks.`,
   `{name} is a mayhem-loving recruit with a fiery personality. They come from the cold north but bring the warmth with them wherever they go. They look up to more experienced fighters to help them know when to turn down the intensity. As the leader of the flamethrower elites, they are known to revel in the mayhem of a battle and getting a little bit carried away when it comes to burning things down.`,
   0,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 400,
@@ -2303,7 +2302,7 @@ export const Saboteur = new UnitInfo(
   `Saboteurs are the most mischievous of all units, capable of sabotaging opposing units and taking away their supplies. They can also rescue neutral units on the battlefield to join their cause. Because they don't carry weapons, they rely on their fists to defend themselves.`,
   `{name} was recruited into the defense forces alongside {14.name}. He loves deceitfully sneaking into enemy territory to sabotage, steal secrets or just wreak havoc for the fun of it. Although nobody is quite sure if he is ever really scared of anything, his comrades have seen him pack a punch when his life depends on it.`,
   10,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 325,
@@ -2350,7 +2349,7 @@ export const TransportHelicopter = new UnitInfo(
     fuel: 60,
     radius: 7,
     supplyTypes: new Set([
-      EntityType.AirInfantry,
+      EntityType.AirSoldier,
       EntityType.LowAltitude,
       EntityType.Airplane,
     ]),
@@ -2364,7 +2363,7 @@ export const TransportHelicopter = new UnitInfo(
   null,
   {
     limit: 2,
-    types: new Set([EntityType.AirInfantry, EntityType.Infantry]),
+    types: new Set([EntityType.AirSoldier, EntityType.Soldier]),
   },
   {
     direction: 'right',
@@ -2455,7 +2454,7 @@ export const Jetpack = new UnitInfo(
   `Jetpacks are a new invention. They can navigate almost all terrain types and are effective against air and ground units. They can capture buildings, but their low fuel supply makes them a risky investment.`,
   `An excitable tinkerer, {name} created the jetpack technology and leads the jetpack division through field testing new and exciting ways to use it. When he isn’t flying a jetpack, he researches new technology found by his friends in their exploration of the multiverse. As a creative tinkerer he can't help himself in trying out any new tech he gets his hands on.`,
   20,
-  EntityType.AirInfantry,
+  EntityType.AirSoldier,
   MovementTypes.AirInfantry,
   {
     cost: 300,
@@ -2521,14 +2520,14 @@ export const SeaPatrol = new UnitInfo(
     weapons: [
       LightAirGun.withDamage(
         new Map([
-          [EntityType.AirInfantry, 100],
+          [EntityType.AirSoldier, 100],
           [EntityType.Amphibious, 70],
           [EntityType.Artillery, 55],
           [EntityType.Ground, 55],
           [EntityType.LowAltitude, 100],
-          [EntityType.Infantry, 40],
           [EntityType.Rail, 55],
           [EntityType.Ship, 85],
+          [EntityType.Soldier, 40],
         ]),
       ).withSupply(5),
     ],
@@ -2678,12 +2677,12 @@ export const Medic = new UnitInfo(
   `Medics are essential on a battlefield with constrained resources. They can patch up wounded soldiers right at the frontlines and keep them going long enough to potentially turn the tide of battle.`,
   `{name} is the cool-headed chief medical officer in the defense force and never breaks a sweat in any conflict. Lose an arm? {name} will give you a band-aid and send you back onto the field.`,
   0,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: 250,
     fuel: 80,
-    healTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    healTypes: new Set([EntityType.Soldier, EntityType.AirSoldier]),
     radius: 4,
     vision: 1,
   },
@@ -2836,8 +2835,8 @@ export const Hovercraft = new UnitInfo(
     limit: 4,
     tiles: new Set([10]),
     types: new Set([
-      EntityType.Infantry,
-      EntityType.AirInfantry,
+      EntityType.Soldier,
+      EntityType.AirSoldier,
       EntityType.Ground,
       EntityType.Artillery,
     ]),
@@ -2890,7 +2889,7 @@ const EntityTypesToSupport = new Set([
   EntityType.Amphibious,
   EntityType.Artillery,
   EntityType.Ground,
-  EntityType.Infantry,
+  EntityType.Soldier,
   EntityType.Rail,
   EntityType.Ship,
 ]);
@@ -3020,15 +3019,15 @@ export const TransportTrain = new UnitInfo(
     weapons: [
       Weapons.HeavyGun.withDamage(
         new Map([
-          [EntityType.AirInfantry, 55],
+          [EntityType.AirSoldier, 55],
           [EntityType.Amphibious, 125],
           [EntityType.Artillery, 125],
           [EntityType.Building, 70],
           [EntityType.Ground, 125],
           [EntityType.LowAltitude, 55],
-          [EntityType.Infantry, 85],
           [EntityType.Rail, 115],
           [EntityType.Ship, 70],
+          [EntityType.Soldier, 85],
           [EntityType.Structure, 110],
         ]),
       ).withSupply(5),
@@ -3037,8 +3036,8 @@ export const TransportTrain = new UnitInfo(
   {
     limit: 4,
     types: new Set([
-      EntityType.Infantry,
-      EntityType.AirInfantry,
+      EntityType.Soldier,
+      EntityType.AirSoldier,
       EntityType.Ground,
       EntityType.Artillery,
       EntityType.Amphibious,
@@ -3062,7 +3061,7 @@ export const Dinosaur = new UnitInfo(
   'A Dinosaur in this day and age?? How did it get here? Do you think it hatched from an Easter Egg?',
   `{name} is the leader of the Dinosaur faction. In their world, {name} worked as a butcher in a fine dining restaurant. Everything changed when their world was invaded by odd-looking bipedal creatures dressed in colorful outfits, wielding strange weapons. Now, {name} is fighting to protect their world from these invaders.`,
   25,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3302,7 +3301,7 @@ export const Truck = new UnitInfo(
   null,
   {
     limit: 4,
-    types: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    types: new Set([EntityType.Soldier, EntityType.AirSoldier]),
   },
   {
     direction: 'left',
@@ -3359,7 +3358,7 @@ export const Dragon = new UnitInfo(
   `Dragons are kind of like a multiversal Flamethrower unit, if you think about it. Except they can also fly, are huge, and people tend to freeze when they see a Dragon. So, not really like a Flamethrower unit at all. But they do breathe fire!`,
   `{name} is a solitary creature, preferring to keep to themselves and avoid conflict whenever possible. Unfortunately, they were pulled into the multiversal conflict and had no choice but to fight. Originally from a world where dragons were revered as wise and powerful beings, {name} is now seen as a terrifying force of nature. They long for the day when they can return to their peaceful existence.`,
   25,
-  EntityType.AirInfantry,
+  EntityType.AirSoldier,
   MovementTypes.AirInfantry,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3375,8 +3374,9 @@ export const Dragon = new UnitInfo(
         buff(
           new Map([
             ...Weapons.Flamethrower.damage,
-            [EntityType.Ship, 70],
+
             [EntityType.LowAltitude, 90],
+            [EntityType.Ship, 70],
           ]),
           40,
         ),
@@ -3419,7 +3419,7 @@ export const Bear = new UnitInfo(
   `This is a Bear, and Bears tend to be huge. Usually found in forests and mountains, they are hunted for their fur and meat. But this Bear is different. It's a unit in a game. So, don't hunt it, just fight it!`,
   `There is not much known about {name}, except that she is bigger and stronger than most other bears. Many stories circulate about a giant in the forest devouring soldiers and even tanks. But that couldn't be her, right? Right??`,
   25,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3457,7 +3457,7 @@ export const Alien = new UnitInfo(
   `Alien units aren't really that special. They're just like any other soldier, except they come from another dimension. Rumored to possess advanced technology and abilities, and known to travel in spaceships — but other than that, they're just like any other soldier. Really.`,
   `Who hasn't been beamed up onto a spaceship and probed by aliens before? Well, anyway, it was definitely not {name}, because {name} is an interior decorator from another dimension. They're here to make sure the multiverse looks good, one universe at a time. Although… they are known to get into disagreements about style. To {name}, all the useless clutter from humans seems out of this world. Who needs it, really?`,
   10,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3497,7 +3497,7 @@ export const Zombie = new UnitInfo(
   `Zombies are slow but extremely dangerous. A hit from a Zombie infects the opponent, converting them to the Zombie faction. A Zombie faction? Yes, that's right. They are a formidable faction, and they are coming for all of us.`,
   `We do not know where {name} comes from, what "it" is thinking, or even if "it" is capable of thought at all. What we do know is that {name}, along with other Zombies, is trying to convert us all, one by one, into their ranks. They want to eat our brains and are here to do it all very, very slowly.`,
   0,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3535,7 +3535,7 @@ export const Ogre = new UnitInfo(
   `Ogres are from a different world. They are huge, slow, and powerful. They are known to wield clubs and are capable of dealing massive damage to ground units.`,
   `{name} is the big, grumpy leader of the Ogres. He’s huge, slow, and super strong, always carrying a massive club that can smash anything in his way. Even though he’s always frowning and seems a bit unhappy, {name} is known to host exclusive dinner parties back in his cave. But be careful – if he gets mad, which happens quite often, guests might end up on the menu!`,
   0,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3573,7 +3573,7 @@ export const Brute = new UnitInfo(
   `The Brute is a huge, slow-moving unit with a powerful shotgun. Its high defense and attack power make it a force to be reckoned with anywhere on the battlefield. If you see a Brute, you better have a plan to deal with it.`,
   `{name} believes he can solve all problems with brute force, rarely admitting when he is wrong. Deep down, he is said to have a gentle heart and goes out of his way to protect those he cares about. However, some wonder if this gentleness is just a facade to hide his true intentions, which might simply involve using his shotgun to get what he wants.`,
   50,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3612,7 +3612,7 @@ export const Commander = new UnitInfo(
   `Armies are composed of master strategists and troops on the ground executing orders. Then there's the Commander unit, who can neither strategize nor execute effectively. They excel in scheduling unnecessary meetings and perpetuating confusion under the guise of "alignment". Equipped only with a pistol, one has to wonder: What exactly is their purpose?`,
   `Even if it appears {name} is one step behind, he invariably ends up five steps ahead. He seems to be the only Commander unit with actual tactical and strategic abilities, perceiving the multiverse as a complex chessboard of possibilities where everyone but him is a pawn. Unlike his counterparts, who often get lost in bureaucracy and confusion, {name} navigates these complexities with unmatched foresight and precision, masterfully turning tough situations to his advantage.`,
   20,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3731,7 +3731,7 @@ export const BazookaBear = new UnitInfo(
   `As an all-rounder, the Bazooka Bear can attack every other unit. Its low mobility is compensated by high long-range attack power. Many have asked: Why is it a bear with a bazooka? You'll have to ask the squad leader that question!`,
   `After losing his partner in crime, {name} took up a bazooka to honor his fallen friend. Now, {name} has assembled a team of elite Bazooka Bears to avenge his friend's death. He is a loyal leader who will stop at nothing to protect those he cares about.`,
   10,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.Soldier,
   {
     cost: Number.POSITIVE_INFINITY,
@@ -3771,7 +3771,7 @@ export const AIU = new UnitInfo(
   `The AIU, or Artificial Intelligence Unit, is a highly advanced robot — possibly sent from another universe — to wreak havoc on the battlefield. It boasts extremely strong defense and is equipped with a powerful minigun.`,
   `{name} is a killing machine through and through. He enjoys walks on the beach only when he can crush an opponent like the sand beneath his feet. We aren't sure if he is conscious or just stringing together random words to sound like he is, but he sure seems smarter than the average human.`,
   40,
-  EntityType.Infantry,
+  EntityType.Soldier,
   MovementTypes.HeavySoldier,
   {
     cost: Number.POSITIVE_INFINITY,

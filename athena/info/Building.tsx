@@ -258,7 +258,7 @@ export const HQ = new BuildingInfo(
     restrictedUnits: SpecialUnits,
     sort: 1,
     type: EntityType.Invincible,
-    unitTypes: new Set([EntityType.Infantry]),
+    unitTypes: new Set([EntityType.Soldier]),
   },
   {
     biomeStyle: new Map([[Biome.Spaceship, new SpriteVector(0, 2)]]),
@@ -303,7 +303,7 @@ export const Factory = new BuildingInfo(
 const AirUnitTypes = new Set([
   EntityType.LowAltitude,
   EntityType.Airplane,
-  EntityType.AirInfantry,
+  EntityType.AirSoldier,
 ]);
 
 export const Airbase = new BuildingInfo(
@@ -472,7 +472,7 @@ export const Barracks = new BuildingInfo(
     placeOn: new Set([ConstructionSite]),
     restrictedUnits: SpecialUnits,
     sort: 2,
-    unitTypes: new Set([EntityType.Infantry]),
+    unitTypes: new Set([EntityType.Soldier]),
   },
   {
     name: 'Buildings',
@@ -490,7 +490,7 @@ export const Shelter = new BuildingInfo(
     cost: 200,
     defense: 40,
     funds: MinFunds / 2,
-    healTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    healTypes: new Set([EntityType.Soldier, EntityType.AirSoldier]),
     placeOn: new Set([Campsite]),
     sort: 4,
   },
@@ -555,7 +555,7 @@ export const Medbay = new BuildingInfo(
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
     defense: 50,
-    healTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    healTypes: new Set([EntityType.Soldier, EntityType.AirSoldier]),
     placeOn: new Set([ConstructionSite]),
     sort: 4,
   },
@@ -572,7 +572,7 @@ export const SpawnPlatform = new BuildingInfo(
     placeOn: new Set([ConstructionSite]),
     restrictedUnits: SpecialUnits,
     sort: 2,
-    unitTypes: new Set([EntityType.Infantry, EntityType.AirInfantry]),
+    unitTypes: new Set([EntityType.Soldier, EntityType.AirSoldier]),
   },
   {
     name: 'Buildings',

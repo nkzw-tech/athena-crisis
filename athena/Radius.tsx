@@ -243,7 +243,7 @@ export function visible(
   const vision =
     radius +
     (unit.isUnfolded() ? 2 : 0) +
-    (unit.info.type === EntityType.Infantry &&
+    (unit.info.type === EntityType.Soldier &&
     map.getTileInfo(start).type & TileTypes.Mountain
       ? 1
       : 0);

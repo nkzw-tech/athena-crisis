@@ -6,8 +6,8 @@ export default function getTranslatedEntityName(entityType: EntityType) {
   switch (entityType) {
     case EntityType.Airplane:
       return String(fbt('Airplane', 'Entity name'));
-    case EntityType.AirInfantry:
-      return String(fbt('Air Infantry', 'Entity name'));
+    case EntityType.AirSoldier:
+      return String(fbt('Air Soldier', 'Entity name'));
     case EntityType.Amphibious:
       return String(fbt('Amphibious', 'Entity name'));
     case EntityType.Artillery:
@@ -18,8 +18,8 @@ export default function getTranslatedEntityName(entityType: EntityType) {
       return String(fbt('Vehicle', 'Entity name'));
     case EntityType.LowAltitude:
       return String(fbt('Low Altitude', 'Entity name'));
-    case EntityType.Infantry:
-      return String(fbt('Infantry', 'Entity name'));
+    case EntityType.Soldier:
+      return String(fbt('Soldier', 'Entity name'));
     case EntityType.Invincible:
       return String(fbt('Invincible', 'Entity name'));
     case EntityType.Ship:
