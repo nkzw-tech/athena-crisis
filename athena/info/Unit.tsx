@@ -2305,7 +2305,7 @@ export const Saboteur = new UnitInfo(
   EntityType.Soldier,
   MovementTypes.Soldier,
   {
-    cost: 325,
+    cost: 275,
     fuel: 40,
     radius: 6,
     sabotageTypes: DefaultSabotageTypes,

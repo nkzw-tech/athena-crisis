@@ -608,7 +608,7 @@ test('AI will prefer attacks over sabotage against weaker units', () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
-    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 55 }, chargeA: 107, chargeB: 90 }
+    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 55 }, chargeA: 95, chargeB: 90 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
