@@ -1053,7 +1053,7 @@ export const RailBridge = new TileInfo(
       [MovementTypes.LowAltitude, 1],
       [MovementTypes.Rail, 1],
       [MovementTypes.Ship, 1],
-      [MovementTypes.Tires, 2],
+      [MovementTypes.Tires, 1],
       [MovementTypes.Tread, 2],
     ]),
   },
