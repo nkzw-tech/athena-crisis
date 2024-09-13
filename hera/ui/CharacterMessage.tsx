@@ -6,7 +6,6 @@ import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { CSSVariables } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
-import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { MenuClassName } from '@deities/ui/Menu.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -36,13 +35,11 @@ const sizes = {
 
 const MessageComponent = ({
   animationConfig,
-  clearTimer,
   factionNames,
   map,
   onComplete,
   player,
   position,
-  scheduleTimer,
   text,
   unitId,
   userDisplayName,
@@ -76,7 +73,6 @@ const MessageComponent = ({
         ? 'Talking/High'
         : 'Talking/Mid';
 
-  const [timer, setTimer] = useState<Promise<number> | null>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [currentComplete, setCurrentComplete] = useState(false);
 
@@ -122,10 +118,6 @@ const MessageComponent = ({
 
   const next = useCallback(
     (isComplete: boolean) => {
-      if (timer) {
-        clearTimer(timer);
-      }
-
       const menuIsOpen =
         document.documentElement.style.getPropertyValue(
           cssVar('ui-is-scaled'),
@@ -148,15 +140,7 @@ const MessageComponent = ({
         onComplete();
       }
     },
-    [
-      timer,
-      animationComplete,
-      hasNext,
-      clearTimer,
-      sound,
-      currentLine,
-      onComplete,
-    ],
+    [animationComplete, hasNext, sound, currentLine, onComplete],
   );
 
   useInput(
@@ -183,17 +167,6 @@ const MessageComponent = ({
       document.body.removeEventListener('click', listener);
     };
   }, [currentComplete, next]);
-
-  useVisibilityState(
-    useCallback(
-      (isVisible: boolean) => {
-        if (timer != null && !isVisible) {
-          clearTimer(timer);
-        }
-      },
-      [clearTimer, timer],
-    ),
-  );
 
   useEffect(() => {
     const listener = throttle(() => {
@@ -307,10 +280,7 @@ const MessageComponent = ({
                           ? () => {
                               AudioPlayer.stop(sound);
                               setCurrentComplete(true);
-                              if (timer != null) {
-                                clearTimer(timer);
-                              }
-                              setTimer(scheduleTimer(() => next(true), 3000));
+                              setAnimationComplete(true);
                             }
                           : undefined
                       }

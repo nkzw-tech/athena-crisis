@@ -38,15 +38,24 @@ export default function useMusic(song: SongName) {
 const isPlaying = (video: HTMLVideoElement | null | undefined) =>
   video && !video.paused && !video.ended && video.currentTime > 0;
 
-let resume = false;
+let resume = AudioPlayer.isPaused();
+let timer: ReturnType<typeof setTimeout> | null = null;
 const onVisibilityChange = (isVisible: boolean) => {
+  if (timer != null) {
+    clearTimeout(timer);
+  }
+
   if (!App.canQuit) {
     if (resume && isVisible) {
       AudioPlayer.resume();
       resume = false;
     } else if (!isVisible && !AudioPlayer.isPaused()) {
-      AudioPlayer.pause();
-      resume = true;
+      // Visibility change is fired on reload and navigation.
+      // We can avoid pausing music on navigation by using a timer.
+      timer = setTimeout(() => {
+        AudioPlayer.pause();
+        resume = true;
+      }, 100);
     }
   }
 };
