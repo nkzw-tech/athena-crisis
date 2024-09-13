@@ -107,9 +107,9 @@ export default function CampaignEditorSettingsPanel({
             <fbt desc="Explanation for tags">
               Campaigns with the{' '}
               <fbt:param name="tag-name">
-                <div className={tagBackgroundStyle}>
+                <span className={tagBackgroundStyle}>
                   <Tag tag="published" />
-                </div>
+                </span>
               </fbt:param>{' '}
               tag will be visible in the campaign list and on your profile.
             </fbt>

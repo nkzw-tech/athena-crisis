@@ -605,15 +605,15 @@ export default function MapEditorSettingsPanel({
             <fbt desc="Explanation for tags">
               Maps with the
               <fbt:param name="published-tag-name">
-                <div className={tagBackgroundStyle}>
+                <span className={tagBackgroundStyle}>
                   <Tag tag="published" />
-                </div>
+                </span>
               </fbt:param>{' '}
               and{' '}
               <fbt:param name="pvp-tag-name">
-                <div className={tagBackgroundStyle}>
+                <span className={tagBackgroundStyle}>
                   <Tag tag="pvp" />
-                </div>
+                </span>
               </fbt:param>{' '}
               tags will be visible in the community map list and on your
               profile.
