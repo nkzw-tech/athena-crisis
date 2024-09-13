@@ -75,7 +75,6 @@ import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserWithFactionNameAndUnlocks } from '../hooks/useUserMap.tsx';
 import filterNodes from '../lib/filterNodes.tsx';
-import { hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
 import GameActions from '../ui/GameActions.tsx';
@@ -895,7 +894,7 @@ export default function MapEditor({
               <MapInfo hide={hide} inset={inset} leftOffset {...props} />
               <CurrentGameCard
                 actions={actions}
-                animatePlayer={hasNotableAnimation(props.animations)}
+                animations={props.animations}
                 currentViewer={props.currentViewer}
                 gameInfoState={props.gameInfoState}
                 hide={hidden}

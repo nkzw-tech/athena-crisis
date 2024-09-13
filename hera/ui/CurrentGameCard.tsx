@@ -8,11 +8,16 @@ import sortBy from '@deities/hephaestus/sortBy.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import React, { memo, useCallback, useState } from 'react';
 import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
 import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
+import {
+  Animations,
+  hasCharacterMessage,
+  hasNotableAnimation,
+} from '../MapAnimations.tsx';
 import { Actions, GameInfoState } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import PlayerCard from './PlayerCard.tsx';
@@ -132,7 +137,7 @@ const TeamsCard = ({
 
 export default memo(function CurrentGameCard({
   actions,
-  animatePlayer,
+  animations,
   currentViewer,
   gameInfoState,
   hide,
@@ -144,7 +149,7 @@ export default memo(function CurrentGameCard({
   zIndex,
 }: {
   actions: Actions;
-  animatePlayer: boolean;
+  animations: Animations;
   currentViewer: PlayerID | null;
   gameInfoState: GameInfoState | null;
   hide?: boolean;
@@ -163,6 +168,9 @@ export default memo(function CurrentGameCard({
   );
   const players = map.getPlayers();
   const hasSkills = players.some(({ skills }) => skills.size > 0);
+
+  const animatePlayer = hasNotableAnimation(animations);
+  const hasMessages = hasCharacterMessage(animations);
 
   useInput(
     'info',
@@ -188,7 +196,7 @@ export default memo(function CurrentGameCard({
   );
 
   const content = (
-    <div className={maybeFade(hide)}>
+    <div className={cx(maybeFade(hide), hasMessages && diabledStyle)}>
       <PrimaryExpandableMenuButton
         gap={16}
         inset={inlineUI ? 1 : inset}
@@ -209,8 +217,12 @@ export default memo(function CurrentGameCard({
       </PrimaryExpandableMenuButton>
     </div>
   );
+
   return inlineUI ? (
-    <div className={inlineContainerStyle} style={{ zIndex: zIndex - 1 }}>
+    <div
+      className={inlineContainerStyle}
+      style={{ zIndex: isExpanded ? zIndex + 3 : zIndex - 1 }}
+    >
       {content}
     </div>
   ) : (
@@ -224,4 +236,12 @@ const inlineContainerStyle = css`
   position: absolute;
   transform: translate3d(0, -76px, 0);
   zoom: 0.333334;
+`;
+
+const diabledStyle = css`
+  pointer-events: none;
+
+  * {
+    pointer-events: none !important;
+  }
 `;

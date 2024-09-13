@@ -342,6 +342,10 @@ export function hasNotableAnimation(animations: Animations) {
   );
 }
 
+export function hasCharacterMessage(animations: Animations) {
+  return animations.some((animation) => animation.type === 'characterMessage');
+}
+
 const ScrollIntoView = ({
   onComplete,
   positions,
