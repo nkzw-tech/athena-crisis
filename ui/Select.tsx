@@ -11,15 +11,25 @@ import Stack from './Stack.tsx';
 export default function Select({
   children,
   forceOpen,
+  outline,
   selectedItem,
+  size = 'medium',
 }: {
   children: ReactNode;
   forceOpen?: boolean;
+  outline?: true;
   selectedItem: ReactNode;
+  size?: 'small' | 'medium';
 }) {
   return (
     <Dropdown
-      className={cx(BoxStyle, dropdownStyle, forceOpen && selectedStyle)}
+      className={cx(
+        BoxStyle,
+        dropdownStyle,
+        forceOpen && selectedStyle,
+        size === 'small' && smallStyle,
+        outline && outlineStyle,
+      )}
       closeOnSelect
       dropdownClassName={cx(BoxStyle, selectorStyle)}
       forceOpen={forceOpen}
@@ -57,4 +67,14 @@ const selectorStyle = css`
 
 const selectedStyle = css`
   ${pixelBorder(undefined, 2)}
+`;
+
+const outlineStyle = css`
+  ${pixelBorder(applyVar('border-color'), 2)};
+`;
+
+const smallStyle = css`
+  height: 36px;
+  min-height: 32px;
+  padding: 8px 12px;
 `;

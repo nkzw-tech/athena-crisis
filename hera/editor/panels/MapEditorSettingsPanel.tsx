@@ -232,6 +232,7 @@ export default function MapEditorSettingsPanel({
                 <span>{getTranslatedPerformanceTypeName('style')}</span>
                 <Stack alignCenter gap={16}>
                   <Select
+                    outline
                     selectedItem={
                       <div className={selectedItemStyle}>
                         {performance.style ? (
@@ -247,6 +248,7 @@ export default function MapEditorSettingsPanel({
                         )}
                       </div>
                     }
+                    size="small"
                   >
                     {PerformanceStyleTypes.map((type) => (
                       <InlineLink
