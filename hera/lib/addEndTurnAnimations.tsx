@@ -101,17 +101,19 @@ export default function addEndTurnAnimations(
               state,
               // Identify units that are out of fuel without applying the fuel adjustment, which is
               // applied later in `applyEndTurnActionResponse`.
-              sortVectors([
-                ...newMap.units
-                  .filter(
-                    (unit, vector) =>
-                      !unitsToSupply.has(vector) &&
-                      !unitsToHeal.has(vector) &&
-                      vision.isVisible(map, vector) &&
-                      shouldRemoveUnit(newMap, vector, unit, nextPlayer),
-                  )
-                  .keys(),
-              ]),
+              isFake
+                ? []
+                : sortVectors([
+                    ...newMap.units
+                      .filter(
+                        (unit, vector) =>
+                          !unitsToSupply.has(vector) &&
+                          !unitsToHeal.has(vector) &&
+                          vision.isVisible(map, vector) &&
+                          shouldRemoveUnit(newMap, vector, unit, nextPlayer),
+                      )
+                      .keys(),
+                  ]),
               onComplete,
             );
 
