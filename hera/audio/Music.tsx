@@ -38,7 +38,7 @@ export default function useMusic(song: SongName) {
 const isPlaying = (video: HTMLVideoElement | null | undefined) =>
   video && !video.paused && !video.ended && video.currentTime > 0;
 
-let resume = AudioPlayer.isPaused();
+let resume = false;
 let timer: ReturnType<typeof setTimeout> | null = null;
 const onVisibilityChange = (isVisible: boolean) => {
   if (timer != null) {
@@ -46,7 +46,7 @@ const onVisibilityChange = (isVisible: boolean) => {
   }
 
   if (!App.canQuit) {
-    if (resume && isVisible) {
+    if (!document.hidden && resume && isVisible) {
       AudioPlayer.resume();
       resume = false;
     } else if (!isVisible && !AudioPlayer.isPaused()) {
