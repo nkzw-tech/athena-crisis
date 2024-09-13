@@ -16,3 +16,18 @@ export default function scrollToCenter(container: Element | Window) {
         },
   );
 }
+
+export function scrollToVerticalCenter(container: Element | Window) {
+  container.scrollTo(
+    isWindow(container)
+      ? {
+          left: 0,
+          top:
+            (document.documentElement.scrollHeight - container.innerHeight) / 2,
+        }
+      : {
+          left: 0,
+          top: (container.scrollHeight - container.clientHeight) / 2,
+        },
+  );
+}

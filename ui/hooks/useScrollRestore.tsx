@@ -33,3 +33,10 @@ export default function useScrollRestore() {
     return () => clearTimeout(timer);
   }, [context, pathname]);
 }
+
+export function useSkipScrollRestore() {
+  const scrollRestoreContext = useContext(ScrollRestore);
+  useEffect(() => {
+    scrollRestoreContext.current = true;
+  }, [scrollRestoreContext]);
+}
