@@ -263,7 +263,7 @@ export default function ObjectiveCard({
               </Stack>
             </label>
           )}
-          <Stack gap>
+          <Stack alignCenter className={lineHeightStyle} gap>
             <label>
               <Stack gap start>
                 <span className={labelWidthStyle}>
@@ -291,7 +291,7 @@ export default function ObjectiveCard({
             )}
           </Stack>
           {!isDefaultObjective && (
-            <Stack gap>
+            <Stack alignCenter className={lineHeightStyle} gap>
               <label>
                 <Stack gap start>
                   <span className={labelWidthStyle}>
@@ -596,4 +596,8 @@ const linkStyle = css`
 const selectorStyle = css`
   padding: 2px;
   width: 160px;
+`;
+
+const lineHeightStyle = css`
+  line-height: 1.4em;
 `;
