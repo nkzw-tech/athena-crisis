@@ -4,7 +4,7 @@ import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import { getCurrentScrollContainer } from '@deities/ui/ScrollContainer.tsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const getKey = (key: string) => `::AC::volume::${key}`;
+const getKey = (key: string) => `::AC::zoom::${key}`;
 
 export type SetZoomFn = (value: number | ((value: number) => number)) => void;
 
