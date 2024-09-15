@@ -5,7 +5,7 @@ import { Sprites } from 'athena-crisis:images';
 
 export default function GamepadOverview() {
   return (
-    <Stack alignCenter center nowrap>
+    <Stack adaptive alignCenter center>
       <Stack gap={16} vertical>
         <div>
           L2:{' '}
@@ -69,8 +69,8 @@ const gamepadStyle = css`
   padding: 24px;
   image-rendering: pixelated;
   user-select: none;
-  zoom: 2;
 
+  zoom: 2;
   ${Breakpoints.sm} {
     zoom: 3;
   }
