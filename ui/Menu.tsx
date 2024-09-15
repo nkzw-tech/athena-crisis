@@ -219,7 +219,7 @@ const menuStyle = css`
     background-color 300ms ease,
     color 300ms ease,
     height 0ms 300ms ease;
-  z-index: 4000;
+  z-index: 3000;
 `;
 
 const dotStyle = css`
@@ -259,6 +259,7 @@ const openStyle = css`
     border-width 300ms ease,
     background-color 300ms ease,
     color 300ms ease;
+  z-index: 4000;
 `;
 
 const overlayStyle = css`
