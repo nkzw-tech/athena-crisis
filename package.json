@@ -63,7 +63,7 @@
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "1.7.26",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.5.5",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -73,14 +73,14 @@
     "eslint": "^8.57.0",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.4",
-    "npm-run-all2": "^6.2.2",
+    "npm-run-all2": "^6.2.3",
     "prettier": "4.0.0-alpha.8",
     "prettier-plugin-packagejson": "^2.5.2",
     "react-refresh": "^0.14.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
-    "vite": "^5.4.4",
-    "vitest": "^2.1.0"
+    "vite": "^5.4.5",
+    "vitest": "^2.1.1"
   },
   "engines": {
     "node": ">=20.0.0",
