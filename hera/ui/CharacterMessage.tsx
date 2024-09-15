@@ -162,9 +162,9 @@ const MessageComponent = ({
       next(currentComplete);
     };
 
-    document.body.addEventListener('click', listener);
+    window.addEventListener('click', listener);
     return () => {
-      document.body.removeEventListener('click', listener);
+      window.removeEventListener('click', listener);
     };
   }, [currentComplete, next]);
 

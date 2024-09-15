@@ -38,8 +38,8 @@ export default function EditorPlayerSelector({
         update(changePlayer(state.map, id));
       }
     };
-    document.body.addEventListener('keydown', listener);
-    return () => document.body.removeEventListener('keydown', listener);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
   }, [editor, setEditorState, state, update]);
 
   return (

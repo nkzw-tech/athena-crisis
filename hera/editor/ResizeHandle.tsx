@@ -112,12 +112,12 @@ export default function ResizeHandle({
   );
 
   useEffect(() => {
-    document.body.addEventListener('mousemove', resizeMap);
-    document.body.addEventListener('mouseup', resizeStop);
+    window.addEventListener('mousemove', resizeMap);
+    window.addEventListener('mouseup', resizeStop);
 
     return () => {
-      document.body.removeEventListener('mousemove', resizeMap);
-      document.body.removeEventListener('mouseup', resizeStop);
+      window.removeEventListener('mousemove', resizeMap);
+      window.removeEventListener('mouseup', resizeStop);
     };
   }, [resizeStart, resizeMap, resizeStop]);
 

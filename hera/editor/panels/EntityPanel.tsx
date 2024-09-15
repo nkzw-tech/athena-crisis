@@ -195,8 +195,8 @@ export default function EntityPanel({
         updatePlayer(entity, PlayerIDs.includes(key) ? key : null);
       }
     };
-    document.body.addEventListener('keydown', listener);
-    return () => document.body.removeEventListener('keydown', listener);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
   }, [editor, entity, isStructure, selectedPosition, updatePlayer]);
 
   const skills: ReadonlyArray<Skill | null> = useMemo(

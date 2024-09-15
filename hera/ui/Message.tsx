@@ -111,9 +111,9 @@ const MessageComponent = ({
 
   useInput('accept', next);
   useEffect(() => {
-    document.body.addEventListener('click', next);
+    window.addEventListener('click', next);
     return () => {
-      document.body.removeEventListener('click', next);
+      window.removeEventListener('click', next);
     };
   }, [next]);
 
