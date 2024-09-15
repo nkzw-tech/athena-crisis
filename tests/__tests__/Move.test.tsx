@@ -70,7 +70,7 @@ test('can only move when there is enough fuel', () => {
   expect(execute(map, vision, MoveAction(vec(2, 1), vec(2, 4)))).toBeNull();
 });
 
-test('transporters receive the correct unit in fog', () => {
+test('transporters receive the correct unit in fog', async () => {
   const from = vec(3, 3);
   const to = vec(3, 2);
   let map = withModifiers(
@@ -95,7 +95,7 @@ test('transporters receive the correct unit in fog', () => {
   );
   const vision = map.createVisionObject(player1);
 
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
     MoveAction(from, to),
     DropUnitAction(to, 0, vec(2, 2)),
@@ -130,7 +130,7 @@ test('transporters receive the correct unit in fog', () => {
   `);
 });
 
-test('transporters can be loaded even if they are completed', () => {
+test('transporters can be loaded even if they are completed', async () => {
   const from = vec(3, 3);
   const to = vec(3, 2);
   const map = withModifiers(
@@ -146,7 +146,7 @@ test('transporters can be loaded even if they are completed', () => {
       ],
     }),
   );
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
     CompleteUnitAction(to),
     MoveAction(from, to),

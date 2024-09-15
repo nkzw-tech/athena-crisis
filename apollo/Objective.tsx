@@ -1,8 +1,15 @@
+import { CommandCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
+import { Bot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { Criteria, Objective } from '@deities/athena/Objectives.tsx';
+import {
+  Criteria,
+  Objective,
+  ObjectiveID,
+} from '@deities/athena/Objectives.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
@@ -27,6 +34,7 @@ export type AttackUnitGameOverActionResponse = Readonly<{
 }>;
 
 export type BeginTurnGameOverActionResponse = Readonly<{
+  abandoned?: boolean;
   type: 'BeginTurnGameOver';
 }>;
 
@@ -55,7 +63,13 @@ export type OptionalObjectiveActionResponse = Readonly<{
   type: 'OptionalObjective';
 }>;
 
+export type AbandonInvasionActionResponse = Readonly<{
+  name: string;
+  type: 'AbandonInvasion';
+}>;
+
 export type ObjectiveActionResponse =
+  | AbandonInvasionActionResponse
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
@@ -137,6 +151,26 @@ export function applyObjectives(
     }
   }
 
+  return checkGameEndCondition(
+    activeMap,
+    map,
+    player,
+    objective,
+    objectiveId,
+    actionResponses,
+    gameState,
+  );
+}
+
+export function checkGameEndCondition(
+  initialMap: MapData,
+  map: MapData,
+  player: PlayerID | undefined,
+  objective: Objective | undefined,
+  objectiveId: ObjectiveID | undefined,
+  actionResponses: ReadonlyArray<ActionResponse> | null,
+  gameState: MutableGameState,
+): GameState {
   const gameEndResponse =
     objective?.type === Criteria.Default || objective?.optional === false
       ? ({
@@ -171,7 +205,7 @@ export function applyObjectives(
         if (map.isCurrentPlayer(fromPlayer)) {
           const [endTurnActionResponse, newMap] =
             execute(
-              map.copy({ active: activeMap.active }),
+              map.copy({ active: initialMap.active }),
               new Vision(fromPlayer.id),
               EndTurnAction(),
             ) || [];
@@ -197,6 +231,18 @@ export function applyObjectiveActionResponse(
 ) {
   const { type } = actionResponse;
   switch (type) {
+    case 'AbandonInvasion': {
+      const currentPlayer = map.getCurrentPlayer();
+      return currentPlayer.isHumanPlayer() &&
+        currentPlayer.crystal === CommandCrystal
+        ? map.copy({
+            teams: updatePlayer(
+              map.teams,
+              Bot.from(currentPlayer, actionResponse.name),
+            ),
+          })
+        : map;
+    }
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
     case 'BeginTurnGameOver': {
@@ -208,6 +254,7 @@ export function applyObjectiveActionResponse(
       return removePlayer(
         map.copy({
           buildings: convertBuildings(map, fromPlayer, 0),
+          units: deleteUnits(map, fromPlayer),
         }),
         fromPlayer,
       );
@@ -246,7 +293,7 @@ export function applyObjectiveActionResponse(
     }
     default: {
       actionResponse satisfies never;
-      throw new UnknownTypeError('applyGameOverActionResponse', type);
+      throw new UnknownTypeError('applyObjectiveActionResponse', type);
     }
   }
 }
@@ -388,12 +435,20 @@ const checkDefaultObjectives = (
 
 const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   const previousPlayer = activeMap.getPlayer(previousMap.getCurrentPlayer().id);
-  if (previousPlayer.misses >= AllowedMisses) {
+  if (
+    previousPlayer.isHumanPlayer() &&
+    previousPlayer.misses >= AllowedMisses
+  ) {
     return [
-      {
-        fromPlayer: previousPlayer.id,
-        type: 'PreviousTurnGameOver',
-      } as const,
+      previousPlayer.crystal === CommandCrystal
+        ? ({
+            name: createBotWithName(previousPlayer).name,
+            type: 'AbandonInvasion',
+          } as const)
+        : ({
+            fromPlayer: previousPlayer.id,
+            type: 'PreviousTurnGameOver',
+          } as const),
     ];
   }
 

@@ -105,8 +105,8 @@ export default function estimateClosestTarget(
   _targets: ReadonlyArray<Vector> | Vector,
   isPendingUnit = false,
 ): [
-  RadiusItem | null,
-  ReadonlyMap<Vector, RadiusItem>,
+  target: RadiusItem | null,
+  radius: ReadonlyMap<Vector, RadiusItem>,
   isObstructed: boolean,
   realTarget?: Vector | null,
   isPendingUnit?: boolean,

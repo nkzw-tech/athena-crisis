@@ -2,6 +2,7 @@ import FastPriorityQueue from 'fastpriorityqueue';
 import { Skill } from './info/Skill.tsx';
 import { Bridge, TileInfo, TileTypes, TransitionCost } from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
+import canAccessBridge from './lib/canAccessBridge.tsx';
 import canLoad from './lib/canLoad.tsx';
 import getVectorRadius from './lib/getVectorRadius.tsx';
 import { EntityType } from './map/Entity.tsx';
@@ -56,8 +57,16 @@ function isAccessibleBase(map: MapData, unit: Unit, vector: Vector) {
 }
 
 export const MoveConfiguration = {
-  getCost: (map: MapData, unit: Unit, vector: Vector) =>
-    map.maybeGetTileInfo(vector)?.getMovementCost(unit.info) || -1,
+  getCost: (map: MapData, unit: Unit, vector: Vector) => {
+    const tile = map.maybeGetTileInfo(vector);
+    const movementCost = tile?.getMovementCost(unit.info);
+    return tile &&
+      movementCost != null &&
+      movementCost !== -1 &&
+      canAccessBridge(map, unit.info, vector, tile)
+      ? movementCost
+      : -1;
+  },
   getResourceValue: (unit: Unit) => unit.fuel,
   getTransitionCost: (
     info: UnitInfo,

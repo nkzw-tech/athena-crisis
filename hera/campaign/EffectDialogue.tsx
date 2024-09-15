@@ -4,19 +4,19 @@ import MapData from '@deities/athena/MapData.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { memo } from 'react';
 import ActionCard from '../editor/lib/ActionCard.tsx';
-import { FactionNames } from '../Types.tsx';
+import { PlayerDetails } from '../Types.tsx';
 
 export default memo(function StartDialogue({
   currentPlayer,
   effect,
-  factionNames,
   map,
+  playerDetails,
   userDisplayName,
 }: {
   currentPlayer?: PlayerID;
   effect: Effect;
-  factionNames: FactionNames;
   map: MapData;
+  playerDetails: PlayerDetails;
   userDisplayName: string;
 }) {
   return (
@@ -26,11 +26,11 @@ export default memo(function StartDialogue({
           action={action}
           biome={map.config.biome}
           currentPlayer={currentPlayer}
-          factionNames={factionNames}
           formatText
           hasContentRestrictions={false}
           key={index}
           map={map}
+          playerDetails={playerDetails}
           scrollRef={null}
           user={null}
           userDisplayName={userDisplayName}

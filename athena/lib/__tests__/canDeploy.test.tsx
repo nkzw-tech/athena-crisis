@@ -2,9 +2,15 @@ import { expect, test } from 'vitest';
 import { Barracks } from '../../info/Building.tsx';
 import { Skill } from '../../info/Skill.tsx';
 import { Sea } from '../../info/Tile.tsx';
-import { Infantry, Jeep, Pioneer } from '../../info/Unit.tsx';
+import {
+  Battleship,
+  Infantry,
+  Jeep,
+  PatrolShip,
+  Pioneer,
+} from '../../info/Unit.tsx';
 import vec from '../../map/vec.tsx';
-import MapData from '../../MapData.tsx';
+import MapData, { SizeVector } from '../../MapData.tsx';
 import canDeploy from '../canDeploy.tsx';
 import getDeployableVectors from '../getDeployableVectors.tsx';
 import updatePlayer from '../updatePlayer.tsx';
@@ -75,4 +81,62 @@ test('restricted units can be created by using a skill', () => {
       1,
     ).length,
   ).toEqual(5);
+});
+
+test('Naval units cannot be deployed on bridges unless they are below a Sea tile', () => {
+  const map = initialMap.copy({
+    map: [
+      6,
+      6,
+      [6, 16],
+      6,
+      6,
+      6,
+      6,
+      [10, 16],
+      6,
+      6,
+      6,
+      19,
+      4,
+      5,
+      6,
+      4,
+      [19, 16],
+      4,
+      [5, 16],
+      4,
+      6,
+      19,
+      1,
+      5,
+      6,
+    ],
+    size: new SizeVector(5, 5),
+  });
+
+  const vecA = vec(1, 1); // Sea
+  expect(canDeploy(map, PatrolShip, vecA, false)).toBeTruthy();
+  expect(canDeploy(map, Infantry, vecA, false)).toBeFalsy();
+  expect(canDeploy(map, Battleship, vecA, false)).toBeTruthy();
+
+  const vecB = vec(1, 4); // Bridge over Trench.
+  expect(canDeploy(map, PatrolShip, vecB, false)).toBeTruthy();
+  expect(canDeploy(map, Infantry, vecB, false)).toBeTruthy();
+  expect(canDeploy(map, Battleship, vecB, false)).toBeFalsy();
+
+  const vecC = vec(3, 4); // Bridge over River.
+  expect(canDeploy(map, PatrolShip, vecC, false)).toBeTruthy();
+  expect(canDeploy(map, Infantry, vecC, false)).toBeTruthy();
+  expect(canDeploy(map, Battleship, vecC, false)).toBeFalsy();
+
+  const vecD = vec(3, 2); // Bridge over Beach.
+  expect(canDeploy(map, PatrolShip, vecD, false)).toBeTruthy();
+  expect(canDeploy(map, Infantry, vecD, false)).toBeTruthy();
+  expect(canDeploy(map, Battleship, vecD, false)).toBeTruthy();
+
+  const vecE = vec(3, 1); // Bridge over Sea.
+  expect(canDeploy(map, PatrolShip, vecE, false)).toBeTruthy();
+  expect(canDeploy(map, Infantry, vecE, false)).toBeTruthy();
+  expect(canDeploy(map, Battleship, vecE, false)).toBeTruthy();
 });

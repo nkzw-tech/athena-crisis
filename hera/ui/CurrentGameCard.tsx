@@ -10,7 +10,7 @@ import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, ReactElement, useCallback, useState } from 'react';
 import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
 import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
 import {
@@ -30,25 +30,29 @@ type TeamList = ReadonlyArray<
   }>
 >;
 
+export type GameCardProps = Readonly<{
+  actions: Actions;
+  currentViewer: PlayerID | null;
+  invasions: boolean;
+  map: MapData;
+  spectatorLink: ReactElement | null;
+  vision: VisionT;
+}>;
+
+type OptionalFields = 'invasions' | 'spectatorLink';
+
 const TeamItem = ({
-  actions,
   animate,
-  currentViewer,
   focusPlayer,
-  map,
   team,
   users,
-  vision,
   wide,
-}: {
-  actions: Actions;
+  ...props
+}: GameCardProps & {
   animate: boolean;
-  currentViewer: PlayerID | null;
   focusPlayer?: Player | null;
-  map: MapData;
   team: Team;
   users: ImmutableMap<number, UserLike>;
-  vision: VisionT;
   wide: boolean;
 }) =>
   sortBy([...team.players.values()], ({ id }) => id)
@@ -61,15 +65,12 @@ const TeamItem = ({
       return (
         user && (
           <PlayerCard
-            actions={actions}
             animate={!!(focusPlayer && animate)}
-            currentViewer={currentViewer}
             key={player.id}
-            map={map}
             player={player}
             user={user}
-            vision={vision}
             wide={wide && !focusPlayer}
+            {...props}
           />
         )
       );
@@ -85,50 +86,37 @@ const arrangeTeams = (focusPlayer: Player | null, teams: TeamList) => {
 };
 
 const TeamsCard = ({
-  actions,
   animatePlayer,
-  currentViewer,
   focusPlayer,
-  map,
   teams,
-  vision,
-}: {
-  actions: Actions;
+  ...props
+}: GameCardProps & {
   animatePlayer: boolean;
-  currentViewer: PlayerID | null;
   focusPlayer: Player | null;
-  map: MapData;
   teams: TeamList;
-  vision: VisionT;
 }) => {
   const [first, ...remainingTeams] = arrangeTeams(focusPlayer, teams);
   return (
     <>
       {first && (
         <TeamItem
-          actions={actions}
           animate={animatePlayer}
-          currentViewer={currentViewer}
           focusPlayer={focusPlayer}
-          map={map}
           team={first.team}
           users={first.users}
-          vision={vision}
           wide
+          {...props}
         />
       )}
       {remainingTeams.flatMap(({ team, users }) => [
         <Vs key={'vs' + team.id} />,
         <TeamItem
-          actions={actions}
           animate={animatePlayer}
-          currentViewer={currentViewer}
           key={team.id}
-          map={map}
           team={team}
           users={users}
-          vision={vision}
           wide
+          {...props}
         />,
       ])}
     </>
@@ -143,23 +131,22 @@ export default memo(function CurrentGameCard({
   hide,
   inlineUI,
   inset = 0,
+  invasions = false,
   map,
+  spectatorLink,
   users,
   vision,
   zIndex,
-}: {
-  actions: Actions;
-  animations: Animations;
-  currentViewer: PlayerID | null;
-  gameInfoState: GameInfoState | null;
-  hide?: boolean;
-  inlineUI: boolean;
-  inset?: number;
-  map: MapData;
-  users: Map<string, UserLikeWithID>;
-  vision: VisionT;
-  zIndex: number;
-}) {
+}: Omit<GameCardProps, OptionalFields> &
+  Partial<Pick<GameCardProps, OptionalFields>> & {
+    animations: Animations;
+    gameInfoState: GameInfoState | null;
+    hide?: boolean;
+    inlineUI: boolean;
+    inset?: number;
+    users: Map<string, UserLikeWithID>;
+    zIndex: number;
+  }) {
   const teams = useCurrentGameTeams(map, users);
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleExpanded = useCallback(
@@ -202,7 +189,7 @@ export default memo(function CurrentGameCard({
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}
         key={players.length}
-        size={hasSkills ? 'large' : undefined}
+        size={hasSkills || invasions ? 'large' : undefined}
         toggleExpanded={toggleExpanded}
       >
         <TeamsCard
@@ -210,7 +197,9 @@ export default memo(function CurrentGameCard({
           animatePlayer={animatePlayer}
           currentViewer={currentViewer}
           focusPlayer={isExpanded ? null : map.getCurrentPlayer()}
+          invasions={invasions}
           map={map}
+          spectatorLink={spectatorLink || null}
           teams={teams}
           vision={vision}
         />

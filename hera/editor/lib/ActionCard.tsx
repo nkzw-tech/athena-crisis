@@ -38,7 +38,7 @@ import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import translateMessage from '../../i18n/translateMessage.tsx';
 import Tick from '../../Tick.tsx';
-import { FactionNames } from '../../Types.tsx';
+import { PlayerDetails } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { ActionChangeFn } from '../panels/EffectsPanel.tsx';
@@ -96,7 +96,6 @@ export default memo(function ActionCard({
   action,
   biome,
   currentPlayer,
-  factionNames,
   first,
   focused,
   formatText,
@@ -105,6 +104,7 @@ export default memo(function ActionCard({
   last,
   map,
   onChange,
+  playerDetails,
   position = 'bottom',
   scrollRef,
   setMap,
@@ -115,7 +115,6 @@ export default memo(function ActionCard({
   action: Action;
   biome: Biome;
   currentPlayer?: PlayerID;
-  factionNames?: FactionNames;
   first?: boolean;
   focused?: true;
   formatText?: true;
@@ -124,6 +123,7 @@ export default memo(function ActionCard({
   last?: boolean;
   map?: MapData;
   onChange?: ActionChangeFn;
+  playerDetails?: PlayerDetails;
   position?: DrawerPosition;
   scrollRef: RefObject<HTMLElement> | null;
   setMap?: SetMapFunction;
@@ -148,7 +148,7 @@ export default memo(function ActionCard({
       ? resolveDynamicPlayerID(map, action.player, currentPlayer)
       : action.player;
     const message =
-      formatText && factionNames && map && userDisplayName
+      formatText && playerDetails && map && userDisplayName
         ? formatCharacterText(
             translateMessage(action),
             unit,
@@ -156,9 +156,8 @@ export default memo(function ActionCard({
               ? 'characterName'
               : 'name',
             map,
-            userDisplayName,
             currentPlayer || 0,
-            factionNames,
+            playerDetails,
           )
         : action.message;
 

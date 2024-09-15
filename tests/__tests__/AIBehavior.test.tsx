@@ -104,7 +104,7 @@ test('attempt to attack new units when they are revealed after a move', async ()
       .set(to, Infantry.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -136,7 +136,7 @@ test('attempt to attack new units when they are revealed after creating a unit',
       .set(vecB, Pioneer.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -164,7 +164,7 @@ test('attempt to attack new units when they are revealed after unfolding', async
       .set(vecB, Pioneer.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -180,7 +180,7 @@ test('attempt to attack new units when they are revealed after unfolding', async
   `);
 });
 
-test('A unit with `stay` behavior will never move or fold', () => {
+test('A unit with `stay` behavior will never move or fold', async () => {
   const from = vec(2, 1);
   const to = vec(3, 3);
   const map = initialMap.copy({
@@ -190,7 +190,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
       .set(to, Pioneer.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -209,7 +209,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
   if (!currentMap) {
     throw new Error(`Expected 'currentMap' not to be 'null'.`);
   }
-  const [, , secondGameState] = executeGameAction(
+  const [, , secondGameState] = await executeGameAction(
     currentMap,
     currentMap.createVisionObject(player1),
     new Map(),
@@ -231,7 +231,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
     ),
   });
 
-  const [, , thirdGameState] = executeGameAction(
+  const [, , thirdGameState] = await executeGameAction(
     thirdMap,
     thirdMap.createVisionObject(player1),
     new Map(),
@@ -244,7 +244,7 @@ test('A unit with `stay` behavior will never move or fold', () => {
   );
 });
 
-test('A unit with `stay` behavior will never move, but it might attack, build or ', () => {
+test('A unit with `stay` behavior will never move, but it might attack, build or ', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
@@ -261,7 +261,7 @@ test('A unit with `stay` behavior will never move, but it might attack, build or
       .set(vecE, Pioneer.create(2, { behavior: AIBehavior.Stay })),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -285,7 +285,7 @@ test('A unit with `stay` behavior will never move, but it might attack, build or
   );
 });
 
-test('A unit with `adaptive` behavior will change to `attack` behavior after engaging in an attack', () => {
+test('A unit with `adaptive` behavior will change to `attack` behavior after engaging in an attack', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
@@ -297,7 +297,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
       .set(vecC, Infantry.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -317,7 +317,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
   );
 });
 
-test('AI behavior from buildings carries over in a round-robin fashion', () => {
+test('AI behavior from buildings carries over in a round-robin fashion', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(1, 3);
   const vecC = vec(3, 3);
@@ -342,7 +342,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
     units: initialMap.units.set(vecC, SmallTank.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -356,7 +356,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
     EndTurn { current: { funds: 250, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , secondGameState] = executeGameAction(
+  const [, , secondGameState] = await executeGameAction(
     gameState!.at(-1)![1],
     map.createVisionObject(player1),
     new Map(),
@@ -373,7 +373,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', () => {
   `);
 });
 
-test('AI behavior will not use `Stay` on units that do not have an attack', () => {
+test('AI behavior will not use `Stay` on units that do not have an attack', async () => {
   const vecA = vec(1, 1);
   const vecC = vec(3, 3);
   const map = initialMap.copy({
@@ -388,7 +388,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', () =
     units: initialMap.units.set(vecC, SmallTank.create(1)),
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -413,7 +413,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', () =
     ),
   });
 
-  const [, , secondGameState] = executeGameAction(
+  const [, , secondGameState] = await executeGameAction(
     currentMap,
     currentMap.createVisionObject(player1),
     new Map(),
@@ -431,7 +431,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', () =
   ).toBe(AIBehavior.Stay);
 });
 
-test('AI will not attempt to create a unit it cannot deploy', () => {
+test('AI will not attempt to create a unit it cannot deploy', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
   const vecC = vec(3, 3);
@@ -443,7 +443,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
 
   const newTiles = [...map.map];
   newTiles[map.getTileIndex(vecB)] = RailTrack.id;
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map.copy({
       map: newTiles,
     }),
@@ -458,7 +458,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
     EndTurn { current: { funds: 100, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , secondGameState] = executeGameAction(
+  const [, , secondGameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -474,7 +474,7 @@ test('AI will not attempt to create a unit it cannot deploy', () => {
   `);
 });
 
-test('AI will not attack if the damage is too low', () => {
+test('AI will not attack if the damage is too low', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const map = initialMap.copy({
@@ -484,7 +484,7 @@ test('AI will not attack if the damage is too low', () => {
       .set(vecB, HeavyTank.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -497,7 +497,7 @@ test('AI will not attack if the damage is too low', () => {
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateB] = executeGameAction(
+  const [, , gameStateB] = await executeGameAction(
     map.copy({
       units: map.units.set(vecB, SmallTank.create(1).setHealth(1)),
     }),
@@ -515,7 +515,7 @@ test('AI will not attack if the damage is too low', () => {
   `);
 });
 
-test('AI will prefer to rescue over capture', () => {
+test('AI will prefer to rescue over capture', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const vecC = vec(1, 1);
@@ -529,7 +529,7 @@ test('AI will prefer to rescue over capture', () => {
       .set(vecD, SmallTank.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -544,7 +544,7 @@ test('AI will prefer to rescue over capture', () => {
   `);
 
   const lastMapA = gameStateA!.at(-1)![1];
-  const [, , gameStateB] = executeGameAction(
+  const [, , gameStateB] = await executeGameAction(
     lastMapA,
     map.createVisionObject(player1),
     new Map(),
@@ -559,7 +559,7 @@ test('AI will prefer to rescue over capture', () => {
   `);
 });
 
-test('AI is able to sabotage other units', () => {
+test('AI is able to sabotage other units', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const vecC = vec(2, 3);
@@ -571,7 +571,7 @@ test('AI is able to sabotage other units', () => {
       .set(vecC, Infantry.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -586,7 +586,7 @@ test('AI is able to sabotage other units', () => {
   `);
 });
 
-test('AI will prefer attacks over sabotage against weaker units', () => {
+test('AI will prefer attacks over sabotage against weaker units', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const vecC = vec(2, 3);
@@ -598,7 +598,7 @@ test('AI will prefer attacks over sabotage against weaker units', () => {
       .set(vecC, Infantry.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -613,7 +613,7 @@ test('AI will prefer attacks over sabotage against weaker units', () => {
   `);
 });
 
-test('AI does not crash when moving away from a unit which it can no longer see after the move', () => {
+test('AI does not crash when moving away from a unit which it can no longer see after the move', async () => {
   const vecA = vec(2, 2);
   const vecB = vec(3, 2);
   const vecC = vec(2, 3);
@@ -625,7 +625,7 @@ test('AI does not crash when moving away from a unit which it can no longer see 
       .set(vecB, Jetpack.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -666,7 +666,7 @@ test('AI keeps attacking even if one unit gets blocked', async () => {
     }),
   );
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -737,7 +737,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     }),
   );
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     mapWithOpponentShips,
     mapWithOpponentShips.createVisionObject(player1),
     new Map(),
@@ -750,7 +750,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     EndTurn { current: { funds: 400, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateB] = executeGameAction(
+  const [, , gameStateB] = await executeGameAction(
     mapWithoutOpponentShips,
     mapWithoutOpponentShips.createVisionObject(player1),
     new Map(),
@@ -763,7 +763,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateC] = executeGameAction(
+  const [, , gameStateC] = await executeGameAction(
     mapWithAIShips,
     mapWithAIShips.createVisionObject(player1),
     new Map(),
@@ -778,7 +778,7 @@ test('AI does not keep building naval units if the opponent does not have any na
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateD] = executeGameAction(
+  const [, , gameStateD] = await executeGameAction(
     mapWithShips,
     mapWithShips.createVisionObject(player1),
     new Map(),
@@ -794,7 +794,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   `);
 });
 
-test('AI will prefer funds generating buildings over factories if it has no income', () => {
+test('AI will prefer funds generating buildings over factories if it has no income', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(2, 2);
   const map = initialMap.copy({
@@ -810,7 +810,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
       .set(vecB, Flamethrower.create(2)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -826,7 +826,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
   `);
 });
 
-test('AI will create factories if it has no income and cannot build funds generating buildings', () => {
+test('AI will create factories if it has no income and cannot build funds generating buildings', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const blocklistedBuildings = new Set(
@@ -850,7 +850,7 @@ test('AI will create factories if it has no income and cannot build funds genera
     units: initialMap.units.set(vecA, Pioneer.create(2)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -871,7 +871,7 @@ test('AI will create factories if it has no income and cannot build funds genera
     `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
   );
 
-  const [, , gameStateB] = executeGameAction(
+  const [, , gameStateB] = await executeGameAction(
     map.copy({
       units: map.units.set(vecB, Flamethrower.create(2)),
     }),
@@ -895,7 +895,7 @@ test('AI will create factories if it has no income and cannot build funds genera
   );
 });
 
-test('AI will move onto escort vectors even if it is a long-range unit', () => {
+test('AI will move onto escort vectors even if it is a long-range unit', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
       map: [
@@ -936,7 +936,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
       .set(vec(1, 5), Pioneer.create(1)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -950,7 +950,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', () => {
   `);
 });
 
-test('AI will prioritize units with labels associated with objectives', () => {
+test('AI will prioritize units with labels associated with objectives', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
       map: [
@@ -992,7 +992,7 @@ test('AI will prioritize units with labels associated with objectives', () => {
       .set(vec(5, 5), TransportHelicopter.create(1, { label: 1 })),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -1014,7 +1014,7 @@ test('AI Zombies are aggressive', async () => {
       .set(vec(2, 1), Zombie.create(2)),
   });
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -1029,7 +1029,7 @@ test('AI Zombies are aggressive', async () => {
   `);
 });
 
-test('skills will only be activated if there are enough units that can be acted with', () => {
+test('skills will only be activated if there are enough units that can be acted with', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
   const vecC = vec(2, 2);
@@ -1049,7 +1049,7 @@ test('skills will only be activated if there are enough units that can be acted 
     Skill.AttackIncreaseMajorDefenseDecreaseMajor,
   );
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -1065,7 +1065,7 @@ test('skills will only be activated if there are enough units that can be acted 
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateB] = executeGameAction(
+  const [, , gameStateB] = await executeGameAction(
     map.copy({
       units: map.units
         .set(vecB, SmallTank.create(2).complete())
@@ -1095,7 +1095,7 @@ test('skills will only be activated if there are enough units that can be acted 
     Skill.RecoverAirUnits,
   );
 
-  const [, , gameStateC] = executeGameAction(
+  const [, , gameStateC] = await executeGameAction(
     mapB,
     map.createVisionObject(player1),
     new Map(),
@@ -1116,7 +1116,7 @@ test('skills will only be activated if there are enough units that can be acted 
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const [, , gameStateD] = executeGameAction(
+  const [, , gameStateD] = await executeGameAction(
     mapB.copy({
       units: mapB.units
         .set(vecB, FighterJet.create(2).complete())
@@ -1137,7 +1137,7 @@ test('skills will only be activated if there are enough units that can be acted 
   `);
 });
 
-test('activates skills where the unit ratio does not matter', () => {
+test('activates skills where the unit ratio does not matter', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
   const vecC = vec(2, 2);
@@ -1159,7 +1159,7 @@ test('activates skills where the unit ratio does not matter', () => {
     Skill.BuyUnitBazookaBear,
   );
 
-  const [, , gameStateA] = executeGameAction(
+  const [, , gameStateA] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),

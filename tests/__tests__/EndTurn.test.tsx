@@ -117,7 +117,7 @@ const player1 = HumanPlayer.from(initialMap.getPlayer(1), '1');
 
 test('supply works correctly for units when a turn ends in fog', async () => {
   const [[[endTurnActionResponse], ...gameState], gameActionResponse] =
-    executeGameActions(initialMap, [
+    await executeGameActions(initialMap, [
       EndTurnAction(),
       MoveAction(vec(2, 5), vec(1, 5)),
       AttackUnitAction(vec(1, 5), vec(1, 4)),
@@ -177,7 +177,7 @@ test('heal works correctly for units when placed on a campsite', async () => {
       .set(vecD, Helicopter.create(2).setFuel(1).setHealth(1))
       .set(vecE, Helicopter.create(2).setFuel(1)),
   });
-  const [gameState, gameActionResponse] = executeGameActions(map, [
+  const [gameState, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
   ]);
 

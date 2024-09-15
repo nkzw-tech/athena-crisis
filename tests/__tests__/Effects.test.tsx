@@ -82,7 +82,7 @@ test('applies an effect after a unit moves and drops it', async () => {
     ],
   ]);
 
-  const [, gameActionResponse, newEffects] = executeGameActions(
+  const [, gameActionResponse, newEffects] = await executeGameActions(
     initialMap,
     [MoveAction(vecA, vecB)],
     effects,
@@ -136,7 +136,7 @@ test('silently discard an effect if an action cannot be applied', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [MoveAction(vecA, vecB)],
     effects,
@@ -177,7 +177,7 @@ test('effects are also applied in the AI', async () => {
     ],
   ]);
 
-  const [, gameActionResponse, newEffects] = executeGameActions(
+  const [, gameActionResponse, newEffects] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,
@@ -237,7 +237,7 @@ test('creates a second unit every time a Flamethrower is created', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [
       CreateUnitAction(vecA, Flamethrower.id, vecA.right()),
@@ -290,7 +290,7 @@ test('spawns an additional unit', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,
@@ -337,7 +337,7 @@ test('spawns a neutral unit', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,
@@ -404,7 +404,7 @@ test('effects work for game start and end', async () => {
     ],
   ]);
 
-  const [, gameActionResponse, newEffects] = executeGameActions(
+  const [, gameActionResponse, newEffects] = await executeGameActions(
     initialMap,
     [StartAction(), MoveAction(vecA, vecB), AttackUnitAction(vecB, vecC)],
     effects,
@@ -440,7 +440,7 @@ test('effects work for game start and end', async () => {
   `);
 });
 
-test('effects work when a player loses', () => {
+test('effects work when a player loses', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
@@ -508,7 +508,7 @@ test('effects work when a player loses', () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [
       StartAction(),
@@ -534,7 +534,7 @@ test('effects work when a player loses', () => {
     `);
 });
 
-test('only one game end win effect is fired', () => {
+test('only one game end win effect is fired', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
   const initialMap = map.copy({
@@ -606,7 +606,7 @@ test('only one game end win effect is fired', () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [CaptureAction(vecA)],
     effects,
@@ -648,7 +648,7 @@ test('a unit spawns instead of ending the game', async () => {
     ],
   ]);
 
-  const [, gameActionResponse, newEffects] = executeGameActions(
+  const [, gameActionResponse, newEffects] = await executeGameActions(
     initialMap,
     [MoveAction(vecA, vecB), AttackUnitAction(vecB, vecC)],
     effects,
@@ -693,7 +693,7 @@ test('spawns a new unit when a player loses their last unit at the beginning of 
     ],
   ]);
 
-  const [gameState, gameActionResponse, newEffects] = executeGameActions(
+  const [gameState, gameActionResponse, newEffects] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,

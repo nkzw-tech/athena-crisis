@@ -1,6 +1,7 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { Skill, Skills } from '../info/Skill.tsx';
 import { getUnitInfo, getUnitInfoOrThrow, UnitInfo } from '../info/Unit.tsx';
+import { Crystal, Crystals } from '../invasions/Crystal.tsx';
 import { Biome, Biomes, getBiomeName } from './Biome.tsx';
 
 export type SkillReward = Readonly<{
@@ -23,9 +24,14 @@ type BiomeReward = Readonly<{
   type: 'Biome';
 }>;
 
-type SkillSlot = Readonly<{
+type SkillSlotReward = Readonly<{
   slot: number;
   type: 'SkillSlot';
+}>;
+
+type CrystalReward = Readonly<{
+  crystal: Crystal;
+  type: 'Crystal';
 }>;
 
 type EncodedSkillReward =
@@ -33,13 +39,15 @@ type EncodedSkillReward =
   | readonly [type: 1, unit: number]
   | readonly [type: 2, variant: 1 | 2]
   | readonly [type: 3, biome: Biome]
-  | readonly [type: 4, slot: number];
+  | readonly [type: 4, slot: number]
+  | readonly [type: 5, crystal: Crystal];
 
 export type Reward =
   | BiomeReward
+  | CrystalReward
   | KeyartReward
   | SkillReward
-  | SkillSlot
+  | SkillSlotReward
   | UnitPortraitsReward;
 
 export type EncodedReward = EncodedSkillReward;
@@ -58,6 +66,8 @@ export function encodeReward(reward: Reward): EncodedReward {
       return [3, reward.biome];
     case 'SkillSlot':
       return [4, reward.slot];
+    case 'Crystal':
+      return [5, reward.crystal];
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('encodeReward', rewardType);
@@ -76,6 +86,8 @@ export function decodeReward([rewardType, ...rest]: EncodedReward): Reward {
       return { biome: rest[0], type: 'Biome' };
     case 4:
       return { slot: rest[0], type: 'SkillSlot' };
+    case 5:
+      return { crystal: rest[0], type: 'Crystal' };
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('decodeReward', rewardType);
@@ -107,6 +119,8 @@ export function formatReward(reward: Reward): string {
       return `Reward { biome: ${getBiomeName(reward.biome)} }`;
     case 'SkillSlot':
       return `Reward { slot: ${reward.slot} }`;
+    case 'Crystal':
+      return `Reward { crystal: ${reward.crystal} }`;
     default:
       rewardType satisfies never;
       throw new UnknownTypeError('formatReward', rewardType);
@@ -125,6 +139,8 @@ export function validateReward(reward: Reward): boolean {
       return Biomes.includes(reward.biome);
     case 'SkillSlot':
       return reward.slot >= 2 && reward.slot <= 4;
+    case 'Crystal':
+      return Crystals.includes(reward.crystal);
     default:
       return false;
   }

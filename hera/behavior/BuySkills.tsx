@@ -132,10 +132,10 @@ export default class BuySkills {
                 action: isDisabled ? undefined : buy,
                 actionName: <fbt desc="Button to buy a skill">Buy</fbt>,
                 charges: null,
-                currentSkill: skill,
+                currentItem: { skill, type: 'Skill' },
                 origin: toTransformOrigin(event),
                 showCost: true,
-                type: 'skill',
+                type: 'player-effect',
               });
 
             return (

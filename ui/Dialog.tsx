@@ -11,7 +11,7 @@ import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
-import { FadePulseStyle } from './RainbowPulseStyle.tsx';
+import { FadePulseStyle } from './PulseStyle.tsx';
 import ScrollContainer from './ScrollContainer.tsx';
 import Stack from './Stack.tsx';
 
@@ -56,9 +56,9 @@ export function useDialogNavigation<T>(
       (event) => {
         const { x } = event.detail;
         if (x < 0) {
-          previous();
+          previous(event);
         } else if (x > 0) {
-          next();
+          next(event);
         }
       },
       [next, previous],

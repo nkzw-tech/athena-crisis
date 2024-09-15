@@ -39,7 +39,7 @@ const customEncoderReferences = new Set([
   'Objective',
   'DynamicEffectObjectiveID',
 ]);
-const scalarReferences = new Set(['PlayerID', 'Skill']);
+const scalarReferences = new Set(['PlayerID', 'Skill', 'Crystal']);
 const allowedReferences = new Set([
   'AttackDirection',
   'Building',
@@ -704,6 +704,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         encodeObjective,
       } from '@deities/athena/Objectives.tsx';
       import { Skill as PlainSkill } from '@deities/athena/info/Skill.tsx';
+      import { Crystal as PlainCrystal } from '@deities/athena/invasions/Crystal.tsx';
       import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
       import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
       import {
@@ -756,6 +757,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     export type EncodedActionResponseType = EncodedActionResponse[0];
 
     const toSkill = (skill: PlainSkill) => skill;
+    const toCrystal = (crystal: PlainCrystal) => crystal;
 
     const removeNull = <T extends EncodedAction | EncodedActionResponse>(array: T): T => {
       let index = array.length - 1;

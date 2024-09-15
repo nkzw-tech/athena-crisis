@@ -1,5 +1,6 @@
 declare module 'athena-crisis:images' {
   export const AttackSprites: Record<AttackSprite, string>;
+  export const Crystals: HTMLImageElement;
   export const Tiles0: HTMLImageElement;
   export const Tiles1: HTMLImageElement;
   export const Tiles2: HTMLImageElement;

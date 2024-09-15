@@ -45,7 +45,7 @@ test('lose the game when missing two turns in a row', async () => {
       .set(vecB, Pioneer.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction(), EndTurnAction(), EndTurnAction()],
     undefined,
@@ -71,7 +71,7 @@ test('misses reset when taking any action', async () => {
       .set(vecB, Pioneer.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [
       EndTurnAction(),
@@ -121,6 +121,7 @@ test('lose the game, but continue when missing two turns in a row with multiple 
               0,
               null,
               0,
+              null,
             ),
           ],
         ]),
@@ -132,7 +133,7 @@ test('lose the game, but continue when missing two turns in a row with multiple 
       .set(vecC, Pioneer.create(3)),
   });
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [
       EndTurnAction(),

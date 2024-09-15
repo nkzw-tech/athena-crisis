@@ -14,6 +14,8 @@ import { printGameState } from '../printGameState.tsx';
 import { captureGameState, captureOne } from '../screenshot.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
 
+const toError = (error: Error) => new Error(stripAnsi(error.message));
+
 const map = withModifiers(
   MapData.createMap({
     config: {
@@ -79,19 +81,15 @@ test('can turn lightning barriers on and off', async () => {
       .set(toC, Helicopter.create(player2)),
   });
 
-  expect(() => {
-    try {
-      executeGameActions(initialMap, [ToggleLightningAction(fromA, toB)]);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(stripAnsi(error.message));
-      }
-    }
-  }).toThrowErrorMatchingInlineSnapshot(
-    `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
+  const errorA = await executeGameActions(initialMap, [
+    ToggleLightningAction(fromA, toB),
+  ]).catch(toError);
+
+  expect(errorA instanceof Error ? errorA.message : '').toMatchInlineSnapshot(
+    `"executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`."`,
   );
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     ToggleLightningAction(fromB, toA),
     ToggleLightningAction(fromA, toC),
   ]);
@@ -130,16 +128,12 @@ test('cannot turn lightning barriers on when self or team units are on the field
     units: map.units.set(to, Pioneer.create(1)),
   });
 
-  expect(() => {
-    try {
-      executeGameActions(mapA, [ToggleLightningAction(from, to)]);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(stripAnsi(error.message));
-      }
-    }
-  }).toThrowErrorMatchingInlineSnapshot(
-    `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
+  const errorA = await executeGameActions(mapA, [
+    ToggleLightningAction(from, to),
+  ]).catch(toError);
+
+  expect(errorA instanceof Error ? errorA.message : '').toMatchInlineSnapshot(
+    `"executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`."`,
   );
 
   const mapB: MapData | null = mapA.copy({
@@ -159,6 +153,7 @@ test('cannot turn lightning barriers on when self or team units are on the field
             0,
             null,
             0,
+            null,
           ),
         ),
       }),
@@ -166,15 +161,11 @@ test('cannot turn lightning barriers on when self or team units are on the field
     units: mapA.units.set(to, Pioneer.create(3)),
   });
 
-  expect(() => {
-    try {
-      executeGameActions(mapB, [ToggleLightningAction(from, to)]);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(stripAnsi(error.message));
-      }
-    }
-  }).toThrowErrorMatchingInlineSnapshot(
-    `[Error: executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`.]`,
+  const errorB = await executeGameActions(mapB, [
+    ToggleLightningAction(from, to),
+  ]).catch(toError);
+
+  expect(errorB instanceof Error ? errorB.message : '').toMatchInlineSnapshot(
+    `"executeGameActions: Failed to execute action \`ToggleLightning (1,1 → 2,3)\`."`,
   );
 });

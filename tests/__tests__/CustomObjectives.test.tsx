@@ -96,7 +96,7 @@ test('default win criteria', async () => {
       .set(to, Helicopter.create(player2).setHealth(1)),
   });
 
-  const [, gameActionResponse] = executeGameActions(mapA, [
+  const [, gameActionResponse] = await executeGameActions(mapA, [
     AttackUnitAction(from, to),
   ]);
 
@@ -134,7 +134,7 @@ test('capture amount win criteria', async () => {
       .set(v5, Pioneer.create(player1).capture()),
   });
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     CaptureAction(v2),
     CaptureAction(v3),
     CaptureAction(v4),
@@ -165,7 +165,7 @@ test('capture amount win criteria', async () => {
   expect(validateObjectives(mapA)).toBe(true);
   expect(validateObjectives(mapWithConditions)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(mapWithConditions, [
+  const [, gameActionResponseB] = await executeGameActions(mapWithConditions, [
     CaptureAction(v2),
     CaptureAction(v3),
     CaptureAction(v4),
@@ -182,7 +182,7 @@ test('capture amount win criteria', async () => {
   const mapWithOptionalObjectives = optional(mapWithConditions);
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
+  const [gameStateB_2, gameActionResponseB_2] = await executeGameActions(
     mapWithOptionalObjectives,
     [CaptureAction(v2), CaptureAction(v3), CaptureAction(v4)],
   );
@@ -211,7 +211,7 @@ test('capture amount win criteria', async () => {
       ]),
     }),
   });
-  const [, gameActionResponseC] = executeGameActions(
+  const [, gameActionResponseC] = await executeGameActions(
     mapWithAsymmetricConditions,
     [
       CaptureAction(v2),
@@ -238,7 +238,7 @@ test('capture amount win criteria', async () => {
 
   expect(validateObjectives(mapWithAsymmetricalOptionalObjectives)).toBe(true);
 
-  const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
+  const [gameStateC_2, gameActionResponseC_2] = await executeGameActions(
     mapWithAsymmetricalOptionalObjectives,
     [
       CaptureAction(v2),
@@ -289,7 +289,7 @@ test('capture amount win criteria also works when creating buildings', async () 
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     CaptureAction(v1),
     CaptureAction(v2),
     CreateBuildingAction(v3, Factory.id),
@@ -307,7 +307,7 @@ test('capture amount win criteria also works when creating buildings', async () 
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       CaptureAction(v1),
@@ -362,7 +362,7 @@ test('capture label win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     CaptureAction(v2),
     CaptureAction(v3),
     CaptureAction(v4),
@@ -389,7 +389,7 @@ test('capture label win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       CaptureAction(v2),
@@ -435,7 +435,7 @@ test('capture label win criteria fails because building is destroyed', async () 
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackBuildingAction(v2, v1),
   ]);
 
@@ -452,7 +452,7 @@ test('capture label win criteria fails because building is destroyed', async () 
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateA_2, gameActionResponseA_2] = executeGameActions(
+  const [gameStateA_2, gameActionResponseA_2] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackBuildingAction(v2, v1)],
   );
@@ -465,7 +465,7 @@ test('capture label win criteria fails because building is destroyed', async () 
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapA.copy({ units: map.units.set(v2, HeavyTank.create(player2)) }),
     [EndTurnAction(), AttackBuildingAction(v2, v1)],
   );
@@ -480,7 +480,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   `,
   );
 
-  const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
+  const [gameStateB_2, gameActionResponseB_2] = await executeGameActions(
     mapWithOptionalObjectives.copy({
       units: map.units.set(v2, HeavyTank.create(player2)),
     }),
@@ -520,7 +520,7 @@ test('capture label win criteria (fail with missing label)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     CaptureAction(v1),
     CaptureAction(v2),
   ]);
@@ -535,7 +535,7 @@ test('capture label win criteria (fail with missing label)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [CaptureAction(v1), CaptureAction(v2)],
   );
@@ -563,7 +563,7 @@ test('destroy amount win criteria', async () => {
       .set(v3.right(), Bomber.create(player1).capture()),
   });
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v3.right(), v3),
   ]);
@@ -590,7 +590,7 @@ test('destroy amount win criteria', async () => {
   expect(validateObjectives(mapA)).toBe(true);
   expect(validateObjectives(mapWithConditions)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(mapWithConditions, [
+  const [, gameActionResponseB] = await executeGameActions(mapWithConditions, [
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v3.right(), v3),
   ]);
@@ -630,7 +630,7 @@ test('destroy amount win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
+  const [gameStateB_2, gameActionResponseB_2] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackBuildingAction(v3.right(), v3),
@@ -668,7 +668,7 @@ test('destroy amount win criteria', async () => {
       ]),
     }),
   });
-  const [, gameActionResponseC] = executeGameActions(
+  const [, gameActionResponseC] = await executeGameActions(
     mapWithAsymmetricConditions,
     [
       AttackBuildingAction(v2.right(), v2),
@@ -693,7 +693,7 @@ test('destroy amount win criteria', async () => {
 
   expect(validateObjectives(mapWithAsymmetricOptionalObjectives)).toBe(true);
 
-  const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
+  const [gameStateC_2, gameActionResponseC_2] = await executeGameActions(
     mapWithAsymmetricOptionalObjectives,
     [
       AttackBuildingAction(v2.right(), v2),
@@ -750,7 +750,7 @@ test('destroy label win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackBuildingAction(v1.right(), v1),
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v3.right(), v3),
@@ -770,7 +770,7 @@ test('destroy label win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackBuildingAction(v1.right(), v1),
@@ -821,7 +821,7 @@ test('destroy label does not fire without label', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackBuildingAction(v1.right(), v1),
     AttackBuildingAction(v2.right(), v2),
   ]);
@@ -836,7 +836,7 @@ test('destroy label does not fire without label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackBuildingAction(v1.right(), v1),
@@ -875,7 +875,7 @@ test('destroy label win criteria (neutral structure)', async () => {
       .set(v3, Pioneer.create(player2)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackBuildingAction(v2.right(), v2),
     AttackBuildingAction(v1.right(), v1),
   ]);
@@ -891,7 +891,7 @@ test('destroy label win criteria (neutral structure)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackBuildingAction(v2.right(), v2),
@@ -941,7 +941,7 @@ test('defeat with label', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v6),
     AttackUnitAction(v5, v4),
@@ -959,7 +959,7 @@ test('defeat with label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackUnitAction(v1, v2),
@@ -1006,7 +1006,7 @@ test('defeat one with label', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v4),
   ]);
@@ -1022,7 +1022,7 @@ test('defeat one with label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
   );
@@ -1068,7 +1068,7 @@ test('defeat by amount', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v6),
     AttackUnitAction(v5, v4),
@@ -1086,7 +1086,7 @@ test('defeat by amount', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       AttackUnitAction(v1, v2),
@@ -1129,7 +1129,7 @@ test('defeat by amount through counter attack', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1143,7 +1143,7 @@ test('defeat by amount through counter attack', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
@@ -1183,7 +1183,7 @@ test('defeat with label and Zombie', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1197,7 +1197,7 @@ test('defeat with label and Zombie', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
@@ -1234,7 +1234,7 @@ test('defeat by amount and Zombie', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -1248,7 +1248,7 @@ test('defeat by amount and Zombie', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2)],
   );
@@ -1289,7 +1289,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
     AttackUnitAction(v3, v4),
   ]);
@@ -1304,7 +1304,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
   );
@@ -1350,7 +1350,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
     MoveAction(v3, v2),
     EndTurnAction(),
@@ -1374,7 +1374,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       EndTurnAction(),
@@ -1423,7 +1423,7 @@ test('win by survival', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
     EndTurnAction(),
     EndTurnAction(),
@@ -1443,7 +1443,7 @@ test('win by survival', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       EndTurnAction(),
@@ -1507,7 +1507,9 @@ test('win by survival in one round', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [EndTurnAction()]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    EndTurnAction(),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -1538,7 +1540,7 @@ test('win by survival in one round', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [EndTurnAction()],
   );
@@ -1581,7 +1583,7 @@ test('win by survival with optional survival', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
     EndTurnAction(),
     EndTurnAction(),
@@ -1627,7 +1629,7 @@ test('escort units', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -1643,7 +1645,7 @@ test('escort units', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
@@ -1685,7 +1687,7 @@ test('escort units by label without having units with that label (fails)', async
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -1700,7 +1702,7 @@ test('escort units by label without having units with that label (fails)', async
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
@@ -1741,7 +1743,7 @@ test('escort units (transport)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     MoveAction(v4, v7),
@@ -1759,7 +1761,7 @@ test('escort units (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v4), MoveAction(v4, v7)],
   );
@@ -1804,7 +1806,7 @@ test('escort units by drop (transport)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     DropUnitAction(v4, 0, v5),
@@ -1830,7 +1832,7 @@ test('escort units by drop (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -1889,7 +1891,7 @@ test('escort units by label fails', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -1909,7 +1911,7 @@ test('escort units by label fails', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -1962,7 +1964,7 @@ test('escort units by label fails (transport)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -1986,7 +1988,7 @@ test('escort units by label fails (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -2038,7 +2040,7 @@ test('escort units by amount', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v7),
   ]);
@@ -2054,7 +2056,7 @@ test('escort units by amount', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [MoveAction(v1, v6), MoveAction(v5, v7)],
   );
@@ -2119,7 +2121,7 @@ test('escort units by amount (label)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v5),
     MoveAction(v3, v4),
   ]);
@@ -2167,7 +2169,7 @@ test('escort units by amount (label)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v5),
@@ -2222,7 +2224,7 @@ test('escort units by amount with label fails', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2242,7 +2244,7 @@ test('escort units by amount with label fails', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -2295,7 +2297,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2316,7 +2318,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -2368,7 +2370,7 @@ test('escort units by amount does not fail when the player has more units left',
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     MoveAction(v1, v6),
     MoveAction(v5, v4),
     EndTurnAction(),
@@ -2387,7 +2389,7 @@ test('escort units by amount does not fail when the player has more units left',
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       MoveAction(v1, v6),
@@ -2437,7 +2439,7 @@ test('rescue label win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     RescueAction(v2, v1),
     RescueAction(v4, v3),
     RescueAction(v6, v5),
@@ -2465,7 +2467,7 @@ test('rescue label win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       RescueAction(v2, v1),
@@ -2527,7 +2529,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     RescueAction(v2, v1),
     AttackUnitAction(v4, v3),
   ]);
@@ -2543,7 +2545,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateA_2, gameActionResponseA_2] = executeGameActions(
+  const [gameStateA_2, gameActionResponseA_2] = await executeGameActions(
     mapWithOptionalObjectives,
     [RescueAction(v2, v1), AttackUnitAction(v4, v3)],
   );
@@ -2556,7 +2558,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapA.copy({
       units: mapA.units.set(v4, SmallTank.create(2)),
     }),
@@ -2571,7 +2573,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const [gameStateB_2, gameActionResponseB_2] = executeGameActions(
+  const [gameStateB_2, gameActionResponseB_2] = await executeGameActions(
     mapWithOptionalObjectives.copy({
       units: mapWithOptionalObjectives.units.set(v4, SmallTank.create(2)),
     }),
@@ -2587,7 +2589,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
 
-  const [, gameActionResponseC] = executeGameActions(
+  const [, gameActionResponseC] = await executeGameActions(
     mapA.copy({
       teams: ImmutableMap([
         ...map.teams,
@@ -2629,7 +2631,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const [gameStateC_2, gameActionResponseC_2] = executeGameActions(
+  const [gameStateC_2, gameActionResponseC_2] = await executeGameActions(
     mapWithOptionalObjectives.copy({
       teams: ImmutableMap([
         ...map.teams,
@@ -2674,7 +2676,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(gameHasEnded(gameStateC_2)).toBe(false);
 
-  const [, gameActionResponseD] = executeGameActions(
+  const [, gameActionResponseD] = await executeGameActions(
     mapA.copy({
       buildings: mapA.buildings.set(v3, House.create(1).setHealth(1)),
       units: mapA.units.set(v4, SmallTank.create(2)),
@@ -2690,7 +2692,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
       GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
-  const [gameStateD_2, gameActionResponseD_2] = executeGameActions(
+  const [gameStateD_2, gameActionResponseD_2] = await executeGameActions(
     mapWithOptionalObjectives.copy({
       buildings: mapWithOptionalObjectives.buildings.set(
         v3,
@@ -2742,7 +2744,7 @@ test('rescue amount win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     RescueAction(v2, v1),
     RescueAction(v4, v3),
     RescueAction(v6, v5),
@@ -2768,7 +2770,7 @@ test('rescue amount win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
     mapWithOptionalObjectives,
     [
       RescueAction(v2, v1),
@@ -2824,7 +2826,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     RescueAction(v2, v1),
     AttackUnitAction(v4, v3),
   ]);
@@ -2858,7 +2860,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
 
   expect(validateObjectives(mapB)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(mapB, [
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
     RescueAction(v2, v1),
     EndTurnAction(),
     AttackUnitAction(v4, v3),
@@ -2911,7 +2913,7 @@ test('optional objectives should not be triggered multiple times for the same pl
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v5),
     AttackUnitAction(v2, v6),
     EndTurnAction(),
@@ -2984,7 +2986,7 @@ test('optional objectives should not end the game, but non-optional one should w
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v5),
     AttackUnitAction(v2, v6),
     EndTurnAction(),
@@ -3039,7 +3041,7 @@ test('optional objectives are processed before game end responses', async () => 
       .set(v2, Flamethrower.create(player2)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(
+  const [, gameActionResponseA] = await executeGameActions(
     mapA,
     [AttackUnitAction(v1, v2)],
     new Map([
@@ -3108,7 +3110,9 @@ test('multiple optional objectives can trigger at once', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    CaptureAction(v2),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3146,7 +3150,9 @@ test('optional and game ending objectives might be triggered at the same time', 
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    CaptureAction(v2),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3179,7 +3185,9 @@ test('optional and default game ending objectives might be triggered at the same
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [CaptureAction(v2)]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    CaptureAction(v2),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -3220,7 +3228,7 @@ test('multiple optional objectives have their effects applied correctly', async 
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [gameState, gameActionResponseA] = executeGameActions(
+  const [gameState, gameActionResponseA] = await executeGameActions(
     mapA,
     [CaptureAction(v2)],
     new Map([
@@ -3311,7 +3319,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [EndTurnAction()]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    EndTurnAction(),
+  ]);
 
   expect(
     snapshotEncodedActionResponse(gameActionResponseA),
@@ -3346,7 +3356,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapB)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(mapB, [EndTurnAction()]);
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
+    EndTurnAction(),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
@@ -3379,7 +3391,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapC)).toBe(true);
 
-  const [, gameActionResponseC] = executeGameActions(mapC, [EndTurnAction()]);
+  const [, gameActionResponseC] = await executeGameActions(mapC, [
+    EndTurnAction(),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseC))
     .toMatchInlineSnapshot(`
@@ -3411,7 +3425,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapD)).toBe(true);
 
-  const [, gameActionResponseD] = executeGameActions(mapD, [EndTurnAction()]);
+  const [, gameActionResponseD] = await executeGameActions(mapD, [
+    EndTurnAction(),
+  ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseD))
     .toMatchInlineSnapshot(`
@@ -3453,7 +3469,7 @@ test('counter attack triggers objectives correctly', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     AttackUnitAction(v1, v2),
   ]);
 
@@ -3485,7 +3501,7 @@ test('counter attack triggers objectives correctly', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseB] = executeGameActions(mapB, [
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
     AttackBuildingAction(v1, v2),
   ]);
 

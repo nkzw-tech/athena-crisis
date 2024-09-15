@@ -18,7 +18,7 @@ import useInput from '../controls/useInput.tsx';
 import { applyVar } from '../cssVar.tsx';
 import pixelBorder from '../pixelBorder.tsx';
 import Portal from '../Portal.tsx';
-import { PulseStyle } from '../RainbowPulseStyle.tsx';
+import { PulseStyle } from '../PulseStyle.tsx';
 import Stack from '../Stack.tsx';
 
 type Props = ComponentProps<typeof Alert>;
@@ -136,7 +136,7 @@ const Alert = ({
         <Stack alignCenter center className={wrapperStyle}>
           <div className={containerStyle}>
             <Stack gap={32} stretch vertical>
-              <Stack gap>
+              <Stack gap vertical>
                 {title && <h2>{title}</h2>}
                 <p>{text}</p>
               </Stack>

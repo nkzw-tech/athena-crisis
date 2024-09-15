@@ -169,7 +169,7 @@ export default function EvaluationPanel({
                 ];
                 const winnerList = intlList(
                   winners.map(
-                    getTranslatedFactionName.bind(null, state.factionNames),
+                    getTranslatedFactionName.bind(null, state.playerDetails),
                   ),
                   Conjunctions.AND,
                   Delimiters.COMMA,

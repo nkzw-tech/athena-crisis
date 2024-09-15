@@ -72,6 +72,7 @@ import useAnimationSpeed, {
   AnimationSpeed,
 } from '../hooks/useAnimationSpeed.tsx';
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
+import useClientGamePlayerDetails from '../hooks/useClientGamePlayerDetails.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserWithFactionNameAndUnlocks } from '../hooks/useUserMap.tsx';
 import filterNodes from '../lib/filterNodes.tsx';
@@ -835,11 +836,7 @@ export default function MapEditor({
     }, []);
   }
 
-  const factionNames = useMemo(() => {
-    const player = map.getPlayerByUserId(user.id);
-    return new Map(player ? [[player.id, user.factionName]] : undefined);
-  }, [map, user.factionName, user.id]);
-
+  const playerDetails = useClientGamePlayerDetails(map, user);
   const isMedium = useMedia(`(min-width: ${sm}px)`);
   const [drawerPosition, _setDrawerPosition] = useState<DrawerPosition>(() =>
     Storage.get('map-editor-position') === 'left' && isMedium
@@ -869,7 +866,6 @@ export default function MapEditor({
           game?.lastAction?.type === 'EndTurn'
         }
         events={eventEmitter}
-        factionNames={factionNames}
         fogStyle={fogStyle}
         inset={inset}
         key="play-test-map"
@@ -880,12 +876,12 @@ export default function MapEditor({
         }
         onAction={onAction}
         pan
+        playerDetails={playerDetails}
         scale={zoom}
         scroll={false}
         showCursor={!hidden}
         style="floating"
         tilted={tiltStyle === 'on'}
-        userDisplayName={user.displayName}
       >
         {(props, actions) => {
           const hide = hidden || props.lastActionResponse?.type === 'GameEnd';
@@ -1046,17 +1042,16 @@ export default function MapEditor({
           currentUserId={user.id}
           editor={editor}
           effects={editor.effects}
-          factionNames={factionNames}
           fogStyle={fogStyle}
           inset={inset}
           key={`editor-map-${internalMapID}`}
           map={map}
+          playerDetails={playerDetails}
           scale={zoom}
           scroll={internalMapID === 0}
           setEditorState={setEditorState}
           style="floating"
           tilted={tiltStyle === 'on' && tilted}
-          userDisplayName={user.displayName}
         >
           {(props, actions) => {
             stateRef.current = props;

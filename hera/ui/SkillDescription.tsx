@@ -12,6 +12,7 @@ import {
   getSkillAttackLeaderUnitStatusEffect,
   getSkillAttackMovementTypeStatusEffect,
   getSkillAttackUnitStatusEffect,
+  getSkillConfig,
   getSkillDefenseMovementTypeStatusEffect,
   getSkillEffect,
   getSkillTileAttackStatusEffect,
@@ -51,6 +52,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { css, cx } from '@emotion/css';
+import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';
@@ -706,6 +708,7 @@ export default memo(function SkillDescription({
   type: 'regular' | 'power';
 }) {
   const isRegular = type === 'regular';
+  const { charges } = getSkillConfig(skill);
   const attack = getSkillEffect(isRegular ? 'attack' : 'attack-power', skill);
   const cost = getSkillEffect(
     isRegular ? 'unit-cost' : 'unit-cost-power',
@@ -759,7 +762,7 @@ export default memo(function SkillDescription({
   ].filter(isPresent);
 
   const list = [
-    type === 'power' ? (
+    charges && type === 'power' ? (
       <span className={typeStyle} style={{ color: getColor(color) }}>
         <fbt desc="Label for skill status effects when a power is activated">
           Power:
@@ -777,6 +780,17 @@ export default memo(function SkillDescription({
     unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     effects.length ? (
       <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
+    ) : null,
+    charges && type === 'power' ? (
+      <div className="paragraph">
+        <Icon className={chargeIconStyle} icon={Charge} />
+        <fbt desc="Power charge cost">
+          Cost: <fbt:param name="charges">{charges}</fbt:param>{' '}
+          <fbt:plural count={charges} many="charges" name="number of charges">
+            charge
+          </fbt:plural>
+        </fbt>
+      </div>
     ) : null,
   ]
     .filter(isPresent)
@@ -814,4 +828,8 @@ const typeStyle = css`
 
 const iconStyle = css`
   vertical-align: text-bottom;
+`;
+
+const chargeIconStyle = css`
+  margin: -4px 4px 0 0;
 `;

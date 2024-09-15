@@ -1,0 +1,31 @@
+diff --git a/lib/lib.dom.d.ts b/lib/lib.dom.d.ts
+index 9ecd352b1050f13e672caea60ba32b4a157a9736..b2fda044fede232071b5f7d019e266b69c0f9384 100644
+--- a/lib/lib.dom.d.ts
++++ b/lib/lib.dom.d.ts
+@@ -27091,9 +27091,6 @@ declare var locationbar: BarProp;
+  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/menubar)
+  */
+ declare var menubar: BarProp;
+-/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/name) */
+-/** @deprecated */
+-declare const name: void;
+ /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/navigator) */
+ declare var navigator: Navigator;
+ /**
+diff --git a/lib/lib.webworker.d.ts b/lib/lib.webworker.d.ts
+index ba727932e79162087752b4a91d608976e7e2be67..a3a397f164b900efe436015bc29edffe3aa902e8 100644
+--- a/lib/lib.webworker.d.ts
++++ b/lib/lib.webworker.d.ts
+@@ -9154,12 +9154,6 @@ interface WebCodecsErrorCallback {
+     (error: DOMException): void;
+ }
+ 
+-/**
+- * Returns dedicatedWorkerGlobal's name, i.e. the value given to the Worker constructor. Primarily useful for debugging.
+- *
+- * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/name)
+- */
+-declare var name: string;
+ /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/message_event) */
+ declare var onmessage: ((this: DedicatedWorkerGlobalScope, ev: MessageEvent) => any) | null;
+ /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/messageerror_event) */

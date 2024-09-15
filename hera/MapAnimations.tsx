@@ -2,6 +2,7 @@ import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirec
 import { SoundName } from '@deities/athena/info/Music.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitAnimationSprite, Weapon } from '@deities/athena/info/Unit.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
@@ -17,6 +18,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 import AttackAnimation from './animations/AttackAnimation.tsx';
 import BuildingCreate from './animations/BuildingCreate.tsx';
+import CrystalAnimation from './animations/CrystalAnimation.tsx';
 import DamageAnimation from './animations/DamageAnimation.tsx';
 import Explosion, { ExplosionStyle } from './animations/Explosion.tsx';
 import Fireworks from './animations/Fireworks.tsx';
@@ -30,8 +32,8 @@ import UpgradeAnimation from './animations/UpgradeAnimation.tsx';
 import {
   Actions,
   ClearTimerFunction,
-  FactionNames,
   GetLayerFunction,
+  PlayerDetails,
   State,
   StateToStateLike,
   TimerFunction,
@@ -229,7 +231,6 @@ export type BannerAnimation = Readonly<{
 }>;
 
 export type CharacterMessageAnimation = Readonly<{
-  factionNames: FactionNames;
   map: MapData;
   onComplete?: StateToStateLike;
   player: PlayerID;
@@ -256,6 +257,12 @@ export type NoticeAnimation = Readonly<{
   type: 'notice';
 }>;
 
+export type CrystalAnimation = Readonly<{
+  crystal: Crystal;
+  onComplete?: StateToStateLike;
+  type: 'crystal';
+}>;
+
 export type UnitAnimation =
   | AttackAnimation
   | AttackUnitFlashAnimation
@@ -279,6 +286,7 @@ export type Animation =
   | BuildingAnimation
   | BuildingAnimation
   | CharacterMessageAnimation
+  | CrystalAnimation
   | DamageAnimation
   | ExplosionAnimation
   | FireworksAnimation
@@ -373,10 +381,11 @@ const MapAnimation = ({
   animationConfig: initialAnimationConfig,
   biome,
   getLayer,
+  playerDetails,
   position,
+  scale,
   skipBanners,
   tileSize,
-  userDisplayName,
   width,
   zIndex,
 }: {
@@ -386,10 +395,11 @@ const MapAnimation = ({
   animationConfig: AnimationConfig;
   biome: Biome;
   getLayer: GetLayerFunction;
+  playerDetails: PlayerDetails;
   position: Vector;
+  scale: number;
   skipBanners?: boolean;
   tileSize: number;
-  userDisplayName: string;
   width: number;
   zIndex: number;
 }) => {
@@ -644,10 +654,18 @@ const MapAnimation = ({
         return (
           <Notice color={animation.color} text={animation.text} {...props} />
         );
+      case 'crystal':
+        return (
+          <CrystalAnimation
+            crystal={animation.crystal}
+            scale={scale}
+            {...props}
+          />
+        );
       case 'characterMessage': {
         return (
           <CharacterMessage
-            userDisplayName={userDisplayName}
+            playerDetails={playerDetails}
             {...animation}
             {...props}
           />
@@ -684,14 +702,15 @@ const MapAnimation = ({
     biome,
     clearTimer,
     getLayer,
+    playerDetails,
     position,
     requestFrame,
+    scale,
     scheduleTimer,
     scrollIntoView,
     skipBanners,
     tileSize,
     update,
-    userDisplayName,
     width,
     zIndex,
   ]);
@@ -701,6 +720,7 @@ export function MapAnimations({
   actions,
   animationComplete,
   getLayer,
+  scale,
   skipBanners,
   state: {
     animationConfig,
@@ -709,14 +729,15 @@ export function MapAnimations({
       config: { biome },
       size: { width },
     },
+    playerDetails,
     tileSize,
-    userDisplayName,
     zIndex,
   },
 }: {
   actions: Actions;
   animationComplete: (position: Vector, animation: Animation) => void;
   getLayer: GetLayerFunction;
+  scale: number;
   skipBanners?: boolean;
   state: State;
 }) {
@@ -745,10 +766,11 @@ export function MapAnimations({
         biome={biome}
         getLayer={getLayer}
         key={String(position)}
+        playerDetails={playerDetails}
         position={position}
+        scale={scale}
         skipBanners={skipBanners}
         tileSize={tileSize}
-        userDisplayName={userDisplayName}
         width={width}
         zIndex={zIndex}
       />,

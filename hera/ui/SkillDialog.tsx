@@ -30,13 +30,9 @@ import SkillBorder, {
 import Skills from '@deities/ui/icons/Skills.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import {
-  RainbowStyle,
-  SquarePulseStyle,
-} from '@deities/ui/RainbowPulseStyle.tsx';
+import { RainbowStyle, SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import { Sprites } from 'athena-crisis:images';
 import { ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
@@ -170,7 +166,7 @@ export default function SkillDialog({
   actionName,
   availableSkills,
   blocklistedAreDisabled,
-  blocklistedSkills: initialBlocklistedSkills,
+  blocklistedSkills,
   canAction,
   children,
   currentSkill,
@@ -179,7 +175,6 @@ export default function SkillDialog({
   onClose,
   onSelect,
   selectedSkills,
-  showAction,
   showCost,
   size,
   tabs,
@@ -198,12 +193,70 @@ export default function SkillDialog({
   onClose: () => void;
   onSelect?: (skill: Skill | null) => void;
   selectedSkills?: ReadonlySet<Skill> | null;
-  showAction?: (skill: Skill) => boolean;
   showCost?: boolean;
   size?: 'small';
   tabs?: ReactNode;
   toggleBlocklist?: boolean;
   transformOrigin?: string;
+}) {
+  return (
+    <Dialog
+      onClose={onClose}
+      size={size}
+      transformOrigin={transformOrigin || 'center center'}
+    >
+      <SkillContainer
+        actionName={actionName}
+        availableSkills={availableSkills}
+        blocklistedAreDisabled={blocklistedAreDisabled}
+        blocklistedSkills={blocklistedSkills}
+        canAction={canAction}
+        currentSkill={currentSkill}
+        focus={focus}
+        onAction={onAction}
+        onClose={onClose}
+        onSelect={onSelect}
+        selectedSkills={selectedSkills}
+        showCost={showCost}
+        toggleBlocklist={toggleBlocklist}
+      >
+        {children}
+      </SkillContainer>
+      {tabs && <DialogTabBar>{tabs}</DialogTabBar>}
+    </Dialog>
+  );
+}
+
+export function SkillContainer({
+  actionName,
+  availableSkills,
+  blocklistedAreDisabled,
+  blocklistedSkills: initialBlocklistedSkills,
+  canAction,
+  children,
+  currentSkill,
+  focus,
+  onAction,
+  onClose,
+  onSelect,
+  selectedSkills,
+  showCost,
+  toggleBlocklist,
+}: {
+  actionName?: ReactElement;
+  availableSkills: ReadonlySet<Skill>;
+  blocklistedAreDisabled?: boolean;
+  blocklistedSkills?: ReadonlySet<Skill> | null;
+  canAction?: (skill: Skill) => boolean;
+  children?: ReactNode;
+  currentSkill?: Skill | null;
+  focus?: boolean;
+  onAction?: (skill: Skill) => void;
+  onClose: () => void;
+  onSelect?: (skill: Skill | null) => void;
+  selectedSkills?: ReadonlySet<Skill> | null;
+  showCost?: boolean;
+  toggleBlocklist?: boolean;
 }) {
   const hasAction = onAction && actionName && currentSkill;
   const partition = groupBy(
@@ -258,7 +311,7 @@ export default function SkillDialog({
       },
       [onClose],
     ),
-    // Has to be on top in order not to interfer with the Map.
+    // Has to be on top in order not to interfere with the Map.
     'top',
   );
 
@@ -267,105 +320,88 @@ export default function SkillDialog({
     blocklistedSkills.delete(currentSkill);
   }
 
+  const key = currentSkill && focus ? `skill-${currentSkill}` : 'skill';
   return (
-    <Dialog
-      onClose={onClose}
-      size={size}
-      transformOrigin={transformOrigin || 'center center'}
-    >
-      <DialogScrollContainer key="skill" navigate={false}>
-        <Stack gap={24} vertical>
-          {!focus && (
-            <h1>
-              {onSelect ? (
-                <fbt desc="Headline to choose a skill">Choose a skill</fbt>
-              ) : availableSkills.size > 1 ? (
-                <fbt desc="Headline to view skills">Skills</fbt>
-              ) : (
-                <fbt desc="Headline to view a skill">Skill</fbt>
-              )}
-            </h1>
-          )}
-          <Stack gap vertical>
-            {enabledSkills?.map((skill, index) => (
-              <SkillListItem
-                blocklistedSkills={blocklistedSkills}
-                currentSkill={!focus ? currentSkill : undefined}
-                key={skill}
-                onSelect={
-                  !hasAction || !canAction || canAction(skill)
-                    ? onSelect
-                    : undefined
-                }
-                selected={selected === index}
-                showCost={showCost}
-                skill={skill}
-                toggleBlocklist={toggleBlocklist}
-              />
-            ))}
-          </Stack>
-          {selectedSkills?.size ? (
-            <Stack gap={16} vertical>
-              <h2>
-                <fbt desc="Headline to for already selected skills">
-                  Skills selected in other slots
-                </fbt>
-              </h2>
-              <Stack gap vertical>
-                {[...selectedSkills].map((skill) => (
-                  <SkillListItem
-                    blocklistedSkills={selectedSkills}
-                    currentSkill={currentSkill}
-                    key={skill}
-                    onSelect={onSelect}
-                    showCost={showCost}
-                    skill={skill}
-                    toggleBlocklist={toggleBlocklist}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-          ) : null}
-          {disabledSkills?.length ? (
-            <Stack gap={16} vertical>
-              <h2>
-                <fbt desc="Headline to for disabled skills">
-                  Disabled skills
-                </fbt>
-              </h2>
-              <Stack gap={16} vertical>
-                {disabledSkills.map((skill) => (
-                  <SkillListItem
-                    blocklistedSkills={initialBlocklistedSkills}
-                    currentSkill={currentSkill}
-                    key={skill}
-                    onSelect={onSelect}
-                    showCost={showCost}
-                    skill={skill}
-                    toggleBlocklist={toggleBlocklist}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-          ) : null}
-          {children}
+    <DialogScrollContainer key={key} navigate={false}>
+      <Stack gap={16} vertical>
+        {focus ? (
+          <h2>
+            <fbt desc="Headline to view a skill">Skill</fbt>
+          </h2>
+        ) : (
+          <h1>
+            {onSelect ? (
+              <fbt desc="Headline to choose a skill">Choose a skill</fbt>
+            ) : availableSkills.size > 1 ? (
+              <fbt desc="Headline to view skills">Skills</fbt>
+            ) : (
+              <fbt desc="Headline to view a skill">Skill</fbt>
+            )}
+          </h1>
+        )}
+        <Stack gap vertical>
+          {enabledSkills?.map((skill, index) => (
+            <SkillListItem
+              blocklistedSkills={blocklistedSkills}
+              currentSkill={!focus ? currentSkill : undefined}
+              key={skill}
+              onSelect={
+                !hasAction || !canAction || canAction(skill)
+                  ? onSelect
+                  : undefined
+              }
+              selected={selected === index}
+              showCost={showCost}
+              skill={skill}
+              toggleBlocklist={toggleBlocklist}
+            />
+          ))}
         </Stack>
-      </DialogScrollContainer>
-      {(hasAction || tabs) && (
-        <DialogTabBar>
-          {tabs}
-          {hasAction && (!showAction || showAction(currentSkill)) && (
-            <DialogTab
-              disabled={canAction ? !canAction(currentSkill) : false}
-              end
-              onClick={() => onAction(currentSkill)}
-            >
-              {actionName}
-            </DialogTab>
-          )}
-        </DialogTabBar>
-      )}
-    </Dialog>
+        {selectedSkills?.size ? (
+          <Stack gap={16} vertical>
+            <h2>
+              <fbt desc="Headline to for already selected skills">
+                Skills selected in other slots
+              </fbt>
+            </h2>
+            <Stack gap vertical>
+              {[...selectedSkills].map((skill) => (
+                <SkillListItem
+                  blocklistedSkills={selectedSkills}
+                  currentSkill={currentSkill}
+                  key={skill}
+                  onSelect={onSelect}
+                  showCost={showCost}
+                  skill={skill}
+                  toggleBlocklist={toggleBlocklist}
+                />
+              ))}
+            </Stack>
+          </Stack>
+        ) : null}
+        {disabledSkills?.length ? (
+          <Stack gap={16} vertical>
+            <h2>
+              <fbt desc="Headline to for disabled skills">Disabled skills</fbt>
+            </h2>
+            <Stack gap={16} vertical>
+              {disabledSkills.map((skill) => (
+                <SkillListItem
+                  blocklistedSkills={initialBlocklistedSkills}
+                  currentSkill={currentSkill}
+                  key={skill}
+                  onSelect={onSelect}
+                  showCost={showCost}
+                  skill={skill}
+                  toggleBlocklist={toggleBlocklist}
+                />
+              ))}
+            </Stack>
+          </Stack>
+        ) : null}
+        {children}
+      </Stack>
+    </DialogScrollContainer>
   );
 }
 
@@ -389,7 +425,6 @@ const SkillListItem = ({
   const element = useRef<HTMLDivElement>(null);
   const { alpha, borderStyle, colors, icon, name } =
     getSkillConfigForDisplay(skill);
-  const { charges } = getSkillConfig(skill);
 
   useInput(
     'accept',
@@ -458,24 +493,12 @@ const SkillListItem = ({
           skill={skill}
           type="regular"
         />
-        {charges ? (
-          <div className={descriptionStyle}>
-            <SkillDescription color={color} skill={skill} type="power" />
-            <div>
-              <Icon className={chargeIconStyle} icon={Charge} />
-              <fbt desc="Power charge cost">
-                Cost: <fbt:param name="charges">{charges}</fbt:param>{' '}
-                <fbt:plural
-                  count={charges}
-                  many="charges"
-                  name="number of charges"
-                >
-                  charge
-                </fbt:plural>
-              </fbt>
-            </div>
-          </div>
-        ) : null}
+        <SkillDescription
+          className={descriptionStyle}
+          color={color}
+          skill={skill}
+          type="power"
+        />
       </Stack>
       {showCost && (
         <Stack className={costStyle} gap nowrap start>
@@ -674,15 +697,6 @@ const tagStyle = css`
   width: fit-content;
 `;
 
-const descriptionStyle = css`
-  line-height: 1.4em;
-  padding: 0 20px 0 38px;
-
-  ${Breakpoints.lg} {
-    padding: 0 40px 0 38px;
-  }
-`;
-
 const itemStyle = css`
   cursor: pointer;
   transform-origin: left center;
@@ -701,6 +715,7 @@ const boxStyle = css`
 
 const selectedBoxStyle = css`
   ${clipBorder()}
+
   background-color: ${applyVar('background-color')};
 `;
 
@@ -727,6 +742,10 @@ const coinIconStyle = css`
   margin-top: 1px;
 `;
 
-const chargeIconStyle = css`
-  margin: -4px 4px 0 0;
+const descriptionStyle = css`
+  padding: 0 20px 0 38px;
+
+  ${Breakpoints.lg} {
+    padding: 0 40px 0 38px;
+  }
 `;

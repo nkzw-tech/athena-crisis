@@ -1,24 +1,10 @@
-import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
 import { applyEffects, Effects } from '../Effects.tsx';
 import { applyObjectives } from '../Objective.tsx';
 import { GameState, GameStateWithEffects } from '../Types.tsx';
-
-const getLosingPlayer = (
-  map: MapData,
-  actionResponse: ActionResponse,
-): PlayerID | null => {
-  switch (actionResponse.type) {
-    case 'AttackUnitGameOver':
-    case 'CaptureGameOver':
-      return actionResponse.fromPlayer;
-    case 'BeginTurnGameOver':
-      return map.currentPlayer;
-  }
-  return null;
-};
+import getLosingPlayer from './getLosingPlayer.tsx';
 
 export default function applyConditions(
   currentMap: MapData,

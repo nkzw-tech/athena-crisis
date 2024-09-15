@@ -12,12 +12,12 @@ import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 
-export default function executeGameActions(
+export default async function executeGameActions(
   map: MapData,
   actions: Actions,
   effects?: Effects,
   mutateAction?: MutateActionResponseFn,
-): [GameState, EncodedGameActionResponse, Effects | null] {
+): Promise<[GameState, EncodedGameActionResponse, Effects | null]> {
   let actionResponse: ActionResponse | null = null;
   let activeMap: MapData | null = null;
   let currentMap: MapData | null = map;
@@ -42,7 +42,7 @@ export default function executeGameActions(
 
     let currentGameState: GameState | null = null;
     [actionResponse, activeMap, currentGameState, newEffects] =
-      executeGameAction(
+      await executeGameAction(
         currentMap,
         currentMap.createVisionObject(currentMap.getCurrentPlayer()),
         newEffects || new Map(),

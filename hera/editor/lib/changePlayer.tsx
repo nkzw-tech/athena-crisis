@@ -27,6 +27,7 @@ export default function changePlayer(map: MapData, id: PlayerID): StateLike {
     existingPlayer?.charge || 0,
     null,
     0,
+    null,
   );
 
   if (id === 0 || !existingPlayer || !teams.get(player.teamId)) {

@@ -108,16 +108,15 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
                 confirmActionStyle="never"
                 currentUserId={viewers[index]}
                 events={eventEmitters?.[index]}
-                factionNames={new Map()}
                 fogStyle="soft"
                 map={map}
                 paused
+                playerDetails={new Map()}
                 scale={1}
                 scroll={false}
                 showCursor={false}
                 style="none"
                 tilted={false}
-                userDisplayName="Viewer"
               />
             </div>
           </div>

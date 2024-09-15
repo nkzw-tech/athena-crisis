@@ -166,7 +166,7 @@ test('spawns new units at adjacent fields if necessary', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,
@@ -206,7 +206,7 @@ test('drops a spawn if no adjacent field is available', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = executeGameActions(
+  const [, gameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction()],
     effects,
@@ -247,7 +247,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     ],
   ]);
 
-  const [, gameActionResponseA] = executeGameActions(
+  const [, gameActionResponseA] = await executeGameActions(
     mapA,
     [EndTurnAction()],
     effects,
@@ -265,7 +265,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     buildings: map.buildings.delete(vecB),
   });
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     mapB,
     [EndTurnAction()],
     effects,
@@ -282,7 +282,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     buildings: map.buildings.set(vecB, House.create(2)),
   });
 
-  const [, gameActionResponseC] = executeGameActions(
+  const [, gameActionResponseC] = await executeGameActions(
     mapC,
     [EndTurnAction()],
     effects,

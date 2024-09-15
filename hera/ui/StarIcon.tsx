@@ -1,18 +1,20 @@
+import { applyVar } from '@deities/ui/cssVar.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { StarEmpty, StarFull } from '@deities/ui/icons/Stars.tsx';
 import { css, cx } from '@emotion/css';
 import React from 'react';
 
 export default function StarIcon({
-  achieved,
   className,
   small,
   starClassName,
+  type,
 }: {
-  achieved: boolean;
   className?: string;
   small?: true;
   starClassName?: string;
+  type: 'achieved' | 'chaos' | 'missed';
 }) {
   const size = small ? 24 : 96;
   return (
@@ -20,7 +22,11 @@ export default function StarIcon({
       <Icon
         className={cx(
           starStyle,
-          achieved ? achievedStyle : missedStyle,
+          type === 'achieved'
+            ? achievedStyle
+            : type === 'chaos'
+              ? chaosStyle
+              : missedStyle,
           starClassName,
         )}
         height={size}
@@ -52,9 +58,13 @@ const outlineStyle = css`
 `;
 
 const missedStyle = css`
-  color: #ebebeb;
+  color: ${applyVar('color-silver')};
 `;
 
 const achievedStyle = css`
-  color: #e9b301;
+  color: ${applyVar('color-gold')};
+`;
+
+const chaosStyle = css`
+  color: ${getColor('red')};
 `;

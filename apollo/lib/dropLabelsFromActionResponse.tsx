@@ -31,43 +31,45 @@ export default function dropLabelsFromActionResponse(
         ? { ...actionResponse, building: building.dropLabel(labels) }
         : actionResponse;
     }
-    case 'AttackUnit':
-    case 'DropUnit':
-    case 'Heal':
-    case 'Move':
-    case 'Rescue':
-    case 'Sabotage':
-    case 'BuySkill':
-    case 'CreateTracks':
-    case 'Fold':
-    case 'HiddenTargetAttackBuilding':
-    case 'HiddenTargetAttackUnit':
-    case 'Supply':
-    case 'Unfold':
-    case 'HiddenDestroyedBuilding':
-    case 'HiddenSourceAttackBuilding':
-    case 'HiddenSourceAttackUnit':
-    case 'ToggleLightning':
-    case 'HiddenMove':
+    case 'AbandonInvasion':
+    case 'ActivateCrystal':
     case 'ActivatePower':
-    case 'EndTurn':
-    case 'CharacterMessage':
-    case 'CompleteBuilding':
-    case 'CompleteUnit':
-    case 'MoveUnit':
+    case 'AttackUnit':
     case 'AttackUnitGameOver':
     case 'BeginGame':
     case 'BeginTurnGameOver':
+    case 'BuySkill':
     case 'CaptureGameOver':
+    case 'CharacterMessage':
+    case 'CompleteBuilding':
+    case 'CompleteUnit':
+    case 'CreateTracks':
+    case 'DropUnit':
+    case 'EndTurn':
+    case 'Fold':
     case 'GameEnd':
+    case 'Heal':
+    case 'HiddenDestroyedBuilding':
     case 'HiddenFundAdjustment':
+    case 'HiddenMove':
+    case 'HiddenSourceAttackBuilding':
+    case 'HiddenSourceAttackUnit':
+    case 'HiddenTargetAttackBuilding':
+    case 'HiddenTargetAttackUnit':
     case 'Message':
+    case 'Move':
+    case 'MoveUnit':
     case 'OptionalObjective':
     case 'PreviousTurnGameOver':
     case 'ReceiveReward':
+    case 'Rescue':
+    case 'Sabotage':
     case 'SecretDiscovered':
     case 'SetViewer':
     case 'Start':
+    case 'Supply':
+    case 'ToggleLightning':
+    case 'Unfold':
       return actionResponse;
     default: {
       actionResponse satisfies never;

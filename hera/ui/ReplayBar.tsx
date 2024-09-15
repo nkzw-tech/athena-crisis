@@ -14,13 +14,23 @@ import useRelativeTime from '@nkzw/use-relative-time';
 import { getShortLocale } from '../i18n/getLocale.tsx';
 import { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
+import MiniPlayerIcon from './MiniPlayerIcon.tsx';
 
-const TurnTimer = ({ timeout }: { timeout: number }) => {
+const TurnTimer = ({
+  player,
+  timeout,
+}: {
+  player: PlayerID;
+  timeout: number;
+}) => {
   const relativeTime = useRelativeTime(timeout, getShortLocale(), dateNow);
 
   return timeout < dateNow() ? null : (
-    <Stack center flex1>
+    <Stack alignCenter center flex1 gap nowrap>
       <span className={textStyle}>
+        <div className={miniIconStyle}>
+          <MiniPlayerIcon gap id={player} />
+        </div>{' '}
         <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
           Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
         </fbt>
@@ -45,17 +55,18 @@ export default function ReplayBar({
   timeout: number | null;
 }) {
   const { isLive, isPaused, isReplaying, isWaiting } = replayState;
-  const icon = isPaused ? Pause : currentPlayer.isBot() ? Android : Live;
+  const isBot = currentPlayer.isBot();
+  const icon = isPaused ? Pause : isBot ? Android : Live;
   const replayIsVisible =
     (isLive || isReplaying || isWaiting) && currentViewer !== currentPlayer.id;
+  const hasTimeout = timeout != null && timeout >= dateNow();
 
   return (
-    <ActionBar
-      inlineUI={inlineUI}
-      visible={replayIsVisible || timeout !== null}
-    >
+    <ActionBar inlineUI={inlineUI} visible={replayIsVisible || hasTimeout}>
       <Stack flex1 gap vertical>
-        {timeout ? <TurnTimer timeout={timeout} /> : null}
+        {hasTimeout && !isBot ? (
+          <TurnTimer player={currentPlayer.id} timeout={timeout} />
+        ) : null}
         {replayIsVisible && (
           <Stack alignCenter stretch>
             {currentViewer !== currentPlayer.id ? (
@@ -71,7 +82,7 @@ export default function ReplayBar({
                 {isPaused ? (
                   <fbt desc="Replay is paused">paused</fbt>
                 ) : isLive ? (
-                  currentPlayer.isBot() ? (
+                  isBot ? (
                     <fbt desc="Bot is moving">bot</fbt>
                   ) : (
                     <fbt desc="Game is live">live</fbt>
@@ -150,4 +161,10 @@ const replayLiveStyle = css`
 
 const textStyle = css`
   text-align: center;
+`;
+
+const miniIconStyle = css`
+  display: inline-block;
+  margin-top: -2px;
+  vertical-align: top;
 `;

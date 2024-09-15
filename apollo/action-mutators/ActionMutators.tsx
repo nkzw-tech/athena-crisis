@@ -1,4 +1,5 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 
@@ -148,4 +149,10 @@ export const ActivatePowerAction = (skill: Skill) =>
   ({
     skill,
     type: 'ActivatePower',
+  }) as const;
+
+export const ActivateCrystalAction = (crystal: Crystal) =>
+  ({
+    crystal,
+    type: 'ActivateCrystal',
   }) as const;

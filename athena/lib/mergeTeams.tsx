@@ -17,17 +17,19 @@ export default function mergeTeams(map: MapData, newTeams: Teams | undefined) {
           );
         }
 
-        if (map.maybeGetPlayer(playerId)) {
+        const maybePlayer = map.maybeGetPlayer(playerId);
+        if (
+          maybePlayer &&
+          (maybePlayer.type === player.type || maybePlayer.teamId !== id)
+        ) {
           throw new Error(
             `mergeTeams: player '${playerId}' is already defined.`,
           );
         }
 
-        if (!teams.get(id)?.players.has(playerId)) {
-          team = team.copy({
-            players: team.players.set(playerId, player),
-          });
-        }
+        team = team.copy({
+          players: team.players.set(playerId, player),
+        });
       }
     }
     teams = teams.set(id, team);

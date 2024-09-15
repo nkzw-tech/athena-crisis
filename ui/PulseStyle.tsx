@@ -32,7 +32,7 @@ const pulse = keyframes`
   }
 `;
 
-export default css`
+export const RainbowPulseStyle = css`
   color: ${getColor(1)};
   animation:
     ${rainbow} ${colors.length * 3}s infinite,

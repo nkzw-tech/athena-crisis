@@ -94,7 +94,7 @@ const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 test('units on a factory do not disappear when a unit is created and moved into fog', async () => {
   const from = vec(2, 4);
   const to = vec(2, 5);
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
     CreateUnitAction(from, Pioneer.id, to),
     EndTurnAction(),

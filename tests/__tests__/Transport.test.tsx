@@ -44,7 +44,7 @@ test('units can be acted on after dropping them after one turn', async () => {
       .set(toB, Infantry.create(2)),
   });
 
-  const [gameStateA] = executeGameActions(initialMap, [
+  const [gameStateA] = await executeGameActions(initialMap, [
     MoveAction(fromA, fromB),
     DropUnitAction(fromB, 0, toA),
   ]);
@@ -53,7 +53,7 @@ test('units can be acted on after dropping them after one turn', async () => {
   expect(lastMapA.units.get(toA)!.canMove()).toBe(false);
   expect(lastMapA.units.get(toA)!.isCompleted()).toBe(true);
 
-  const [gameStateB] = executeGameActions(lastMapA, [
+  const [gameStateB] = await executeGameActions(lastMapA, [
     EndTurnAction(),
     EndTurnAction(),
   ]);

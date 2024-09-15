@@ -1,4 +1,5 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import { Reward } from '@deities/athena/map/Reward.tsx';
@@ -201,6 +202,12 @@ export type ActivatePowerActionResponse = Readonly<{
   units?: ImmutableMap<Vector, Unit>;
 }>;
 
+export type ActivateCrystalActionResponse = Readonly<{
+  crystal: Crystal;
+  player: PlayerID;
+  type: 'ActivateCrystal';
+}>;
+
 export type SecretDiscoveredActionResponse = Readonly<{
   objective: Objective;
   toPlayer?: PlayerID;
@@ -208,6 +215,7 @@ export type SecretDiscoveredActionResponse = Readonly<{
 }>;
 
 export type ActionResponse =
+  | ActivateCrystalActionResponse
   | ActivatePowerActionResponse
   | AttackBuildingActionResponse
   | AttackUnitActionResponse

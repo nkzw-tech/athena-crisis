@@ -222,7 +222,7 @@ h2 {
   }
 }
 
-p {
+p, .paragraph {
   line-height: 1.4em;
   margin: 0;
   user-select: text;

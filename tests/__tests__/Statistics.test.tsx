@@ -76,7 +76,7 @@ test('collects statistics on attacks', async () => {
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [
+  const [gameState] = await executeGameActions(initialMap, [
     AttackUnitAction(fromA, toA),
     AttackUnitAction(fromB, toB),
     AttackUnitAction(fromC, toC),
@@ -166,7 +166,7 @@ test('one shots work through counter attacks', async () => {
       .set(toA, APU.create(player2)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [
+  const [gameState] = await executeGameActions(initialMap, [
     AttackUnitAction(fromA, toA),
   ]);
 
@@ -230,6 +230,7 @@ test('collects statistics when attacking buildings', async () => {
               0,
               null,
               0,
+              null,
             ),
           ],
         ]),
@@ -241,7 +242,7 @@ test('collects statistics when attacking buildings', async () => {
       .set(vec(3, 3), Pioneer.create(player2)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [
+  const [gameState] = await executeGameActions(initialMap, [
     AttackBuildingAction(fromA, toA),
     EndTurnAction(),
     EndTurnAction(),
@@ -305,7 +306,7 @@ test('collects statistics on captures and creating units', async () => {
       .set(vecC, Pioneer.create(player1)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [
+  const [gameState] = await executeGameActions(initialMap, [
     CaptureAction(vecA),
     CreateBuildingAction(vecC, House.id),
     CreateUnitAction(vecD, Pioneer.id, vecD),
@@ -408,7 +409,7 @@ test('tracks statistics for players of the same team in fog', async () => {
     },
   );
 
-  const [gameState, encodedGameActionResponse] = executeGameActions(
+  const [gameState, encodedGameActionResponse] = await executeGameActions(
     initialMap,
     [EndTurnAction(), AttackUnitAction(vecC, vecB)],
   );
@@ -482,7 +483,7 @@ test('increases the `destroyedUnits` count of other players when a unit self-des
       .set(toB, Helicopter.create(3)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [EndTurnAction()]);
+  const [gameState] = await executeGameActions(initialMap, [EndTurnAction()]);
 
   const lastMap = gameState.at(-1)![1];
   const statsA = lastMap.getPlayer(player1.id).stats;
@@ -536,7 +537,7 @@ test('increases the `lostUnits` count of a player when a unit self-destructs', a
       .set(toB, Helicopter.create(3)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [EndTurnAction()]);
+  const [gameState] = await executeGameActions(initialMap, [EndTurnAction()]);
 
   const lastMap = gameState.at(-1)![1];
   const statsA = lastMap.getPlayer(player1.id).stats;
@@ -565,7 +566,7 @@ test('counts transported units correctly', async () => {
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
-  const [gameState] = executeGameActions(initialMap, [
+  const [gameState] = await executeGameActions(initialMap, [
     AttackUnitAction(fromA, toA),
   ]);
 

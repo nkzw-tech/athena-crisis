@@ -45,6 +45,7 @@ import minBy from '@deities/hephaestus/minBy.tsx';
 import randomEntry from '@deities/hephaestus/randomEntry.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import { App } from '@deities/ui/App.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -92,7 +93,7 @@ import getTranslatedEntityName, {
 } from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Tick from '../Tick.tsx';
-import { FactionNames } from '../Types.tsx';
+import { PlayerDetails } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import UILabel from '../ui/UILabel.tsx';
 import UnitTile from '../Unit.tsx';
@@ -227,14 +228,14 @@ const supplyRange = getAttributeRange(
 );
 
 export default memo(function UnitCard({
-  factionNames,
   map,
+  playerDetails,
   unit,
   vector,
   viewer,
 }: {
-  factionNames: FactionNames;
   map: MapData;
+  playerDetails: PlayerDetails;
   unit: Unit;
   vector: Vector;
   viewer?: PlayerID | null;
@@ -414,7 +415,7 @@ export default memo(function UnitCard({
               </Stack>
               <Stack alignCenter className={wideColumnStyle} end gap>
                 <MiniPlayerIcon id={rescuer} />
-                {getTranslatedFactionName(factionNames, rescuer)}
+                {getTranslatedFactionName(playerDetails, rescuer)}
               </Stack>
             </>
           )}
@@ -622,9 +623,18 @@ const Weapon = memo(function WeaponAttack({
               Note: Cover, status effects and unit defense affect the inflicted
               damage. See the{' '}
               <fbt:param name="link">
-                <InlineLink to={`/damage-chart?back=${backURL}`}>
-                  <fbt desc="Damage chart link name">Damage Chart</fbt>
-                </InlineLink>
+                {App.canQuit ? (
+                  <InlineLink to={`/damage-chart?back=${backURL}`}>
+                    <fbt desc="Damage chart link name">Damage Chart</fbt>
+                  </InlineLink>
+                ) : (
+                  <InlineLink
+                    href={`/damage-chart?back=${backURL}`}
+                    target="blank"
+                  >
+                    <fbt desc="Damage chart link name">Damage Chart</fbt>
+                  </InlineLink>
+                )}
               </fbt:param>{' '}
               for more information.
             </fbt>

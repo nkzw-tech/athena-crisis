@@ -277,7 +277,7 @@ test('escort radius with label', async () => {
       .set(v3, Pioneer.create(1, { label: 2 })),
   });
 
-  const [, gameActionResponseA] = executeGameActions(initialMap, [
+  const [, gameActionResponseA] = await executeGameActions(initialMap, [
     MoveAction(v1, v5),
     MoveAction(v3, v4),
   ]);
@@ -311,7 +311,7 @@ test('capture might be stopped when a unit is converted to another faction', asy
       .set(vecC, Flamethrower.create(2)),
   });
 
-  const [gameState, gameActionResponseA] = executeGameActions(map, [
+  const [gameState, gameActionResponseA] = await executeGameActions(map, [
     AttackUnitAction(vecA, vecB),
   ]);
 
@@ -349,7 +349,7 @@ test('capture does not stop when a unit is converted to another faction and they
       .set(vecC, Flamethrower.create(1)),
   });
 
-  const [gameState, gameActionResponseA] = executeGameActions(map, [
+  const [gameState, gameActionResponseA] = await executeGameActions(map, [
     AttackUnitAction(vecB, vecA),
   ]);
 
@@ -383,7 +383,7 @@ test('leaders are set correctly when a unit is converted to another faction', as
       .set(vecD, Zombie.create(1)),
   });
 
-  const [gameState] = executeGameActions(map, [
+  const [gameState] = await executeGameActions(map, [
     AttackUnitAction(vecA, vecB),
     AttackUnitAction(vecD, vecC),
   ]);

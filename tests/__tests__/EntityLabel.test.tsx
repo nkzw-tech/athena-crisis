@@ -59,7 +59,7 @@ test('carries labels forward when creating buildings or units', async () => {
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     MoveAction(from, to),
     CreateUnitAction(from, Infantry.id, from),
     CreateBuildingAction(to, Factory.id),
@@ -82,7 +82,7 @@ test('carries labels forward when creating buildings or units', async () => {
   );
 });
 
-test('carries labels forward when transporting units', () => {
+test('carries labels forward when transporting units', async () => {
   const from = vec(1, 1);
   const toA = vec(2, 1);
   const initialMap = map.copy({
@@ -92,7 +92,7 @@ test('carries labels forward when transporting units', () => {
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     MoveAction(from, toA),
     DropUnitAction(toA, 0, from),
     EndTurnAction(),
@@ -108,14 +108,16 @@ test('carries labels forward when transporting units', () => {
   expect(gameState.at(-1)?.[1].units.get(from)?.label).toBe(3);
 });
 
-test('capture retains a label', () => {
+test('capture retains a label', async () => {
   const from = vec(1, 1);
   const initialMap = map.copy({
     buildings: map.buildings.set(from, Barracks.create(player2, { label: 1 })),
     units: map.units.set(from, Pioneer.create(player1).capture()),
   });
 
-  const [gameState] = executeGameActions(initialMap, [CaptureAction(from)]);
+  const [gameState] = await executeGameActions(initialMap, [
+    CaptureAction(from),
+  ]);
 
   const label = gameState.at(-1)?.[1].buildings.get(from)?.label;
   expect(label).toEqual(initialMap.buildings.get(from)?.label);

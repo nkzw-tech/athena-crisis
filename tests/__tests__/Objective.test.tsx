@@ -71,7 +71,7 @@ test('game over conditions with HQ', async () => {
       .set(vec(5, 5), Pioneer.create(player2).setFuel(0)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     EndTurnAction(),
     EndTurnAction(),
   ]);
@@ -116,7 +116,7 @@ test('game over conditions without HQ', async () => {
       .set(vec(5, 5), Pioneer.create(player2).setFuel(0)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     EndTurnAction(),
     EndTurnAction(),
   ]);
@@ -169,7 +169,7 @@ test('game over conditions without HQ', async () => {
       .set(toB, Pioneer.create(player2).setHealth(1)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     CaptureAction(capturePosition),
     AttackUnitAction(fromA, toA),
     AttackUnitAction(fromB, toB),
@@ -203,7 +203,7 @@ test('game over conditions with only one HQ', async () => {
     units: map.units.set(capturePosition, Pioneer.create(player1).capture()),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     CaptureAction(capturePosition),
   ]);
 
@@ -249,7 +249,7 @@ test('if the player self-destructs, an end-turn action is issued', async () => {
       .set(vecC, SmallTank.create(3)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     AttackUnitAction(vecA, vecB),
   ]);
 
@@ -276,7 +276,7 @@ test('destroying a neutral unit does not end or crash the game', async () => {
       .set(vecB, Pioneer.create(0).setHealth(1)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     AttackUnitAction(vecA, vecB),
   ]);
 
@@ -303,7 +303,7 @@ test('destroying a building with a neutral unit does not end or crash the game',
       .set(vecB, Pioneer.create(0)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     AttackBuildingAction(vecA, vecB),
   ]);
 
@@ -329,7 +329,7 @@ test('win the game when converting a unit as a Zombie', async () => {
       .set(vecB, Infantry.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     AttackUnitAction(vecA, vecB),
   ]);
 
@@ -357,7 +357,7 @@ test('lose the game when the only unit attacks a building with a Zombie on it', 
       .set(vecB, Zombie.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     AttackBuildingAction(vecA, vecB),
   ]);
 
@@ -369,7 +369,7 @@ test('lose the game when the only unit attacks a building with a Zombie on it', 
     `);
 });
 
-test('lose game if you destroy the last unit of the opponent but miss your own win condition', () => {
+test('lose game if you destroy the last unit of the opponent but miss your own win condition', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
       map: [1, 8, 1, 1, 1, 1, 1, 1, 1],
@@ -409,7 +409,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
     units: initialMap.units.set(from, APU.create(1)).set(to, Bomber.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     AttackBuildingAction(from, to),
   ]);
 
@@ -432,12 +432,10 @@ test('game over through poison status effects', async () => {
       .set(vec(4, 4), Helicopter.create(player2)),
   });
 
-  const [gameStateA, gameActionResponseA] = executeGameActions(initialMap, [
-    EndTurnAction(),
-    EndTurnAction(),
-    EndTurnAction(),
-    EndTurnAction(),
-  ]);
+  const [gameStateA, gameActionResponseA] = await executeGameActions(
+    initialMap,
+    [EndTurnAction(), EndTurnAction(), EndTurnAction(), EndTurnAction()],
+  );
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
@@ -457,7 +455,7 @@ test('game over through poison status effects', async () => {
   printGameState('Final State', finalState);
   expect(finalState).toMatchImageSnapshot();
 
-  const [, gameActionResponseB] = executeGameActions(
+  const [, gameActionResponseB] = await executeGameActions(
     initialMap.copy({
       buildings: initialMap.buildings.set(vec(2, 2), Shelter.create(1)),
     }),
@@ -493,7 +491,7 @@ test('game over through activating a power', async () => {
       .set(vec(4, 4), Helicopter.create(player2)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
     ActivatePowerAction(skill),
   ]);
@@ -522,7 +520,7 @@ test('game over through activating a power', async () => {
     }),
   });
 
-  const [, gameActionResponseB] = executeGameActions(mapB, [
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
     EndTurnAction(),
     ActivatePowerAction(skill),
   ]);
@@ -561,6 +559,7 @@ test('game over through activating a power can beat more than one player', async
                 0,
                 null,
                 0,
+                null,
               ),
             ],
           ]),
@@ -577,7 +576,7 @@ test('game over through activating a power can beat more than one player', async
       .set(vec(1, 1), Flamethrower.create(3)),
   });
 
-  const [, gameActionResponseA] = executeGameActions(mapA, [
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
     ActivatePowerAction(skill),
   ]);
@@ -593,7 +592,7 @@ test('game over through activating a power can beat more than one player', async
     units: mapA.units.set(vec(1, 1), Flamethrower.create(3).setHealth(1)),
   });
 
-  const [, gameActionResponseB] = executeGameActions(mapB, [
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
     EndTurnAction(),
     ActivatePowerAction(skill),
   ]);

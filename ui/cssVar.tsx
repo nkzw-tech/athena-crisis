@@ -27,12 +27,15 @@ type GlobalCSSVariableName =
   | 'color-purple'
   | 'color-red'
   // UI
+  | 'color-gold-base'
+  | 'color-gold'
+  | 'color-orange-green'
+  | 'color-red-orange'
+  | 'color-silver'
   | 'error-color'
   | 'transform-origin'
-  | 'ui-scale'
   | 'ui-is-scaled'
-  | 'color-red-orange'
-  | 'color-orange-green'
+  | 'ui-scale'
   // Map Editor insets
   | 'inset'
   | 'inset-z'
@@ -175,10 +178,13 @@ export function initializeCSSVariables() {
   ${cssVar('color-pink', '195, 33, 127')}
   ${cssVar('color-purple', '157, 60, 255')}
   ${cssVar('color-red', '195, 46, 33')}
-
+  
   ${cssVar('color-red-orange', 'rgb(225, 102, 46.5)')}
   ${cssVar('color-orange-green', 'rgb(134.5, 160.5, 42)')}
-
+  ${cssVar('color-gold-base', '233, 179, 1')}
+  ${cssVar('color-gold', `rgb(${applyVar('color-gold-base')})`)}
+  ${cssVar('color-silver', 'rgb(235, 235, 235)')}
+  
   // Common Variables
   ${cssVar('error-color', '#c4362e')}
   ${cssVar('inset-z', 0)}

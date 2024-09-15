@@ -31,8 +31,14 @@ export default function maybeCreatePlayers(
             teamId,
             team.copy({
               players: ImmutableMap<PlayerID, Player>(
-                [...team.players].filter(([id]) => {
+                [...team.players].filter(([id, player]) => {
                   if (players.has(id)) {
+                    newPlayers.delete(id);
+                    return true;
+                  }
+
+                  const currentPlayer = map.maybeGetPlayer(id);
+                  if (currentPlayer && currentPlayer.type !== player.type) {
                     newPlayers.delete(id);
                     return true;
                   }

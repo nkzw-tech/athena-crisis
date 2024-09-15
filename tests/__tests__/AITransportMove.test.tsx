@@ -159,16 +159,18 @@ test('AI will hop between islands if necessary', async () => {
     }),
   );
 
-  const execute = (map: MapData) =>
-    executeGameAction(
-      map,
-      map.createVisionObject(player1),
-      new Map(),
-      EndTurnAction(),
-      AIRegistry,
+  const execute = async (map: MapData) =>
+    (
+      await executeGameAction(
+        map,
+        map.createVisionObject(player1),
+        new Map(),
+        EndTurnAction(),
+        AIRegistry,
+      )
     )[2];
 
-  const gameState = execute(map);
+  const gameState = await execute(map);
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5] }
@@ -177,7 +179,7 @@ test('AI will hop between islands if necessary', async () => {
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const secondGameState = execute(gameState!.at(-1)![1]);
+  const secondGameState = await execute(gameState!.at(-1)![1]);
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
     "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 26, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 277 }
     CompleteUnit (2,2)
@@ -185,7 +187,7 @@ test('AI will hop between islands if necessary', async () => {
   `);
 
   // Now try with fog:
-  const fogGameState = execute(
+  const fogGameState = await execute(
     map.copy({ config: map.config.copy({ fog: true }) }),
   );
 
@@ -196,7 +198,7 @@ test('AI will hop between islands if necessary', async () => {
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  const secondFogGameState = execute(fogGameState!.at(-1)![1]);
+  const secondFogGameState = await execute(fogGameState!.at(-1)![1]);
   expect(snapshotGameState(secondFogGameState)).toMatchInlineSnapshot(`
     "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 26, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 277 }
     CompleteUnit (2,2)
@@ -209,7 +211,7 @@ test('AI will hop between islands if necessary', async () => {
 });
 
 test('transporters do not stick to opposing naval units when loaded with other units', async () => {
-  const [gameState, gameActionResponse] = executeGameActions(map, [
+  const [gameState, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
   ]);
 
@@ -238,7 +240,7 @@ test('transporters do not stick to opposing air units on sea when loaded with ot
       .set(v3, Bomber.create(1)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(mapA, [
+  const [gameState, gameActionResponse] = await executeGameActions(mapA, [
     EndTurnAction(),
   ]);
 

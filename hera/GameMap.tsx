@@ -70,7 +70,6 @@ import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
-  AnimationSpeed,
   GameInfoState,
   GetLayerFunction,
   MapBehavior,
@@ -210,12 +209,12 @@ const getInitialState = (props: Props) => {
     map,
     mapName,
     paused,
+    playerDetails,
     scale,
     spectatorCodes,
     tileSize,
     timeout,
     unitSize,
-    userDisplayName,
   } = props;
   const isEditor = !!editor;
   const currentViewer = map.getPlayerByUserId(currentUserId)?.id || null;
@@ -243,7 +242,6 @@ const getInitialState = (props: Props) => {
     currentUserId,
     currentViewer,
     effectState: getEffectState(map, effects),
-    factionNames: props.factionNames,
     gameInfoState: null,
     initialBehaviorClass: baseBehavior,
     inlineUI: getInlineUIState(map, tileSize, scale),
@@ -255,6 +253,7 @@ const getInitialState = (props: Props) => {
     navigationDirection: null,
     objectiveRadius: getObjectiveRadius(map, currentViewer, isEditor),
     paused: paused || false,
+    playerDetails,
     position: null,
     preventRemoteActions: false,
     previousPosition: null,
@@ -274,7 +273,6 @@ const getInitialState = (props: Props) => {
     tileSize,
     timeout: timeout || null,
     unitSize,
-    userDisplayName,
     vision,
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
   };
@@ -293,6 +291,10 @@ type NativeTimeout = ReturnType<typeof setTimeout> | null;
 
 export default class GameMap extends Component<Props, State> {
   static defaultProps = {
+    animationSpeed: {
+      human: AnimationConfig,
+      regular: AnimationConfig,
+    },
     buildingSize: TileSize,
     confirmActionStyle: 'touch',
     scroll: true,
@@ -303,7 +305,6 @@ export default class GameMap extends Component<Props, State> {
 
   private _actionQueue: Promise<void> | null = null;
   private _actions: Actions;
-  private _animationSpeed: AnimationSpeed;
   private _controlListeners: Array<() => void> = [];
   private _isTouch = { current: false };
   private _lastEnteredPosition: Vector | null = null;
@@ -327,10 +328,6 @@ export default class GameMap extends Component<Props, State> {
     super(props);
 
     this.state = getInitialState(props);
-    this._animationSpeed = props.animationSpeed || {
-      human: AnimationConfig,
-      regular: AnimationConfig,
-    };
     this._timers = new Set();
     this._resolvers = [];
     this._actions = {
@@ -379,6 +376,16 @@ export default class GameMap extends Component<Props, State> {
       newState = {
         ...(newState || state),
         paused: !!props.paused,
+      };
+    }
+
+    if (
+      'playerDetails' in props &&
+      props.playerDetails !== state.playerDetails
+    ) {
+      newState = {
+        ...(newState || state),
+        playerDetails: props.playerDetails,
       };
     }
 
@@ -1046,7 +1053,7 @@ export default class GameMap extends Component<Props, State> {
           ...this._resetGameInfoState(),
           animationConfig: getCurrentAnimationConfig(
             currentPlayer,
-            this._animationSpeed,
+            this.props.animationSpeed,
           ),
           preventRemoteActions: true,
           replayState: {
@@ -1059,14 +1066,15 @@ export default class GameMap extends Component<Props, State> {
         },
         async () => {
           const { currentViewer } = this.state;
-          const { behavior, onError } = this.props;
+          const { animationSpeed, behavior, onError, playerHasReward } =
+            this.props;
           try {
             await processActionResponses(
               this.state,
               this._actions,
               gameActionResponses,
-              this._animationSpeed,
-              this.props.playerHasReward || (() => false),
+              animationSpeed,
+              playerHasReward || (() => false),
             );
           } catch (error) {
             if (onError) {
@@ -1094,7 +1102,7 @@ export default class GameMap extends Component<Props, State> {
               ...(resetBehavior(this.props.behavior) as State),
               animationConfig: getCurrentAnimationConfig(
                 currentPlayer,
-                this._animationSpeed,
+                this.props.animationSpeed,
               ),
               behavior:
                 lastActionResponse.type === 'GameEnd'
@@ -1763,6 +1771,7 @@ export default class GameMap extends Component<Props, State> {
               actions={this._actions}
               animationComplete={this._animationComplete}
               getLayer={getLayer}
+              scale={scale}
               skipBanners={skipBanners}
               state={this.state}
             />

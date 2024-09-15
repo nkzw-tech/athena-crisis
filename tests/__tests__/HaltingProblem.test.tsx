@@ -43,7 +43,7 @@ const play = async (map: MapData) => {
   let initialActionResponse: ActionResponse | null = null;
   let gameState: GameState | null = null;
   try {
-    [initialActionResponse, , gameState] = executeGameAction(
+    [initialActionResponse, , gameState] = await executeGameAction(
       map,
       map.createVisionObject(player1),
       new Map(),

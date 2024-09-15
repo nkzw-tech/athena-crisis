@@ -62,7 +62,7 @@ const map = withModifiers(
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 
 test('buildings appear properly when they are created in fog', async () => {
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     CreateBuildingAction(vec(1, 1), House.id),
     EndTurnAction(),
     CreateBuildingAction(vec(5, 5), Factory.id),

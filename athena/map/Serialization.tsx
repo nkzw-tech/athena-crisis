@@ -59,6 +59,7 @@ export function decodePlayers(
               player.charge || 0,
               decodePlayerStatistics(player.stats),
               player.misses || 0,
+              player.crystal ?? null,
             )
           : 'name' in player
             ? new Bot(

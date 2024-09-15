@@ -4,7 +4,7 @@ import { getCurrentFonts } from '../../i18n/getLocale.tsx';
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d')!;
 
-export default function measure(
+export default function measureText(
   text: string,
   containerWidth: number,
   { fontSize, letterSpacing } = {

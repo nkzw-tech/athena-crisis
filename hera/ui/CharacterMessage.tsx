@@ -20,12 +20,13 @@ import {
   BaseAnimationProps,
   CharacterMessageAnimation,
 } from '../MapAnimations.tsx';
+import { PlayerDetails } from '../Types.tsx';
 import formatCharacterText from './lib/formatCharacterText.tsx';
 import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
 type Props = Omit<CharacterMessageAnimation, 'onComplete'> &
-  BaseAnimationProps & { userDisplayName: string };
+  BaseAnimationProps & { playerDetails: PlayerDetails };
 
 const sizes = {
   fontSize: 9,
@@ -35,14 +36,13 @@ const sizes = {
 
 const MessageComponent = ({
   animationConfig,
-  factionNames,
   map,
   onComplete,
   player,
+  playerDetails,
   position,
   text,
   unitId,
-  userDisplayName,
   variant,
   viewer,
 }: Props) => {
@@ -79,15 +79,7 @@ const MessageComponent = ({
   const viewerIsPlayer = viewer != null && viewer === player;
   const nameType = viewerIsPlayer ? 'characterName' : 'name';
   const [currentText, setCurrentText] = useState(() =>
-    formatCharacterText(
-      text,
-      unit,
-      nameType,
-      map,
-      userDisplayName,
-      player,
-      factionNames,
-    ),
+    formatCharacterText(text, unit, nameType, map, player, playerDetails),
   );
   const [currentLine, setCurrentLine] = useState(0);
   const [clientWidth, setClientWidth] = useState<number>(

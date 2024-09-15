@@ -56,7 +56,7 @@ test('unit can unfold and can change style', async () => {
     initialMap.units.get(from)?.canAttackAt(from.distance(to), player1),
   ).toBe(false);
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     UnfoldAction(from),
     EndTurnAction(),
     EndTurnAction(),

@@ -1,24 +1,25 @@
-import { CaptureGameOverActionResponse } from '@deities/apollo/Objective.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import { sortVectors } from '@deities/athena/map/Vector.tsx';
+import { fbt } from 'fbt';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { Actions, State, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import explodeUnits from './explodeUnits.tsx';
-import getPlayerDefeatedMessage from './getPlayerDefeatedMessage.tsx';
+import getTranslatedFactionName from './getTranslatedFactionName.tsx';
+import getUserDisplayName from './getUserDisplayName.tsx';
 
 export default function addPlayerLoseAnimation(
   actions: Actions,
-  actionResponse: CaptureGameOverActionResponse,
   state: State,
   player: Player,
+  abandoned: boolean,
   onComplete: StateToStateLike,
 ) {
   return {
     animations: state.animations.set(new AnimationKey(), {
-      color: actionResponse.fromPlayer,
-      length: 'short',
+      color: player.id,
+      length: 'medium',
       onComplete: (state) => {
         const { map } = state;
         const unitsToExplode = map.units
@@ -34,11 +35,24 @@ export default function addPlayerLoseAnimation(
           ),
         };
       },
-      player: actionResponse.fromPlayer,
+      player: player.id,
       sound: null,
-      text: getPlayerDefeatedMessage(
-        state.factionNames,
-        actionResponse.fromPlayer,
+      text: String(
+        abandoned
+          ? fbt(
+              fbt.param(
+                'user',
+                getUserDisplayName(state.playerDetails, player.id),
+              ) + ' abandoned this game and disappeared!',
+              'Player was defeated',
+            )
+          : fbt(
+              fbt.param(
+                'color',
+                getTranslatedFactionName(state.playerDetails, player.id),
+              ) + ' was defeated!',
+              'Player was defeated',
+            ),
       ),
       type: 'banner',
     }),

@@ -1,6 +1,11 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
+import {
+  Crystal,
+  CrystalMap,
+  PowerCrystal,
+} from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
@@ -16,8 +21,10 @@ import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import useActive from '@deities/ui/controls/useActive.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
+import useMenuNavigation from '@deities/ui/controls/useMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dialog, {
   DialogScrollContainer,
@@ -28,6 +35,7 @@ import Dialog, {
 import getColor from '@deities/ui/getColor.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -39,7 +47,7 @@ import { fbt } from 'fbt';
 import {
   Fragment,
   memo,
-  ReactNode,
+  ReactElement,
   useCallback,
   useMemo,
   useState,
@@ -49,25 +57,28 @@ import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
 import TileCard from '../card/TileCard.tsx';
 import UnitCard from '../card/UnitCard.tsx';
+import CrystalCard from '../invasions/CrystalCard.tsx';
 import getClientViewer from '../lib/getClientViewer.tsx';
 import getTranslatedPerformanceStyleTypeName from '../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../lib/getTranslatedPerformanceTypeName.tsx';
 import ObjectiveDescription from '../objectives/ObjectiveDescription.tsx';
 import {
   CurrentGameInfoState,
-  FactionNames,
   LeaderInfoState,
   MapInfoState,
-  SkillInfoState,
+  PlayerDetails,
+  PlayerEffectInfoState,
+  PlayerEffectItem,
   State,
 } from '../Types.tsx';
 import Comparator from './Comparator.tsx';
-import SkillDialog, { SkillIcon } from './SkillDialog.tsx';
+import CrystalIcon from './CrystalIcon.tsx';
+import { SkillContainer, SkillIcon } from './SkillDialog.tsx';
 
 type GameDialogState = Pick<
   State,
   | 'currentViewer'
-  | 'factionNames'
+  | 'playerDetails'
   | 'gameInfoState'
   | 'lastActionResponse'
   | 'map'
@@ -81,32 +92,16 @@ type MapInfoPanelState = Readonly<
   | { type: 'none' }
 >;
 
-const MapInfoTab = ({
-  children,
-  end,
-  highlight,
-  onClick,
-}: {
-  children: ReactNode;
-  end?: boolean;
-  highlight?: boolean;
-  onClick?: () => void;
-}) => (
-  <DialogTab end={end} highlight={highlight} onClick={onClick}>
-    {children}
-  </DialogTab>
-);
-
 const MapInfoPanel = memo(function MapInfoPanel({
   currentViewer,
-  factionNames,
   info,
   map,
+  playerDetails,
 }: {
   currentViewer: PlayerID | null;
-  factionNames: FactionNames;
   info: MapInfoState | LeaderInfoState;
   map: MapData;
+  playerDetails: PlayerDetails;
 }) {
   const unit = info.unit;
   const { building, tile } =
@@ -175,8 +170,8 @@ const MapInfoPanel = memo(function MapInfoPanel({
         <Stack gap={16} vertical>
           {panel.type === 'unit' ? (
             <UnitCard
-              factionNames={factionNames}
               map={map}
+              playerDetails={playerDetails}
               {...info}
               {...panel}
               viewer={currentViewer}
@@ -185,8 +180,8 @@ const MapInfoPanel = memo(function MapInfoPanel({
             <LeaderCard {...info} {...panel} viewer={currentViewer} />
           ) : panel.type === 'building' ? (
             <BuildingCard
-              factionNames={factionNames}
               map={map}
+              playerDetails={playerDetails}
               {...info}
               {...panel}
             />
@@ -202,23 +197,23 @@ const MapInfoPanel = memo(function MapInfoPanel({
       </DialogScrollContainer>
       <DialogTabBar>
         {unitState && (
-          <MapInfoTab
+          <DialogTab
             highlight={panel.type === 'unit'}
             onClick={() => setPanel(unitState)}
           >
             <fbt desc="Label for unit tab">Unit</fbt>
-          </MapInfoTab>
+          </DialogTab>
         )}
         {leaderState && (
-          <MapInfoTab
+          <DialogTab
             highlight={panel.type === 'leader'}
             onClick={() => setPanel(leaderState)}
           >
             <LeaderTitle gender={leaderState.unit.info.gender} />
-          </MapInfoTab>
+          </DialogTab>
         )}
         {buildingState && (
-          <MapInfoTab
+          <DialogTab
             highlight={panel.type === 'building'}
             onClick={() => setPanel(buildingState)}
           >
@@ -227,24 +222,24 @@ const MapInfoPanel = memo(function MapInfoPanel({
             ) : (
               <fbt desc="Label for building tab">Building</fbt>
             )}
-          </MapInfoTab>
+          </DialogTab>
         )}
         {tileState && (
-          <MapInfoTab
+          <DialogTab
             highlight={panel.type === 'tile'}
             onClick={() => setPanel(tileState)}
           >
             <fbt desc="Label for field tab">Field</fbt>
-          </MapInfoTab>
+          </DialogTab>
         )}
         {info.type === 'map-info' && info.create && (unit || building) && (
-          <MapInfoTab end onClick={info.create}>
+          <DialogTab end onClick={info.create}>
             {unit ? (
               <fbt desc="Button to create a unit">Deploy</fbt>
             ) : building ? (
               <fbt desc="Button to create a building">Build</fbt>
             ) : null}
-          </MapInfoTab>
+          </DialogTab>
         )}
       </DialogTabBar>
     </>
@@ -392,22 +387,29 @@ const objectivesPanel = Symbol('objectives');
 const GameInfoPanel = memo(function GameInfoPanel({
   currentViewer,
   endGame,
-  factionNames,
   gameInfoState,
   lastActionResponse,
   map,
+  playerDetails,
 }: {
   currentViewer: PlayerID | null;
   endGame?: () => void;
-  factionNames: FactionNames;
   gameInfoState: CurrentGameInfoState;
   lastActionResponse: ActionResponse | null;
   map: MapData;
+  playerDetails: PlayerDetails;
 }) {
   const {
     config: { objectives },
   } = map;
 
+  const player =
+    currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
+  const isCurrentPlayer = player?.id === map.getCurrentPlayer().id;
+  const canAbandon =
+    player?.isHumanPlayer() &&
+    player.crystal != null &&
+    player.crystal !== PowerCrystal;
   const hasEnded = lastActionResponse?.type === 'GameEnd';
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
 
@@ -419,16 +421,21 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const { alert } = useAlert();
   const onGiveUp = useCallback(() => {
-    if (!hasEnded && endGame) {
+    if (isCurrentPlayer && !hasEnded && endGame) {
       alert({
         onAccept: endGame,
-        text: fbt(
-          'Are you sure you want to give up and restart this map?',
-          'Confirmation dialog to give up.',
-        ),
+        text: canAbandon
+          ? fbt(
+              'Are you sure you want to abandon this map? You will not receive any Chaos Stars.',
+              'Confirmation dialog to abandon (give up) a map.',
+            )
+          : fbt(
+              'Are you sure you want to give up and restart this map?',
+              'Confirmation dialog to give up.',
+            ),
       });
     }
-  }, [hasEnded, endGame, alert]);
+  }, [isCurrentPlayer, hasEnded, endGame, alert, canAbandon]);
 
   useInput(
     'secondary',
@@ -473,9 +480,9 @@ const GameInfoPanel = memo(function GameInfoPanel({
               </p>
               {requiredObjectives?.map(([id, objective]) => (
                 <ObjectiveDescription
-                  factionNames={factionNames}
                   key={id}
                   objective={objective}
+                  playerDetails={playerDetails}
                   round={map.round}
                 />
               ))}
@@ -488,9 +495,9 @@ const GameInfoPanel = memo(function GameInfoPanel({
                   </p>
                   {optionalObjectives.map(([id, objective]) => (
                     <ObjectiveDescription
-                      factionNames={factionNames}
                       key={id}
                       objective={objective}
+                      playerDetails={playerDetails}
                       round={map.round}
                     />
                   ))}
@@ -502,26 +509,30 @@ const GameInfoPanel = memo(function GameInfoPanel({
         )}
       </DialogScrollContainer>
       <DialogTabBar>
-        <MapInfoTab
+        <DialogTab
           highlight={panel === objectivesPanel}
           onClick={() => setPanel(objectivesPanel)}
         >
           <fbt desc="Label for win condition tab">Objectives</fbt>
-        </MapInfoTab>
+        </DialogTab>
         {gameInfoState.panels &&
           [...gameInfoState.panels].map(([panelName, { title }]) => (
-            <MapInfoTab
+            <DialogTab
               highlight={panel === panelName}
               key={panelName}
               onClick={() => setPanel(panelName)}
             >
               {title}
-            </MapInfoTab>
+            </DialogTab>
           ))}
         {!hasEnded && endGame && (
-          <MapInfoTab end onClick={onGiveUp}>
-            <fbt desc="Button to give up">Give Up</fbt>
-          </MapInfoTab>
+          <DialogTab disabled={!isCurrentPlayer} end onClick={onGiveUp}>
+            {canAbandon ? (
+              <fbt desc="Button to abandon (give up)">Abandon</fbt>
+            ) : (
+              <fbt desc="Button to give up">Give Up</fbt>
+            )}
+          </DialogTab>
         )}
       </DialogTabBar>
     </>
@@ -532,7 +543,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
   gameInfoState,
   spectatorCodes,
-  state: { currentViewer, factionNames, lastActionResponse, map },
+  state: { currentViewer, lastActionResponse, map, playerDetails },
 }: {
   endGame?: () => void;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
@@ -548,10 +559,10 @@ const GameDialogPanel = memo(function GameDialogPanel({
         <GameInfoPanel
           currentViewer={getClientViewer(map, currentViewer, spectatorCodes)}
           endGame={endGame}
-          factionNames={factionNames}
           gameInfoState={gameInfoState}
           lastActionResponse={lastActionResponse || null}
           map={map}
+          playerDetails={playerDetails}
         />
       );
     }
@@ -560,9 +571,9 @@ const GameDialogPanel = memo(function GameDialogPanel({
       return (
         <MapInfoPanel
           currentViewer={currentViewer}
-          factionNames={factionNames}
           info={gameInfoState}
           map={map}
+          playerDetails={playerDetails}
         />
       );
     default: {
@@ -572,83 +583,302 @@ const GameDialogPanel = memo(function GameDialogPanel({
   }
 });
 
-const GameSkillDialog = ({
+const GamePlayerEffectDialog = ({
   gameInfoState: {
     action,
     actionName,
+    activeCrystal,
     canAction,
     charges,
-    currentSkill: initialSkill,
+    crystalMap,
+    crystals,
+    currentItem: initialItem,
     origin,
     showAction,
     showCost,
     skills,
+    spectatorLink,
   },
   onClose,
 }: {
-  gameInfoState: SkillInfoState;
+  gameInfoState: PlayerEffectInfoState;
   onClose: () => void | Promise<void>;
 }) => {
-  const [currentSkill, setCurrentSkill] = useState(initialSkill);
-  useDialogNavigation(
-    skills,
-    skills?.indexOf(currentSkill) ?? -1,
-    setCurrentSkill,
+  const [currentItem, setCurrentItem] = useState(initialItem);
+  const items = useMemo(
+    () =>
+      [
+        ...(skills?.map((skill) => ({ skill, type: 'Skill' }) as const) || []),
+        ...(crystals?.map(
+          (crystal) => ({ crystal, type: 'Crystal' }) as const,
+        ) || []),
+      ] as const,
+    [skills, crystals],
   );
 
-  const onAction = useCallback(
+  useDialogNavigation(
+    items,
+    items?.findIndex(
+      (item) =>
+        (item.type === 'Skill' &&
+          item.type === currentItem.type &&
+          item.skill === currentItem.skill) ||
+        (item.type === 'Crystal' &&
+          item.type === currentItem.type &&
+          item.crystal === currentItem.crystal),
+    ) ?? -1,
+    setCurrentItem,
+  );
+
+  useBlockInput('dialog');
+
+  const onSkillAction = useCallback(
     async (skill: Skill | null) => {
       await onClose();
-      action?.(skill);
+      if (skill) {
+        action?.({ skill, type: 'Skill' });
+      }
     },
     [action, onClose],
   );
 
-  return (
-    <SkillDialog
-      actionName={actionName}
-      availableSkills={new Set([currentSkill])}
-      canAction={canAction}
-      currentSkill={currentSkill}
-      focus
-      onAction={action ? onAction : undefined}
-      onClose={onClose}
-      onSelect={action ? onAction : undefined}
-      showAction={showAction}
-      showCost={showCost}
-      size="small"
-      tabs={skills?.map((skill, index) => (
+  const onAction = useCallback(
+    async (item: PlayerEffectItem) => {
+      await onClose();
+      action?.(item);
+    },
+    [action, onClose],
+  );
+
+  const tabs = useMemo(
+    () => [
+      ...(skills?.map((skill, index) => (
         <DialogTab
-          highlight={currentSkill === skill}
+          highlight={
+            currentItem.type === 'Skill' && currentItem.skill === skill
+          }
           isIcon
-          key={index}
-          onClick={() => setCurrentSkill(skill)}
+          key={`skill-${index}`}
+          onClick={() => setCurrentItem({ skill, type: 'Skill' })}
         >
           <SkillIcon hideDialog skill={skill} />
         </DialogTab>
-      ))}
+      )) || []),
+      ...(crystals?.map((crystal, index) => (
+        <DialogTab
+          highlight={
+            currentItem.type === 'Crystal' && currentItem.crystal === crystal
+          }
+          isIcon
+          key={`crystal-${index}`}
+          onClick={() => setCurrentItem({ crystal, type: 'Crystal' })}
+        >
+          <CrystalIcon animate={false} crystal={crystal} />
+        </DialogTab>
+      )) || []),
+    ],
+    [crystals, currentItem, skills],
+  );
+
+  const currentSkill = currentItem.type === 'Skill' ? currentItem.skill : null;
+  const currentCrystal =
+    currentItem.type === 'Crystal' ? currentItem.crystal : null;
+
+  return (
+    <Dialog
+      onClose={onClose}
+      size={currentSkill ? 'small' : 'medium'}
       transformOrigin={origin}
     >
-      {charges != null && (
-        <Stack className={boxStyle} gap vertical>
-          <p>
-            <fbt desc="Number of current available charges">
-              You currently have <fbt:param name="charges">{charges}</fbt:param>{' '}
-              <fbt:plural
-                count={charges}
-                many="charges"
-                name="number of charges"
-              >
-                charge
-              </fbt:plural>. Your charge bar fills up through attacks during
-              battle.
-            </fbt>
-          </p>
-        </Stack>
-      )}
-    </SkillDialog>
+      {currentSkill != null ? (
+        <SkillContainer
+          actionName={actionName}
+          availableSkills={new Set([currentSkill])}
+          canAction={
+            canAction
+              ? (skill) => canAction({ skill, type: 'Skill' })
+              : undefined
+          }
+          currentSkill={currentSkill}
+          focus
+          onAction={action ? onSkillAction : undefined}
+          onClose={onClose}
+          onSelect={action ? onSkillAction : undefined}
+          showCost={showCost}
+        >
+          {charges != null && (
+            <InfoBox gap vertical>
+              <p>
+                <fbt desc="Number of current available charges">
+                  You currently have{' '}
+                  <fbt:param name="charges">{charges}</fbt:param>{' '}
+                  <fbt:plural
+                    count={charges}
+                    many="charges"
+                    name="number of charges"
+                  >
+                    charge
+                  </fbt:plural>. Your charge bar fills up through attacks during
+                  battle.
+                </fbt>
+              </p>
+            </InfoBox>
+          )}
+        </SkillContainer>
+      ) : currentCrystal != null ? (
+        <CrystalContainer
+          activeCrystal={activeCrystal}
+          canAction={canAction}
+          crystal={currentCrystal}
+          crystalMap={crystalMap}
+          onAction={onAction}
+          onClose={onClose}
+          spectatorLink={spectatorLink || null}
+        />
+      ) : null}
+      <DialogTabBar>
+        {tabs}
+        {(!showAction || showAction(currentItem)) && (
+          <DialogTab
+            disabled={canAction ? !canAction(currentItem) : false}
+            end
+            onClick={() => onAction(currentItem)}
+          >
+            {actionName}
+          </DialogTab>
+        )}
+      </DialogTabBar>
+    </Dialog>
   );
 };
+
+const CrystalContainer = ({
+  activeCrystal,
+  canAction,
+  crystal,
+  crystalMap,
+  onAction,
+  onClose,
+  spectatorLink,
+}: {
+  activeCrystal: Crystal | null | undefined;
+  canAction: ((item: PlayerEffectItem) => boolean) | undefined;
+  crystal: Crystal;
+  crystalMap?: CrystalMap;
+  onAction: (item: PlayerEffectItem) => void;
+  onClose: () => void | Promise<void>;
+  spectatorLink: ReactElement | null;
+}) => {
+  const isPowerCrystal = crystal === PowerCrystal;
+
+  const onSelect = useCallback(() => {
+    if (!canAction || canAction({ crystal, type: 'Crystal' })) {
+      onAction({ crystal, type: 'Crystal' });
+    }
+  }, [canAction, crystal, onAction]);
+
+  useInput(
+    'accept',
+    useCallback(
+      (event) => {
+        event.preventDefault();
+        onSelect();
+      },
+      [onSelect],
+    ),
+    'dialog',
+  );
+
+  useInput(
+    'cancel',
+    useCallback(
+      (event) => {
+        event.preventDefault();
+
+        onClose();
+      },
+      [onClose],
+    ),
+    // Has to be on top in order not to interfere with the Map.
+    'top',
+  );
+
+  useBlockInput('dialog');
+
+  const [selected, active] = useMenuNavigation(1, 'dialog');
+  useActive(active === 0, onSelect);
+
+  return (
+    <DialogScrollContainer key={`crystal-${crystal}`} navigate>
+      <Stack gap={16} vertical>
+        <h2>
+          {activeCrystal === crystal ? (
+            <fbt desc="Headline for crystal dialog">Active Crystal</fbt>
+          ) : (
+            <fbt desc="Headline for crystal dialog">Crystal</fbt>
+          )}
+        </h2>
+        <div
+          className={cx(
+            crystalBoxStyle,
+            selected === 0 && crystalSelectedBoxStyle,
+          )}
+          onClick={onSelect}
+        >
+          <CrystalCard crystal={crystal} />
+        </div>
+        {isPowerCrystal && spectatorLink}
+        {activeCrystal == null && crystalMap != null && (
+          <InfoBox>
+            <p>
+              <fbt desc="Number of current available crystals">
+                You currently have{' '}
+                <fbt:param name="crystals">
+                  {crystalMap.get(crystal) || 0}
+                </fbt:param>{' '}
+                <fbt:plural
+                  count={crystalMap.get(crystal) || 0}
+                  many="crystals"
+                  name="number of crystals"
+                >
+                  crystal
+                </fbt:plural>{' '}
+                of this type. You can buy more crystals in the shop.
+              </fbt>
+            </p>
+          </InfoBox>
+        )}
+        {isPowerCrystal && (
+          <InfoBox style={{ backgroundColor: getColor('orange', 0.3) }}>
+            <p>
+              <fbt desc="Explanation for invasion mechanics">
+                This game turns into a realtime game if another player invades
+                your world.
+              </fbt>
+            </p>
+          </InfoBox>
+        )}
+      </Stack>
+    </DialogScrollContainer>
+  );
+};
+
+const crystalBoxStyle = css`
+  cursor: pointer;
+  padding: 4px;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    ${clipBorder()}
+    background-color: ${applyVar('background-color')};
+  }
+`;
+
+const crystalSelectedBoxStyle = css`
+  ${clipBorder()}
+
+  background-color: ${applyVar('background-color')};
+`;
 
 export default memo(function GameDialog({
   endGame,
@@ -665,8 +895,11 @@ export default memo(function GameDialog({
   const create = gameInfoState?.type === 'map-info' && gameInfoState.create;
   return gameInfoState ? (
     <Portal>
-      {gameInfoState.type === 'skill' ? (
-        <GameSkillDialog gameInfoState={gameInfoState} onClose={onClose} />
+      {gameInfoState.type === 'player-effect' ? (
+        <GamePlayerEffectDialog
+          gameInfoState={gameInfoState}
+          onClose={onClose}
+        />
       ) : (
         <Dialog onClose={onClose} transformOrigin={gameInfoState.origin}>
           <GameDialogPanel
@@ -727,11 +960,4 @@ const failedStyle = css`
 
 const zapStyle = css`
   margin: -2px 4px 2px 0;
-`;
-
-const boxStyle = css`
-  ${clipBorder()}
-
-  background: ${applyVar('background-color')};
-  padding: 12px;
 `;

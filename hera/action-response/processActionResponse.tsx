@@ -1,6 +1,7 @@
 import type { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
+import getLosingPlayer from '@deities/apollo/lib/getLosingPlayer.tsx';
 import getMatchingTeam from '@deities/apollo/lib/getMatchingTeam.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import {
@@ -26,8 +27,10 @@ import animateFireworks, {
 } from '../animations/animateFireworks.tsx';
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import receiveBiomeAnimation from '../animations/receiveBiomeAnimation.tsx';
+import receiveCrystalAnimation from '../animations/receiveCrystalAnimation.tsx';
 import receivePortraitAnimation from '../animations/receivePortraitAnimation.tsx';
 import receiveSkillSlotAnimation from '../animations/receiveSkillSlotAnimation.tsx';
+import activateCrystalAction from '../behavior/activateCrystal/activateCrystalAction.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
 import {
@@ -52,12 +55,12 @@ import sabotageAction, {
 import unfoldAction from '../behavior/unfold/unfoldAction.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import translateMessage from '../i18n/translateMessage.tsx';
+import abandonInvasion from '../lib/abandonInvasion.tsx';
 import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
 import addPlayerLoseAnimation from '../lib/addPlayerLoseAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
 import getCurrentAnimationConfig from '../lib/getCurrentAnimationConfig.tsx';
-import getPlayerDefeatedMessage from '../lib/getPlayerDefeatedMessage.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import isFakeEndTurn from '../lib/isFakeEndTurn.tsx';
 import isSkillRewardActionResponse from '../lib/isSkillRewardActionResponse.tsx';
@@ -94,7 +97,7 @@ async function processActionResponse(
   },
   playerHasReward: PlayerHasRewardFunction,
 ): Promise<State | null> {
-  const { factionNames, map, vision } = state;
+  const { map, playerDetails, vision } = state;
   const { requestFrame, scrollIntoView, update } = actions;
   const { type } = actionResponse;
   let newState: State;
@@ -293,7 +296,6 @@ async function processActionResponse(
 
       await update((state) => ({
         animations: state.animations.set(new AnimationKey(), {
-          factionNames,
           map,
           onComplete: (state) => {
             resolve({ ...state, namedPositions: null, radius: null });
@@ -433,52 +435,36 @@ async function processActionResponse(
       return hiddenTargetAttackAction(actions, state, actionResponse);
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
-      await update((state) => ({
-        animations: state.animations.set(new AnimationKey(), {
-          color: actionResponse.fromPlayer,
-          length: 'short',
-          onComplete: (state) => {
-            resolve({
-              ...state,
-              map: newMap,
-            });
-            return null;
-          },
-          player: actionResponse.fromPlayer,
-          sound: null,
-          text: getPlayerDefeatedMessage(
-            factionNames,
-            actionResponse.fromPlayer,
-          ),
-          type: 'banner',
-        }),
-      }));
-      break;
-    case 'BeginTurnGameOver': {
-      requestFrame(() =>
-        resolve({
-          ...state,
-          map: newMap,
-        }),
-      );
-      break;
-    }
+    case 'BeginTurnGameOver':
     case 'CaptureGameOver': {
-      await update((state) =>
-        addPlayerLoseAnimation(
-          actions,
-          actionResponse,
-          state,
-          map.getPlayer(actionResponse.fromPlayer),
-          (state) => {
-            resolve({
-              ...state,
-              map: newMap,
-            });
-            return null;
-          },
-        ),
-      );
+      const abandoned =
+        actionResponse.type === 'BeginTurnGameOver' &&
+        !!actionResponse.abandoned;
+      const losingPlayer = getLosingPlayer(map, actionResponse);
+      if (losingPlayer) {
+        await update((state) =>
+          addPlayerLoseAnimation(
+            actions,
+            state,
+            map.getPlayer(losingPlayer),
+            abandoned,
+            (state) => {
+              resolve({
+                ...state,
+                map: newMap,
+              });
+              return null;
+            },
+          ),
+        );
+      } else {
+        requestFrame(() =>
+          resolve({
+            ...state,
+            map: newMap,
+          }),
+        );
+      }
       break;
     }
     case 'GameEnd': {
@@ -488,7 +474,7 @@ async function processActionResponse(
         await update((currentState) => ({
           ...state,
           animations: currentState.animations.set(new AnimationKey(), {
-            length: 'short',
+            length: 'medium',
             player: 0,
             sound: null,
             text: String(fbt(`The game ended in a draw!`, 'Draw')),
@@ -500,17 +486,17 @@ async function processActionResponse(
 
       const winners = [...team.players.map(({ id }) => id).values()];
       const winnerList = intlList(
-        winners.map(getTranslatedFactionName.bind(null, factionNames)),
+        winners.map(getTranslatedFactionName.bind(null, playerDetails)),
         Conjunctions.AND,
         Delimiters.COMMA,
       );
       const fireworks =
-        state.currentViewer && winners.includes(state.currentViewer) ? 7 : 3;
+        state.currentViewer && winners.includes(state.currentViewer) ? 5 : 3;
       await update((currentState) => ({
         ...state,
         animations: currentState.animations.set(new AnimationKey(), {
           color: winners,
-          length: 'short',
+          length: 'medium',
           onComplete: (state) =>
             animateFireworks(
               state,
@@ -590,6 +576,7 @@ async function processActionResponse(
             `${actionResponse.type} - ${rewardType}`,
           );
         }
+        case 'Crystal':
         case 'Biome':
         case 'SkillSlot':
         case 'UnitPortraits': {
@@ -600,6 +587,8 @@ async function processActionResponse(
           ) {
             if (rewardType === 'Biome') {
               return receiveBiomeAnimation(actions, state, actionResponse);
+            } else if (rewardType === 'Crystal') {
+              return receiveCrystalAnimation(actions, state, actionResponse);
             } else if (rewardType === 'SkillSlot') {
               return receiveSkillSlotAnimation(actions, state, actionResponse);
             } else if (rewardType === 'UnitPortraits') {
@@ -610,7 +599,6 @@ async function processActionResponse(
         }
         case 'Keyart':
           break;
-
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError(
@@ -630,6 +618,18 @@ async function processActionResponse(
     }
     case 'ActivatePower':
       return activatePowerAction(actions, state, actionResponse);
+    case 'AbandonInvasion':
+      state = await update(abandonInvasion(state, actionResponse.name));
+
+      requestFrame(() =>
+        resolve({
+          ...state,
+          map: newMap,
+        }),
+      );
+      break;
+    case 'ActivateCrystal':
+      return activateCrystalAction(actions, actionResponse);
     case 'OptionalObjective':
     case 'SecretDiscovered':
       return objectiveAnimation(newMap, actions, state, actionResponse);

@@ -4,6 +4,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
 import useClientGame from '@deities/hera/hooks/useClientGame.tsx';
 import useClientGameAction from '@deities/hera/hooks/useClientGameAction.tsx';
+import useClientGamePlayerDetails from '@deities/hera/hooks/useClientGamePlayerDetails.tsx';
 import GameActions from '@deities/hera/ui/GameActions.tsx';
 import MapInfo from '@deities/hera/ui/MapInfo.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
@@ -15,6 +16,12 @@ prepareSprites();
 const startAction = {
   type: 'Start',
 } as const;
+
+const viewer = {
+  displayName: 'Player',
+  factionName: 'Athena',
+  id: 'User-Demo',
+};
 
 export default function PlaygroundGame({
   map,
@@ -35,12 +42,12 @@ export default function PlaygroundGame({
   const zoom = useScale();
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: '-20% 0px 6% 0px' });
+  const playerDetails = useClientGamePlayerDetails(map, viewer);
 
   return (
     <div ref={ref}>
       <GameMap
         currentUserId={userId}
-        factionNames={new Map()}
         fogStyle="soft"
         key="play-demo-map"
         lastActionResponse={game.lastAction}
@@ -49,11 +56,11 @@ export default function PlaygroundGame({
         onAction={onAction}
         pan
         paused={!isInView}
+        playerDetails={playerDetails}
         scale={zoom}
         scroll={false}
         style="floating"
         tilted
-        userDisplayName="Player"
       >
         {(props, actions) => {
           const hide =

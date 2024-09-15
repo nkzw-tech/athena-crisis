@@ -1,7 +1,7 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { fbt } from 'fbt';
-import { FactionNames } from '../Types.tsx';
+import { PlayerDetails } from '../Types.tsx';
 import getTranslatedColorName from './getTranslatedColorName.tsx';
 
 const toFactionName = (player: PlayerID) => {
@@ -29,10 +29,10 @@ const toFactionName = (player: PlayerID) => {
 };
 
 export default function getTranslatedFactionName(
-  factionNames: FactionNames,
+  playerDetails: PlayerDetails,
   player: PlayerID,
 ) {
-  const factionName = factionNames.get(player);
+  const factionName = playerDetails.get(player)?.factionName;
   if (factionName) {
     return `${getTranslatedColorName(player)} ${factionName}`;
   }

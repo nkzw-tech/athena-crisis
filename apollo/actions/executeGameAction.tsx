@@ -77,24 +77,43 @@ export function executeAIAction(
   return [gameState, effects];
 }
 
-export default function executeGameAction(
+export default async function executeGameAction(
   map: MapData,
   vision: VisionT,
   effects: Effects,
   action: Action,
   AIRegistry: AIRegistryT | null,
   mutateAction?: MutateActionResponseFn,
-): [ActionResponse, MapData, GameState, Effects] | [null, null, null, null] {
+  onEndTurn?: (map: MapData) => Promise<GameState | null>,
+): Promise<
+  [ActionResponse, MapData, GameState, Effects] | [null, null, null, null]
+> {
   const actionResult = execute(map, vision, action, mutateAction);
   if (!actionResult) {
     return [null, null, null, null];
   }
   const [actionResponse, activeMap] = actionResult;
-  const [gameState, newEffects] = applyConditions(map, effects, actionResponse);
-  const lastMap = gameState.at(-1)?.[1] || activeMap;
+  // eslint-disable-next-line prefer-const
+  let [gameState, newEffects] = applyConditions(map, effects, actionResponse);
+  let lastMap = gameState.at(-1)?.[1] || activeMap;
+  const hasEnded = gameHasEnded(gameState);
+
+  if (
+    onEndTurn &&
+    !hasEnded &&
+    (actionResponse.type === 'EndTurn' ||
+      gameState?.some(([{ type }]) => type === 'EndTurn'))
+  ) {
+    const endTurnGameState = await onEndTurn(lastMap);
+    if (endTurnGameState?.length) {
+      gameState = [...gameState, ...endTurnGameState];
+      lastMap = gameState.at(-1)![1]!;
+    }
+  }
+
   const shouldInvokeAI = !!(
     AIRegistry &&
-    !gameHasEnded(gameState) &&
+    !hasEnded &&
     lastMap.getCurrentPlayer().isBot()
   );
   return [

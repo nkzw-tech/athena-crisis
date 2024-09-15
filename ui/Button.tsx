@@ -16,7 +16,7 @@ import { applyVar } from './cssVar.tsx';
 import useScrollIntoView from './hooks/useScrollIntoView.tsx';
 import Link from './Link.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import { PulseStyle } from './RainbowPulseStyle.tsx';
+import { PulseStyle } from './PulseStyle.tsx';
 
 type OnClickFn = () => void;
 
@@ -42,7 +42,10 @@ export default memo(function Button({
   const click = useCallback(() => {
     AudioPlayer.playSound('UI/Accept');
     onClick?.();
-  }, [onClick]);
+    if (!to && props.href) {
+      window.open(props.href);
+    }
+  }, [onClick, props.href, to]);
 
   const setRefs = useCallback(
     (anchorElement: HTMLAnchorElement | null) => {

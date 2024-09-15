@@ -170,9 +170,9 @@ const Card = ({
           )}
         </Stack>
         <StarIcon
-          achieved={achieved}
           className={achieved ? achievedAnimationStyle : missedAnimationStyle}
           starClassName={achieved ? achievedStarAnimationStyle : undefined}
+          type={achieved ? 'achieved' : 'missed'}
         />
       </Stack>
     </motion.div>
@@ -234,9 +234,9 @@ const SummaryCard = ({
         >
           {result.map(([type, achieved]) => (
             <StarIcon
-              achieved={achieved}
               className={cx(summaryStarStyle, instant && instantStyle)}
               key={type}
+              type={achieved ? 'achieved' : 'missed'}
             />
           ))}
         </Stack>
@@ -382,13 +382,13 @@ export default function MapPerformanceMetrics({
                       <Stack>
                         {previousResult.map(([type, achieved]) => (
                           <StarIcon
-                            achieved={achieved}
                             className={cx(
                               previousStarStyle,
                               wasHidden && instantStyle,
                             )}
                             key={type}
                             small
+                            type={achieved ? 'achieved' : 'missed'}
                           />
                         ))}
                       </Stack>
@@ -477,19 +477,19 @@ const achievedAnimationStyle = css`
 `;
 
 const achievedStarAnimationStyle = css`
-  color: #ebebeb;
+  color: ${applyVar('color-silver')};
   animation: ${keyframes`
     0% {
-      color: #ebebeb;
+      color: ${applyVar('color-silver')};
     }
     50% {
-      color: #ebebeb;
+      color: ${applyVar('color-silver')};
     }
     75% {
-      color: #e9b301;
+      color: ${applyVar('color-gold')};
     }
     100% {
-      color: #e9b301;
+      color: ${applyVar('color-gold')};
     }
   `} ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms
     forwards;

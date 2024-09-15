@@ -1,4 +1,5 @@
 import { Skill } from '../info/Skill.tsx';
+import { Crystal } from '../invasions/Crystal.tsx';
 import MapData from '../MapData.tsx';
 import { Charge, MaxCharges } from './Configuration.tsx';
 import {
@@ -37,6 +38,7 @@ type BasePlainPlayerType = Readonly<{
 
 export type PlainPlayerType = BasePlainPlayerType &
   Readonly<{
+    crystal: Crystal | undefined;
     userId: string;
   }>;
 
@@ -333,6 +335,7 @@ export class HumanPlayer extends Player {
     charge: number,
     stats: PlayerStatistics | null,
     misses: number,
+    public readonly crystal: Crystal | null,
   ) {
     super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
   }
@@ -341,6 +344,7 @@ export class HumanPlayer extends Player {
     activeSkills,
     ai,
     charge,
+    crystal,
     funds,
     id,
     misses,
@@ -352,6 +356,7 @@ export class HumanPlayer extends Player {
     activeSkills?: ReadonlySet<Skill>;
     ai?: number;
     charge?: number;
+    crystal?: Crystal | null;
     funds?: number;
     id?: PlayerID;
     misses?: number;
@@ -371,7 +376,16 @@ export class HumanPlayer extends Player {
       charge ?? this.charge,
       stats ?? this.stats,
       misses ?? this.misses,
+      crystal ?? this.crystal,
     ) as this;
+  }
+
+  activateCrystal(crystal: Crystal): this {
+    return this.crystal !== crystal
+      ? this.copy({
+          crystal,
+        })
+      : this;
   }
 
   toJSON(): PlainPlayerType {
@@ -379,6 +393,7 @@ export class HumanPlayer extends Player {
       activeSkills,
       ai,
       charge,
+      crystal,
       funds,
       id,
       misses,
@@ -390,6 +405,7 @@ export class HumanPlayer extends Player {
       activeSkills: [...activeSkills],
       ai,
       charge,
+      crystal: crystal != null ? crystal : undefined,
       funds,
       id,
       misses,
@@ -400,7 +416,8 @@ export class HumanPlayer extends Player {
   }
 
   static from(player: Player, userId: string): HumanPlayer {
-    return player.isHumanPlayer() && player.userId === userId
+    const isHumanPlayer = player.isHumanPlayer();
+    return isHumanPlayer && player.userId === userId
       ? player
       : new HumanPlayer(
           player.id,
@@ -413,6 +430,7 @@ export class HumanPlayer extends Player {
           player.charge,
           player.stats,
           player.misses,
+          isHumanPlayer ? player.crystal : null,
         );
   }
 }
@@ -483,8 +501,15 @@ export function isDynamicPlayerID(id: number | string): id is DynamicPlayerID {
   return DynamicPlayerIDs.has(id as DynamicPlayerID);
 }
 
-const preferHumanPlayers = (players: ReadonlyArray<Player>) =>
-  players.find((player) => isHumanPlayer(player)) || players.at(0)!;
+const preferHumanPlayers = (map: MapData, players: ReadonlyArray<Player>) => {
+  const active = new Set(map.active);
+  const activePlayers = players.filter(({ id }) => active.has(id));
+  return (
+    activePlayers.find((player) => isHumanPlayer(player)) ||
+    activePlayers[0] ||
+    players[0]
+  );
+};
 
 export function resolveDynamicPlayerID(
   map: MapData,
@@ -497,6 +522,7 @@ export function resolveDynamicPlayerID(
     case 'team': {
       return (
         preferHumanPlayers(
+          map,
           [...(map.maybeGetTeam(player)?.players.values() || [])].filter(
             ({ id }) => id > 0 && id !== player,
           ),
@@ -506,6 +532,7 @@ export function resolveDynamicPlayerID(
     case 'opponent': {
       const team = map.maybeGetTeam(player);
       return preferHumanPlayers(
+        map,
         map
           .getPlayers()
           .filter(({ id, teamId }) => id > 0 && teamId !== team?.id),

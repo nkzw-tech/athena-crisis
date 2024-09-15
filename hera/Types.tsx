@@ -11,6 +11,7 @@ import {
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
+import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -46,9 +47,15 @@ export type PlayerHasRewardFunction = (
 
 export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
 
+export type PlayerDetail = Readonly<{
+  displayName: string;
+  factionName: string;
+}>;
+export type PlayerDetails = ReadonlyMap<PlayerID, PlayerDetail>;
+
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
-  animationSpeed?: AnimationSpeed;
+  animationSpeed: AnimationSpeed;
   behavior?: MapBehaviorConstructor | null;
   buildingSize: number;
   children?: (state: State, actions: Actions) => ReactNode;
@@ -61,7 +68,6 @@ export type Props = Readonly<{
   effects?: Effects;
   endGame?: (type: 'Lose') => void;
   events?: EventTarget;
-  factionNames: FactionNames;
   fogStyle: 'soft' | 'hard';
   gameInfoPanels?: GameInfoPanels;
   inset?: number;
@@ -76,6 +82,7 @@ export type Props = Readonly<{
   pan?: true;
   paused?: boolean;
   playerAchievement?: PlayerAchievement | null;
+  playerDetails: PlayerDetails;
   playerHasReward?: PlayerHasRewardFunction;
   scale: number;
   scroll?: boolean;
@@ -88,7 +95,6 @@ export type Props = Readonly<{
   tilted: boolean;
   timeout?: number | null;
   unitSize: number;
-  userDisplayName: string;
 }>;
 
 export type TimerState = Readonly<{
@@ -119,7 +125,6 @@ export type State = Readonly<{
     extraUnits: ImmutableMap<Vector, Unit>;
     radius: ReadonlyArray<RadiusInfo>;
   } | null;
-  factionNames: FactionNames;
   gameInfoState: GameInfoState | null;
   initialBehaviorClass: MapBehaviorConstructor | undefined | null;
   inlineUI: boolean;
@@ -131,6 +136,7 @@ export type State = Readonly<{
   navigationDirection: NavigationDirection | null;
   objectiveRadius: ReadonlyArray<RadiusInfo> | null;
   paused: boolean;
+  playerDetails: PlayerDetails;
   position: Vector | null;
   preventRemoteActions: boolean;
   previousPosition: Vector | null;
@@ -143,14 +149,12 @@ export type State = Readonly<{
   showCursor: boolean;
   tileSize: number;
   timeout: number | null;
-  userDisplayName: string;
   vision: VisionT;
   zIndex: number;
 }>;
 
 export type StateLike = Partial<State>;
 
-export type FactionNames = ReadonlyMap<PlayerID, string>;
 export type TimerID = Promise<number>;
 export type TimerFunction = (fn: () => void, delay: number) => TimerID;
 export type RequestFrameFunction = (fn: (timestamp: number) => void) => void;
@@ -204,24 +208,32 @@ export type LeaderInfoState = Readonly<{
   vector: Vector;
 }>;
 
-export type SkillInfoState = Readonly<{
-  action?: (skill: Skill | null) => void;
+export type PlayerEffectItem =
+  | Readonly<{ skill: Skill; type: 'Skill' }>
+  | Readonly<{ crystal: Crystal; type: 'Crystal' }>;
+
+export type PlayerEffectInfoState = Readonly<{
+  action?: (item: PlayerEffectItem) => void;
   actionName?: ReactElement;
-  canAction?: (skill: Skill) => boolean;
+  activeCrystal?: Crystal | null;
+  canAction?: (item: PlayerEffectItem) => boolean;
   charges: number | null;
-  currentSkill: Skill;
+  crystalMap?: CrystalMap;
+  crystals?: ReadonlyArray<Crystal>;
+  currentItem: PlayerEffectItem;
   origin: string;
-  showAction?: (skill: Skill) => boolean;
+  showAction?: (item: PlayerEffectItem) => boolean;
   showCost?: boolean;
   skills?: ReadonlyArray<Skill>;
-  type: 'skill';
+  spectatorLink?: ReactElement | null;
+  type: 'player-effect';
 }>;
 
 export type GameInfoState =
   | CurrentGameInfoState
   | LeaderInfoState
   | MapInfoState
-  | SkillInfoState;
+  | PlayerEffectInfoState;
 
 export type Actions = Readonly<{
   action: (

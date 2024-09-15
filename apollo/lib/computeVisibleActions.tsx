@@ -106,6 +106,8 @@ const VisibleActionModifiers: Record<
   ActionResponse['type'],
   VisibleModifier<never>
 > = {
+  AbandonInvasion: true,
+  ActivateCrystal: true,
   ActivatePower: (
     actionResponse: ActivatePowerActionResponse,
     map: MapData,

@@ -62,7 +62,7 @@ test('units that will be supplied by a hidden adjacent supply unit are not destr
       .set(vec(4, 4), Helicopter.create(2).setFuel(1))
       .set(vec(5, 4), TransportHelicopter.create(2).setFuel(10)),
   });
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     EndTurnAction(),
     EndTurnAction(),
   ]);
@@ -109,6 +109,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
               0,
               null,
               0,
+              null,
             ),
           ],
         ]),
@@ -119,7 +120,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
       .set(vec(5, 5), Pioneer.create(1).capture())
       .set(vec(4, 4), Helicopter.create(2)),
   });
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     CaptureAction(vec(5, 5)),
     EndTurnAction(),
     EndTurnAction(),
@@ -207,7 +208,7 @@ test('neutralizes the opponent HQ when it is no longer visible', async () => {
       .set(to, Pioneer.create(1).setHealth(1)),
   });
 
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     EndTurnAction(),
     AttackUnitAction(from, to),
     EndTurnAction(),
@@ -255,7 +256,7 @@ test(`a unit that gets blocked and issues a 'HiddenMove' action is marked as com
   const initialMap: MapData | null = map.copy({
     units: map.units.set(to, Pioneer.create(1)).set(from, Helicopter.create(2)),
   });
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     EndTurnAction(),
     MoveAction(from, to),
   ]);
@@ -301,7 +302,7 @@ test(`hidden labels are dropped from buildings and units`, async () => {
       .set(from, Infantry.create(1))
       .set(vecA, Helicopter.create(2, { label: 2 })),
   });
-  const [, gameActionResponse] = executeGameActions(initialMap, [
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
     MoveAction(from, to),
   ]);
   const screenshot = await captureGameActionResponse(

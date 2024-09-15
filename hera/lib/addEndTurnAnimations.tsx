@@ -150,7 +150,7 @@ export default function addEndTurnAnimations(
             ', ' +
             fbt.param(
               'color',
-              getTranslatedFactionName(state.factionNames, nextPlayer),
+              getTranslatedFactionName(state.playerDetails, nextPlayer),
             ),
           `The banner text for the beginning of a player's turn.`,
         ),

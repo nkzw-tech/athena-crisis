@@ -1,5 +1,6 @@
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import { Skills } from '@deities/athena/info/Skill.tsx';
+import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
@@ -17,13 +18,13 @@ import {
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
-import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import Form from '@deities/ui/Form.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -34,8 +35,10 @@ import { useCallback, useMemo, useState } from 'react';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
+import getTranslatedCrystalName from '../../invasions/getTranslatedCrystalName.tsx';
 import getTranslatedBiomeName from '../../lib/getTranslatedBiomeName.tsx';
 import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
+import CrystalIcon from '../../ui/CrystalIcon.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import { ManyLabelSelector } from '../selectors/LabelSelector.tsx';
@@ -475,6 +478,54 @@ export default function ObjectiveCard({
                           ))}
                         </Stack>
                       </Dropdown>
+                      <Dropdown
+                        title={
+                          reward?.type === 'Crystal' ? (
+                            <Stack
+                              className={cx(borderStyle, highlightStyle)}
+                              gap={4}
+                              nowrap
+                            >
+                              <div className={crystalScaleStyle}>
+                                <CrystalIcon animate crystal={reward.crystal} />
+                              </div>
+                              <div>
+                                {getTranslatedCrystalName(reward.crystal)}
+                              </div>
+                            </Stack>
+                          ) : (
+                            <div className={borderStyle}>
+                              <fbt desc="Label to select a crystal">
+                                Crystal
+                              </fbt>
+                            </div>
+                          )
+                        }
+                      >
+                        <Stack className={crystalSelectorStyle} gap vertical>
+                          {Crystals.map((crystal) => (
+                            <InlineLink
+                              className={linkStyle}
+                              key={crystal}
+                              onClick={() =>
+                                onChange({
+                                  ...objective,
+                                  reward: { crystal, type: 'Crystal' },
+                                })
+                              }
+                              selectedText={
+                                reward?.type === 'Crystal' &&
+                                reward.crystal === crystal
+                              }
+                            >
+                              <Stack gap={4} nowrap>
+                                <CrystalIcon animate crystal={crystal} />
+                                {getTranslatedCrystalName(crystal)}
+                              </Stack>
+                            </InlineLink>
+                          ))}
+                        </Stack>
+                      </Dropdown>
                     </>
                   )}
                   {reward && (
@@ -490,27 +541,30 @@ export default function ObjectiveCard({
                 </Stack>
               </Stack>
               {reward && (
-                <p className={noteBoxStyle}>
-                  {objective.type === Criteria.Default ? (
-                    <fbt desc="Explanation in the map editor of how rewards work for the default objective">
-                      Players receive the reward for the default objective if
-                      they win in any way.
-                    </fbt>
-                  ) : (
-                    <fbt desc="Explanation in the map editor for how rewards work">
-                      Players receive the reward if they achieve this objective.
-                    </fbt>
-                  )}{' '}
-                  {!tags.includes('reward') && (
-                    <fbt desc="Reward tags">
-                      To permanently receive the reward, the map must have the
-                      <fbt:param name="tag">
-                        <Tag tag="reward" />
-                      </fbt:param>{' '}
-                      tag which can only be added by an Athena Crisis admin.
-                    </fbt>
-                  )}
-                </p>
+                <InfoBox>
+                  <p>
+                    {objective.type === Criteria.Default ? (
+                      <fbt desc="Explanation in the map editor of how rewards work for the default objective">
+                        Players receive the reward for the default objective if
+                        they win in any way.
+                      </fbt>
+                    ) : (
+                      <fbt desc="Explanation in the map editor for how rewards work">
+                        Players receive the reward if they achieve this
+                        objective.
+                      </fbt>
+                    )}{' '}
+                    {!tags.includes('reward') && (
+                      <fbt desc="Reward tags">
+                        To permanently receive the reward, the map must have the
+                        <fbt:param name="tag">
+                          <Tag tag="reward" />
+                        </fbt:param>{' '}
+                        tag which can only be added by an Athena Crisis admin.
+                      </fbt>
+                    )}
+                  </p>
+                </InfoBox>
               )}
             </Stack>
           )}
@@ -559,12 +613,6 @@ const deleteStyle = css`
   top: 4px;
 `;
 
-const noteBoxStyle = css`
-  ${clipBorder()}
-  padding: 12px;
-  background: ${applyVar('background-color')};
-`;
-
 const labelWidthStyle = css`
   width: 100px;
 `;
@@ -580,7 +628,7 @@ const iconStyle = css`
 const borderStyle = css`
   ${pixelBorder(undefined, 2)}
 
-  padding: 2px 8px;
+  padding: 2px 4px;
 `;
 
 const highlightStyle = css`
@@ -598,6 +646,15 @@ const selectorStyle = css`
   width: 160px;
 `;
 
+const crystalSelectorStyle = css`
+  padding: 2px;
+  width: 260px;
+`;
+
 const lineHeightStyle = css`
   line-height: 1.4em;
+`;
+
+const crystalScaleStyle = css`
+  transform: scale(0.75);
 `;

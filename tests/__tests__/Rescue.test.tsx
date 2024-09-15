@@ -40,10 +40,10 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
       .set(vecC, Pioneer.create(1)),
   });
 
-  const [gameStateA, gameActionResponseA] = executeGameActions(initialMap, [
-    RescueAction(vecA, vecB),
-    RescueAction(vecC, vecB),
-  ]);
+  const [gameStateA, gameActionResponseA] = await executeGameActions(
+    initialMap,
+    [RescueAction(vecA, vecB), RescueAction(vecC, vecB)],
+  );
 
   expect(
     snapshotEncodedActionResponse(gameActionResponseA),
@@ -57,12 +57,15 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
   const lastMapA = gameStateA.at(-1)![1];
   expect(lastMapA.units.get(vecB)!.player).toBe(1);
 
-  const [gameStateB, gameActionResponseB] = executeGameActions(initialMap, [
-    RescueAction(vecA, vecB),
-    EndTurnAction(),
-    EndTurnAction(),
-    RescueAction(vecA, vecB),
-  ]);
+  const [gameStateB, gameActionResponseB] = await executeGameActions(
+    initialMap,
+    [
+      RescueAction(vecA, vecB),
+      EndTurnAction(),
+      EndTurnAction(),
+      RescueAction(vecA, vecB),
+    ],
+  );
 
   expect(
     snapshotEncodedActionResponse(gameActionResponseB),
@@ -79,7 +82,7 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
   expect(lastMapB.units.get(vecB)!.player).toBe(1);
 });
 
-test('in-progress rescues can be stolen by other players', () => {
+test('in-progress rescues can be stolen by other players', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
   const vecC = vec(3, 1);
@@ -90,7 +93,7 @@ test('in-progress rescues can be stolen by other players', () => {
       .set(vecC, Pioneer.create(2)),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(initialMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     RescueAction(vecA, vecB),
     EndTurnAction(),
     RescueAction(vecC, vecB),

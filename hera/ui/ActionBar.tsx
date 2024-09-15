@@ -48,12 +48,12 @@ const actionBarStyle = css`
 `;
 
 const regularStyle = css`
-  @media (min-width: 840px) {
-    ${vars.set('x', '16px')}
+  @media (min-width: 1100px) {
+    ${vars.set('x', '24px')}
     top: 8px;
   }
 
-  @media (min-width: 860px) {
+  @media (min-width: 1300px) {
     ${vars.set('x', 0)}
   }
 `;

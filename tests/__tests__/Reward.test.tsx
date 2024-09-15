@@ -35,7 +35,7 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 
-test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
+test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
   const mapA = map.copy({
@@ -111,7 +111,11 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     ],
   ]);
 
-  const [gameStateA] = executeGameActions(mapA, [CaptureAction(vecA)], effects);
+  const [gameStateA] = await executeGameActions(
+    mapA,
+    [CaptureAction(vecA)],
+    effects,
+  );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "SetViewer
@@ -126,7 +130,11 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
     teams: updatePlayer(map.teams, Bot.from(player1, 'Bot')),
   });
 
-  const [gameStateB] = executeGameActions(mapB, [CaptureAction(vecA)], effects);
+  const [gameStateB] = await executeGameActions(
+    mapB,
+    [CaptureAction(vecA)],
+    effects,
+  );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
     "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
@@ -136,7 +144,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, () => {
   `);
 });
 
-test(`each skill is only received once`, () => {
+test(`each skill is only received once`, async () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
   const reward = {
@@ -214,7 +222,7 @@ test(`each skill is only received once`, () => {
     ],
   ]);
 
-  const [gameState] = executeGameActions(
+  const [gameState] = await executeGameActions(
     currentMap,
     [CaptureAction(vecA)],
     effects,

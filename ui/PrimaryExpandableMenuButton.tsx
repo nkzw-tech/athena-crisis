@@ -49,7 +49,7 @@ const style = css`
 
 const largeStyle = css`
   ${Breakpoints.xs} {
-    width: 280px;
+    width: 320px;
   }
 `;
 

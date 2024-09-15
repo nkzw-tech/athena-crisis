@@ -123,6 +123,9 @@ const UnitIconsSprite = 'https://art.athenacrisis.com/v14/assets/UnitIcons.png';
 
 const UpgradeSprite = 'https://art.athenacrisis.com/v14/assets/Upgrade.png';
 
+const CrystalsSprite =
+  'https://art.athenacrisis.com/v14/assets/render/Crystals.png';
+
 const Tiles0Sprite =
   'https://art.athenacrisis.com/v14/assets/render/Tiles0.png';
 
@@ -266,6 +269,12 @@ const UnitsXFighterSprite =
 
 const UnitsZombieSprite =
   'https://art.athenacrisis.com/v14/assets/shadow/Units-Zombie.png';
+
+export const Crystals = (() => {
+  const image = new Image();
+  image.src = CrystalsSprite;
+  return image;
+})();
 
 export const Tiles0 = (() => {
   const image = new Image();
@@ -452,6 +461,7 @@ export default [
   TileDecoratorsSprite,
   UnitIconsSprite,
   UpgradeSprite,
+  CrystalsSprite,
   Tiles0Sprite,
   Tiles1Sprite,
   Tiles2Sprite,

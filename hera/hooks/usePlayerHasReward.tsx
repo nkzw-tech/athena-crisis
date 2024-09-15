@@ -45,6 +45,8 @@ export default function usePlayerHasReward({
           return biomes.includes(reward.biome);
         case 'SkillSlot':
           return unlockedSkillSlots.includes(reward.slot);
+        case 'Crystal':
+          return false;
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError('usePlayerHasReward', rewardType);

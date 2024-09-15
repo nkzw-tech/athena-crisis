@@ -38,7 +38,7 @@ const initialMap = withModifiers(
   }),
 );
 
-test('skills are active until the beginning of the next turn', () => {
+test('skills are active until the beginning of the next turn', async () => {
   const skills = new Set([Skill.AttackIncreaseMajorDefenseDecreaseMajor]);
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
@@ -61,7 +61,7 @@ test('skills are active until the beginning of the next turn', () => {
       .set(vecE, SmallTank.create(2)),
   });
 
-  const [, gameActionResponse] = executeGameActions(map, [
+  const [, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
     AttackUnitAction(vecB, vecA),
     EndTurnAction(),

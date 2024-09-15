@@ -7,6 +7,7 @@ import {
 import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, getUnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
+import { Crystal, PowerCrystal } from '@deities/athena/invasions/Crystal.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -179,6 +180,11 @@ type BuySkillAction = Readonly<{
 
 type ActivatePowerAction = Readonly<{ skill: Skill; type: 'ActivatePower' }>;
 
+type ActivateCrystalAction = Readonly<{
+  crystal: Crystal;
+  type: 'ActivateCrystal';
+}>;
+
 export type CharacterMessageEffectAction = Readonly<{
   message: string;
   player: DynamicPlayerID;
@@ -192,6 +198,7 @@ type StartAction = Readonly<{
 }>;
 
 export type Action =
+  | ActivateCrystalAction
   | ActivatePowerAction
   | AttackBuildingAction
   | AttackUnitAction
@@ -852,9 +859,10 @@ function spawnEffect(
     }
   }
 
-  return newUnits.size
+  teams = maybeCreatePlayers(map, teams, newUnits);
+  return newUnits.size || teams
     ? ({
-        teams: maybeCreatePlayers(map, teams, newUnits),
+        teams,
         type: 'Spawn',
         units: assignDeterministicUnitNames(map, newUnits),
       } as const)
@@ -924,6 +932,24 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
   return null;
 }
 
+function activateCrystal(map: MapData, { crystal }: ActivateCrystalAction) {
+  const player = map.getCurrentPlayer();
+
+  if (
+    player.isHumanPlayer() &&
+    player.crystal === null &&
+    crystal === PowerCrystal
+  ) {
+    return {
+      crystal,
+      player: player.id,
+      type: 'ActivateCrystal',
+    } as const;
+  }
+
+  return null;
+}
+
 function applyAction(
   map: MapData,
   vision: VisionT,
@@ -980,6 +1006,8 @@ function applyAction(
       return buySkill(map, action);
     case 'ActivatePower':
       return activatePower(map, action);
+    case 'ActivateCrystal':
+      return activateCrystal(map, action);
     default: {
       const _exhaustiveCheck: never = action;
       return _exhaustiveCheck;

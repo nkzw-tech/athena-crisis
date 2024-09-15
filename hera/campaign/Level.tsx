@@ -61,6 +61,7 @@ import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
 import Comparator from '../ui/Comparator.tsx';
+import CrystalIcon from '../ui/CrystalIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
@@ -566,6 +567,8 @@ const RewardDetail = ({
           </fbt>
         </div>
       );
+    case 'Crystal':
+      return <CrystalIcon animate crystal={reward.crystal} />;
     default: {
       rewardType satisfies never;
       throw new UnknownTypeError('Level::Reward', rewardType);

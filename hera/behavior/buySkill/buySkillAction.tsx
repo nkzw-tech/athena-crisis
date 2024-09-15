@@ -4,6 +4,7 @@ import { fbt } from 'fbt';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
+import getUserDisplayName from '../../lib/getUserDisplayName.tsx';
 import { SkillRewardActionResponse } from '../../lib/isSkillRewardActionResponse.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
@@ -42,7 +43,7 @@ export default async function buySkillAction(
             ? fbt(
                 fbt.param(
                   'player',
-                  getTranslatedFactionName(state.factionNames, player),
+                  getTranslatedFactionName(state.playerDetails, player),
                 ) +
                   ' bought the skill ' +
                   fbt.param('skill', name) +
@@ -51,7 +52,10 @@ export default async function buySkillAction(
               )
             : isPermanent
               ? fbt(
-                  fbt.param('user', state.userDisplayName) +
+                  fbt.param(
+                    'user',
+                    getUserDisplayName(state.playerDetails, player),
+                  ) +
                     ' received the skill ' +
                     fbt.param('skill', name) +
                     '!',
@@ -60,7 +64,7 @@ export default async function buySkillAction(
               : fbt(
                   fbt.param(
                     'player',
-                    getTranslatedFactionName(state.factionNames, player),
+                    getTranslatedFactionName(state.playerDetails, player),
                   ) +
                     ' temporarily received the skill ' +
                     fbt.param('skill', name) +

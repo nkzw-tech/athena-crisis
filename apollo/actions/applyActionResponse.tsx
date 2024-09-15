@@ -517,11 +517,12 @@ export default function applyActionResponse(
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
       return applyHiddenActionResponse(map, vision, actionResponse);
-    case 'OptionalObjective':
+    case 'AbandonInvasion':
     case 'AttackUnitGameOver':
     case 'BeginTurnGameOver':
     case 'CaptureGameOver':
     case 'GameEnd':
+    case 'OptionalObjective':
     case 'PreviousTurnGameOver':
       return applyObjectiveActionResponse(map, actionResponse);
     case 'SetViewer': {
@@ -568,6 +569,18 @@ export default function applyActionResponse(
         }),
       );
     }
+    case 'ActivateCrystal': {
+      // Crystal activations may happen prior to the player appearing on the map.
+      const player = map.maybeGetPlayer(actionResponse.player);
+      return player?.isHumanPlayer()
+        ? map.copy({
+            teams: updatePlayer(
+              map.teams,
+              player.activateCrystal(actionResponse.crystal),
+            ),
+          })
+        : map;
+    }
     case 'ReceiveReward': {
       const { player, reward } = actionResponse;
       const rewardType = reward.type;
@@ -584,6 +597,7 @@ export default function applyActionResponse(
           });
         }
         case 'Biome':
+        case 'Crystal':
         case 'Keyart':
         case 'SkillSlot':
         case 'UnitPortraits':

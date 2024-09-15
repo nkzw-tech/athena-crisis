@@ -13,24 +13,24 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
-import { FactionNames } from '../Types.tsx';
+import { PlayerDetails } from '../Types.tsx';
 import UILabel from '../ui/UILabel.tsx';
 import ObjectiveTitle from './ObjectiveTitle.tsx';
 
 const PlayerList = ({
   conjunction = 'or',
-  factionNames,
+  playerDetails,
   players,
 }: {
   conjunction?: 'and' | 'or';
-  factionNames: FactionNames;
+  playerDetails: PlayerDetails;
   players: PlayerIDs;
 }) =>
   players.length ? (
     intlList(
       players.map((id) => (
         <span key={`player-${id}`} style={{ color: getColor(id) }}>
-          {getTranslatedFactionName(factionNames, id)}
+          {getTranslatedFactionName(playerDetails, id)}
         </span>
       )),
       Conjunctions[conjunction === 'or' ? 'OR' : 'AND'],
@@ -43,16 +43,16 @@ const PlayerList = ({
   );
 
 const ObjectiveText = ({
-  factionNames,
   objective,
+  playerDetails,
 }: {
-  factionNames: FactionNames;
   objective: Objective;
+  playerDetails: PlayerDetails;
 }) => {
   const { type } = objective;
   const playerList = (
     <PlayerList
-      factionNames={factionNames}
+      playerDetails={playerDetails}
       players={(type !== Criteria.Default && objective.players) || []}
     />
   );
@@ -307,29 +307,29 @@ const ObjectiveText = ({
 };
 
 const CompletedConditionText = ({
-  factionNames,
+  playerDetails,
   players,
 }: {
-  factionNames: FactionNames;
+  playerDetails: PlayerDetails;
   players: PlayerIDs;
 }) => (
   <div>
     <fbt desc="List of players that completed an objective">
       Completed by{' '}
       <fbt:param name="players">
-        <PlayerList factionNames={factionNames} players={players} />
+        <PlayerList playerDetails={playerDetails} players={players} />
       </fbt:param>.
     </fbt>
   </div>
 );
 
 export default function ObjectiveDescription({
-  factionNames,
   objective,
+  playerDetails,
   round,
 }: {
-  factionNames: FactionNames;
   objective: Objective;
+  playerDetails: PlayerDetails;
   round: number;
 }) {
   return (
@@ -348,7 +348,7 @@ export default function ObjectiveDescription({
         <ObjectiveTitle objective={objective} />
       </h2>
       <p>
-        <ObjectiveText factionNames={factionNames} objective={objective} />
+        <ObjectiveText objective={objective} playerDetails={playerDetails} />
       </p>
       {objective.type === Criteria.Survival && (
         <div>
@@ -359,7 +359,7 @@ export default function ObjectiveDescription({
       )}
       {objective.type !== Criteria.Default && objective.completed?.size ? (
         <CompletedConditionText
-          factionNames={factionNames}
+          playerDetails={playerDetails}
           players={[...objective.completed]}
         />
       ) : null}

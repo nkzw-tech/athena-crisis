@@ -1,24 +1,28 @@
-import { ActivatePowerAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import {
+  ActivateCrystalAction,
+  ActivatePowerAction,
+} from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import {
   capturedByPlayer,
   destroyedBuildingsByPlayer,
   escortedByPlayer,
   rescuedUnitsByPlayer,
 } from '@deities/apollo/lib/checkObjective.tsx';
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
+import { PowerCrystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
-import { isBot, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import { isBot, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import {
   Criteria,
   Objective,
   objectiveHasAmounts,
 } from '@deities/athena/Objectives.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
@@ -26,7 +30,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
-import { BackgroundRainbowAnimation } from '@deities/ui/RainbowPulseStyle.tsx';
+import { BackgroundRainbowAnimation } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
@@ -37,14 +41,18 @@ import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback, useMemo } from 'react';
+import activateCrystalAction from '../behavior/activateCrystal/activateCrystalAction.tsx';
 import clientActivatePowerAction from '../behavior/activatePower/clientActivatePowerAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import handleRemoteAction from '../behavior/handleRemoteAction.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
+import useCrystals from '../invasions/useCrystals.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
-import { Actions } from '../Types.tsx';
+import { PlayerEffectItem } from '../Types.tsx';
+import CrystalIcon from './CrystalIcon.tsx';
+import { GameCardProps } from './CurrentGameCard.tsx';
 import Funds from './Funds.tsx';
 import { SkillIcon } from './SkillDialog.tsx';
 
@@ -52,25 +60,34 @@ export default memo(function PlayerCard({
   actions,
   animate,
   currentViewer,
+  invasions,
   map,
   player,
+  spectatorLink,
   user,
   vision,
   wide,
-}: {
-  actions: Actions;
+}: GameCardProps & {
   animate: boolean;
-  currentViewer: PlayerID | null;
-  map: MapData;
   player: Player;
-  user: UserLike;
-  vision: VisionT;
+  user: UserLike & { crystals?: string };
   wide?: boolean;
 }) {
   const { action, showGameInfo, update } = actions;
   const { objectives } = map.config;
   const color = getColor(player.id);
-
+  const crystalMap = useCrystals(user.crystals);
+  const powerCrystals = crystalMap.get(PowerCrystal) || 0;
+  const isCurrentPlayer = currentViewer === player.id;
+  const canActivateCrystal = invasions && isCurrentPlayer;
+  const activeCrystal =
+    player.isHumanPlayer() && player.crystal != null ? player.crystal : null;
+  const crystal =
+    activeCrystal != null
+      ? activeCrystal
+      : canActivateCrystal
+        ? PowerCrystal
+        : undefined;
   const shouldShow =
     !map.config.fog ||
     // Visibility is determined by the Vision's 'currentViewer', which might be a spectator.
@@ -95,77 +112,127 @@ export default memo(function PlayerCard({
     0;
 
   const canAction = useCallback(
-    (skill: Skill) => {
-      const { charges } = getSkillConfig(skill);
-      const currentPlayer = map.getCurrentPlayer();
-      return !!(
-        charges &&
-        currentPlayer.id === currentViewer &&
-        player.id === currentPlayer.id &&
-        charges * Charge <= player.charge &&
-        !player.activeSkills.has(skill)
-      );
+    (item: PlayerEffectItem) => {
+      const itemType = item.type;
+      switch (itemType) {
+        case 'Skill': {
+          const { charges } = getSkillConfig(item.skill);
+          const currentPlayer = map.getCurrentPlayer();
+          return !!(
+            charges &&
+            currentPlayer.id === currentViewer &&
+            player.id === currentPlayer.id &&
+            charges * Charge <= player.charge &&
+            !player.activeSkills.has(item.skill)
+          );
+        }
+        case 'Crystal':
+          return (
+            canActivateCrystal &&
+            player.isHumanPlayer() &&
+            player.crystal === null &&
+            powerCrystals > 0
+          );
+        default: {
+          itemType satisfies never;
+          throw new UnknownTypeError('PlayerCard.canAction', itemType);
+        }
+      }
     },
-    [currentViewer, map, player.activeSkills, player.charge, player.id],
+    [canActivateCrystal, player, powerCrystals, map, currentViewer],
   );
 
-  const showSkillDialog = useCallback(
-    async (currentSkill: Skill, origin: string | null) => {
+  const showPlayerEffectDialog = useCallback(
+    async (currentItem: PlayerEffectItem, origin: string | null) => {
       const { behavior } = await update(null);
       if (behavior?.type === 'null') {
         return;
       }
 
       showGameInfo({
-        action:
-          currentViewer === player.id
-            ? async (skill: Skill | null) => {
-                if (!skill) {
-                  return;
+        action: isCurrentPlayer
+          ? async (item: PlayerEffectItem) => {
+              const state = await update(resetBehavior());
+
+              const getActionMutator = (item: PlayerEffectItem) => {
+                const itemType = item.type;
+                switch (itemType) {
+                  case 'Skill':
+                    return ActivatePowerAction(item.skill);
+                  case 'Crystal':
+                    return ActivateCrystalAction(PowerCrystal);
+                  default: {
+                    itemType satisfies never;
+                    throw new UnknownTypeError('PlayerCard.action', itemType);
+                  }
                 }
-                const state = await update(resetBehavior());
-                const [remoteAction, , actionResponse] = action(
-                  state,
-                  ActivatePowerAction(skill),
-                );
-                if (actionResponse.type === 'ActivatePower') {
-                  await update({
-                    ...(await clientActivatePowerAction(
-                      actions,
-                      state,
-                      actionResponse,
-                    )),
-                  });
-                  await handleRemoteAction(actions, remoteAction);
-                }
+              };
+
+              const [remoteAction, , actionResponse] = action(
+                state,
+                getActionMutator(item),
+              );
+              if (
+                actionResponse.type === 'ActivatePower' ||
+                actionResponse.type === 'ActivateCrystal'
+              ) {
+                await update({
+                  ...(await (actionResponse.type === 'ActivatePower'
+                    ? clientActivatePowerAction(actions, state, actionResponse)
+                    : activateCrystalAction(actions, actionResponse))),
+                });
+                await handleRemoteAction(actions, remoteAction);
               }
-            : undefined,
+            }
+          : undefined,
         actionName: <fbt desc="Button to activate a skill">Activate</fbt>,
+        activeCrystal,
         canAction,
         charges: availableCharges,
-        currentSkill,
+        crystalMap: isCurrentPlayer ? crystalMap : undefined,
+        crystals: crystal != null ? [crystal] : undefined,
+        currentItem,
         origin: origin || 'center center',
-        showAction: (skill: Skill) => !!getSkillConfig(skill).charges,
+        showAction: (item: PlayerEffectItem) =>
+          item.type === 'Skill'
+            ? !!getSkillConfig(item.skill).charges
+            : activeCrystal === null,
         skills: [...player.skills],
-        type: 'skill',
+        spectatorLink: isCurrentPlayer ? spectatorLink : undefined,
+        type: 'player-effect',
       });
     },
     [
       update,
       showGameInfo,
-      currentViewer,
-      player.id,
-      player.skills,
+      isCurrentPlayer,
+      activeCrystal,
       canAction,
       availableCharges,
+      crystalMap,
+      crystal,
+      player.skills,
+      spectatorLink,
       action,
       actions,
     ],
   );
 
   useInput('info', () => {
-    if (wide && currentViewer === player.id && player.skills.size > 0) {
-      showSkillDialog(player.skills.values().next().value!, null);
+    if (wide && isCurrentPlayer) {
+      const item =
+        player.skills.size > 0
+          ? ({
+              skill: player.skills.values().next().value!,
+              type: 'Skill',
+            } as const)
+          : crystal != null
+            ? ({ crystal, type: 'Crystal' } as const)
+            : null;
+
+      if (item) {
+        showPlayerEffectDialog(item, null);
+      }
     }
   });
 
@@ -316,7 +383,7 @@ export default memo(function PlayerCard({
               </Stack>
             )}
           </Stack>
-          {player.skills.size ? (
+          {player.skills.size || invasions ? (
             <Stack className={skillStyle} nowrap>
               {[...new Set([...player.activeSkills, ...player.skills])].map(
                 (skill) => {
@@ -328,7 +395,10 @@ export default memo(function PlayerCard({
                       onClick={async (event) => {
                         event.stopPropagation();
 
-                        showSkillDialog(skill, toTransformOrigin(event));
+                        showPlayerEffectDialog(
+                          { skill, type: 'Skill' },
+                          toTransformOrigin(event),
+                        );
                       }}
                     >
                       <SkillIcon
@@ -345,6 +415,30 @@ export default memo(function PlayerCard({
                     </div>
                   );
                 },
+              )}
+              {crystal != null && (
+                <div
+                  className={cx(
+                    crystal === PowerCrystal &&
+                      crystal !== activeCrystal &&
+                      powerCrystals <= 0 &&
+                      grayscaleStyle,
+                  )}
+                >
+                  <CrystalIcon
+                    active={crystal === activeCrystal}
+                    animate={false}
+                    crystal={crystal}
+                    onClick={async (event) => {
+                      event.stopPropagation();
+
+                      showPlayerEffectDialog(
+                        { crystal, type: 'Crystal' },
+                        toTransformOrigin(event),
+                      );
+                    }}
+                  />
+                </div>
               )}
             </Stack>
           ) : null}
@@ -530,4 +624,8 @@ const playerStatsStyle = css`
 
 const playerStatsBeforeIconStyle = css`
   margin: 3px 4px 0 0;
+`;
+
+const grayscaleStyle = css`
+  filter: grayscale(100%);
 `;

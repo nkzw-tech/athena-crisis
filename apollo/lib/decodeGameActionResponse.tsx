@@ -13,7 +13,8 @@ export default function decodeGameActionResponse(
   detail?: unknown,
 ): GameActionResponse {
   if (!Array.isArray(response)) {
-    if (response?.n === 'p') {
+    const type = response?.n;
+    if (type === 'p' || type === 'r' || type === 'q') {
       return { others: [], self: null, timeout: null };
     }
 

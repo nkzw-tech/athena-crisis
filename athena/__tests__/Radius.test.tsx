@@ -2,7 +2,13 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { expect, test } from 'vitest';
 import startMap from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
 import { Skill } from '../info/Skill.tsx';
-import { Flamethrower, Humvee, XFighter } from '../info/Unit.tsx';
+import {
+  Battleship,
+  Flamethrower,
+  Humvee,
+  PatrolShip,
+  XFighter,
+} from '../info/Unit.tsx';
 import updatePlayer from '../lib/updatePlayer.tsx';
 import MapData, { SizeVector } from '../MapData.tsx';
 import { attackable, moveable } from '../Radius.tsx';
@@ -1844,4 +1850,45 @@ test('correctly cancels transition costs in the Space biome', () => {
       ],
     ]
   `);
+});
+
+test('Naval units cannot access bridges unless they are below a Sea tile', () => {
+  const map = radiusTestMap.copy({
+    buildings: radiusTestMap.buildings.deleteAll(
+      radiusTestMap.buildings.keys(),
+    ),
+    map: [
+      6,
+      6,
+      [6, 16],
+      6,
+      6,
+      6,
+      6,
+      [10, 16],
+      6,
+      6,
+      6,
+      6,
+      4,
+      [5, 16],
+      4,
+      6,
+      6,
+      6,
+      5,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+    ],
+    size: new SizeVector(5, 5),
+    units: radiusTestMap.units.deleteAll(radiusTestMap.units.keys()),
+  });
+
+  const vecA = vec(4, 2);
+  expect(moveable(map, Battleship.create(1), vecA).has(vec(4, 3))).toBeFalsy();
+  expect(moveable(map, PatrolShip.create(1), vecA).has(vec(4, 3))).toBeTruthy();
 });

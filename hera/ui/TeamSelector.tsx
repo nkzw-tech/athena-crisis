@@ -14,7 +14,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import { SquarePulseStyle } from '@deities/ui/RainbowPulseStyle.tsx';
+import { SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';

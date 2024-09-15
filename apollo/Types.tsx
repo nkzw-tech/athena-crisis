@@ -22,7 +22,10 @@ export type EncodedGameActionResponseWithError =
   // Error
   | { n: 'x' }
   // Passthrough
-  | { n: 'p' };
+  | { n: 'p' }
+  // Refresh
+  | { n: 'r' }
+  | { n: 'q' };
 
 export type EncodedGameActionResponseItem = [
   EncodedActionResponse,

@@ -83,7 +83,7 @@ const player1 = initialMap.getPlayer(1);
 
 test('units will hide in hidden fields in fog', async () => {
   const map = initialMap;
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),
@@ -97,7 +97,7 @@ test('units will hide in hidden fields in fog', async () => {
   `);
 
   // Without fog the unit will move further.
-  const [, , secondGameState] = executeGameAction(
+  const [, , secondGameState] = await executeGameAction(
     map.copy({ config: map.config.copy({ fog: false }) }),
     map.createVisionObject(player1),
     new Map(),
@@ -142,7 +142,7 @@ test('does not hide in hidden fields too far from the target', async () => {
     ],
   });
 
-  const [, , gameState] = executeGameAction(
+  const [, , gameState] = await executeGameAction(
     map,
     map.createVisionObject(player1),
     new Map(),

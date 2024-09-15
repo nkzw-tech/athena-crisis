@@ -15,7 +15,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import RainbowPulseStyle from '@deities/ui/RainbowPulseStyle.tsx';
+import { RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
 import Attack from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
@@ -492,7 +492,6 @@ export default function GameActions({
   } = state;
 
   const hasEnded = lastActionResponse?.type === 'GameEnd';
-
   const maxZoom = useScale() + 1;
   const playerCanEndTurn =
     !preventRemoteActions && !paused && canEndTurn(state);

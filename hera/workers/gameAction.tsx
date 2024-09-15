@@ -17,7 +17,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { ClientGameActionRequest, ClientGameActionResponse } from './Types.tsx';
 
-self.onmessage = function (event: MessageEvent<ClientGameActionRequest>) {
+self.onmessage = async (event: MessageEvent<ClientGameActionRequest>) => {
   const [plainMap, encodedEffects, action, mutateAction] = event.data;
   const map = MapData.fromObject(plainMap);
   const vision = map.createVisionObject(map.getCurrentPlayer());
@@ -27,7 +27,7 @@ self.onmessage = function (event: MessageEvent<ClientGameActionRequest>) {
     MapData | null,
     GameState | null,
     Effects | null,
-  ] = executeGameAction(
+  ] = await executeGameAction(
     map,
     vision,
     effects,

@@ -4,10 +4,11 @@ import { Teams } from '@deities/athena/map/Team.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { fbt } from 'fbt';
 import { Actions, State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
+import getInvasionNoticeAnimation from './getInvasionNoticeAnimation.tsx';
 import getUnitDirection from './getUnitDirection.tsx';
+import getUserDisplayName from './getUserDisplayName.tsx';
 
 export default function spawn(
   actions: Actions,
@@ -16,7 +17,7 @@ export default function spawn(
   teams: Teams | null | undefined,
   speed: 'fast' | 'slow',
   onComplete: StateToStateLike,
-  isEditor = false,
+  isSubsequent = false,
 ): StateLike | null {
   const { animationConfig } = state;
   const [entry, ...remainingUnits] = unitsToSpawn;
@@ -28,32 +29,21 @@ export default function spawn(
   const team = teams?.find(({ players }) =>
     players.some(({ id }) => id === unit.player),
   );
-  const hasNewPlayer = !state.map.getPlayer(unit) && team;
-  const newTeam = hasNewPlayer
+  const newTeam = team
     ? team.copy({
         players: team.players.filter(({ id }) => id === unit.player),
       })
     : null;
   const newPlayer = newTeam?.players.get(unit.player);
-  const name = newPlayer ? (newPlayer.isBot() ? newPlayer.name : null) : null;
-
-  const animationKey = new AnimationKey();
-  const animations =
-    name && !isEditor
-      ? state.animations.set(animationKey, {
-          color: unit.player,
-          text: String(
-            fbt(
-              `${fbt.param('name', name)} is invading!`,
-              'user or bot is invading the game',
-            ),
-          ),
-          type: 'notice',
-        })
-      : state.animations;
+  const crystal = newPlayer?.isHumanPlayer() ? newPlayer.crystal : null;
+  const name =
+    (newPlayer?.isBot() && newPlayer.name) ||
+    (newPlayer?.isHumanPlayer() &&
+      getUserDisplayName(state.playerDetails, newPlayer.id)) ||
+    null;
 
   const spawnUnit = (state: State) => ({
-    animations: animations.set(position, {
+    animations: state.animations.set(position, {
       locked: false,
       onComplete: (state: State) => {
         if (!remainingUnits.length) {
@@ -62,7 +52,15 @@ export default function spawn(
         actions.scheduleTimer(
           () =>
             actions.update((state) =>
-              spawn(actions, state, remainingUnits, teams, speed, onComplete),
+              spawn(
+                actions,
+                state,
+                remainingUnits,
+                teams,
+                speed,
+                onComplete,
+                true,
+              ),
             ),
           animationConfig.ExplosionStep,
         );
@@ -93,10 +91,19 @@ export default function spawn(
     }),
   });
 
-  return isEditor
+  return isSubsequent
     ? spawnUnit(state)
     : {
-        animations: animations.set(new AnimationKey(), {
+        animations: (name
+          ? getInvasionNoticeAnimation(
+              state.animations,
+              state.playerDetails,
+              unit.player,
+              name,
+              crystal,
+            )
+          : state.animations
+        ).set(new AnimationKey(), {
           onComplete: spawnUnit,
           positions: [position],
           type: 'scrollIntoView',

@@ -44,6 +44,7 @@ test('ensures the configuration for buildings and the units they can create is c
                   0,
                   null,
                   0,
+                  null,
                 ),
               ),
           ]
@@ -132,6 +133,7 @@ test('units can be added to buildings via skills', () => {
     0,
     null,
     0,
+    null,
   );
   const playerWithSkill = new HumanPlayer(
     1,
@@ -144,6 +146,7 @@ test('units can be added to buildings via skills', () => {
     0,
     null,
     0,
+    null,
   );
 
   expect(
@@ -175,6 +178,7 @@ test('units can be added to the Bar via skills', () => {
     0,
     null,
     0,
+    null,
   );
   const playerWithSkill = new HumanPlayer(
     1,
@@ -187,6 +191,7 @@ test('units can be added to the Bar via skills', () => {
     0,
     null,
     0,
+    null,
   );
 
   expect(

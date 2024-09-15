@@ -4,6 +4,7 @@ import { fbt } from 'fbt';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
+import getUserDisplayName from '../lib/getUserDisplayName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function receiveSkillSlotAnimation(
@@ -42,7 +43,7 @@ export default async function receiveSkillSlotAnimation(
         style: 'flashy',
         text: String(
           fbt(
-            fbt.param('user', state.userDisplayName) +
+            fbt.param('user', getUserDisplayName(state.playerDetails, player)) +
               ' received a skill slot!',
             'Receive reward message',
           ),

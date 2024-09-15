@@ -17,7 +17,7 @@ export default function getTurnState<
   T extends M extends MapData ? ActionResponse : EncodedActionResponse,
   S extends M extends MapData ? Effects : EncodedEffects,
 >(
-  map: MapData,
+  previousMap: MapData,
   activeMap: M,
   effects: S,
   turnState: PreviousGameState<M> | null,
@@ -28,8 +28,8 @@ export default function getTurnState<
   return (
     (!ended &&
       (isStart ||
-      map.currentPlayer !== activeMap.currentPlayer ||
-      map.round !== activeMap.round
+      previousMap.currentPlayer !== activeMap.currentPlayer ||
+      previousMap.round !== activeMap.round
         ? [activeMap, lastAction, effects]
         : turnState)) ||
     null

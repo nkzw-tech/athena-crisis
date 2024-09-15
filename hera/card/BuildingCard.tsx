@@ -42,7 +42,7 @@ import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
 import getTranslatedEntityName from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Tick from '../Tick.tsx';
-import { FactionNames } from '../Types.tsx';
+import { PlayerDetails } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import UILabel from '../ui/UILabel.tsx';
@@ -76,13 +76,13 @@ const defenseRange = getAttributeRange(
 
 export default memo(function BuildingCard({
   building,
-  factionNames,
   map,
+  playerDetails,
   unit,
 }: {
   building: Building;
-  factionNames: FactionNames;
   map: MapData;
+  playerDetails: PlayerDetails;
   unit?: Unit | null;
 }) {
   const { biome } = map.config;
@@ -226,7 +226,7 @@ export default memo(function BuildingCard({
               </Stack>
               <Stack alignCenter className={wideColumnStyle} end gap>
                 <MiniPlayerIcon id={unit.player} />
-                {getTranslatedFactionName(factionNames, unit.player)}
+                {getTranslatedFactionName(playerDetails, unit.player)}
               </Stack>
             </>
           )}

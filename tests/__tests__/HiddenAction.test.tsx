@@ -138,7 +138,7 @@ const map = withModifiers(
 const player1 = HumanPlayer.from(map.getPlayer(1), 'User-1');
 
 test('create building and create unit actions', async () => {
-  const [gameState, gameActionResponse] = executeGameActions(map, [
+  const [gameState, gameActionResponse] = await executeGameActions(map, [
     EndTurnAction(),
     CreateBuildingAction(vec(5, 4), 2),
     CompleteUnitAction(vec(1, 1)),
@@ -188,7 +188,7 @@ test('destroy hidden building', async () => {
     units: map.units.set(from, SmallTank.create(map.getPlayer(2))).delete(to),
   });
 
-  const [gameState, gameActionResponse] = executeGameActions(newMap, [
+  const [gameState, gameActionResponse] = await executeGameActions(newMap, [
     EndTurnAction(),
     AttackBuildingAction(from, to),
     EndTurnAction(),

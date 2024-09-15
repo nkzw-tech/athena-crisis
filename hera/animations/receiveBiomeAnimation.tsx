@@ -16,6 +16,7 @@ import NullBehavior from '../behavior/NullBehavior.tsx';
 import InlineTileList from '../card/InlineTileList.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
+import getUserDisplayName from '../lib/getUserDisplayName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function receiveBiomeAnimation(
@@ -27,7 +28,7 @@ export default async function receiveBiomeAnimation(
   const biome =
     actionResponse.reward.type === 'Biome' ? actionResponse.reward.biome : null;
 
-  if (!biome) {
+  if (biome == null) {
     return state;
   }
 
@@ -93,7 +94,7 @@ export default async function receiveBiomeAnimation(
         style: 'flashy',
         text: String(
           fbt(
-            fbt.param('user', state.userDisplayName) +
+            fbt.param('user', getUserDisplayName(state.playerDetails, player)) +
               ' received the ' +
               fbt.param('biome', getTranslatedBiomeName(biome)) +
               ' biome!',
