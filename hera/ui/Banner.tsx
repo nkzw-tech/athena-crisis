@@ -218,7 +218,7 @@ const containerStyle = css`
 `;
 
 const innerStyle = css`
-  ${vars.set('multiplier', 2)}
+  ${vars.set('multiplier', 3)}
 
   border-bottom: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
   border-top: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
