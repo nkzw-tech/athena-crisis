@@ -3618,7 +3618,7 @@ export const Commander = new UnitInfo(
     cost: Number.POSITIVE_INFINITY,
     fuel: 30,
     radius: 2,
-    vision: 3,
+    vision: 1,
   },
   DefaultUnitAbilitiesWithCapture.copy({ morale: true }),
   { type: AttackType.ShortRange, weapons: [Weapons.Pistol.withSupply(5)] },
