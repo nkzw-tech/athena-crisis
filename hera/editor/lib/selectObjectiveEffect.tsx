@@ -12,13 +12,10 @@ export default function selectObjectiveEffect(
   const trigger =
     !isDefault && objective?.optional ? 'OptionalObjective' : 'GameEnd';
   const effectList = editor.effects.get(trigger);
+  const objectiveIndex = isDefault ? 'win' : conditionIndex;
   const effect = effectList
     ? [...effectList].find(({ conditions }) =>
-        hasEffectObjective(
-          trigger,
-          isDefault ? 'win' : conditionIndex,
-          conditions,
-        ),
+        hasEffectObjective(trigger, objectiveIndex, conditions),
       )
     : false;
 
@@ -31,7 +28,7 @@ export default function selectObjectiveEffect(
       : trigger === 'GameEnd'
         ? ({
             actions: [],
-            conditions: [{ type: trigger, value: conditionIndex }],
+            conditions: [{ type: trigger, value: objectiveIndex }],
           } as const)
         : null;
 
