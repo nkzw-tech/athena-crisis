@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { PlayerDetail } from '../Types.tsx';
 
 export default function useClientGamePlayerDetails(
-  map: MapData | null,
+  map: MapData | null | undefined,
   user: PlayerDetail & { id: string },
 ) {
   return useMemo(() => {

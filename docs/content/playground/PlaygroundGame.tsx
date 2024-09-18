@@ -30,24 +30,23 @@ export default function PlaygroundGame({
   map: MapData;
   metadata?: MapMetadata;
 }) {
-  const userId = 'User-Demo';
-  const [game, setGame] = useClientGame(
-    map,
-    userId,
-    metadata?.effects || new Map(),
-    startAction,
-  );
-
-  const onAction = useClientGameAction(game, setGame);
   const zoom = useScale();
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: '-20% 0px 6% 0px' });
-  const playerDetails = useClientGamePlayerDetails(map, viewer);
+
+  const [game, setGame] = useClientGame(
+    map,
+    viewer.id,
+    metadata?.effects || new Map(),
+    startAction,
+  );
+  const onAction = useClientGameAction(game, setGame);
+  const playerDetails = useClientGamePlayerDetails(game.state, viewer);
 
   return (
     <div ref={ref}>
       <GameMap
-        currentUserId={userId}
+        currentUserId={viewer.id}
         fogStyle="soft"
         key="play-demo-map"
         lastActionResponse={game.lastAction}
