@@ -120,10 +120,6 @@ input[type="checkbox"] {
   vertical-align: middle;
   width: 24px;
 
-  &:not(.disabled):hover {
-    transform: scale(1.1);
-  }
-
   &:not(.disabled):active {
     transform: scale(0.9);
   }
@@ -141,9 +137,21 @@ input[type="checkbox"] {
   &:checked:before {
     color: ${applyVar('text-color')};
   }
+}
 
-  &:hover:not(:checked):not(.disabled):before {
-    color: ${applyVar('text-color-light')};
+@media (hover: hover) {
+  input[type="checkbox"] {
+    &:not(.disabled):hover {
+      transform: scale(1.1);
+    }
+
+    &:not(.disabled):active {
+      transform: scale(0.9);
+    }
+
+    &:hover:not(:checked):not(.disabled):before {
+      color: ${applyVar('text-color-light')};
+    }
   }
 }
 
