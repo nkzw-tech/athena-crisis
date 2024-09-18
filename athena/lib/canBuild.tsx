@@ -1,7 +1,29 @@
-import { BuildingInfo } from '../info/Building.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
+import { BuildingInfo, RadarStation } from '../info/Building.tsx';
+import { getTileInfo, Lightning } from '../info/Tile.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData, { PlayerOrPlayerID } from '../MapData.tsx';
+import canPlaceLightning from './canPlaceLightning.tsx';
 import getBiomeBuildingRestrictions from './getBiomeBuildingRestrictions.tsx';
+import indexToVector from './indexToSpriteVector.tsx';
+
+const canBuildRadarStation = (map: MapData) => {
+  const emptyMap = map.copy({
+    buildings: ImmutableMap(),
+    units: ImmutableMap(),
+  });
+
+  for (let i = 0; i < map.map.length; i++) {
+    const tile = getTileInfo(map.map[i]);
+    if (
+      tile === Lightning ||
+      canPlaceLightning(emptyMap, indexToVector(i, map.size.width))
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
 
 export default function canBuild(
   map: MapData,
@@ -11,6 +33,11 @@ export default function canBuild(
   isEditor = false,
 ): boolean {
   const tile = map.getTileInfo(to);
+
+  if (!isEditor && info === RadarStation && !canBuildRadarStation(map)) {
+    return false;
+  }
+
   return !!(
     tile &&
     (isEditor || info.configuration.canBeCreated) &&

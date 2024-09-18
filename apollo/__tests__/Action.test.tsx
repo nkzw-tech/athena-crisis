@@ -1,5 +1,14 @@
-import { Factory, House } from '@deities/athena/info/Building.tsx';
-import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
+import {
+  Factory,
+  House,
+  RadarStation,
+} from '@deities/athena/info/Building.tsx';
+import {
+  ConstructionSite,
+  Lightning,
+  Plain,
+  StormCloud,
+} from '@deities/athena/info/Tile.tsx';
 import {
   APU,
   Flamethrower,
@@ -128,13 +137,10 @@ test('creating units with a friendly player on the building', () => {
 test('creating buildings', () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);
-  const map = initialMap
-    .copy({
-      map: [ConstructionSite.id, 1, 1, 1, 1, 1, 1, 1, 1],
-    })
-    .copy({
-      units: initialMap.units.set(vecA, Pioneer.create(1)),
-    });
+  const map = initialMap.copy({
+    map: [ConstructionSite.id, 1, 1, 1, 1, 1, 1, 1, 1],
+    units: initialMap.units.set(vecA, Pioneer.create(1)),
+  });
 
   const [responseA] = execute(
     map,
@@ -173,4 +179,67 @@ test('creating buildings', () => {
       CreateBuildingAction(vecA, House.id),
     ),
   ).toBe(null);
+});
+
+test('Radar Stations are only available if Lightning can be placed', () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(1, 3);
+  const map = initialMap.copy({
+    buildings: initialMap.buildings.set(vecB, Factory.create(1)),
+    map: [ConstructionSite.id, 1, 1, 1, 1, 1, 1, 1, 1],
+    units: initialMap.units.set(vecA, Pioneer.create(1)),
+  });
+
+  const tilesA = map.map.slice();
+  tilesA[2] = [Plain.id, StormCloud.id];
+  tilesA[8] = [Plain.id, StormCloud.id];
+  const mapA = map.copy({
+    map: tilesA,
+  });
+  const [responseC] = execute(
+    mapA,
+    vision,
+    CreateBuildingAction(vecA, RadarStation.id),
+  )!;
+
+  expect(
+    formatActionResponse(responseC, { colors: false }),
+  ).toMatchInlineSnapshot(
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+  );
+
+  expect(
+    execute(map, vision, CreateBuildingAction(vecA, RadarStation.id)),
+  ).toBe(null);
+
+  const tilesB = tilesA.slice();
+  tilesB[5] = [Plain.id, Lightning.id];
+  const mapB = map.copy({
+    map: tilesA,
+  });
+  const [responseD] = execute(
+    mapB,
+    vision,
+    CreateBuildingAction(vecA, RadarStation.id),
+  )!;
+
+  expect(
+    formatActionResponse(responseD, { colors: false }),
+  ).toMatchInlineSnapshot(
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+  );
+
+  const [responseE] = execute(
+    mapA.copy({
+      buildings: mapA.buildings.set(vec(3, 2), Factory.create(1)),
+    }),
+    vision,
+    CreateBuildingAction(vecA, RadarStation.id),
+  )!;
+
+  expect(
+    formatActionResponse(responseE, { colors: false }),
+  ).toMatchInlineSnapshot(
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+  );
 });
