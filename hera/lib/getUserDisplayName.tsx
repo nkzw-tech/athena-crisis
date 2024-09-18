@@ -7,10 +7,9 @@ export default function getUserDisplayName(
   player: PlayerID | null,
 ) {
   return (
-    (player != null &&
-      playerDetails.size > 1 &&
-      playerDetails.get(player)?.displayName) ||
-    playerDetails.values().next().value!.displayName ||
+    (player != null && playerDetails.get(player)?.displayName) ||
+    (playerDetails.size >= 1 &&
+      playerDetails.values().next().value!.displayName) ||
     String(fbt('Player', 'Placeholder user name'))
   );
 }
