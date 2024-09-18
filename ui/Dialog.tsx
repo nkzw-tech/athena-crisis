@@ -347,7 +347,7 @@ const tabBarStyle = css`
   gap: 16px;
   padding-bottom: 8px;
   position: absolute;
-  top: -48px;
+  top: -${DoubleSize}px;
   width: calc(100% - ${DoubleSize + 16}px);
 `;
 
@@ -366,9 +366,7 @@ const tabStyle = css`
     background-color 150ms ease,
     color 150ms ease;
 
-  // Use clip on the horizontal axis to avoid the after element from being cut off
-  // while still allowing the ellipsis on the text.
-  overflow-x: clip;
+  overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
@@ -387,7 +385,7 @@ const tabStyle = css`
   }
 
   &:not(.disabled):hover {
-    ${isSafari ? `overflow-x: visible;` : ''}
+    overflow-x: visible;
     background-color: ${applyVar('background-color-bright')};
     color: ${applyVar('text-color')};
 
@@ -407,9 +405,9 @@ const disabledStyle = css`
 `;
 
 const highlightStyle = css`
-  ${isSafari ? `overflow-x: visible;` : ''}
   background: ${applyVar('background-color-bright')};
   color: ${applyVar('text-color')};
+  overflow-x: visible;
 
   &:after {
     opacity: 1;
@@ -423,10 +421,10 @@ const tabEndStyle = css`
 
 const closeButtonStyle = css`
   color: ${applyVar('text-color-bright')};
-  height: 44px;
+  height: ${DoubleSize - 4}px;
   padding: 0;
   position: absolute;
   right: 0;
-  top: -48px;
-  width: 48px;
+  top: -${DoubleSize}px;
+  width: ${DoubleSize}px;
 `;
