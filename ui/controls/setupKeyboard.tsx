@@ -36,6 +36,7 @@ type PressedKey = keyof typeof pressed;
 const keydownListener = (event: KeyboardEvent) => {
   const { code } = event;
   const isMeta = event.metaKey || event.ctrlKey;
+  const isRepeat = event.repeat;
 
   if (isMeta) {
     if (code === 'KeyE') {
@@ -111,21 +112,25 @@ const keydownListener = (event: KeyboardEvent) => {
     } else {
       next();
     }
-  } else if (code === 'ShiftLeft') {
+  } else if (!isRepeat && code === 'ShiftLeft') {
     Input.fire('tertiary');
   } else if (code === 'Enter' || code === 'Space') {
     event.preventDefault();
-    Input.fire('accept');
-  } else if (code === 'Escape') {
+    if (!isRepeat) {
+      Input.fire('accept');
+    }
+  } else if (!isRepeat && code === 'Escape') {
     Input.fire('cancel', { isEscape: true });
-  } else if (code === 'KeyI') {
+  } else if (!isRepeat && code === 'KeyI') {
     Input.fire('field-info');
   } else if (code === 'KeyP') {
     if (isMeta) {
       event.preventDefault();
     }
-    Input.fire('select', { modifier: isMeta });
-  } else if (!isMeta) {
+    if (!isRepeat) {
+      Input.fire('select', { modifier: isMeta });
+    }
+  } else if (!isRepeat && !isMeta) {
     if (code === 'KeyM') {
       Input.fire('menu');
     } else if (code === 'KeyQ') {
