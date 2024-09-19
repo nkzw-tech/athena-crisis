@@ -110,6 +110,11 @@ async function processActionResponse(
     return null;
   };
 
+  if (type === 'CharacterMessage' && skipDialogue) {
+    requestFrame(() => resolve(null));
+    return null;
+  }
+
   await scrollIntoView(getActionResponseVectors(map, actionResponse));
 
   const remoteActionResponse = applyRemoteActionResponse(
@@ -276,11 +281,6 @@ async function processActionResponse(
       }));
       break;
     case 'CharacterMessage': {
-      if (skipDialogue) {
-        requestFrame(() => resolve(null));
-        break;
-      }
-
       const { player: dynamicPlayer, unitId, variant } = actionResponse;
       const player = resolveDynamicPlayerID(map, dynamicPlayer);
       if (
@@ -660,7 +660,10 @@ export default async function processActionResponses(
   while (responses.length) {
     const response = responses.shift();
     if (response) {
-      if (lastActionResponse) {
+      if (
+        lastActionResponse &&
+        !(state.skipDialogue && lastActionResponse.type === 'CharacterMessage')
+      ) {
         await sleep(
           actions.scheduleTimer,
           state.animationConfig,

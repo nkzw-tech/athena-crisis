@@ -558,12 +558,15 @@ export default class GameMap extends Component<Props, State> {
   }
 
   private maybeSkipDialogue = () => {
-    const { behavior, lastActionResponse, skipDialogue } = this.state;
+    const { behavior, lastActionResponse, preventRemoteActions, skipDialogue } =
+      this.state;
     if (behavior?.type === 'null' && this._skipDialogueTimer == null) {
       if (
         !skipDialogue &&
-        (lastActionResponse?.type === 'Start' ||
-          lastActionResponse?.type === 'CharacterMessage')
+        ((!lastActionResponse && preventRemoteActions) ||
+          lastActionResponse?.type === 'Start' ||
+          lastActionResponse?.type === 'CharacterMessage' ||
+          lastActionResponse?.type === 'SetViewer')
       ) {
         this.setState({ showSkipDialogue: true });
       }
@@ -1090,7 +1093,7 @@ export default class GameMap extends Component<Props, State> {
       this._resolvers = [];
       this._timers = new Set();
 
-      const { currentViewer, map } = this.state;
+      const { currentViewer, lastActionResponse, map } = this.state;
       const currentPlayer = map.getCurrentPlayer();
       const isLive = currentViewer !== currentPlayer.id;
       this.setState(
@@ -1108,7 +1111,10 @@ export default class GameMap extends Component<Props, State> {
             isWaiting: false,
             pauseStart: null,
           },
-          skipDialogue: false,
+          skipDialogue:
+            !lastActionResponse || lastActionResponse?.type === 'Start'
+              ? this.state.skipDialogue
+              : false,
         },
         async () => {
           const { currentViewer } = this.state;
@@ -1169,7 +1175,10 @@ export default class GameMap extends Component<Props, State> {
                 pauseStart: null,
               },
               showSkipDialogue: false,
-              skipDialogue: false,
+              skipDialogue:
+                lastActionResponse?.type === 'Start'
+                  ? this.state.skipDialogue
+                  : false,
             },
             () => {
               if (isLive) {
