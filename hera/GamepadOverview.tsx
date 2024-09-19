@@ -3,9 +3,9 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
 
-export default function GamepadOverview() {
+export default function GamepadControls() {
   return (
-    <Stack adaptive alignCenter center>
+    <Stack adaptive alignCenter center nowrap>
       <Stack gap={16} vertical>
         <div>
           L2:{' '}
