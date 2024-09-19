@@ -77,7 +77,8 @@ class AudioPlayer {
 
   playSound(sound: SoundName, rate = 1) {
     const instance = this.getInstance(sound);
-    const volume = getVolume('sound');
+    const isTalkingSound = sound.startsWith('Talking/');
+    const volume = getVolume('sound') * (isTalkingSound ? 0.66 : 1);
 
     if (
       this.paused ||
