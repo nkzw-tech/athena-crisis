@@ -157,7 +157,6 @@ export default function Menu({
           stretch
           vertical
         >
-          <div />
           {canToggleFullScreen && (
             <Stack gap vertical>
               <a onClick={toggleFullscreen}>
