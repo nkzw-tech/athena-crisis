@@ -1488,8 +1488,12 @@ export default class GameMap extends Component<Props, State> {
     });
 
   private _pointerDown = (event: ReactPointerEvent) => {
+    this.maybeSkipDialogue();
+
     this._isTouch.current = event.pointerType === 'touch';
   };
+
+  private _pointerUp = () => this.resetDialogueSkip();
 
   private _pointerMove = (event: PointerEvent) => {
     this._enablePointer();
@@ -1546,8 +1550,6 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _mouseDown = (event: MouseEvent) => {
-    this.maybeSkipDialogue();
-
     this._pointerPosition = {
       clientX: event.clientX,
       clientY: event.clientY,
@@ -1592,8 +1594,6 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _mouseUp = () => {
-    this.resetDialogueSkip();
-
     const { editor } = this.props;
     if (!editor && this._lastEnteredPosition) {
       this._enter(this._lastEnteredPosition);
@@ -1725,6 +1725,7 @@ export default class GameMap extends Component<Props, State> {
             )}
             onMouseLeave={this._reset}
             onPointerDown={this._pointerDown}
+            onPointerUp={this._pointerUp}
             style={{
               [cssVar('perspective-height')]: Math.max(
                 0,
