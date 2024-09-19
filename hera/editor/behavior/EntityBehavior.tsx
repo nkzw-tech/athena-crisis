@@ -19,6 +19,11 @@ const UnfoldButton = ({
   const { map, navigationDirection, selectedPosition, selectedUnit } = state;
   return selectedUnit && selectedPosition && availableActions.has('unfold') ? (
     <ActionButton
+      label={
+        <fbt desc="Unfold button label (as short as possible, ideally one word)">
+          Unfold
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() => {
         const unit = selectedUnit.unfold();
@@ -42,6 +47,11 @@ const FoldButton = ({
   const { map, navigationDirection, selectedPosition, selectedUnit } = state;
   return selectedUnit && selectedPosition && availableActions.has('fold') ? (
     <ActionButton
+      label={
+        <fbt desc="Fold button label (as short as possible, ideally one word)">
+          Fold
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() => {
         const unit = selectedUnit.fold();
@@ -64,11 +74,23 @@ const CaptureButton = ({
   type = 'capture',
 }: MenuItemProps & { type: 'capture' | 'stopCapture' }) => {
   const { map, navigationDirection, selectedPosition, selectedUnit } = state;
+  const isCapturing = selectedUnit?.isCapturing();
   return selectedUnit && selectedPosition && availableActions.has('capture') ? (
     <ActionButton
+      label={
+        isCapturing ? (
+          <fbt desc="Stop Capture button label (as short as possible, ideally one or two words)">
+            Stop Capture
+          </fbt>
+        ) : (
+          <fbt desc="Capture button label (as short as possible, ideally one word)">
+            Capture
+          </fbt>
+        )
+      }
       navigationDirection={navigationDirection}
       onClick={() => {
-        const unit = selectedUnit.isCapturing()
+        const unit = isCapturing
           ? selectedUnit.stopCapture()
           : selectedUnit.capture();
         update({

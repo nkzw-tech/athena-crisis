@@ -36,7 +36,14 @@ import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
 import Load from '@iconify-icons/pixelarticons/login.js';
 import { motion } from 'framer-motion';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Tick from '../Tick.tsx';
@@ -86,7 +93,7 @@ export default function ActionWheel({
         opacity: 1,
         transform: `${translate}scale(1)`,
       }}
-      className={cx(style, hasEntities ? radiusStyle : null)}
+      className={cx(actionWheelStyle, hasEntities ? radiusStyle : null)}
       initial={{
         opacity: 0,
         transform: `${translate}scale(0)`,
@@ -157,9 +164,11 @@ export function ActionButton({
   onClick,
   hasShift,
   shift,
+  label,
 }: {
   hasShift?: boolean;
   icon?: ActionButtonType;
+  label: ReactElement;
   navigationDirection: NavigationDirection | null;
   onClick: () => void;
   shift?: boolean;
@@ -198,6 +207,8 @@ export function ActionButton({
     'menu',
   );
 
+  const isLeft = navigationPositions[type] === left;
+  const isRight = navigationPositions[type] === right;
   return (
     <a
       className={cx(
@@ -223,6 +234,17 @@ export function ActionButton({
           width={`${iconSize}px`}
         />
       </div>
+      <div
+        className={cx(
+          descriptionClassName,
+          BoxStyle,
+          descriptionStyle,
+          isLeft && descriptionLeftStyle,
+          isRight && descriptionRightStyle,
+        )}
+      >
+        {label}
+      </div>
     </a>
   );
 }
@@ -237,6 +259,11 @@ export const CancelActionButton = ({
   navigationDirection: NavigationDirection | null;
 }) => (
   <ActionButton
+    label={
+      <fbt desc="Cancel button label (as short as possible, ideally one word)">
+        Cancel
+      </fbt>
+    }
     navigationDirection={navigationDirection}
     onClick={() => cancelAction(actions)}
     type="close"
@@ -465,7 +492,10 @@ const vars = new CSSVariables<
 >('w');
 
 const size = TileSize;
-const style = css`
+const iconSize = (TileSize / 3) * 2 - 2;
+const descriptionClassName = 'item-description';
+
+const actionWheelStyle = css`
   height: ${size * 3}px;
   line-height: 0;
   pointer-events: none;
@@ -473,7 +503,6 @@ const style = css`
   width: ${size * 3}px;
 `;
 
-const iconSize = (TileSize / 3) * 2 - 2;
 const itemStyle = css`
   ${vars.set('transform', `translate3d(0, 0, 0)`)}
   ${vars.set('scale', `1`)}
@@ -503,6 +532,22 @@ const itemStyle = css`
   &:active {
     ${vars.set('scale', '0.9')}
   }
+
+  &.highlight .${descriptionClassName} {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 150ms ease 350ms;
+  }
+
+  @media (hover: hover) {
+    &:not(:active):hover {
+      .${descriptionClassName} {
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 150ms ease 350ms;
+      }
+    }
+  }
 `;
 
 const disabledStyle = css`
@@ -525,6 +570,35 @@ const iconStyle = css`
   font-size: ${vars.apply('size')};
   height: ${vars.apply('size')};
   width: ${vars.apply('size')};
+`;
+
+const descriptionStyle = css`
+  ${vars.set('size', `${iconSize}px`)}
+
+  ${pixelBorder(applyVar('background-color-light'), 1)};
+
+  font-size: calc(${vars.apply('size')} * 0.6);
+  height: ${vars.apply('size')};
+  left: calc(100% - 1px);
+  line-height: ${vars.apply('size')};
+  opacity: 0;
+  padding: 0 2px;
+  pointer-events: none;
+  position: absolute;
+  transform: scale(0.9);
+  transition:
+    opacity 150ms ease 0ms,
+    transform 150ms ease 0ms;
+  white-space: nowrap;
+`;
+
+const descriptionLeftStyle = css`
+  left: auto;
+  right: 100%;
+`;
+
+const descriptionRightStyle = css`
+  left: 100%;
 `;
 
 const leftStyle = css`

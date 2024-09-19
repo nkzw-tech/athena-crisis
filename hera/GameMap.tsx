@@ -596,6 +596,7 @@ export default class GameMap extends Component<Props, State> {
   }: CustomEvent<NavigationDirection>) => {
     const {
       behavior,
+      confirmAction,
       lastActionResponse,
       map,
       navigationDirection,
@@ -604,7 +605,7 @@ export default class GameMap extends Component<Props, State> {
       selectedPosition,
     } = this.state;
 
-    if (behavior?.navigate) {
+    if (confirmAction || behavior?.navigate) {
       this.setState({
         navigationDirection: {
           ...direction,

@@ -3,8 +3,8 @@ import { State, StateLike, StateWithActions } from '../../Types.tsx';
 import ActionWheel, {
   ActionButton,
   ActionButtonType,
+  CancelActionButton,
 } from '../../ui/ActionWheel.tsx';
-import { resetBehavior } from '../Behavior.tsx';
 
 export type ConfirmProps = Readonly<{
   icon?: ActionButtonType;
@@ -31,13 +31,17 @@ export default function ConfirmAction({
       tileSize={tileSize}
       zIndex={zIndex}
     >
-      <ActionButton
+      <CancelActionButton
+        actions={actions}
         navigationDirection={navigationDirection}
-        onClick={() => update(resetBehavior())}
-        type="close"
       />
       <ActionButton
         icon={icon}
+        label={
+          <fbt desc="Move button label (as short as possible, ideally one word)">
+            Move
+          </fbt>
+        }
         navigationDirection={navigationDirection}
         onClick={() => update(onAction(state, 'confirm'))}
         type="confirm"
@@ -45,6 +49,11 @@ export default function ConfirmAction({
       {complete && (
         <ActionButton
           icon={icon}
+          label={
+            <fbt desc="Wait button label (as short as possible, ideally one word)">
+              Wait
+            </fbt>
+          }
           navigationDirection={navigationDirection}
           onClick={() => update(onAction(state, 'complete'))}
           type="complete"

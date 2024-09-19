@@ -61,6 +61,11 @@ const UnfoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { navigationDirection, selectedPosition } = state;
   return selectedPosition && availableActions.has('unfold') ? (
     <ActionButton
+      label={
+        <fbt desc="Unfold button label (as short as possible, ideally one word)">
+          Unfold
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         unfoldAction(
@@ -80,6 +85,11 @@ const FoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { navigationDirection, selectedPosition } = state;
   return selectedPosition && availableActions.has('fold') ? (
     <ActionButton
+      label={
+        <fbt desc="Fold button label (as short as possible, ideally one word)">
+          Fold
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         unfoldAction(
@@ -112,6 +122,11 @@ const AttackButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('attack') ? (
     <ActionButton
       hasShift={availableActions.has('createBuildings')}
+      label={
+        <fbt desc="Attack button label (as short as possible, ideally one word)">
+          Attack
+        </fbt>
+      }
       navigationDirection={state.navigationDirection}
       onClick={() => attackAction(actions, state)}
       type="attack"
@@ -130,6 +145,11 @@ const dropUnitAction = ({ update }: Actions, { selectedPosition }: State) => {
 const DropUnitButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('drop') ? (
     <ActionButton
+      label={
+        <fbt desc="Unload button label (as short as possible, ideally one word)">
+          Unload
+        </fbt>
+      }
       navigationDirection={state.navigationDirection}
       onClick={() => dropUnitAction(actions, state)}
       type="drop"
@@ -148,6 +168,11 @@ const buildAction = ({ update }: Actions, { selectedPosition }: State) => {
 const BuildButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('createBuildings') ? (
     <ActionButton
+      label={
+        <fbt desc="Build button label (as short as possible, ideally one word)">
+          Build
+        </fbt>
+      }
       navigationDirection={state.navigationDirection}
       onClick={() => buildAction(actions, state)}
       shift={availableActions.has('attack')}
@@ -171,6 +196,11 @@ const BuildTracksButton = ({
     selectedUnit &&
     availableActions.has('createTracks') ? (
     <ActionButton
+      label={
+        <fbt desc="Build Tracks button label (as short as possible, ideally one or two words)">
+          Build Tracks
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() => {
         if (map.getPlayer(selectedUnit).funds >= CreateTracksCost) {
@@ -201,6 +231,11 @@ const CaptureButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { navigationDirection, selectedPosition } = state;
   return selectedPosition && availableActions.has('capture') ? (
     <ActionButton
+      label={
+        <fbt desc="Capture button label (as short as possible, ideally one word)">
+          Capture
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         captureAction(
@@ -241,6 +276,11 @@ const SupplyButton = ({ actions, availableActions, state }: MenuItemProps) => {
     state;
   return selectedPosition && selectedUnit && availableActions.has('supply') ? (
     <ActionButton
+      label={
+        <fbt desc="Supply button label (as short as possible, ideally one word)">
+          Supply
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         supplyAction(
@@ -266,6 +306,11 @@ const HealButton = ({
 }: MenuItemProps) =>
   availableActions.has('heal') ? (
     <ActionButton
+      label={
+        <fbt desc="Heal button label (as short as possible, ideally one word)">
+          Heal
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         update({
@@ -283,6 +328,11 @@ const RescueButton = ({
 }: MenuItemProps) =>
   availableActions.has('rescue') ? (
     <ActionButton
+      label={
+        <fbt desc="Rescue button label (as short as possible, ideally one word)">
+          Rescue
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         update({
@@ -300,6 +350,11 @@ const SabotageButton = ({
 }: MenuItemProps) =>
   availableActions.has('sabotage') ? (
     <ActionButton
+      label={
+        <fbt desc="Sabotage button label (as short as possible, ideally one word)">
+          Sabotage
+        </fbt>
+      }
       navigationDirection={navigationDirection}
       onClick={() =>
         update({
@@ -405,6 +460,11 @@ export default class Menu {
           zIndex={zIndex}
         >
           <ActionButton
+            label={
+              <fbt desc="Wait button label (as short as possible, ideally one word)">
+                Wait
+              </fbt>
+            }
             navigationDirection={navigationDirection}
             onClick={() => completeAction(actions, state)}
             type={offset ? 'completeOffset' : 'complete'}

@@ -94,6 +94,11 @@ export default class Transport {
           navigationDirection={navigationDirection}
         />
         <ActionButton
+          label={
+            <fbt desc="Load button label (as short as possible, ideally one word)">
+              Load
+            </fbt>
+          }
           navigationDirection={navigationDirection}
           onClick={() => loadAction(this.transport, actions, state)}
           type="load"
