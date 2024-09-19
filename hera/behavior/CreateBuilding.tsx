@@ -147,6 +147,7 @@ export default class CreateBuilding {
                   </>
                 )}
                 key={id}
+                label={building.name}
                 navigationDirection={navigationDirection}
                 onClick={create}
                 onLongPress={showInfo}

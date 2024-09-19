@@ -252,6 +252,7 @@ export default class CreateUnit {
                   </>
                 )}
                 key={unit.id}
+                label={unit.name}
                 navigationDirection={navigationDirection}
                 onClick={create}
                 onLongPress={showInfo}
@@ -268,6 +269,7 @@ export default class CreateUnit {
               }
               entityCount={entityCount}
               icon={(highlight, props) => <Icon icon={More} {...props} />}
+              label={null}
               navigationDirection={navigationDirection}
               onClick={() =>
                 setCursor((cursor) =>

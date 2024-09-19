@@ -36,14 +36,7 @@ import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
 import Load from '@iconify-icons/pixelarticons/login.js';
 import { motion } from 'framer-motion';
-import {
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Tick from '../Tick.tsx';
@@ -168,7 +161,7 @@ export function ActionButton({
 }: {
   hasShift?: boolean;
   icon?: ActionButtonType;
-  label: ReactElement;
+  label: ReactNode;
   navigationDirection: NavigationDirection | null;
   onClick: () => void;
   shift?: boolean;
@@ -316,6 +309,7 @@ export function LargeActionButton({
   disabled,
   entityCount,
   icon,
+  label,
   navigationDirection,
   onClick,
   onLongPress: initialOnLongPress,
@@ -325,6 +319,7 @@ export function LargeActionButton({
   disabled?: boolean;
   entityCount: number;
   icon: (highlight: boolean, { className }: { className: string }) => ReactNode;
+  label: ReactNode | null;
   navigationDirection: NavigationDirection | null;
   onClick: () => void;
   onLongPress?: (
@@ -332,6 +327,7 @@ export function LargeActionButton({
   ) => void;
   position: number;
 }) {
+  const [highlight, setHighlight] = useState(false);
   const ref = useRef<HTMLAnchorElement | null>(null);
   const onLongPress = useCallback(
     (event: LongPressReactEvents<Element> | ClientCoordinates) => {
@@ -353,23 +349,25 @@ export function LargeActionButton({
       click();
     }
   }, [disabled, click]);
+
   const props = usePress({
     onLongPress,
     onPress,
   })();
 
   const highlighted = isHighlighted(entityCount, position, navigationDirection);
-
   useInput(
     'accept',
     useCallback(
       (event) => {
         if (highlighted) {
           event.preventDefault();
-          click();
+          if (!disabled) {
+            click();
+          }
         }
       },
-      [highlighted, click],
+      [disabled, highlighted, click],
     ),
     'menu',
   );
@@ -387,7 +385,18 @@ export function LargeActionButton({
   useInput('info', showInfo, 'menu');
   useInput('detail', showInfo, 'menu');
 
-  const [highlight, setHighlight] = useState(false);
+  const isTop = entityCount >= 8 && position === 0;
+  const isBottom = !isTop && entityCount >= 7 && position === 4;
+  const isLeft =
+    !isBottom &&
+    (entityCount >= 5
+      ? position > 3 || position === 0
+      : entityCount >= 4
+        ? position >= 3
+        : entityCount === 2
+          ? position === 3
+          : false);
+
   return (
     <a
       className={cx(
@@ -429,6 +438,21 @@ export function LargeActionButton({
         </div>
         {detail}
       </Stack>
+      {label && (
+        <div
+          className={cx(
+            descriptionClassName,
+            BoxStyle,
+            descriptionStyle,
+            largeDescriptionStyle,
+            isBottom && largeDescriptionBottomStyle,
+            isLeft && largeDescriptionLeftStyle,
+            isTop && largeDescriptionTopStyle,
+          )}
+        >
+          {label}
+        </div>
+      )}
     </a>
   );
 }
@@ -477,6 +501,7 @@ export function ActionWheelCharge({
 const vars = new CSSVariables<
   | 'container-size'
   | 'count'
+  | 'description-transform'
   | 'item-size'
   | 'offset'
   | 'position'
@@ -535,7 +560,7 @@ const itemStyle = css`
 
   &.highlight .${descriptionClassName} {
     opacity: 1;
-    transform: scale(1);
+    transform: ${vars.apply('description-transform')} scale(1);
     transition: opacity 150ms ease 350ms;
   }
 
@@ -543,7 +568,7 @@ const itemStyle = css`
     &:not(:active):hover {
       .${descriptionClassName} {
         opacity: 1;
-        transform: scale(1);
+        transform: ${vars.apply('description-transform')} scale(1);
         transition: opacity 150ms ease 350ms;
       }
     }
@@ -573,10 +598,12 @@ const iconStyle = css`
 `;
 
 const descriptionStyle = css`
+  ${vars.set('description-transform', `translate3d(0, 0, 0)`)}
   ${vars.set('size', `${iconSize}px`)}
 
   ${pixelBorder(applyVar('background-color-light'), 1)};
 
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6));
   font-size: calc(${vars.apply('size')} * 0.6);
   height: ${vars.apply('size')};
   left: calc(100% - 1px);
@@ -585,7 +612,7 @@ const descriptionStyle = css`
   padding: 0 2px;
   pointer-events: none;
   position: absolute;
-  transform: scale(0.9);
+  transform: ${vars.apply('description-transform')} scale(0.9);
   transition:
     opacity 150ms ease 0ms,
     transform 150ms ease 0ms;
@@ -599,6 +626,27 @@ const descriptionLeftStyle = css`
 
 const descriptionRightStyle = css`
   left: 100%;
+`;
+
+const largeDescriptionStyle = css`
+  left: calc(100% + 4px);
+`;
+
+const largeDescriptionLeftStyle = css`
+  left: auto;
+  right: calc(100% + 4px);
+`;
+
+const largeDescriptionTopStyle = css`
+  ${vars.set('description-transform', `translate3d(-50%, 0, 0)`)}
+  bottom: calc(100% + 4px);
+  left: 50%;
+  width: fit-content;
+`;
+
+const largeDescriptionBottomStyle = css`
+  left: auto;
+  top: calc(100% + 4px);
 `;
 
 const leftStyle = css`

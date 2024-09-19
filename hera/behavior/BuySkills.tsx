@@ -10,6 +10,7 @@ import More from '@iconify-icons/pixelarticons/more-horizontal.js';
 import { fbt } from 'fbt';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
+import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import toTransformOrigin, {
   ClientCoordinates,
 } from '../lib/toTransformOrigin.tsx';
@@ -109,6 +110,7 @@ export default class BuySkills {
           <ActionWheelFunds funds={funds} />
           {skillsToDisplay.map((skill) => {
             const cost = skillCosts.get(skill)!;
+            const { name } = getSkillConfigForDisplay(skill);
             const isDisabled = funds < cost || currentPlayer.skills.has(skill);
             const buy = async () => {
               if (!isDisabled && selectedPosition) {
@@ -163,6 +165,7 @@ export default class BuySkills {
                   </>
                 )}
                 key={skill}
+                label={name}
                 navigationDirection={navigationDirection}
                 onClick={buy}
                 onLongPress={showInfo}
@@ -179,6 +182,7 @@ export default class BuySkills {
               }
               entityCount={entityCount}
               icon={(highlight, props) => <Icon icon={More} {...props} />}
+              label={null}
               navigationDirection={navigationDirection}
               onClick={() =>
                 setCursor((cursor) =>

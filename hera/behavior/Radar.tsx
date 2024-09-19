@@ -102,6 +102,11 @@ export default class Radar {
             disabled={!canDisableLightning || charge < Charge}
             entityCount={2}
             icon={(highlight, props) => <Icon icon={Zap} {...props} />}
+            label={
+              <fbt desc="Short label to describe the disable lightning action">
+                Disable Lightning
+              </fbt>
+            }
             navigationDirection={navigationDirection}
             onClick={() => update({ behavior: new Radar('off') })}
             position={1}
@@ -111,6 +116,11 @@ export default class Radar {
             disabled={!canEnableLightning || charge < Charge}
             entityCount={2}
             icon={(highlight, props) => <Icon icon={ZapOn} {...props} />}
+            label={
+              <fbt desc="Short label to describe the enable lightning action">
+                Enable Lightning
+              </fbt>
+            }
             navigationDirection={navigationDirection}
             onClick={() => update({ behavior: new Radar('on') })}
             position={3}
