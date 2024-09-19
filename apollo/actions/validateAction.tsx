@@ -1,4 +1,5 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
+import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import { validateUnit } from '@deities/athena/lib/validateMap.tsx';
 import { MaxMessageLength } from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
@@ -6,6 +7,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import sanitizeText from '@deities/hephaestus/sanitizeText.tsx';
 import {
   Action,
+  ActivateCrystalAction,
   CharacterMessageEffectAction,
   SpawnEffectAction,
 } from '../Action.tsx';
@@ -67,12 +69,17 @@ const validateSpawnEffect = (map: MapData, action: SpawnEffectAction) => {
   return { ...action, units };
 };
 
+const validateActivateCrystal = (action: ActivateCrystalAction) =>
+  Crystals.includes(action.crystal) ? action : null;
+
 export default function validateAction(map: MapData, action: Action) {
   switch (action.type) {
     case 'CharacterMessageEffect':
       return validateCharacterMessage(action);
     case 'SpawnEffect':
       return validateSpawnEffect(map, action);
+    case 'ActivateCrystal':
+      return validateActivateCrystal(action);
   }
 
   return null;

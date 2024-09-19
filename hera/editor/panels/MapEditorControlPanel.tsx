@@ -183,6 +183,7 @@ export default function MapEditorControlPanel({
               <EffectsPanel
                 editor={editor}
                 hasContentRestrictions={!isAdmin}
+                isAdmin={isAdmin}
                 map={state.map}
                 position={drawerPosition}
                 scenario={editor.scenario}

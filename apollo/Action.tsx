@@ -7,7 +7,11 @@ import {
 import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, getUnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
-import { Crystal, PowerCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import {
+  Crystal,
+  Crystals,
+  PowerCrystal,
+} from '@deities/athena/invasions/Crystal.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -180,7 +184,7 @@ type BuySkillAction = Readonly<{
 
 type ActivatePowerAction = Readonly<{ skill: Skill; type: 'ActivatePower' }>;
 
-type ActivateCrystalAction = Readonly<{
+export type ActivateCrystalAction = Readonly<{
   crystal: Crystal;
   type: 'ActivateCrystal';
 }>;
@@ -932,9 +936,19 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
   return null;
 }
 
-function activateCrystal(map: MapData, { crystal }: ActivateCrystalAction) {
-  const player = map.getCurrentPlayer();
+function activateCrystal(
+  map: MapData,
+  { crystal }: ActivateCrystalAction,
+  isEffect: boolean,
+) {
+  if (isEffect && Crystals.includes(crystal)) {
+    return {
+      crystal,
+      type: 'ActivateCrystal',
+    } as const;
+  }
 
+  const player = map.getCurrentPlayer();
   if (
     player.isHumanPlayer() &&
     player.crystal === null &&
@@ -1007,7 +1021,7 @@ function applyAction(
     case 'ActivatePower':
       return activatePower(map, action);
     case 'ActivateCrystal':
-      return activateCrystal(map, action);
+      return activateCrystal(map, action, isEffect);
     default: {
       const _exhaustiveCheck: never = action;
       return _exhaustiveCheck;

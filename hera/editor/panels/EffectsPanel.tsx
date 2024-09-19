@@ -1,5 +1,6 @@
 import { Action } from '@deities/apollo/Action.tsx';
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
@@ -38,6 +39,7 @@ export type ActionChangeFn = (
 export default function EffectsPanel({
   editor,
   hasContentRestrictions,
+  isAdmin,
   map,
   position,
   scenario,
@@ -50,6 +52,7 @@ export default function EffectsPanel({
 }: {
   editor: EditorState;
   hasContentRestrictions: boolean;
+  isAdmin?: boolean;
   map: MapData;
   position: DrawerPosition;
   scenario: Scenario;
@@ -352,6 +355,26 @@ export default function EffectsPanel({
             >
               <fbt desc="Button to add a new spawn effect in the map editor">
                 Add Spawn Effect
+              </fbt>
+            </Button>
+          ) : null}
+          {isAdmin ? (
+            <Button
+              onClick={() =>
+                updateEffect({
+                  ...effect,
+                  actions: [
+                    ...actions,
+                    {
+                      crystal: Crystal.Gray,
+                      type: 'ActivateCrystal',
+                    },
+                  ],
+                })
+              }
+            >
+              <fbt desc="Button to add a new crystal effect in the map editor">
+                Add Activate Crystal Effect
               </fbt>
             </Button>
           ) : null}

@@ -2,6 +2,7 @@ import { Action } from '@deities/apollo/Action.tsx';
 import { EffectTrigger } from '@deities/apollo/Effects.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
+import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
@@ -21,6 +22,7 @@ import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -31,12 +33,13 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
-import { memo, RefObject, useRef, useState } from 'react';
+import { memo, ReactNode, RefObject, useRef, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import translateMessage from '../../i18n/translateMessage.tsx';
+import CrystalSprite from '../../invasions/CrystalSprite.tsx';
 import Tick from '../../Tick.tsx';
 import { PlayerDetails } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
@@ -54,17 +57,14 @@ const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
   return number < 0 ? 1 / number : number;
 });
 
-const TopBarIcons = ({
-  first,
-  index,
-  last,
-  onChange,
-}: {
+type TopBarProps = Readonly<{
   first: boolean | undefined;
   index: number | undefined;
   last: boolean | undefined;
   onChange: ActionChangeFn | undefined;
-}) =>
+}>;
+
+const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
   onChange && index != null ? (
     <Stack nowrap>
       {!first && (
@@ -91,6 +91,20 @@ const TopBarIcons = ({
       />
     </Stack>
   ) : null;
+
+const ActionHeadline = ({
+  children,
+  focused,
+  ...props
+}: {
+  children: ReactNode;
+  focused?: boolean;
+} & TopBarProps) => (
+  <Stack className={headlineStyle} nowrap>
+    <h2>{children}</h2>
+    {!focused && <TopBarIcons {...props} />}
+  </Stack>
+);
 
 export default memo(function ActionCard({
   action,
@@ -304,19 +318,15 @@ export default memo(function ActionCard({
     const vectors = [...action.units.keys()];
     return (
       <Box className={boxStyle} gap={16} vertical>
-        <Stack className={headlineStyle} nowrap>
-          <h2>
-            <fbt desc="Label for Spawn Effect">Spawn</fbt>
-          </h2>
-          {!focused && (
-            <TopBarIcons
-              first={first}
-              index={index}
-              last={last}
-              onChange={onChange}
-            />
-          )}
-        </Stack>
+        <ActionHeadline
+          first={first}
+          focused={focused}
+          index={index}
+          last={last}
+          onChange={onChange}
+        >
+          <fbt desc="Label for Spawn Effect">Spawn</fbt>
+        </ActionHeadline>
         <Stack gap vertical>
           <Stack alignNormal>
             <Tick animationConfig={AnimationConfig}>
@@ -418,15 +428,53 @@ export default memo(function ActionCard({
           </Stack>
         ) : null}
         {trigger === 'GameEnd' && (
-          <p className={lightStyle}>
-            <fbt desc="Game end spawn effect conflict note">
-              Note: This Action is associated with a Game End Effect and will be
-              removed upon saving. If you want to keep this action, please
-              change the effect type, for example by changing the objective to
-              be optional.
-            </fbt>
-          </p>
+          <InfoBox>
+            <p className={lightStyle}>
+              <fbt desc="Game end spawn effect conflict note">
+                Note: This Action is associated with a Game End Effect and will
+                be removed upon saving. If you want to keep this action, please
+                change the effect type, for example by changing the objective to
+                be optional.
+              </fbt>
+            </p>
+          </InfoBox>
         )}
+      </Box>
+    );
+  } else if (action.type === 'ActivateCrystal') {
+    const { crystal } = action;
+    return (
+      <Box className={boxStyle} gap={16} vertical>
+        <ActionHeadline
+          first={first}
+          focused={focused}
+          index={index}
+          last={last}
+          onChange={onChange}
+        >
+          <fbt desc="Label for Spawn Effect">Activate Crystal</fbt>
+        </ActionHeadline>
+        <Stack alignCenter center gap={24}>
+          {canChange ? (
+            Crystals.map((crystal) => (
+              <InlineLink
+                className={crystalStyle}
+                key={crystal}
+                onClick={() =>
+                  onChange(index, 'update', {
+                    ...action,
+                    crystal,
+                  })
+                }
+                selected={crystal === action.crystal}
+              >
+                <CrystalSprite animate crystal={crystal} />
+              </InlineLink>
+            ))
+          ) : (
+            <CrystalSprite animate crystal={crystal} />
+          )}
+        </Stack>
       </Box>
     );
   }
@@ -580,4 +628,8 @@ const spawnLinkStyle = css`
 
 const lightStyle = css`
   opacity: 0.7;
+`;
+
+const crystalStyle = css`
+  padding: 8px;
 `;

@@ -570,8 +570,12 @@ export default function applyActionResponse(
       );
     }
     case 'ActivateCrystal': {
-      // Crystal activations may happen prior to the player appearing on the map.
-      const player = map.maybeGetPlayer(actionResponse.player);
+      // Crystal activations may happen prior to the player appearing on the map, or
+      // are just used for effects.
+      const player =
+        actionResponse.player != null
+          ? map.maybeGetPlayer(actionResponse.player)
+          : null;
       return player?.isHumanPlayer()
         ? map.copy({
             teams: updatePlayer(

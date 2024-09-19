@@ -204,7 +204,7 @@ export type ActivatePowerActionResponse = Readonly<{
 
 export type ActivateCrystalActionResponse = Readonly<{
   crystal: Crystal;
-  player: PlayerID;
+  player?: PlayerID;
   type: 'ActivateCrystal';
 }>;
 
