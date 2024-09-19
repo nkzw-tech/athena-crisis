@@ -133,14 +133,16 @@ class AudioPlayer {
     return this.paused;
   }
 
-  pause() {
+  pause(temporary?: boolean) {
     if (this.paused) {
       return;
     }
 
     this.paused = true;
-    localStorage.setItem(pausedKey, String(1));
     this.currentInstance?.pause();
+    if (!temporary) {
+      localStorage.setItem(pausedKey, String(1));
+    }
   }
 
   resume() {

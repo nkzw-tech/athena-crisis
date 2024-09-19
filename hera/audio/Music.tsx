@@ -53,7 +53,7 @@ const onVisibilityChange = (isVisible: boolean) => {
       // Visibility change is fired on reload and navigation.
       // We can avoid pausing music on navigation by using a timer.
       timer = setTimeout(() => {
-        AudioPlayer.pause();
+        AudioPlayer.pause(true);
         resume = true;
       }, 100);
     }
