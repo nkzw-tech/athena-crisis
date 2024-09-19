@@ -697,12 +697,10 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
 };
 
 export default memo(function SkillDescription({
-  className,
   color,
   skill,
   type,
 }: {
-  className?: string;
   color: BaseColor;
   skill: Skill;
   type: 'regular' | 'power';
@@ -798,7 +796,7 @@ export default memo(function SkillDescription({
       item ? <Fragment key={index}>{item} </Fragment> : null,
     );
 
-  return list?.length ? <div className={className}>{list}</div> : null;
+  return list?.length ? <div className="paragraph">{list}</div> : null;
 });
 
 const inlineStyle = css`

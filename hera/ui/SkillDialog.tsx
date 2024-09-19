@@ -487,18 +487,10 @@ const SkillListItem = ({
             </div>
           </Stack>
         </Stack>
-        <SkillDescription
-          className={descriptionStyle}
-          color={color}
-          skill={skill}
-          type="regular"
-        />
-        <SkillDescription
-          className={descriptionStyle}
-          color={color}
-          skill={skill}
-          type="power"
-        />
+        <Stack className={descriptionStyle} gap={16} vertical>
+          <SkillDescription color={color} skill={skill} type="regular" />
+          <SkillDescription color={color} skill={skill} type="power" />
+        </Stack>
       </Stack>
       {showCost && (
         <Stack className={costStyle} gap nowrap start>

@@ -6,6 +6,7 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { useCallback, useMemo } from 'react';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
@@ -109,12 +110,14 @@ export default function MapEditorSetupPanel({
         skillSlots={DefaultMapSkillSlots.length}
         users={placeholderUsers}
       >
-        <p>
-          <fbt desc="Skill explanation">
-            Bots can use any skills, but players can only use predefined skills
-            if they&apos;ve unlocked them already.
-          </fbt>
-        </p>
+        <InfoBox>
+          <p>
+            <fbt desc="Skill explanation">
+              Bots can use any skills, but players can only use predefined
+              skills if they&apos;ve unlocked them already.
+            </fbt>
+          </p>
+        </InfoBox>
       </PlayerSelector>
     </Stack>
   );
