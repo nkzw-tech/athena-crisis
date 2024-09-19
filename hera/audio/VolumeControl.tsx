@@ -1,6 +1,7 @@
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer, { AudioVolumeType } from '@deities/ui/AudioPlayer.tsx';
 import { InputLayer } from '@deities/ui/controls/Input.tsx';
+import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import { useOptionalInput } from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -27,7 +28,7 @@ export default function VolumeControl({
 }) {
   const [isPaused, setIsPaused] = useState(() => AudioPlayer.isPaused());
   const [volume, _setVolume] = useState(() => AudioPlayer.getVolume(type));
-  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+  const timerRef = useRef<NativeTimeout>(null);
 
   const setVolume = useCallback(
     (volume: number) => {
@@ -35,7 +36,9 @@ export default function VolumeControl({
       AudioPlayer.setVolume(type, volume);
 
       if (type === 'master' || type === 'music') {
-        clearTimeout(timerRef.current);
+        if (timerRef.current != null) {
+          clearTimeout(timerRef.current);
+        }
         timerRef.current = setTimeout(() => AudioPlayer.resume(), 300);
       }
 

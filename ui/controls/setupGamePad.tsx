@@ -42,6 +42,7 @@ export default function setupGamePad() {
   const previous = throttle(() => Input.fireWithPointerLock('previous'), 250);
   let needsThrottleReset = false;
   let detailPressed = false;
+  let acceptPressed = false;
 
   const handleInputs = (controller: QueryModule) => {
     const stickLeft = controller.getStick('L');
@@ -133,8 +134,14 @@ export default function setupGamePad() {
     }
 
     if (singlePress(A)) {
+      acceptPressed = true;
       navigate.reset();
       Input.fireWithPointerLock('accept');
+    }
+
+    if (acceptPressed && !A?.pressed) {
+      acceptPressed = false;
+      Input.fire('accept:released');
     }
 
     if (singlePress(select)) {
@@ -181,7 +188,7 @@ export default function setupGamePad() {
 
       if (detailPressed && !r2pressed) {
         detailPressed = false;
-        Input.fireWithPointerLock('detail:released');
+        Input.fire('detail:released');
       }
     }
 

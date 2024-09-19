@@ -97,7 +97,7 @@ async function processActionResponse(
   },
   playerHasReward: PlayerHasRewardFunction,
 ): Promise<State | null> {
-  const { map, playerDetails, vision } = state;
+  const { map, playerDetails, skipDialogue, vision } = state;
   const { requestFrame, scrollIntoView, update } = actions;
   const { type } = actionResponse;
   let newState: State;
@@ -276,6 +276,11 @@ async function processActionResponse(
       }));
       break;
     case 'CharacterMessage': {
+      if (skipDialogue) {
+        requestFrame(() => resolve(null));
+        break;
+      }
+
       const { player: dynamicPlayer, unitId, variant } = actionResponse;
       const player = resolveDynamicPlayerID(map, dynamicPlayer);
       if (

@@ -3,13 +3,14 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { App } from '@deities/ui/App.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
+import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
 import { createContext, ReactNode, useContext, useEffect } from 'react';
 
 type MusicContext = {
   songByRoute: Map<string, SongName | null>;
-  timer?: ReturnType<typeof setTimeout>;
+  timer?: NativeTimeout;
 };
 
 const fallbackSong = 'hestias-serenade';
@@ -39,7 +40,7 @@ const isPlaying = (video: HTMLVideoElement | null | undefined) =>
   video && !video.paused && !video.ended && video.currentTime > 0;
 
 let resume = false;
-let timer: ReturnType<typeof setTimeout> | null = null;
+let timer: NativeTimeout = null;
 const onVisibilityChange = (isVisible: boolean) => {
   if (timer != null) {
     clearTimeout(timer);
@@ -67,7 +68,9 @@ export function usePlayMusic(dep?: unknown) {
   useVisibilityState(onVisibilityChange);
 
   useEffect(() => {
-    clearTimeout(context.timer);
+    if (context.timer != null) {
+      clearTimeout(context.timer);
+    }
     context.timer = setTimeout(
       () => AudioPlayer.play(context.songByRoute.get(pathname) || fallbackSong),
       isPlaying(

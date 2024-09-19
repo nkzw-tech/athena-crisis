@@ -8,6 +8,7 @@ import { attackable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
@@ -43,8 +44,6 @@ import { RadiusType } from '../Radius.tsx';
 import { StateWithActions } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import ReplayBar from './ReplayBar.tsx';
-
-type TimerID = ReturnType<typeof setTimeout>;
 
 const InfoButton = ({
   actions: { showGameInfo },
@@ -291,8 +290,8 @@ const EndTurnButton = ({
   const { currentViewer, lastActionResponse, map, vision } = state;
   const [endTurnIsExpanded, setEndTurnIsExpanded] = useState<boolean>(false);
   const [cooldown, setCooldown] = useState(false);
-  const timerRef = useRef<TimerID>();
-  const highlightTimerRef = useRef<TimerID>();
+  const timerRef = useRef<NativeTimeout>();
+  const highlightTimerRef = useRef<NativeTimeout>();
 
   useEffect(() => {
     if (cooldown) {
@@ -322,14 +321,18 @@ const EndTurnButton = ({
       }
 
       AudioPlayer.playSound('UI/Accept');
-      clearTimeout(highlightTimerRef.current);
+      if (highlightTimerRef.current != null) {
+        clearTimeout(highlightTimerRef.current);
+      }
       if (
         !cooldown &&
         (endTurnIsExpanded || fastEndTurn || event.detail >= 2)
       ) {
         setEndTurnIsExpanded(false);
         setCooldown(true);
-        clearTimeout(timerRef.current);
+        if (timerRef.current != null) {
+          clearTimeout(timerRef.current);
+        }
         await endTurnAction(actions, state);
         subscribe?.(state.map);
       } else {
@@ -390,7 +393,9 @@ const EndTurnButton = ({
       };
       document.addEventListener('click', listener);
       return () => {
-        clearTimeout(highlightTimerRef.current);
+        if (highlightTimerRef.current != null) {
+          clearTimeout(highlightTimerRef.current);
+        }
         document.removeEventListener('click', listener);
       };
     }

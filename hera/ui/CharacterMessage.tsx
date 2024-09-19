@@ -312,6 +312,7 @@ export default function CharacterMessage(props: Props) {
 
 const vars = new CSSVariables<'multiplier' | 'color' | 'color-light'>('ui-m');
 
+// Keep zIndex in sync with SkipMessages and Menu.
 const containerStyle = css`
   align-items: start;
   display: flex;

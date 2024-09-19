@@ -147,6 +147,8 @@ export type State = Readonly<{
   selectedPosition: Vector | null;
   selectedUnit: Unit | null;
   showCursor: boolean;
+  showSkipDialogue: boolean;
+  skipDialogue: boolean;
   tileSize: number;
   timeout: number | null;
   vision: VisionT;

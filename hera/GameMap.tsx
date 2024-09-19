@@ -33,10 +33,11 @@ import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import Input, { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
-import throttle from '@deities/ui/controls/throttle.tsx';
+import throttle, { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { ScrollRestore } from '@deities/ui/hooks/useScrollRestore.tsx';
 import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
+import Portal from '@deities/ui/Portal.tsx';
 import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -83,6 +84,7 @@ import {
 import GameDialog from './ui/GameDialog.tsx';
 import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
 import NamedPosition from './ui/NamedPosition.tsx';
+import SkipMessages from './ui/SkipMessages.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -270,6 +272,8 @@ const getInitialState = (props: Props) => {
     selectedPosition: null,
     selectedUnit: null,
     showCursor: props.showCursor,
+    showSkipDialogue: false,
+    skipDialogue: false,
     tileSize,
     timeout: timeout || null,
     unitSize,
@@ -286,8 +290,6 @@ const getScale = (scale: number | undefined, element: HTMLElement) =>
   scale ||
   parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale'))) ||
   2;
-
-type NativeTimeout = ReturnType<typeof setTimeout> | null;
 
 export default class GameMap extends Component<Props, State> {
   static defaultProps = {
@@ -309,6 +311,7 @@ export default class GameMap extends Component<Props, State> {
   private _isTouch = { current: false };
   private _lastEnteredPosition: Vector | null = null;
   private _liveTimer: NativeTimeout = null;
+  private _skipDialogueTimer: NativeTimeout = null;
   private _maskRef = createRef<HTMLDivElement>();
   private _pointerEnabled = true;
   private _pointerLock = { current: false };
@@ -469,6 +472,8 @@ export default class GameMap extends Component<Props, State> {
       Input.register('navigate', this._navigate),
       Input.register('point', this._enablePointer),
       Input.register('accept', async () => {
+        this.maybeSkipDialogue();
+
         const { editor } = this.props;
         const { position, selectedPosition } = this.state;
         const vector = position || selectedPosition;
@@ -492,6 +497,7 @@ export default class GameMap extends Component<Props, State> {
           this._select(vector);
         }
       }),
+      Input.register('accept:released', this.resetDialogueSkip),
       Input.register(
         'cancel',
         (event) =>
@@ -550,6 +556,44 @@ export default class GameMap extends Component<Props, State> {
 
     behavior?.deactivate?.();
   }
+
+  private maybeSkipDialogue = () => {
+    const { behavior, lastActionResponse, skipDialogue } = this.state;
+    if (behavior?.type === 'null' && this._skipDialogueTimer == null) {
+      if (
+        !skipDialogue &&
+        (lastActionResponse?.type === 'Start' ||
+          lastActionResponse?.type === 'CharacterMessage')
+      ) {
+        this.setState({ showSkipDialogue: true });
+      }
+
+      this._skipDialogueTimer = setTimeout(() => {
+        this._skipDialogueTimer = null;
+        if (!this.state.skipDialogue) {
+          rumbleEffect('accept');
+          for (const [vector, animation] of this.state.animations) {
+            if (animation.type === 'characterMessage') {
+              this._requestFrame(() =>
+                this._animationComplete(vector, animation),
+              );
+            }
+          }
+          this.setState({ showSkipDialogue: false, skipDialogue: true });
+        }
+      }, 2400);
+    }
+  };
+
+  private resetDialogueSkip = () => {
+    if (this._skipDialogueTimer != null) {
+      clearTimeout(this._skipDialogueTimer);
+      this._skipDialogueTimer = null;
+    }
+    if (this.state.showSkipDialogue) {
+      this.setState({ showSkipDialogue: false });
+    }
+  };
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   private _resize = throttle(() => {
@@ -1064,6 +1108,7 @@ export default class GameMap extends Component<Props, State> {
             isWaiting: false,
             pauseStart: null,
           },
+          skipDialogue: false,
         },
         async () => {
           const { currentViewer } = this.state;
@@ -1123,6 +1168,8 @@ export default class GameMap extends Component<Props, State> {
                 isWaiting: false,
                 pauseStart: null,
               },
+              showSkipDialogue: false,
+              skipDialogue: false,
             },
             () => {
               if (isLive) {
@@ -1242,15 +1289,15 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _clearReplayTimers = () => {
-    if (this._liveTimer) {
+    if (this._liveTimer != null) {
       clearTimeout(this._liveTimer);
+      this._liveTimer = null;
     }
-    this._liveTimer = null;
 
-    if (this._waitingTimer) {
+    if (this._waitingTimer != null) {
       clearTimeout(this._waitingTimer);
+      this._waitingTimer = null;
     }
-    this._waitingTimer = null;
   };
 
   private _pauseReplay = async () => {
@@ -1490,6 +1537,8 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _mouseDown = (event: MouseEvent) => {
+    this.maybeSkipDialogue();
+
     this._pointerPosition = {
       clientX: event.clientX,
       clientY: event.clientY,
@@ -1534,6 +1583,8 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _mouseUp = () => {
+    this.resetDialogueSkip();
+
     const { editor } = this.props;
     if (!editor && this._lastEnteredPosition) {
       this._enter(this._lastEnteredPosition);
@@ -1621,6 +1672,7 @@ export default class GameMap extends Component<Props, State> {
         selectedPosition,
         selectedUnit,
         showCursor,
+        showSkipDialogue,
         tileSize,
         vision,
         zIndex,
@@ -1854,6 +1906,15 @@ export default class GameMap extends Component<Props, State> {
             state={this.state}
           />
         )}
+        <Portal>
+          <AnimatePresence>
+            {showSkipDialogue && (
+              <SkipMessages
+                key={`messages-${String(this._skipDialogueTimer)}`}
+              />
+            )}
+          </AnimatePresence>
+        </Portal>
       </div>
     );
   }

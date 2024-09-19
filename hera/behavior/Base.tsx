@@ -49,6 +49,7 @@ export default class Base extends AbstractSelectBehavior {
   clearTimers() {
     if (this.infoTimer) {
       clearTimeout(this.infoTimer);
+      this.infoTimer = null;
     }
   }
 

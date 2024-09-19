@@ -34,15 +34,15 @@ const pressed = {
 type PressedKey = keyof typeof pressed;
 
 const keydownListener = (event: KeyboardEvent) => {
-  const { code: key } = event;
+  const { code } = event;
   const isMeta = event.metaKey || event.ctrlKey;
 
   if (isMeta) {
-    if (key === 'KeyE') {
+    if (code === 'KeyE') {
       event.preventDefault();
       Input.fire('secondary');
       return;
-    } else if (key === 'KeyS') {
+    } else if (code === 'KeyS') {
       event.preventDefault();
       Input.fire('save');
       return;
@@ -54,18 +54,18 @@ const keydownListener = (event: KeyboardEvent) => {
   }
 
   if (
-    key === 'ArrowDown' ||
-    key === 'ArrowLeft' ||
-    key === 'ArrowRight' ||
-    key === 'ArrowUp' ||
-    key === 'Space' ||
-    key === 'KeyA'
+    code === 'ArrowDown' ||
+    code === 'ArrowLeft' ||
+    code === 'ArrowRight' ||
+    code === 'ArrowUp' ||
+    code === 'Space' ||
+    code === 'KeyA'
   ) {
     event.preventDefault();
   }
 
-  if (key in pressed) {
-    pressed[key as PressedKey] = true;
+  if (code in pressed) {
+    pressed[code as PressedKey] = true;
   }
 
   const direction: NavigationDirection = { x: 0, y: 0 };
@@ -104,35 +104,35 @@ const keydownListener = (event: KeyboardEvent) => {
     navigateSecondary(secondaryDirection);
   }
 
-  if (key === 'Tab') {
+  if (code === 'Tab') {
     event.preventDefault();
     if (event.shiftKey) {
       previous();
     } else {
       next();
     }
-  } else if (key === 'ShiftLeft') {
+  } else if (code === 'ShiftLeft') {
     Input.fire('tertiary');
-  } else if (key === 'Enter' || key === 'Space') {
+  } else if (code === 'Enter' || code === 'Space') {
     event.preventDefault();
     Input.fire('accept');
-  } else if (key === 'Escape') {
+  } else if (code === 'Escape') {
     Input.fire('cancel', { isEscape: true });
-  } else if (key === 'KeyI') {
+  } else if (code === 'KeyI') {
     Input.fire('field-info');
-  } else if (key === 'KeyP') {
+  } else if (code === 'KeyP') {
     if (isMeta) {
       event.preventDefault();
     }
     Input.fire('select', { modifier: isMeta });
   } else if (!isMeta) {
-    if (key === 'KeyM') {
+    if (code === 'KeyM') {
       Input.fire('menu');
-    } else if (key === 'KeyQ') {
+    } else if (code === 'KeyQ') {
       Input.fire('info');
-    } else if (key === 'KeyE') {
+    } else if (code === 'KeyE') {
       Input.fire('detail');
-    } else if (key === 'KeyA') {
+    } else if (code === 'KeyA') {
       Input.fire('keyboard:tertiary');
     }
   }
@@ -143,9 +143,13 @@ const keyupListener = (event: KeyboardEvent) => {
     return;
   }
 
-  const { code: key } = event;
-  if (key in pressed) {
-    pressed[key as PressedKey] = false;
+  const { code } = event;
+  if (code in pressed) {
+    pressed[code as PressedKey] = false;
+  }
+
+  if (code === 'Enter' || code === 'Space') {
+    Input.fire('accept:released');
   }
 };
 

@@ -3,7 +3,11 @@ import type { EventName } from './Input.tsx';
 
 type ButtonNames = Exclude<
   EventName,
-  'navigateSecondary' | 'detail:released' | 'point' | 'reset'
+  | 'navigateSecondary'
+  | 'accept:released'
+  | 'detail:released'
+  | 'point'
+  | 'reset'
 >;
 
 const gamepadNames: Record<ButtonNames, string> = {

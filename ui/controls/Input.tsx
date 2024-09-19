@@ -11,6 +11,7 @@ export type NavigationDirection = {
 
 export type Events = Readonly<{
   accept: undefined;
+  'accept:released': undefined;
   cancel: { isEscape: boolean } | null;
   detail: undefined;
   'detail:released': undefined;

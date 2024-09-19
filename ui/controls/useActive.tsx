@@ -1,6 +1,7 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import { useEffect, useRef } from 'react';
 import useNavigate from '../hooks/useNavigate.tsx';
+import { NativeTimeout } from './throttle.tsx';
 
 export default function useActive(
   isActive: boolean | undefined,
@@ -8,10 +9,10 @@ export default function useActive(
   to?: Route,
 ) {
   const navigate = useNavigate();
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timer = useRef<NativeTimeout>(null);
 
   useEffect(() => {
-    if (!timer.current && isActive) {
+    if (timer.current == null && isActive) {
       timer.current = setTimeout(() => {
         timer.current = null;
         click?.();
