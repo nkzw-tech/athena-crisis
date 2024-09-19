@@ -107,6 +107,40 @@ const transform = cssVar(
         `perspective(calc(125px - ${applyVar('perspective-height')} / 20 * 10px)) rotateX(calc(2deg - ${applyVar('perspective-height')} / 20 * 1deg))`,
 );
 
+const lightMode = `
+${cssVar('background-color-active', '#a7c2f5')}
+${cssVar('background-color-bright', '#ffffff')}
+${cssVar('background-color-dark', 'rgba(40, 40, 40, 1)')}
+${cssVar('background-color-light', 'rgba(255, 255, 255, 0.8)')}
+${cssVar('background-color-light9', 'rgba(255, 255, 255, 0.9)')}
+${cssVar('background-color', '#f2f2f2')}
+${cssVar('border-color-light', 'rgba(0, 0, 0, 0.2)')}
+${cssVar('border-color', 'rgba(0, 0, 0, 0.7)')}
+
+${cssVar('highlight-color', '#3999d4')}
+${cssVar('text-color-active-light', '#fff')}
+${cssVar('text-color-bright', '#fff')}
+${cssVar('text-color-active', '#111')}
+${cssVar('text-color-inactive', '#838383')}
+${cssVar('text-color-light', '#a2a2a2')}
+${cssVar('text-color', '#111')}
+
+// Player Colors
+${cssVar('color-black', '10, 10, 10')}
+${cssVar('color-blue', '60, 157, 255')}
+${cssVar('color-cyan', '33, 195, 155')}
+${cssVar('color-gray', '132, 132, 132')}
+${cssVar('color-green', '94, 163, 24')}
+${cssVar('color-neutral', '179, 160, 124')}
+${cssVar('color-orange', '255, 158, 60')}
+${cssVar('color-pink', '195, 33, 127')}
+${cssVar('color-purple', '157, 60, 255')}
+${cssVar('color-red', '195, 46, 33')}
+
+${cssVar('color-red-orange', 'rgb(225, 102, 46.5)')}
+${cssVar('color-orange-green', 'rgb(134.5, 160.5, 42)')}
+`;
+
 const darkMode = `
 ${cssVar('background-color-active', '#596884')}
 ${cssVar('background-color-bright', '#121212')}
@@ -150,37 +184,8 @@ export function initializeCSSVariables() {
   initialized = true;
   injectGlobal(`
 :root {
-  ${cssVar('background-color-active', '#a7c2f5')}
-  ${cssVar('background-color-bright', '#ffffff')}
-  ${cssVar('background-color-dark', 'rgba(40, 40, 40, 1)')}
-  ${cssVar('background-color-light', 'rgba(255, 255, 255, 0.8)')}
-  ${cssVar('background-color-light9', 'rgba(255, 255, 255, 0.9)')}
-  ${cssVar('background-color', '#f2f2f2')}
-  ${cssVar('border-color-light', 'rgba(0, 0, 0, 0.2)')}
-  ${cssVar('border-color', 'rgba(0, 0, 0, 0.7)')}
+  ${lightMode}
 
-  ${cssVar('highlight-color', '#3999d4')}
-  ${cssVar('text-color-active-light', '#fff')}
-  ${cssVar('text-color-bright', '#fff')}
-  ${cssVar('text-color-active', '#111')}
-  ${cssVar('text-color-inactive', '#838383')}
-  ${cssVar('text-color-light', '#a2a2a2')}
-  ${cssVar('text-color', '#111')}
-
-  // Player Colors
-  ${cssVar('color-black', '10, 10, 10')}
-  ${cssVar('color-blue', '60, 157, 255')}
-  ${cssVar('color-cyan', '33, 195, 155')}
-  ${cssVar('color-gray', '132, 132, 132')}
-  ${cssVar('color-green', '94, 163, 24')}
-  ${cssVar('color-neutral', '179, 160, 124')}
-  ${cssVar('color-orange', '255, 158, 60')}
-  ${cssVar('color-pink', '195, 33, 127')}
-  ${cssVar('color-purple', '157, 60, 255')}
-  ${cssVar('color-red', '195, 46, 33')}
-  
-  ${cssVar('color-red-orange', 'rgb(225, 102, 46.5)')}
-  ${cssVar('color-orange-green', 'rgb(134.5, 160.5, 42)')}
   ${cssVar('color-gold-base', '233, 179, 1')}
   ${cssVar('color-gold', `rgb(${applyVar('color-gold-base')})`)}
   ${cssVar('color-silver', 'rgb(235, 235, 235)')}
@@ -207,5 +212,10 @@ export function initializeCSSVariables() {
 html.dark {
   ${darkMode}
 }
+
+div.lightMode {
+  ${lightMode}
+
+  color: ${applyVar('text-color')};
 `);
 }

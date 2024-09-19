@@ -38,6 +38,7 @@ export default function Drawer({
           opacity: 1,
         }}
         className={cx(
+          'lightMode',
           style,
           baseStyle[position],
           expand && expandStyle[position],
@@ -55,7 +56,10 @@ export default function Drawer({
       >
         <Stack
           alignCenter
-          className={cx(!hasInset && panelWithoutInsetStyle[position])}
+          className={cx(
+            'lightMode',
+            !hasInset && panelWithoutInsetStyle[position],
+          )}
           nowrap
           vertical
         >
