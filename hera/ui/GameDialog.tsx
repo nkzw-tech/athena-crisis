@@ -865,7 +865,7 @@ const CrystalContainer = ({
 
 const crystalBoxStyle = css`
   cursor: pointer;
-  padding: 4px;
+  padding: 8px 4px;
   transition: background-color 150ms ease;
 
   &:hover {
