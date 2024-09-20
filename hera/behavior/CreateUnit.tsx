@@ -3,6 +3,7 @@ import { Plain } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
 import getBuildableUnits from '@deities/athena/lib/getBuildableUnits.tsx';
+import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
 import getLeaders from '@deities/athena/lib/getLeaders.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
@@ -16,8 +17,13 @@ import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
+import Supply from '@deities/ui/icons/Supply.tsx';
+import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
+import Reply from '@iconify-icons/pixelarticons/reply.js';
+import Shield from '@iconify-icons/pixelarticons/shield.js';
+import Visible from '@iconify-icons/pixelarticons/visible.js';
 import { fbt } from 'fbt';
 import { MouseEvent, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
@@ -252,7 +258,46 @@ export default class CreateUnit {
                   </>
                 )}
                 key={unit.id}
-                label={unit.name}
+                label={
+                  <Stack className={descriptionStyle} gap={4} vertical>
+                    <Stack center flex1>
+                      {unit.name}
+                    </Stack>
+                    <Stack center className={detailSyle} gap={4} nowrap start>
+                      <Stack alignCenter gap={2} nowrap start>
+                        <Icon
+                          className={iconStyle}
+                          horizontalFlip
+                          icon={Shield}
+                        />
+                        <div>
+                          {Math.floor(
+                            unit.defense *
+                              getDefenseStatusEffect(map, entity, null),
+                          )}
+                        </div>
+                      </Stack>
+                      <Stack alignCenter gap={2} nowrap start>
+                        <Icon
+                          className={iconStyle}
+                          horizontalFlip
+                          icon={Reply}
+                        />
+                        <div>{unit.getRadiusFor(currentPlayer)}</div>
+                      </Stack>
+                      <Stack alignCenter gap={2} nowrap start>
+                        <Icon className={iconHalfStyle} icon={Supply} />
+                        <div>{unit.configuration.fuel}</div>
+                      </Stack>
+                      {map.config.fog && (
+                        <Stack alignCenter gap={2} nowrap start>
+                          <Icon className={iconHalfStyle} icon={Visible} />
+                          <div>{unit.configuration.vision}</div>
+                        </Stack>
+                      )}
+                    </Stack>
+                  </Stack>
+                }
                 navigationDirection={navigationDirection}
                 onClick={create}
                 onLongPress={showInfo}
@@ -297,4 +342,21 @@ const infoIconStyle = css`
   bottom: 1px;
   position: absolute;
   right: 0;
+`;
+
+const descriptionStyle = css`
+  line-height: 0.75em;
+  padding: 3px 0;
+`;
+
+const detailSyle = css`
+  color: ${applyVar('text-color')};
+`;
+
+const iconStyle = css`
+  margin: 1px 0 -1px;
+`;
+
+const iconHalfStyle = css`
+  margin: 0.5px 0 -0.5px;
 `;

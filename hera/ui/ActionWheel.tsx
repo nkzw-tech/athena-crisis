@@ -630,6 +630,7 @@ const descriptionRightStyle = css`
 
 const largeDescriptionStyle = css`
   left: calc(100% + 4px);
+  height: auto;
 `;
 
 const largeDescriptionLeftStyle = css`

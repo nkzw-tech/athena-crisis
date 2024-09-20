@@ -31,8 +31,8 @@ import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import CloseBox from '@iconify-icons/pixelarticons/close-box.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
+import Reload from '@iconify-icons/pixelarticons/reload.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
-import TrendingUp from '@iconify-icons/pixelarticons/trending-up.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { memo, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
@@ -152,7 +152,7 @@ export default memo(function BuildingCard({
           {funds > 0 ? (
             <>
               <Stack nowrap start>
-                <Icon icon={TrendingUp} />
+                <Icon icon={Reload} />
                 <fbt desc="Label for limit">Funds</fbt>
               </Stack>
               <div>{funds}</div>
