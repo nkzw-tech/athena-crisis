@@ -638,7 +638,7 @@ export class UnitInfo {
       return true;
     }
 
-    return (
+    return !!(
       player.skills.size &&
       this === Battleship &&
       player.activeSkills.has(Skill.UnitBattleShipMoveAndAct)

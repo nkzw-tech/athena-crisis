@@ -2,23 +2,28 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { State, StateLike, StateWithActions } from '../../Types.tsx';
 import ActionWheel, {
   ActionButton,
-  ActionButtonType,
   CancelActionButton,
 } from '../../ui/ActionWheel.tsx';
 
 export type ConfirmProps = Readonly<{
-  icon?: ActionButtonType;
-  onAction: (state: State, type?: 'confirm' | 'complete') => StateLike | null;
+  icon: 'attack' | 'heal' | 'move' | 'move-and-wait';
+  onAction: (state: State, type?: 'complete' | 'confirm') => StateLike | null;
   position: Vector;
   showComplete?: boolean;
 }>;
+
+const MoveAndWait = () => (
+  <fbt desc="Move & Wait button label (as short as possible, ideally one word)">
+    Move & Wait
+  </fbt>
+);
 
 export default function ConfirmAction({
   actions,
   icon,
   onAction,
   position,
-  showComplete: complete,
+  showComplete,
   state,
 }: StateWithActions & ConfirmProps) {
   const { update } = actions;
@@ -36,24 +41,31 @@ export default function ConfirmAction({
         navigationDirection={navigationDirection}
       />
       <ActionButton
-        icon={icon}
+        icon={icon === 'move-and-wait' ? 'complete' : icon}
         label={
-          <fbt desc="Move button label (as short as possible, ideally one word)">
-            Move
-          </fbt>
+          icon === 'move-and-wait' ? (
+            <MoveAndWait />
+          ) : icon === 'attack' ? (
+            <fbt desc="Attack button label (as short as possible, ideally one word)">
+              Attack
+            </fbt>
+          ) : icon === 'heal' ? (
+            <fbt desc="Heal button label (as short as possible, ideally one word)">
+              Heal
+            </fbt>
+          ) : (
+            <fbt desc="Move button label (as short as possible, ideally one word)">
+              Move
+            </fbt>
+          )
         }
         navigationDirection={navigationDirection}
         onClick={() => update(onAction(state, 'confirm'))}
-        type="confirm"
+        type="move"
       />
-      {complete && (
+      {showComplete && (
         <ActionButton
-          icon={icon}
-          label={
-            <fbt desc="Wait button label (as short as possible, ideally one word)">
-              Wait
-            </fbt>
-          }
+          label={<MoveAndWait />}
           navigationDirection={navigationDirection}
           onClick={() => update(onAction(state, 'complete'))}
           type="complete"

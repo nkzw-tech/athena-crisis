@@ -411,21 +411,18 @@ export default class Move {
               type === 'complete' ? true : undefined,
             );
 
+          const showComplete = selectedUnit.info.canAct(
+            map.getPlayer(selectedUnit),
+          );
+
           return shouldConfirm
             ? {
-                confirmAction: selectedUnit.info.canAct(
-                  map.getPlayer(selectedUnit),
-                )
-                  ? {
-                      onAction,
-                      position: vector,
-                      showComplete: true,
-                    }
-                  : {
-                      icon: 'complete',
-                      onAction,
-                      position: vector,
-                    },
+                confirmAction: {
+                  icon: showComplete ? 'move' : 'move-and-wait',
+                  onAction,
+                  position: vector,
+                  showComplete,
+                },
                 radius: {
                   ...radius,
                   locked: true,
