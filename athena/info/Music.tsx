@@ -60,7 +60,7 @@ export type SoundName =
   | 'UI/Next'
   | 'UI/Previous'
   | 'UI/Put'
-  | 'UI/SelectPosition'
+  | 'UI/Skip'
   | 'UI/Start'
   | 'Unit/ArtilleryFold'
   | 'Unit/ArtilleryUnfold'
