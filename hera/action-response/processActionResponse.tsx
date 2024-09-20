@@ -559,6 +559,7 @@ async function processActionResponse(
         ? await startGameAnimation(actions, animations, mapName)
         : state;
     }
+    case 'SetPlayer':
     case 'SetViewer':
       return { ...state, map: newMap };
     case 'BuySkill':

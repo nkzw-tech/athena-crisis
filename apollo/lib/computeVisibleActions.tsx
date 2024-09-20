@@ -422,6 +422,7 @@ const VisibleActionModifiers: Record<
     }),
   },
   SecretDiscovered: true,
+  SetPlayer: true,
   SetViewer: true,
   Spawn: (
     actionResponse: SpawnActionResponse,

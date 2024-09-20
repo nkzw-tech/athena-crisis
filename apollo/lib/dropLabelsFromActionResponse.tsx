@@ -65,6 +65,7 @@ export default function dropLabelsFromActionResponse(
     case 'Rescue':
     case 'Sabotage':
     case 'SecretDiscovered':
+    case 'SetPlayer':
     case 'SetViewer':
     case 'Start':
     case 'Supply':

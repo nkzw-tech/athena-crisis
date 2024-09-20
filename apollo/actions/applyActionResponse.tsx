@@ -526,8 +526,13 @@ export default function applyActionResponse(
     case 'OptionalObjective':
     case 'PreviousTurnGameOver':
       return applyObjectiveActionResponse(map, actionResponse);
+    case 'SetPlayer':
     case 'SetViewer': {
-      const currentPlayer = map.maybeGetPlayer(vision.currentViewer)?.id;
+      const currentPlayer = map.maybeGetPlayer(
+        actionResponse.type === 'SetPlayer'
+          ? actionResponse.player
+          : vision.currentViewer,
+      )?.id;
       return currentPlayer
         ? map.copy({
             currentPlayer,

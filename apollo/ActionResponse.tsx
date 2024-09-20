@@ -183,6 +183,11 @@ export type SetViewerActionResponse = Readonly<{
   type: 'SetViewer';
 }>;
 
+export type SetPlayerActionResponse = Readonly<{
+  player: PlayerID;
+  type: 'SetPlayer';
+}>;
+
 export type ReceiveRewardActionResponse = Readonly<{
   permanent?: boolean;
   player: PlayerID;
@@ -241,6 +246,7 @@ export type ActionResponse =
   | RescueActionResponse
   | SabotageActionResponse
   | SecretDiscoveredActionResponse
+  | SetPlayerActionResponse
   | SetViewerActionResponse
   | SpawnActionResponse
   | StartActionResponse

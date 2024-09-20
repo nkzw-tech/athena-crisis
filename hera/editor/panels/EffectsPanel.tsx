@@ -209,7 +209,7 @@ export default function EffectsPanel({
   if (showNewEffects) {
     return (
       <Stack gap={24} vertical verticalPadding>
-        <Box gap vertical>
+        <Box gap={16} vertical>
           {possibleEffects.length ? (
             <>
               <h2 className={flexStyle}>
