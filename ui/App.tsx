@@ -8,6 +8,7 @@ import {
 export type NativeApp = Readonly<{
   canToggleFullScreen: () => boolean;
   copyToClipboard: (text: string) => void;
+  getInitialURL: () => string | null;
   getSteamAuthenticationTicket: () => Promise<string | null>;
   getSteamUserId: () => string;
   getSteamUserName: () => string;
@@ -46,6 +47,7 @@ type App = Omit<NativeApp, 'copyToClipboard'> &
 
 export type InitializeData = Readonly<{
   canToggleFullScreen: boolean;
+  initialURL: string | null;
   isFullscreen: boolean;
   isSteam: boolean;
   isSteamDeck: boolean;
@@ -100,6 +102,7 @@ export const App: App = {
   canToggleFullScreen: app?.canToggleFullScreen || (() => false),
   getCurrentAppVersion: () =>
     navigator.userAgent.match(/AthenaCrisis\/([\w.-]+)/)?.[1] || null,
+  getInitialURL: app?.getInitialURL || (() => null),
   getLatestAppVersion: () => process.env.NATIVE_APP_VERSION || '',
   getSteamAuthenticationTicket:
     app?.getSteamAuthenticationTicket || (() => Promise.resolve(null)),
@@ -118,6 +121,10 @@ export const App: App = {
   reload: app?.reload ?? (() => location.reload()),
   setNavigationHandler: (_navigate: Navigate) => {
     navigate = _navigate;
+    const initialURL = App.getInitialURL();
+    if (initialURL) {
+      navigate(initialURL.replace('https://app.athenacrisis.com', '') as Route);
+    }
   },
   showFloatingGamepadTextInput:
     app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
