@@ -34,6 +34,7 @@ import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProduct
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
 import powerSpawnUnits from '@deities/athena/lib/powerSpawnUnits.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
+import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import {
   BuildingCover,
@@ -185,6 +186,7 @@ type BuySkillAction = Readonly<{
 type ActivatePowerAction = Readonly<{ skill: Skill; type: 'ActivatePower' }>;
 
 export type ActivateCrystalAction = Readonly<{
+  biome?: Biome;
   crystal: Crystal;
   type: 'ActivateCrystal';
 }>;
@@ -938,11 +940,16 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
 
 function activateCrystal(
   map: MapData,
-  { crystal }: ActivateCrystalAction,
+  { biome, crystal }: ActivateCrystalAction,
   isEffect: boolean,
 ) {
-  if (isEffect && Crystals.includes(crystal)) {
+  if (
+    isEffect &&
+    Crystals.includes(crystal) &&
+    (!biome || (Biomes.includes(biome) && biome !== Biome.Spaceship))
+  ) {
     return {
+      biome,
       crystal,
       type: 'ActivateCrystal',
     } as const;

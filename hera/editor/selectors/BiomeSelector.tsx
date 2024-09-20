@@ -4,7 +4,6 @@ import filterByBiomeRestriction from '@deities/athena/lib/filterByBiomeRestricti
 import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import Box from '@deities/ui/Box.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -16,18 +15,22 @@ import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 
 const unsortedBiomes = new Set(Biomes);
 unsortedBiomes.delete(Biome.Spaceship);
-const biomes = [...unsortedBiomes, Biome.Spaceship];
+const initialBiomes = [...unsortedBiomes, Biome.Spaceship];
 
 export default function BiomeSelector({
+  biomes = initialBiomes,
   hasContentRestrictions,
   map,
+  navigate,
   onBiomeChange,
   user,
 }: {
+  biomes?: ReadonlyArray<Biome>;
   hasContentRestrictions: boolean;
   map: MapData;
+  navigate?: true;
   onBiomeChange: (map: MapData) => void;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithFactionNameAndUnlocks | null;
 }) {
   const currentBiome = map.config.biome;
   const { alert } = useAlert();
@@ -38,7 +41,7 @@ export default function BiomeSelector({
           filterByBiomeRestriction(
             convertBiome(map, biome),
             hasContentRestrictions,
-            new Set(user.skills),
+            new Set(user?.skills),
           ),
         );
 
@@ -54,7 +57,7 @@ export default function BiomeSelector({
         select();
       }
     },
-    [map, hasContentRestrictions, user.skills, onBiomeChange, alert],
+    [map, hasContentRestrictions, user?.skills, onBiomeChange, alert],
   );
 
   const lockedBiomes = useMemo(() => {
@@ -62,16 +65,19 @@ export default function BiomeSelector({
       return new Set();
     }
 
-    const unlockedBiomes = new Set(user.biomes);
+    const unlockedBiomes = new Set(user?.biomes);
     return new Set(
       [...UnlockableBiomes].filter((biome) => !unlockedBiomes.has(biome)),
     );
-  }, [hasContentRestrictions, user.biomes]);
+  }, [hasContentRestrictions, user?.biomes]);
 
   useGridNavigation(
     'navigateSecondary',
     useCallback(
       (direction) => {
+        if (!navigate) {
+          return;
+        }
         const maybeBiomes = biomes.filter((biome) => !lockedBiomes.has(biome));
         const maybeBiome =
           maybeBiomes[
@@ -82,12 +88,12 @@ export default function BiomeSelector({
           update(maybeBiome);
         }
       },
-      [currentBiome, lockedBiomes, update],
+      [biomes, currentBiome, lockedBiomes, navigate, update],
     ),
   );
 
   return (
-    <Box center gap>
+    <Stack center gap>
       {biomes.map((biome) => {
         const isLocked = lockedBiomes.has(biome);
         return (
@@ -109,7 +115,7 @@ export default function BiomeSelector({
           </div>
         );
       })}
-    </Box>
+    </Stack>
   );
 }
 

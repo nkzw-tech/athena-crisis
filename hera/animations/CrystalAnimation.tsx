@@ -1,22 +1,37 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
+import convertBiome from '@deities/athena/lib/convertBiome.tsx';
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, keyframes } from '@emotion/css';
 import { useCallback, useState } from 'react';
 import CrystalSprite from '../invasions/CrystalSprite.tsx';
+import { Actions } from '../Types.tsx';
 
 export default function CrystalAnimation({
+  biome,
   crystal,
   onComplete,
   scale,
+  update,
 }: {
+  biome?: Biome;
   crystal: Crystal;
   onComplete: () => void;
   scale: number;
+  update: Actions['update'];
 }) {
   const [showCircle, setShowCircle] = useState(false);
   const complete = useCallback(() => {
     setShowCircle(true);
-  }, []);
+
+    if (biome != null) {
+      const timer = setTimeout(
+        () => update((state) => ({ map: convertBiome(state.map, biome) })),
+        750,
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [biome, update]);
 
   return (
     <Portal>

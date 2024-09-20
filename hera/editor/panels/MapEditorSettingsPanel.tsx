@@ -123,12 +123,15 @@ export default function MapEditorSettingsPanel({
 
   return (
     <Stack className={marginStyle} gap={24} vertical verticalPadding>
-      <BiomeSelector
-        hasContentRestrictions={!isAdmin}
-        map={state.map}
-        onBiomeChange={(map) => setMap('biome', map)}
-        user={user}
-      />
+      <Box center>
+        <BiomeSelector
+          hasContentRestrictions={!isAdmin}
+          map={state.map}
+          navigate
+          onBiomeChange={(map) => setMap('biome', map)}
+          user={user}
+        />
+      </Box>
       <Box gap={16} vertical>
         <h2>
           <fbt desc="Map settings headline">Map Settings</fbt>

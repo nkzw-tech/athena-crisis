@@ -1,6 +1,7 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import { validateUnit } from '@deities/athena/lib/validateMap.tsx';
+import { Biomes } from '@deities/athena/map/Biome.tsx';
 import { MaxMessageLength } from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -69,8 +70,13 @@ const validateSpawnEffect = (map: MapData, action: SpawnEffectAction) => {
   return { ...action, units };
 };
 
-const validateActivateCrystal = (action: ActivateCrystalAction) =>
-  Crystals.includes(action.crystal) ? action : null;
+const validateActivateCrystal = (action: ActivateCrystalAction) => {
+  if (action.biome != null && !Biomes.includes(action.biome)) {
+    return null;
+  }
+
+  return Crystals.includes(action.crystal) ? action : null;
+};
 
 export default function validateAction(map: MapData, action: Action) {
   switch (action.type) {

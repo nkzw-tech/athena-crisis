@@ -15,6 +15,7 @@ export default async function activateCrystalAction(
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
+        biome: actionResponse.biome,
         crystal: actionResponse.crystal,
         onComplete: (state) => {
           requestFrame(() =>

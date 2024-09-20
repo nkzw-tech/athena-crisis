@@ -1,5 +1,6 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import { Reward } from '@deities/athena/map/Reward.tsx';
@@ -203,6 +204,7 @@ export type ActivatePowerActionResponse = Readonly<{
 }>;
 
 export type ActivateCrystalActionResponse = Readonly<{
+  biome?: Biome;
   crystal: Crystal;
   player?: PlayerID;
   type: 'ActivateCrystal';

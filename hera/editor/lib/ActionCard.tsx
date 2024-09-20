@@ -4,7 +4,7 @@ import { Plain } from '@deities/athena/info/Tile.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
+import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   MaxMessageLength,
@@ -45,8 +45,16 @@ import { PlayerDetails } from '../../Types.tsx';
 import formatCharacterText from '../../ui/lib/formatCharacterText.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import { ActionChangeFn } from '../panels/EffectsPanel.tsx';
+import BiomeSelector from '../selectors/BiomeSelector.tsx';
 import { SetMapFunction } from '../Types.tsx';
 import UnitSelector from './UnitSelector.tsx';
+
+type TopBarProps = Readonly<{
+  first: boolean | undefined;
+  index: number | undefined;
+  last: boolean | undefined;
+  onChange: ActionChangeFn | undefined;
+}>;
 
 const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
   if (id === 0) {
@@ -57,12 +65,7 @@ const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
   return number < 0 ? 1 / number : number;
 });
 
-type TopBarProps = Readonly<{
-  first: boolean | undefined;
-  index: number | undefined;
-  last: boolean | undefined;
-  onChange: ActionChangeFn | undefined;
-}>;
+const biomes = Biomes.filter((biome) => biome !== Biome.Spaceship);
 
 const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
   onChange && index != null ? (
@@ -442,7 +445,7 @@ export default memo(function ActionCard({
       </Box>
     );
   } else if (action.type === 'ActivateCrystal') {
-    const { crystal } = action;
+    const { biome, crystal } = action;
     return (
       <Box className={boxStyle} gap={16} vertical>
         <ActionHeadline
@@ -454,25 +457,62 @@ export default memo(function ActionCard({
         >
           <fbt desc="Label for Spawn Effect">Activate Crystal</fbt>
         </ActionHeadline>
-        <Stack alignCenter center gap={24}>
+        <Stack gap={16} vertical>
           {canChange ? (
-            Crystals.map((crystal) => (
-              <InlineLink
-                className={crystalStyle}
-                key={crystal}
-                onClick={() =>
-                  onChange(index, 'update', {
-                    ...action,
-                    crystal,
-                  })
-                }
-                selected={crystal === action.crystal}
-              >
-                <CrystalSprite animate crystal={crystal} />
-              </InlineLink>
-            ))
+            <>
+              <Stack alignCenter center gap={16}>
+                {Crystals.map((crystal) => (
+                  <InlineLink
+                    className={crystalStyle}
+                    key={crystal}
+                    onClick={() =>
+                      onChange(index, 'update', {
+                        ...action,
+                        crystal,
+                      })
+                    }
+                    selected={crystal === action.crystal}
+                  >
+                    <CrystalSprite animate crystal={crystal} />
+                  </InlineLink>
+                ))}
+              </Stack>
+              {map && (
+                <Stack center gap>
+                  <BiomeSelector
+                    biomes={biomes}
+                    hasContentRestrictions={false}
+                    map={
+                      biome != null
+                        ? map.copy({
+                            config: map.config.copy({
+                              biome,
+                            }),
+                          })
+                        : map
+                    }
+                    onBiomeChange={(map) =>
+                      onChange(index, 'update', {
+                        ...action,
+                        biome: map.config.biome,
+                      })
+                    }
+                    user={null}
+                  />
+                </Stack>
+              )}
+            </>
           ) : (
-            <CrystalSprite animate crystal={crystal} />
+            <Stack alignCenter center gap={24}>
+              <CrystalSprite animate crystal={crystal} />
+              {biome != null && (
+                <InlineTileList
+                  biome={biome}
+                  scrollIntoView={false}
+                  tiles={[Plain]}
+                />
+              )}
+            </Stack>
           )}
         </Stack>
       </Box>

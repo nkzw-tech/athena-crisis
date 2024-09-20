@@ -258,6 +258,7 @@ export type NoticeAnimation = Readonly<{
 }>;
 
 export type CrystalAnimation = Readonly<{
+  biome?: Biome;
   crystal: Crystal;
   onComplete?: StateToStateLike;
   type: 'crystal';
@@ -657,9 +658,10 @@ const MapAnimation = ({
       case 'crystal':
         return (
           <CrystalAnimation
-            crystal={animation.crystal}
-            scale={scale}
+            {...animation}
             {...props}
+            scale={scale}
+            update={update}
           />
         );
       case 'characterMessage': {
