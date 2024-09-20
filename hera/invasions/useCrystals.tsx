@@ -1,18 +1,14 @@
-import { CrystalMap, Crystals } from '@deities/athena/invasions/Crystal.tsx';
+import {
+  Crystal,
+  CrystalMap,
+  Crystals,
+} from '@deities/athena/invasions/Crystal.tsx';
 import { useMemo } from 'react';
-
-const parse = (crystals: string | undefined) => {
-  try {
-    const maybeArray = JSON.parse(crystals || '');
-    return Array.isArray(maybeArray) ? maybeArray : null;
-  } catch {
-    return null;
-  }
-};
+import safeParseArray from '../lib/safeParse.tsx';
 
 export default function useCrystals(crystals: string | undefined): CrystalMap {
   return useMemo(() => {
-    const maybeCrystals = parse(crystals);
+    const maybeCrystals = safeParseArray<readonly [Crystal, number]>(crystals);
     const map = new Map(Crystals.map((crystal) => [crystal, 0]));
     if (maybeCrystals) {
       for (const crystal of maybeCrystals) {

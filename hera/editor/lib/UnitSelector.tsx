@@ -139,7 +139,7 @@ const nowrapStyle = css`
 const borderStyle = css`
   ${pixelBorder(undefined, 2)}
 
-  padding: 2px 8px;
+  padding: 1px 8px 3px;
 `;
 
 const highlightStyle = css`

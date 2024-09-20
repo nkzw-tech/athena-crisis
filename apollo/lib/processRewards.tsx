@@ -32,7 +32,7 @@ export function processRewards(
       for (const reward of rewards) {
         for (const [, player] of team.players) {
           if (reward.type !== 'Skill' || !player.skills.has(reward.skill)) {
-            if (isGameEnd && player.isBot()) {
+            if (player.isBot() && (isGameEnd || reward.type !== 'Skill')) {
               continue;
             }
 

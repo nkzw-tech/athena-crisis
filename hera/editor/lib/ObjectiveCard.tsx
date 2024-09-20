@@ -482,7 +482,11 @@ export default function ObjectiveCard({
                         title={
                           reward?.type === 'Crystal' ? (
                             <Stack
-                              className={cx(borderStyle, highlightStyle)}
+                              className={cx(
+                                borderStyle,
+                                crystalBorderStyle,
+                                highlightStyle,
+                              )}
                               gap={4}
                               nowrap
                             >
@@ -628,7 +632,11 @@ const iconStyle = css`
 const borderStyle = css`
   ${pixelBorder(undefined, 2)}
 
-  padding: 2px 4px;
+  padding: 1px 4px 3px;
+`;
+
+const crystalBorderStyle = css`
+  padding: 0 4px 0;
 `;
 
 const highlightStyle = css`
@@ -656,5 +664,5 @@ const lineHeightStyle = css`
 `;
 
 const crystalScaleStyle = css`
-  transform: scale(0.75);
+  transform: scale(0.66);
 `;

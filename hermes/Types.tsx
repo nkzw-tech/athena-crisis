@@ -15,7 +15,8 @@ export type PlainLevel<T = number> = Readonly<{
   next?: ReadonlyArray<T | [number, T]>;
 }>;
 
-export type LevelEntry<T> = [T, PlainLevel<T>];
+export type LevelEntry<T> = readonly [T, PlainLevel<T>];
+export type ReceivedCrystals<T> = ReadonlyArray<readonly [T, number]>;
 
 export type Campaign<T> = Readonly<{
   description: string;
