@@ -59,7 +59,10 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
 
-export type MutateActionResponseFn = (action: ActionResponse) => ActionResponse;
+export type MutateActionResponseFn = (
+  map: MapData,
+  action: ActionResponse,
+) => ActionResponse;
 
 export type MoveAction = Readonly<{
   complete?: boolean;
@@ -1045,7 +1048,7 @@ function executeAction(
 ): readonly [ActionResponse, MapData] | null {
   let actionResponse = applyAction(map, vision, action, isEffect || false);
   if (actionResponse && mutateAction) {
-    actionResponse = mutateAction(actionResponse);
+    actionResponse = mutateAction(map, actionResponse);
   }
 
   return actionResponse

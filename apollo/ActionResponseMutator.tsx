@@ -1,7 +1,8 @@
+import MapData from '@deities/athena/MapData.tsx';
 import { ActionResponse } from './ActionResponse.tsx';
 
 const Mutators = {
-  actAsEveryPlayer: (actionResponse: ActionResponse) =>
+  actAsEveryPlayer: (map: MapData, actionResponse: ActionResponse) =>
     actionResponse.type === 'EndTurn'
       ? { ...actionResponse, rotatePlayers: true }
       : actionResponse,

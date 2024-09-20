@@ -2,8 +2,14 @@ import {
   AttackUnitAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import {
+  decodeActionResponse,
+  encodeActionResponse,
+} from '@deities/apollo/EncodedActions.tsx';
 import timeoutActionResponseMutator from '@deities/apollo/lib/timeoutActionResponseMutator.tsx';
 import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
+import { CommandCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
@@ -156,5 +162,45 @@ test('lose the game, but continue when missing two turns in a row with multiple 
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 300, player: 3 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 3 }"
+    `);
+});
+
+test('abandon the game when missing two turns in a row during an invasion', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const initialMap = map.copy({
+    teams: updatePlayer(map.teams, player1.copy({ crystal: CommandCrystal })),
+    units: map.units
+      .set(vecA, SmallTank.create(player1))
+      .set(vecB, Pioneer.create(2)),
+  });
+
+  const [, gameActionResponse] = await executeGameActions(
+    initialMap,
+    [EndTurnAction(), EndTurnAction(), EndTurnAction()],
+    undefined,
+    timeoutActionResponseMutator,
+  );
+
+  const actionResponse = gameActionResponse[1]?.[2][0];
+  expect(actionResponse).toBeDefined();
+
+  const abandonActionResponse = actionResponse
+    ? decodeActionResponse(actionResponse)
+    : null;
+  if (abandonActionResponse?.type === 'AbandonInvasion') {
+    gameActionResponse[1]![2][0] = encodeActionResponse({
+      ...abandonActionResponse,
+      name: '<name>',
+    } as const);
+  }
+
+  expect(snapshotEncodedActionResponse(gameActionResponse))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
+      AbandonInvasion { name: '<name>' }
+      AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 45 }, chargeA: 18, chargeB: 55 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 });
