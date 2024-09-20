@@ -8,6 +8,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import NoSkill from '@deities/ui/icons/NoSkill.tsx';
 import Size from '@deities/ui/icons/Size.tsx';
 import Skills from '@deities/ui/icons/Skills.tsx';
+import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagList from '@deities/ui/TagList.tsx';
@@ -163,7 +164,12 @@ export default function MapDetails({
         )}
       </Stack>
       {buttons && (
-        <Stack alignCenter gap={24} start>
+        <Stack
+          alignCenter
+          className={cx(containerStyle, buttonStyle)}
+          gap={24}
+          start
+        >
           {buttons}
         </Stack>
       )}
@@ -190,4 +196,10 @@ const tagStyle = css`
 
 const iconOffsetStyle = css`
   margin: 2px 0 -2px;
+`;
+
+const buttonStyle = css`
+  ${pixelBorder(applyVar('background-color-light'), 2)}
+
+  padding: 2px 2px 0;
 `;

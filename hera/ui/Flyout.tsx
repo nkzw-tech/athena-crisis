@@ -18,6 +18,7 @@ export default function Flyout({
   align,
   items: initialItems,
   mini,
+  opaque,
   position,
   resetPosition,
   tileSize,
@@ -27,6 +28,7 @@ export default function Flyout({
   align?: 'top' | 'top-lower';
   items: ReactNode | ReadonlyArray<ReactNode | null>;
   mini?: boolean;
+  opaque?: true;
   position: Vector;
   resetPosition: Actions['resetPosition'];
   tileSize: number;
@@ -48,6 +50,7 @@ export default function Flyout({
             : rightStyle,
         align === 'top-lower' && topLowerStyle,
         mini && miniStyle,
+        opaque && opaqueStyle,
       )}
       key={String(position)}
       onMouseEnter={resetPosition}
@@ -74,6 +77,7 @@ type FlyoutProps = Readonly<{
   disabled?: boolean;
   highlight?: boolean;
   icon?: ReactNode;
+  interactive?: boolean;
   onClick?: () => void;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -87,6 +91,7 @@ export function FlyoutItem({
   disabled,
   highlight,
   icon,
+  interactive = true,
   onClick,
   onPointerEnter,
   onPointerLeave,
@@ -98,6 +103,7 @@ export function FlyoutItem({
     <Component
       className={cx(
         itemStyle,
+        interactive && interactiveStyle,
         center && centerStyle,
         disabled && disabledItemStyle,
         highlight && 'highlight',
@@ -199,6 +205,10 @@ const miniStyle = css`
   ${vars.set('size', mini + 'px')}
 `;
 
+const opaqueStyle = css`
+  opacity: 1;
+`;
+
 const largeStyle = css`
   ${vars.set('size', large + 'px')}
 `;
@@ -245,8 +255,14 @@ const itemStyle = css`
     transform 150ms ease,
     color 150ms ease;
 
-  &:hover,
   &.highlight {
+    color: ${applyVar('highlight-color')};
+    transform: scale(1.1);
+  }
+`;
+
+const interactiveStyle = css`
+  &:hover {
     color: ${applyVar('highlight-color')};
     transform: scale(1.1);
   }

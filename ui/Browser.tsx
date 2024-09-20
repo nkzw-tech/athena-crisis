@@ -21,6 +21,8 @@ export const isIOS =
   (/(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent) &&
     navigator.maxTouchPoints > 0);
 
+export const isAndroid = /android/i.test(navigator.userAgent);
+
 export const isSafari =
   /constructor/i.test(maybeWindow.HTMLElement as unknown as string) ||
   ((pushNotification) =>

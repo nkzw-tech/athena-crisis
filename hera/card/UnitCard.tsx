@@ -483,7 +483,7 @@ const Weapon = memo(function WeaponAttack({
   vector: Vector;
   weapon: WeaponT;
 }) {
-  const backURL = useLocation().pathname;
+  const { pathname: backURL } = useLocation();
   const tile = map.getTileInfo(vector);
   const opponent = resolveDynamicPlayerID(map, 'opponent', player);
   const allSkills = useMemo(
