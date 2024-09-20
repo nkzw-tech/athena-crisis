@@ -1,8 +1,8 @@
 import {
-  ChaosCrystal,
   CommandCrystal,
   Crystal,
   HelpCrystal,
+  PhantomCrystal,
 } from '@deities/athena/invasions/Crystal.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { fbt } from 'fbt';
@@ -31,7 +31,7 @@ export default function getInvasionNoticeAnimation(
               `${fbt.param('name', name)} is invading to help the player!`,
               'Notice for a user or bot is invading the game',
             )
-          : crystal === ChaosCrystal
+          : crystal === PhantomCrystal
             ? fbt(
                 `${fbt.param('name', name)} is invading to hinder the player!`,
                 'Notice for a user or bot is invading the game',

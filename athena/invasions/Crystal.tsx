@@ -21,7 +21,7 @@ export type CrystalMap = Map<Crystal, number>;
 
 export const PowerCrystal = Crystal.Green;
 export const HelpCrystal = Crystal.Blue;
-export const ChaosCrystal = Crystal.Red;
+export const PhantomCrystal = Crystal.Red;
 export const CommandCrystal = Crystal.Purple;
 
 export const CrystalAttackEffect = 0.1;
