@@ -1,5 +1,5 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import { BuildableTiles, MinFunds } from '../info/Building.tsx';
+import { MinFunds } from '../info/Building.tsx';
 import { Ability, UnitInfo } from '../info/Unit.tsx';
 import Building from '../map/Building.tsx';
 import { getEntityInfoGroup } from '../map/Entity.tsx';
@@ -10,6 +10,7 @@ import MapData from '../MapData.tsx';
 import calculateFunds, {
   calculateTotalPossibleFunds,
 } from './calculateFunds.tsx';
+import _getBuildableTileCount from './getBuildableTileCount.tsx';
 import { PotentialUnitAbilities } from './getPossibleUnitAbilities.tsx';
 import needsSupply from './needsSupply.tsx';
 
@@ -34,35 +35,28 @@ export default function determineUnitsToCreate(
     return [];
   }
 
-  let _availableTiles: number | null = null;
-  const getAvailableTiles = () =>
-    _availableTiles === null
-      ? (_availableTiles = map.reduceEachField(
-          (sum, vector) =>
-            sum +
-            (BuildableTiles.has(map.getTileInfo(vector)) &&
-            !map.buildings.has(vector)
-              ? 1
-              : 0),
-          0,
-        ))
-      : _availableTiles;
+  let _buildableTileCount: number | null = null;
+  const getBuildableTileCount = () =>
+    _buildableTileCount === null
+      ? (_buildableTileCount = _getBuildableTileCount(map))
+      : _buildableTileCount;
 
-  let _structures: ImmutableMap<Vector, Building> | null = null;
-  const getStructures = () =>
-    _structures === null
-      ? (_structures = map.buildings.filter(
+  let _neutralBuildings: ImmutableMap<Vector, Building> | null = null;
+  const getNeutralBuildings = () =>
+    _neutralBuildings === null
+      ? (_neutralBuildings = map.buildings.filter(
           (building) => map.isNeutral(building) && !building.info.isStructure(),
         ))
-      : _structures;
+      : _neutralBuildings;
 
   const totalFunds = calculateTotalPossibleFunds(map);
   const unitsWithCreateBuildingsAbility = playerUnits.filter((unit) =>
     unit.info.hasAbility(Ability.CreateBuildings),
   );
+
   const getShouldBuildCaptureUnits = () => {
     const minUnitsWithCaptureAbility =
-      Math.max(getStructures().size, totalFunds / MinFunds) * 0.2;
+      Math.max(getNeutralBuildings().size, totalFunds / MinFunds) * 0.2;
 
     return (
       calculateFunds(map, currentPlayer) / totalFunds <
@@ -97,10 +91,11 @@ export default function determineUnitsToCreate(
     // Otherwise, prefer units that can build buildings, if there is space.
   } else if (
     (canCreateBuildUnits || canCreateCaptureUnits) &&
-    (getAvailableTiles() || getStructures().size) &&
+    (getBuildableTileCount() || getNeutralBuildings().size) &&
     (map.round <= 2 ||
       (map.round > 4 && !(map.round % 4)) ||
-      (!unitsWithCreateBuildingsAbility.length && getAvailableTiles() > 3)) &&
+      (!unitsWithCreateBuildingsAbility.length &&
+        getBuildableTileCount() > 3)) &&
     (getShouldBuildCaptureUnits() ||
       buildableUnits.some(
         (info) =>
@@ -111,7 +106,7 @@ export default function determineUnitsToCreate(
     if (
       playerUnits.filter(({ info }) => info.hasAbility(Ability.Capture))
         .length <
-        getStructures().size * 0.3 &&
+        getNeutralBuildings().size * 0.3 &&
       (map.round <= 2 ||
         buildableUnits.some((info) => info.hasAbility(Ability.Capture)))
     ) {
@@ -119,7 +114,7 @@ export default function determineUnitsToCreate(
     }
 
     if (
-      unitsWithCreateBuildingsAbility.length < getAvailableTiles() &&
+      unitsWithCreateBuildingsAbility.length < getBuildableTileCount() &&
       (map.round <= 2 ||
         buildableUnits.some((info) => info.hasAbility(Ability.CreateBuildings)))
     ) {
