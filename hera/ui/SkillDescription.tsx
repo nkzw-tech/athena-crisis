@@ -632,7 +632,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Counter attacks are as effective as initial attacks.
         </fbt>
       );
-    case Skill.UnitInfantryForestDefenseIncrease:
+    case Skill.UnitInfantryForestAttackAndDefenseIncrease:
       return (
         <fbt desc="Additional skill description">
           Hidden fields in regular vision range are uncovered in fog.

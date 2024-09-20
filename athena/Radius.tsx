@@ -268,7 +268,7 @@ export function visible(
   const player = map.getPlayer(unit);
   const canSeeHiddenFields =
     player.activeSkills.size &&
-    player.activeSkills.has(Skill.UnitInfantryForestDefenseIncrease);
+    player.activeSkills.has(Skill.UnitInfantryForestAttackAndDefenseIncrease);
 
   for (const [vector] of visible) {
     if (

@@ -188,7 +188,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: SpeedSlow,
         name: fbt('Easy Mode', 'Skill name'),
       };
-    case Skill.UnitInfantryForestDefenseIncrease:
+    case Skill.UnitInfantryForestAttackAndDefenseIncrease:
       return {
         alpha: 0.3,
         borderStyle: 'plus',

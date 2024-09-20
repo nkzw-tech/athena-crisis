@@ -31,7 +31,7 @@ export enum Skill {
   NoUnitRestrictions = 17,
   CounterAttackPower = 18,
   AttackAndDefenseDecreaseEasy = 19,
-  UnitInfantryForestDefenseIncrease = 20,
+  UnitInfantryForestAttackAndDefenseIncrease = 20,
   UnitRailDefenseIncreasePowerAttackIncrease = 21,
   BuyUnitAIU = 22,
   BuyUnitCommander = 23,
@@ -56,7 +56,7 @@ export const Skills = new Set<Skill>([
   Skill.CounterAttackPower,
   Skill.UnitBattleShipMoveAndAct,
   Skill.UnitAbilitySniperImmediateAction,
-  Skill.UnitInfantryForestDefenseIncrease,
+  Skill.UnitInfantryForestAttackAndDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.Sabotage,
   Skill.RecoverAirUnits,
@@ -103,7 +103,10 @@ const skillConfig: Record<
   [Skill.NoUnitRestrictions]: { cost: null },
   [Skill.CounterAttackPower]: { charges: 3, cost: 1500 },
   [Skill.AttackAndDefenseDecreaseEasy]: { cost: null },
-  [Skill.UnitInfantryForestDefenseIncrease]: { charges: 3, cost: 2000 },
+  [Skill.UnitInfantryForestAttackAndDefenseIncrease]: {
+    charges: 3,
+    cost: 2000,
+  },
   [Skill.UnitRailDefenseIncreasePowerAttackIncrease]: {
     charges: 4,
     cost: 1500,
@@ -203,6 +206,22 @@ const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
   ],
 ]);
 
+const forestAttack = new Map([
+  [MovementTypes.Soldier, 0.3],
+  [MovementTypes.HeavySoldier, 0.3],
+]);
+const attackTileStatusEffects: TileMovementSkillMap = new Map([
+  [
+    Skill.UnitInfantryForestAttackAndDefenseIncrease,
+    new Map([
+      [TileTypes.Forest, forestAttack],
+      [TileTypes.ForestVariant2, forestAttack],
+      [TileTypes.ForestVariant3, forestAttack],
+      [TileTypes.ForestVariant4, forestAttack],
+    ]),
+  ],
+]);
+
 const attackTilePowerStatusEffects: TileMovementSkillMap = new Map([
   [
     Skill.UnitRailDefenseIncreasePowerAttackIncrease,
@@ -274,7 +293,7 @@ const forestDefense = new Map([
 ]);
 const defenseTileStatusEffects: TileMovementSkillMap = new Map([
   [
-    Skill.UnitInfantryForestDefenseIncrease,
+    Skill.UnitInfantryForestAttackAndDefenseIncrease,
     new Map([
       [TileTypes.Forest, forestDefense],
       [TileTypes.ForestVariant2, forestDefense],
@@ -328,7 +347,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.BazookaBear, new Map([[Skill.BuyUnitBazookaBear, 800]])],
   [UnitID.Brute, new Map([[Skill.BuyUnitBrute, 600]])],
   [UnitID.Zombie, new Map([[Skill.BuyUnitZombieDefenseDecreaseMajor, 250]])],
-  [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 300]])],
+  [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 500]])],
   [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
   [UnitID.Alien, new Map([[Skill.BuyUnitAlien, 450]])],
   [UnitID.Octopus, new Map([[Skill.BuyUnitOctopus, 600]])],
@@ -510,7 +529,7 @@ export const getSkillAttackStatusEffects = sumAll.bind(
   attackPowerStatusEffects,
   attackUnitPowerStatusEffects,
   attackMovementTypePowerStatusEffects,
-  null,
+  attackTileStatusEffects,
   attackTilePowerStatusEffects,
   null,
   attackLeaderPowerStatusEffects,
@@ -795,8 +814,9 @@ export function getSkillTileAttackStatusEffect(
   type: SkillActivationType,
 ) {
   return (
-    (type === 'regular' ? null : attackTilePowerStatusEffects.get(skill)) ||
-    null
+    (type === 'regular'
+      ? attackTileStatusEffects.get(skill)
+      : attackTilePowerStatusEffects.get(skill)) || null
   );
 }
 

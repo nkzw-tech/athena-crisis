@@ -283,7 +283,7 @@ test('status effects can increase defense on specific tiles', async () => {
     teams: updatePlayer(
       map.teams,
       map.getPlayer(2).copy({
-        skills: new Set([Skill.UnitInfantryForestDefenseIncrease]),
+        skills: new Set([Skill.UnitInfantryForestAttackAndDefenseIncrease]),
       }),
     ),
   });
@@ -292,7 +292,7 @@ test('status effects can increase defense on specific tiles', async () => {
     teams: updatePlayer(
       map.teams,
       map.getPlayer(2).copy({
-        skills: new Set([Skill.UnitInfantryForestDefenseIncrease]),
+        skills: new Set([Skill.UnitInfantryForestAttackAndDefenseIncrease]),
       }),
     ),
   });

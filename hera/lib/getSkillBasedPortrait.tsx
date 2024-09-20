@@ -64,7 +64,7 @@ export default function getSkillBasedPortrait(skill: Skill) {
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
-    case Skill.UnitInfantryForestDefenseIncrease:
+    case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
       return null;
     default: {
