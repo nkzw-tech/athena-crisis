@@ -25,5 +25,12 @@ export const PhantomCrystal = Crystal.Red;
 export const CommandCrystal = Crystal.Purple;
 
 export const CrystalAttackEffect = 0.1;
-export const RedCrystalChaosStars = 5;
-export const PurpleCrystalChaosStars = 10;
+
+export const CrystalChaosStars: Record<Crystal, number> = {
+  [CommandCrystal]: 7,
+  [HelpCrystal]: 2,
+  [PhantomCrystal]: 10,
+  [PowerCrystal]: 1,
+  [Crystal.Gold]: 0,
+  [Crystal.Gray]: 0,
+};
