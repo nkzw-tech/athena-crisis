@@ -566,7 +566,7 @@ export default class GameMap extends Component<Props, State> {
         ((!lastActionResponse && preventRemoteActions) ||
           lastActionResponse?.type === 'Start' ||
           lastActionResponse?.type === 'CharacterMessage' ||
-          lastActionResponse?.type === 'SetViewer')
+          lastActionResponse?.type === 'SetPlayer')
       ) {
         this.setState({ showSkipDialogue: true });
       }

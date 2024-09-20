@@ -7,16 +7,16 @@ import Vision from '@deities/athena/Vision.tsx';
 export default function onGameEnd(
   gameState: GameState,
   effects: Effects,
-  viewerId: PlayerID,
+  currentPlayer: PlayerID,
 ): GameState {
   const [lastAction, activeMap] = gameState.at(-1) || [];
   if (!activeMap || lastAction?.type !== 'GameEnd') {
     return gameState;
   }
 
-  // Set the current player to the `viewerId` which is used to evaluate conditions.
+  // Change the current player which is used to evaluate conditions.
   const map = activeMap.copy({
-    currentPlayer: viewerId,
+    currentPlayer,
   });
   const { objective, toPlayer } = lastAction;
   const secretCondition = objective?.hidden ? objective : null;
@@ -40,7 +40,7 @@ export default function onGameEnd(
   const lastMap = effectGameState?.at(-1)?.[1];
   if (lastMap) {
     const adjustedGameState = [
-      [{ type: 'SetViewer' }, lastMap] as const,
+      [{ player: currentPlayer, type: 'SetPlayer' }, lastMap] as const,
       ...(secretGameState || []),
       ...effectGameState.map(
         ([actionResponse, map]) => [actionResponse, map] as const,

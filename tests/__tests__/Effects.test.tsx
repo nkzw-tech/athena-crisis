@@ -418,7 +418,7 @@ test('effects work for game start and end', async () => {
       Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      SetViewer
+      SetPlayer { player: 1 }
       CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
     `);
@@ -528,7 +528,7 @@ test('effects work when a player loses', async () => {
       Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
       AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      SetViewer
+      SetPlayer { player: 1 }
       CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
     `);
@@ -615,7 +615,7 @@ test('only one game end win effect is fired', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-      SetViewer
+      SetPlayer { player: 1 }
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
       GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1 }"
     `);
