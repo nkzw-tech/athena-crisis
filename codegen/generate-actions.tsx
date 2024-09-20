@@ -780,7 +780,9 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
-    `
+    `default: {
+        throw new Error(\`encodeAction: Invalid Action. "\${JSON.stringify(action)}".\`);
+      }
     }}
 
     export function encodeActions(actions: Actions): EncodedActions {
@@ -797,7 +799,9 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
-    `
+    `default: {
+        throw new Error(\`encodeCondition: Invalid Condition. "\${JSON.stringify(condition)}".\`);
+      }
     }}
     export function encodeConditions(conditions: Conditions): EncodedConditions {
       return conditions.map(encodeCondition);
@@ -813,7 +817,9 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         case '${getShortName(name)}':
           return ${hasOptional ? `removeNull(${value})` : value};`;
     }),
-    `
+    `default: {
+        throw new Error(\`encodeActionResponse: Invalid ActionResponse. "\${JSON.stringify(action)}".\`);
+      }
     }}
     export function encodeActionResponses(actions: ActionResponses): EncodedActionResponses {
       return actions.map(encodeActionResponse);
@@ -839,7 +845,10 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         case ${getStableTypeID(type, name)}:
           return {${decodeProps(name, type, props).join(',')}};`,
     ),
-    `}}
+    `default: {
+        throw new Error(\`decodeAction: Invalid Action. "\${JSON.stringify(action)}".\`);
+      }
+    }}
     export function decodeActions(actions: EncodedActions): Actions {
       return actions.map(decodeAction);
     }
@@ -852,7 +861,9 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         case ${getStableTypeID(type, name)}:
           return {${decodeProps(name, type, props).join(',')}};`,
     ),
-    `
+    `default: {
+        throw new Error(\`decodeCondition: Invalid Condition. "\${JSON.stringify(condition)}".\`);
+      }
     }}
     export function decodeConditions(conditions: EncodedConditions): Conditions {
       return conditions.map(decodeCondition);
@@ -866,7 +877,9 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         `case ${getStableTypeID(type, name)}:
           return {${decodeProps(name, type, props).join(',')}};`,
     ),
-    `
+    `default: {
+        throw new Error(\`decodeActionResponse: Invalid ActionResponse. "\${JSON.stringify(action)}".\`);
+      }
     }}
     export function decodeActionResponses(action: EncodedActionResponses): ActionResponses {
       return action.map(decodeActionResponse);

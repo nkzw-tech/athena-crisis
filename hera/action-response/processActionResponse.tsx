@@ -683,7 +683,7 @@ export default async function processActionResponses(
         ...(await processActionResponse(
           state,
           actions,
-          response.actionResponse,
+          lastActionResponse,
           messageState,
           playerHasReward,
         )),
