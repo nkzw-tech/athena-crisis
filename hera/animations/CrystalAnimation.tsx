@@ -1,9 +1,11 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
+import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, keyframes } from '@emotion/css';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { crystalToSound } from '../audio/Music.tsx';
 import CrystalSprite from '../invasions/CrystalSprite.tsx';
 import { Actions } from '../Types.tsx';
 
@@ -32,6 +34,8 @@ export default function CrystalAnimation({
       return () => clearTimeout(timer);
     }
   }, [biome, update]);
+
+  useEffect(() => AudioPlayer.playSound(crystalToSound(crystal)), [crystal]);
 
   return (
     <Portal>

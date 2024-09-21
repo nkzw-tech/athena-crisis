@@ -1,4 +1,5 @@
-import { SongName } from '@deities/athena/info/Music.tsx';
+import { SongName, SoundName } from '@deities/athena/info/Music.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { App } from '@deities/ui/App.tsx';
@@ -144,4 +145,25 @@ export function useBiomeMusic(
   tags: ReadonlyArray<string> | undefined,
 ) {
   useMusic(biome != null ? biomeToSong(biome, tags) : fallbackSong);
+}
+
+export function crystalToSound(crystal: Crystal): SoundName {
+  switch (crystal) {
+    case Crystal.Green:
+      return 'Crystal/Power';
+    case Crystal.Blue:
+      return 'Crystal/Help';
+    case Crystal.Red:
+      return 'Crystal/Phantom';
+    case Crystal.Purple:
+      return 'Crystal/Command';
+    case Crystal.Gold:
+      return 'Crystal/Super';
+    case Crystal.Gray:
+      return 'Crystal/Memory';
+    default: {
+      crystal satisfies never;
+      throw new UnknownTypeError('crystalToSound', crystal);
+    }
+  }
 }
