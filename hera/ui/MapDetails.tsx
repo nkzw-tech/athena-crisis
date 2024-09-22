@@ -16,6 +16,7 @@ import { css, cx } from '@emotion/css';
 import Chess from '@iconify-icons/pixelarticons/chess.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Watch from '@iconify-icons/pixelarticons/device-watch.js';
+import Campaign from '@iconify-icons/pixelarticons/git-branch.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import Timeline from '@iconify-icons/pixelarticons/timeline.js';
 import Tournament from '@iconify-icons/pixelarticons/tournament.js';
@@ -41,6 +42,7 @@ export type MapDetailsProps = Readonly<{
   isRanked?: boolean;
   map: MapData;
   rating?: number;
+  showCampaign?: boolean;
   showGameState?: boolean;
   showRound?: 'ended' | 'ongoing';
   tags?: ReadonlyArray<string>;
@@ -58,6 +60,7 @@ export default function MapDetails({
   isRanked,
   map,
   rating,
+  showCampaign,
   showGameState,
   showRound,
   tags,
@@ -82,10 +85,16 @@ export default function MapDetails({
             </fbt>
           </div>
         ) : null}
-        {tags?.length ? (
+        {!isCampaign && tags?.length ? (
           <div className={cx(containerStyle, tagStyle)}>
             <TagList tags={[...tags].sort()} />
           </div>
+        ) : null}
+        {isCampaign && showCampaign ? (
+          <Stack alignCenter gap start>
+            <Icon icon={Campaign} />{' '}
+            <fbt desc="Label for campaign games">Campaign</fbt>
+          </Stack>
         ) : null}
         {rating && rating > 0 ? (
           <Stack alignCenter gap start>
@@ -101,10 +110,12 @@ export default function MapDetails({
           <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))}{' '}
           {map.size.width}x{map.size.height}
         </Stack>
-        <Stack alignCenter gap start>
-          <Icon className={iconOffsetStyle} icon={Coin} />{' '}
-          {map.config.seedCapital}
-        </Stack>
+        {!showGameState && (
+          <Stack alignCenter gap start>
+            <Icon className={iconOffsetStyle} icon={Coin} />{' '}
+            {map.config.seedCapital}
+          </Stack>
+        )}
         <Stack alignCenter gap start>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
         </Stack>
@@ -121,23 +132,26 @@ export default function MapDetails({
                 <Icon icon={Watch} /> {getTranslatedTimerName(timer)}
               </Stack>
             ) : null}
-            <Stack alignCenter gap start>
-              <Icon icon={hasSkills ? Skills : NoSkill} />{' '}
-              {hasSkills ? (
-                <fbt desc="Label for a game with skills">Skills</fbt>
-              ) : (
-                <fbt desc="Label for a game without skills">No skills</fbt>
-              )}
-            </Stack>
+
             {!isCampaign && (
-              <Stack alignCenter gap start>
-                <Icon icon={Tournament} />{' '}
-                {isRanked ? (
-                  <fbt desc="Label for ranked game">Ranked</fbt>
-                ) : (
-                  <fbt desc="Label for casual game">Casual</fbt>
-                )}
-              </Stack>
+              <>
+                <Stack alignCenter gap start>
+                  <Icon icon={hasSkills ? Skills : NoSkill} />{' '}
+                  {hasSkills ? (
+                    <fbt desc="Label for a game with skills">Skills</fbt>
+                  ) : (
+                    <fbt desc="Label for a game without skills">No skills</fbt>
+                  )}
+                </Stack>
+                <Stack alignCenter gap start>
+                  <Icon icon={Tournament} />{' '}
+                  {isRanked ? (
+                    <fbt desc="Label for ranked game">Ranked</fbt>
+                  ) : (
+                    <fbt desc="Label for casual game">Casual</fbt>
+                  )}
+                </Stack>
+              </>
             )}
           </>
         )}
