@@ -7,6 +7,10 @@ import { verifyMap } from './verifyTiles.tsx';
 import withModifiers from './withModifiers.tsx';
 
 export default function convertBiome(map: MapData, biome: Biome) {
+  if (map.config.biome === biome) {
+    return map;
+  }
+
   const fromBiome = getBiomeStyle(map.config.biome);
   const toBiome = getBiomeStyle(biome);
 
