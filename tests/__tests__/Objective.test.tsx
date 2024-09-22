@@ -93,7 +93,7 @@ test('game over conditions with HQ', async () => {
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       BeginTurnGameOver
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
   const initialState = await captureOne(initialMap, player1.userId);
@@ -138,7 +138,7 @@ test('game over conditions without HQ', async () => {
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       BeginTurnGameOver
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
   const initialState = await captureOne(initialMap, player1.userId);
@@ -181,7 +181,7 @@ test('game over conditions without HQ', async () => {
       AttackUnit (4,5 → 5,5) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       AttackUnit (5,4 → 5,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 
   const initialState = await captureOne(initialMap, player1.userId);
@@ -211,7 +211,7 @@ test('game over conditions with only one HQ', async () => {
     .toMatchInlineSnapshot(`
       "Capture (2,2) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 });
 
@@ -337,7 +337,7 @@ test('win the game when converting a unit as a Zombie', async () => {
     .toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 75, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 35 }, chargeA: 142, chargeB: 130 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 });
 
@@ -365,7 +365,7 @@ test('lose the game when the only unit attacks a building with a Zombie on it', 
     .toMatchInlineSnapshot(`
       "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 40, player: 2 }, playerC: 2, unitA: DryUnit { health: 93, ammo: [ [ 1, 6 ] ] }, unitC: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, chargeA: 13, chargeB: 0, chargeC: 0 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
 
@@ -416,7 +416,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 2000 }
-      GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 1, toPlayer: 2 }"
+      GameEnd { objective: { completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
     `);
 });
 
@@ -444,7 +444,7 @@ test('game over through poison status effects', async () => {
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
       BeginTurnGameOver
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
   const initialState = await captureOne(initialMap, player1.userId);
@@ -501,7 +501,7 @@ test('game over through activating a power', async () => {
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       ActivatePower { skill: 26, units: [] }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
   const mapB = mapA.copy({
@@ -529,7 +529,7 @@ test('game over through activating a power', async () => {
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       ActivatePower { skill: 26, units: [] }
-      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }"
+      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 });
 
@@ -603,6 +603,6 @@ test('game over through activating a power can beat more than one player', async
       ActivatePower { skill: 26, units: [] }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });

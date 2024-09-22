@@ -141,7 +141,7 @@ test('supply works correctly for units when a turn ends in fog', async () => {
       AttackUnit (4,3 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 58, chargeB: 181 }
       AttackUnit (5,2 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: null, chargeA: 64, chargeB: 200 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
   const initialState = await captureOne(initialMap, player1.userId);

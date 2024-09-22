@@ -387,7 +387,7 @@ export default function MapPerformanceMetrics({
                               wasHidden && instantStyle,
                             )}
                             key={type}
-                            small
+                            size="small"
                             type={achieved ? 'achieved' : 'missed'}
                           />
                         ))}

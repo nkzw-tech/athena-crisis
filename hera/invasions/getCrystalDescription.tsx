@@ -1,7 +1,7 @@
 import {
   Crystal,
   CrystalAttackEffect,
-  CrystalChaosStars,
+  MaxChaosStars,
 } from '@deities/athena/invasions/Crystal.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { fbt } from 'fbt';
@@ -28,14 +28,14 @@ export default function getCrystalDescription(crystal: Crystal) {
     case Crystal.Phantom:
       return String(
         fbt(
-          `A chaotic-looking crystal that allows you to wreak havoc in another player's world. When you use it, your goal becomes disrupting other players in any way you can. If you succeed, you can earn up to ${fbt.param('chaosStars', CrystalChaosStars[Crystal.Phantom])} Chaos Stars.`,
+          `A chaotic-looking crystal that allows you to wreak havoc in another player's world. When you use it, your goal becomes disrupting other players in any way you can. If you succeed, you can earn up to ${fbt.param('chaosStars', MaxChaosStars[Crystal.Phantom])} Chaos Stars.`,
           'Crystal description',
         ),
       );
     case Crystal.Command:
       return String(
         fbt(
-          `Emitting an aura of malevolence, this crystal lets you take over whoever your foe is battling directly. Winning can earn you up to ${fbt.param('chaosStars', CrystalChaosStars[Crystal.Command])} Chaos Stars.`,
+          `Emitting an aura of malevolence, this crystal lets you take over whoever your foe is battling directly. Winning can earn you up to ${fbt.param('chaosStars', MaxChaosStars[Crystal.Command])} Chaos Stars.`,
           'Crystal description',
         ),
       );

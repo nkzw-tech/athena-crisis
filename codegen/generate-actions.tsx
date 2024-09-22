@@ -33,11 +33,12 @@ const files = [
 ];
 
 const customEncoderReferences = new Set([
+  'ChaosStars',
+  'DynamicEffectObjectiveID',
   'DynamicPlayerID',
+  'Objective',
   'Reward',
   'Teams',
-  'Objective',
-  'DynamicEffectObjectiveID',
 ]);
 const scalarReferences = new Set(['Biome', 'Crystal', 'PlayerID', 'Skill']);
 const allowedReferences = new Set([
@@ -698,6 +699,11 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         AttackDirection,
         PlainAttackDirection,
       } from './attack-direction/getAttackDirection.tsx';
+       import {
+        PlainChaosStars,
+        decodeChaosStars,
+        encodeChaosStars,
+      } from './invasions/ChaosStars.tsx';
       import {
         PlainObjective,
         decodeObjective,
@@ -903,6 +909,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     `
       import { Action } from './Action.tsx';
       import { ActionResponse, ActionResponses } from './ActionResponse.tsx';
+      import { formatChaosStars } from './invasions/ChaosStars.tsx';
       import { formatObjective } from '@deities/athena/Objectives.tsx';
       import { getBuildingInfo } from '@deities/athena/info/Building.tsx';
       import { getUnitInfo } from '@deities/athena/info/Unit.tsx';

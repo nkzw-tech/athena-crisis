@@ -64,7 +64,7 @@ test('lose the game when missing two turns in a row', async () => {
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
 
@@ -98,7 +98,7 @@ test('misses reset when taking any action', async () => {
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 });
 
@@ -161,7 +161,7 @@ test('lose the game, but continue when missing two turns in a row with multiple 
       PreviousTurnGameOver { fromPlayer: 1 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 300, player: 3 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       PreviousTurnGameOver { fromPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 3 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 3, chaosStars: null }"
     `);
 });
 
@@ -199,7 +199,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
-      AbandonInvasion { name: '<name>' }
+      AbandonInvasion { name: '<name>', chaosStars: null }
       AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 45 }, chargeA: 18, chargeB: 55 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);

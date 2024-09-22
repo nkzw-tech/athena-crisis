@@ -122,7 +122,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
-    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
   `);
 
   // Bots do not receive rewards at the end of a game.
@@ -140,7 +140,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     SetPlayer { player: 1 }
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
   `);
 });
 
@@ -233,7 +233,7 @@ test(`each skill is only received once`, async () => {
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
-    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
   `);
 });
 

@@ -1,3 +1,4 @@
+import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -7,16 +8,18 @@ import React from 'react';
 
 export default function StarIcon({
   className,
-  small,
+  size,
   starClassName,
   type,
 }: {
   className?: string;
-  small?: true;
+  size?: 'small' | 'medium' | 'large';
   starClassName?: string;
   type: 'achieved' | 'chaos' | 'missed';
 }) {
-  const size = small ? 24 : 96;
+  const dimensions =
+    TileSize * (size === 'small' ? 1 : size === 'medium' ? 2 : 3);
+
   return (
     <div className={cx(relativeStyle, className)}>
       <Icon
@@ -29,15 +32,15 @@ export default function StarIcon({
               : missedStyle,
           starClassName,
         )}
-        height={size}
+        height={dimensions}
         icon={StarFull}
-        width={size}
+        width={dimensions}
       />
       <Icon
         className={cx(starStyle, outlineStyle)}
-        height={size}
+        height={dimensions}
         icon={StarEmpty}
-        width={size}
+        width={dimensions}
       />
     </div>
   );

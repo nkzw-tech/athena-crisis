@@ -25,6 +25,7 @@ import { fbt } from 'fbt';
 import animateFireworks, {
   getPossibleFireworksPositions,
 } from '../animations/animateFireworks.tsx';
+import maybeReceiveChaosStarsAnimation from '../animations/maybeReceiveChaosStarsAnimation.tsx';
 import objectiveAnimation from '../animations/objectiveAnimation.tsx';
 import receiveBiomeAnimation from '../animations/receiveBiomeAnimation.tsx';
 import receiveCrystalAnimation from '../animations/receiveCrystalAnimation.tsx';
@@ -509,9 +510,16 @@ async function processActionResponse(
                 ...getPossibleFireworksPositions(map, toPlayer),
               ]).slice(0, fireworks),
               (state) => {
-                resolve({
-                  ...state,
-                  map: newMap,
+                requestFrame(async () => {
+                  state = await maybeReceiveChaosStarsAnimation(
+                    actions,
+                    state,
+                    actionResponse.chaosStars,
+                  );
+                  resolve({
+                    ...state,
+                    map: newMap,
+                  });
                 });
                 return null;
               },
@@ -624,8 +632,13 @@ async function processActionResponse(
     }
     case 'ActivatePower':
       return activatePowerAction(actions, state, actionResponse);
-    case 'AbandonInvasion':
+    case 'AbandonInvasion': {
       state = await update(abandonInvasion(state, actionResponse.name));
+      state = await maybeReceiveChaosStarsAnimation(
+        actions,
+        state,
+        actionResponse.chaosStars,
+      );
 
       requestFrame(() =>
         resolve({
@@ -634,6 +647,7 @@ async function processActionResponse(
         }),
       );
       break;
+    }
     case 'ActivateCrystal':
       return activateCrystalAction(actions, actionResponse);
     case 'OptionalObjective':

@@ -20,6 +20,7 @@ import {
   AttackUnitActionResponse,
   ToggleLightningActionResponse,
 } from './ActionResponse.tsx';
+import { ChaosStars } from './invasions/ChaosStars.tsx';
 import checkObjectives, {
   pickWinningPlayer,
   shouldCheckDefaultObjectives,
@@ -51,6 +52,7 @@ export type CaptureGameOverActionResponse = Readonly<{
 }>;
 
 export type GameEndActionResponse = Readonly<{
+  chaosStars?: ChaosStars;
   objective?: Objective;
   objectiveId?: number;
   toPlayer?: PlayerID;
@@ -65,6 +67,7 @@ export type OptionalObjectiveActionResponse = Readonly<{
 }>;
 
 export type AbandonInvasionActionResponse = Readonly<{
+  chaosStars?: ChaosStars;
   name: string;
   type: 'AbandonInvasion';
 }>;

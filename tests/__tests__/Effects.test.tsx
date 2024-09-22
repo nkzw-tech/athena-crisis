@@ -420,7 +420,7 @@ test('effects work for game start and end', async () => {
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       SetPlayer { player: 1 }
       CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 
   expect(newEffects?.get('Start')).toMatchInlineSnapshot(`
@@ -530,7 +530,7 @@ test('effects work when a player loses', async () => {
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       SetPlayer { player: 1 }
       CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
 
@@ -617,7 +617,7 @@ test('only one game end win effect is fired', async () => {
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetPlayer { player: 1 }
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1 }"
+      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
     `);
 });
 

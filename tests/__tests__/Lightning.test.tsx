@@ -111,7 +111,7 @@ test('can turn lightning barriers on and off', async () => {
       "ToggleLightning (1,2 → 3,2)
       ToggleLightning (1,1 → 4,3)
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1 }"
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 
   expect(initialMap.getPlayer(player1.id).charge).toBeGreaterThan(
