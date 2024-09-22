@@ -45,6 +45,7 @@ export type MapDetailsProps = Readonly<{
   showCampaign?: boolean;
   showGameState?: boolean;
   showRound?: 'ended' | 'ongoing';
+  subText?: ReactNode;
   tags?: ReadonlyArray<string>;
   teamPlay?: boolean;
   timer?: number | null;
@@ -63,6 +64,7 @@ export default function MapDetails({
   showCampaign,
   showGameState,
   showRound,
+  subText,
   tags,
   teamPlay,
   timer,
@@ -90,6 +92,7 @@ export default function MapDetails({
             <TagList tags={[...tags].sort()} />
           </div>
         ) : null}
+        {subText}
         {isCampaign && showCampaign ? (
           <Stack alignCenter gap start>
             <Icon icon={Campaign} />{' '}
