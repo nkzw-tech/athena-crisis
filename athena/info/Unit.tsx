@@ -2165,7 +2165,7 @@ export const HeavyArtillery = new UnitInfo(
   },
 );
 
-const Lander = new UnitInfo(
+export const Lander = new UnitInfo(
   13,
   'Lander',
   'Masato',

@@ -33,13 +33,14 @@ type TeamList = ReadonlyArray<
 export type GameCardProps = Readonly<{
   actions: Actions;
   currentViewer: PlayerID | null;
+  hideIfNoCrystals: boolean;
   invasions: boolean;
   map: MapData;
   spectatorLink: ReactElement | null;
   vision: VisionT;
 }>;
 
-type OptionalFields = 'invasions' | 'spectatorLink';
+type OptionalFields = 'hideIfNoCrystals' | 'invasions' | 'spectatorLink';
 
 const TeamItem = ({
   animate,
@@ -129,6 +130,7 @@ export default memo(function CurrentGameCard({
   currentViewer,
   gameInfoState,
   hide,
+  hideIfNoCrystals,
   inlineUI,
   inset = 0,
   invasions = false,
@@ -197,6 +199,7 @@ export default memo(function CurrentGameCard({
           animatePlayer={animatePlayer}
           currentViewer={currentViewer}
           focusPlayer={isExpanded ? null : map.getCurrentPlayer()}
+          hideIfNoCrystals={!!hideIfNoCrystals}
           invasions={invasions}
           map={map}
           spectatorLink={spectatorLink || null}

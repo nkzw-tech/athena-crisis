@@ -25,8 +25,8 @@ import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
 import { css, cx } from '@emotion/css';
-import Check from '@iconify-icons/pixelarticons/checkbox.js';
-import CloseBox from '@iconify-icons/pixelarticons/close-box.js';
+import MissingBonusIcon from '@iconify-icons/pixelarticons/checkbox-on.js';
+import HasBonusIcon from '@iconify-icons/pixelarticons/checkbox.js';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
@@ -119,8 +119,7 @@ export default function MapEditorSettingsPanel({
     [config, map, performance, update],
   );
 
-  const _hasBonusObjective = hasBonusObjective(map, map.getFirstPlayerID());
-
+  const hasBonus = hasBonusObjective(map, map.getFirstPlayerID());
   return (
     <Stack className={marginStyle} gap={24} vertical verticalPadding>
       <Box center>
@@ -300,7 +299,7 @@ export default function MapEditorSettingsPanel({
             <Stack alignCenter gap nowrap start>
               <Icon
                 className={iconStyle}
-                icon={_hasBonusObjective ? Check : CloseBox}
+                icon={hasBonus ? HasBonusIcon : MissingBonusIcon}
               />
               <fbt desc="Label for a map's bonus objective">
                 Bonus Objective

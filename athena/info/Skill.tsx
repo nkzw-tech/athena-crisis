@@ -122,9 +122,12 @@ const skillConfig: Record<
   [Skill.Sabotage]: { charges: 5, cost: 1500 },
 };
 
-export const AIOnlySkills: ReadonlySet<Skill> = new Set(
-  [...Skills].filter((skill) => skillConfig[skill].cost === null),
-);
+export const AIOnlySkills: ReadonlySet<Skill> = new Set([
+  ...[...Skills].filter((skill) => skillConfig[skill].cost === null),
+  Skill.BuyUnitZombieDefenseDecreaseMajor,
+  Skill.RecoverAirUnits,
+  Skill.BuyUnitAIU,
+]);
 
 type ID = number;
 type Modifier = number;

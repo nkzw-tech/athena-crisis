@@ -70,128 +70,122 @@ export const MAX_AMOUNT = 128;
 export const MIN_ROUNDS = 1;
 export const MAX_ROUNDS = 1024;
 
-type CaptureLabelObjective = Readonly<{
+type OptionalObjective = Readonly<{
+  bonus?: 1;
   completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
   optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.CaptureLabel;
 }>;
 
-type CaptureAmountObjective = Readonly<{
-  amount: number;
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.CaptureAmount;
-}>;
+type CaptureLabelObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.CaptureLabel;
+  }>;
 
-type DefeatObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.DefeatLabel;
-}>;
+type CaptureAmountObjective = OptionalObjective &
+  Readonly<{
+    amount: number;
+    hidden: boolean;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.CaptureAmount;
+  }>;
 
-type SurvivalObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  optional: boolean;
-  players: PlayerIDs;
-  reward?: Reward | null;
-  rounds: number;
-  type: Criteria.Survival;
-}>;
+type DefeatObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.DefeatLabel;
+  }>;
 
-type EscortLabelObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
-  optional: boolean;
-  players: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.EscortLabel;
-  vectors: ReadonlySet<Vector>;
-}>;
+type SurvivalObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    players: PlayerIDs;
+    reward?: Reward | null;
+    rounds: number;
+    type: Criteria.Survival;
+  }>;
 
-type EscortAmountObjective = Readonly<{
-  amount: number;
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label?: PlayerIDSet;
-  optional: boolean;
-  players: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.EscortAmount;
-  vectors: ReadonlySet<Vector>;
-}>;
+type EscortLabelObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.EscortLabel;
+    vectors: ReadonlySet<Vector>;
+  }>;
 
-type RescueLabelObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.RescueLabel;
-}>;
+type EscortAmountObjective = OptionalObjective &
+  Readonly<{
+    amount: number;
+    hidden: boolean;
+    label?: PlayerIDSet;
+    players: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.EscortAmount;
+    vectors: ReadonlySet<Vector>;
+  }>;
 
-type DefeatAmountObjective = Readonly<{
-  amount: number;
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.DefeatAmount;
-}>;
+type RescueLabelObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.RescueLabel;
+  }>;
 
-type DefeatOneLabelObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.DefeatOneLabel;
-}>;
+type DefeatAmountObjective = OptionalObjective &
+  Readonly<{
+    amount: number;
+    hidden: boolean;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.DefeatAmount;
+  }>;
 
-type DestroyLabelObjective = Readonly<{
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  label: PlayerIDSet;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.DestroyLabel;
-}>;
+type DefeatOneLabelObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.DefeatOneLabel;
+  }>;
 
-type DestroyAmountObjective = Readonly<{
-  amount: number;
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.DestroyAmount;
-}>;
+type DestroyLabelObjective = OptionalObjective &
+  Readonly<{
+    hidden: boolean;
+    label: PlayerIDSet;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.DestroyLabel;
+  }>;
 
-type RescueAmountObjective = Readonly<{
-  amount: number;
-  completed?: PlayerIDSet;
-  hidden: boolean;
-  optional: boolean;
-  players?: PlayerIDs;
-  reward?: Reward | null;
-  type: Criteria.RescueAmount;
-}>;
+type DestroyAmountObjective = OptionalObjective &
+  Readonly<{
+    amount: number;
+    hidden: boolean;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.DestroyAmount;
+  }>;
+
+type RescueAmountObjective = OptionalObjective &
+  Readonly<{
+    amount: number;
+    hidden: boolean;
+    players?: PlayerIDs;
+    reward?: Reward | null;
+    type: Criteria.RescueAmount;
+  }>;
 
 export type ObjectivesWithVectors =
   | EscortLabelObjective
@@ -232,6 +226,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.CaptureAmount,
@@ -241,6 +236,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.DefeatLabel,
@@ -250,6 +246,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.EscortLabel,
@@ -260,6 +257,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.Survival,
@@ -269,6 +267,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.EscortAmount,
@@ -280,6 +279,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.RescueLabel,
@@ -289,6 +289,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.DefeatAmount,
@@ -298,6 +299,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.DefeatOneLabel,
@@ -307,6 +309,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.DestroyLabel,
@@ -316,6 +319,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.DestroyAmount,
@@ -325,6 +329,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ]
   | [
       type: Criteria.RescueAmount,
@@ -334,6 +339,7 @@ export type PlainObjective =
       reward?: EncodedReward | null,
       optional?: 0 | 1,
       completed?: ReadonlyArray<number>,
+      bonus?: 1 | null,
     ];
 
 export type ObjectiveID = number;
@@ -357,6 +363,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.CaptureAmount:
     case Criteria.DestroyAmount:
@@ -368,6 +375,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.DefeatLabel:
       return [
@@ -378,6 +386,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.EscortLabel:
       return [
@@ -389,6 +398,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.Survival:
       return [
@@ -399,6 +409,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.EscortAmount:
       return [
@@ -411,6 +422,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.RescueAmount:
       return [
@@ -421,6 +433,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.RescueLabel:
       return [
@@ -431,6 +444,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.DefeatAmount:
       return [
@@ -441,6 +455,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     case Criteria.DefeatOneLabel:
       return [
@@ -451,6 +466,7 @@ export function encodeObjective(objective: Objective): PlainObjective {
         maybeEncodeReward(objective.reward),
         objective.optional ? 1 : 0,
         objective.completed?.size ? Array.from(objective.completed) : [],
+        objective.bonus ? 1 : null,
       ];
     default: {
       objective satisfies never;
@@ -472,6 +488,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.CaptureLabel:
     case Criteria.DestroyLabel:
       return {
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -486,6 +503,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.DestroyAmount:
       return {
         amount: objective[2]!,
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -497,6 +515,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       };
     case Criteria.DefeatLabel:
       return {
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -509,6 +528,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       };
     case Criteria.EscortLabel:
       return {
+        bonus: objective[8] || undefined,
         completed: objective[7]
           ? new Set(toPlayerIDs(objective[7]))
           : new Set(),
@@ -522,6 +542,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       };
     case Criteria.Survival:
       return {
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -535,6 +556,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.EscortAmount:
       return {
         amount: objective[2],
+        bonus: objective[9] || undefined,
         completed: objective[8]
           ? new Set(toPlayerIDs(objective[8]))
           : new Set(),
@@ -549,6 +571,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.RescueAmount:
       return {
         amount: objective[2],
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -560,6 +583,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       };
     case Criteria.RescueLabel:
       return {
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -573,6 +597,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.DefeatAmount:
       return {
         amount: objective[2],
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -584,6 +609,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       };
     case Criteria.DefeatOneLabel:
       return {
+        bonus: objective[7] || undefined,
         completed: objective[6]
           ? new Set(toPlayerIDs(objective[6]))
           : new Set(),
@@ -761,7 +787,8 @@ export function validateObjective(
   if (
     (hidden !== false && hidden !== true) ||
     (objective.reward && !validateReward(objective.reward)) ||
-    (type !== Criteria.Default && objective.completed?.size)
+    (type !== Criteria.Default && objective.completed?.size) ||
+    (type !== Criteria.Default && objective.bonus && !objective.optional)
   ) {
     return false;
   }

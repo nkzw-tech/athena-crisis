@@ -133,6 +133,7 @@ const maybeSwapEffect = (
 export default function ObjectivePanel({
   actions,
   campaignEdges,
+  canEditPerformance,
   editor,
   hasContentRestrictions,
   isAdmin,
@@ -143,6 +144,7 @@ export default function ObjectivePanel({
   user,
 }: StateWithActions & {
   campaignEdges: CampaignEdge['edges'] | undefined;
+  canEditPerformance: boolean;
   editor: EditorState;
   hasContentRestrictions: boolean;
   isAdmin?: boolean;
@@ -271,6 +273,7 @@ export default function ObjectivePanel({
               canDelete={
                 objectives.size > 1 || objective.type !== Criteria.Default
               }
+              canEditPerformance={canEditPerformance}
               hasContentRestrictions={hasContentRestrictions}
               id={id}
               isAdmin={isAdmin}

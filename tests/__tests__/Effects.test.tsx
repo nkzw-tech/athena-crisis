@@ -617,7 +617,7 @@ test('only one game end win effect is fired', async () => {
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetPlayer { player: 1 }
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
-      GameEnd { objective: { amount: 1, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
+      GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
     `);
 });
 

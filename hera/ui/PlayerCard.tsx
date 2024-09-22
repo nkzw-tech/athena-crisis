@@ -60,6 +60,7 @@ export default memo(function PlayerCard({
   actions,
   animate,
   currentViewer,
+  hideIfNoCrystals,
   invasions,
   map,
   player,
@@ -85,7 +86,7 @@ export default memo(function PlayerCard({
   const crystal =
     activeCrystal != null
       ? activeCrystal
-      : canActivateCrystal
+      : canActivateCrystal && (!hideIfNoCrystals || powerCrystals > 0)
         ? Crystal.Power
         : undefined;
   const shouldShow =

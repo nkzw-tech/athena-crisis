@@ -117,6 +117,7 @@ export default function MapEditorControlPanel({
     (scenario: Scenario) => setEditorState({ scenario }),
     [setEditorState],
   );
+  const canEditPerformance = !!mapObject?.campaigns.edges?.length;
 
   return (
     <Drawer
@@ -200,6 +201,7 @@ export default function MapEditorControlPanel({
               <ObjectivePanel
                 actions={actions}
                 campaignEdges={mapObject?.campaigns.edges}
+                canEditPerformance={canEditPerformance}
                 editor={editor}
                 hasContentRestrictions={!isAdmin}
                 isAdmin={isAdmin}
@@ -233,7 +235,7 @@ export default function MapEditorControlPanel({
             return (
               <MapEditorSettingsPanel
                 actions={actions}
-                canEditPerformance={!!mapObject?.campaigns.edges?.length}
+                canEditPerformance={canEditPerformance}
                 estimateMapPerformance={estimateMapPerformance}
                 isAdmin={isAdmin}
                 mapName={mapName}

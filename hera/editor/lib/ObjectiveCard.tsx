@@ -47,6 +47,7 @@ import UnitSelector from './UnitSelector.tsx';
 export default function ObjectiveCard({
   campaigns,
   canDelete,
+  canEditPerformance,
   hasContentRestrictions,
   id,
   isAdmin,
@@ -61,6 +62,7 @@ export default function ObjectiveCard({
 }: {
   campaigns: ReadonlyArray<{ name: string; slug: string }> | null;
   canDelete?: boolean;
+  canEditPerformance: boolean;
   hasContentRestrictions: boolean;
   id: number;
   isAdmin?: boolean;
@@ -294,34 +296,62 @@ export default function ObjectiveCard({
             )}
           </Stack>
           {!isDefaultObjective && (
-            <Stack alignCenter className={lineHeightStyle} gap>
-              <label>
-                <Stack gap start>
-                  <span className={labelWidthStyle}>
-                    <fbt desc="Label for optional objective checkbox">
-                      Optional
+            <>
+              <Stack alignCenter className={lineHeightStyle} gap>
+                <label>
+                  <Stack gap start>
+                    <span className={labelWidthStyle}>
+                      <fbt desc="Label for optional objective checkbox">
+                        Optional
+                      </fbt>
+                    </span>
+                    <input
+                      checked={isOptional}
+                      onChange={(event) =>
+                        onChange({
+                          ...objective,
+                          bonus: event.target.checked
+                            ? objective.bonus
+                            : undefined,
+                          optional: event.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                    />
+                  </Stack>
+                </label>
+                {isOptional && (
+                  <p className={lightStyle}>
+                    <fbt desc="Description for optional objectives">
+                      Achieving optional objectives does not end the game.
                     </fbt>
-                  </span>
-                  <input
-                    checked={isOptional}
-                    onChange={(event) =>
-                      onChange({
-                        ...objective,
-                        optional: event.target.checked,
-                      })
-                    }
-                    type="checkbox"
-                  />
+                  </p>
+                )}
+              </Stack>
+              {canEditPerformance && isOptional && (
+                <Stack alignCenter className={lineHeightStyle} gap>
+                  <label>
+                    <Stack gap start>
+                      <span className={labelWidthStyle}>
+                        <fbt desc="Label for enabling this objective to reward a bonus star">
+                          Bonus Star
+                        </fbt>
+                      </span>
+                      <input
+                        checked={objective.bonus === 1}
+                        onChange={(event) =>
+                          onChange({
+                            ...objective,
+                            bonus: event.target.checked ? 1 : undefined,
+                          })
+                        }
+                        type="checkbox"
+                      />
+                    </Stack>
+                  </label>
                 </Stack>
-              </label>
-              {isOptional && (
-                <p className={lightStyle}>
-                  <fbt desc="Description for optional objectives">
-                    Achieving optional objectives does not end the game.
-                  </fbt>
-                </p>
               )}
-            </Stack>
+            </>
           )}
           {(isAdmin || isOptional) && (
             <Stack gap={16} vertical>

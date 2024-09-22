@@ -9,6 +9,7 @@ const isBonusObjective = (
   !!(
     objective.type !== Criteria.Default &&
     objective.optional &&
+    objective.bonus &&
     (!objective.players?.length || objective.players.includes(player))
   );
 
