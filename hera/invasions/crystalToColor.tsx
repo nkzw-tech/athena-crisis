@@ -5,17 +5,17 @@ import getColor from '@deities/ui/getColor.tsx';
 
 export default function crystalToColor(crystal: Crystal, alpha = 1): string {
   switch (crystal) {
-    case Crystal.Blue:
+    case Crystal.Help:
       return getColor('blue', alpha);
-    case Crystal.Gold:
+    case Crystal.Super:
       return `rgba(${applyVar('color-gold-base')}, ${alpha})`;
-    case Crystal.Green:
+    case Crystal.Power:
       return getColor('green', alpha);
-    case Crystal.Gray:
+    case Crystal.Memory:
       return getColor('team', alpha);
-    case Crystal.Purple:
+    case Crystal.Command:
       return getColor('purple', alpha);
-    case Crystal.Red:
+    case Crystal.Phantom:
       return getColor('red', alpha);
     default: {
       crystal satisfies never;

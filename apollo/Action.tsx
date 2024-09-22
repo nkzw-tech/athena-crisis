@@ -7,11 +7,7 @@ import {
 import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, getUnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import { getDeterministicUnitName } from '@deities/athena/info/UnitNames.tsx';
-import {
-  Crystal,
-  Crystals,
-  PowerCrystal,
-} from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal, Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -962,7 +958,7 @@ function activateCrystal(
   if (
     player.isHumanPlayer() &&
     player.crystal === null &&
-    crystal === PowerCrystal
+    crystal === Crystal.Power
   ) {
     return {
       crystal,

@@ -149,17 +149,17 @@ export function useBiomeMusic(
 
 export function crystalToSound(crystal: Crystal): SoundName {
   switch (crystal) {
-    case Crystal.Green:
+    case Crystal.Power:
       return 'Crystal/Power';
-    case Crystal.Blue:
+    case Crystal.Help:
       return 'Crystal/Help';
-    case Crystal.Red:
+    case Crystal.Phantom:
       return 'Crystal/Phantom';
-    case Crystal.Purple:
+    case Crystal.Command:
       return 'Crystal/Command';
-    case Crystal.Gold:
+    case Crystal.Super:
       return 'Crystal/Super';
-    case Crystal.Gray:
+    case Crystal.Memory:
       return 'Crystal/Memory';
     default: {
       crystal satisfies never;

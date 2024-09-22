@@ -1,7 +1,7 @@
 import { getSkillAttackStatusEffects } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { Ability } from '../info/Unit.tsx';
-import { CrystalAttackEffect, PowerCrystal } from '../invasions/Crystal.tsx';
+import { Crystal, CrystalAttackEffect } from '../invasions/Crystal.tsx';
 import { LeaderStatusEffect } from '../map/Configuration.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
@@ -36,7 +36,7 @@ export default function getAttackStatusEffect(
   }
 
   const crystalEffect =
-    player.isHumanPlayer() && player.crystal === PowerCrystal
+    player.isHumanPlayer() && player.crystal === Crystal.Power
       ? CrystalAttackEffect
       : 0;
 

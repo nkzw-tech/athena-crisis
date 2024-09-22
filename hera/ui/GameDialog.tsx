@@ -1,11 +1,7 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
-import {
-  Crystal,
-  CrystalMap,
-  PowerCrystal,
-} from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
@@ -410,7 +406,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   const canAbandon =
     player?.isHumanPlayer() &&
     player.crystal != null &&
-    player.crystal !== PowerCrystal;
+    player.crystal !== Crystal.Power;
   const hasEnded = lastActionResponse?.type === 'GameEnd';
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
 
@@ -770,7 +766,7 @@ const CrystalContainer = ({
   onClose: () => void | Promise<void>;
   spectatorLink: ReactElement | null;
 }) => {
-  const isPowerCrystal = crystal === PowerCrystal;
+  const isPowerCrystal = crystal === Crystal.Power;
   const isActive = activeCrystal === crystal;
 
   const onSelect = useCallback(() => {

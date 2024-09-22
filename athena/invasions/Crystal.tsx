@@ -1,45 +1,40 @@
 export enum Crystal {
-  Green = 0,
-  Blue = 1,
-  Red = 2,
-  Purple = 3,
-  Gold = 5,
-  Gray = 4,
+  Power = 0,
+  Help = 1,
+  Phantom = 2,
+  Command = 3,
+  Super = 5,
+  Memory = 4,
 }
 
 export const Crystals = [
-  Crystal.Green,
-  Crystal.Blue,
-  Crystal.Red,
-  Crystal.Purple,
-  Crystal.Gray,
-  Crystal.Gold,
+  Crystal.Power,
+  Crystal.Help,
+  Crystal.Phantom,
+  Crystal.Command,
+  Crystal.Memory,
+  Crystal.Super,
 ] as const;
 
 export type CrystalList = ReadonlyArray<[Crystal, number]>;
 export type CrystalMap = Map<Crystal, number>;
 
-export const PowerCrystal = Crystal.Green;
-export const HelpCrystal = Crystal.Blue;
-export const PhantomCrystal = Crystal.Red;
-export const CommandCrystal = Crystal.Purple;
-
 export const CrystalAttackEffect = 0.1;
 
 export const CrystalCosts: Record<Crystal, number> = {
-  [CommandCrystal]: 7,
-  [HelpCrystal]: 3,
-  [PhantomCrystal]: 5,
-  [PowerCrystal]: 2,
-  [Crystal.Gold]: -1,
-  [Crystal.Gray]: -1,
+  [Crystal.Command]: 7,
+  [Crystal.Help]: 3,
+  [Crystal.Phantom]: 5,
+  [Crystal.Power]: 2,
+  [Crystal.Super]: -1,
+  [Crystal.Memory]: -1,
 };
 
 export const CrystalChaosStars: Record<Crystal, number> = {
-  [CommandCrystal]: 10,
-  [HelpCrystal]: 2,
-  [PhantomCrystal]: 15,
-  [PowerCrystal]: 1,
-  [Crystal.Gold]: 0,
-  [Crystal.Gray]: 0,
+  [Crystal.Command]: 10,
+  [Crystal.Help]: 2,
+  [Crystal.Phantom]: 15,
+  [Crystal.Power]: 1,
+  [Crystal.Super]: 0,
+  [Crystal.Memory]: 0,
 };

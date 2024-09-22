@@ -8,7 +8,7 @@ import {
 } from '@deities/apollo/EncodedActions.tsx';
 import timeoutActionResponseMutator from '@deities/apollo/lib/timeoutActionResponseMutator.tsx';
 import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
-import { CommandCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
@@ -169,7 +169,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
   const initialMap = map.copy({
-    teams: updatePlayer(map.teams, player1.copy({ crystal: CommandCrystal })),
+    teams: updatePlayer(map.teams, player1.copy({ crystal: Crystal.Command })),
     units: map.units
       .set(vecA, SmallTank.create(player1))
       .set(vecB, Pioneer.create(2)),

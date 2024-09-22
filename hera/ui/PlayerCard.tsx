@@ -9,7 +9,7 @@ import {
   rescuedUnitsByPlayer,
 } from '@deities/apollo/lib/checkObjective.tsx';
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
-import { PowerCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
@@ -77,7 +77,7 @@ export default memo(function PlayerCard({
   const { objectives } = map.config;
   const color = getColor(player.id);
   const crystalMap = useCrystals(user.crystals);
-  const powerCrystals = crystalMap.get(PowerCrystal) || 0;
+  const powerCrystals = crystalMap.get(Crystal.Power) || 0;
   const isCurrentPlayer = currentViewer === player.id;
   const canActivateCrystal = invasions && isCurrentPlayer;
   const activeCrystal =
@@ -86,7 +86,7 @@ export default memo(function PlayerCard({
     activeCrystal != null
       ? activeCrystal
       : canActivateCrystal
-        ? PowerCrystal
+        ? Crystal.Power
         : undefined;
   const shouldShow =
     !map.config.fog ||
@@ -160,7 +160,7 @@ export default memo(function PlayerCard({
                   case 'Skill':
                     return ActivatePowerAction(item.skill);
                   case 'Crystal':
-                    return ActivateCrystalAction(PowerCrystal);
+                    return ActivateCrystalAction(Crystal.Power);
                   default: {
                     itemType satisfies never;
                     throw new UnknownTypeError('PlayerCard.action', itemType);
@@ -419,7 +419,7 @@ export default memo(function PlayerCard({
               {crystal != null && (
                 <div
                   className={cx(
-                    crystal === PowerCrystal &&
+                    crystal === Crystal.Power &&
                       crystal !== activeCrystal &&
                       powerCrystals <= 0 &&
                       grayscaleStyle,

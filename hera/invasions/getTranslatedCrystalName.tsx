@@ -4,17 +4,17 @@ import { fbt } from 'fbt';
 
 export default function getTranslatedCrystalName(crystal: Crystal) {
   switch (crystal) {
-    case Crystal.Green:
+    case Crystal.Power:
       return String(fbt('Power Crystal', 'Crystal name'));
-    case Crystal.Blue:
+    case Crystal.Help:
       return String(fbt('Valor Crystal', 'Crystal name'));
-    case Crystal.Red:
+    case Crystal.Phantom:
       return String(fbt('Phantom Crystal', 'Crystal name'));
-    case Crystal.Purple:
+    case Crystal.Command:
       return String(fbt('Command Crystal', 'Crystal name'));
-    case Crystal.Gold:
+    case Crystal.Super:
       return String(fbt('Super Crystal', 'Crystal name'));
-    case Crystal.Gray:
+    case Crystal.Memory:
       return String(fbt('Memory Crystal', 'Crystal name'));
     default: {
       crystal satisfies never;

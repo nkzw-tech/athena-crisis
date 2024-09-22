@@ -1,4 +1,4 @@
-import { CommandCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
@@ -235,7 +235,7 @@ export function applyObjectiveActionResponse(
     case 'AbandonInvasion': {
       const currentPlayer = map.getCurrentPlayer();
       return currentPlayer.isHumanPlayer() &&
-        currentPlayer.crystal === CommandCrystal
+        currentPlayer.crystal === Crystal.Command
         ? map.copy({
             teams: updatePlayer(
               map.teams,
@@ -442,7 +442,7 @@ const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
     previousPlayer.misses >= AllowedMisses
   ) {
     return [
-      previousPlayer.crystal === CommandCrystal
+      previousPlayer.crystal === Crystal.Command
         ? ({
             name: createBotWithName(previousPlayer).name,
             type: 'AbandonInvasion',

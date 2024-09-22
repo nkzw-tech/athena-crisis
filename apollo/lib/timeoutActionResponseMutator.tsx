@@ -1,4 +1,4 @@
-import { CommandCrystal } from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -13,7 +13,7 @@ export default function timeoutActionResponseMutator(
     if (
       player.misses >= AllowedMisses - 1 &&
       player.isHumanPlayer() &&
-      player.crystal === CommandCrystal
+      player.crystal === Crystal.Command
     ) {
       return {
         name: createBotWithName(player).name,

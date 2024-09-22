@@ -366,7 +366,7 @@ export default function EffectsPanel({
                   actions: [
                     ...actions,
                     {
-                      crystal: Crystal.Gray,
+                      crystal: Crystal.Memory,
                       type: 'ActivateCrystal',
                     },
                   ],
