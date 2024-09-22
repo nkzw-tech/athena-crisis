@@ -1,5 +1,6 @@
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { GameTimerValue } from './GameTimerValue.tsx';
 
 export default function hasTimer<T>(
   game: T & {
@@ -7,7 +8,7 @@ export default function hasTimer<T>(
     timer: number | null;
   },
   map: MapData,
-): game is T & { ended: boolean; timer: number } {
+): game is T & { ended: boolean; timer: Exclude<GameTimerValue, null> } {
   const { ended, timer } = game;
   return (
     !ended &&

@@ -24,6 +24,7 @@ import checkObjectives, {
   pickWinningPlayer,
   shouldCheckDefaultObjectives,
 } from './lib/checkObjective.tsx';
+import getLosingPlayer from './lib/getLosingPlayer.tsx';
 import { processRewards } from './lib/processRewards.tsx';
 import { GameState, MutableGameState } from './Types.tsx';
 
@@ -246,11 +247,12 @@ export function applyObjectiveActionResponse(
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
     case 'BeginTurnGameOver': {
-      const fromPlayer =
-        actionResponse.type === 'AttackUnitGameOver' ||
-        actionResponse.type === 'PreviousTurnGameOver'
-          ? map.getPlayer(actionResponse.fromPlayer)
-          : map.getCurrentPlayer();
+      const playerID = getLosingPlayer(map, actionResponse);
+      const fromPlayer = playerID != null && map.maybeGetPlayer(playerID);
+      if (!fromPlayer) {
+        return map;
+      }
+
       return removePlayer(
         map.copy({
           buildings: convertBuildings(map, fromPlayer, 0),

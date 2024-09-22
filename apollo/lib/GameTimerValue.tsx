@@ -19,3 +19,5 @@ export function isValidTimer(
 ): timer is GameTimerValue {
   return !!timerSet.has(timer as GameTimerValue);
 }
+
+export const isRealTime = (timer: number | null | undefined) => timer === -1;

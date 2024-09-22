@@ -37,6 +37,7 @@ import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import Portal from '@deities/ui/Portal.tsx';
+import { RainbowStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
@@ -770,6 +771,7 @@ const CrystalContainer = ({
   spectatorLink: ReactElement | null;
 }) => {
   const isPowerCrystal = crystal === PowerCrystal;
+  const isActive = activeCrystal === crystal;
 
   const onSelect = useCallback(() => {
     if (!canAction || canAction({ crystal, type: 'Crystal' })) {
@@ -811,8 +813,8 @@ const CrystalContainer = ({
   return (
     <DialogScrollContainer key={`crystal-${crystal}`} navigate>
       <Stack gap={16} vertical>
-        <h2>
-          {activeCrystal === crystal ? (
+        <h2 className={cx(isActive && RainbowStyle)}>
+          {isActive ? (
             <fbt desc="Headline for crystal dialog">Active Crystal</fbt>
           ) : (
             <fbt desc="Headline for crystal dialog">Crystal</fbt>
@@ -825,7 +827,7 @@ const CrystalContainer = ({
           )}
           onClick={onSelect}
         >
-          <CrystalCard crystal={crystal} />
+          <CrystalCard active={isActive} crystal={crystal} />
         </div>
         {isPowerCrystal && spectatorLink}
         {activeCrystal == null && crystalMap != null && (

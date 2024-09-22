@@ -5,11 +5,17 @@ import crystalToColor from './crystalToColor.tsx';
 import getCrystalDescription from './getCrystalDescription.tsx';
 import getTranslatedCrystalName from './getTranslatedCrystalName.tsx';
 
-export default function CrystalCard({ crystal }: { crystal: Crystal }) {
+export default function CrystalCard({
+  active,
+  crystal,
+}: {
+  active?: boolean;
+  crystal: Crystal;
+}) {
   return (
     <Stack alignCenter gap={16} nowrap>
       <div>
-        <CrystalSprite animate crystal={crystal} />
+        <CrystalSprite animate crystal={crystal} portal={active} />
       </div>
       <Stack gap start vertical>
         <div style={{ color: crystalToColor(crystal) }}>

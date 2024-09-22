@@ -1252,6 +1252,11 @@ export default class GameMap extends Component<Props, State> {
       const { animationConfig, animations } =
         await this.processGameActionResponse(gameActionResponse);
 
+      const { timeout } = gameActionResponse;
+      if (timeout !== undefined) {
+        await this._update({ timeout });
+      }
+
       if (animations.size) {
         // Some animations like HealthAnimation do not have an `onComplete` callback.
         // This delay gives these animations a chance to finish before continuing to process the queue.
