@@ -536,19 +536,19 @@ const summaryStarStyle = css`
 
   &:nth-child(2) {
     animation-delay: ${starDuration * 1.2}ms;
-    margin-left: -60px;
+    margin-left: -48px;
     top: 12px;
   }
 
   &:nth-child(3) {
     animation-delay: ${starDuration * 1.4}ms;
-    margin-left: -60px;
+    margin-left: -48px;
     top: 24px;
   }
 
   &:nth-child(4) {
     animation-delay: ${starDuration * 1.6}ms;
-    margin-left: -60px;
+    margin-left: -48px;
     top: 36px;
   }
 `;

@@ -334,7 +334,7 @@ export default function ObjectiveCard({
                     <Stack gap start>
                       <span className={labelWidthStyle}>
                         <fbt desc="Label for enabling this objective to reward a bonus star">
-                          Bonus Star
+                          Bonus
                         </fbt>
                       </span>
                       <input

@@ -134,6 +134,12 @@ input[type="checkbox"] {
     transition: color 350ms ease;
   }
 
+  &.checkmark:before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M18 6h2v2h-2V6Zm-2 4V8h2v2h-2Zm-2 2v-2h2v2h-2Zm-2 2h2v-2h-2v2Zm-2 2h2v-2h-2v2Zm-2 0v2h2v-2H8Zm-2-2h2v2H6v-2Zm0 0H4v-2h2v2Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    top: -3px;
+    left: 0;
+  }
+
   &:checked:before {
     color: ${applyVar('text-color')};
   }

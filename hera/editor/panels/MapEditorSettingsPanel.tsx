@@ -25,8 +25,6 @@ import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
 import { css, cx } from '@emotion/css';
-import MissingBonusIcon from '@iconify-icons/pixelarticons/checkbox-on.js';
-import HasBonusIcon from '@iconify-icons/pixelarticons/checkbox.js';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
@@ -297,9 +295,11 @@ export default function MapEditorSettingsPanel({
               </Stack>
             </label>
             <Stack alignCenter gap nowrap start>
-              <Icon
-                className={iconStyle}
-                icon={hasBonus ? HasBonusIcon : MissingBonusIcon}
+              <input
+                checked={hasBonus}
+                className={cx('checkmark', 'disabled')}
+                disabled
+                type="checkbox"
               />
               <fbt desc="Label for a map's bonus objective">
                 Bonus Objective

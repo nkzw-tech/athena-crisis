@@ -1,4 +1,7 @@
-import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import {
+  AnimationConfig,
+  DoubleSize,
+} from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -61,13 +64,13 @@ export default function Notice(
 }
 
 const style = css`
-  ${pixelBorder(applyVar('background-color-light'))}
+  ${pixelBorder(applyVar('text-color'))}
 
   align-items: center;
   backdrop-filter: blur(4px);
   background: ${applyVar('background-color')};
-  bottom: 24px;
-  color: ${applyVar('text-color-active-light')};
+  bottom: ${DoubleSize + 16}px;
+  color: ${applyVar('text-color')};
   display: flex;
   flex-direction: row;
   font-size: 1.5em;
