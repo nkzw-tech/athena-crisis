@@ -175,7 +175,8 @@ test('spawns new units at adjacent fields if necessary', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Zephyr' }], teams: null }"
+      Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Zephyr' }], teams: null }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 });
 
@@ -294,4 +295,19 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam' }], teams: null }
     EndTurn { current: { funds: 600, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
   `);
+});
+
+test('correctly keeps track of active players', async () => {
+  const vision = map.createVisionObject(player1);
+  const gameStateEntry = executeEffect(map, vision, {
+    type: 'SpawnEffect',
+    units: ImmutableMap([[vec(1, 1), Bomber.create(1)]]),
+  } as const);
+
+  const newMap = applyActionResponse(
+    vision.apply(map),
+    vision,
+    gameStateEntry![0],
+  );
+  expect(newMap.active).toEqual([1, 2]);
 });

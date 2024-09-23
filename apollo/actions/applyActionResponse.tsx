@@ -483,7 +483,7 @@ export default function applyActionResponse(
         units: map.units.merge(units),
       });
       return newMap.copy({
-        active: getActivePlayers(newMap),
+        active: getActivePlayers(newMap, map.active),
       });
     }
     case 'ToggleLightning': {

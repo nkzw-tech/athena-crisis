@@ -80,7 +80,7 @@ export default function spawn(
 
         return {
           map: map.copy({
-            active: getActivePlayers(map),
+            active: getActivePlayers(map, map.active),
           }),
         };
       },
