@@ -1072,6 +1072,25 @@ export default class GameMap extends Component<Props, State> {
         await sleep(this._scheduleTimer, this.state.animationConfig, 'long');
       }
 
+      // Update the viewer id when a spectator invades to show the correct
+      // info during fog.
+      for (const { actionResponse } of others) {
+        if (actionResponse.type === 'Spawn' && actionResponse.teams) {
+          const currentViewer = actionResponse.teams
+            .flatMap(({ players }) => players)
+            .find(
+              (player) =>
+                player.isHumanPlayer() && player.userId === state.currentUserId,
+            )?.id;
+
+          if (currentViewer) {
+            state = await this._update({
+              currentViewer,
+            });
+          }
+        }
+      }
+
       state = await this._processActionResponses(others);
     }
 
