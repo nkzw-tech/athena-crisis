@@ -64,13 +64,13 @@ export default function Notice(
 }
 
 const style = css`
-  ${pixelBorder(applyVar('text-color'))}
+  ${pixelBorder(applyVar('text-color-bright'))}
 
   align-items: center;
   backdrop-filter: blur(4px);
   background: ${applyVar('background-color')};
   bottom: ${DoubleSize + 16}px;
-  color: ${applyVar('text-color')};
+  color: ${applyVar('text-color-bright')};
   display: flex;
   flex-direction: row;
   font-size: 1.5em;
