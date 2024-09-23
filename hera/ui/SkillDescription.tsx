@@ -14,6 +14,7 @@ import {
   getSkillAttackUnitStatusEffect,
   getSkillConfig,
   getSkillDefenseMovementTypeStatusEffect,
+  getSkillDefenseUnitStatusEffect,
   getSkillEffect,
   getSkillTileAttackStatusEffect,
   getSkillTileDefenseStatusEffect,
@@ -717,6 +718,7 @@ export default memo(function SkillDescription({
     skill,
   );
   const unitAttack = getSkillAttackUnitStatusEffect(skill, type);
+  const unitDefense = getSkillDefenseUnitStatusEffect(skill, type);
   const movementTypeAttack = getSkillAttackMovementTypeStatusEffect(
     skill,
     type,
@@ -741,6 +743,9 @@ export default memo(function SkillDescription({
     ) : null,
     unitAttack ? (
       <UnitStatusEffects color={color} effects={unitAttack} type="attack" />
+    ) : null,
+    unitDefense ? (
+      <UnitStatusEffects color={color} effects={unitDefense} type="defense" />
     ) : null,
     movementTypeAttack ? (
       <MovementTypeStatusEffect effects={movementTypeAttack} type="attack" />

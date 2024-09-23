@@ -173,7 +173,7 @@ const attackUnitStatusEffects = new Map<Skill, UnitModifierMap>([
       [UnitID.Cannon, 0.1],
     ]),
   ],
-  [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.2]])],
+  [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.5]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -252,6 +252,10 @@ const defenseStatusEffects: SkillMap = new Map([
   [Skill.BuyUnitZombieDefenseDecreaseMajor, -0.5],
   [Skill.AttackAndDefenseIncreaseHard, 0.1],
   [Skill.AttackAndDefenseDecreaseEasy, -0.1],
+]);
+
+const defenseUnitStatusEffects = new Map<Skill, UnitModifierMap>([
+  [Skill.Sabotage, new Map([[UnitID.Saboteur, 3]])],
 ]);
 
 const defensePowerStatusEffects: SkillMap = new Map([
@@ -541,7 +545,7 @@ export const getSkillAttackStatusEffects = sumAll.bind(
 export const getSkillDefenseStatusEffects = sumAll.bind(
   null,
   defenseStatusEffects,
-  null,
+  defenseUnitStatusEffects,
   defenseMovementTypeStatusEffects,
   defensePowerStatusEffects,
   null,
@@ -792,6 +796,13 @@ export function getSkillAttackUnitStatusEffect(
   return type === 'regular'
     ? attackUnitStatusEffects.get(skill)
     : attackUnitPowerStatusEffects.get(skill) || null;
+}
+
+export function getSkillDefenseUnitStatusEffect(
+  skill: Skill,
+  type: SkillActivationType,
+) {
+  return (type === 'regular' && defenseUnitStatusEffects.get(skill)) || null;
 }
 
 export function getSkillAttackLeaderUnitStatusEffect(

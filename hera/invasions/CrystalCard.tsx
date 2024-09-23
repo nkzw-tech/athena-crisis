@@ -1,5 +1,6 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
+import { ReactNode } from 'react';
 import CrystalSprite from './CrystalSprite.tsx';
 import crystalToColor from './crystalToColor.tsx';
 import getCrystalDescription from './getCrystalDescription.tsx';
@@ -7,9 +8,11 @@ import getTranslatedCrystalName from './getTranslatedCrystalName.tsx';
 
 export default function CrystalCard({
   active,
+  children,
   crystal,
 }: {
   active?: boolean;
+  children?: ReactNode;
   crystal: Crystal;
 }) {
   return (
@@ -22,6 +25,7 @@ export default function CrystalCard({
           {getTranslatedCrystalName(crystal)}
         </div>
         <p>{getCrystalDescription(crystal)}</p>
+        {children}
       </Stack>
     </Stack>
   );
