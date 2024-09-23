@@ -27,7 +27,7 @@ export default function Fireworks({
       frames={frames}
       position={new SpriteVector((x - 2.5) * size, (y - 2.5) * size)}
       size={spriteSize}
-      sound="Explosion/Air"
+      sound="Fireworks"
       source={Sprites.Fireworks}
       {...props}
     />

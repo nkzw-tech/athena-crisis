@@ -40,6 +40,7 @@ export type SoundName =
   | 'Explosion/Infantry'
   | 'Explosion/Naval'
   | 'ExplosionImpact'
+  | 'Fireworks'
   | 'Movement/Air'
   | 'Movement/AirEnd'
   | 'Movement/AirInfantry'
