@@ -23,8 +23,8 @@ import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, {
   ClientGame,
 } from '@deities/hermes/game/toClientGame.tsx';
+import captureException from '@deities/ui/lib/captureException.tsx';
 import { useCallback, useRef } from 'react';
-import captureException from '../lib/captureException.tsx';
 import gameActionWorker from '../workers/gameAction.tsx?worker';
 import {
   ClientGameActionRequest,

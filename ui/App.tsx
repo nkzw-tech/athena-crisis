@@ -4,6 +4,7 @@ import {
   GamepadTextInputLineMode,
   GamepadTextInputMode,
 } from './controls/GamepadTextInput.tsx';
+import captureException from './lib/captureException.tsx';
 
 export type NativeApp = Readonly<{
   canToggleFullScreen: () => boolean;
@@ -88,7 +89,16 @@ window.$__AC__R = {
     switch (name) {
       case 'pushState':
         if (data.url) {
-          navigate?.(new URL(data.url).pathname as Route);
+          try {
+            const route = new URL(data.url).pathname as Route;
+            navigate?.(route);
+          } catch (error) {
+            captureException(
+              new Error(`Remote 'pushState' call: Invalid URL: ${data.url}`, {
+                cause: error,
+              }),
+            );
+          }
         }
         break;
       default:

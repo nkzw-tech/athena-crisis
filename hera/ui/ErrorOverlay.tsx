@@ -1,10 +1,10 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
+import captureException from '@deities/ui/lib/captureException.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import { fbt } from 'fbt';
 import { useEffect } from 'react';
-import captureException from '../lib/captureException.tsx';
 
 export class SpriteLoadError extends Error {}
 
