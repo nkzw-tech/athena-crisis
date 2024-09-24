@@ -13,7 +13,7 @@ export function hidePointer() {
   if (pointerEnabled) {
     if (!document.pointerLockElement) {
       try {
-        document.body.requestPointerLock?.();
+        document.body.requestPointerLock?.().catch();
       } catch {
         /* empty */
       }
