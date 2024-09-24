@@ -6,6 +6,7 @@ import Player, {
 } from '@deities/athena/map/Player.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
+import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css } from '@emotion/css';
@@ -23,6 +24,7 @@ export default function MiniPortrait({
   player: Player | PlayerID;
   user: Omit<UserLike, 'username'> & { username: string | null };
 }) {
+  const { pathname } = useLocation();
   const unit = getUnitInfo(user.character.unitId);
   if (!unit) {
     return null;
@@ -39,7 +41,7 @@ export default function MiniPortrait({
       style={{
         [cssVar('border-color')]: getColor(id),
       }}
-      to={username ? getUserRoute(username) : '/'}
+      to={username ? `${getUserRoute(username)}?back=${pathname}` : '/'}
     >
       <Portrait
         animate={animate}
