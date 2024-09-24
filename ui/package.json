@@ -25,7 +25,7 @@
     "use-long-press": "^3.2.0"
   },
   "devDependencies": {
-    "@types/howler": "^2.2.11",
+    "@types/howler": "^2.2.12",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0"
   }
