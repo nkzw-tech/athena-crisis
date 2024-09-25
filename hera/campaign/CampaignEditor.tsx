@@ -1,4 +1,5 @@
 import { Scenario } from '@deities/apollo/Effects.tsx';
+import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import {
   AttributeRangeWithZero,
   validateAttributeRange,
@@ -13,6 +14,7 @@ import { Campaign, ClientLevelID, PlainLevel } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import validateCampaign from '@deities/hermes/validateCampaign.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
+import { isIOS } from '@deities/ui/Browser.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Dialog, { DialogScrollContainer } from '@deities/ui/Dialog.tsx';
@@ -20,6 +22,7 @@ import ellipsis from '@deities/ui/ellipsis.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import useMedia from '@deities/ui/hooks/useMedia.tsx';
+import useNavigate from '@deities/ui/hooks/useNavigate.tsx';
 import { usePrompt } from '@deities/ui/hooks/usePrompt.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import CreateMap from '@deities/ui/icons/CreateMap.tsx';
@@ -100,6 +103,7 @@ export default function CampaignEditor({
   users: ReadonlyArray<UserNode>;
   viewer: { id: string };
 }) {
+  const navigate = useNavigate();
   const [, startTransition] = useTransition();
   const [hasChanges, setHasChanges] = useState(!data.id);
   const [mapHasChanges, setMapHasChanges] = useState(false);
@@ -271,6 +275,10 @@ export default function CampaignEditor({
     (mapId: string, mode?: EditorMode, scenario?: Scenario) => {
       const node = maps.get(mapId);
       if (node) {
+        if (isIOS) {
+          navigate(getMapRoute(node.slug, 'edit'));
+          return;
+        }
         setShowAllDialogue(false);
         setCampaignEditorState({
           map: node,
@@ -279,7 +287,7 @@ export default function CampaignEditor({
         });
       }
     },
-    [maps, setCampaignEditorState],
+    [maps, navigate, setCampaignEditorState],
   );
 
   useMusic('hestias-serenade');
