@@ -1,0 +1,14 @@
+diff --git a/index.js b/index.js
+index dfeea3814d61f496ce40f39ca9b89c3ff7fcacd1..6b13d89612bfb1fd3b86b195e4a3407661755789 100644
+--- a/index.js
++++ b/index.js
+@@ -103,6 +103,9 @@ class ExportsCache {
+ 
+ function Hook (modules, options, onrequire) {
+   if ((this instanceof Hook) === false) return new Hook(modules, options, onrequire)
++
++  return
++
+   if (typeof modules === 'function') {
+     onrequire = modules
+     modules = null

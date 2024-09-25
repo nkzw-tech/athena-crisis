@@ -116,6 +116,7 @@
       "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
+      "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
       "typescript": "patches/typescript.patch"
     }
