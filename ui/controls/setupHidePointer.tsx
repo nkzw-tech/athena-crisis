@@ -1,3 +1,5 @@
+import { isFirefox } from '../Browser.tsx';
+
 let pointerEnabled = true;
 
 const showPointer = () => {
@@ -25,7 +27,7 @@ export function hidePointer() {
 let setup = false;
 
 export default function setupHidePointer() {
-  if (setup) {
+  if (setup || isFirefox) {
     return;
   }
 
