@@ -10,16 +10,14 @@ import MapData from '../MapData.tsx';
 import assignDeterministicUnitNames from './assignDeterministicUnitNames.tsx';
 import canDeploy from './canDeploy.tsx';
 
-const spawnConfiguration: Partial<
-  Record<
-    Skill,
-    Readonly<{
-      matchBuilding: (building: Building) => boolean;
-      max?: number;
-      unitType: UnitInfo;
-    }>
-  >
-> = {
+type SpawnConfiguration = Readonly<{
+  matchBuilding?: (building: Building) => boolean;
+  matchUnit?: (unit: Unit) => boolean;
+  max?: number;
+  unitType: UnitInfo;
+}>;
+
+const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
   [Skill.BuyUnitBazookaBear]: {
     matchBuilding: (building) => building.id === Bar.id,
     unitType: BazookaBear,
@@ -33,9 +31,36 @@ const spawnConfiguration: Partial<
 
   [Skill.SpawnUnitInfernoJetpack]: {
     matchBuilding: () => true,
+    matchUnit: () => true,
     max: 3,
     unitType: InfernoJetpack,
   },
+};
+
+const getDeployVector = (
+  map: MapData,
+  player: PlayerID,
+  vector: Vector,
+  { matchBuilding, matchUnit, unitType }: SpawnConfiguration,
+) => {
+  const unit = map.units.get(vector);
+  const building = map.buildings.get(vector);
+  if (
+    (matchBuilding &&
+      building &&
+      map.matchesPlayer(building, player) &&
+      (!unit || map.matchesTeam(unit, building)) &&
+      matchBuilding?.(building)) ||
+    (matchUnit && unit && map.matchesPlayer(unit, player) && matchUnit(unit))
+  ) {
+    const deployVector = vector
+      .expand()
+      .find((vector) => canDeploy(map, unitType, vector, true));
+    if (deployVector) {
+      return deployVector;
+    }
+  }
+  return null;
 };
 
 export default function powerSpawnUnits(
@@ -47,21 +72,19 @@ export default function powerSpawnUnits(
     return null;
   }
 
-  const { matchBuilding, max, unitType } = spawnConfiguration[skill];
+  const configuration = spawnConfiguration[skill];
+  const { max, unitType } = configuration;
+  const vectors = new Set([
+    ...map.buildings
+      .map((building) => map.matchesPlayer(building, player))
+      .keys(),
+    ...map.units.map((unit) => map.matchesPlayer(unit, player)).keys(),
+  ]);
   let newUnits = ImmutableMap<Vector, Unit>();
-  for (const [vector, building] of map.buildings) {
-    const unit = map.units.get(vector);
-    if (
-      map.matchesPlayer(building, player) &&
-      (!unit || map.matchesTeam(unit, building)) &&
-      matchBuilding(building)
-    ) {
-      const deployVector = vector
-        .expand()
-        .find((vector) => canDeploy(map, unitType, vector, true));
-      if (deployVector) {
-        newUnits = newUnits.set(deployVector, unitType.create(player));
-      }
+  for (const vector of vectors) {
+    const deployVector = getDeployVector(map, player, vector, configuration);
+    if (deployVector) {
+      newUnits = newUnits.set(deployVector, unitType.create(player));
     }
 
     if (max && newUnits.size >= max) {
