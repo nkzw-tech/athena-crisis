@@ -28,15 +28,17 @@ export default function upgradeUnits(
                   }
 
                   const newState = await update(null);
-                  update(
-                    upgradeUnits(
+                  const upgrade = onUpgrade(newState, position);
+                  update({
+                    ...upgradeUnits(
                       actions,
-                      { ...newState, ...onUpgrade(newState, position) },
+                      { ...newState, ...upgrade },
                       remainingUnits,
                       remainingUnits.length ? onComplete : (state) => state,
                       onUpgrade,
                     ),
-                  );
+                    ...upgrade,
+                  });
                 });
 
                 return null;

@@ -135,9 +135,13 @@ export default async function activatePowerAction(
                 )
             : null;
 
-          const queue = [damage, healUnits, spawnUnits, upgrade].filter(
-            isPresent,
-          );
+          const queue = [
+            damage,
+            healUnits,
+            ...(skill === Skill.SpawnUnitInfernoJetpack
+              ? [upgrade, spawnUnits]
+              : [spawnUnits, upgrade]),
+          ].filter(isPresent);
 
           const next = (state: State): StateLike | null => {
             const fn = queue.shift();

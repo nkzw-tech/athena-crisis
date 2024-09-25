@@ -8,6 +8,7 @@ import {
   GameActionResponse,
   GameActionResponses,
 } from '@deities/apollo/Types.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
 import {
@@ -33,6 +34,7 @@ import receivePortraitAnimation from '../animations/receivePortraitAnimation.tsx
 import receiveSkillSlotAnimation from '../animations/receiveSkillSlotAnimation.tsx';
 import activateCrystalAction from '../behavior/activateCrystal/activateCrystalAction.tsx';
 import activatePowerAction from '../behavior/activatePower/activatePowerAction.tsx';
+import clientActivatePowerAction from '../behavior/activatePower/clientActivatePowerAction.tsx';
 import clientAttackAction from '../behavior/attack/clientAttackAction.tsx';
 import {
   hiddenSourceAttackAction,
@@ -630,8 +632,11 @@ async function processActionResponse(
       );
       break;
     }
-    case 'ActivatePower':
-      return activatePowerAction(actions, state, actionResponse);
+    case 'ActivatePower': {
+      return actionResponse.skill === Skill.SpawnUnitInfernoJetpack
+        ? clientActivatePowerAction(actions, state, actionResponse)
+        : activatePowerAction(actions, state, actionResponse);
+    }
     case 'AbandonInvasion': {
       state = await update(abandonInvasion(state, actionResponse.name));
       state = await maybeReceiveChaosStarsAnimation(

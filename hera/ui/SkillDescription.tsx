@@ -28,7 +28,9 @@ import {
   Alien,
   Battleship,
   BazookaBear,
+  Flamethrower,
   getUnitInfoOrThrow,
+  InfernoJetpack,
   Saboteur,
   Sniper,
   SpecialUnits,
@@ -52,6 +54,7 @@ import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import UICrystalIcon from '@deities/ui/icons/UICrystalIcon.tsx';
 import { css, cx } from '@emotion/css';
 import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
@@ -692,6 +695,22 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           convert opponents after attacking.
         </fbt>
       );
+    case Skill.SpawnUnitInfernoJetpack:
+      return (
+        <fbt desc="Additional skill description">
+          Converts all
+          <fbt:param name="fromUnitName">
+            <UnitName color={color} unit={Flamethrower} />
+          </fbt:param>{' '}
+          into{' '}
+          <fbt:param name="toUnitName">
+            <UnitName color={color} unit={InfernoJetpack} />
+          </fbt:param>. Spawns 3{' '}
+          <fbt:param name="unitNameB">
+            <UnitName color={color} unit={InfernoJetpack} />
+          </fbt:param>.
+        </fbt>
+      );
   }
 
   return null;
@@ -707,7 +726,8 @@ export default memo(function SkillDescription({
   type: 'regular' | 'power';
 }) {
   const isRegular = type === 'regular';
-  const { charges } = getSkillConfig(skill);
+  const isPower = !isRegular;
+  const { charges, requiresCrystal } = getSkillConfig(skill);
   const attack = getSkillEffect(isRegular ? 'attack' : 'attack-power', skill);
   const cost = getSkillEffect(
     isRegular ? 'unit-cost' : 'unit-cost-power',
@@ -735,7 +755,7 @@ export default memo(function SkillDescription({
   const blockedUnits = type === 'regular' ? getBlockedUnits(skill) : null;
   const unitMovement = getSkillUnitMovement(skill, type);
   const unitRange = getUnitRangeForSkill(skill, type);
-  const healTypes = type === 'power' ? getHealUnitTypes(skill) : null;
+  const healTypes = isPower ? getHealUnitTypes(skill) : null;
   const effects = [
     attack ? <AttackStatusEffect effect={attack} /> : null,
     unitAttackLeader ? (
@@ -765,7 +785,7 @@ export default memo(function SkillDescription({
   ].filter(isPresent);
 
   const list = [
-    charges && type === 'power' ? (
+    charges && isPower ? (
       <span className={typeStyle} style={{ color: getColor(color) }}>
         <fbt desc="Label for skill status effects when a power is activated">
           Power:
@@ -784,7 +804,18 @@ export default memo(function SkillDescription({
     effects.length ? (
       <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
     ) : null,
-    charges && type === 'power' ? (
+    isPower && requiresCrystal ? (
+      <div
+        className="paragraph"
+        style={{
+          color: getColor('red'),
+        }}
+      >
+        <Icon className={chargeIconStyle} icon={UICrystalIcon} />
+        <fbt desc="Power charge cost">Requires an active crystal.</fbt>
+      </div>
+    ) : null,
+    isPower && charges ? (
       <div className="paragraph">
         <Icon className={chargeIconStyle} icon={Charge} />
         <fbt desc="Power charge cost">

@@ -5,6 +5,7 @@ export default {
   Artillery: 7,
   HeavyArtillery: 12,
   Sniper: 14,
+  Flamethrower: 15,
   Saboteur: 16,
   AcidBomber: 22,
   Medic: 26,
@@ -19,5 +20,6 @@ export default {
   SuperAPU: 52,
   BazookaBear: 53,
   AIU: 54,
+  InfernoJetpack: 55,
 } as const;
 /* eslint-enable sort-keys-fix/sort-keys-fix */

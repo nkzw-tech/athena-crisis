@@ -24,7 +24,9 @@ export default function getActivatePowerMessage(
   }
 
   const message = pickItem(
-    messages.filter(([message]) => units.has(message.unitId)),
+    skill === Skill.SpawnUnitInfernoJetpack
+      ? messages
+      : messages.filter(([message]) => units.has(message.unitId)),
   );
   return message ? executeEffect(currentMap, vision, message) : null;
 }

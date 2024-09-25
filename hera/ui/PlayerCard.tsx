@@ -118,14 +118,16 @@ export default memo(function PlayerCard({
       const itemType = item.type;
       switch (itemType) {
         case 'Skill': {
-          const { charges } = getSkillConfig(item.skill);
+          const { charges, requiresCrystal } = getSkillConfig(item.skill);
           const currentPlayer = map.getCurrentPlayer();
           return !!(
             charges &&
             currentPlayer.id === currentViewer &&
             player.id === currentPlayer.id &&
             charges * Charge <= player.charge &&
-            !player.activeSkills.has(item.skill)
+            !player.activeSkills.has(item.skill) &&
+            (!requiresCrystal ||
+              (player.isHumanPlayer() && player.crystal != null))
           );
         }
         case 'Crystal':
@@ -390,7 +392,7 @@ export default memo(function PlayerCard({
             <Stack className={skillStyle} nowrap>
               {[...new Set([...player.activeSkills, ...player.skills])].map(
                 (skill) => {
-                  const { charges } = getSkillConfig(skill);
+                  const { charges, requiresCrystal } = getSkillConfig(skill);
                   const isActive = player.activeSkills.has(skill);
                   return (
                     <div
@@ -410,7 +412,9 @@ export default memo(function PlayerCard({
                           !isActive &&
                           !!charges &&
                           availableCharges >= charges &&
-                          map.getCurrentPlayer().id === currentViewer
+                          map.getCurrentPlayer().id === player.id &&
+                          (!requiresCrystal ||
+                            (player.isHumanPlayer() && player.crystal != null))
                         }
                         hideDialog
                         skill={skill}

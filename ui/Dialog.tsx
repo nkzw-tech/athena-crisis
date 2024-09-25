@@ -322,11 +322,11 @@ const sizes = {
     }
   `,
   small: css`
-    height: 40vh;
-    max-height: 420px;
-    top: calc(50vh - max(20vh, 210px));
+    height: 80vh;
 
     ${Breakpoints.sm} {
+      height: min(480px, 46vh);
+      top: max(${DoubleSize * 2.2}px, calc(50vh - max(20vh, 210px)));
       width: min(90vw, 600px);
     }
   `,

@@ -2,6 +2,7 @@ import {
   AttackUnitAction,
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import resizeMap from '@deities/apollo/lib/resizeMap.tsx';
 import { Barracks, House, HQ } from '@deities/athena/info/Building.tsx';
 import { findTile, Plain, Sea } from '@deities/athena/info/Tile.tsx';
 import {
@@ -25,7 +26,7 @@ import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -69,7 +70,7 @@ test('displays all units and all possible states correctly', async () => {
     y++;
   });
 
-  const size = { height: y, width: maxWidth };
+  const size = { height: y - 1, width: maxWidth };
   units = units.merge(
     units
       .filter((_, vector) => vector.x === 1)
@@ -109,12 +110,33 @@ test('displays all units and all possible states correctly', async () => {
     }
   });
 
-  const screenshot = await captureOne(
-    withModifiers(map.copy({ map: newMap })),
-    HumanPlayer.from(map.getPlayer(1), '1').userId,
+  const finalMap = map.copy({ map: newMap });
+
+  const [mapA] = resizeMap(
+    finalMap,
+    new Map(),
+    new SizeVector(size.width, Math.ceil(size.height / 2)),
+    new Set(['bottom']),
   );
-  printGameState('All Units', screenshot);
-  expect(screenshot).toMatchImageSnapshot();
+  const screenshotA = await captureOne(
+    withModifiers(mapA),
+    HumanPlayer.from(mapA.getPlayer(1), '1').userId,
+  );
+  printGameState('Units Part 1', screenshotA);
+  expect(screenshotA).toMatchImageSnapshot();
+
+  const [mapB] = resizeMap(
+    finalMap,
+    new Map(),
+    new SizeVector(size.width, Math.floor(size.height / 2)),
+    new Set(['top']),
+  );
+  const screenshotB = await captureOne(
+    withModifiers(mapB),
+    HumanPlayer.from(mapB.getPlayer(1), '1').userId,
+  );
+  printGameState('Units Part 2', screenshotB);
+  expect(screenshotB).toMatchImageSnapshot();
 });
 
 test('correctly palette swaps water on naval units', async () => {

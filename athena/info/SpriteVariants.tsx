@@ -39,6 +39,7 @@ export type SpriteVariant =
   | 'Units-Humvee'
   | 'Units-HumveeAvenger'
   | 'Units-Infantry'
+  | 'Units-InfernoJetpack'
   | 'Units-Jeep'
   | 'Units-Jetpack'
   | 'Units-Lander'

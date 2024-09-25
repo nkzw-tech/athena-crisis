@@ -917,7 +917,7 @@ function buySkill(map: MapData, { from, skill }: BuySkillAction) {
 
 function activatePower(map: MapData, { skill }: ActivatePowerAction) {
   const player = map.getCurrentPlayer();
-  const { charges } = getSkillConfig(skill);
+  const { charges, requiresCrystal } = getSkillConfig(skill);
 
   if (
     player &&
@@ -925,7 +925,8 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
     !player.activeSkills?.has(skill) &&
     charges &&
     charges > 0 &&
-    player.charge >= charges * Charge
+    player.charge >= charges * Charge &&
+    (!requiresCrystal || (player.isHumanPlayer() && player.crystal != null))
   ) {
     return {
       skill,

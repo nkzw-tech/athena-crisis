@@ -1,4 +1,5 @@
 import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
+import { Flamethrower, InfernoJetpack } from '@deities/athena/info/Unit.tsx';
 import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
@@ -19,6 +20,15 @@ export function onPowerUnitUpgrade(
   if (skill === Skill.RecoverAirUnits) {
     return map.copy({
       units: map.units.set(vector, unit.recover()),
+    });
+  }
+
+  if (skill === Skill.SpawnUnitInfernoJetpack) {
+    return map.copy({
+      units: map.units.set(
+        vector,
+        InfernoJetpack.create(unit.player).setHealth(unit.health),
+      ),
     });
   }
 
@@ -71,6 +81,16 @@ export default function applyPower(skill: Skill, map: MapData) {
     map = map.copy({
       units: map.units.merge(
         getAirUnitsToRecover(map, player).map((unit) => unit.recover()),
+      ),
+    });
+  }
+
+  if (skill === Skill.SpawnUnitInfernoJetpack) {
+    map = map.copy({
+      units: map.units.map((unit) =>
+        unit.info === Flamethrower && map.matchesPlayer(player, unit)
+          ? InfernoJetpack.create(unit.player).setHealth(unit.health)
+          : unit,
       ),
     });
   }

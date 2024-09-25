@@ -9,6 +9,8 @@ import MapData from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import { formatInputNames } from '@deities/ui/controls/formatInputNames.tsx';
 import { hasGamepad } from '@deities/ui/controls/setupGamePad.tsx';
+import { fbt } from 'fbt';
+import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import getUserDisplayName from '../../lib/getUserDisplayName.tsx';
 import { PlayerDetails } from '../../Types.tsx';
@@ -24,6 +26,26 @@ export default function formatCharacterText(
   return formatInputNames(
     formatText(text, unit, name, [
       ['user', getUserDisplayName(playerDetails, player)],
+      [
+        'opponents',
+        String(
+          intlList(
+            [...playerDetails]
+              .filter(
+                ([playerID]) =>
+                  map.active.includes(playerID) &&
+                  map.isOpponent(playerID, player),
+              )
+              .map(([playerID]) => getUserDisplayName(playerDetails, playerID)),
+            Conjunctions.AND,
+            Delimiters.COMMA,
+          ),
+        ) ||
+          fbt(
+            'Players',
+            'If there are no human opponents, this falls back to replace {users} with "Players" in a character message.',
+          ),
+      ],
     ]).replaceAll(/{faction(?:\.(\w+))?}/g, (_, id: string) => {
       const dynamicPlayerID = id
         ? isDynamicPlayerID(id)

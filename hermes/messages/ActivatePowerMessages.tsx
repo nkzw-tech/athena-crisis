@@ -325,4 +325,27 @@ export default new Map<
       ],
     ],
   ],
+  [
+    Skill.SpawnUnitInfernoJetpack,
+    [
+      [
+        CharacterMessage(
+          BazookaBear,
+          '{opponents}, leave this world now!',
+          'self',
+          0,
+        ),
+        0.3,
+      ],
+      [
+        CharacterMessage(
+          BazookaBear,
+          '{opponents}, you are not welcome here.',
+          'self',
+          1,
+        ),
+        0.1,
+      ],
+    ],
+  ],
 ]);

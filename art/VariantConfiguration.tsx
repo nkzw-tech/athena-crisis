@@ -241,6 +241,12 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Units-InfernoJetpack',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Units-Sniper',
     {
       variantNames,

@@ -54,6 +54,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
     case Skill.Sabotage:
+    case Skill.SpawnUnitInfernoJetpack:
     case Skill.UnitAbilitySniperImmediateAction:
     case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:

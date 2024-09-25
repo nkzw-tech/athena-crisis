@@ -134,6 +134,7 @@ const borderIconStyle = css`
   color: ${applyVar('border-color')};
   inset: -2px;
   position: absolute;
+  z-index: 2;
 `;
 
 const hoverStyle = css`
@@ -156,10 +157,12 @@ const backgroundStyle = css`
       rgba(0, 0, 0, 0.7) 50%
     );
   position: absolute;
+  z-index: 1;
 `;
 
 const iconStyle = css`
   position: relative;
+  z-index: 2;
 `;
 
 export default function SkillDialog({
@@ -423,7 +426,7 @@ const SkillListItem = ({
   toggleBlocklist?: boolean;
 }) => {
   const element = useRef<HTMLDivElement>(null);
-  const { alpha, borderStyle, colors, icon, name } =
+  const { alpha, borderStyle, colors, icon, name, textColor } =
     getSkillConfigForDisplay(skill);
 
   useInput(
@@ -480,7 +483,7 @@ const SkillListItem = ({
               style={{
                 background,
                 color:
-                  alpha != null && alpha >= 0.5 ? undefined : getColor(color),
+                  alpha != null && alpha >= 0.5 ? textColor : getColor(color),
               }}
             >
               {name}
@@ -633,7 +636,7 @@ export function SkillIcon({
     }
   }, [showDialog]);
 
-  const { alpha, borderStyle, colors, icon, name } =
+  const { alpha, borderStyle, colors, icon, name, textColor } =
     getSkillConfigForDisplay(skill);
   const background = gradient(colors, alpha);
   const color: BaseColor = Array.isArray(colors) ? colors[0] : colors;
@@ -663,7 +666,7 @@ export function SkillIcon({
             style={{
               background,
               color:
-                alpha != null && alpha >= 0.5 ? undefined : getColor(color),
+                alpha != null && alpha >= 0.5 ? textColor : getColor(color),
             }}
           >
             {name}

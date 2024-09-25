@@ -438,6 +438,17 @@ export class Weapon {
     );
   }
 
+  withAnimation(animation: WeaponAnimation): Weapon {
+    return new Weapon(
+      this.internalName,
+      this.damage,
+      animation,
+      this.hitAnimation,
+      this.supply,
+      this.id,
+    );
+  }
+
   withAnimationPositions(positions: WeaponPositions, mirror?: boolean): Weapon {
     return new Weapon(
       this.internalName,
@@ -1022,6 +1033,35 @@ const MiniGun = new Weapon(
   SparkAnimation,
 );
 
+const FlamethrowerWeapon = new Weapon(
+  'Flamethrower',
+  new Map([
+    [EntityType.AirSoldier, 100],
+    [EntityType.Amphibious, 70],
+    [EntityType.Artillery, 75],
+    [EntityType.Ground, 70],
+    [EntityType.Soldier, 130],
+    [EntityType.Structure, 80],
+  ]),
+  new WeaponAnimation('Flamethrower', 'Attack/Flamethrower', {
+    frames: 24,
+    positions: {
+      down: sprite(-0.35, 1.1),
+      horizontal: sprite(-1.1, -0.1),
+      up: sprite(0.45, -0.9),
+    },
+    recoil: false,
+  }),
+  new WeaponAnimation('Flamethrower', null, {
+    cell: 1,
+    frames: 24,
+    positions: {
+      horizontal: sprite(0.1, 0),
+    },
+    recoil: false,
+  }),
+);
+
 const AIUMiniGun = new Weapon(
   'Super Mini Gun',
   buff(MiniGun.damage, 40),
@@ -1326,34 +1366,7 @@ export const Weapons = {
       [EntityType.Structure, 50],
     ]),
   ),
-  Flamethrower: new Weapon(
-    'Flamethrower',
-    new Map([
-      [EntityType.AirSoldier, 100],
-      [EntityType.Amphibious, 70],
-      [EntityType.Artillery, 75],
-      [EntityType.Ground, 70],
-      [EntityType.Soldier, 130],
-      [EntityType.Structure, 80],
-    ]),
-    new WeaponAnimation('Flamethrower', 'Attack/Flamethrower', {
-      frames: 24,
-      positions: {
-        down: sprite(-0.35, 1.1),
-        horizontal: sprite(-1.1, -0.1),
-        up: sprite(0.45, -0.9),
-      },
-      recoil: false,
-    }),
-    new WeaponAnimation('Flamethrower', null, {
-      cell: 1,
-      frames: 24,
-      positions: {
-        horizontal: sprite(0.1, 0),
-      },
-      recoil: false,
-    }),
-  ),
+  Flamethrower: FlamethrowerWeapon,
   HeavyArtillery: new Weapon(
     'Heavy Artillery',
     new Map([
@@ -1369,6 +1382,18 @@ export const Weapons = {
     SmokeAnimation,
   ),
   HeavyGun,
+  InfernoFlamethrower: FlamethrowerWeapon.withDamage(
+    new Map([
+      ...buff(FlamethrowerWeapon.damage, 15),
+      ...buff(AirToAirMissile.damage, -15),
+
+      [EntityType.Ship, 85],
+    ]),
+  ).withAnimationPositions({
+    down: sprite(-0.35, 1.1),
+    horizontal: sprite(-1, -0.2),
+    up: sprite(0.45, -0.9),
+  }),
   LightAirGun,
   LightAirToAirMissile,
   LightGun,
@@ -2257,7 +2282,7 @@ export const Sniper = new UnitInfo(
 );
 
 export const Flamethrower = new UnitInfo(
-  15,
+  UnitID.Flamethrower,
   'Flamethrower',
   'Yuki',
   'unknown',
@@ -2481,7 +2506,6 @@ export const Jetpack = new UnitInfo(
     ],
   },
   null,
-
   {
     attackStance: 'short',
     directionOffset: 2,
@@ -3800,6 +3824,44 @@ export const AIU = new UnitInfo(
   },
 );
 
+export const InfernoJetpack = new UnitInfo(
+  UnitID.InfernoJetpack,
+  'Inferno Jetpack',
+  'Super Yuki',
+  'unknown',
+  `Flamethrowers that can fly? Inferno Jetpacks are highly mobile and can attack all unit types. They are extremely rare, dangerous, and can only be found in the most intense battles.`,
+  `After the discovery of strange crystals, {20.name} and {15.name} invented the Inferno Jetpack together. {20.name} discovered that broken shards of a Phantom Crystal could be used to turn up the heat of a flamethrower so much that it could melt through anything. {4.name}, {20.name} and {15.name} were all fighting to lead the new Inferno Jetpack group, but somehow {15.name} was already an expert at maneuvering it on the first attempt.`,
+  35,
+  EntityType.AirSoldier,
+  MovementTypes.AirInfantry,
+  {
+    cost: Number.POSITIVE_INFINITY,
+    fuel: 50,
+    radius: 5,
+    vision: 3,
+  },
+  DefaultUnitAbilitiesWithCapture,
+  {
+    type: AttackType.ShortRange,
+    weapons: [Weapons.InfernoFlamethrower.withSupply(6)],
+  },
+  null,
+  {
+    attackStance: 'short',
+    directionOffset: 2,
+    explosionSprite: {
+      frames: 8,
+      position: sprite(7, 1),
+    },
+    name: 'Units-InfernoJetpack',
+    portrait: {
+      position: sprite(5, 0),
+      variants: 3,
+    },
+    withNavalExplosion: true,
+  },
+);
+
 // The order of units must not be changed.
 const Units = [
   Pioneer,
@@ -3856,6 +3918,7 @@ const Units = [
   SuperAPU,
   BazookaBear,
   AIU,
+  InfernoJetpack,
 ];
 
 export const InitialPortraits = new Set([Pioneer, Sniper, Flamethrower]);
@@ -3867,6 +3930,7 @@ export const SpecialUnits = new Set([
   Dragon,
   Octopus,
   Ogre,
+  InfernoJetpack,
 ]);
 
 export function getUnitInfo(id: number): UnitInfo | null {

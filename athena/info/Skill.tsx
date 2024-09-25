@@ -42,6 +42,7 @@ export enum Skill {
   BuyUnitAcidBomber = 28,
   BuyUnitDinosaur = 29,
   Sabotage = 30,
+  SpawnUnitInfernoJetpack = 31,
 }
 
 export const Skills = new Set<Skill>([
@@ -75,11 +76,12 @@ export const Skills = new Set<Skill>([
   Skill.AttackAndDefenseDecreaseEasy,
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
+  Skill.SpawnUnitInfernoJetpack,
 ]);
 
 const skillConfig: Record<
   Skill,
-  Readonly<{ charges?: number; cost: number | null }>
+  Readonly<{ charges?: number; cost: number | null; requiresCrystal?: boolean }>
 > = {
   [Skill.AttackIncreaseMinor]: { charges: 3, cost: 300 },
   [Skill.DefenseIncreaseMinor]: { charges: 2, cost: 300 },
@@ -120,6 +122,11 @@ const skillConfig: Record<
   [Skill.BuyUnitAcidBomber]: { cost: 1500 },
   [Skill.BuyUnitDinosaur]: { cost: 1500 },
   [Skill.Sabotage]: { charges: 5, cost: 1500 },
+  [Skill.SpawnUnitInfernoJetpack]: {
+    charges: 3,
+    cost: null,
+    requiresCrystal: true,
+  },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set([
@@ -908,6 +915,15 @@ const getSkillActiveUnitTypes = (
   if (skill === Skill.Sabotage) {
     for (const [vector, unit] of map.units) {
       if (unit.id === UnitID.Saboteur && map.matchesPlayer(unit, player)) {
+        list.push(vector);
+      }
+    }
+    return list;
+  }
+
+  if (skill === Skill.SpawnUnitInfernoJetpack) {
+    for (const [vector, unit] of map.units) {
+      if (unit.id === UnitID.Flamethrower) {
         list.push(vector);
       }
     }

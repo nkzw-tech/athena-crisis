@@ -15,6 +15,9 @@ export const SkillBorderIcons = {
   coin: icon(
     `<path fill="currentColor" d="M26 2h2v17h-2zM2 26h20v2H2v-2ZM28 26h1v-1h-1zM2 0h24v2H2zM0 2h2v24H0zM24 23h5v-1h-5zM24 27h5v-1h-5zM24 24h1v-1h-1zM26 22h1v-1h-1zM24 25h5v-1h-5zM26 28h1v-1h-1z"/>`,
   ),
+  crystal: icon(
+    `<path fill="currentColor" d="M24 25h1v-1h-1zM27 24h1v-1h-1zM25 24h1v-1h-1zM26 23h1v-1h-1zM23 26h1v-1h-1zM22 27h1v-1h-1zM30 27h1v-1h-1zM22 28h9v-1h-9zM29 26h1v-1h-1zM28 25h1v-1h-1zM2 26h18v2H2v-2ZM2 0h24v2H2zM0 2h2v24H0zM26 2h2v19h-2z"/>`,
+  ),
   down: icon(
     `<path fill="currentColor" d="M28 27h1v-1h-1zM26 28h1v-1h-1zM27 28h1v-1h-1zM24 26h1v-1h-1zM23 25h1v-1h-1zM30 25h1v-1h-1zM29 26h1v-1h-1zM25 27h1v-1h-1zM2 26h19v2H2v-2ZM2 0h24v2H2zM0 2h2v24H0zM26 2h2v20h-2z"/>`,
   ),

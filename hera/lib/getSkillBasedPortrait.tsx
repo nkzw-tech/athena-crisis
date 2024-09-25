@@ -9,6 +9,7 @@ import {
   Cannon,
   Commander,
   Dinosaur,
+  InfernoJetpack,
   Octopus,
   Saboteur,
   Sniper,
@@ -46,6 +47,8 @@ export default function getSkillBasedPortrait(skill: Skill) {
       return Zombie;
     case Skill.Sabotage:
       return Saboteur;
+    case Skill.SpawnUnitInfernoJetpack:
+      return InfernoJetpack;
     case Skill.UnitAbilitySniperImmediateAction:
       return Sniper;
     case Skill.UnitBattleShipMoveAndAct:

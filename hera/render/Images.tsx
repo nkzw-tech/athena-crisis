@@ -213,6 +213,9 @@ const UnitsHumveeAvengerSprite =
 const UnitsInfantrySprite =
   'https://art.athenacrisis.com/v14/assets/shadow/Units-Infantry.png';
 
+const UnitsInfernoJetpackSprite =
+  'https://art.athenacrisis.com/v14/assets/shadow/Units-InfernoJetpack.png';
+
 const UnitsJeepSprite =
   'https://art.athenacrisis.com/v14/assets/shadow/Units-Jeep.png';
 
@@ -393,6 +396,7 @@ export const ShadowImages = new Map([
   ['Units-Humvee', UnitsHumveeSprite],
   ['Units-HumveeAvenger', UnitsHumveeAvengerSprite],
   ['Units-Infantry', UnitsInfantrySprite],
+  ['Units-InfernoJetpack', UnitsInfernoJetpackSprite],
   ['Units-Jeep', UnitsJeepSprite],
   ['Units-Jetpack', UnitsJetpackSprite],
   ['Units-Mammoth', UnitsMammothSprite],
@@ -491,6 +495,7 @@ export default [
   UnitsHumveeSprite,
   UnitsHumveeAvengerSprite,
   UnitsInfantrySprite,
+  UnitsInfernoJetpackSprite,
   UnitsJeepSprite,
   UnitsJetpackSprite,
   UnitsMammothSprite,
