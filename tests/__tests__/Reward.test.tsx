@@ -142,6 +142,31 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
   `);
+
+  // Inactive players do not receive rewards.
+  const team1 = map.getTeam(1);
+  const mapC = mapA.copy({
+    teams: map.teams.set(
+      1,
+      team1.copy({
+        players: team1.players.set(3, player1.copy({ id: 3, userId: '3' })),
+      }),
+    ),
+  });
+
+  const [gameStateC] = await executeGameActions(
+    mapC,
+    [CaptureAction(vecA)],
+    effects,
+  );
+
+  expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
+    "SetPlayer { player: 1 }
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
+    ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
+    GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
+  `);
 });
 
 test(`each skill is only received once`, async () => {
