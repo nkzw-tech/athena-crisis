@@ -25,6 +25,7 @@ import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
+import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -265,6 +266,7 @@ export default memo(function PlayerCard({
     <div
       className={cx(playerStyle, wide && playerWideStyle)}
       style={{
+        [vars.set('items')]: player.skills.size + (crystal != null ? 1 : 0),
         opacity: map.active.includes(player.id) ? 1 : 0.3,
       }}
     >
@@ -510,8 +512,12 @@ const PlayerCardObjective = ({
   );
 };
 
+const vars = new CSSVariables<'items'>('pc');
+
 const width = PortraitWidth / 2;
 const playerStyle = css`
+  ${vars.set('items', 0)}
+
   position: relative;
   max-height: ${PortraitHeight / 2}px;
 `;
@@ -590,7 +596,9 @@ const textStyle = css`
 `;
 
 const wideStyle = css`
-  max-width: calc(min(440px, 100vw) - 128px);
+  max-width: calc(
+    min(calc(440px - ${vars.apply('items')} * ${TileSize}px), 100vw) - 128px
+  );
 `;
 
 const marginLeftStyle = css`
