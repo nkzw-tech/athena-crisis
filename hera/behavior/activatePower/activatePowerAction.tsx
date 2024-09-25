@@ -109,7 +109,9 @@ export default async function activatePowerAction(
           const unitsToUpgrade = state.map.units.filter(
             (unit, vector) =>
               !healVectors.has(vector) &&
-              (!unit.isCompleted() || skill === Skill.RecoverAirUnits) &&
+              (!unit.isCompleted() ||
+                skill === Skill.RecoverAirUnits ||
+                skill === Skill.SpawnUnitInfernoJetpack) &&
               state.map.matchesPlayer(unit, player) &&
               matchesActiveType(unitTypes, unit, vector),
           );

@@ -1,5 +1,6 @@
 import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
 import { Flamethrower, InfernoJetpack } from '@deities/athena/info/Unit.tsx';
+import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
@@ -27,7 +28,12 @@ export function onPowerUnitUpgrade(
     return map.copy({
       units: map.units.set(
         vector,
-        InfernoJetpack.create(unit.player).setHealth(unit.health),
+        InfernoJetpack.create(unit.player)
+          .setHealth(unit.health)
+          .copy({
+            completed: unit.isCompleted() ? true : undefined,
+            moved: unit.hasMoved() ? true : undefined,
+          }),
       ),
     });
   }
@@ -86,11 +92,23 @@ export default function applyPower(skill: Skill, map: MapData) {
   }
 
   if (skill === Skill.SpawnUnitInfernoJetpack) {
+    const newUnits = map.units
+      .filter(
+        (unit) => unit.info === Flamethrower && map.matchesPlayer(player, unit),
+      )
+      .map((unit) =>
+        InfernoJetpack.create(unit.player)
+          .setHealth(unit.health)
+          .copy({
+            completed: unit.isCompleted() ? true : undefined,
+            moved: unit.hasMoved() ? true : undefined,
+          }),
+      );
+
     map = map.copy({
-      units: map.units.map((unit) =>
-        unit.info === Flamethrower && map.matchesPlayer(player, unit)
-          ? InfernoJetpack.create(unit.player).setHealth(unit.health)
-          : unit,
+      units: map.units.merge(
+        map.units,
+        assignDeterministicUnitNames(map, newUnits),
       ),
     });
   }
