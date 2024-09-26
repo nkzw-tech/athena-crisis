@@ -17,7 +17,7 @@
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/joymap": "^3.0.0",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.5.6",
+    "framer-motion": "^11.9.0",
     "howler": "^2.2.4",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^18.3.8",
+    "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0"
   }
 }

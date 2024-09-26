@@ -61,9 +61,9 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@nkzw/eslint-config": "^1.18.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "1.7.26",
+    "@swc/core": "1.7.28",
     "@types/fbt": "^1.0.5",
-    "@types/node": "^22.6.1",
+    "@types/node": "^22.7.4",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
@@ -79,7 +79,7 @@
     "react-refresh": "^0.14.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
-    "vite": "^5.4.7",
+    "vite": "^5.4.8",
     "vitest": "^2.1.1"
   },
   "engines": {
