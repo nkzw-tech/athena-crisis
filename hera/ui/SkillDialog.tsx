@@ -291,6 +291,7 @@ export function SkillContainer({
     useCallback(
       (event) => {
         if (
+          selected === -1 &&
           onAction &&
           currentSkill &&
           (!canAction || canAction(currentSkill))
@@ -299,7 +300,7 @@ export function SkillContainer({
           onAction(currentSkill);
         }
       },
-      [canAction, currentSkill, onAction],
+      [canAction, currentSkill, onAction, selected],
     ),
     'dialog',
   );
