@@ -1,6 +1,7 @@
 import { Scenario } from '@deities/apollo/Effects.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
+import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
 import {
   AnimationConfig,
   TileSize,
@@ -39,7 +40,7 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import Typeahead, { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import ArrowLeftBox from '@iconify-icons/pixelarticons/arrow-left-box.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
@@ -324,27 +325,41 @@ export default memo(function Level({
             />
             <Stack className={mapDetailStyle} gap vertical>
               {hasPerformanceExpectation(map) && (
-                <Stack alignCenter gap={16} start>
+                <Stack alignCenter gap={16} nowrap start>
                   {performance.pace != null && (
-                    <Stack gap start>
-                      <Icon icon={Pace} />
+                    <Stack gap nowrap start>
+                      <Icon className={performanceIconStyle} icon={Pace} />
                       <div>{performance.pace}</div>
                     </Stack>
                   )}
                   {performance.power != null && (
-                    <Stack gap start>
-                      <Icon icon={Zap} />
+                    <Stack gap nowrap start>
+                      <Icon className={performanceIconStyle} icon={Zap} />
                       <div>{performance.power}</div>
                     </Stack>
                   )}
                   {performance.style != null && (
-                    <Stack gap start>
-                      <Icon icon={Subscriptions} />
-                      <span>
+                    <Stack gap nowrap start>
+                      <Icon
+                        className={performanceIconStyle}
+                        icon={Subscriptions}
+                      />
+                      <span className={nowrapStyle}>
                         {PerformanceStyleTypeShortName[performance.style[0]]}{' '}
                         <Comparator type={performance.style[0]} />{' '}
                         {performance.style[1]}
                       </span>
+                    </Stack>
+                  )}
+                  {hasBonusObjective(map, map.active[0]) && (
+                    <Stack gap nowrap start>
+                      <input
+                        checked
+                        className={cx('disabled', 'checkmark')}
+                        disabled
+                        type="checkbox"
+                      />{' '}
+                      B
                     </Stack>
                   )}
                 </Stack>
@@ -641,4 +656,12 @@ const iconStyle = css`
 
 const dialogueIconStyle = css`
   margin-top: 1px;
+`;
+
+const performanceIconStyle = css`
+  flex-shrink: 0;
+`;
+
+const nowrapStyle = css`
+  white-space: nowrap;
 `;

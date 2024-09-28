@@ -297,7 +297,7 @@ export default function MapEditorSettingsPanel({
             <Stack alignCenter gap nowrap start>
               <input
                 checked={hasBonus}
-                className={cx(hasBonus ? 'checkmark' : null, 'disabled')}
+                className={cx('disabled', hasBonus && 'checkmark')}
                 disabled
                 type="checkbox"
               />
