@@ -372,7 +372,14 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
-  [BarID, new Map([[Skill.BuyUnitBazookaBear, 600]])],
+  [
+    BarID,
+    new Map([
+      [Skill.BuyUnitBazookaBear, 600],
+      [Skill.BuyUnitOctopus, 600],
+      [Skill.BuyUnitDinosaur, 600],
+    ]),
+  ],
 ]);
 
 const blockedUnits = new Map<Skill, ReadonlySet<ID>>([
