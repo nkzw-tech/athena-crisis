@@ -1,6 +1,6 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
-import React, {
+import {
   AnchorHTMLAttributes,
   CSSProperties,
   MouseEvent,
@@ -129,8 +129,7 @@ const linkStyle = css`
   display: inline-flex;
   align-content: center;
 
-  &.selected,
-  &.selected:hover {
+  &.selected {
     ${pixelBorder(
       applyVar('text-color-active'),
       vars.apply('pixel-border-size'),
@@ -139,8 +138,7 @@ const linkStyle = css`
     color: ${applyVar('text-color-active')};
   }
 
-  &.selected-text,
-  &.selected-text:hover {
+  &.selected-text {
     color: ${applyVar('text-color-active')};
   }
 
@@ -149,8 +147,7 @@ const linkStyle = css`
     transform: scaleX(0.95) scaleY(0.98);
   }
 
-  &:not(.active):not(.selected-text).hover,
-  &:not(.active):not(.selected-text):hover {
+  &:not(.active):not(.selected-text).hover {
     ${pixelBorder(
       applyVar('background-color-active'),
       vars.apply('pixel-border-size'),
@@ -167,6 +164,41 @@ const linkStyle = css`
 
     svg {
       filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  @media (hover: hover) {
+    &.selected:hover {
+      ${pixelBorder(
+        applyVar('text-color-active'),
+        vars.apply('pixel-border-size'),
+      )}
+      background-color: ${applyVar('background-color-light')};
+      color: ${applyVar('text-color-active')};
+    }
+
+    &.selected-text:hover {
+      color: ${applyVar('text-color-active')};
+    }
+
+    &:not(.active):not(.selected-text):hover {
+      ${pixelBorder(
+        applyVar('background-color-active'),
+        vars.apply('pixel-border-size'),
+      )}
+
+      color: ${applyVar('text-color-bright')};
+      background-color: ${applyVar('background-color-active')};
+      text-decoration: none;
+      text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 0;
+
+      .${InlineLinkColor} {
+        color: ${applyVar('text-color-bright')} !important;
+      }
+
+      svg {
+        filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.3));
+      }
     }
   }
 `;
