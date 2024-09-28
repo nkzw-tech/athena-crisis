@@ -2,7 +2,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { useTick } from './lib/tick.tsx';
 
 export default memo(function Cursor({

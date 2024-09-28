@@ -8,7 +8,7 @@ import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { AttackSprites } from 'athena-crisis:images';
-import React, { CSSProperties } from 'react';
+import { CSSProperties } from 'react';
 import attackSpriteHasVariants from '../lib/attackSpriteHasVariants.tsx';
 import Animation, { AnimationDirection, AnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';

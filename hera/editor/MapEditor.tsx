@@ -56,7 +56,7 @@ import { css, cx } from '@emotion/css';
 import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
 import { fbt } from 'fbt';
 import { AnimatePresence } from 'framer-motion';
-import React, {
+import {
   ReactNode,
   useCallback,
   useEffect,

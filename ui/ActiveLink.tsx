@@ -1,6 +1,6 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useMatch, useResolvedPath } from 'react-router-dom';
 import { applyVar } from './cssVar.tsx';
 import Link, { LinkProps } from './Link.tsx';

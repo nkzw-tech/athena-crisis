@@ -10,7 +10,7 @@ import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
-import React, { memo, ReactElement, useCallback, useState } from 'react';
+import { memo, ReactElement, useCallback, useState } from 'react';
 import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
 import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
 import {

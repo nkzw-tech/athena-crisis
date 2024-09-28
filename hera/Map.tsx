@@ -17,7 +17,7 @@ import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import Images from 'athena-crisis:images';
 // eslint-disable-next-line @deities/no-lazy-import
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import Building from './Building.tsx';
 import Decorators from './Decorators.tsx';
 import Fog from './Fog.tsx';

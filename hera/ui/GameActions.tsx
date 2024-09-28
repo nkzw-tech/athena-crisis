@@ -23,7 +23,7 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import Forward from '@iconify-icons/pixelarticons/forward.js';
 import EndTurn from '@iconify-icons/pixelarticons/reply-all.js';
 import Next from '@iconify-icons/pixelarticons/reply.js';
-import React, {
+import {
   MouseEvent,
   ReactNode,
   useCallback,

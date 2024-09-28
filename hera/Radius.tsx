@@ -11,7 +11,7 @@ import { VisionT } from '@deities/athena/Vision.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { motion } from 'framer-motion';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { GetLayerFunction } from './Types.tsx';
 
 export enum RadiusType {

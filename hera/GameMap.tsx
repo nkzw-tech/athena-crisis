@@ -42,7 +42,7 @@ import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import React, {
+import {
   Component,
   createRef,
   MutableRefObject,

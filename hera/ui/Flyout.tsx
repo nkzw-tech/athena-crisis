@@ -6,7 +6,7 @@ import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
-import React, { Fragment, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 import { Actions } from '../Types.tsx';
 
 export type FlyoutColor = BaseColor | null | 'error';

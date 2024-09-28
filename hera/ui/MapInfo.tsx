@@ -35,7 +35,7 @@ import Supply from '@deities/ui/icons/Supply.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import BuildingTile from '../Building.tsx';
 import CoverRange from '../card/lib/CoverRange.tsx';
 import { LargeRange } from '../card/Range.tsx';

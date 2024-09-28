@@ -6,7 +6,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import getDamageColor from '../behavior/attack/getDamageColor.tsx';
 import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 

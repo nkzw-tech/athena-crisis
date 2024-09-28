@@ -6,7 +6,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import Tick from './Tick.tsx';
 
 const defaultPosition = vec(1, 1);

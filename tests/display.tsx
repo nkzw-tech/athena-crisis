@@ -12,7 +12,7 @@ import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx, injectGlobal } from '@emotion/css';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 

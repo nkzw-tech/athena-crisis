@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css';
 import { motion } from 'framer-motion';
-import React, {
+import {
   ComponentProps,
   createContext,
   MouseEvent,

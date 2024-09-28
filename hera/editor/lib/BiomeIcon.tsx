@@ -4,7 +4,7 @@ import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import { css } from '@emotion/css';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import Tiles from '../../Tiles.tsx';
 
 const vision = new Vision(1);

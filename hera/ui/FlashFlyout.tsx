@@ -4,7 +4,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
 import Flyout from './Flyout.tsx';
 
