@@ -466,6 +466,8 @@ export default memo(function UnitCard({
   );
 });
 
+const damageRange = [20, 40, 60, 80, 100];
+
 const Weapon = memo(function WeaponAttack({
   biome,
   map,
@@ -498,12 +500,6 @@ const Weapon = memo(function WeaponAttack({
   ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type));
   const isLeader = unit.isLeader();
   const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
-  const damageRange = getAttributeRange(
-    [...weapon.damage],
-    ([, damage]) => damage,
-    50,
-  );
-
   const damageGroups = sortBy(
     [
       ...groupBy(

@@ -354,7 +354,7 @@ export const VerticalBarrier = new BuildingInfo(
   `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
   {
     canBeCreated: false,
-    defense: 60,
+    defense: 30,
     editorPlaceOn: barrierTiles,
     isAccessible: false,
     sort: 10,
@@ -374,7 +374,7 @@ export const HorizontalBarrier = new BuildingInfo(
   `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
   {
     canBeCreated: false,
-    defense: 60,
+    defense: 30,
     editorPlaceOn: barrierTiles,
     isAccessible: false,
     sort: 10,
@@ -394,7 +394,7 @@ export const CrashedAirplane = new BuildingInfo(
   `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
   {
     canBeCreated: false,
-    defense: 80,
+    defense: 50,
     editorPlaceOn: new Set([Plain, Street]),
     isAccessible: false,
     sort: 10,
@@ -409,7 +409,7 @@ export const DestroyedHouse = new BuildingInfo(
   `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
   {
     canBeCreated: false,
-    defense: 70,
+    defense: 40,
     editorPlaceOn: new Set([Plain, ConstructionSite]),
     isAccessible: false,
     sort: 10,
