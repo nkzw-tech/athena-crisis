@@ -546,7 +546,7 @@ function capture(map: MapData, { from }: CaptureAction) {
   ) {
     return unit.isCapturing()
       ? ({
-          building: buildingA.capture(map.getPlayer(unit)),
+          building: buildingA.capture(map, map.getPlayer(unit).id),
           from,
           player: buildingA.player,
           type: 'Capture',

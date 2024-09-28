@@ -209,7 +209,7 @@ test('game over conditions with only one HQ', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "Capture (2,2) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
+      "Capture (2,2) { building: HQ { id: 1, health: 100, player: 1 }, player: 2 }
       CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);

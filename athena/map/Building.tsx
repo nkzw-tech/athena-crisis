@@ -1,8 +1,13 @@
 import getFirst from '@deities/hephaestus/getFirst.tsx';
-import { Barracks, BuildingInfo, getBuildingInfo } from '../info/Building.tsx';
+import {
+  Barracks,
+  BuildingInfo,
+  getBuildingInfo,
+  SpawnPlatform,
+} from '../info/Building.tsx';
 import { Skill } from '../info/Skill.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
-import { ID } from '../MapData.tsx';
+import MapData, { ID } from '../MapData.tsx';
 import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
 import { Biome } from './Biome.tsx';
 import { MaxHealth } from './Configuration.tsx';
@@ -53,21 +58,37 @@ export default class Building extends Entity {
     );
   }
 
-  capture(player: Player | PlayerID, biome?: Biome): this {
+  private convert(biome: Biome, player: PlayerID) {
     return this.copy({
-      id:
-        this.info.isHQ() && (!biome || biome !== Biome.Spaceship)
-          ? Barracks.id
-          : this.id,
-      player: typeof player === 'number' ? player : player.id,
+      id: this.info.isHQ()
+        ? biome === Biome.Spaceship
+          ? SpawnPlatform.id
+          : Barracks.id
+        : this.id,
+      player,
     });
+  }
+
+  capture(map: MapData, player: PlayerID): this {
+    if (
+      player !== 0 &&
+      this.info.isHQ() &&
+      !map.buildings.some(
+        (building) =>
+          building.info.isHQ() && map.matchesPlayer(building, player),
+      )
+    ) {
+      return this.copy({ player });
+    }
+
+    return this.convert(map.config.biome, player);
   }
 
   neutralize(biome: Biome, displayOnly = false) {
     return this.player === 0 ||
       (!displayOnly && this.info.configuration.attackStatusEffect)
       ? this
-      : this.capture(0, biome);
+      : this.convert(biome, 0);
   }
 
   recover(): this {

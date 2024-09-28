@@ -3191,7 +3191,7 @@ test('optional and default game ending objectives might be triggered at the same
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "Capture (1,2) { building: Barracks { id: 12, health: 100, player: 1, label: 4 }, player: 2 }
+      "Capture (1,2) { building: HQ { id: 1, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
       CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"

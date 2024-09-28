@@ -270,7 +270,7 @@ export function applyObjectiveActionResponse(
       return updateCapture(
         removePlayer(
           map.copy({
-            buildings: convertBuildings(map, fromPlayer, toPlayer),
+            buildings: convertBuildings(map, fromPlayer, toPlayer.id),
             units: deleteUnits(map, fromPlayer),
           }),
           fromPlayer,
@@ -312,11 +312,16 @@ export function checkCapture(
     const fromPlayer = map.getPlayer(action.player);
     const building = map.buildings.get(action.from);
     const previousBuilding = previousMap.buildings.get(action.from);
-    if (previousBuilding?.info.isHQ() && building && !building.info.isHQ()) {
+    const toPlayer = building ? map.getPlayer(building).id : null;
+    if (
+      toPlayer &&
+      previousBuilding?.info.isHQ() &&
+      toPlayer !== previousBuilding.player
+    ) {
       return [
         {
           fromPlayer: fromPlayer.id,
-          toPlayer: map.getPlayer(building).id,
+          toPlayer,
           type: 'CaptureGameOver',
         } as const,
       ];
@@ -489,11 +494,11 @@ const checkGameEnd = (map: MapData) => {
 const convertBuildings = (
   map: MapData,
   fromPlayer: Player,
-  toPlayer: Player | 0,
+  toPlayer: PlayerID,
 ) =>
   map.buildings.map((building) =>
     map.matchesPlayer(building, fromPlayer)
-      ? building.capture(toPlayer)
+      ? building.capture(map, toPlayer)
       : building,
   );
 
