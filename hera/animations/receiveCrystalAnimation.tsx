@@ -55,7 +55,7 @@ export default async function receiveCrystalAnimation(
               </Stack>
             ),
             direction: 'up',
-            length: 'long',
+            length: 'medium',
             onComplete: (state) => {
               requestFrame(() =>
                 resolve({

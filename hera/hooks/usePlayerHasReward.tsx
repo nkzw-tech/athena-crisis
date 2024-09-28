@@ -6,24 +6,21 @@ import MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { useCallback } from 'react';
 
-export default function usePlayerHasReward(
-  {
-    biomes,
-    id,
-    keyart,
-    portraits,
-    skills,
-    unlockedSkillSlots,
-  }: {
-    biomes: ReadonlyArray<Biome>;
-    id: string;
-    keyart: ReadonlyArray<number>;
-    portraits: ReadonlyArray<number>;
-    skills: ReadonlyArray<Skill>;
-    unlockedSkillSlots: ReadonlyArray<number>;
-  },
-  hasCrystal: () => boolean,
-) {
+export default function usePlayerHasReward({
+  biomes,
+  id,
+  keyart,
+  portraits,
+  skills,
+  unlockedSkillSlots,
+}: {
+  biomes: ReadonlyArray<Biome>;
+  id: string;
+  keyart: ReadonlyArray<number>;
+  portraits: ReadonlyArray<number>;
+  skills: ReadonlyArray<Skill>;
+  unlockedSkillSlots: ReadonlyArray<number>;
+}) {
   return useCallback(
     (
       map: MapData,
@@ -49,13 +46,13 @@ export default function usePlayerHasReward(
         case 'SkillSlot':
           return unlockedSkillSlots.includes(reward.slot);
         case 'Crystal':
-          return !hasCrystal();
+          return false;
         default: {
           rewardType satisfies never;
           throw new UnknownTypeError('usePlayerHasReward', rewardType);
         }
       }
     },
-    [biomes, hasCrystal, id, keyart, portraits, skills, unlockedSkillSlots],
+    [biomes, id, keyart, portraits, skills, unlockedSkillSlots],
   );
 }

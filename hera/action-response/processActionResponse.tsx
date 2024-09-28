@@ -575,7 +575,7 @@ async function processActionResponse(
     case 'BuySkill':
       return buySkillAction(actions, actionResponse);
     case 'ReceiveReward': {
-      const { reward } = actionResponse;
+      const { permanent, reward } = actionResponse;
       const rewardType = reward.type;
       switch (rewardType) {
         case 'Skill': {
@@ -603,7 +603,7 @@ async function processActionResponse(
           ) {
             if (rewardType === 'Biome') {
               return receiveBiomeAnimation(actions, state, actionResponse);
-            } else if (rewardType === 'Crystal') {
+            } else if (rewardType === 'Crystal' && permanent) {
               return receiveCrystalAnimation(actions, state, actionResponse);
             } else if (rewardType === 'SkillSlot') {
               return receiveSkillSlotAnimation(actions, state, actionResponse);
