@@ -9,9 +9,12 @@ import {
   GameActionResponses,
 } from '@deities/apollo/Types.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
+import getWinningInvaders from '@deities/athena/lib/getWinningInvaders.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
 import {
+  isHumanPlayer,
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
@@ -492,7 +495,21 @@ async function processActionResponse(
         break;
       }
 
-      const winners = [...team.players.map(({ id }) => id).values()];
+      const winners = [
+        ...new Set([
+          ...team.players.map(({ id }) => id).values(),
+          ...(
+            getWinningInvaders(
+              map,
+              team,
+              map
+                .getPlayers()
+                .filter(isHumanPlayer)
+                .find((player) => player.crystal === Crystal.Power) || null,
+            ) || []
+          ).map(({ id }) => id),
+        ]),
+      ];
       const winnerList = intlList(
         winners.map(getTranslatedFactionName.bind(null, playerDetails)),
         Conjunctions.AND,
