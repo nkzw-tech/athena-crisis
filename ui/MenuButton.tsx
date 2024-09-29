@@ -5,6 +5,7 @@ import { CSSProperties, memo, MouseEvent, ReactNode, RefObject } from 'react';
 import { BoxStyle } from './Box.tsx';
 
 export default memo(function MenuButton({
+  blur = true,
   children,
   className,
   delay,
@@ -12,6 +13,7 @@ export default memo(function MenuButton({
   ref,
   ...props
 }: {
+  blur?: boolean;
   children?: ReactNode;
   className?: string;
   delay?: boolean;
@@ -26,7 +28,7 @@ export default memo(function MenuButton({
       animate={{
         opacity: hide ? 0 : 1,
       }}
-      className={cx(BoxStyle, buttonStyle, className)}
+      className={cx(BoxStyle, buttonStyle, blur && blurStyle, className)}
       initial={{ opacity: 0 }}
       ref={ref}
       transition={{
@@ -42,7 +44,6 @@ export default memo(function MenuButton({
 const size = DoubleSize;
 const buttonStyle = css`
   -webkit-user-drag: none;
-  backdrop-filter: blur(4px);
   cursor: pointer;
   font-size: ${size}px;
   height: ${size}px;
@@ -57,4 +58,8 @@ const buttonStyle = css`
   & svg {
     vertical-align: top;
   }
+`;
+
+const blurStyle = css`
+  backdrop-filter: blur(4px);
 `;

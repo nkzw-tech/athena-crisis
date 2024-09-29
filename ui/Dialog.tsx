@@ -107,6 +107,7 @@ export default function Dialog({
           <div className={cx(containerStyle, sizes[size])}>
             {children}
             <MenuButton
+              blur={!isSafari}
               className={cx(tabStyle, closeButtonStyle)}
               onClick={onClose}
             >
@@ -194,15 +195,16 @@ export const DialogScrollContainer = ({
   );
 
   return (
-    <ScrollContainer className={scrollStyle} ref={setRef}>
-      {children}
-
+    <div className={scrollContainerStyle}>
+      <ScrollContainer className={scrollStyle} ref={setRef}>
+        {children}
+      </ScrollContainer>
       <div className={cx(scrollDownStyle, showArrow && arrowVisibleStyle)}>
         <div className={scrollDownIconStyle}>
           <Icon className={FadePulseStyle} icon={Reply} />
         </div>
       </div>
-    </ScrollContainer>
+    </div>
   );
 };
 
@@ -341,6 +343,13 @@ const scrollStyle = css`
   position: absolute;
 `;
 
+// `translateZ` is required for Safari, otherwise it doesn't place the containing `position: fixed` element correctly.
+const scrollContainerStyle = css`
+  inset: 0;
+  position: absolute;
+  transform: translateZ(0);
+`;
+
 const tabBarStyle = css`
   display: flex;
   flex-wrap: nowrap;
@@ -352,12 +361,13 @@ const tabBarStyle = css`
 `;
 
 const tabStyle = css`
+  ${isSafari ? `` : `backdrop-filter: blur(4px);`}
+
+  background-color: ${applyVar('border-color-light')};
   box-shadow:
     -4px 0 0 0 ${applyVar('border-color-light')},
     4px 0 0 0 ${applyVar('border-color-light')},
     0 -4px 0 0 ${applyVar('border-color-light')};
-  backdrop-filter: blur(4px);
-  background-color: ${applyVar('border-color-light')};
   color: ${applyVar('text-color-bright')};
   cursor: pointer;
   padding: 12px;
