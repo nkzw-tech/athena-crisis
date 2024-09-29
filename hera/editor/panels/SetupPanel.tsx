@@ -1,4 +1,5 @@
 import { Skill, Skills } from '@deities/athena/info/Skill.tsx';
+import reorderActive from '@deities/athena/lib/reorderActive.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { DefaultMapSkillSlots } from '@deities/athena/map/Configuration.tsx';
@@ -6,13 +7,17 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import Box from '@deities/ui/Box.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import Stack from '@deities/ui/Stack.tsx';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import { State } from '../../Types.tsx';
+import PlayerIcon from '../../ui/PlayerIcon.tsx';
 import PlayerSelector from '../../ui/PlayerSelector.tsx';
 import TeamSelector from '../../ui/TeamSelector.tsx';
+import changePlayer from '../lib/changePlayer.tsx';
 import { SetMapFunction } from '../Types.tsx';
 
 const aiRegistry =
@@ -99,6 +104,40 @@ export default function MapEditorSetupPanel({
         onTeamChange={(teams) => setMap('teams', map.copy({ teams }))}
         placeholders
       />
+      <Box gap={16} vertical>
+        <h2>
+          <fbt desc="Pick the main campaign player">Main Player</fbt>
+        </h2>
+        <p>
+          <fbt desc="Explanation for the main player">
+            You can pick the main player for this map.
+          </fbt>
+        </p>
+        <Stack center gap={24}>
+          <AnimatePresence mode="popLayout">
+            {map.active.map((id) => (
+              <motion.div key={id} layoutId={`${id}`}>
+                <PlayerIcon
+                  id={id}
+                  key={id}
+                  onClick={() => {
+                    setMap(
+                      'teams',
+                      changePlayer(
+                        map.copy({
+                          active: reorderActive(map.active, id),
+                        }),
+                        id,
+                      ).map,
+                    );
+                  }}
+                  selected={map.active[0] === id}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </Stack>
+      </Box>
       <PlayerSelector
         aiRegistry={aiRegistry.size > 1 ? aiRegistry : null}
         availableSkills={Skills}

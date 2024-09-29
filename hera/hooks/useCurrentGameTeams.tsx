@@ -10,7 +10,7 @@ export default function useCurrentGameTeams(
 ) {
   return useMemo(
     () =>
-      [...map.teams.sortBy(({ id }) => id).values()].map((team) => ({
+      [...map.teams.values()].map((team) => ({
         team,
         users: team.players.map(
           (player) =>

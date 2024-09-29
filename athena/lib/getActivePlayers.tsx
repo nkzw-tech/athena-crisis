@@ -1,6 +1,7 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { PlayerID, PlayerIDs } from '../map/Player.tsx';
 import MapData from '../MapData.tsx';
+import reorderActive from './reorderActive.tsx';
 
 export default function getActivePlayers(
   map: MapData,
@@ -18,8 +19,11 @@ export default function getActivePlayers(
     active.add(unit.player);
   }
 
-  return sortBy(
-    [...active].filter((id) => id > 0),
-    (id) => id,
+  return reorderActive(
+    sortBy(
+      [...active].filter((id) => id > 0),
+      (id) => id,
+    ),
+    map.active[0],
   );
 }

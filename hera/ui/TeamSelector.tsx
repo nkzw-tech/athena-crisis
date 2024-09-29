@@ -66,8 +66,8 @@ export default function TeamSelector({
   );
 
   const sortedTeams = useMemo(
-    () => [...teams.sortBy(({ id }) => id).values()],
-    [teams],
+    () => [...teams.sortBy(({ id }) => map.active.indexOf(id)).values()],
+    [map.active, teams],
   );
   const players: ReadonlyArray<PlayerID> = useMemo(
     () =>

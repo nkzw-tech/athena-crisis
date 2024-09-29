@@ -83,7 +83,7 @@ export default function validateTeams(
               ).sortBy(({ id }) => id),
             ),
           ]),
-      ).sortBy(({ id }) => id),
+      ).sortBy(({ id }) => map.active.indexOf(id)),
     }),
     null,
   ];

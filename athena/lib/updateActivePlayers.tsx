@@ -24,6 +24,6 @@ export default function updateActivePlayers(
             ? HumanPlayer.from(player, userId)
             : createBot(player),
         ),
-    ),
+    ).sortBy(({ id }) => map.active.indexOf(id)),
   });
 }

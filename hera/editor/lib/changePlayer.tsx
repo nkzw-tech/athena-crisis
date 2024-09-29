@@ -7,9 +7,12 @@ import {
 import Team from '@deities/athena/map/Team.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { StateLike } from '../../Types.tsx';
+import { State } from '../../Types.tsx';
 
-export default function changePlayer(map: MapData, id: PlayerID): StateLike {
+export default function changePlayer(
+  map: MapData,
+  id: PlayerID,
+): Pick<State, 'currentViewer' | 'map'> {
   let { teams } = map;
 
   const current = map.getCurrentPlayer();
