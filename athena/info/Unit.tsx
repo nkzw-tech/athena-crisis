@@ -2710,7 +2710,7 @@ export const Medic = new UnitInfo(
     radius: 4,
     vision: 1,
   },
-  HealUnitAbilities,
+  HealUnitAbilities.copy({ rescue: true }),
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.Punch],
