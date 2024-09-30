@@ -106,13 +106,8 @@ export default function MapEditorSetupPanel({
       />
       <Box gap={16} vertical>
         <h2>
-          <fbt desc="Pick the main campaign player">Main Player</fbt>
+          <fbt desc="Pick the main campaign faction">Primary Faction</fbt>
         </h2>
-        <p>
-          <fbt desc="Explanation for the main player">
-            You can pick the main player for this map.
-          </fbt>
-        </p>
         <Stack center gap={24}>
           <AnimatePresence mode="popLayout">
             {map.active.map((id) => (
@@ -137,6 +132,13 @@ export default function MapEditorSetupPanel({
             ))}
           </AnimatePresence>
         </Stack>
+        <InfoBox>
+          <p>
+            <fbt desc="Explanation for the main faction">
+              In a campaign, the first faction will be controlled by the user.
+            </fbt>
+          </p>
+        </InfoBox>
       </Box>
       <PlayerSelector
         aiRegistry={aiRegistry.size > 1 ? aiRegistry : null}
