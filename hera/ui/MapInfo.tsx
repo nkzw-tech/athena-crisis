@@ -9,7 +9,6 @@ import Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   DoubleSize,
-  MaxHealth,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -36,6 +35,7 @@ import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { useEffect, useMemo, useRef } from 'react';
+import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
 import CoverRange from '../card/lib/CoverRange.tsx';
 import { LargeRange } from '../card/Range.tsx';
@@ -100,8 +100,8 @@ const Tile = ({
           </div>
         </div>
         <div className={textStyle}>
-          <div>{info.name}</div>
-          <Stack gap nowrap start>
+          <div className={overflowStyle}>{info.name}</div>
+          <Stack className={overflowStyle} gap nowrap start>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
               <LargeRange
@@ -145,14 +145,26 @@ const renderUnit = (
           unit={unit}
         />
         <div className={textStyle}>
-          <div>{info.name}</div>
-          <Stack gap>
-            <Stack alignCenter gap={4} start>
+          <Stack className={overflowStyle} gap nowrap stretch>
+            <div>{info.name}</div>
+            <Stack alignCenter gap={4} nowrap start>
+              <Icon className={iconStyle} icon={Heart} />
+              <div
+                style={{
+                  color: getHealthColor(unit.health),
+                }}
+              >
+                {unit.health}%
+              </div>
+            </Stack>
+          </Stack>
+          <Stack className={overflowStyle} gap nowrap>
+            <Stack alignCenter gap={4} nowrap start>
               <Icon className={iconStyle} icon={Supply} />
               {unit.fuel}/{info.configuration.fuel}
             </Stack>
             {ammo && (
-              <Stack alignCenter gap={4} start>
+              <Stack alignCenter gap={4} nowrap start>
                 <Icon className={iconStyle} icon={Ammo} />
                 {ammo.join(', ')}
               </Stack>
@@ -179,6 +191,7 @@ const renderBuilding = (
           buildingStyle,
           building.label != null && buildingWithLabelStyle,
         )}
+        gap
       >
         <BuildingTile
           biome={biome}
@@ -187,13 +200,21 @@ const renderBuilding = (
           position={vec(1, 2)}
           size={tileSize}
         />
-        <div className={textStyle}>
-          <div>{building.info.name}</div>
+        <Stack alignCenter className={overflowStyle} gap={4} nowrap>
+          <div>
+            <div>{building.info.name}</div>
+          </div>
           <Stack alignCenter gap={4} start>
             <Icon className={iconStyle} icon={Heart} />
-            {building.health}/{MaxHealth}
+            <div
+              style={{
+                color: getHealthColor(building.health),
+              }}
+            >
+              {building.health}%
+            </div>
           </Stack>
-        </div>
+        </Stack>
       </Box>
     );
   }
@@ -291,7 +312,7 @@ export default function MapInfo({
   );
 }
 
-const vars = new CSSVariables<'left-offset'>('mi');
+const vars = new CSSVariables<'left-offset' | 'width'>('mi');
 const left = `calc(
   ${applyVar('inset')} + ${applyVar('mouse-position-left')} +
     ${vars.apply('left-offset')}
@@ -330,12 +351,14 @@ const style = css`
 `;
 
 const boxStyle = css`
+  ${vars.set('width', '240px')}
+
   font-size: 0.9em;
   height: ${DoubleSize}px;
   line-height: 1.1em;
   padding: 0 4px;
   position: relative;
-  width: 260px;
+  width: ${vars.apply('width')};
 
   > div:nth-child(1) {
     align-self: center;
@@ -343,11 +366,19 @@ const boxStyle = css`
   }
 
   ${Breakpoints.sm} {
+    ${vars.set('width', '280px')}
+
     align-self: flex-end;
+  }
+
+  ${Breakpoints.lg} {
+    ${vars.set('width', '324px')}
   }
 `;
 
 const buildingStyle = css`
+  align-content: center;
+
   > div:nth-child(1) {
     margin-top: -${TileSize - 3}px;
   }
@@ -372,15 +403,15 @@ const textStyle = css`
   left: ${textPosition}px;
   position: absolute;
   top: 3px;
+`;
 
-  > div {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: calc(260px - ${textPosition}px);
-  }
+const overflowStyle = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(${vars.apply('width')} - ${textPosition}px);
 `;
 
 const iconStyle = css`
-  margin-top: 2px;
+  margin: 2px 0 -2px;
 `;
