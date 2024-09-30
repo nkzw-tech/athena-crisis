@@ -30,7 +30,7 @@ const gamepadNames: Record<ButtonNames, string> = {
   zoom: 'R3',
 } as const;
 
-const keyboardNames: Record<ButtonNames, string> = {
+export const KeyboardNames: Record<ButtonNames, string> = {
   accept: 'Enter',
   cancel: 'Escape',
   detail: 'E',
@@ -51,7 +51,7 @@ const keyboardNames: Record<ButtonNames, string> = {
 } as const;
 
 export function formatInputNames(text: string, type: 'keyboard' | 'gamepad') {
-  const buttons = type === 'gamepad' ? gamepadNames : keyboardNames;
+  const buttons = type === 'gamepad' ? gamepadNames : KeyboardNames;
 
   return text.replaceAll(/{button\.([\w:-]+)}/g, (_, button: string) => {
     const buttonName = buttons[button as ButtonNames];
