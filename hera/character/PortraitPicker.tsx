@@ -7,10 +7,11 @@ import {
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import useColumns from '../editor/hooks/useColumns.tsx';
 import useGridNavigation from '../hooks/useGridNavigation.tsx';
 import navigate from '../lib/navigate.tsx';
@@ -22,6 +23,45 @@ export type CharacterImage = Readonly<{
   unitId: number;
   variant: number;
 }>;
+
+const PortraitItem = ({
+  character,
+  color,
+  onSelect,
+  unit,
+  variant,
+}: {
+  character: CharacterImage;
+  color: PlayerID;
+  onSelect: (character: CharacterImage) => void;
+  unit: UnitInfo;
+  variant: number;
+}) => {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const isSelected =
+    unit.id === character.unitId && variant === character.variant;
+
+  useScrollIntoView(ref, isSelected);
+
+  return (
+    <a
+      className={cx(
+        SquareButtonStyle,
+        isSelected ? selectedPortraitStyle : null,
+      )}
+      onClick={() => onSelect({ color, unitId: unit.id, variant })}
+      ref={ref}
+    >
+      <Portrait
+        animate
+        clip={!isSelected}
+        player={color}
+        unit={unit}
+        variant={variant}
+      />
+    </a>
+  );
+};
 
 export default memo(function PortraitPicker({
   character,
@@ -115,28 +155,16 @@ export default memo(function PortraitPicker({
         ))}
       </Stack>
       <Stack gap ref={setRef} start>
-        {portraits.map(([unit, variant]) => {
-          const isSelected =
-            unit.id === character.unitId && variant === character.variant;
-          return (
-            <a
-              className={cx(
-                SquareButtonStyle,
-                isSelected ? selectedPortraitStyle : null,
-              )}
-              key={`${unit.id}-${variant}`}
-              onClick={() => onSelect({ color, unitId: unit.id, variant })}
-            >
-              <Portrait
-                animate
-                clip={!isSelected}
-                player={color}
-                unit={unit}
-                variant={variant}
-              />
-            </a>
-          );
-        })}
+        {portraits.map(([unit, variant]) => (
+          <PortraitItem
+            character={character}
+            color={color}
+            key={`${unit.id}-${variant}`}
+            onSelect={onSelect}
+            unit={unit}
+            variant={variant}
+          />
+        ))}
       </Stack>
     </>
   );
