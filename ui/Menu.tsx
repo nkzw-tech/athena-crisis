@@ -5,8 +5,11 @@ import DragAndDrop from '@iconify-icons/pixelarticons/drag-and-drop.js';
 import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
 import { motion } from 'framer-motion';
 import {
+  createContext,
+  MutableRefObject,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -28,6 +31,30 @@ import Stack from './Stack.tsx';
 
 export const MenuClassName = 'menu-button';
 
+export type MenuContext = MutableRefObject<boolean>;
+
+const Context = createContext<MenuContext>({ current: false });
+
+export const MenuContext = ({ children }: { children: ReactNode }) => {
+  return (
+    <Context.Provider value={{ current: false }}>{children}</Context.Provider>
+  );
+};
+
+export const useDisableOpenMenuOnCancel = () => {
+  const context = useContext(Context);
+  useEffect(() => {
+    context.current = false;
+  }, [context]);
+};
+
+export const useOpenMenuOnCancel = () => {
+  const context = useContext(Context);
+  useEffect(() => {
+    context.current = true;
+  }, [context]);
+};
+
 export default function Menu({
   children,
   controls,
@@ -37,6 +64,7 @@ export default function Menu({
   controls?: (isOpen: boolean) => ReactNode;
   hide?: boolean;
 }) {
+  const context = useContext(Context);
   const [isOpen, setIsOpen] = useState(false);
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
@@ -66,6 +94,18 @@ export default function Menu({
       [close, isOpen],
     ),
     'top',
+  );
+
+  useInput(
+    'cancel',
+    useCallback(
+      (event) => {
+        if (event.detail?.isEscape && context.current && !isOpen) {
+          setIsOpen(true);
+        }
+      },
+      [context, isOpen],
+    ),
   );
 
   const toggleFullscreen = useCallback(() => {

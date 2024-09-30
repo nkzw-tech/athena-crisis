@@ -505,13 +505,14 @@ export default class GameMap extends Component<Props, State> {
           this._cancel(
             this.state.position,
             undefined,
+            event,
             event.detail?.isEscape || false,
           ),
         'dialog',
       ),
       Input.register(
         'field-info',
-        () => this._cancel(this.state.position, undefined, false),
+        () => this._cancel(this.state.position, undefined, null, false),
         'dialog',
       ),
     ];
@@ -781,10 +782,15 @@ export default class GameMap extends Component<Props, State> {
   private _cancel = (
     vector: Vector | null,
     transformOrigin: string | undefined,
+    event: CustomEvent | null,
     isEscape: boolean,
   ) => {
+    const maybePreventDefault =
+      isEscape && event ? () => event.preventDefault() : null;
+
     const { behavior } = this.state;
     if (behavior?.type === 'null') {
+      maybePreventDefault?.();
       if (this.state.gameInfoState) {
         this._update(this._resetGameInfoState());
       }
@@ -794,45 +800,49 @@ export default class GameMap extends Component<Props, State> {
     if (behavior?.onCancel) {
       const maybeState = behavior.onCancel(this.state);
       if (maybeState) {
+        maybePreventDefault?.();
         return this._update(maybeState);
       }
     }
 
-    this._update((state) => {
-      const newState = {
-        ...state.behavior?.deactivate?.(),
-        ...resetBehavior(
-          state.lastActionResponse?.type === 'GameEnd'
-            ? NullBehavior
-            : this.props.behavior,
-        ),
-      };
+    const state = this.state;
+    let newState = {
+      ...state.behavior?.deactivate?.(),
+      ...resetBehavior(
+        state.lastActionResponse?.type === 'GameEnd'
+          ? NullBehavior
+          : this.props.behavior,
+      ),
+    };
 
-      if (
-        state.gameInfoState ||
-        newState.behavior?.type !== state.behavior?.type
-      ) {
-        AudioPlayer.playSound('UI/Cancel');
-      }
+    if (newState.behavior?.type !== this.state.behavior?.type) {
+      maybePreventDefault?.();
+    }
 
-      if (state.gameInfoState) {
-        return this._resetGameInfoState();
-      }
+    if (
+      state.gameInfoState ||
+      newState.behavior?.type !== state.behavior?.type
+    ) {
+      AudioPlayer.playSound('UI/Cancel');
+    }
 
-      if (
-        !isEscape &&
-        !this.props.editor &&
-        newState.behavior?.type === state.behavior?.type &&
-        vector
-      ) {
-        requestAnimationFrame(() =>
-          this._showFieldInfo(vector, transformOrigin || 'center center'),
-        );
-        return null;
-      }
+    if (state.gameInfoState) {
+      maybePreventDefault?.();
+      newState = { ...newState, ...this._resetGameInfoState() };
+    }
 
-      return newState;
-    });
+    if (
+      !isEscape &&
+      !this.props.editor &&
+      newState.behavior?.type === state.behavior?.type &&
+      vector
+    ) {
+      maybePreventDefault?.();
+      this._showFieldInfo(vector, transformOrigin || 'center center');
+      return;
+    }
+
+    return this._update(newState);
   };
 
   private _update = (

@@ -96,6 +96,7 @@ export type BaseMaskProps = Readonly<{
   cancel: (
     vector: Vector | null,
     transformOrigin: string | undefined,
+    cancel: CustomEvent | null,
     isEscape: boolean,
   ) => void;
   enter: (vector: Vector, _: undefined, type: MapEnterType) => void;
@@ -217,6 +218,7 @@ export default memo(function Mask({
               (event.target as HTMLElement)?.getAttribute('data-vector'),
             ),
             toTransformOrigin(event),
+            null,
             false,
           );
         }}
