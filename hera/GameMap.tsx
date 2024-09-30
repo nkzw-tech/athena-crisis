@@ -36,6 +36,7 @@ import { rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
 import throttle, { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { ScrollRestore } from '@deities/ui/hooks/useScrollRestore.tsx';
+import captureException from '@deities/ui/lib/captureException.tsx';
 import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
@@ -1291,7 +1292,7 @@ export default class GameMap extends Component<Props, State> {
     const currentAnimation = this.state.animations.get(position);
     if (currentAnimation && currentAnimation !== animation) {
       throw new Error(
-        `Animation at position '${position}' changed unexpectedly:\nExpected: ${JSON.stringify(
+        `Animation '${animation.type}' at position '${position}' changed unexpectedly:\nExpected: ${JSON.stringify(
           animation,
           null,
           2,
@@ -1304,8 +1305,21 @@ export default class GameMap extends Component<Props, State> {
     }
 
     if ('onComplete' in animation && animation.onComplete) {
+      if (animation.completed) {
+        captureException(
+          new Error(
+            `Animation '${animation.type}' at position '${position}' was already completed.\nAnimation: ${JSON.stringify(
+              animation,
+              null,
+              2,
+            )}`,
+          ),
+        );
+      }
+
       const onComplete = animation.onComplete;
       this._update((state) => {
+        animation.completed = true;
         const animations = state.animations.delete(position);
         return {
           animations,

@@ -15,7 +15,14 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  ComponentType,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import AttackAnimation from './animations/AttackAnimation.tsx';
 import BuildingCreate from './animations/BuildingCreate.tsx';
 import CrystalAnimation from './animations/CrystalAnimation.tsx';
@@ -282,7 +289,7 @@ export type BuildingAnimation =
   | CreateBuildingAnimation
   | CaptureAnimation;
 
-export type Animation =
+export type Animation = { completed?: boolean } & (
   | BannerAnimation
   | BuildingAnimation
   | BuildingAnimation
@@ -298,7 +305,8 @@ export type Animation =
   | ScrollIntoView
   | ShakeAnimation
   | UnitAnimation
-  | UpgradeAnimation;
+  | UpgradeAnimation
+);
 
 export type Animations = ImmutableMap<Vector, Animation>;
 
@@ -382,7 +390,7 @@ const MapAnimation = ({
   animationConfig: initialAnimationConfig,
   biome,
   getLayer,
-  playerDetails,
+  playerDetails: initialPlayerDetails,
   position,
   scale,
   skipBanners,
@@ -405,11 +413,19 @@ const MapAnimation = ({
   zIndex: number;
 }) => {
   const [animationConfig] = useState(initialAnimationConfig);
+
+  // `playerDetails` should never change during an animation.
+  const [playerDetails] = useState(initialPlayerDetails);
+  const onComplete = useCallback(
+    () => animationComplete(position, animation),
+    [animation, animationComplete, position],
+  );
+
   return useMemo(() => {
     const props = {
       animationConfig,
       clearTimer,
-      onComplete: () => animationComplete(position, animation),
+      onComplete,
       rate:
         AnimationConfig.AnimationDuration / animationConfig.AnimationDuration,
       scheduleTimer,
@@ -699,11 +715,11 @@ const MapAnimation = ({
     }
   }, [
     animation,
-    animationComplete,
     animationConfig,
     biome,
     clearTimer,
     getLayer,
+    onComplete,
     playerDetails,
     position,
     requestFrame,

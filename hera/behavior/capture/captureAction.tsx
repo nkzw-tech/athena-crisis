@@ -28,6 +28,7 @@ export default async function captureAction(
               resolve(await handleRemoteAction(actions, remoteAction)),
             );
             return {
+              ...state,
               map: applyActionResponse(state.map, state.vision, actionResponse),
             };
           },
