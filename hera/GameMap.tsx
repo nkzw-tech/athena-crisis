@@ -790,7 +790,9 @@ export default class GameMap extends Component<Props, State> {
 
     const { behavior } = this.state;
     if (behavior?.type === 'null') {
-      maybePreventDefault?.();
+      if (this.state.lastActionResponse?.type !== 'GameEnd') {
+        maybePreventDefault?.();
+      }
       if (this.state.gameInfoState) {
         this._update(this._resetGameInfoState());
       }
