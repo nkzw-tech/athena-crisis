@@ -8,6 +8,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getPathCost, RadiusItem } from '@deities/athena/Radius.tsx';
+import useInput from '@deities/ui/controls/useInput.tsx';
 import { useCallback } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import sleep from '../lib/sleep.tsx';
@@ -253,6 +254,7 @@ export default class Move {
     editor?: unknown,
     subVector?: unknown,
     shouldConfirm?: boolean,
+    type: 'confirm' | 'complete' = 'confirm',
   ): StateLike | null {
     const {
       attackable,
@@ -428,7 +430,7 @@ export default class Move {
                   locked: true,
                 },
               }
-            : onAction(state);
+            : onAction(state, type);
         }
       }
     }
@@ -444,6 +446,7 @@ export default class Move {
   }
 
   component = ({ actions, state }: StateWithActions) => {
+    const { update } = actions;
     const {
       attackable,
       confirmAction,
@@ -454,6 +457,26 @@ export default class Move {
       selectedPosition,
       selectedUnit,
     } = state;
+
+    useInput(
+      'tertiary',
+      useCallback(() => {
+        if (position) {
+          update(
+            this.select(
+              position,
+              state,
+              actions,
+              false,
+              false,
+              false,
+              'complete',
+            ),
+          );
+        }
+      }, [update, actions, position, state]),
+      'menu',
+    );
 
     const onSelect = useCallback(
       (entity: Entity) => {
