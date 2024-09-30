@@ -31,7 +31,10 @@ import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
-import { BackgroundRainbowAnimation } from '@deities/ui/PulseStyle.tsx';
+import {
+  BackgroundRainbowAnimation,
+  SlowRainbowStyle,
+} from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
@@ -327,7 +330,23 @@ export default memo(function PlayerCard({
                 textStyle,
                 wide && wideStyle,
                 marginLeftStyle,
+                isCurrentPlayer && maxCharge > 0 && SlowRainbowStyle,
               )}
+              onClick={
+                isCurrentPlayer && maxCharge > 0 && player.skills.size
+                  ? (event) => {
+                      event.stopPropagation();
+
+                      showPlayerEffectDialog(
+                        {
+                          skill: player.skills.values().next().value!,
+                          type: 'Skill',
+                        },
+                        null,
+                      );
+                    }
+                  : undefined
+              }
             >
               <span style={{ color }}>{player.id}.</span> {user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
