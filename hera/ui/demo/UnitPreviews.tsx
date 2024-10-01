@@ -109,6 +109,7 @@ export default function UnitPreviews() {
       {gameInfoState && (
         <GameDialog
           onClose={() => setGameInfoState(null)}
+          playerAchievement={null}
           state={
             {
               currentViewer: gameInfoState.unit?.player || map.getPlayer(1).id,

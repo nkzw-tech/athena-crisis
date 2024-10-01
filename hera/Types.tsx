@@ -81,7 +81,7 @@ export type Props = Readonly<{
   onError?: (error: Error) => void;
   pan?: true;
   paused?: boolean;
-  playerAchievement?: PlayerAchievement | null;
+  playerAchievement: PlayerAchievement | null;
   playerDetails: PlayerDetails;
   playerHasReward?: PlayerHasRewardFunction;
   scale: number;

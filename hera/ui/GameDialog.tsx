@@ -63,6 +63,7 @@ import {
   CurrentGameInfoState,
   LeaderInfoState,
   MapInfoState,
+  PlayerAchievement as PlayerAchievementT,
   PlayerDetails,
   PlayerEffectInfoState,
   PlayerEffectItem,
@@ -70,6 +71,7 @@ import {
 } from '../Types.tsx';
 import Comparator from './Comparator.tsx';
 import CrystalIcon from './CrystalIcon.tsx';
+import PlayerAchievement from './PlayerAchievement.tsx';
 import { SkillContainer, SkillIcon } from './SkillDialog.tsx';
 
 type GameDialogState = Pick<
@@ -246,9 +248,11 @@ const MapInfoPanel = memo(function MapInfoPanel({
 const MapPerformance = ({
   currentViewer,
   map,
+  playerAchievement,
 }: {
   currentViewer: PlayerID | null;
   map: MapData;
+  playerAchievement: PlayerAchievementT | null;
 }) => {
   if (!hasPerformanceExpectation(map)) {
     return null;
@@ -375,6 +379,14 @@ const MapPerformance = ({
           </fbt>
         </p>
       ) : null}
+      {playerAchievement && (
+        <Stack alignCenter gap start>
+          <div>
+            <fbt desc="Label for previous result">Previous Best:</fbt>
+          </div>
+          <PlayerAchievement achievement={playerAchievement} />
+        </Stack>
+      )}
     </Stack>
   );
 };
@@ -387,6 +399,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   gameInfoState,
   lastActionResponse,
   map,
+  playerAchievement,
   playerDetails,
 }: {
   currentViewer: PlayerID | null;
@@ -394,6 +407,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   gameInfoState: CurrentGameInfoState;
   lastActionResponse: ActionResponse | null;
   map: MapData;
+  playerAchievement: PlayerAchievementT | null;
   playerDetails: PlayerDetails;
 }) {
   const {
@@ -501,7 +515,11 @@ const GameInfoPanel = memo(function GameInfoPanel({
                 </>
               )}
             </Stack>
-            <MapPerformance currentViewer={currentViewer} map={map} />
+            <MapPerformance
+              currentViewer={currentViewer}
+              map={map}
+              playerAchievement={playerAchievement}
+            />
           </Stack>
         )}
       </DialogScrollContainer>
@@ -539,11 +557,13 @@ const GameInfoPanel = memo(function GameInfoPanel({
 const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
   gameInfoState,
+  playerAchievement,
   spectatorCodes,
   state: { currentViewer, lastActionResponse, map, playerDetails },
 }: {
   endGame?: () => void;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
+  playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
   state: GameDialogState;
 }) {
@@ -559,6 +579,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
           gameInfoState={gameInfoState}
           lastActionResponse={lastActionResponse || null}
           map={map}
+          playerAchievement={playerAchievement}
           playerDetails={playerDetails}
         />
       );
@@ -881,11 +902,13 @@ const crystalSelectedBoxStyle = css`
 export default memo(function GameDialog({
   endGame,
   onClose,
+  playerAchievement,
   spectatorCodes,
   state,
 }: {
   endGame?: (type: 'Lose') => void;
   onClose: () => void | Promise<void>;
+  playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
   state: GameDialogState;
 }) {
@@ -920,6 +943,7 @@ export default memo(function GameDialog({
                   }
                 : gameInfoState
             }
+            playerAchievement={playerAchievement}
             spectatorCodes={spectatorCodes}
             state={state}
           />

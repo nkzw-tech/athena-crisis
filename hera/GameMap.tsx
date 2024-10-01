@@ -300,6 +300,7 @@ export default class GameMap extends Component<Props, State> {
     },
     buildingSize: TileSize,
     confirmActionStyle: 'touch',
+    playerAchievement: null,
     scroll: true,
     showCursor: true,
     tileSize: TileSize,
@@ -1954,7 +1955,7 @@ export default class GameMap extends Component<Props, State> {
                 key="performance-metrics"
                 map={map}
                 player={currentViewer}
-                playerAchievement={playerAchievement || null}
+                playerAchievement={playerAchievement}
                 scrollIntoView={this._scrollIntoView}
               />
             )}
@@ -1963,6 +1964,7 @@ export default class GameMap extends Component<Props, State> {
           <GameDialog
             endGame={this.props.endGame ? this._endGame : undefined}
             onClose={this._hideGameInfo}
+            playerAchievement={playerAchievement}
             spectatorCodes={this.props.spectatorCodes}
             state={this.state}
           />
