@@ -64,7 +64,7 @@
     "@swc/core": "1.7.28",
     "@types/fbt": "^1.0.5",
     "@types/node": "^22.7.4",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "4.3.1",
     "babel-plugin-fbt": "^1.0.0",
     "babel-plugin-fbt-import": "^0.1.0",
     "babel-plugin-fbt-runtime": "^1.0.0",
