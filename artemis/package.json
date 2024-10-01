@@ -37,7 +37,7 @@
     "bufferutil": "^4.0.8",
     "chalk": "^5.3.0",
     "cors": "^2.8.5",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.16.2",
     "express": "^4.21.0",
     "express-session": "^1.18.0",
     "graphql": "^16.9.0",
@@ -71,7 +71,7 @@
     "glob": "11.0.0",
     "p-limit": "^6.1.0",
     "prisma": "~5.20.0",
-    "prisma-json-types-generator": "^3.1.1",
+    "prisma-json-types-generator": "^3.0.4",
     "terminal-link": "^3.0.0"
   },
   "prisma": {
