@@ -1,6 +1,7 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import { getAllTiles, getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
 import {
   Abilities,
@@ -14,6 +15,7 @@ import {
 import calculateLikelyDamage from '@deities/athena/lib/calculateLikelyDamage.tsx';
 import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
 import getAttributeRange, {
+  AttributeRangeWithZero,
   getAttributeRangeValue,
 } from '@deities/athena/lib/getAttributeRange.tsx';
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
@@ -447,6 +449,8 @@ export default memo(function UnitCard({
           </CardInfoHeading>
           <p>{info.description}</p>
         </Stack>
+        <UnitAbilities player={currentPlayer} unit={unit} />
+        <UnitTransports biome={biome} player={player} unit={unit} />
         <UnitAttack
           biome={biome}
           map={map}
@@ -454,8 +458,13 @@ export default memo(function UnitCard({
           unit={unit}
           vector={vector}
         />
-        <UnitAbilities player={currentPlayer} unit={unit} />
-        <UnitTransports biome={biome} player={player} unit={unit} />
+        <UnitVulnerability
+          biome={biome}
+          map={map}
+          player={player}
+          unit={unit}
+          vector={vector}
+        />
         <UnitMovement
           biome={biome}
           movementType={info.movementType}
@@ -467,6 +476,28 @@ export default memo(function UnitCard({
 });
 
 const damageRange = [20, 40, 60, 80, 100];
+
+const getAllAvailableUnits = (
+  map: MapData,
+  biome: Biome,
+  opponent: PlayerID,
+  allSkills: Set<Skill>,
+) => {
+  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
+  const unitInfos = new Set(
+    mapUnitsWithContentRestriction((unit) => unit, allSkills).filter(
+      (unit) => !biomeUnitRestrictions?.has(unit.type),
+    ),
+  );
+
+  for (const [, unit] of map.units) {
+    if (!unitInfos.has(unit.info)) {
+      unitInfos.add(unit.info);
+    }
+  }
+
+  return [...unitInfos].map((unit) => unit.create(opponent));
+};
 
 const Weapon = memo(function WeaponAttack({
   biome,
@@ -493,11 +524,7 @@ const Weapon = memo(function WeaponAttack({
     [map],
   );
   const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
-  const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
-  const availableUnits = mapUnitsWithContentRestriction(
-    (unit) => unit.create(opponent),
-    allSkills,
-  ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type));
+  const availableUnits = getAllAvailableUnits(map, biome, opponent, allSkills);
   const isLeader = unit.isLeader();
   const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
   const damageGroups = sortBy(
@@ -686,6 +713,114 @@ const UnitAttack = ({
       throw new UnknownTypeError('UnitAttack', attackType);
     }
   }
+};
+
+const UnitVulnerability = ({
+  biome,
+  map,
+  player,
+  unit,
+  vector,
+}: {
+  biome: Biome;
+  map: MapData;
+  player: PlayerID;
+  unit: Unit;
+  vector: Vector;
+}) => {
+  const tile = map.getTileInfo(vector);
+  const opponent = resolveDynamicPlayerID(map, 'opponent', player);
+  const allSkills = useMemo(
+    () => new Set(map.getPlayers().flatMap(({ skills }) => [...skills])),
+    [map],
+  );
+  const availableUnits = getAllAvailableUnits(map, biome, opponent, allSkills);
+  const damageGroups = sortBy(
+    [
+      ...groupBy(
+        availableUnits
+          .map((unitB) => {
+            const damage = calculateLikelyDamage(
+              unitB,
+              unit,
+              map,
+              vector,
+              vector,
+              getAttackStatusEffect(map, unitB, vector, tile),
+              getDefenseStatusEffect(map, unit, null),
+              1,
+            );
+            return [
+              unitB,
+              damage,
+              damage != null ? getAttributeRangeValue(damageRange, damage) : 0,
+            ] as const;
+          })
+          .filter(
+            (entry): entry is [Unit, number, AttributeRangeWithZero] =>
+              entry[1] != null &&
+              entry[2] != null &&
+              entry[1] > 0 &&
+              entry[2] > 0,
+          ),
+        ([, , attributeRangeValue]) => attributeRangeValue,
+      ),
+    ],
+    ([attributeRangeValue]) => -attributeRangeValue,
+  ).slice(0, 2);
+
+  const getLikelyDamage = (damage: number, index: number) => (
+    <div key={index}>{damage}</div>
+  );
+
+  return (
+    <Tick animationConfig={AnimationConfig}>
+      <Stack gap vertical>
+        <CardInfoHeading style={{ color: getColor(player) }}>
+          <fbt desc="Headline for who the unit is weak to">
+            Vulnerable Against
+          </fbt>
+        </CardInfoHeading>
+        <Stack adaptive className={marginTopStyle} gap={16} start>
+          {damageGroups.map(([strength, damageMapEntry]) => {
+            const unitGroups = [
+              ...groupBy(damageMapEntry, ([unit]) => unit.info.type).values(),
+            ];
+
+            const damage = unitGroups.map((units) =>
+              units.map(([, damage], index) => getLikelyDamage(damage, index)),
+            );
+            const tiles = unitGroups.map(
+              ([[unit]]) => getAnyUnitTile(unit.info) || Plain,
+            );
+            return damage.length ? (
+              <TileBox key={strength}>
+                {strength <= 1 ? (
+                  <fbt desc="Label for attack strength">Weak</fbt>
+                ) : strength === 2 ? (
+                  <fbt desc="Label for attack strength">Marginal</fbt>
+                ) : strength === 3 ? (
+                  <fbt desc="Label for attack strength">Moderate</fbt>
+                ) : strength === 4 ? (
+                  <fbt desc="Label for attack strength">Strong</fbt>
+                ) : (
+                  <fbt desc="Label for attack strength">Devastating</fbt>
+                )}
+                <InlineTileList
+                  biome={biome}
+                  extraInfos={damage}
+                  tiles={tiles}
+                  unitGroups={unitGroups.map((units) =>
+                    units.map(([unit]) => unit),
+                  )}
+                />
+              </TileBox>
+            ) : null;
+          })}
+        </Stack>
+      </Stack>
+    </Tick>
+  );
 };
 
 const UnitAbility = ({
