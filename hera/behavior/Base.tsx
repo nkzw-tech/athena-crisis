@@ -67,7 +67,7 @@ export default class Base extends AbstractSelectBehavior {
       !selectedPosition &&
       vision.isVisible(map, vector)
     ) {
-      const showAttackRadius = !unit.isCompleted() && info?.hasAttack();
+      const showAttackRadius = info?.hasAttack();
       this.infoTimer = await scheduleTimer(
         () =>
           update((state) => ({
@@ -77,7 +77,7 @@ export default class Base extends AbstractSelectBehavior {
                   radius: {
                     dim:
                       showAttackRadius && !unit.canAttack(map.getPlayer(unit)),
-                    fields: attackable(map, unit, vector, 'cost'),
+                    fields: attackable(map, unit.recover(), vector, 'cost'),
                     path: null,
                     type: RadiusType.Attack,
                   },
