@@ -377,9 +377,14 @@ export default memo(function PlayerCard({
                       [
                         HumanHandsdown,
                         () =>
-                          map.units.filter((unit) =>
-                            map.matchesPlayer(unit, player),
-                          ).size,
+                          map.units.reduce(
+                            (count, unit) =>
+                              count +
+                              (map.matchesPlayer(unit, player)
+                                ? unit.count()
+                                : 0),
+                            0,
+                          ),
                       ],
                       [
                         Buildings,
