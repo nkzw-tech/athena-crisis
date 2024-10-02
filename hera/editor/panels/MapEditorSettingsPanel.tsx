@@ -453,7 +453,7 @@ export default function MapEditorSettingsPanel({
                     <Icon className={iconStyle} icon={Trophy} />
                     <div>
                       <fbt desc="Map metrics summary">
-                        Total:
+                        Total (excluding invasions):
                         <fbt:param name="won">{metrics.won}</fbt:param>{' '}
                         <fbt:plural
                           count={metrics.won}
