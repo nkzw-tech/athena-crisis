@@ -618,7 +618,7 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
     case Skill.Aloof:
       return (
         <fbt desc="Additional skill description">
-          Ur so cool!
+          If you get this you're very cool!
         </fbt>
       );
   }
