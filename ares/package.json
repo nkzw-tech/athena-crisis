@@ -26,7 +26,7 @@
     "@deities/i18n": "workspace:*",
     "@deities/ui": "workspace:*",
     "@deities/zeus": "workspace:*",
-    "@emotion/css": "^11.13.0",
+    "@emotion/css": "^11.13.4",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
     "@sentry/browser": "^8.32.0",

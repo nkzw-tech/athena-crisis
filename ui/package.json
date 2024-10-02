@@ -13,7 +13,7 @@
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hephaestus": "workspace:*",
-    "@emotion/css": "^11.13.0",
+    "@emotion/css": "^11.13.4",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/joymap": "^3.0.0",
     "fbt": "^1.0.2",

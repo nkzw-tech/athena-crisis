@@ -17,7 +17,7 @@
     "@deities/hera": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@deities/ui": "workspace:*",
-    "@emotion/css": "^11.13.0",
+    "@emotion/css": "^11.13.4",
     "array-shuffle": "^3.0.0",
     "fbt": "^1.0.2",
     "framer-motion": "^11.9.0",
