@@ -380,12 +380,21 @@ const MapPerformance = ({
         </p>
       ) : null}
       {playerAchievement && (
-        <Stack alignCenter gap start>
-          <div>
-            <fbt desc="Label for previous result">Previous Best:</fbt>
-          </div>
-          <PlayerAchievement achievement={playerAchievement} />
-        </Stack>
+        <>
+          <InfoBox gap={16} vertical>
+            <Stack alignCenter gap start>
+              <div>
+                <fbt desc="Label for previous result">Previous Best:</fbt>
+              </div>
+              <PlayerAchievement achievement={playerAchievement} />
+            </Stack>
+            <p>
+              <fbt desc="Explanation for player achievements">
+                Achieve more goals than before to receive any remaining stars.
+              </fbt>
+            </p>
+          </InfoBox>
+        </>
       )}
     </Stack>
   );
