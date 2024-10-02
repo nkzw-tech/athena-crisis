@@ -615,6 +615,12 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
         </fbt>
       );
+    case Skill.Aloof:
+      return (
+        <fbt desc="Additional skill description">
+          Ur so cool!
+        </fbt>
+      );
   }
   return null;
 };

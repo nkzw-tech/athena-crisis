@@ -43,6 +43,7 @@ export enum Skill {
   BuyUnitDinosaur = 29,
   Sabotage = 30,
   SpawnUnitInfernoJetpack = 31,
+  Aloof = 31,
 }
 
 export const Skills = new Set<Skill>([
@@ -77,6 +78,7 @@ export const Skills = new Set<Skill>([
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
   Skill.SpawnUnitInfernoJetpack,
+  Skill.Aloof,
 ]);
 
 const skillConfig: Record<

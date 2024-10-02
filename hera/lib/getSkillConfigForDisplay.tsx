@@ -287,6 +287,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         name: fbt('Inferno', 'Skill name'),
         textColor: '#fff',
       };
+    case Skill.Aloof:
+      return {
+        alpha: 0.3,
+        borderStyle: 'plus',
+        colors: 'orange',
+        icon: Heart,
+        name: fbt('Aloof', 'Skill name'),
+      };
     default: {
       skill satisfies never;
       throw new UnknownTypeError('getSkillConfig', skill);
