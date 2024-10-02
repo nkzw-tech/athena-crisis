@@ -129,6 +129,7 @@ const skillConfig: Record<
     cost: null,
     requiresCrystal: true,
   },
+  [Skill.Aloof]: { cost: 9001 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set([
