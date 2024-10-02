@@ -43,7 +43,7 @@ export enum Skill {
   BuyUnitDinosaur = 29,
   Sabotage = 30,
   SpawnUnitInfernoJetpack = 31,
-  Aloof = 31,
+  Aloof = 1000,
 }
 
 export const Skills = new Set<Skill>([
