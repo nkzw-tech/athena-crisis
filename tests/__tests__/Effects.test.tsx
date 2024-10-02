@@ -13,6 +13,7 @@ import {
   Flamethrower,
   Helicopter,
   Pioneer,
+  RocketLauncher,
   SmallTank,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
@@ -220,7 +221,7 @@ test('creates a second unit every time a Flamethrower is created', async () => {
           actions: [
             {
               from: RelativeVectors.Source,
-              id: Flamethrower.id,
+              id: RocketLauncher.id,
               to: RelativeVectors.Any,
               type: 'CreateUnit',
             },
@@ -251,10 +252,10 @@ test('creates a second unit every time a Flamethrower is created', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "CreateUnit (1,1 → 2,1) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
-      CreateUnit (1,1 → 1,1) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Blair', completed: true }, free: true, skipBehaviorRotation: false }
+      CreateUnit (1,1 → 1,1) { unit: Rocket Launcher { id: 3, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: true, skipBehaviorRotation: false }
       CreateUnit (2,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 1, fuel: 40, moved: true, name: 'Sam', completed: true }, free: false, skipBehaviorRotation: false }
-      CreateUnit (1,3 → 1,3) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Riley', completed: true }, free: false, skipBehaviorRotation: false }
-      CreateUnit (1,3 → 1,2) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Cameron', completed: true }, free: true, skipBehaviorRotation: false }
+      CreateUnit (1,3 → 1,3) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yael', completed: true }, free: false, skipBehaviorRotation: false }
+      CreateUnit (1,3 → 1,2) { unit: Rocket Launcher { id: 3, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Idris', completed: true }, free: true, skipBehaviorRotation: false }
       EndTurn { current: { funds: 9100, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 9100, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
