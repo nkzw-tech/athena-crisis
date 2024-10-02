@@ -199,7 +199,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
-      AbandonInvasion { name: '<name>', chaosStars: null }
+      AbandonInvasion { name: '<name>', chaosStars: null, fromPlayer: 1 }
       AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 45 }, chargeA: 18, chargeB: 55 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);

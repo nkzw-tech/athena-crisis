@@ -71,7 +71,7 @@
   ],
   ["Message", [12, ["type", "message", "player"]]],
   ["AttackUnitGameOver", [13, ["type", "fromPlayer", "toPlayer"]]],
-  ["BeginTurnGameOver", [14, ["type", "abandoned"]]],
+  ["BeginTurnGameOver", [14, ["type", "abandoned", "fromPlayer"]]],
   ["CaptureGameOver", [15, ["type", "fromPlayer", "toPlayer"]]],
   [
     "GameEnd",
@@ -177,6 +177,6 @@
   ["SecretDiscovered", [42, ["type", "objective", "toPlayer"]]],
   ["OptionalObjective", [43, ["type", "objective", "objectiveId", "toPlayer"]]],
   ["ActivateCrystal", [44, ["type", "crystal", "player", "biome"]]],
-  ["AbandonInvasion", [45, ["type", "name", "chaosStars"]]],
+  ["AbandonInvasion", [45, ["type", "name", "chaosStars", "fromPlayer"]]],
   ["SetPlayer", [46, ["type", "player"]]]
 ]
