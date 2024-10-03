@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0"
   }
 }
