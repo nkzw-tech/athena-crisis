@@ -32,6 +32,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
+import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -40,7 +41,6 @@ import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
-import { fbt } from 'fbt';
 import {
   Fragment,
   memo,
@@ -401,6 +401,7 @@ const MapPerformance = ({
 };
 
 const objectivesPanel = Symbol('objectives');
+const endGamePanel = Symbol('end-game');
 
 const GameInfoPanel = memo(function GameInfoPanel({
   currentViewer,
@@ -431,31 +432,69 @@ const GameInfoPanel = memo(function GameInfoPanel({
     player.crystal != null &&
     player.crystal !== Crystal.Power;
   const hasEnded = lastActionResponse?.type === 'GameEnd';
+  const canEndGame = isCurrentPlayer && !hasEnded && endGame;
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
 
   const states = useMemo(
-    () => [objectivesPanel, ...(gameInfoState.panels?.keys() || [])],
-    [gameInfoState.panels],
+    () => [
+      objectivesPanel,
+      ...(gameInfoState.panels?.keys() || []),
+      ...(canEndGame ? [endGamePanel] : []),
+    ],
+    [canEndGame, gameInfoState.panels],
   );
   useDialogNavigation(states, states.indexOf(panel), setPanel);
 
+  const endGameText = useMemo(
+    () => (
+      <Fragment>
+        {canAbandon ? (
+          <fbt desc="Button to abandon (give up)">Abandon</fbt>
+        ) : (
+          <fbt desc="Button to give up">Give Up</fbt>
+        )}
+      </Fragment>
+    ),
+    [canAbandon],
+  );
+  const endGameExplanation = useMemo(
+    () => (
+      <Fragment>
+        {canAbandon ? (
+          <fbt desc="Confirmation dialog to abandon (give up) a map.">
+            Are you sure you want to abandon this map? You will not receive any
+            Chaos Stars.
+          </fbt>
+        ) : (
+          <fbt desc="Confirmation dialog to give up.">
+            Are you sure you want to give up and restart this map?
+          </fbt>
+        )}
+      </Fragment>
+    ),
+    [canAbandon],
+  );
+
   const { alert } = useAlert();
   const onGiveUp = useCallback(() => {
-    if (isCurrentPlayer && !hasEnded && endGame) {
+    if (canEndGame) {
       alert({
         onAccept: endGame,
-        text: canAbandon
-          ? fbt(
-              'Are you sure you want to abandon this map? You will not receive any Chaos Stars.',
-              'Confirmation dialog to abandon (give up) a map.',
-            )
-          : fbt(
-              'Are you sure you want to give up and restart this map?',
-              'Confirmation dialog to give up.',
-            ),
+        text: endGameExplanation,
       });
     }
-  }, [isCurrentPlayer, hasEnded, endGame, alert, canAbandon]);
+  }, [canEndGame, alert, endGame, endGameExplanation]);
+
+  useInput(
+    'accept',
+    (event) => {
+      if (panel === endGamePanel) {
+        event.preventDefault();
+        onGiveUp();
+      }
+    },
+    'dialog',
+  );
 
   useInput(
     'secondary',
@@ -476,12 +515,23 @@ const GameInfoPanel = memo(function GameInfoPanel({
   const optionalObjectives = partition.get('optional');
   const Component =
     typeof panel === 'string' && gameInfoState.panels?.get(panel)?.content;
+
   return (
     <>
       <DialogScrollContainer key={panel.toString()} navigate>
-        {(Component && (
+        {Component ? (
           <Component lastActionResponse={lastActionResponse} map={map} />
-        )) || (
+        ) : panel === endGamePanel ? (
+          <Stack gap={24} vertical>
+            <h1>{endGameText}</h1>
+            <Stack gap={16} vertical>
+              <div>{endGameExplanation}</div>
+              <div>
+                <InlineLink onClick={endGame}>{endGameText}</InlineLink>
+              </div>
+            </Stack>
+          </Stack>
+        ) : (
           <Stack gap={24} vertical>
             <Stack gap={16} vertical>
               <h1>
@@ -550,12 +600,13 @@ const GameInfoPanel = memo(function GameInfoPanel({
             </DialogTab>
           ))}
         {!hasEnded && endGame && (
-          <DialogTab disabled={!isCurrentPlayer} end onClick={onGiveUp}>
-            {canAbandon ? (
-              <fbt desc="Button to abandon (give up)">Abandon</fbt>
-            ) : (
-              <fbt desc="Button to give up">Give Up</fbt>
-            )}
+          <DialogTab
+            disabled={!isCurrentPlayer}
+            end
+            highlight={panel === endGamePanel}
+            onClick={onGiveUp}
+          >
+            {endGameText}
           </DialogTab>
         )}
       </DialogTabBar>
