@@ -28,7 +28,7 @@ export function onPowerUnitUpgrade(
     return map.copy({
       units: map.units.set(
         vector,
-        InfernoJetpack.create(unit.player)
+        InfernoJetpack.create(unit.player, { label: unit.label })
           .setHealth(unit.health)
           .copy({
             completed: unit.isCompleted() ? true : undefined,
@@ -97,7 +97,7 @@ export default function applyPower(skill: Skill, map: MapData) {
         (unit) => unit.info === Flamethrower && map.matchesPlayer(player, unit),
       )
       .map((unit) =>
-        InfernoJetpack.create(unit.player)
+        InfernoJetpack.create(unit.player, { label: unit.label })
           .setHealth(unit.health)
           .copy({
             completed: unit.isCompleted() ? true : undefined,
