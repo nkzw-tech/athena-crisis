@@ -186,15 +186,14 @@ const getObjectiveRadius = (
   const radiusItems: Array<RadiusInfo> = [];
   let id = 0;
   for (const [, ojective] of objectives) {
-    if (
-      (!isEditor && ojective.hidden) ||
-      !objectiveHasVectors(ojective) ||
-      (currentViewer != null && ojective.completed?.has(currentViewer))
-    ) {
+    if ((!isEditor && ojective.hidden) || !objectiveHasVectors(ojective)) {
       continue;
     }
 
-    radiusItems.push(toRadiusInfo([...ojective.vectors], escortTypes[id]));
+    if (currentViewer == null || !ojective.completed?.has(currentViewer)) {
+      radiusItems.push(toRadiusInfo([...ojective.vectors], escortTypes[id]));
+    }
+
     id = (id + 1) % 3;
   }
   return radiusItems;
