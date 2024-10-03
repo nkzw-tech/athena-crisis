@@ -38,6 +38,7 @@ export enum Ability {
   Convert = 10,
   Morale = 11,
   Poison = 12,
+  HeavyEquipment = 13,
 }
 
 export const Abilities = [
@@ -54,6 +55,7 @@ export const Abilities = [
   Ability.Supply,
   Ability.Unfold,
   Ability.Poison,
+  Ability.HeavyEquipment,
 ] as const;
 
 export enum AttackType {
@@ -111,6 +113,7 @@ type UnitAbilityConfiguration = Readonly<{
   createBuildings?: boolean;
   createTracks?: boolean;
   heal?: boolean;
+  heavyEquipment?: boolean;
   morale?: boolean;
   moveAndAct?: boolean;
   poison?: boolean;
@@ -127,6 +130,7 @@ class UnitAbilities {
   private readonly createBuildings: boolean;
   private readonly createTracks: boolean;
   private readonly heal: boolean;
+  private readonly heavyEquipment: boolean;
   private readonly morale: boolean;
   private readonly moveAndAct: boolean;
   private readonly poison: boolean;
@@ -142,6 +146,7 @@ class UnitAbilities {
     createBuildings,
     createTracks,
     heal,
+    heavyEquipment,
     morale,
     moveAndAct,
     poison,
@@ -152,13 +157,14 @@ class UnitAbilities {
   }: UnitAbilityConfiguration = {}) {
     this.accessBuildings = accessBuildings ?? false;
     this.capture = capture ?? false;
+    this.convert = convert ?? false;
     this.createBuildings = createBuildings ?? false;
     this.createTracks = createTracks ?? false;
-    this.morale = morale ?? false;
     this.heal = heal ?? false;
+    this.heavyEquipment = heavyEquipment ?? false;
+    this.morale = morale ?? false;
     this.moveAndAct = moveAndAct ?? false;
     this.poison = poison ?? false;
-    this.convert = convert ?? false;
     this.rescue = rescue ?? false;
     this.sabotage = sabotage ?? false;
     this.supply = supply ?? false;
@@ -179,6 +185,8 @@ class UnitAbilities {
         return this.convert;
       case Ability.Heal:
         return this.heal;
+      case Ability.HeavyEquipment:
+        return this.heavyEquipment;
       case Ability.Morale:
         return this.morale;
       case Ability.MoveAndAct:
@@ -207,6 +215,7 @@ class UnitAbilities {
     createBuildings,
     createTracks,
     heal,
+    heavyEquipment,
     morale,
     moveAndAct,
     poison,
@@ -222,6 +231,7 @@ class UnitAbilities {
       createBuildings: createBuildings ?? this.createBuildings,
       createTracks: createTracks ?? this.createTracks,
       heal: heal ?? this.heal,
+      heavyEquipment: heavyEquipment ?? this.heavyEquipment,
       morale: morale ?? this.morale,
       moveAndAct: moveAndAct ?? this.moveAndAct,
       poison: poison ?? this.poison,
@@ -1826,7 +1836,7 @@ export const RocketLauncher = new UnitInfo(
     radius: 3,
     vision: 2,
   },
-  DefaultUnitAbilitiesWithCapture,
+  DefaultUnitAbilitiesWithCapture.copy({ heavyEquipment: true }),
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.RocketLauncher.withSupply(4)],

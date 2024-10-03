@@ -172,7 +172,7 @@ export class TransportedUnit {
       null,
       null,
       null,
-      this.moved ? true : null,
+      this.moved || this.info.hasAbility(Ability.HeavyEquipment) ? true : null,
       this.label,
       this.name,
       this.behavior,

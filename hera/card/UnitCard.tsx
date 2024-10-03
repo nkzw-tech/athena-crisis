@@ -899,6 +899,12 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
                   <fbt desc="Unit heal ability">Heal</fbt>
                 </UnitAbility>
               );
+            case Ability.HeavyEquipment:
+              return (
+                <UnitAbility ability={ability} icon={WarningBox} key={ability}>
+                  <fbt desc="Unit heavy equipment ability">Heavy Equipment</fbt>
+                </UnitAbility>
+              );
             case Ability.Morale:
               return (
                 <UnitAbility ability={ability} icon={Volume} key={ability}>
@@ -945,6 +951,17 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
           }
         })}
       </Stack>
+      {unit.info.hasAbility(Ability.HeavyEquipment) && (
+        <Stack alignCenter gap nowrap start>
+          <Icon className={errorStyle} icon={WarningBox} />
+          <p className={errorStyle}>
+            <fbt desc="Label for a unit that cannot act after being dropped.">
+              Heavy Equipment: Can&apos;t act after being dropped by a
+              transporter.
+            </fbt>
+          </p>
+        </Stack>
+      )}
     </Stack>
   ) : null;
 };

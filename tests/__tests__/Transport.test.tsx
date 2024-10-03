@@ -3,7 +3,12 @@ import {
   EndTurnAction,
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Flamethrower, Infantry, Jeep } from '@deities/athena/info/Unit.tsx';
+import {
+  Flamethrower,
+  Infantry,
+  Jeep,
+  RocketLauncher,
+} from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -12,46 +17,36 @@ import executeGameActions from '../executeGameActions.tsx';
 
 const map = withModifiers(
   MapData.createMap({
-    config: {
-      fog: true,
-    },
     map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
     size: { height: 3, width: 3 },
     teams: [
-      {
-        id: 1,
-        name: '',
-        players: [{ funds: 500, id: 1, userId: '1' }],
-      },
-      {
-        id: 2,
-        name: '',
-        players: [{ funds: 500, id: 2, name: 'AI' }],
-      },
+      { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+      { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '2' }] },
     ],
   }),
 );
 
-test('units can be acted on after dropping them after one turn', async () => {
+test('units can act after dropping them after one turn', async () => {
   const fromA = vec(1, 1);
   const fromB = vec(2, 1);
   const toA = vec(3, 1);
   const toB = vec(3, 2);
-  const initialMap: MapData | null = map.copy({
+  const mapA: MapData | null = map.copy({
     units: map.units
       .set(fromA, Flamethrower.create(1))
       .set(fromB, Jeep.create(1))
       .set(toB, Infantry.create(2)),
   });
 
-  const [gameStateA] = await executeGameActions(initialMap, [
+  const [gameStateA] = await executeGameActions(mapA, [
     MoveAction(fromA, fromB),
     DropUnitAction(fromB, 0, toA),
   ]);
 
   const lastMapA = gameStateA.at(-1)![1];
-  expect(lastMapA.units.get(toA)!.canMove()).toBe(false);
-  expect(lastMapA.units.get(toA)!.isCompleted()).toBe(true);
+  const unitA = lastMapA.units.get(toA)!;
+  expect(unitA.canMove()).toBe(false);
+  expect(unitA.isCompleted()).toBe(true);
 
   const [gameStateB] = await executeGameActions(lastMapA, [
     EndTurnAction(),
@@ -59,6 +54,32 @@ test('units can be acted on after dropping them after one turn', async () => {
   ]);
 
   const lastMapB = gameStateB.at(-1)![1];
-  expect(lastMapB.units.get(toA)!.canMove()).toBe(true);
-  expect(lastMapB.units.get(toA)!.isCompleted()).toBe(false);
+  const unitB = lastMapB.units.get(toA)!;
+  expect(unitB.canMove()).toBe(true);
+  expect(unitB.isCompleted()).toBe(false);
+});
+
+test('units with the HeavyEquipment ability cannot act after being dropped', async () => {
+  const fromA = vec(1, 1);
+  const fromB = vec(2, 1);
+  const toA = vec(3, 1);
+  const toB = vec(3, 2);
+  const mapA: MapData | null = map.copy({
+    units: map.units
+      .set(fromA, RocketLauncher.create(1))
+      .set(fromB, Jeep.create(1))
+      .set(toB, Infantry.create(2)),
+  });
+
+  const [gameStateA] = await executeGameActions(mapA, [
+    MoveAction(fromA, fromB),
+    EndTurnAction(),
+    EndTurnAction(),
+    DropUnitAction(fromB, 0, toA),
+  ]);
+
+  const lastMapA = gameStateA.at(-1)![1];
+  const unitA = lastMapA.units.get(toA)!;
+  expect(unitA.canMove()).toBe(false);
+  expect(unitA.isCompleted()).toBe(true);
 });
