@@ -6,13 +6,15 @@ import { css, cx, keyframes } from '@emotion/css';
 import { motion, useAnimationControls, usePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+export const MessageSkipDuration = 1500;
+
 const circleProps = {
   animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 1.2 },
+  exit: { delay: 0, opacity: 0, scale: 1.2 },
   initial: { opacity: 0, scale: 0 },
   transition: {
     delay: 0.3,
-    duration: 1.3,
+    duration: (MessageSkipDuration / 1000) * 0.55,
     ease: [0.34, 1.56, 0.64, 1],
   },
 };
@@ -20,7 +22,7 @@ const circleProps = {
 const skipProps = {
   ...circleProps,
   animate: { opacity: 1 },
-  exit: { opacity: 0 },
+  exit: { delay: 0, opacity: 0 },
   initial: { opacity: 0 },
 };
 
@@ -41,7 +43,7 @@ export default function SkipMessages() {
 
   return (
     <motion.div {...skipProps} className={absoluteStyle}>
-      <Box alignCenter className={skipMessagesStyle} gap nowrap>
+      <Box alignCenter className={skipMessagesStyle} nowrap>
         <motion.div
           className={cx(circleStyle, animationComplete && pulseStyle)}
           {...circleProps}
@@ -71,6 +73,7 @@ const skipMessagesStyle = css`
   ${pixelBorder(applyVar('background-color'))};
 
   background-color: ${applyVar('background-color')};
+  gap: 12px;
   height: ${DoubleSize}px;
   line-height: ${DoubleSize}px;
   position: fixed;
@@ -84,7 +87,7 @@ const circleStyle = css`
   border-radius: 50%;
   height: 16px;
   width: 16px;
-  margin-top: 2px;
+  margin-top: 2.5px;
 `;
 
 export const pulseStyle = css`
@@ -104,5 +107,5 @@ export const pulseStyle = css`
     70% {
       opacity: 0;
     }
-  `} 1200ms 1 forwards;
+  `} ${MessageSkipDuration / 3}ms 1 forwards;
 `;

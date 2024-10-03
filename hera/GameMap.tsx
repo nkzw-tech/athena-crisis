@@ -65,7 +65,12 @@ import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
 import MapComponent from './Map.tsx';
-import { Animation, Animations, MapAnimations } from './MapAnimations.tsx';
+import {
+  Animation,
+  Animations,
+  hasCharacterMessage,
+  MapAnimations,
+} from './MapAnimations.tsx';
 import Mask from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
 import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
@@ -85,7 +90,7 @@ import {
 import GameDialog from './ui/GameDialog.tsx';
 import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
 import NamedPosition from './ui/NamedPosition.tsx';
-import SkipMessages from './ui/SkipMessages.tsx';
+import SkipMessages, { MessageSkipDuration } from './ui/SkipMessages.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -561,15 +566,21 @@ export default class GameMap extends Component<Props, State> {
   }
 
   private maybeSkipDialogue = () => {
-    const { behavior, lastActionResponse, preventRemoteActions, skipDialogue } =
-      this.state;
+    const {
+      animations,
+      behavior,
+      lastActionResponse,
+      preventRemoteActions,
+      skipDialogue,
+    } = this.state;
     if (behavior?.type === 'null' && this._skipDialogueTimer == null) {
       if (
         !skipDialogue &&
         ((!lastActionResponse && preventRemoteActions) ||
           lastActionResponse?.type === 'Start' ||
           lastActionResponse?.type === 'CharacterMessage' ||
-          lastActionResponse?.type === 'SetPlayer')
+          lastActionResponse?.type === 'SetPlayer' ||
+          hasCharacterMessage(animations))
       ) {
         this.setState({ showSkipDialogue: true });
       }
@@ -588,7 +599,7 @@ export default class GameMap extends Component<Props, State> {
           }
           this.setState({ showSkipDialogue: false, skipDialogue: true });
         }
-      }, 2400);
+      }, MessageSkipDuration);
     }
   };
 
