@@ -46,6 +46,7 @@ export const MinSize = 5;
 export const MaxSize = 40;
 export const MaxMessageLength = 512;
 export const LeaderStatusEffect = 0.05;
+export const MoraleStatusEffect = 0.1;
 export const CounterAttack = 0.75;
 export const RaisedCounterAttack = 0.9;
 export const CreateTracksCost = 50;
