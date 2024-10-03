@@ -636,7 +636,7 @@ export function getUnitCost(
     const skill: Skill = skills.values().next().value!;
     return unitIsBlocked(unit, skill)
       ? Number.POSITIVE_INFINITY
-      : Math.floor((costs?.get(skill) || min) * modifier);
+      : Math.ceil((costs?.get(skill) || min) * modifier);
   }
 
   for (const skill of skills) {
