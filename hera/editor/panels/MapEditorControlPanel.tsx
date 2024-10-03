@@ -242,6 +242,7 @@ export default function MapEditorControlPanel({
                 mapObject={mapObject}
                 resize={resize}
                 saveMap={saveMap}
+                setEditorState={setEditorState}
                 setMap={setMap}
                 setMapName={setMapName}
                 setTags={setTags}
