@@ -68,11 +68,13 @@ export default function Notification({
 }
 
 const containerStyle = css`
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
   position: fixed;
+  width: fit-content;
   z-index: ${applyVar('inset-z')};
 `;
 
@@ -98,7 +100,6 @@ const boxStyle = css`
   line-height: 1.2em;
   pointer-events: auto;
   position: relative;
-  width: 50%;
 `;
 
 const fitStyle = css`
