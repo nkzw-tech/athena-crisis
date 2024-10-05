@@ -1,45 +1,59 @@
 import { CreateBuildingAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { CreateBuildingActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { BuildingInfo } from '@deities/athena/info/Building.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default function createBuildingAction(
-  { optimisticAction }: Actions,
+  actions: Actions,
   position: Vector,
   building: BuildingInfo,
   state: State,
   onComplete: StateToStateLike = (state) => state,
 ): StateLike | null {
-  const actionResponse = optimisticAction(
+  return addCreateBuildingAnimation(
+    actions,
     state,
-    CreateBuildingAction(position, building.id),
+    ...actions.action(state, CreateBuildingAction(position, building.id)),
+    onComplete,
   );
-  return actionResponse.type === 'CreateBuilding'
-    ? addCreateBuildingAnimation(actionResponse, state, onComplete)
-    : null;
 }
 
 export function addCreateBuildingAnimation(
-  actionResponse: CreateBuildingActionResponse,
+  actions: Actions,
   state: State,
+  remoteAction: Promise<GameActionResponse>,
+  newMap: MapData,
+  actionResponse: ActionResponse,
   onComplete: StateToStateLike = (state) => state,
 ) {
+  if (actionResponse.type !== 'CreateBuilding') {
+    return null;
+  }
+
   const { building, from } = actionResponse;
   return {
     animations: state.animations.set(from, {
       onComplete: (state) => {
-        return onComplete({
+        actions.requestFrame(async () =>
+          actions.update(
+            onComplete(await handleRemoteAction(actions, remoteAction)),
+          ),
+        );
+
+        return {
           ...state,
-          ...resetBehavior(),
           map: state.map.copy({
             buildings: state.map.buildings.set(from, building),
           }),
           position: from,
-        });
+        };
       },
       onCreate: (state) => {
         const map = applyActionResponse(

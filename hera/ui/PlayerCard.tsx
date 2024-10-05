@@ -53,12 +53,15 @@ import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import useCrystals from '../invasions/useCrystals.tsx';
+import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { PlayerEffectItem } from '../Types.tsx';
 import CrystalIcon from './CrystalIcon.tsx';
 import { GameCardProps } from './CurrentGameCard.tsx';
 import Funds from './Funds.tsx';
 import { SkillIcon } from './SkillDialog.tsx';
+
+const emptyMap = new Map();
 
 export default memo(function PlayerCard({
   actions,
@@ -69,6 +72,7 @@ export default memo(function PlayerCard({
   map,
   player,
   spectatorLink,
+  useFactionNamesForBots,
   user,
   vision,
   wide,
@@ -348,7 +352,10 @@ export default memo(function PlayerCard({
                   : undefined
               }
             >
-              <span style={{ color }}>{player.id}.</span> {user?.displayName}
+              <span style={{ color }}>{player.id}.</span>{' '}
+              {isBot(player) && useFactionNamesForBots
+                ? getTranslatedFactionName(emptyMap, player.id)
+                : user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
             <Stack className={offsetStyle} gap={16} nowrap start>

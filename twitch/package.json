@@ -15,7 +15,7 @@
     "@deities/athena": "workspace:*",
     "@deities/hera": "workspace:*",
     "@deities/ui": "workspace:*",
-    "@emotion/css": "^11.13.0",
+    "@emotion/css": "^11.13.4",
     "fbt": "^1.0.2",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.12.0",
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "@types/twitch-ext": "^1.24.9"
   }

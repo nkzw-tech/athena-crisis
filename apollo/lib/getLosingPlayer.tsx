@@ -12,7 +12,10 @@ export default function getLosingPlayer(
     case 'CaptureGameOver':
       return actionResponse.fromPlayer;
     case 'BeginTurnGameOver':
-      return map.currentPlayer;
+      return (
+        actionResponse.fromPlayer ||
+        /* Fallback for previous versions of `BeginTurnGameOver` */ map.currentPlayer
+      );
   }
   return null;
 }

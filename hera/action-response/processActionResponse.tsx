@@ -233,7 +233,12 @@ async function processActionResponse(
       break;
     case 'CreateBuilding':
       await update((state) =>
-        addCreateBuildingAnimation(actionResponse, state, resolveWithNull),
+        addCreateBuildingAnimation(
+          actions,
+          state,
+          ...remoteActionResponse,
+          resolveWithNull,
+        ),
       );
       break;
     case 'CreateTracks':

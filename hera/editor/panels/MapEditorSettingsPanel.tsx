@@ -1,4 +1,5 @@
 import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
+import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
 import {
   DoubleSize,
@@ -41,6 +42,7 @@ import getTranslatedPerformanceTypeName from '../../lib/getTranslatedPerformance
 import { StateWithActions } from '../../Types.tsx';
 import BiomeSelector from '../selectors/BiomeSelector.tsx';
 import {
+  EditorState,
   MapObject,
   MapPerformanceMetricsEstimation,
   MapPerformanceMetricsEstimationFunction,
@@ -57,6 +59,7 @@ export default function MapEditorSettingsPanel({
   mapObject,
   resize,
   saveMap,
+  setEditorState,
   setMap,
   setMapName,
   setTags,
@@ -71,6 +74,7 @@ export default function MapEditorSettingsPanel({
   mapObject?: MapObject | null;
   resize: (size: SizeVector, origin: Set<ResizeOrigin>) => void;
   saveMap: SaveMapFunction;
+  setEditorState: (setEditorState: Partial<EditorState>) => void;
   setMap: SetMapFunction;
   setMapName: (name: string) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
@@ -118,7 +122,7 @@ export default function MapEditorSettingsPanel({
     [config, map, performance, update],
   );
 
-  const hasBonus = hasBonusObjective(map, map.getFirstPlayerID());
+  const hasBonus = hasBonusObjective(map, getActivePlayers(map)[0]);
   return (
     <Stack className={marginStyle} gap={24} vertical verticalPadding>
       <Box center>
@@ -328,9 +332,13 @@ export default function MapEditorSettingsPanel({
                 disabled
                 type="checkbox"
               />
-              <fbt desc="Label for a map's bonus objective">
-                Bonus Objective
-              </fbt>
+              <InlineLink
+                onClick={() => setEditorState({ mode: 'objectives' })}
+              >
+                <fbt desc="Label for a map's bonus objective">
+                  Bonus Objective
+                </fbt>
+              </InlineLink>
             </Stack>
           </Stack>
           {metrics || metrics === null ? (
@@ -480,7 +488,7 @@ export default function MapEditorSettingsPanel({
                     <Icon className={iconStyle} icon={Trophy} />
                     <div>
                       <fbt desc="Map metrics summary">
-                        Total:
+                        Total (excluding invasions):
                         <fbt:param name="won">{metrics.won}</fbt:param>{' '}
                         <fbt:plural
                           count={metrics.won}

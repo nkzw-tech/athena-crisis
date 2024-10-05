@@ -37,10 +37,15 @@ export type GameCardProps = Readonly<{
   invasions: boolean;
   map: MapData;
   spectatorLink: ReactElement | null;
+  useFactionNamesForBots: boolean;
   vision: VisionT;
 }>;
 
-type OptionalFields = 'hideIfNoCrystals' | 'invasions' | 'spectatorLink';
+type OptionalFields =
+  | 'hideIfNoCrystals'
+  | 'invasions'
+  | 'spectatorLink'
+  | 'useFactionNamesForBots';
 
 const TeamItem = ({
   animate,
@@ -136,6 +141,7 @@ export default memo(function CurrentGameCard({
   invasions = false,
   map,
   spectatorLink,
+  useFactionNamesForBots,
   users,
   vision,
   zIndex,
@@ -204,6 +210,7 @@ export default memo(function CurrentGameCard({
           map={map}
           spectatorLink={spectatorLink || null}
           teams={teams}
+          useFactionNamesForBots={!!useFactionNamesForBots}
           vision={vision}
         />
       </PrimaryExpandableMenuButton>

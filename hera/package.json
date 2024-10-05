@@ -18,7 +18,7 @@
     "@deities/hermes": "workspace:*",
     "@deities/i18n": "workspace:*",
     "@deities/ui": "workspace:*",
-    "@emotion/css": "^11.13.0",
+    "@emotion/css": "^11.13.4",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/use-relative-time": "^1.1.0",
@@ -30,7 +30,7 @@
     "react-fps": "^1.0.6"
   },
   "devDependencies": {
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0"
   }
 }
