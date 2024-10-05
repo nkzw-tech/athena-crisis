@@ -43,7 +43,6 @@ export enum Skill {
   BuyUnitDinosaur = 29,
   Sabotage = 30,
   SpawnUnitInfernoJetpack = 31,
-  Aloof = 1000,
 }
 
 export const Skills = new Set<Skill>([
@@ -78,7 +77,6 @@ export const Skills = new Set<Skill>([
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
   Skill.SpawnUnitInfernoJetpack,
-  Skill.Aloof,
 ]);
 
 const skillConfig: Record<
@@ -129,7 +127,6 @@ const skillConfig: Record<
     cost: null,
     requiresCrystal: true,
   },
-  [Skill.Aloof]: { cost: 9001 },
 };
 
 export const AIOnlySkills: ReadonlySet<Skill> = new Set([
