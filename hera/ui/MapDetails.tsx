@@ -13,6 +13,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import { css, cx } from '@emotion/css';
+import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Chess from '@iconify-icons/pixelarticons/chess.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Watch from '@iconify-icons/pixelarticons/device-watch.js';
@@ -117,6 +118,12 @@ export default function MapDetails({
           <Stack alignCenter gap start>
             <Icon className={iconOffsetStyle} icon={Coin} />{' '}
             {map.config.seedCapital}
+          </Stack>
+        )}
+        {!showGameState && (
+          <Stack alignCenter gap start>
+            <Icon className={iconOffsetStyle} icon={Charge} />{' '}
+            {map.config.initialCharge}
           </Stack>
         )}
         <Stack alignCenter gap start>
