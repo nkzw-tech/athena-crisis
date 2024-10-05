@@ -3,8 +3,7 @@ import { Skill } from '@deities/athena/info/Skill.tsx';
 import Player, { isBot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
-import useHorizontalNavigation from '@deities/ui/controls/useHorizontalNavigation.tsx';
-import useInput from '@deities/ui/controls/useInput.tsx';
+import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { playerToColor } from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -12,7 +11,7 @@ import InlineLink, { InlineLinkColor } from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode } from 'react';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { CharacterImage } from '../character/PortraitPicker.tsx';
 import AISelector from './AISelector.tsx';
@@ -166,37 +165,11 @@ const PlayerSkillSelectors = ({
   player: Player;
   skillSlots: number;
 }) => {
-  const [focused, setFocused] = useState(0);
-
-  useHorizontalNavigation(
-    useCallback(
-      (change) => {
-        if (isFocused) {
-          setFocused((focused + change) % skillSlots);
-          return true;
-        }
-        return false;
-      },
-      [focused, skillSlots, isFocused],
-    ),
-  );
-
-  useInput(
-    'navigate',
-    useCallback(
-      (event) => {
-        if (isFocused) {
-          const { detail } = event;
-          if (detail.x === -1) {
-            setFocused((focused - 1) % skillSlots);
-          } else if (detail.x === 1) {
-            setFocused((focused + 1) % skillSlots);
-          }
-        }
-      },
-      [focused, skillSlots, isFocused],
-    ),
+  const [focused] = useHorizontalMenuNavigation(
+    isFocused ? skillSlots : 0,
     'menu',
+    false,
+    0,
   );
 
   return (

@@ -26,6 +26,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
+  MoraleStatusEffect,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import Entity, {
@@ -857,6 +858,10 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
       (unit.info.hasAbility(ability) ||
         (ability === Ability.Capture && unit.canCapture(player))),
   );
+  const heavyEquipmentColor = getColor(
+    numberToPlayerID(Ability.HeavyEquipment - 1),
+  );
+  const moraleColor = getColor(numberToPlayerID(Ability.Morale - 1));
   return abilities?.length ? (
     <Stack gap vertical>
       <CardInfoHeading style={{ color: getColor(player.id) }}>
@@ -897,6 +902,12 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
               return (
                 <UnitAbility ability={ability} icon={Heart} key={ability}>
                   <fbt desc="Unit heal ability">Heal</fbt>
+                </UnitAbility>
+              );
+            case Ability.HeavyEquipment:
+              return (
+                <UnitAbility ability={ability} icon={WarningBox} key={ability}>
+                  <fbt desc="Unit heavy equipment ability">Heavy Equipment</fbt>
                 </UnitAbility>
               );
             case Ability.Morale:
@@ -945,6 +956,28 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
           }
         })}
       </Stack>
+      {unit.info.hasAbility(Ability.HeavyEquipment) && (
+        <Stack alignCenter gap nowrap start>
+          <Icon icon={WarningBox} style={{ color: heavyEquipmentColor }} />
+          <p style={{ color: heavyEquipmentColor }}>
+            <fbt desc="Label for a unit that cannot act after being dropped.">
+              Heavy Equipment: Can&apos;t act after being dropped by a
+              transporter.
+            </fbt>
+          </p>
+        </Stack>
+      )}
+      {unit.info.hasAbility(Ability.Morale) && (
+        <Stack alignCenter gap nowrap start>
+          <Icon icon={Volume} style={{ color: moraleColor }} />
+          <p style={{ color: moraleColor }}>
+            <fbt desc="Label for a unit that cannot act after being dropped.">
+              Morale Boost: Increases attack of adjacent units by{' '}
+              <fbt:param name="attack">{MoraleStatusEffect * 100}</fbt:param>%.
+            </fbt>
+          </p>
+        </Stack>
+      )}
     </Stack>
   ) : null;
 };

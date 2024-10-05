@@ -37,6 +37,7 @@ export type AttackUnitGameOverActionResponse = Readonly<{
 
 export type BeginTurnGameOverActionResponse = Readonly<{
   abandoned?: boolean;
+  fromPlayer?: PlayerID;
   type: 'BeginTurnGameOver';
 }>;
 
@@ -68,6 +69,7 @@ export type OptionalObjectiveActionResponse = Readonly<{
 
 export type AbandonInvasionActionResponse = Readonly<{
   chaosStars?: ChaosStars;
+  fromPlayer?: PlayerID;
   name: string;
   type: 'AbandonInvasion';
 }>;
@@ -202,10 +204,9 @@ export function checkGameEndCondition(
         actionResponse?.type === 'BeginTurnGameOver'
       ) {
         // If the user self-destructs, issue an `EndTurnAction`.
-        const fromPlayer =
-          actionResponse.type === 'AttackUnitGameOver'
-            ? map.getPlayer(actionResponse.fromPlayer)
-            : map.getCurrentPlayer();
+        const fromPlayer = actionResponse.fromPlayer
+          ? map.getPlayer(actionResponse.fromPlayer)
+          : map.getCurrentPlayer();
         if (map.isCurrentPlayer(fromPlayer)) {
           const [endTurnActionResponse, newMap] =
             execute(
@@ -236,7 +237,9 @@ export function applyObjectiveActionResponse(
   const { type } = actionResponse;
   switch (type) {
     case 'AbandonInvasion': {
-      const currentPlayer = map.getCurrentPlayer();
+      const currentPlayer = actionResponse.fromPlayer
+        ? map.getPlayer(actionResponse.fromPlayer)
+        : map.getCurrentPlayer();
       return currentPlayer.isHumanPlayer() &&
         currentPlayer.crystal === Crystal.Command
         ? map.copy({
@@ -452,6 +455,7 @@ const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
     return [
       previousPlayer.crystal === Crystal.Command
         ? ({
+            fromPlayer: previousPlayer.id,
             name: createBotWithName(previousPlayer).name,
             type: 'AbandonInvasion',
           } as const)
@@ -465,7 +469,7 @@ const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   const currentPlayer = activeMap.getCurrentPlayer();
   return hasUnits(previousMap, currentPlayer) &&
     !hasUnits(activeMap, currentPlayer)
-    ? [{ type: 'BeginTurnGameOver' } as const]
+    ? [{ fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' } as const]
     : null;
 };
 

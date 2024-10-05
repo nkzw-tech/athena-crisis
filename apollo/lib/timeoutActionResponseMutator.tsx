@@ -16,6 +16,7 @@ export default function timeoutActionResponseMutator(
       player.crystal === Crystal.Command
     ) {
       return {
+        fromPlayer: player.id,
         name: createBotWithName(player).name,
         type: 'AbandonInvasion',
       } as const;

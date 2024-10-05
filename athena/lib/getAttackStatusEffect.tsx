@@ -2,7 +2,10 @@ import { getSkillAttackStatusEffects } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { Ability } from '../info/Unit.tsx';
 import { Crystal, CrystalAttackEffect } from '../invasions/Crystal.tsx';
-import { LeaderStatusEffect } from '../map/Configuration.tsx';
+import {
+  LeaderStatusEffect,
+  MoraleStatusEffect,
+} from '../map/Configuration.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -30,7 +33,7 @@ export default function getAttackStatusEffect(
         unit.info.hasAbility(Ability.Morale) &&
         map.matchesPlayer(unit, player)
       ) {
-        unitEffect += 0.1;
+        unitEffect += MoraleStatusEffect;
       }
     }
   }

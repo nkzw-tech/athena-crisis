@@ -92,7 +92,7 @@ test('game over conditions with HQ', async () => {
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      BeginTurnGameOver
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
@@ -137,7 +137,7 @@ test('game over conditions without HQ', async () => {
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      BeginTurnGameOver
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
@@ -443,7 +443,7 @@ test('game over through poison status effects', async () => {
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
-      BeginTurnGameOver
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 

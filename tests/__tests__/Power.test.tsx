@@ -76,13 +76,13 @@ test('skills are active until the beginning of the next turn', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 87, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 41, ammo: [ [ 1, 6 ] ] }, chargeA: 131, chargeB: 15254 }
+      AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 87, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 41, ammo: [ [ 1, 6 ] ] }, chargeA: 132, chargeB: 15254 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 11, ammo: [ [ 1, 5 ] ] }, unitB: DryUnit { health: 70, ammo: [ [ 1, 5 ] ] }, chargeA: 15150, chargeB: 194 }
+      AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 11, ammo: [ [ 1, 5 ] ] }, unitB: DryUnit { health: 70, ammo: [ [ 1, 5 ] ] }, chargeA: 15150, chargeB: 195 }
       ActivatePower { skill: 3, units: [] }
-      AttackUnit (2,2 → 2,3) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 6181, chargeB: 550 }
+      AttackUnit (2,2 → 2,3) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 6181, chargeB: 551 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,2 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 7, ammo: [ [ 1, 5 ] ] }, chargeA: 690, chargeB: 6517 }
+      AttackUnit (3,2 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 7, ammo: [ [ 1, 5 ] ] }, chargeA: 692, chargeB: 6517 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }"
     `);
 });

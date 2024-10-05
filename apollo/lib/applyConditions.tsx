@@ -13,13 +13,16 @@ export default function applyConditions(
 ): [GameState, Effects] {
   let gameState: GameStateWithEffects = [];
   const queue: Array<
-    readonly [lastActionResponse: ActionResponse, addToGameState: boolean]
-  > = [[lastActionResponse, false]];
+    readonly [
+      lastActionResponse: ActionResponse,
+      effects: Effects,
+      addToGameState: boolean,
+    ]
+  > = [[lastActionResponse, effects, false]];
 
   while (queue.length) {
     const previousMap = currentMap;
-    const [actionResponse, _addToGameState] = queue.shift()!;
-    const currentEffects = gameState.at(-1)?.[2] || effects;
+    const [actionResponse, currentEffects, _addToGameState] = queue.shift()!;
     const activeMap = applyActionResponse(
       previousMap,
       previousMap.createVisionObject(previousMap.currentPlayer),
@@ -58,6 +61,7 @@ export default function applyConditions(
         currentEffects,
         actionResponse,
       );
+      currentMap = previousMap;
     }
 
     if (addToGameState) {
@@ -73,15 +77,19 @@ export default function applyConditions(
     if (objectiveState?.length) {
       queue.push(
         ...objectiveState.map(
-          ([actionResponse]) => [actionResponse, true] as const,
+          ([actionResponse]) => [actionResponse, currentEffects, true] as const,
         ),
       );
       continue;
     }
 
     if (effectGameState?.length) {
-      gameState = [...gameState, ...effectGameState];
-      currentMap = effectGameState.at(-1)![1];
+      queue.unshift(
+        ...effectGameState.map(
+          ([actionResponse, , effects]) =>
+            [actionResponse, effects, true] as const,
+        ),
+      );
     }
   }
 
