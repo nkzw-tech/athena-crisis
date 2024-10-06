@@ -89,7 +89,7 @@ We greatly appreciate contributions in the following areas:
 
 ## What is open source and what isn't?
 
-About 75% of all non-content related Athena Crisis code – **almost 100,000 lines** – is open source, including the core data structures, algorithms, game engine, rendering, AI, and the map editor. Backend implementations such as user management, databases, APIs, realtime spectating, server configuration, and app wrappers for Steam or app stores are not open source. We aim to open source more of the game over time, but the content will remain the intellectual property of Nakazawa Tech KK and therefore not be open source. You can buy and experience [Athena Crisis on Steam](https://store.steampowered.com/app/2456430/Athena_Crisis/) or [buy it on athenacrisis.com](https://app.athenacrisis.com/checkout).
+**More than 100,000 lines** of all non-content related Athena Crisis code are open source, including the core data structures, algorithms, game engine, rendering, AI, and the map editor. Backend implementations such as user management, databases, APIs, realtime spectating, server configuration, and app wrappers for Steam or app stores are not open source. We aim to open source more of the game over time, but the content will remain the intellectual property of Nakazawa Tech KK and therefore won't become open source. You can buy and experience [Athena Crisis on Steam](https://store.steampowered.com/app/2456430/Athena_Crisis/) or [buy it on athenacrisis.com](https://app.athenacrisis.com/checkout).
 
 ## Why is Athena Crisis open source?
 
