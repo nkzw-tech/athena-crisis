@@ -9,7 +9,7 @@ export default function startGame(map: MapData): MapData {
     teams: map.teams.map((team) =>
       team.copy({
         players: team.players.map((player) =>
-          player.setFunds(map.config.seedCapital).setCharge(map.config.initialCharge * Charge).resetStatistics(),
+          player.setFunds(map.config.seedCapital).maybeSetCharge(map.config.initialCharge * Charge).resetStatistics(),
         ),
       }),
     ),
