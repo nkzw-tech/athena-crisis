@@ -28,6 +28,7 @@ export type PlainMapConfig = Readonly<{
   ];
   seedCapital: number;
   winConditions?: LegacyWinConditions;
+  initialCharge: number | undefined;
 }>;
 
 export type PlainMap = Readonly<{

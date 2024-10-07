@@ -6,6 +6,7 @@ import {
   MaxSize,
   MinSize,
   TileSize,
+  MaxCharges,
 } from '@deities/athena/map/Configuration.tsx';
 import {
   PerformanceStyle,
@@ -180,6 +181,32 @@ export default function MapEditorSettingsPanel({
                 style={{ width: 100 }}
                 type="number"
                 value={config.seedCapital}
+              />
+            </Stack>
+          </label>
+          <label>
+            <Stack alignCenter gap>
+              <span>
+                <fbt desc="Starting charges for a game">Starting Charges</fbt>
+              </span>
+              <input
+                min={0}
+                max={String(MaxCharges)}
+                onChange={({ target: { value } }) => {
+                  const initialCharge = parseInteger(value || '0');
+                  if (initialCharge != null) {
+                    update({
+                      map: map.copy({
+                        config: config.copy({
+                          initialCharge,
+                        }),
+                      }),
+                    });
+                  }
+                }}
+                style={{ width: 100 }}
+                type="number"
+                value={config.initialCharge}
               />
             </Stack>
           </label>

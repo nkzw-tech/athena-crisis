@@ -94,6 +94,7 @@ export class MapConfig {
     public readonly biome: Biome,
     public readonly objectives: Objectives,
     public readonly performance: PerformanceExpectation,
+    public readonly initialCharge: number,
   ) {}
 
   copy({
@@ -106,6 +107,7 @@ export class MapConfig {
     objectives,
     performance,
     seedCapital,
+    initialCharge,
   }: Partial<MapConfig>) {
     return new MapConfig(
       multiplier ?? this.multiplier,
@@ -117,6 +119,7 @@ export class MapConfig {
       biome ?? this.biome,
       objectives ?? this.objectives,
       performance ?? this.performance,
+      initialCharge ?? this.initialCharge,
     );
   }
 
@@ -131,6 +134,7 @@ export class MapConfig {
       objectives,
       performance,
       seedCapital,
+      initialCharge,
     } = this;
     return {
       biome,
@@ -152,6 +156,7 @@ export class MapConfig {
           }
         : null),
       seedCapital,
+      initialCharge,
     };
   }
 }
@@ -596,6 +601,7 @@ export default class MapData {
               style: config.performance[2] || null,
             }
           : { pace: null, power: null, style: null },
+        config.initialCharge,
       ),
       size,
       toPlayerID(data.currentPlayer),
@@ -633,6 +639,7 @@ export default class MapData {
         fog: false,
         multiplier: 1,
         seedCapital: 0,
+        initialCharge: 0,
         ...config,
       },
       currentPlayer: active[0],

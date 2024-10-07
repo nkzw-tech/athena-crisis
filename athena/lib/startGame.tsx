@@ -2,13 +2,14 @@ import MapData from '../MapData.tsx';
 import assignUnitNames from './assignUnitNames.tsx';
 import calculateFunds from './calculateFunds.tsx';
 import updatePlayer from './updatePlayer.tsx';
+import { Charge } from '../map/Configuration.tsx';
 
 export default function startGame(map: MapData): MapData {
   map = map.copy({
     teams: map.teams.map((team) =>
       team.copy({
         players: team.players.map((player) =>
-          player.setFunds(map.config.seedCapital).resetStatistics(),
+          player.setFunds(map.config.seedCapital).maybeSetCharge(map.config.initialCharge * Charge).resetStatistics(),
         ),
       }),
     ),
