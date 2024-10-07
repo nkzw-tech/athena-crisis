@@ -19,6 +19,7 @@ export type PlainMapConfig = Readonly<{
   blocklistedSkills?: ReadonlyArray<number>;
   blocklistedUnits: ReadonlyArray<number>;
   fog: boolean;
+  initialCharge: number | undefined;
   multiplier: number;
   objectives?: PlainObjectives;
   performance?: [
@@ -28,7 +29,6 @@ export type PlainMapConfig = Readonly<{
   ];
   seedCapital: number;
   winConditions?: LegacyWinConditions;
-  initialCharge: number | undefined;
 }>;
 
 export type PlainMap = Readonly<{

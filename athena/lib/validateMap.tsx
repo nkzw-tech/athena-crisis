@@ -13,6 +13,7 @@ import { Biomes } from '../map/Biome.tsx';
 import Building from '../map/Building.tsx';
 import {
   DecoratorsPerSide,
+  MaxCharges,
   MaxHealth,
   MaxSize,
 } from '../map/Configuration.tsx';
@@ -58,10 +59,10 @@ const validateMapConfig = (map: MapData) => {
     blocklistedBuildings,
     blocklistedUnits,
     fog,
+    initialCharge,
     multiplier,
     performance,
     seedCapital,
-    initialCharge,
   } = config;
 
   if (typeof fog !== 'boolean') {
@@ -76,7 +77,10 @@ const validateMapConfig = (map: MapData) => {
     return false;
   }
 
-  if (!isPositiveInteger(initialCharge) && initialCharge !== 0) {
+  if (
+    (!isPositiveInteger(initialCharge) && initialCharge !== 0) ||
+    initialCharge > MaxCharges
+  ) {
     return false;
   }
 

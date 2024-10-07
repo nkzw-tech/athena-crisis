@@ -70,6 +70,7 @@ export default function MapDetails({
   teamPlay,
   timer,
 }: MapDetailsProps) {
+  const { initialCharge, seedCapital } = map.config;
   return map ? (
     <Stack className={contentStyle} gap={24} vertical>
       <Stack gap={16} vertical>
@@ -114,21 +115,26 @@ export default function MapDetails({
           <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))}{' '}
           {map.size.width}x{map.size.height}
         </Stack>
-        {!showGameState && (
-          <Stack alignCenter gap start>
-            <Icon className={iconOffsetStyle} icon={Coin} />{' '}
-            {map.config.seedCapital}
-          </Stack>
-        )}
-        {!showGameState && (
-          <Stack alignCenter gap start>
-            <Icon className={iconOffsetStyle} icon={Charge} />{' '}
-            {map.config.initialCharge}
-          </Stack>
-        )}
         <Stack alignCenter gap start>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
         </Stack>
+        {!showGameState && (
+          <Stack alignCenter gap start>
+            <Icon className={iconOffsetStyle} icon={Coin} /> {seedCapital}
+          </Stack>
+        )}
+        {!showGameState && initialCharge > 0 && (
+          <Stack alignCenter gap start>
+            <Icon className={iconOffsetStyle} icon={Charge} />{' '}
+            {initialCharge === 1 ? (
+              <fbt desc="Label for initial charges">1 Charge</fbt>
+            ) : (
+              <fbt desc="Label for initial charges">
+                <fbt:param name="charges">{initialCharge}</fbt:param> Charges
+              </fbt>
+            )}
+          </Stack>
+        )}
         {teamPlay && (
           <Stack alignCenter gap start>
             <Icon icon={Users} />{' '}

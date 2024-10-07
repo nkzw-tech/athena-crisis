@@ -103,11 +103,11 @@ export class MapConfig {
     blocklistedSkills,
     blocklistedUnits,
     fog,
+    initialCharge,
     multiplier,
     objectives,
     performance,
     seedCapital,
-    initialCharge,
   }: Partial<MapConfig>) {
     return new MapConfig(
       multiplier ?? this.multiplier,
@@ -130,11 +130,11 @@ export class MapConfig {
       blocklistedSkills,
       blocklistedUnits,
       fog,
+      initialCharge,
       multiplier,
       objectives,
       performance,
       seedCapital,
-      initialCharge,
     } = this;
     return {
       biome,
@@ -155,8 +155,8 @@ export class MapConfig {
             ],
           }
         : null),
-      seedCapital,
       initialCharge,
+      seedCapital,
     };
   }
 }
@@ -601,7 +601,7 @@ export default class MapData {
               style: config.performance[2] || null,
             }
           : { pace: null, power: null, style: null },
-        config.initialCharge,
+        config.initialCharge ?? 0,
       ),
       size,
       toPlayerID(data.currentPlayer),
@@ -637,9 +637,9 @@ export default class MapData {
         blocklistedBuildings: [],
         blocklistedUnits: [],
         fog: false,
+        initialCharge: 0,
         multiplier: 1,
         seedCapital: 0,
-        initialCharge: 0,
         ...config,
       },
       currentPlayer: active[0],

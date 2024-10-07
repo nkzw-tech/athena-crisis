@@ -3,10 +3,10 @@ import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
 import {
   DoubleSize,
+  MaxCharges,
   MaxSize,
   MinSize,
   TileSize,
-  MaxCharges,
 } from '@deities/athena/map/Configuration.tsx';
 import {
   PerformanceStyle,
@@ -138,7 +138,7 @@ export default function MapEditorSettingsPanel({
         <h2>
           <fbt desc="Map settings headline">Map Settings</fbt>
         </h2>
-        <Stack alignCenter gap>
+        <Stack gap>
           <label>
             <Stack alignCenter gap>
               <input
@@ -159,57 +159,59 @@ export default function MapEditorSettingsPanel({
               </span>
             </Stack>
           </label>
-          <label>
-            <Stack alignCenter gap>
-              <span>
-                <fbt desc="Starting funds for a game">Starting Funds</fbt>
-              </span>
-              <input
-                min={0}
-                onChange={({ target: { value } }) => {
-                  const seedCapital = parseInteger(value || '0');
-                  if (seedCapital != null) {
-                    update({
-                      map: map.copy({
-                        config: config.copy({
-                          seedCapital,
+          <Stack gap vertical>
+            <label>
+              <Stack alignCenter gap>
+                <span>
+                  <fbt desc="Starting funds for a game">Starting Funds</fbt>
+                </span>
+                <input
+                  min={0}
+                  onChange={({ target: { value } }) => {
+                    const seedCapital = parseInteger(value || '0');
+                    if (seedCapital != null) {
+                      update({
+                        map: map.copy({
+                          config: config.copy({
+                            seedCapital,
+                          }),
                         }),
-                      }),
-                    });
-                  }
-                }}
-                style={{ width: 100 }}
-                type="number"
-                value={config.seedCapital}
-              />
-            </Stack>
-          </label>
-          <label>
-            <Stack alignCenter gap>
-              <span>
-                <fbt desc="Starting charges for a game">Starting Charges</fbt>
-              </span>
-              <input
-                min={0}
-                max={String(MaxCharges)}
-                onChange={({ target: { value } }) => {
-                  const initialCharge = parseInteger(value || '0');
-                  if (initialCharge != null) {
-                    update({
-                      map: map.copy({
-                        config: config.copy({
-                          initialCharge,
+                      });
+                    }
+                  }}
+                  style={{ width: 100 }}
+                  type="number"
+                  value={config.seedCapital}
+                />
+              </Stack>
+            </label>
+            <label>
+              <Stack alignCenter gap>
+                <span>
+                  <fbt desc="Starting charges for a game">Starting Charges</fbt>
+                </span>
+                <input
+                  max={String(MaxCharges)}
+                  min={0}
+                  onChange={({ target: { value } }) => {
+                    const initialCharge = parseInteger(value || '0');
+                    if (initialCharge != null) {
+                      update({
+                        map: map.copy({
+                          config: config.copy({
+                            initialCharge,
+                          }),
                         }),
-                      }),
-                    });
-                  }
-                }}
-                style={{ width: 100 }}
-                type="number"
-                value={config.initialCharge}
-              />
-            </Stack>
-          </label>
+                      });
+                    }
+                  }}
+                  style={{ width: 100 }}
+                  type="number"
+                  value={config.initialCharge}
+                />
+              </Stack>
+            </label>
+          </Stack>
         </Stack>
       </Box>
       <Box className={performanceMetricsStyle} gap={16} vertical>
