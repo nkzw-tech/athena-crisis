@@ -563,6 +563,7 @@ export default function MapEditorSettingsPanel({
                 <fbt desc="Map size input field width">Width</fbt>
               </span>
               <input
+                max={MaxSize}
                 min={MinSize}
                 onChange={({ target: { value } }) => {
                   const width = parseInteger(value);
@@ -582,6 +583,7 @@ export default function MapEditorSettingsPanel({
                 <fbt desc="Map size input field height">Height</fbt>
               </span>
               <input
+                max={MaxSize}
                 min={MinSize}
                 onChange={({ target: { value } }) => {
                   const height = parseInteger(value);
@@ -596,15 +598,15 @@ export default function MapEditorSettingsPanel({
             </Stack>
           </label>
           <button
-            onClick={() =>
-              resize(
-                new SizeVector(
-                  Math.max(MinSize, Math.min(MaxSize, width)),
-                  Math.max(MinSize, Math.min(MaxSize, height)),
-                ),
-                new Set(['bottom', 'right']),
-              )
-            }
+            onClick={() => {
+              const size = new SizeVector(
+                Math.max(MinSize, Math.min(MaxSize, width)),
+                Math.max(MinSize, Math.min(MaxSize, height)),
+              );
+              setHeight(size.height);
+              setWidth(size.width);
+              resize(size, new Set(['bottom', 'right']));
+            }}
           >
             <fbt desc="Map resize button">Resize</fbt>
           </button>
