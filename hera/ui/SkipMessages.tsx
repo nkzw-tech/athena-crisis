@@ -65,7 +65,9 @@ export default function SkipMessages() {
 // Keep zIndex in sync with CharacterMessage and Menu.
 const absoluteStyle = css`
   pointer-events: none;
-  position: absolute;
+  position: fixed;
+  right: 0;
+  top: 0;
   z-index: 3002;
 `;
 

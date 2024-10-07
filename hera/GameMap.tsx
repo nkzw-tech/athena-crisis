@@ -590,7 +590,7 @@ export default class GameMap extends Component<Props, State> {
           rumbleEffect('accept');
           AudioPlayer.playSound('UI/Skip');
           for (const [vector, animation] of this.state.animations) {
-            if (animation.type === 'characterMessage') {
+            if (animation.type === 'characterMessage' && !animation.completed) {
               this._requestFrame(() =>
                 this._animationComplete(vector, animation),
               );
