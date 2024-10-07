@@ -3,6 +3,7 @@ import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { ButtonStyle } from './Button.tsx';
 import clipBorder from './clipBorder.tsx';
+import useActive from './controls/useActive.tsx';
 import { applyVar } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import Icon from './Icon.tsx';
@@ -11,6 +12,7 @@ import Link from './Link.tsx';
 import pixelBorder from './pixelBorder.tsx';
 
 export default function Tag({
+  active,
   className,
   onClick,
   removeTag,
@@ -18,6 +20,7 @@ export default function Tag({
   tag,
   to,
 }: Readonly<{
+  active?: boolean;
   className?: string;
   onClick?: () => void;
   removeTag?: () => void;
@@ -43,6 +46,9 @@ export default function Tag({
       )}
     </>
   );
+
+  useActive(active, onClick, to);
+
   return to ? (
     <Link
       className={className}

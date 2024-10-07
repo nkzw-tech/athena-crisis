@@ -167,6 +167,13 @@ const linkStyle = css`
     }
   }
 
+  &:not(.active).selected.hover {
+    ${pixelBorder(
+      applyVar('text-color-active'),
+      vars.apply('pixel-border-size'),
+    )}
+  }
+
   @media (hover: hover) {
     &.selected:hover {
       ${pixelBorder(
