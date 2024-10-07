@@ -1,3 +1,4 @@
+import isPresent from '@deities/hephaestus/isPresent.tsx';
 import {
   ButtonResult,
   createJoymap,
@@ -23,6 +24,59 @@ export function hasGamepad() {
   return !!joymap && joymap.getGamepads().length > 0;
 }
 
+export type GamepadType = 'playstation' | 'switch' | 'generic';
+
+const isPlayStation = (name: string | null) => {
+  if (!name) {
+    return false;
+  }
+
+  name = name.toLowerCase();
+  return (
+    name.includes('sony interactive entertainment') ||
+    name.includes('playstation') ||
+    name.includes('dualshock') ||
+    name.includes('dualsense')
+  );
+};
+
+const isSwitch = (() => {
+  const cache = new Map<string, boolean>();
+  return (name: string | null) => {
+    if (!name) {
+      return false;
+    }
+
+    if (cache.has(name)) {
+      return cache.get(name)!;
+    }
+
+    name = name.toLowerCase();
+    const result =
+      name.includes('joy-con') ||
+      name.includes('nintendo') ||
+      name.includes('pro controller');
+    cache.set(name, result);
+    return result;
+  };
+})();
+
+export function getGamepadType(): GamepadType | null {
+  const gamepads =
+    joymap &&
+    joymap
+      .getGamepads()
+      .filter(isPresent)
+      .map((gamepad) => gamepad.id);
+  return gamepads?.length
+    ? gamepads.some(isPlayStation)
+      ? 'playstation'
+      : gamepads.some(isSwitch)
+        ? 'switch'
+        : 'generic'
+    : null;
+}
+
 export default function setupGamePad() {
   if (joymap) {
     return;
@@ -46,9 +100,8 @@ export default function setupGamePad() {
 
   const handleInputs = (controller: QueryModule) => {
     const stickLeft = controller.getStick('L');
+    const buttons = controller.getAllButtons();
     const {
-      A,
-      B,
       L1,
       L2,
       L3,
@@ -64,7 +117,12 @@ export default function setupGamePad() {
       home,
       select,
       start,
-    } = controller.getAllButtons();
+    } = buttons;
+
+    const { A, B } = isSwitch(controller.getPadId())
+      ? { A: buttons.B, B: buttons.A }
+      : buttons;
+
     if (needsThrottleReset) {
       if (
         stickLeft &&

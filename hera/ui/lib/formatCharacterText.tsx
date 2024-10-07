@@ -8,7 +8,7 @@ import {
 import MapData from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import { formatInputNames } from '@deities/ui/controls/formatInputNames.tsx';
-import { hasGamepad } from '@deities/ui/controls/setupGamePad.tsx';
+import { getGamepadType } from '@deities/ui/controls/setupGamePad.tsx';
 import { fbt } from 'fbt';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
@@ -61,6 +61,6 @@ export default function formatCharacterText(
         ) || ''
       );
     }),
-    hasGamepad() ? 'gamepad' : 'keyboard',
+    getGamepadType() || 'keyboard',
   ).trim();
 }

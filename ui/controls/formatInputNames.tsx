@@ -1,5 +1,6 @@
 import { isLinux, isWindows } from '../Browser.tsx';
 import type { EventName } from './Input.tsx';
+import { GamepadType } from './setupGamePad.tsx';
 
 type ButtonNames = Exclude<
   EventName,
@@ -10,7 +11,7 @@ type ButtonNames = Exclude<
   | 'reset'
 >;
 
-const gamepadNames: Record<ButtonNames, string> = {
+const generic = {
   accept: 'A',
   cancel: 'B',
   detail: 'R2',
@@ -28,6 +29,31 @@ const gamepadNames: Record<ButtonNames, string> = {
   tertiary: 'Y',
   undo: 'L3',
   zoom: 'R3',
+} as const;
+
+export const GamepadNames: Record<GamepadType, Record<ButtonNames, string>> = {
+  generic,
+  playstation: {
+    ...generic,
+    accept: '✖',
+    cancel: '●',
+    'field-info': '●',
+    'gamepad:tertiary': '▲',
+    'keyboard:tertiary': '▲',
+    menu: 'Options',
+    secondary: '■',
+    select: 'Share',
+    tertiary: '▲',
+  },
+  switch: {
+    ...generic,
+    'gamepad:tertiary': 'X',
+    'keyboard:tertiary': 'X',
+    menu: 'Home',
+    secondary: 'Y',
+    select: 'Minus',
+    tertiary: 'X',
+  },
 } as const;
 
 export const KeyboardNames: Record<ButtonNames, string> = {
@@ -50,9 +76,8 @@ export const KeyboardNames: Record<ButtonNames, string> = {
   zoom: '',
 } as const;
 
-export function formatInputNames(text: string, type: 'keyboard' | 'gamepad') {
-  const buttons = type === 'gamepad' ? gamepadNames : KeyboardNames;
-
+export function formatInputNames(text: string, type: GamepadType | 'keyboard') {
+  const buttons = (type !== 'keyboard' && GamepadNames[type]) || KeyboardNames;
   return text.replaceAll(/{button\.([\w:-]+)}/g, (_, button: string) => {
     const buttonName = buttons[button as ButtonNames];
     return buttonName ? `"${buttonName}"` : '';

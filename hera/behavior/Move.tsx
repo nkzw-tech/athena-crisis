@@ -458,10 +458,10 @@ export default class Move {
       selectedUnit,
     } = state;
 
-    useInput(
-      'tertiary',
-      useCallback(() => {
+    const complete = useCallback(
+      (event: CustomEvent) => {
         if (position) {
+          event.preventDefault();
           update(
             this.select(
               position,
@@ -474,9 +474,12 @@ export default class Move {
             ),
           );
         }
-      }, [update, actions, position, state]),
-      'menu',
+      },
+      [update, actions, position, state],
     );
+
+    useInput('tertiary', complete, 'menu');
+    useInput('gamepad:tertiary', complete, 'menu');
 
     const onSelect = useCallback(
       (entity: Entity) => {
