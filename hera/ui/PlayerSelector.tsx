@@ -267,6 +267,7 @@ const PlayerItem = ({
             {user && 'character' in user && user.character && user.username && (
               <div className={playerImageStyle}>
                 <MiniPortrait
+                  animate={isFocused}
                   player={player}
                   user={{
                     character: user.character,
