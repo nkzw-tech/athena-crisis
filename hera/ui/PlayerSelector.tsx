@@ -17,7 +17,7 @@ import { CharacterImage } from '../character/PortraitPicker.tsx';
 import AISelector from './AISelector.tsx';
 import PlayerIcon from './PlayerIcon.tsx';
 import PlayerPosition from './PlayerPosition.tsx';
-import { SkillIcon, SkillSelector } from './SkillDialog.tsx';
+import { HiddenSkillIcon, SkillIcon, SkillSelector } from './SkillDialog.tsx';
 import Vs from './Vs.tsx';
 
 type UserLike =
@@ -296,9 +296,14 @@ const PlayerItem = ({
             />
           ) : (
             <Stack className={cx(nameStyle, skillStyle)} gap={16} nowrap>
-              {[...player.skills].map((skill) => (
-                <SkillIcon key={skill} skill={skill} />
-              ))}
+              {[...player.skills].map((skill, index) =>
+                // Skills in pending games are hidden.
+                skill < 0 ? (
+                  <HiddenSkillIcon key={index} />
+                ) : (
+                  <SkillIcon key={skill} skill={skill} />
+                ),
+              )}
             </Stack>
           )
         ) : null}

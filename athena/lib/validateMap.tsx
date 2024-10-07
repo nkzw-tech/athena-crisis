@@ -61,7 +61,6 @@ const validateMapConfig = (map: MapData) => {
     multiplier,
     performance,
     seedCapital,
-    initialCharge,
   } = config;
 
   if (typeof fog !== 'boolean') {
@@ -73,10 +72,6 @@ const validateMapConfig = (map: MapData) => {
   }
 
   if (!isPositiveInteger(seedCapital) && seedCapital !== 0) {
-    return false;
-  }
-
-  if (!isPositiveInteger(initialCharge) && initialCharge !== 0) {
     return false;
   }
 

@@ -53,48 +53,6 @@ test('`startGame` calculates the correct funds for all players', () => {
   `);
 });
 
-test('`startGame` allocates the correct initial charge for all players', () => {
-  const map = withModifiers(
-    MapData.createMap({
-      buildings: [
-        [1, 1, HQ.create(1).toJSON()],
-        [5, 5, HQ.create(2).toJSON()],
-      ],
-      config: {
-        initialCharge: 5,
-      },
-      map: [
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1,
-      ],
-      size: { height: 5, width: 5 },
-      teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 0, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 0, id: 2, name: 'AI' }],
-        },
-      ],
-    }),
-  );
-
-  expect(
-    startGame(map)
-      .getPlayers()
-      .map(({ charge }) => charge),
-  ).toMatchInlineSnapshot(`
-    [
-      7500,
-      7500,
-    ]
-  `);
-});
-
 test('`startGame` resets fuel or ammo that is beyond the maximum', () => {
   const flamethrowerFuel = Math.floor(Flamethrower.configuration.fuel / 2);
   const tank = SmallTank.create(2);
