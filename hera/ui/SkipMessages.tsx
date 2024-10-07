@@ -13,8 +13,8 @@ const circleProps = {
   exit: { delay: 0, opacity: 0, scale: 1.2 },
   initial: { opacity: 0, scale: 0 },
   transition: {
-    delay: 0.3,
-    duration: (MessageSkipDuration / 1000) * 0.55,
+    delay: 0.05,
+    duration: (MessageSkipDuration / 1000) * 0.75,
     ease: [0.34, 1.56, 0.64, 1],
   },
 };
@@ -103,10 +103,10 @@ export const pulseStyle = css`
     120% {
       transform: scale(0);
     }
-    55%, 85% {
+    45%, 65% {
       opacity: 1;
     }
-    70% {
+    60% {
       opacity: 0;
     }
   `} ${MessageSkipDuration / 3}ms 1 forwards;
