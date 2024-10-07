@@ -111,6 +111,7 @@ export default class DropUnit {
     const {
       animationConfig,
       map,
+      position,
       radius,
       selectedPosition,
       selectedUnit,
@@ -120,12 +121,13 @@ export default class DropUnit {
 
     const width = map.size.width;
     const [currentIndex, setCurrentIndex] = useState(0);
+    const hasUnit = this.dropUnit != null;
 
     useInput(
       'navigate',
       useCallback(
         (event) => {
-          if (this.dropUnit != null) {
+          if (hasUnit) {
             return;
           }
 
@@ -136,7 +138,7 @@ export default class DropUnit {
             setCurrentIndex(newIndex);
           }
         },
-        [currentIndex, selectedUnit?.transports],
+        [currentIndex, hasUnit, selectedUnit?.transports],
       ),
       'menu',
     );
@@ -145,7 +147,7 @@ export default class DropUnit {
       'accept',
       useCallback(
         (event) => {
-          if (this.dropUnit != null) {
+          if (hasUnit) {
             return;
           }
 
@@ -155,10 +157,19 @@ export default class DropUnit {
             actions.update(getRadius(unit, currentIndex, state));
           }
         },
-        [actions, currentIndex, selectedUnit?.transports, state],
+        [actions, currentIndex, hasUnit, selectedUnit?.transports, state],
       ),
       'menu',
     );
+
+    const drop = useCallback(() => {
+      if (hasUnit && position && radius?.fields.has(position)) {
+        actions.update(this.select(position, state, actions));
+      }
+    }, [actions, hasUnit, position, radius?.fields, state]);
+
+    useInput('tertiary', drop, 'menu');
+    useInput('gamepad:tertiary', drop, 'menu');
 
     if (!radius && selectedPosition && selectedUnit?.transports) {
       const { transports } = selectedUnit;

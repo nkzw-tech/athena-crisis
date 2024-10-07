@@ -11,6 +11,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
+import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
@@ -25,7 +26,7 @@ import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
 import { fbt } from 'fbt';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, {
   ClientCoordinates,
@@ -118,19 +119,31 @@ export default class CreateUnit {
       currentViewer,
       map,
       navigationDirection,
+      position,
       radius,
       selectedBuilding,
       selectedPosition,
       tileSize,
       zIndex,
     } = state;
-    if (
+
+    const showActionWheel =
       behavior?.type === 'createUnit' &&
       currentViewer &&
       !radius &&
       selectedBuilding &&
-      selectedPosition
-    ) {
+      selectedPosition;
+
+    const create = useCallback(() => {
+      if (position && radius?.fields.has(position) && !showActionWheel) {
+        actions.update(this.select(position, state, actions));
+      }
+    }, [actions, position, radius?.fields, showActionWheel, state]);
+
+    useInput('tertiary', create, 'menu');
+    useInput('gamepad:tertiary', create, 'menu');
+
+    if (showActionWheel) {
       const currentPlayer = map.getCurrentPlayer();
       const funds = currentPlayer.funds;
       const units = sortBy(
