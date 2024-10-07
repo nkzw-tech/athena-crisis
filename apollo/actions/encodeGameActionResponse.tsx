@@ -1,5 +1,6 @@
 import Building, { PlainBuilding } from '@deities/athena/map/Building.tsx';
 import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
+import { PlayerIDSet } from '@deities/athena/map/Player.tsx';
 import { encodeEntities } from '@deities/athena/map/Serialization.tsx';
 import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -40,6 +41,7 @@ const addVisibleEntities = (
   currentMap: MapData,
   vision: VisionT,
   actionResponse: ActionResponse,
+  labels: PlayerIDSet | null,
 ):
   | [
       PlainEntitiesList<PlainBuilding> | undefined,
@@ -51,6 +53,7 @@ const addVisibleEntities = (
       previousMap,
       currentMap,
       vision,
+      labels,
     );
     const actualBuildings =
       actionResponse.type === 'Move'
@@ -68,12 +71,19 @@ const addVisibleEntities = (
 const encodeItem = (
   actionResponse: ActionResponse,
   vision: VisionT,
-  previousMap?: MapData,
-  currentMap?: MapData,
+  previousMap: MapData | undefined,
+  currentMap: MapData | undefined,
+  labels: PlayerIDSet | null,
 ): EncodedGameActionResponseItem => {
   const visible =
     previousMap && currentMap
-      ? addVisibleEntities(previousMap, currentMap, vision, actionResponse)
+      ? addVisibleEntities(
+          previousMap,
+          currentMap,
+          vision,
+          actionResponse,
+          labels,
+        )
       : null;
   return [encodeActionResponse(actionResponse), ...(visible || [])];
 };
@@ -84,18 +94,19 @@ export default function encodeGameActionResponse(
   vision: VisionT,
   gameState: GameState | null,
   timeout: Date | null | undefined,
-  actionResponse?: ActionResponse | null,
+  actionResponse: ActionResponse | null,
+  labels: PlayerIDSet | null,
 ) {
   const response: EncodedGameActionResponse = [
     actionResponse
-      ? encodeItem(actionResponse, vision, clientMap, initialMap)
+      ? encodeItem(actionResponse, vision, clientMap, initialMap, labels)
       : null,
   ];
 
   if (gameState?.length) {
     response[1] = computeVisibleActions(initialMap, vision, gameState).map(
       ([actionResponse, previousMap, currentMap]) =>
-        encodeItem(actionResponse, vision, previousMap, currentMap),
+        encodeItem(actionResponse, vision, previousMap, currentMap, labels),
     );
   }
 

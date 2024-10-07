@@ -919,7 +919,14 @@ export function getHiddenLabels(objectives: Objectives): PlayerIDSet | null {
 
   let labels: Set<PlayerID> | null = null;
   for (const [, objective] of objectives) {
-    if (objective.hidden && objectiveHasLabel(objective) && objective.label) {
+    if (
+      objective.hidden &&
+      objectiveHasLabel(objective) &&
+      objective.label &&
+      (!objective.optional ||
+        !objective.completed ||
+        objective.completed.size < 1)
+    ) {
       for (const label of objective.label) {
         if (!labels) {
           labels = new Set();

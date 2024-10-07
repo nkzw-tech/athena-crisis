@@ -111,6 +111,8 @@ test('spawns units and adds new players', async () => {
     vision,
     gameState,
     null,
+    null,
+    null,
   );
   const screenshot = await captureGameActionResponse(
     map,

@@ -9,6 +9,7 @@ import {
   GameState,
 } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 
@@ -84,6 +85,7 @@ export default async function executeGameActions(
       gameState,
       null,
       null,
+      getHiddenLabels(currentMap.config.objectives),
     ),
     newEffects,
   ];

@@ -1,5 +1,6 @@
 import { Action, execute } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
@@ -1034,6 +1035,12 @@ export default class GameMap extends Component<Props, State> {
           // Keep the map disabled until other actions are executed.
           state = await this._update(resetBehavior(NullBehavior));
         }
+      } else if (actionResponse.type === 'Capture') {
+        const { map, vision } = this.state;
+        // A remote capture action may reveal a hidden label.
+        await this._update({
+          map: applyActionResponse(map, vision, actionResponse),
+        });
       } else if (actionResponse.type === 'EndTurn') {
         const { map } = this.state;
         const { current, next } = actionResponse;

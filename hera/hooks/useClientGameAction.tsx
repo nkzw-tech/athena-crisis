@@ -150,7 +150,9 @@ export default function useClientGameAction(
               ),
             );
 
-            const hiddenLabels = getHiddenLabels(map.config.objectives);
+            const hiddenLabels = getHiddenLabels(
+              lastEntry[1].config.objectives,
+            );
             actionResponse = dropLabelsFromActionResponse(
               actionResponse,
               hiddenLabels,
@@ -176,6 +178,7 @@ export default function useClientGameAction(
                       vision,
                     )
                   : actionResponse,
+                hiddenLabels,
               ),
             );
           }

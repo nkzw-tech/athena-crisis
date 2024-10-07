@@ -106,6 +106,7 @@ const play = async (map: MapData) => {
               vision,
             )
           : null,
+        null,
       );
       const { others, self } = decodeGameActionResponse(
         encodedGameActionResponse,
