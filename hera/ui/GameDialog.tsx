@@ -931,8 +931,8 @@ const CrystalContainer = ({
           <InfoBox style={{ backgroundColor: getColor('orange', 0.3) }}>
             <p>
               <fbt desc="Explanation for invasion mechanics">
-                This game turns into a realtime game if another player invades
-                your world.
+                This game turns into a realtime game after activating the Power
+                Crystal.
               </fbt>
             </p>
           </InfoBox>

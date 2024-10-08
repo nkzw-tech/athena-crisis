@@ -62,7 +62,10 @@ export default function ReplayBar({
   const hasTimeout = timeout != null && timeout >= dateNow();
 
   return (
-    <ActionBar inlineUI={inlineUI} visible={replayIsVisible || hasTimeout}>
+    <ActionBar
+      inlineUI={inlineUI}
+      visible={replayIsVisible || (hasTimeout && !isBot)}
+    >
       <Stack flex1 gap vertical>
         {hasTimeout && !isBot ? (
           <TurnTimer player={currentPlayer.id} timeout={timeout} />
