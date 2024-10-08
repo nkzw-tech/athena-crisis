@@ -2,11 +2,13 @@ import { AIRegistryT } from '@deities/apollo/actions/executeGameAction.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import Player, { isBot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { playerToColor } from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink, { InlineLinkColor } from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -15,6 +17,7 @@ import { ReactNode } from 'react';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { CharacterImage } from '../character/PortraitPicker.tsx';
 import AISelector from './AISelector.tsx';
+import MiniPlayerIcon from './MiniPlayerIcon.tsx';
 import PlayerIcon from './PlayerIcon.tsx';
 import PlayerPosition from './PlayerPosition.tsx';
 import { HiddenSkillIcon, SkillIcon, SkillSelector } from './SkillDialog.tsx';
@@ -45,6 +48,7 @@ export default function PlayerSelector({
   onSelectSkill,
   onSelectSkills,
   selectedPlayer,
+  showFirstPlayer,
   skillSlots,
   users,
   viewerPlayerID,
@@ -65,6 +69,7 @@ export default function PlayerSelector({
     | ((player: PlayerID, slot: number, skill: Skill | null) => void)
     | null;
   selectedPlayer?: PlayerID | null;
+  showFirstPlayer?: true;
   skillSlots?: number;
   users: ReadonlyMap<PlayerID, UserLike | undefined>;
   viewerPlayerID?: PlayerID;
@@ -112,6 +117,10 @@ export default function PlayerSelector({
     .slice(0, -1);
 
   const Component = inline ? Stack : Box;
+
+  const activeIsRearranged =
+    showFirstPlayer && map.active[0] !== sortBy([...map.active], (id) => id)[0];
+
   return (
     <Component
       className={boxStyle}
@@ -142,6 +151,21 @@ export default function PlayerSelector({
         {teams}
       </Stack>
       {children}
+      {activeIsRearranged && (
+        <Stack>
+          <InfoBox>
+            <p>
+              <fbt desc="Explanation for which player goes first">
+                Player
+                <fbt:param name="player">
+                  <MiniPlayerIcon gap id={map.active[0]} />
+                </fbt:param>{' '}
+                will take the first turn in this game.
+              </fbt>
+            </p>
+          </InfoBox>
+        </Stack>
+      )}
     </Component>
   );
 }
