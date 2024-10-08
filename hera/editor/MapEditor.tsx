@@ -987,22 +987,25 @@ export default function MapEditor({
                   {mapObject?.campaigns.edges
                     ?.filter(filterNodes)
                     .map(({ node: { name, slug } }) => (
-                      <InlineLink
-                        className={ellipsis}
-                        key={slug}
-                        to={getCampaignRoute(slug, 'edit')}
-                      >
-                        {name}
-                      </InlineLink>
+                      <div key={slug}>
+                        <InlineLink
+                          className={ellipsis}
+                          to={getCampaignRoute(slug, 'edit')}
+                        >
+                          {name}
+                        </InlineLink>
+                      </div>
                     ))}
-                  <InlineLink
-                    className={ellipsis}
-                    to={`/campagin-editor-new/${mapObject.slug}` as Route}
-                  >
-                    <fbt desc="Link to create a new campaign">
-                      Create a new campaign from this map
-                    </fbt>
-                  </InlineLink>
+                  <div>
+                    <InlineLink
+                      className={ellipsis}
+                      to={`/campagin-editor-new/${mapObject.slug}` as Route}
+                    >
+                      <fbt desc="Link to create a new campaign">
+                        Create a new campaign from this map
+                      </fbt>
+                    </InlineLink>
+                  </div>
                 </>
               ) : (
                 <div className={ellipsis}>
