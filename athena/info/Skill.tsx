@@ -5,7 +5,7 @@ import Player from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
 import { BuildingInfo } from './Building.tsx';
-import { BarID } from './BuildingIDs.tsx';
+import BuildingID from './BuildingID.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
 import { TileInfo, TileType, TileTypes } from './Tile.tsx';
 import type { UnitInfo } from './Unit.tsx';
@@ -43,6 +43,11 @@ export enum Skill {
   BuyUnitDinosaur = 29,
   Sabotage = 30,
   SpawnUnitInfernoJetpack = 31,
+  UnlockZombie = 32,
+  UnlockPowerStation = 33,
+  BuyUnitDragon = 34,
+  BuyUnitOgre = 35,
+  BuyUnitBear = 36,
 }
 
 export const Skills = new Set<Skill>([
@@ -72,7 +77,12 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitOctopus,
   Skill.BuyUnitAlien,
   Skill.BuyUnitDinosaur,
+  Skill.BuyUnitDragon,
+  Skill.BuyUnitOgre,
+  Skill.BuyUnitBear,
   Skill.BuyUnitAIU,
+  Skill.UnlockZombie,
+  Skill.UnlockPowerStation,
   Skill.AttackAndDefenseDecreaseEasy,
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
@@ -119,7 +129,7 @@ const skillConfig: Record<
   [Skill.BuyUnitAlien]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500 },
   [Skill.BuyUnitSuperTank]: { cost: 1500 },
-  [Skill.BuyUnitAcidBomber]: { cost: 1500 },
+  [Skill.BuyUnitAcidBomber]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitDinosaur]: { cost: 1500 },
   [Skill.Sabotage]: { charges: 5, cost: 1500 },
   [Skill.SpawnUnitInfernoJetpack]: {
@@ -127,9 +137,14 @@ const skillConfig: Record<
     cost: null,
     requiresCrystal: true,
   },
+  [Skill.UnlockZombie]: { charges: 10, cost: 1500 },
+  [Skill.UnlockPowerStation]: { charges: 4, cost: 600 },
+  [Skill.BuyUnitDragon]: { charges: 5, cost: 1500 },
+  [Skill.BuyUnitOgre]: { charges: 3, cost: 1500 },
+  [Skill.BuyUnitBear]: { charges: 3, cost: 1500 },
 };
 
-export const AIOnlySkills: ReadonlySet<Skill> = new Set([
+export const UnobtainableSkills: ReadonlySet<Skill> = new Set([
   ...[...Skills].filter((skill) => skillConfig[skill].cost === null),
   Skill.BuyUnitZombieDefenseDecreaseMajor,
   Skill.RecoverAirUnits,
@@ -142,12 +157,10 @@ type Modifier = number;
 type SkillMap = ReadonlyMap<Skill, Modifier>;
 type UnitModifierMap = ReadonlyMap<ID, Modifier>;
 type UnitSkillMap = ReadonlyMap<Skill, UnitModifierMap>;
-type MovementSkillMap = ReadonlyMap<Skill, ReadonlyMap<MovementType, Modifier>>;
-
-type TileMovementSkillMap = ReadonlyMap<
-  Skill,
-  ReadonlyMap<TileType, ReadonlyMap<MovementType, Modifier>>
->;
+export type MovementMap = ReadonlyMap<MovementType, Modifier>;
+export type TileMovementMap = ReadonlyMap<TileType, MovementMap>;
+type MovementSkillMap = ReadonlyMap<Skill, MovementMap>;
+type TileMovementSkillMap = ReadonlyMap<Skill, TileMovementMap>;
 type RangeSkillMap = ReadonlyMap<Skill, [number, number]>;
 type RangeMap = ReadonlyMap<ID, RangeSkillMap>;
 
@@ -216,11 +229,13 @@ const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
   ],
 ]);
 
+// Referential equality might improve the skill description.
 const forestAttack = new Map([
   [MovementTypes.Soldier, 0.3],
   [MovementTypes.HeavySoldier, 0.3],
 ]);
-const attackTileStatusEffects: TileMovementSkillMap = new Map([
+const tileAttack = new Map([[MovementTypes.Soldier, 0.15]]);
+const attackTileStatusEffects = new Map<Skill, TileMovementMap>([
   [
     Skill.UnitInfantryForestAttackAndDefenseIncrease,
     new Map([
@@ -230,9 +245,19 @@ const attackTileStatusEffects: TileMovementSkillMap = new Map([
       [TileTypes.ForestVariant4, forestAttack],
     ]),
   ],
+  [
+    Skill.BuyUnitBear,
+    new Map([
+      [TileTypes.Forest, tileAttack],
+      [TileTypes.ForestVariant2, tileAttack],
+      [TileTypes.ForestVariant3, tileAttack],
+      [TileTypes.ForestVariant4, tileAttack],
+      [TileTypes.Mountain, tileAttack],
+    ]),
+  ],
 ]);
 
-const attackTilePowerStatusEffects: TileMovementSkillMap = new Map([
+const attackTilePowerStatusEffects = new Map<Skill, TileMovementMap>([
   [
     Skill.UnitRailDefenseIncreasePowerAttackIncrease,
     new Map([
@@ -244,6 +269,16 @@ const attackTilePowerStatusEffects: TileMovementSkillMap = new Map([
           [MovementTypes.Rail, 0.1],
         ]),
       ],
+    ]),
+  ],
+  [
+    Skill.BuyUnitOgre,
+    new Map([
+      [TileTypes.Forest, tileAttack],
+      [TileTypes.ForestVariant2, tileAttack],
+      [TileTypes.ForestVariant3, tileAttack],
+      [TileTypes.ForestVariant4, tileAttack],
+      [TileTypes.Mountain, tileAttack],
     ]),
   ],
 ]);
@@ -259,6 +294,7 @@ const defenseStatusEffects: SkillMap = new Map([
   [Skill.BuyUnitZombieDefenseDecreaseMajor, -0.5],
   [Skill.AttackAndDefenseIncreaseHard, 0.1],
   [Skill.AttackAndDefenseDecreaseEasy, -0.1],
+  [Skill.UnlockZombie, -0.5],
 ]);
 
 const defenseUnitStatusEffects = new Map<Skill, UnitModifierMap>([
@@ -305,7 +341,7 @@ const forestDefense = new Map([
   [MovementTypes.Soldier, 0.1],
   [MovementTypes.HeavySoldier, 0.1],
 ]);
-const defenseTileStatusEffects: TileMovementSkillMap = new Map([
+const defenseTileStatusEffects = new Map<Skill, TileMovementMap>([
   [
     Skill.UnitInfantryForestAttackAndDefenseIncrease,
     new Map([
@@ -354,6 +390,7 @@ const skillMovementTypeRadiusPowerEffects = new Map<
     MovementTypes.Tread,
     new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
   ],
+  [MovementTypes.Soldier, new Map([[Skill.BuyUnitOgre, 1]])],
 ]);
 
 const unitCosts = new Map<ID, Map<Skill, number>>([
@@ -369,15 +406,22 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.AcidBomber, new Map([[Skill.BuyUnitAcidBomber, 750]])],
   [UnitID.Dinosaur, new Map([[Skill.BuyUnitDinosaur, 600]])],
   [UnitID.SuperAPU, new Map([[Skill.BuyUnitSuperAPU, 650]])],
+  [UnitID.Dragon, new Map([[Skill.BuyUnitDragon, 500]])],
+  [UnitID.Ogre, new Map([[Skill.BuyUnitOgre, 300]])],
+  [UnitID.Bear, new Map([[Skill.BuyUnitBear, 250]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
   [
-    BarID,
+    BuildingID.Bar,
     new Map([
       [Skill.BuyUnitBazookaBear, 600],
-      [Skill.BuyUnitOctopus, 600],
+      [Skill.BuyUnitBear, 600],
       [Skill.BuyUnitDinosaur, 600],
+      [Skill.BuyUnitDragon, 600],
+      [Skill.BuyUnitOctopus, 600],
+      [Skill.BuyUnitOgre, 600],
+      [Skill.SpawnUnitInfernoJetpack, 600],
     ]),
   ],
 ]);
@@ -597,7 +641,15 @@ export function getBuildingCost(
   building: BuildingInfo,
   cost: number,
   skills: ReadonlySet<Skill>,
+  activeSkills: ReadonlySet<Skill>,
 ) {
+  if (
+    building.id === BuildingID.PowerStation &&
+    activeSkills.has(Skill.UnlockPowerStation)
+  ) {
+    return 500;
+  }
+
   if (skills.size === 0) {
     return cost;
   }
@@ -661,6 +713,10 @@ export function hasUnlockedBuilding(
     return false;
   }
 
+  if (building.id === BuildingID.PowerStation) {
+    return skills.has(Skill.UnlockPowerStation);
+  }
+
   const unlocks = buildingCosts.get(building.id);
   if (unlocks) {
     for (const [skill] of unlocks) {
@@ -676,6 +732,10 @@ export function hasUnlockedBuilding(
 export function hasUnlockedUnit(unit: UnitInfo, skills: ReadonlySet<Skill>) {
   if (skills.size === 0) {
     return false;
+  }
+
+  if (unit.id === UnitID.Zombie && skills.has(Skill.UnlockZombie)) {
+    return true;
   }
 
   const unlocks = unitCosts.get(unit.id);
@@ -849,7 +909,7 @@ export function getSkillTileAttackStatusEffect(
 }
 
 export function getSkillUnitCosts(skill: Skill, type: SkillActivationType) {
-  const skillUnitCosts = new Map<number, number>();
+  const skillUnitCosts = new Map<ID, number>();
   if (type === 'regular') {
     for (const [unitID, costs] of unitCosts) {
       const cost = costs.get(skill);
@@ -931,6 +991,15 @@ const getSkillActiveUnitTypes = (
   if (skill === Skill.SpawnUnitInfernoJetpack) {
     for (const [vector, unit] of map.units) {
       if (unit.id === UnitID.Flamethrower) {
+        list.push(vector);
+      }
+    }
+    return list;
+  }
+
+  if (skill === Skill.UnlockZombie) {
+    for (const [vector, unit] of map.units) {
+      if (unit.id === UnitID.Pioneer) {
         list.push(vector);
       }
     }
@@ -1022,4 +1091,15 @@ export function hasCounterAttackSkill(skills: ReadonlySet<Skill>) {
 
 export function isRecoverySkill(skill: Skill) {
   return skill === Skill.RecoverAirUnits;
+}
+
+const octopusPowerDamage = 20;
+const dragonPowerDamage = 80;
+
+export function getSkillPowerDamage(skill: Skill) {
+  return skill === Skill.BuyUnitOctopus
+    ? octopusPowerDamage
+    : skill === Skill.BuyUnitDragon
+      ? dragonPowerDamage
+      : 0;
 }

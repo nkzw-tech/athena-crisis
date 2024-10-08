@@ -5,21 +5,26 @@ import {
   Alien,
   Battleship,
   BazookaBear,
+  Bear,
   Brute,
   Cannon,
   Commander,
   Dinosaur,
+  Dragon,
   InfernoJetpack,
   Octopus,
+  Ogre,
+  Pioneer,
   Saboteur,
   Sniper,
   SuperAPU,
   SuperTank,
+  UnitInfo,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 
-export default function getSkillBasedPortrait(skill: Skill) {
+export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
   switch (skill) {
     case Skill.BuyUnitAlien:
       return Alien;
@@ -53,14 +58,22 @@ export default function getSkillBasedPortrait(skill: Skill) {
       return Sniper;
     case Skill.UnitBattleShipMoveAndAct:
       return Battleship;
-
-    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
+    case Skill.BuyUnitBear:
+      return Bear;
+    case Skill.BuyUnitDragon:
+      return Dragon;
+    case Skill.BuyUnitOgre:
+      return Ogre;
+    case Skill.UnlockPowerStation:
+    case Skill.UnlockZombie:
+      return Pioneer;
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
     case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
     case Skill.AttackIncreaseMinor:
     case Skill.CounterAttackPower:
+    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.DefenseIncreaseMinor:
     case Skill.HealInfantryMedicPower:
     case Skill.HealVehiclesAttackDecrease:

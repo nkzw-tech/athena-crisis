@@ -38,6 +38,7 @@ import {
   CounterAttack,
   CreateTracksCost,
   MinDamage,
+  PoisonSkillPowerDamageMultiplier,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
 import {
@@ -318,7 +319,7 @@ function _attackUnit(
   const luck = 1;
   const tileInfoA = map.getTileInfo(vectorA);
   const tileInfoB = map.getTileInfo(vectorB);
-  const damage = Math.floor(
+  let damage = Math.floor(
     Math.max(
       MinDamage,
       calculateDamage(
@@ -335,6 +336,12 @@ function _attackUnit(
       ) * modifier,
     ),
   );
+  if (
+    unitB.statusEffect === UnitStatusEffect.Poison &&
+    map.getPlayer(unitA).activeSkills.has(Skill.BuyUnitAcidBomber)
+  ) {
+    damage = Math.floor(damage * (1 + PoisonSkillPowerDamageMultiplier));
+  }
   unitB = unitB.modifyHealth(-damage);
   if (unitA.info.hasAbility(Ability.Poison)) {
     unitB = unitB.setStatusEffect(UnitStatusEffect.Poison);

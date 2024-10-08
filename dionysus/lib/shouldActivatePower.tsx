@@ -28,6 +28,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
   switch (skill) {
     case Skill.BuyUnitAlien:
     case Skill.BuyUnitBazookaBear:
+    case Skill.BuyUnitBear:
     case Skill.BuyUnitOctopus:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
       return false;
@@ -43,6 +44,8 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.BuyUnitCannon:
     case Skill.BuyUnitCommander:
     case Skill.BuyUnitDinosaur:
+    case Skill.BuyUnitDragon:
+    case Skill.BuyUnitOgre:
     case Skill.BuyUnitSuperAPU:
     case Skill.BuyUnitSuperTank:
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
@@ -59,6 +62,8 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
+    case Skill.UnlockPowerStation:
+    case Skill.UnlockZombie:
       return true;
     default: {
       skill satisfies never;

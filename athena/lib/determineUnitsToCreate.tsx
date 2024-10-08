@@ -3,7 +3,7 @@ import { MinFunds } from '../info/Building.tsx';
 import { Ability, UnitInfo } from '../info/Unit.tsx';
 import Building from '../map/Building.tsx';
 import { getEntityInfoGroup } from '../map/Entity.tsx';
-import Player, { PlayerID } from '../map/Player.tsx';
+import Player from '../map/Player.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -16,7 +16,7 @@ import needsSupply from './needsSupply.tsx';
 
 export default function determineUnitsToCreate(
   map: MapData,
-  currentPlayer: Player | PlayerID,
+  currentPlayer: Player,
   playerUnits: ReadonlyArray<Unit>,
   buildableUnits: ReadonlyArray<UnitInfo>,
   {

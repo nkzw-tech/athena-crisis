@@ -7,7 +7,7 @@ import { EntityType } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import type { ID } from '../MapData.tsx';
-import { BarID } from './BuildingIDs.tsx';
+import BuildingID from './BuildingID.tsx';
 import { getBuildingCost, hasUnlockedBuilding, Skill } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
 import {
@@ -178,11 +178,11 @@ export class BuildingInfo {
   }
 
   getCostFor(player: Player | null) {
-    if (!player?.skills.size) {
+    if (!player?.skills.size && !player?.activeSkills.size) {
       return this.cost;
     }
 
-    return getBuildingCost(this, this.cost, player.skills);
+    return getBuildingCost(this, this.cost, player.skills, player.activeSkills);
   }
 
   canBeCreatedOn(tileInfo: TileInfo) {
@@ -449,11 +449,10 @@ export const RadarStation = new BuildingInfo(
 );
 
 export const PowerStation = new BuildingInfo(
-  11,
+  BuildingID.PowerStation,
   'Power Station',
   `Power Stations increase the funds earned from all other buildings by 30%.`,
   {
-    canBeCreated: false,
     cost: Number.POSITIVE_INFINITY,
     defense: 30,
     placeOn: new Set([ConstructionSite]),
@@ -482,7 +481,7 @@ export const Barracks = new BuildingInfo(
 );
 
 export const Shelter = new BuildingInfo(
-  13,
+  BuildingID.Shelter,
   'Shelter',
   `Shelters automatically heal and resupply infantry units at the beginning of each turn.`,
   {
@@ -498,7 +497,7 @@ export const Shelter = new BuildingInfo(
 );
 
 export const Bar = new BuildingInfo(
-  BarID,
+  BuildingID.Bar,
   'Bar',
   `A bar, on the battlefield? Why?`,
   {

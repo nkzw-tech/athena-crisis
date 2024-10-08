@@ -1,12 +1,13 @@
 import { PowerStation } from '../info/Building.tsx';
-import { PowerStationMultiplier } from '../map/Configuration.tsx';
-import Player, { PlayerID } from '../map/Player.tsx';
+import { Skill } from '../info/Skill.tsx';
+import {
+  PowerStationMultiplier,
+  PowerStationSkillMultiplier,
+} from '../map/Configuration.tsx';
+import Player from '../map/Player.tsx';
 import MapData from '../MapData.tsx';
 
-export default function calculateFunds(
-  map: MapData,
-  player: Player | PlayerID,
-): number {
+export default function calculateFunds(map: MapData, player: Player): number {
   let sum = 0;
   let powerStations = 0;
 
@@ -21,7 +22,14 @@ export default function calculateFunds(
   }
 
   return Math.floor(
-    sum * map.config.multiplier * (1 + PowerStationMultiplier * powerStations),
+    sum *
+      map.config.multiplier *
+      (1 +
+        (PowerStationMultiplier +
+          (player.skills.has(Skill.UnlockPowerStation)
+            ? PowerStationSkillMultiplier
+            : 0)) *
+          powerStations),
   );
 }
 

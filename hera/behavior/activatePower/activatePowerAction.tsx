@@ -1,16 +1,18 @@
 import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import {
+  getUnitsToDamage,
   onPowerUnitOpponentEffect,
   onPowerUnitUpgrade,
 } from '@deities/apollo/actions/applyPower.tsx';
-import { getHealUnitTypes, Skill } from '@deities/athena/info/Skill.tsx';
+import {
+  getHealUnitTypes,
+  getSkillPowerDamage,
+  Skill,
+} from '@deities/athena/info/Skill.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import {
-  MaxHealth,
-  OctopusPowerDamage,
-} from '@deities/athena/map/Configuration.tsx';
+import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -45,7 +47,6 @@ export default async function activatePowerAction(
   const { requestFrame, update } = actions;
   const { skill, units: unitsToSpawn } = actionResponse;
   const { colors, name } = getSkillConfigForDisplay(skill);
-  const { vision } = state;
   const player = state.map.getCurrentPlayer();
 
   return new Promise((resolve) =>
@@ -54,9 +55,10 @@ export default async function activatePowerAction(
         color: colors,
         length: 'long',
         onComplete: (state) => {
+          const { vision } = state;
           const finalMap = applyActionResponse(
             state.map,
-            state.vision,
+            vision,
             actionResponse,
           );
 
@@ -70,14 +72,12 @@ export default async function activatePowerAction(
             .getActiveUnitTypes()
             .get(player.id);
 
-          const unitsToDamage =
-            skill === Skill.BuyUnitOctopus
-              ? state.map.units.filter(
-                  (unit, vector) =>
-                    vision.isVisible(state.map, vector) &&
-                    state.map.isNonNeutralOpponent(player, unit),
-                )
-              : null;
+          const unitsToDamage = getUnitsToDamage(
+            state.map,
+            player,
+            skill,
+            vision,
+          );
           const unitsToHeal = getUnitsToHeal(state.map, player.id, skill);
           const healVectors = new Set(
             unitsToHeal ? [...unitsToHeal.keys()] : [],
@@ -88,7 +88,8 @@ export default async function activatePowerAction(
                 damageUnits(
                   actions,
                   state,
-                  OctopusPowerDamage,
+                  skill === Skill.BuyUnitDragon ? 'fire' : 'power',
+                  getSkillPowerDamage(skill),
                   sortByVectorKey(unitsToDamage),
                   next,
                   ({ map }, vector) => {
@@ -111,7 +112,8 @@ export default async function activatePowerAction(
               !healVectors.has(vector) &&
               (!unit.isCompleted() ||
                 skill === Skill.RecoverAirUnits ||
-                skill === Skill.SpawnUnitInfernoJetpack) &&
+                skill === Skill.SpawnUnitInfernoJetpack ||
+                skill === Skill.UnlockZombie) &&
               state.map.matchesPlayer(unit, player) &&
               matchesActiveType(unitTypes, unit, vector),
           );
@@ -130,9 +132,14 @@ export default async function activatePowerAction(
                   next,
                   ({ map }, vector) => {
                     const unit = map.units.get(vector);
-                    const newMap =
-                      unit && onPowerUnitUpgrade(skill, map, vector, unit);
-                    return newMap ? { map: newMap } : null;
+                    const newUnit = unit && onPowerUnitUpgrade(skill, unit);
+                    return newUnit
+                      ? {
+                          map: map.copy({
+                            units: map.units.set(vector, newUnit),
+                          }),
+                        }
+                      : null;
                   },
                 )
             : null;

@@ -6,7 +6,11 @@ import {
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { House, HQ, Shelter } from '@deities/athena/info/Building.tsx';
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import {
+  getSkillConfig,
+  getSkillPowerDamage,
+  Skill,
+} from '@deities/athena/info/Skill.tsx';
 import {
   APU,
   Bomber,
@@ -19,11 +23,7 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import {
-  Charge,
-  OctopusPowerDamage,
-  PoisonDamage,
-} from '@deities/athena/map/Configuration.tsx';
+import { Charge, PoisonDamage } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
@@ -486,7 +486,7 @@ test('game over through activating a power', async () => {
     units: map.units
       .set(
         vec(2, 2),
-        Flamethrower.create(player1).setHealth(OctopusPowerDamage - 1),
+        Flamethrower.create(player1).setHealth(getSkillPowerDamage(skill) - 1),
       )
       .set(vec(4, 4), Helicopter.create(player2)),
   });

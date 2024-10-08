@@ -1,5 +1,6 @@
 import { SoundName } from '@deities/athena/info/Music.tsx';
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
+import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { Rumble, rumbleEffect } from '@deities/ui/controls/setupGamePad.tsx';
@@ -21,7 +22,7 @@ export type AnimationProps = Readonly<{
   size: number;
   sound: SoundName | null;
   trailingDelay?: number;
-  variant?: number;
+  variant?: PlayerID;
   zIndex: number;
 }>;
 

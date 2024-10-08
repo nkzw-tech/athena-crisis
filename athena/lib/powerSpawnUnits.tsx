@@ -1,7 +1,13 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import { Bar, Barracks, HQ } from '../info/Building.tsx';
+import { Bar, Barracks, HQ, Shelter } from '../info/Building.tsx';
 import { Skill } from '../info/Skill.tsx';
-import { Alien, BazookaBear, InfernoJetpack, UnitInfo } from '../info/Unit.tsx';
+import {
+  Alien,
+  BazookaBear,
+  Bear,
+  InfernoJetpack,
+  UnitInfo,
+} from '../info/Unit.tsx';
 import Building from '../map/Building.tsx';
 import { PlayerID } from '../map/Player.tsx';
 import Unit from '../map/Unit.tsx';
@@ -21,6 +27,11 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
   [Skill.BuyUnitBazookaBear]: {
     matchBuilding: (building) => building.id === Bar.id,
     unitType: BazookaBear,
+  },
+
+  [Skill.BuyUnitBear]: {
+    matchBuilding: (building) => building.id === Shelter.id,
+    unitType: Bear,
   },
 
   [Skill.BuyUnitAlien]: {

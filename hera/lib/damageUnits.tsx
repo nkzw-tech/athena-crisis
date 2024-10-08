@@ -8,6 +8,7 @@ import explodeUnits from './explodeUnits.tsx';
 export default function damageUnits(
   actions: Actions,
   state: State,
+  animation: 'fire' | 'power',
   damage: number,
   unitsToDamage: Iterable<[Vector, Unit]>,
   onComplete: StateToStateLike = (state) => state,
@@ -22,6 +23,7 @@ export default function damageUnits(
           animations: animations.set(new AnimationKey(), {
             onComplete: (state) => ({
               animations: state.animations.set(position, {
+                animation,
                 onComplete: (state: State) => {
                   const healthAnimation = {
                     animations: state.animations.set(new AnimationKey(), {
@@ -50,6 +52,7 @@ export default function damageUnits(
                         ...damageUnits(
                           actions,
                           state,
+                          animation,
                           damage,
                           remainingItems,
                           onComplete,
@@ -64,6 +67,7 @@ export default function damageUnits(
                     ...damageUnits(
                       actions,
                       newState,
+                      animation,
                       damage,
                       remainingItems,
                       onComplete,

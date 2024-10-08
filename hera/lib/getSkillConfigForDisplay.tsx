@@ -8,6 +8,7 @@ import Fire from '@deities/ui/icons/Fire.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
 import Octopus from '@deities/ui/icons/Octopus.tsx';
+import Ogre from '@deities/ui/icons/Ogre.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
@@ -25,6 +26,7 @@ import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
+import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbt';
 
 type SkillConfig = Readonly<{
@@ -266,7 +268,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
       return {
         alpha: 0.3,
         borderStyle: 'coin',
-        colors: 'green',
+        colors: 'cyan',
         icon: Dinosaur,
         name: fbt('Dino Rampage', 'Skill name'),
       };
@@ -286,6 +288,46 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Fire,
         name: fbt('Inferno', 'Skill name'),
         textColor: '#fff',
+      };
+    case Skill.UnlockZombie:
+      return {
+        alpha: 0.3,
+        borderStyle: 'down',
+        colors: 'neutral',
+        icon: Zombie,
+        name: fbt('Last Resort', 'Skill name'),
+      };
+    case Skill.UnlockPowerStation:
+      return {
+        alpha: 0.5,
+        borderStyle: 'up2x',
+        colors: 'orange',
+        icon: Zap,
+        name: fbt('More Power', 'Skill name'),
+      };
+    case Skill.BuyUnitDragon:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'red',
+        icon: Fire,
+        name: fbt('Dragon Fire', 'Skill name'),
+      };
+    case Skill.BuyUnitBear:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'red',
+        icon: Paw,
+        name: fbt('Wild Companion', 'Skill name'),
+      };
+    case Skill.BuyUnitOgre:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'cyan',
+        icon: Ogre,
+        name: fbt('Large Footprint', 'Skill name'),
       };
     default: {
       skill satisfies never;

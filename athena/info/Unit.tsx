@@ -3385,7 +3385,7 @@ export const Octopus = new UnitInfo(
 );
 
 export const Dragon = new UnitInfo(
-  44,
+  UnitID.Dragon,
   'Dragon',
   'Coco',
   'unknown',
@@ -3446,7 +3446,7 @@ export const Dragon = new UnitInfo(
 );
 
 export const Bear = new UnitInfo(
-  45,
+  UnitID.Bear,
   'Bear',
   'Unknown',
   'female',
@@ -3562,7 +3562,7 @@ export const Zombie = new UnitInfo(
   },
 );
 export const Ogre = new UnitInfo(
-  48,
+  UnitID.Ogre,
   'Ogre',
   'Igor',
   'male',

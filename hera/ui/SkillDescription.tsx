@@ -3,6 +3,8 @@ import {
   Barracks,
   BuildingInfo,
   HQ,
+  PowerStation,
+  Shelter,
 } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import {
@@ -16,32 +18,41 @@ import {
   getSkillDefenseMovementTypeStatusEffect,
   getSkillDefenseUnitStatusEffect,
   getSkillEffect,
+  getSkillPowerDamage,
   getSkillTileAttackStatusEffect,
   getSkillTileDefenseStatusEffect,
   getSkillUnitCosts,
   getSkillUnitMovement,
   getUnitRangeForSkill,
+  MovementMap,
   Skill,
+  TileMovementMap,
 } from '@deities/athena/info/Skill.tsx';
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
   Alien,
   Battleship,
   BazookaBear,
+  Bear,
+  Dragon,
   Flamethrower,
   getUnitInfoOrThrow,
   InfernoJetpack,
+  Pioneer,
   Saboteur,
   Sniper,
   SpecialUnits,
   UnitInfo,
+  Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   CounterAttack,
   HealAmount,
-  OctopusPowerDamage,
+  LowHealthZombieSkillConversion,
+  PoisonSkillPowerDamageMultiplier,
+  PowerStationSkillMultiplier,
   RaisedCounterAttack,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
@@ -63,6 +74,11 @@ import BuildingTile from '../Building.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
 import UnitTile from '../Unit.tsx';
+
+const canBuildBar = (unitCosts: ReadonlyMap<ID, number>) =>
+  [...unitCosts.keys()].some((unit) =>
+    SpecialUnits.has(getUnitInfoOrThrow(unit)),
+  );
 
 const RawUnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
   <Fragment>
@@ -320,7 +336,7 @@ const TileTypeStatusEffect = ({
   effects: initialEffects,
   type,
 }: {
-  effects: ReadonlyMap<TileType, ReadonlyMap<MovementType, number>>;
+  effects: TileMovementMap;
   type: 'attack' | 'defense';
 }) => {
   const effects = [...initialEffects].filter(
@@ -330,9 +346,17 @@ const TileTypeStatusEffect = ({
       tileType !== TileTypes.ForestVariant4,
   );
 
-  return effects.length
+  const inverseEffects = new Map<MovementMap, ReadonlyArray<TileType>>();
+  for (const [tileType, effect] of effects) {
+    inverseEffects.set(effect, [
+      ...(inverseEffects.get(effect) || []),
+      tileType,
+    ]);
+  }
+
+  return inverseEffects.size
     ? intlList(
-        effects.map(([tileType, movementTypes], index) => (
+        [...inverseEffects].map(([movementTypes, tileTypes], index) => (
           <Fragment key={index}>
             <fbt desc="List item of tiletypes with status effects for specific movement types">
               <fbt:param name="movementTypeEffect">
@@ -340,7 +364,13 @@ const TileTypeStatusEffect = ({
               </fbt:param>{' '}
               on{' '}
               <fbt:param name="tileType">
-                <TileTypeName tileType={tileType} />
+                {intlList(
+                  tileTypes.map((tileType, index) => (
+                    <TileTypeName key={index} tileType={tileType} />
+                  )),
+                  Conjunctions.AND,
+                  Delimiters.COMMA,
+                )}
               </fbt:param>{' '}
               fields
             </fbt>
@@ -425,25 +455,39 @@ const UnitCosts = ({
   costs,
 }: {
   color: BaseColor;
-  costs: ReadonlyMap<number, number>;
+  costs: ReadonlyMap<ID, number>;
 }) => (
-  <fbt desc="List of one or more units that can be built using this skill">
-    Build
-    <fbt:param name="list">
-      {intlList(
-        [...costs].map(([unit, cost], index) => (
-          <UnitCost
-            color={color}
-            cost={cost}
-            key={index}
-            unit={getUnitInfoOrThrow(unit)}
-          />
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      )}
-    </fbt:param>.
-  </fbt>
+  <Fragment>
+    <fbt desc="List of one or more units that can be built using this skill">
+      Build
+      <fbt:param name="list">
+        {intlList(
+          [...costs].map(([unit, cost], index) => (
+            <UnitCost
+              color={color}
+              cost={cost}
+              key={index}
+              unit={getUnitInfoOrThrow(unit)}
+            />
+          )),
+          Conjunctions.AND,
+          Delimiters.COMMA,
+        )}
+      </fbt:param>.
+    </fbt>
+    {canBuildBar(costs) ? (
+      <Fragment>
+        {' '}
+        <fbt desc="List item explaining that the Bar can be built.">
+          Enables constructing
+          <fbt:param name="buildingName">
+            <BuildingName building={Bar} color={color} />
+          </fbt:param>{' '}
+          buildings.
+        </fbt>
+      </Fragment>
+    ) : null}
+  </Fragment>
 );
 
 const UnitBlocks = ({
@@ -615,6 +659,27 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
         </fbt>
       );
+    case Skill.UnlockZombie:
+      return (
+        <fbt desc="Additional skill description">
+          Units with less than{' '}
+          <fbt:param name="hp">{LowHealthZombieSkillConversion}</fbt:param>{' '}
+          health points convert opponents after attacking.
+        </fbt>
+      );
+    case Skill.UnlockPowerStation:
+      return (
+        <fbt desc="Additional skill description">
+          Each{' '}
+          <fbt:param name="buildingName">
+            <BuildingName building={PowerStation} color={color} />
+          </fbt:param>{' '}
+          building provides an extra{' '}
+          <fbt:param name="value">
+            {PowerStationSkillMultiplier * 100}
+          </fbt:param>% funds increase.
+        </fbt>
+      );
   }
   return null;
 };
@@ -661,6 +726,28 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           </fbt:param>.
         </fbt>
       );
+    case Skill.BuyUnitBear:
+      return (
+        <fbt desc="Additional skill description">
+          Spawns{' '}
+          <fbt:param name="unitName">
+            <UnitName color={color} unit={Bear} />
+          </fbt:param>{' '}
+          at each
+          <fbt:param name="buildingName">
+            <BuildingName building={Shelter} color={color} />
+          </fbt:param>.
+        </fbt>
+      );
+    case Skill.BuyUnitAcidBomber:
+      return (
+        <fbt desc="Additional skill description">
+          Increases damage to poisoned units by{' '}
+          <fbt:param name="value">
+            {PoisonSkillPowerDamageMultiplier * 100}
+          </fbt:param>%.
+        </fbt>
+      );
     case Skill.BuyUnitAlien:
       return (
         <fbt desc="Additional skill description">
@@ -682,8 +769,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description">
           Reduces the health of all opposing units by{' '}
-          <fbt:param name="amount">{OctopusPowerDamage}</fbt:param> health
-          points.
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
+          health points.
         </fbt>
       );
     case Skill.Sabotage:
@@ -711,6 +798,39 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           </fbt:param>.
         </fbt>
       );
+    case Skill.UnlockZombie:
+      return (
+        <fbt desc="Additional skill description">
+          Converts all
+          <fbt:param name="fromUnitName">
+            <UnitName color={color} unit={Pioneer} />
+          </fbt:param>{' '}
+          into{' '}
+          <fbt:param name="toUnitName">
+            <UnitName color={color} unit={Zombie} />
+          </fbt:param>.
+        </fbt>
+      );
+    case Skill.UnlockPowerStation:
+      return (
+        <fbt desc="Additional skill description">
+          Build{' '}
+          <fbt:param name="buildingName">
+            <BuildingName building={PowerStation} color={color} />
+          </fbt:param>{' '}
+          buildings at construction sites.
+        </fbt>
+      );
+    case Skill.BuyUnitDragon:
+      return (
+        <fbt desc="Additional skill description">
+          Opponents adjacent to{' '}
+          <fbt:param name="fromUnitName">
+            <UnitName color={color} unit={Dragon} />
+          </fbt:param>{' '}
+          are engulfed in flames and suffer massive damage.
+        </fbt>
+      );
   }
 
   return null;
@@ -728,6 +848,10 @@ export default memo(function SkillDescription({
   const isRegular = type === 'regular';
   const isPower = !isRegular;
   const { charges, requiresCrystal } = getSkillConfig(skill);
+  if ((charges == null || charges === 0) && isPower) {
+    return null;
+  }
+
   const attack = getSkillEffect(isRegular ? 'attack' : 'attack-power', skill);
   const cost = getSkillEffect(
     isRegular ? 'unit-cost' : 'unit-cost-power',
@@ -834,6 +958,80 @@ export default memo(function SkillDescription({
 
   return list?.length ? <div className="paragraph">{list}</div> : null;
 });
+
+export const SkillUnlockDescription = ({
+  color,
+  skill,
+}: {
+  color: BaseColor;
+  skill: Skill;
+}) => {
+  let unlockContent = null;
+  if (skill === Skill.UnlockPowerStation) {
+    unlockContent = (
+      <fbt desc="Description for unlocks">
+        Unlocks the{' '}
+        <fbt:param name="buildingName">
+          <BuildingName building={PowerStation} color={color} />
+        </fbt:param>{' '}
+        building in the Map Editor.
+      </fbt>
+    );
+  } else if (skill === Skill.UnlockZombie) {
+    unlockContent = (
+      <fbt desc="Description for unlocks">
+        Unlocks{' '}
+        <fbt:param name="unit">
+          <UnitName color={color} unit={Zombie} />
+        </fbt:param>{' '}
+        in the Map Editor.
+      </fbt>
+    );
+  } else {
+    const costs = getSkillUnitCosts(skill, 'regular');
+    const specialUnits = new Set();
+    for (const unit of costs.keys()) {
+      if (SpecialUnits.has(getUnitInfoOrThrow(unit))) {
+        specialUnits.add(unit);
+      }
+    }
+
+    if (specialUnits.size) {
+      unlockContent = (
+        <fbt desc="Description for unlocks">
+          Unlocks{' '}
+          <fbt:param name="list">
+            {intlList(
+              [...costs].map(([unit], index) => (
+                <UnitName
+                  color={color}
+                  key={index}
+                  unit={getUnitInfoOrThrow(unit)}
+                />
+              )),
+              Conjunctions.AND,
+              Delimiters.COMMA,
+            )}
+          </fbt:param>{' '}
+          and the{' '}
+          <fbt:param name="buildingName">
+            <BuildingName building={Bar} color={color} />
+          </fbt:param>{' '}
+          building in the Map Editor.
+        </fbt>
+      );
+    }
+  }
+
+  return unlockContent ? (
+    <div className="paragraph">
+      <span className={typeStyle} style={{ color: getColor(color) }}>
+        <fbt desc="Label for what a power unlocks">Unlock:</fbt>
+      </span>{' '}
+      {unlockContent}
+    </div>
+  ) : null;
+};
 
 const inlineStyle = css`
   display: inline-block;

@@ -1,6 +1,11 @@
-import { BuildingCover, MinDamage } from '../map/Configuration.tsx';
-import Entity from '../map/Entity.tsx';
-import Unit from '../map/Unit.tsx';
+import { Skill } from '../info/Skill.tsx';
+import {
+  BuildingCover,
+  MinDamage,
+  PoisonSkillPowerDamageMultiplier,
+} from '../map/Configuration.tsx';
+import Entity, { isUnit } from '../map/Entity.tsx';
+import Unit, { UnitStatusEffect } from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 import calculateDamage from './calculateDamage.tsx';
@@ -19,7 +24,7 @@ export default function calculateLikelyDamage(
   if (weapon) {
     const coverA = map.getTileInfo(from).configuration.cover;
     const coverB = map.getTileInfo(to).configuration.cover;
-    return Math.floor(
+    const damage = Math.floor(
       Math.max(
         MinDamage,
         calculateDamage(
@@ -36,6 +41,11 @@ export default function calculateLikelyDamage(
         ) * modifier,
       ),
     );
+    return isUnit(entityB) &&
+      entityB.statusEffect === UnitStatusEffect.Poison &&
+      map.getPlayer(unitA).activeSkills.has(Skill.BuyUnitAcidBomber)
+      ? Math.floor(damage * (1 + PoisonSkillPowerDamageMultiplier))
+      : damage;
   }
 
   return null;

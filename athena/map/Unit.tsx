@@ -15,6 +15,7 @@ import getUnitName from '../info/UnitNames.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
 import { ID } from '../MapData.tsx';
 import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
+import { LowHealthZombieSkillConversion } from './Configuration.tsx';
 import Entity, { PlainEntity } from './Entity.tsx';
 import Player, { PlayerID, PlayerIDSet, toPlayerID } from './Player.tsx';
 
@@ -481,7 +482,9 @@ export default class Unit extends Entity {
   canConvert(player: Player) {
     return (
       this.info.hasAbility(Ability.Convert) ||
-      (this.info === Saboteur && player.activeSkills.has(Skill.Sabotage))
+      (this.info === Saboteur && player.activeSkills.has(Skill.Sabotage)) ||
+      (this.health < LowHealthZombieSkillConversion &&
+        player.skills.has(Skill.UnlockZombie))
     );
   }
 
