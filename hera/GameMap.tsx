@@ -1,6 +1,5 @@
 import { Action, execute } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
@@ -15,6 +14,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
   DoubleSize,
+  MaxHealth,
   MaxSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
@@ -1036,11 +1036,19 @@ export default class GameMap extends Component<Props, State> {
           state = await this._update(resetBehavior(NullBehavior));
         }
       } else if (actionResponse.type === 'Capture') {
-        const { map, vision } = this.state;
-        // A remote capture action may reveal a hidden label.
-        await this._update({
-          map: applyActionResponse(map, vision, actionResponse),
-        });
+        const { map } = this.state;
+        const { building, from } = actionResponse;
+        if (building) {
+          // A remote capture action may reveal a hidden label.
+          await this._update({
+            map: map.copy({
+              buildings: map.buildings.set(
+                from,
+                building.setHealth(MaxHealth).complete(),
+              ),
+            }),
+          });
+        }
       } else if (actionResponse.type === 'EndTurn') {
         const { map } = this.state;
         const { current, next } = actionResponse;
