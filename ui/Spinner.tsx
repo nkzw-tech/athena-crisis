@@ -1,10 +1,15 @@
 import { css, keyframes } from '@emotion/css';
 import { useEffect, useState } from 'react';
+import Box from './Box.tsx';
 import clipBorder from './clipBorder.tsx';
 import getColor from './getColor.tsx';
 import Stack from './Stack.tsx';
 
-export default function Spinner() {
+export default function Spinner({
+  component: Component = Stack,
+}: {
+  component?: typeof Stack | typeof Box;
+}) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -15,7 +20,7 @@ export default function Spinner() {
   }, [show]);
 
   return (
-    <Stack
+    <Component
       alignCenter
       className={containerStyle}
       gap
@@ -24,7 +29,7 @@ export default function Spinner() {
       <div className={dotStyle}></div>
       <div className={dotStyle}></div>
       <div className={dotStyle}></div>
-    </Stack>
+    </Component>
   );
 }
 
