@@ -35,7 +35,7 @@ import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
 import Load from '@iconify-icons/pixelarticons/login.js';
-import { motion } from 'framer-motion';
+import { motion, MotionStyle } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
@@ -95,23 +95,25 @@ export default function ActionWheel({
       onAnimationComplete={() => setPaused(false)}
       onAnimationStart={() => setPaused(true)}
       onMouseEnter={resetPosition}
-      style={{
-        [cssVar('highlight-color')]: getColor(color),
-        [vars.set('count')]: count,
-        [vars.set('offset')]: count > 4 ? 2 : 1,
-        [vars.set('tan')]: hasEntities
-          ? Math.tan(Math.PI / Math.max(5, count)).toFixed(2)
-          : undefined,
-        left: (position.x - 2) * tileSize,
-        top: (position.y - 2) * tileSize,
-        zIndex,
-        ...(hasEntities
-          ? {
-              [vars.set('radius-size')]:
-                count === 9 ? 1.5 : count > 7 ? 1.45 : 1.6,
-            }
-          : null),
-      }}
+      style={
+        {
+          [cssVar('highlight-color')]: getColor(color),
+          [vars.set('count')]: count,
+          [vars.set('offset')]: count > 4 ? 2 : 1,
+          [vars.set('tan')]: hasEntities
+            ? Math.tan(Math.PI / Math.max(5, count)).toFixed(2)
+            : undefined,
+          left: (position.x - 2) * tileSize,
+          top: (position.y - 2) * tileSize,
+          zIndex,
+          ...(hasEntities
+            ? {
+                [vars.set('radius-size')]:
+                  count === 9 ? 1.5 : count > 7 ? 1.45 : 1.6,
+              }
+            : null),
+        } as MotionStyle
+      }
       transition={{
         duration: 0.3,
         ease: [0.34, 1.56, 0.64, 1],

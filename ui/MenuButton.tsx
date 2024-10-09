@@ -1,7 +1,7 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
-import { motion } from 'framer-motion';
-import { CSSProperties, memo, MouseEvent, ReactNode, RefObject } from 'react';
+import { motion, MotionStyle } from 'framer-motion';
+import { memo, MouseEvent, ReactNode, RefObject } from 'react';
 import { BoxStyle } from './Box.tsx';
 
 export default memo(function MenuButton({
@@ -20,7 +20,7 @@ export default memo(function MenuButton({
   hide?: boolean;
   onClick?: (event: MouseEvent) => void;
   ref?: RefObject<HTMLDivElement>;
-  style?: CSSProperties;
+  style?: MotionStyle;
 }) {
   return (
     <motion.div
