@@ -342,6 +342,12 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Units-VampireMedic',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Units-ReconDrone',
     {
       variantNames,

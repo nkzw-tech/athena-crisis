@@ -580,6 +580,21 @@ export const SpawnPlatform = new BuildingInfo(
   },
 );
 
+export const DestroyedSuperTank = new BuildingInfo(
+  20,
+  'Destroyed Super Tank',
+  `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
+  {
+    canBeCreated: false,
+    defense: 50,
+    editorPlaceOn: new Set([Plain, Street]),
+    isAccessible: false,
+    sort: 10,
+    type: EntityType.Structure,
+  },
+  { name: 'Structures', position: new SpriteVector(4, 0), size: 'small' },
+);
+
 // The order of buildings must not be changed.
 const Buildings = [
   HQ,
@@ -601,6 +616,7 @@ const Buildings = [
   RepairShop,
   Medbay,
   SpawnPlatform,
+  DestroyedSuperTank,
 ];
 
 export function getBuildingInfo(id: number): BuildingInfo | null {

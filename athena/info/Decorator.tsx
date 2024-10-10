@@ -46,6 +46,12 @@ enum DecoratorGroup {
   Pipe,
   Ladder,
   Plank,
+  Pumpkin,
+  Coffin,
+  SpiderWeb,
+  Candle,
+  Cauldron,
+  DestroyedUnit,
   Shipwreck,
   Buoy,
 }
@@ -58,7 +64,7 @@ export class DecoratorInfo {
     public readonly group: DecoratorGroup,
     public readonly position: SpriteVector,
     public readonly placeOn: Set<TileInfo>,
-    public readonly animation: TileAnimation | null = null,
+    public readonly animation: (TileAnimation & { clear?: true }) | null = null,
     public readonly biomeStyle?: Map<Biome, SpriteVector>,
     public readonly id: ID = 0,
   ) {}
@@ -111,7 +117,7 @@ export class DecoratorInfo {
 
 const TrenchTileGroup = new Set([Trench]);
 
-const seaAnimation = {
+const animation = {
   frames: 4,
   offset: 1,
   ticks: 6,
@@ -168,7 +174,7 @@ const Ladder = new DecoratorInfo(
   DecoratorGroup.Ladder,
   sprite(0, 1),
   SeaTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const Plank = new DecoratorInfo(
@@ -176,7 +182,7 @@ const Plank = new DecoratorInfo(
   DecoratorGroup.Plank,
   sprite(0, 2),
   SeaTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const StreetSign = new DecoratorInfo(
@@ -230,7 +236,7 @@ const Pothole = new DecoratorInfo(
   DecoratorGroup.PotHole,
   sprite(0, 6),
   PlainTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const ElectricityPole = new DecoratorInfo(
@@ -252,7 +258,7 @@ const StreetLamp = new DecoratorInfo(
   DecoratorGroup.StreetSign,
   sprite(4, 7),
   PlainTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const Statue = new DecoratorInfo(
@@ -339,7 +345,7 @@ const Shipwreck = new DecoratorInfo(
   DecoratorGroup.Shipwreck,
   sprite(0, 10),
   SeaTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const Sandbag = new DecoratorInfo(
@@ -403,7 +409,7 @@ const Buoy = new DecoratorInfo(
   DecoratorGroup.Buoy,
   sprite(20, 10),
   SeaTileGroup,
-  seaAnimation,
+  animation,
 );
 
 const Fence = new DecoratorInfo(
@@ -417,6 +423,58 @@ const Pipe = new DecoratorInfo(
   'Pipe',
   DecoratorGroup.Pipe,
   sprite(23, 2),
+  PlainTileGroup,
+);
+
+const Pumpkin = new DecoratorInfo(
+  'Pumpkin',
+  DecoratorGroup.Pumpkin,
+  sprite(21, 3),
+  PlainTileGroup,
+);
+
+const Coffin = new DecoratorInfo(
+  'Coffin',
+  DecoratorGroup.Coffin,
+  sprite(20, 1),
+  PlainTileGroup,
+);
+
+const AnimatedCoffin = new DecoratorInfo(
+  'Coffin',
+  DecoratorGroup.Coffin,
+  sprite(21, 4),
+  PlainTileGroup,
+  animation,
+);
+
+const SpiderWeb = new DecoratorInfo(
+  'SpiderWeb',
+  DecoratorGroup.SpiderWeb,
+  sprite(21, 5),
+  PlainTileGroup,
+);
+
+const Candle = new DecoratorInfo(
+  'Candle',
+  DecoratorGroup.Candle,
+  sprite(22, 6),
+  PlainTileGroup,
+  { ...animation, clear: true },
+);
+
+const Cauldron = new DecoratorInfo(
+  'Cauldron',
+  DecoratorGroup.Cauldron,
+  sprite(0, 11),
+  PlainTileGroup,
+  { ...animation, clear: true, frames: 11 },
+);
+
+const DestroyedUnit = new DecoratorInfo(
+  'Destroyed Unit',
+  DecoratorGroup.DestroyedUnit,
+  sprite(0, 12),
   PlainTileGroup,
 );
 
@@ -565,6 +623,27 @@ const Decorators = [
   Pipe,
   Pipe.right(1),
   Pipe.right(2),
+  Pumpkin,
+  Pumpkin.right(1),
+  Pumpkin.right(2),
+  Pumpkin.right(3),
+  Pumpkin.right(4),
+  Coffin,
+  Coffin.right(1),
+  AnimatedCoffin,
+  SpiderWeb,
+  SpiderWeb.right(1),
+  SpiderWeb.right(2),
+  Candle,
+  Candle.down(1),
+  Candle.down(2),
+  Candle.down(3),
+  Cauldron,
+  Shipwreck.down(1).right(12),
+  Shipwreck.down(1).right(16),
+  ...Array(20)
+    .fill(0)
+    .map((_, index) => DestroyedUnit.right(index)),
 ].map((decorator, index) => decorator.copy({ id: index + 1 }));
 
 export const Bush = Decorators[0];

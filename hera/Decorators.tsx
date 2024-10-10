@@ -68,6 +68,7 @@ export default memo(function Decorators({
 
     const currentTick = getTick();
     const animatedDecorators = new Map<Vector, DecoratorInfo>();
+    const clearableVectors = new Set<Vector>();
     map.forEachDecorator((decorator, vector) => {
       renderDecorator(
         context,
@@ -81,27 +82,42 @@ export default memo(function Decorators({
 
       if (decorator.animation) {
         animatedDecorators.set(vector, decorator);
+
+        if (decorator.animation.clear) {
+          clearableVectors.add(vector);
+        }
       }
     });
 
     if (!paused && isVisible && animatedDecorators.size) {
       return tick((tick) => {
-        animatedDecorators.forEach(
-          (decorator: DecoratorInfo, vector: Vector) => {
-            const frame = getFrame(decorator, 0, tick);
-            if (frame != null) {
-              renderDecorator(
-                context,
-                image,
-                frame,
-                decorator,
-                vector,
-                size,
-                map.config.biome,
-              );
-            }
-          },
-        );
+        for (const vector of clearableVectors) {
+          const targetX = (vector.x * size) / DecoratorsPerSide + size / 2 - 1;
+          const targetY = (vector.y * size) / DecoratorsPerSide;
+          context.clearRect(targetX, targetY, size, size);
+        }
+
+        const render = (decorator: DecoratorInfo, vector: Vector) => {
+          const frame =
+            getFrame(decorator, 0, tick) || (clearableVectors.size ? 0 : null);
+          if (frame != null) {
+            renderDecorator(
+              context,
+              image,
+              frame,
+              decorator,
+              vector,
+              size,
+              map.config.biome,
+            );
+          }
+        };
+
+        if (clearableVectors.size) {
+          map.forEachDecorator(render);
+        } else {
+          animatedDecorators.forEach(render);
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

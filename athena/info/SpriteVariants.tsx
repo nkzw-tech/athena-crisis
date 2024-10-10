@@ -63,5 +63,6 @@ export type SpriteVariant =
   | 'Units-TransportHelicopter'
   | 'Units-TransportTrain'
   | 'Units-Truck'
+  | 'Units-VampireMedic'
   | 'Units-XFighter'
   | 'Units-Zombie';
