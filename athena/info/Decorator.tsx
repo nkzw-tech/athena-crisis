@@ -641,7 +641,7 @@ const Decorators = [
   Cauldron,
   Shipwreck.down(1).right(12),
   Shipwreck.down(1).right(16),
-  ...Array(20)
+  ...Array(19)
     .fill(0)
     .map((_, index) => DestroyedUnit.right(index)),
 ].map((decorator, index) => decorator.copy({ id: index + 1 }));
