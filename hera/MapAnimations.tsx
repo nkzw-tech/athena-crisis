@@ -507,7 +507,6 @@ const MapAnimation = ({
       case 'upgrade':
         return (
           <UpgradeAnimation
-            delay={animationConfig.ExplosionStep}
             position={position}
             requestFrame={requestFrame}
             size={tileSize}

@@ -14,6 +14,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
   DoubleSize,
+  FastAnimationConfig,
   MaxHealth,
   MaxSize,
   TileSize,
@@ -1717,7 +1718,7 @@ export default class GameMap extends Component<Props, State> {
         block: direction?.x && !direction.y ? 'nearest' : 'center',
         inline: direction?.y && !direction.x ? 'nearest' : 'center',
       });
-      return sleep(this._scheduleTimer, this.state.animationConfig, 'long');
+      return sleep(this._scheduleTimer, FastAnimationConfig, 'long');
     }
   };
 

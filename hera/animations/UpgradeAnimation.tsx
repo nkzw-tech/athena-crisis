@@ -1,3 +1,4 @@
+import { FastAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
@@ -17,14 +18,14 @@ export default function UpgradeAnimation({
   size,
   update,
   ...props
-}: Omit<AnimationProps, 'sound'> & {
-  delay: number;
+}: Omit<AnimationProps, 'sound' | 'delay'> & {
   onUpgrade: StateToStateLike;
   position: Vector;
   update: UpdateFunction;
 }) {
   return (
     <Animation
+      delay={FastAnimationConfig.ExplosionStep}
       frames={frames}
       onStep={useCallback(
         (step: number) => {
