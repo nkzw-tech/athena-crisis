@@ -1,3 +1,4 @@
+import { Charge } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import type Team from '@deities/athena/map/Team.tsx';
@@ -8,6 +9,7 @@ import sortBy from '@deities/hephaestus/sortBy.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
+import { BorderRainbowAnimation } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import { memo, ReactElement, useCallback, useState } from 'react';
@@ -19,6 +21,7 @@ import {
   hasNotableAnimation,
 } from '../MapAnimations.tsx';
 import { Actions, GameInfoState } from '../Types.tsx';
+import getMaxCharge from './lib/getMaxCharge.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import PlayerCard from './PlayerCard.tsx';
 import Vs from './Vs.tsx';
@@ -163,6 +166,11 @@ export default memo(function CurrentGameCard({
   );
   const players = map.getPlayers();
   const hasSkills = players.some(({ skills }) => skills.size > 0);
+  const currentPlayer = map.getCurrentPlayer();
+  const isCurrentPlayer = currentViewer === currentPlayer.id;
+  const canActivatePower =
+    isCurrentPlayer &&
+    getMaxCharge(currentPlayer, Math.floor(currentPlayer.charge / Charge)) > 0;
 
   const animatePlayer = hasNotableAnimation(animations);
   const hasMessages = hasCharacterMessage(animations);
@@ -193,6 +201,7 @@ export default memo(function CurrentGameCard({
   const content = (
     <div className={cx(maybeFade(hide), hasMessages && diabledStyle)}>
       <PrimaryExpandableMenuButton
+        className={cx(canActivatePower && BorderRainbowAnimation)}
         gap={16}
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}

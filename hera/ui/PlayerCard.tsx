@@ -21,7 +21,6 @@ import {
   Objective,
   objectiveHasAmounts,
 } from '@deities/athena/Objectives.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -59,6 +58,7 @@ import { PlayerEffectItem } from '../Types.tsx';
 import CrystalIcon from './CrystalIcon.tsx';
 import { GameCardProps } from './CurrentGameCard.tsx';
 import Funds from './Funds.tsx';
+import getMaxCharge from './lib/getMaxCharge.tsx';
 import { SkillIcon } from './SkillDialog.tsx';
 
 const emptyMap = new Map();
@@ -105,20 +105,7 @@ export default memo(function PlayerCard({
   const charge = shouldShow ? player.charge : 0;
   const availableCharges = Math.floor(charge / Charge);
   const remainingCharge = charge % Charge;
-  const maxCharge =
-    (shouldShow &&
-      sortBy(
-        [...player.skills].flatMap((skill) => {
-          if (player.activeSkills.has(skill)) {
-            return [];
-          }
-
-          const { charges } = getSkillConfig(skill);
-          return charges && charges <= availableCharges ? [charges] : [];
-        }),
-        (charges) => charges,
-      ).at(-1)) ||
-    0;
+  const maxCharge = (shouldShow && getMaxCharge(player, availableCharges)) || 0;
 
   const canAction = useCallback(
     (item: PlayerEffectItem) => {

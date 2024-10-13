@@ -1,6 +1,7 @@
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import { css, keyframes } from '@emotion/css';
 import getColor from './getColor.tsx';
+import pixelBorder from './pixelBorder.tsx';
 
 const colors = PlayerIDs.slice(2);
 const rainbow = keyframes`
@@ -47,6 +48,21 @@ export const RainbowStyle = css`
 export const SlowRainbowStyle = css`
   color: ${getColor(1)};
   animation: ${rainbow} ${colors.length * 1.5}s infinite;
+`;
+
+export const BorderRainbowAnimation = css`
+  ${pixelBorder(getColor(1), 2)}
+
+  animation: ${keyframes`
+    0%, 100% {
+      ${pixelBorder(getColor(1), 2)}
+    }
+
+    ${colors.map(
+      (color, index) =>
+        `${Math.floor(((index + 1) / (colors.length + 1)) * 100)}% { ${pixelBorder(getColor(color), 2)} }`,
+    )};
+  `} ${colors.length * 1.5}s infinite;
 `;
 
 export const SquarePulseStyle = css`
