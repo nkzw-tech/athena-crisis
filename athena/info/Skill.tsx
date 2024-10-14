@@ -702,7 +702,7 @@ export function getUnitCost(
     }
   }
 
-  return Math.floor(min * modifier);
+  return Math.ceil(min * modifier);
 }
 
 export function hasUnlockedBuilding(
