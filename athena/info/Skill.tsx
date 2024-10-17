@@ -219,7 +219,7 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
 const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
   [Skill.UnitBattleShipMoveAndAct, new Map([[MovementTypes.Ship, 0.5]])],
   [Skill.BuyUnitBrute, new Map([[MovementTypes.Soldier, 0.5]])],
-  [Skill.BuyUnitSuperAPU, new Map([[MovementTypes.HeavySoldier, 3]])],
+  [Skill.BuyUnitSuperAPU, new Map([[MovementTypes.HeavySoldier, 0.5]])],
   [
     Skill.HealInfantryMedicPower,
     new Map([
