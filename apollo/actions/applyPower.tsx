@@ -22,15 +22,6 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 
-const convert = (unit: Unit, to: UnitInfo) =>
-  to
-    .create(unit.player, { label: unit.label })
-    .setHealth(unit.health)
-    .copy({
-      completed: unit.isCompleted() ? true : undefined,
-      moved: unit.hasMoved() ? true : undefined,
-    });
-
 const conversions = new Map<Skill, Readonly<{ from: UnitInfo; to: UnitInfo }>>([
   [Skill.SpawnUnitInfernoJetpack, { from: Flamethrower, to: InfernoJetpack }],
   [Skill.UnlockZombie, { from: Pioneer, to: Zombie }],
@@ -84,7 +75,7 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
 
   const conversion = conversions.get(skill);
   if (conversion) {
-    return convert(unit, conversion.to);
+    return unit.maybeConvert(conversion.from, conversion.to);
   }
 
   return null;
@@ -144,11 +135,8 @@ export default function applyPower(skill: Skill, map: MapData) {
   const conversion = conversions.get(skill);
   if (conversion) {
     const newUnits = map.units
-      .filter(
-        (unit) =>
-          unit.info === conversion.from && map.matchesPlayer(player, unit),
-      )
-      .map((unit) => convert(unit, conversion.to));
+      .filter((unit) => map.matchesPlayer(player, unit))
+      .map((unit) => unit.maybeConvert(conversion.from, conversion.to));
 
     map = map.copy({
       units: map.units.merge(

@@ -740,7 +740,7 @@ export class UnitInfo {
   create(
     player: Player | PlayerID,
     config?: {
-      behavior?: AIBehavior;
+      behavior?: AIBehavior | null;
       label?: PlayerID | null;
       name?: number | null;
     },

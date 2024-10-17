@@ -211,6 +211,31 @@ export class TransportedUnit {
     return unit.isLeader() ? unit.copy({ name: null }) : unit;
   }
 
+  maybeConvert(from: UnitInfo, to: UnitInfo): TransportedUnit {
+    let unit =
+      from.id === this.id
+        ? to
+            .create(this.player, {
+              behavior: this.behavior,
+              label: this.label,
+            })
+            .setHealth(this.health)
+            .copy({
+              moved: this.moved ? true : undefined,
+              transports: this.transports,
+            })
+            .transport()
+        : this;
+
+    if (unit.transports?.length) {
+      unit = unit.copy({
+        transports: unit.transports.map((unit) => unit.maybeConvert(from, to)),
+      });
+    }
+
+    return unit;
+  }
+
   hasName() {
     return !!(this.name != null && getUnitName(this.info.gender, this.name));
   }
@@ -730,6 +755,31 @@ export default class Unit extends Entity {
     }
 
     return unit.isLeader() ? unit.copy({ name: null }) : unit;
+  }
+
+  maybeConvert(from: UnitInfo, to: UnitInfo): Unit {
+    let unit =
+      from.id === this.id
+        ? to
+            .create(this.player, {
+              behavior: this.behavior,
+              label: this.label,
+            })
+            .setHealth(this.health)
+            .copy({
+              completed: this.isCompleted() ? true : undefined,
+              moved: this.hasMoved() ? true : undefined,
+              transports: this.transports,
+            })
+        : this;
+
+    if (unit.transports?.length) {
+      unit = unit.copy({
+        transports: unit.transports.map((unit) => unit.maybeConvert(from, to)),
+      });
+    }
+
+    return unit;
   }
 
   hasName() {
