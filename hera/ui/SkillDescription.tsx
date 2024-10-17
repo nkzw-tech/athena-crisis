@@ -30,6 +30,7 @@ import {
 } from '@deities/athena/info/Skill.tsx';
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
+  AcidBomber,
   Alien,
   Battleship,
   BazookaBear,
@@ -42,6 +43,7 @@ import {
   Saboteur,
   Sniper,
   SpecialUnits,
+  SuperTank,
   UnitInfo,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
@@ -959,6 +961,13 @@ export default memo(function SkillDescription({
   return list?.length ? <div className="paragraph">{list}</div> : null;
 });
 
+const mapEditorUnitUnlocks = new Map<Skill, UnitInfo>([
+  [Skill.UnlockZombie, Zombie],
+  [Skill.BuyUnitSuperTank, SuperTank],
+  [Skill.BuyUnitAcidBomber, AcidBomber],
+  [Skill.BuyUnitAlien, Alien],
+]);
+
 export const SkillUnlockDescription = ({
   color,
   skill,
@@ -967,7 +976,18 @@ export const SkillUnlockDescription = ({
   skill: Skill;
 }) => {
   let unlockContent = null;
-  if (skill === Skill.UnlockPowerStation) {
+  const unitInfo = mapEditorUnitUnlocks.get(skill);
+  if (unitInfo) {
+    unlockContent = (
+      <fbt desc="Description for unlocks">
+        Unlocks{' '}
+        <fbt:param name="unit">
+          <UnitName color={color} unit={unitInfo} />
+        </fbt:param>{' '}
+        in the Map Editor.
+      </fbt>
+    );
+  } else if (skill === Skill.UnlockPowerStation) {
     unlockContent = (
       <fbt desc="Description for unlocks">
         Unlocks the{' '}
@@ -975,16 +995,6 @@ export const SkillUnlockDescription = ({
           <BuildingName building={PowerStation} color={color} />
         </fbt:param>{' '}
         building in the Map Editor.
-      </fbt>
-    );
-  } else if (skill === Skill.UnlockZombie) {
-    unlockContent = (
-      <fbt desc="Description for unlocks">
-        Unlocks{' '}
-        <fbt:param name="unit">
-          <UnitName color={color} unit={Zombie} />
-        </fbt:param>{' '}
-        in the Map Editor.
       </fbt>
     );
   } else {
