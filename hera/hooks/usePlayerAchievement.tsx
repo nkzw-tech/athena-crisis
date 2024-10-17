@@ -16,7 +16,7 @@ export default function usePlayerAchievement(
         ? String(
             Object.keys(result).filter(
               (type) => result[type as PerformanceType] != null,
-            ).length,
+            ).length || '?',
           )
         : '?',
     ] as const;
