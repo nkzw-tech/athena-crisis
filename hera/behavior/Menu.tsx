@@ -121,7 +121,10 @@ const attackAction = (
 const AttackButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('attack') ? (
     <ActionButton
-      hasShift={availableActions.has('createBuildings')}
+      hasShift={
+        availableActions.has('createBuildings') ||
+        availableActions.has('supply')
+      }
       label={
         <fbt desc="Attack button label (as short as possible, ideally one word)">
           Attack
@@ -294,6 +297,7 @@ const SupplyButton = ({ actions, availableActions, state }: MenuItemProps) => {
           ),
         )
       }
+      shift={availableActions.has('attack')}
       type="supply"
     />
   ) : null;
