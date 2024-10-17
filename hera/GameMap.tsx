@@ -589,15 +589,20 @@ export default class GameMap extends Component<Props, State> {
       this._skipDialogueTimer = setTimeout(() => {
         this._skipDialogueTimer = null;
         if (!this.state.skipDialogue) {
-          rumbleEffect('accept');
-          AudioPlayer.playSound('UI/Skip');
+          let hasMessage = false;
           for (const [vector, animation] of this.state.animations) {
             if (animation.type === 'characterMessage' && !animation.completed) {
+              hasMessage = true;
               this._requestFrame(() =>
                 this._animationComplete(vector, animation),
               );
             }
           }
+          if (hasMessage) {
+            rumbleEffect('accept');
+            AudioPlayer.playSound('UI/Skip');
+          }
+
           this.setState({ showSkipDialogue: false, skipDialogue: true });
         }
       }, MessageSkipDuration);
