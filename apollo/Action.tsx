@@ -319,9 +319,9 @@ function _attackUnit(
   const luck = 1;
   const tileInfoA = map.getTileInfo(vectorA);
   const tileInfoB = map.getTileInfo(vectorB);
-  let damage = Math.floor(
-    Math.max(
-      MinDamage,
+  let damage = Math.max(
+    MinDamage,
+    Math.ceil(
       calculateDamage(
         unitA,
         unitB,
@@ -360,7 +360,7 @@ function _attackBuilding(
   const luck = 1;
   const tileInfoA = map.getTileInfo(vectorA);
   const tileInfoB = map.getTileInfo(vectorB);
-  const damage = Math.floor(
+  const damage = Math.ceil(
     calculateDamage(
       unitA,
       buildingB,

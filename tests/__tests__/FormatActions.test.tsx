@@ -146,18 +146,18 @@ test('create building and create unit actions', async () => {
     CreateUnit (5,2 → 4,2) { unit: Infantry { id: 2, health: 100, player: 2, fuel: 50, moved: true, name: 'Valentin', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 8450, player: 2 }, next: { funds: 9050, player: 1 }, round: 4, rotatePlayers: null, supply: null, miss: null }
     Move (2,1 → 3,2) { fuel: 48, completed: null, path: [3,1 → 3,2] }
-    AttackUnit (3,2 → 4,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 75 }, unitB: DryUnit { health: 43 }, chargeA: 87, chargeB: 113 }
+    AttackUnit (3,2 → 4,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 74 }, unitB: DryUnit { health: 42 }, chargeA: 90, chargeB: 115 }
     Move (1,3 → 1,4) { fuel: 39, completed: null, path: [1,4] }
     Capture (1,4)
     Move (2,2 → 2,5) { fuel: 37, completed: null, path: [2,3 → 2,4 → 2,5] }
     Capture (2,5)
     EndTurn { current: { funds: 9050, player: 1 }, next: { funds: 8450, player: 2 }, round: 4, rotatePlayers: null, supply: null, miss: null }
     Capture (4,1) { building: Barracks { id: 12, health: 100, player: 2 }, player: 1 }
-    AttackUnit (4,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 18 }, unitB: DryUnit { health: 42 }, chargeA: 184, chargeB: 153 }
+    AttackUnit (4,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 17 }, unitB: DryUnit { health: 40 }, chargeA: 187, chargeB: 158 }
     EndTurn { current: { funds: 8450, player: 2 }, next: { funds: 9050, player: 1 }, round: 5, rotatePlayers: null, supply: null, miss: null }
     Capture (1,4) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }
     Capture (2,5) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-    AttackUnit (3,2 → 4,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 42 }, unitB: null, chargeA: 164, chargeB: 220 }
+    AttackUnit (3,2 → 4,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 40 }, unitB: null, chargeA: 169, chargeB: 221 }
     CreateUnit (2,1 → 3,1) { unit: Sniper { id: 14, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 7 ] ], moved: true, name: 'Maxima', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 8675, player: 1 }, next: { funds: 8450, player: 2 }, round: 5, rotatePlayers: null, supply: null, miss: null }
     Move (4,1 → 5,3) { fuel: 36, completed: null, path: [5,1 → 5,2 → 5,3] }
@@ -165,7 +165,7 @@ test('create building and create unit actions', async () => {
     Move (2,5 → 5,5) { fuel: 34, completed: null, path: [3,5 → 4,5 → 5,5] }
     Capture (5,5)
     Move (3,2 → 4,3) { fuel: 46, completed: null, path: [4,2 → 4,3] }
-    AttackUnit (4,3 → 5,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 42 }, unitB: DryUnit { health: 62 }, chargeA: 176, chargeB: 258 }
+    AttackUnit (4,3 → 5,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 40 }, unitB: DryUnit { health: 62 }, chargeA: 181, chargeB: 259 }
     Move (3,1 → 3,2) { fuel: 39, completed: null, path: [3,2] }
     Unfold (3,2)
     Move (1,4 → 4,4) { fuel: 36, completed: null, path: [2,4 → 3,4 → 4,4] }
@@ -201,18 +201,18 @@ test('create building and create unit actions', async () => {
       HiddenMove { path: [5,2 → 4,2], completed: false, fuel: null, unit: Infantry { id: 2, health: 100, player: 2, fuel: 50, moved: true, name: 'Valentin', completed: true } }
       EndTurn { current: { funds: 8450, player: 2 }, next: { funds: 9050, player: 1 }, round: 4, rotatePlayers: false, supply: null, miss: false }
       Move (2,1 → 3,2) { fuel: 48, completed: false, path: [3,1 → 3,2] }
-      AttackUnit (3,2 → 4,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 75 }, unitB: DryUnit { health: 43 }, chargeA: 87, chargeB: 113 }
+      AttackUnit (3,2 → 4,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 74 }, unitB: DryUnit { health: 42 }, chargeA: 90, chargeB: 115 }
       Move (1,3 → 1,4) { fuel: 39, completed: false, path: [1,4] }
       Capture (1,4)
       Move (2,2 → 2,5) { fuel: 37, completed: false, path: [2,3 → 2,4 → 2,5] }
       Capture (2,5)
       EndTurn { current: { funds: 9050, player: 1 }, next: { funds: 8450, player: 2 }, round: 4, rotatePlayers: false, supply: null, miss: false }
       Capture (4,1) { building: Barracks { id: 12, health: 100, player: 2 }, player: 1 }
-      AttackUnit (4,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 18 }, unitB: DryUnit { health: 42 }, chargeA: 184, chargeB: 153 }
+      AttackUnit (4,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 17 }, unitB: DryUnit { health: 40 }, chargeA: 187, chargeB: 158 }
       EndTurn { current: { funds: 8450, player: 2 }, next: { funds: 9050, player: 1 }, round: 5, rotatePlayers: false, supply: null, miss: false }
       Capture (1,4) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }
       Capture (2,5) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
-      AttackUnit (3,2 → 4,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 42 }, unitB: null, chargeA: 164, chargeB: 220 }
+      AttackUnit (3,2 → 4,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 40 }, unitB: null, chargeA: 169, chargeB: 221 }
       CreateUnit (2,1 → 3,1) { unit: Sniper { id: 14, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 7 ] ], moved: true, name: 'Maxima', completed: true }, free: false, skipBehaviorRotation: false }
       EndTurn { current: { funds: 8675, player: 1 }, next: { funds: 8450, player: 2 }, round: 5, rotatePlayers: false, supply: null, miss: false }
       HiddenMove { path: [4,1 → 5,1 → 5,2 → 5,3], completed: false, fuel: 36, unit: null }
@@ -220,7 +220,7 @@ test('create building and create unit actions', async () => {
       Move (2,5 → 5,5) { fuel: 34, completed: false, path: [3,5 → 4,5 → 5,5] }
       Capture (5,5)
       Move (3,2 → 4,3) { fuel: 46, completed: false, path: [4,2 → 4,3] }
-      AttackUnit (4,3 → 5,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 42 }, unitB: DryUnit { health: 62 }, chargeA: 176, chargeB: 258 }
+      AttackUnit (4,3 → 5,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 40 }, unitB: DryUnit { health: 62 }, chargeA: 181, chargeB: 259 }
       Move (3,1 → 3,2) { fuel: 39, completed: false, path: [3,2] }
       Unfold (3,2)
       Move (1,4 → 4,4) { fuel: 36, completed: false, path: [2,4 → 3,4 → 4,4] }

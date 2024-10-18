@@ -181,7 +181,7 @@ test('AI will hop between islands if necessary', async () => {
 
   const secondGameState = await execute(gameState!.at(-1)![1]);
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
-    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 26, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 277 }
+    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 25, ammo: [ [ 1, 6 ] ] }, chargeA: 122, chargeB: 281 }
     CompleteUnit (2,2)
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -200,7 +200,7 @@ test('AI will hop between islands if necessary', async () => {
 
   const secondFogGameState = await execute(fogGameState!.at(-1)![1]);
   expect(snapshotGameState(secondFogGameState)).toMatchInlineSnapshot(`
-    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 26, ammo: [ [ 1, 6 ] ] }, chargeA: 121, chargeB: 277 }
+    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 25, ammo: [ [ 1, 6 ] ] }, chargeA: 122, chargeB: 281 }
     CompleteUnit (2,2)
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
   `);

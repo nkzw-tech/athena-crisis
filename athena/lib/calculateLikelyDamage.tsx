@@ -24,9 +24,9 @@ export default function calculateLikelyDamage(
   if (weapon) {
     const coverA = map.getTileInfo(from).configuration.cover;
     const coverB = map.getTileInfo(to).configuration.cover;
-    const damage = Math.floor(
-      Math.max(
-        MinDamage,
+    const damage = Math.max(
+      MinDamage,
+      Math.ceil(
         calculateDamage(
           unitA,
           entityB,

@@ -340,7 +340,7 @@ test('capture might be stopped when a unit is converted to another faction', asy
   expect(
     snapshotEncodedActionResponse(gameActionResponseA),
   ).toMatchInlineSnapshot(
-    `"AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 47, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 30, ammo: [ [ 1, 3 ] ] }, chargeA: 304, chargeB: 280 }"`,
+    `"AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 46, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 29, ammo: [ [ 1, 3 ] ] }, chargeA: 309, chargeB: 284 }"`,
   );
 
   const lastMap = gameState.at(-1)![1];
@@ -378,7 +378,7 @@ test('capture does not stop when a unit is converted to another faction and they
   expect(
     snapshotEncodedActionResponse(gameActionResponseA),
   ).toMatchInlineSnapshot(
-    `"AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 42, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 2, ammo: [ [ 1, 4 ] ] }, chargeA: 201, chargeB: 392 }"`,
+    `"AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 41, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 1, ammo: [ [ 1, 4 ] ] }, chargeA: 206, chargeB: 396 }"`,
   );
 
   const lastMap = gameState.at(-1)![1];

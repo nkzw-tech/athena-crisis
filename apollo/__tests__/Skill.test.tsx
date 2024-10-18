@@ -104,7 +104,7 @@ test('status effects from leaders are applied', async () => {
   expect(unitB1.health).toBeLessThan(unitB2.health);
 
   // A2 and B2 are weaker, therefore dealing less damage than A3 and B3.
-  expect(unitA2.health).toBeGreaterThanOrEqual(unitA3.health);
+  expect(unitA2.health).toBeLessThanOrEqual(unitA3.health);
   expect(unitB2.health).toBeGreaterThan(unitB3.health);
 
   // A3 is attacked by a stronger unit than A1.
@@ -134,7 +134,7 @@ test('status effects from research labs are applied', async () => {
           ],
         ],
         "fuel": 30,
-        "health": 51,
+        "health": 50,
         "id": 5,
         "player": 2,
       },
@@ -146,7 +146,7 @@ test('status effects from research labs are applied', async () => {
           ],
         ],
         "fuel": 30,
-        "health": 42,
+        "health": 41,
         "id": 5,
         "player": 2,
       },

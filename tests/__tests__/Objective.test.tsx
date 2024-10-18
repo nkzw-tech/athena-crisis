@@ -335,7 +335,7 @@ test('win the game when converting a unit as a Zombie', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 75, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 35 }, chargeA: 142, chargeB: 130 }
+      "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 74, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 34 }, chargeA: 147, chargeB: 132 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
@@ -363,7 +363,7 @@ test('lose the game when the only unit attacks a building with a Zombie on it', 
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 40, player: 2 }, playerC: 2, unitA: DryUnit { health: 93, ammo: [ [ 1, 6 ] ] }, unitC: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, chargeA: 13, chargeB: 0, chargeC: 0 }
+      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 39, player: 2 }, playerC: 2, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitC: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, chargeA: 15, chargeB: 0, chargeC: 0 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);

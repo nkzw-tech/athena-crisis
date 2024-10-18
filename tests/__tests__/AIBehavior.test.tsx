@@ -114,7 +114,7 @@ test('attempt to attack new units when they are revealed after a move', async ()
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "Move (1,1 → 3,2) { fuel: 47, completed: null, path: [2,1 → 2,2 → 3,2] }
-    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 75 }, unitB: DryUnit { health: 45 }, chargeA: 86, chargeB: 110 }
+    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 74 }, unitB: DryUnit { health: 45 }, chargeA: 88, chargeB: 110 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -279,7 +279,7 @@ test('A unit with `stay` behavior will never move, but it might attack, build or
 
   expect(snapshotGameState(gameState.slice(0, 2))).toMatchInlineSnapshot(
     `
-    "AttackUnit (2,3 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 50 }, chargeA: 51, chargeB: 100 }
+    "AttackUnit (2,3 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49 }, chargeA: 51, chargeB: 102 }
     Capture (1,3)"
   `,
   );
@@ -306,7 +306,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
-    "AttackUnit (2,3 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 50 }, chargeA: 51, chargeB: 100 }
+    "AttackUnit (2,3 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49 }, chargeA: 51, chargeB: 102 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -365,7 +365,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', async (
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
-    "AttackUnit (2,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 15, ammo: [ [ 1, 7 ] ] }, chargeA: 105, chargeB: 318 }
+    "AttackUnit (2,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 14, ammo: [ [ 1, 7 ] ] }, chargeA: 106, chargeB: 322 }
     Move (2,3 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
     CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true } }
     CreateUnit (1,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true, behavior: 1 }, free: false, skipBehaviorRotation: false }
@@ -554,7 +554,7 @@ test('AI will prefer to rescue over capture', async () => {
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
     "Rescue (3,2 → 3,3) { player: 2, name: -18 }
-    AttackUnit (3,3 → 2,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 20, ammo: [ [ 1, 6 ] ] }, chargeA: 129, chargeB: 300 }
+    AttackUnit (3,3 → 2,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, unitB: DryUnit { health: 19, ammo: [ [ 1, 6 ] ] }, chargeA: 130, chargeB: 303 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -608,7 +608,7 @@ test('AI will prefer attacks over sabotage against weaker units', async () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
-    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 55 }, chargeA: 95, chargeB: 90 }
+    AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 54 }, chargeA: 96, chargeB: 92 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -677,7 +677,7 @@ test('AI keeps attacking even if one unit gets blocked', async () => {
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,1 → 2,1) { fuel: 48, completed: true, path: [2,1] }
     CreateUnit (2,4 → 2,3) { unit: Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
-    AttackUnit (5,5 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 71 }, chargeA: 19, chargeB: 57 }
+    AttackUnit (5,5 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 70 }, chargeA: 19, chargeB: 60 }
     EndTurn { current: { funds: 600, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -773,7 +773,7 @@ test('AI does not keep building naval units if the opponent does not have any na
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
-    AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 4 ] ] }, chargeA: 108, chargeB: 330 }
+    AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 66, ammo: [ [ 1, 4 ] ] }, chargeA: 112, chargeB: 340 }
     CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -788,7 +788,7 @@ test('AI does not keep building naval units if the opponent does not have any na
 
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
-    AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 4 ] ] }, chargeA: 108, chargeB: 330 }
+    AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 66, ammo: [ [ 1, 4 ] ] }, chargeA: 112, chargeB: 340 }
     CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Thomas', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 400, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -1023,7 +1023,7 @@ test('AI Zombies are aggressive', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 34, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, chargeA: 293, chargeB: 90 }
+    "AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 33, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 95, ammo: [ [ 1, 9 ] ] }, chargeA: 297, chargeB: 90 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
     GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
   `);
@@ -1059,9 +1059,9 @@ test('skills will only be activated if there are enough units that can be acted 
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "ActivatePower { skill: 3, units: [] }
-    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 185, chargeB: 352 }
-    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 6 ] ] }, chargeA: 370, chargeB: 704 }
-    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 377, chargeB: 726 }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 186, chargeB: 356 }
+    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 372, chargeB: 712 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 378, chargeB: 730 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -1078,7 +1078,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 86, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 38, ammo: [ [ 1, 6 ] ] }, chargeA: 9136, chargeB: 232 }
+    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 37, ammo: [ [ 1, 6 ] ] }, chargeA: 9141, chargeB: 236 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -1104,15 +1104,15 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
-    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7648, chargeB: 302 }
-    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7796, chargeB: 604 }
-    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7877, chargeB: 851 }
+    "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7654, chargeB: 302 }
+    AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7808, chargeB: 604 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7889, chargeB: 851 }
     ActivatePower { skill: 24, units: [] }
     Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1] }
-    AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 25, ammo: [ [ 1, 6 ] ] }, chargeA: 440, chargeB: 961 }
+    AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 24, ammo: [ [ 1, 6 ] ] }, chargeA: 454, chargeB: 966 }
     Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2] }
-    AttackUnit (2,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 86, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 10, ammo: [ [ 1, 5 ] ] }, chargeA: 494, chargeB: 1043 }
-    AttackUnit (3,3 → 3,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 91, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 512, chargeB: 1098 }
+    AttackUnit (2,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 8, ammo: [ [ 1, 5 ] ] }, chargeA: 510, chargeB: 1054 }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 524, chargeB: 1098 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -1171,9 +1171,9 @@ test('activates skills where the unit ratio does not matter', async () => {
     "ActivatePower { skill: 12, units: [1,2 → Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], name: 'Bazoo' }, 2,3 → Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], name: 'Taylor' }] }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 123, chargeB: 375 }
     AttackUnit (1,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: null, chargeA: 246, chargeB: 750 }
-    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 49, ammo: [ [ 1, 6 ] ] }, chargeA: 346, chargeB: 941 }
-    CreateUnit (1,2 → 2,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Kelly', completed: true }, free: false, skipBehaviorRotation: false }
-    CreateUnit (2,3 → 1,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Casey', completed: true }, free: false, skipBehaviorRotation: false }
+    AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 89, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 48, ammo: [ [ 1, 6 ] ] }, chargeA: 351, chargeB: 945 }
+    CreateUnit (1,2 → 2,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Jess', completed: true }, free: false, skipBehaviorRotation: false }
+    CreateUnit (2,3 → 1,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Blair', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
