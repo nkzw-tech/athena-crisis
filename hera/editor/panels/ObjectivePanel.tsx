@@ -69,7 +69,6 @@ const maybeSwapEffect = (
   existingObjective: Objective,
   index: number,
   setEditorState: SetEditorStateFunction,
-  isAdmin?: boolean,
 ) => {
   if (
     objective.type === Criteria.Default ||
@@ -216,7 +215,6 @@ export default function ObjectivePanel({
           existingObjective,
           id,
           setEditorState,
-          isAdmin,
         );
 
         actions.update({
@@ -228,15 +226,7 @@ export default function ObjectivePanel({
         });
       }
     },
-    [
-      actions,
-      editor.effects,
-      isAdmin,
-      map,
-      objectives,
-      setEditorState,
-      validate,
-    ],
+    [actions, editor.effects, map, objectives, setEditorState, validate],
   );
 
   if (editor?.objective) {
