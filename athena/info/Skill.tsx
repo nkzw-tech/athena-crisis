@@ -128,7 +128,7 @@ const skillConfig: Record<
   [Skill.RecoverAirUnits]: { charges: 5, cost: 3000 },
   [Skill.BuyUnitAlien]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500 },
-  [Skill.BuyUnitSuperTank]: { cost: 1500 },
+  [Skill.BuyUnitSuperTank]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitAcidBomber]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitDinosaur]: { cost: 1500 },
   [Skill.Sabotage]: { charges: 5, cost: 1500 },
@@ -230,29 +230,30 @@ const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
 ]);
 
 // Referential equality might improve the skill description.
-const forestAttack = new Map([
+const forestTileAttack = new Map([
   [MovementTypes.Soldier, 0.3],
   [MovementTypes.HeavySoldier, 0.3],
 ]);
-const tileAttack = new Map([[MovementTypes.Soldier, 0.15]]);
+const soldierTileAttack = new Map([[MovementTypes.Soldier, 0.15]]);
+const treadTileAttack = new Map([[MovementTypes.Tread, 0.3]]);
 const attackTileStatusEffects = new Map<Skill, TileMovementMap>([
   [
     Skill.UnitInfantryForestAttackAndDefenseIncrease,
     new Map([
-      [TileTypes.Forest, forestAttack],
-      [TileTypes.ForestVariant2, forestAttack],
-      [TileTypes.ForestVariant3, forestAttack],
-      [TileTypes.ForestVariant4, forestAttack],
+      [TileTypes.Forest, forestTileAttack],
+      [TileTypes.ForestVariant2, forestTileAttack],
+      [TileTypes.ForestVariant3, forestTileAttack],
+      [TileTypes.ForestVariant4, forestTileAttack],
     ]),
   ],
   [
     Skill.BuyUnitBear,
     new Map([
-      [TileTypes.Forest, tileAttack],
-      [TileTypes.ForestVariant2, tileAttack],
-      [TileTypes.ForestVariant3, tileAttack],
-      [TileTypes.ForestVariant4, tileAttack],
-      [TileTypes.Mountain, tileAttack],
+      [TileTypes.Forest, soldierTileAttack],
+      [TileTypes.ForestVariant2, soldierTileAttack],
+      [TileTypes.ForestVariant3, soldierTileAttack],
+      [TileTypes.ForestVariant4, soldierTileAttack],
+      [TileTypes.Mountain, soldierTileAttack],
     ]),
   ],
 ]);
@@ -274,13 +275,14 @@ const attackTilePowerStatusEffects = new Map<Skill, TileMovementMap>([
   [
     Skill.BuyUnitOgre,
     new Map([
-      [TileTypes.Forest, tileAttack],
-      [TileTypes.ForestVariant2, tileAttack],
-      [TileTypes.ForestVariant3, tileAttack],
-      [TileTypes.ForestVariant4, tileAttack],
-      [TileTypes.Mountain, tileAttack],
+      [TileTypes.Forest, soldierTileAttack],
+      [TileTypes.ForestVariant2, soldierTileAttack],
+      [TileTypes.ForestVariant3, soldierTileAttack],
+      [TileTypes.ForestVariant4, soldierTileAttack],
+      [TileTypes.Mountain, soldierTileAttack],
     ]),
   ],
+  [Skill.BuyUnitSuperTank, new Map([[TileTypes.Street, treadTileAttack]])],
 ]);
 
 const attackLeaderPowerStatusEffects: SkillMap = new Map([
@@ -388,7 +390,10 @@ const skillMovementTypeRadiusPowerEffects = new Map<
   ],
   [
     MovementTypes.Tread,
-    new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
+    new Map([
+      [Skill.MovementIncreaseGroundUnitDefenseDecrease, 1],
+      [Skill.BuyUnitSuperTank, 2],
+    ]),
   ],
   [MovementTypes.Soldier, new Map([[Skill.BuyUnitOgre, 1]])],
 ]);
@@ -443,6 +448,7 @@ const healPower = new Map<Skill, ActiveUnitTypes>([
     Skill.HealInfantryMedicPower,
     new Set([MovementTypes.AirInfantry, MovementTypes.Soldier]),
   ],
+  [Skill.BuyUnitSuperTank, new Set([MovementTypes.Tread])],
 ]);
 
 export function getSkillConfig(skill: Skill) {
