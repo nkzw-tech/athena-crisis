@@ -1137,7 +1137,7 @@ const Bomb = new Weapon(
     [EntityType.Amphibious, 115],
     [EntityType.Artillery, 100],
     [EntityType.Building, 70],
-    [EntityType.Ground, 110],
+    [EntityType.Ground, 115],
     [EntityType.Rail, 110],
     [EntityType.Ship, 115],
     [EntityType.Soldier, 105],
