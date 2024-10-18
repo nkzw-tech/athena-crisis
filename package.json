@@ -73,7 +73,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.7",
-    "npm-run-all2": "^6.2.3",
+    "npm-run-all2": "^6.2.4",
     "prettier": "4.0.0-alpha.8",
     "prettier-plugin-packagejson": "^2.5.3",
     "react-refresh": "^0.14.2",
