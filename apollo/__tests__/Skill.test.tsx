@@ -4,6 +4,7 @@ import { Forest, Forest2, RailTrack } from '@deities/athena/info/Tile.tsx';
 import {
   BazookaBear,
   Cannon,
+  Flamethrower,
   Infantry,
   Pioneer,
   Saboteur,
@@ -645,4 +646,21 @@ test('the commander skill makes leader units stronger', () => {
   expect(state1.units.get(toA)!.health).toBeGreaterThan(0);
   expect(state2.units.get(toA)).toBeUndefined();
   expect(state3.units.get(toB)!.health).toBeGreaterThan(0);
+});
+
+test('unit prices always round up', () => {
+  const skills = new Set([Skill.AttackIncreaseMajorDefenseDecreaseMajor]);
+  const player = map.getPlayer(1);
+  const playerWithOneSkill = map.getPlayer(1).copy({ skills });
+  const playerWithTwoSkills = map
+    .getPlayer(1)
+    .copy({ skills: new Set([...skills, Skill.AttackIncreaseMinor]) });
+
+  expect(Flamethrower.getCostFor(player)).toBeLessThan(
+    Flamethrower.getCostFor(playerWithOneSkill),
+  );
+
+  expect(Flamethrower.getCostFor(playerWithOneSkill)).toEqual(
+    Flamethrower.getCostFor(playerWithTwoSkills),
+  );
 });
