@@ -738,6 +738,10 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           at each
           <fbt:param name="buildingName">
             <BuildingName building={Shelter} color={color} />
+          </fbt:param>{' '}
+          and{' '}
+          <fbt:param name="buildingNameB">
+            <BuildingName building={HQ} color={color} />
           </fbt:param>.
         </fbt>
       );

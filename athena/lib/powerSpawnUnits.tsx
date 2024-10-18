@@ -30,7 +30,8 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
   },
 
   [Skill.BuyUnitBear]: {
-    matchBuilding: (building) => building.id === Shelter.id,
+    matchBuilding: (building) =>
+      building.id === Shelter.id || building.id === HQ.id,
     unitType: Bear,
   },
 
