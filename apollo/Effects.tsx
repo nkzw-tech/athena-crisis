@@ -205,7 +205,7 @@ export function validateEffects(map: MapData, effects: Effects): Effects {
       if (newActions.length) {
         newEffectList.push({
           actions: newActions,
-          conditions: newConditions,
+          conditions: newConditions?.length ? newConditions : undefined,
           occurrence: occurrence === 'once' ? occurrence : undefined,
           players: players ? new Set(toPlayerIDs([...players])) : undefined,
         });
