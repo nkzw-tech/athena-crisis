@@ -1,4 +1,5 @@
 import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
+import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
 import {
@@ -669,6 +670,11 @@ export default function MapEditorSettingsPanel({
         {mapObject?.id && (
           <InlineLink onClick={() => saveMap(map, 'New')}>
             <fbt desc="Button to save as a new map">Save as new Map</fbt>
+          </InlineLink>
+        )}
+        {!process.env.IS_LANDING_PAGE && (
+          <InlineLink to={`${getUserRoute(user.username)}?view=maps#maps`}>
+            <fbt desc="Button to save as a new map">Load Map</fbt>
           </InlineLink>
         )}
         {mapObject?.id && isAdmin ? (

@@ -20,18 +20,24 @@ export const ScrollRestoreContext = ({ children }: { children: ReactNode }) => (
 );
 
 export default function useScrollRestore() {
-  const { pathname } = useLocation();
+  const { hash, pathname } = useLocation();
   const context = useContext(Context);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let timer = setTimeout(() => {
       if (context.current) {
         context.current = false;
+      } else if (hash.length > 1) {
+        timer = setTimeout(() => {
+          document.getElementById(hash.slice(1))?.scrollIntoView({
+            behavior: 'smooth',
+          });
+        }, PageTransitionDuration * 3000);
       } else {
         window.scrollTo(0, 0);
       }
     }, PageTransitionDuration * 1000);
     return () => clearTimeout(timer);
-  }, [context, pathname]);
+  }, [context, hash, pathname]);
 }
 
 export function useSkipScrollRestore() {
