@@ -1063,6 +1063,7 @@ export default function MapEditor({
               <>
                 <MapEditorControlPanel
                   actions={actions}
+                  campaignLock={campaignLock}
                   drawerPosition={drawerPosition}
                   editor={editor}
                   estimateMapPerformance={estimateMapPerformance}

@@ -25,6 +25,7 @@ import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import replaceEffect from '../lib/replaceEffect.tsx';
+import { BaseMapEditorProps } from '../MapEditor.tsx';
 import {
   EditorState,
   MapObject,
@@ -46,6 +47,7 @@ import SetupPanel from './SetupPanel.tsx';
 
 export default function MapEditorControlPanel({
   actions,
+  campaignLock,
   drawerPosition,
   editor,
   estimateMapPerformance,
@@ -71,6 +73,7 @@ export default function MapEditorControlPanel({
   user,
   visible,
 }: StateWithActions & {
+  campaignLock: BaseMapEditorProps['campaignLock'];
   drawerPosition: DrawerPosition;
   editor: EditorState;
   estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
@@ -117,7 +120,9 @@ export default function MapEditorControlPanel({
     (scenario: Scenario) => setEditorState({ scenario }),
     [setEditorState],
   );
-  const canEditPerformance = !!mapObject?.campaigns.edges?.length;
+  const canEditPerformance = !!(
+    campaignLock || mapObject?.campaigns.edges?.length
+  );
 
   return (
     <Drawer
