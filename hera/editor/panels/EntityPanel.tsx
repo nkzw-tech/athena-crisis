@@ -28,7 +28,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
 import { fbt } from 'fbt';
-import { Fragment, useCallback, useEffect, useMemo } from 'react';
+import { ChangeEvent, Fragment, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -204,6 +204,26 @@ export default function EntityPanel({
     [entity, entityIsBuilding],
   );
 
+  const onHealthChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const health = parseInteger(event.target.value);
+      if (entity && health != null) {
+        updateEntity('health', entity.setHealth(health));
+      }
+    },
+    [entity, updateEntity],
+  );
+
+  const onFuelChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const fuel = parseInteger(event.target.value);
+      if (entity && isUnit(entity) && fuel != null) {
+        updateEntity('fuel', entity.setFuel(fuel));
+      }
+    },
+    [entity, updateEntity],
+  );
+
   if (
     !selectedPosition ||
     !entity ||
@@ -240,7 +260,7 @@ export default function EntityPanel({
             </div>
             <h2>{entity.info.name}</h2>
           </Stack>
-          <AttributeGrid rowGap={16}>
+          <AttributeGrid rowGap={4}>
             <Stack alignCenter start>
               <Icon icon={Heart} />
               <fbt desc="Label for unit health">Health</fbt>
@@ -248,18 +268,21 @@ export default function EntityPanel({
             <Slider
               max={String(MaxHealth)}
               min="1"
-              onChange={(event) => {
-                const health = parseInteger(event.target.value);
-                if (health != null) {
-                  updateEntity('health', entity.setHealth(health));
-                }
-              }}
+              onChange={onHealthChange}
               type="range"
               value={entity.health}
             />
-            <div className={textStyle}>
-              {entity.health}/{MaxHealth}
-            </div>
+            <Stack alignCenter className={textStyle} gap nowrap>
+              <input
+                max={String(MaxHealth)}
+                min="1"
+                onChange={onHealthChange}
+                style={{ width: 80 }}
+                type="number"
+                value={entity.health}
+              />
+              /{MaxHealth}
+            </Stack>
             {isUnit(entity) && (
               <>
                 <Stack alignCenter start>
@@ -269,18 +292,21 @@ export default function EntityPanel({
                 <Slider
                   max={String(entity.info.configuration.fuel)}
                   min="0"
-                  onChange={(event) => {
-                    const fuel = parseInteger(event.target.value);
-                    if (fuel != null) {
-                      updateEntity('fuel', entity.setFuel(fuel));
-                    }
-                  }}
+                  onChange={onFuelChange}
                   type="range"
                   value={entity.fuel}
                 />
-                <div className={textStyle}>
-                  {entity.fuel}/{entity.info.configuration.fuel}
-                </div>
+                <Stack alignCenter className={textStyle} gap nowrap>
+                  <input
+                    max={String(entity.info.configuration.fuel)}
+                    min="0"
+                    onChange={onFuelChange}
+                    style={{ width: 80 }}
+                    type="number"
+                    value={entity.fuel}
+                  />
+                  /{entity.info.configuration.fuel}
+                </Stack>
                 {entity.info.attack.weapons
                   ? [...entity.info.attack.weapons]
                       .filter(([, weapon]) => weapon.supply)
@@ -289,6 +315,20 @@ export default function EntityPanel({
                         if (ammo === undefined) {
                           return null;
                         }
+
+                        const onAmmoChange = (
+                          event: ChangeEvent<HTMLInputElement>,
+                        ) => {
+                          const ammo = parseInteger(event.target.value);
+                          if (ammo != null) {
+                            updateEntity(
+                              `ammo-${id}`,
+                              entity.setAmmo(
+                                new Map(entity.ammo).set(id, ammo),
+                              ),
+                            );
+                          }
+                        };
 
                         return (
                           <Fragment key={id}>
@@ -299,23 +339,21 @@ export default function EntityPanel({
                             <Slider
                               max={String(weapon.supply)}
                               min="0"
-                              onChange={(event) => {
-                                const ammo = parseInteger(event.target.value);
-                                if (ammo != null) {
-                                  updateEntity(
-                                    `ammo-${id}`,
-                                    entity.setAmmo(
-                                      new Map(entity.ammo).set(id, ammo),
-                                    ),
-                                  );
-                                }
-                              }}
+                              onChange={onAmmoChange}
                               type="range"
                               value={ammo}
                             />
-                            <div className={textStyle}>
-                              {ammo}/{weapon.supply}
-                            </div>
+                            <Stack alignCenter className={textStyle} gap nowrap>
+                              <input
+                                max={String(weapon.supply)}
+                                min="0"
+                                onChange={onAmmoChange}
+                                style={{ width: 80 }}
+                                type="number"
+                                value={ammo}
+                              />
+                              /{weapon.supply}
+                            </Stack>
                           </Fragment>
                         );
                       })

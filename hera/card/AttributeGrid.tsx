@@ -10,7 +10,7 @@ export default function AttributeGrid({
   rowGap,
 }: {
   children: ReactNode;
-  rowGap?: 8 | 16;
+  rowGap?: 4 | 8 | 16;
 }) {
   return (
     <div
