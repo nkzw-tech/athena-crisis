@@ -293,14 +293,17 @@ export default function CampaignEditor({
   useMusic('hestias-serenade');
   usePlayMusic(campaignEditorState.map?.id);
 
-  const onMapSave = useCallback(
+  const onSaveMap = useCallback(
     (map: MapNode) => {
+      setCampaignEditorState({
+        map,
+      });
       addMap(map);
       mapDataSource.updateEntry(
         new TypeaheadDataSourceEntry(map.name, map.id, map),
       );
     },
-    [addMap, mapDataSource],
+    [addMap, mapDataSource, setCampaignEditorState],
   );
 
   const { alert } = useAlert();
@@ -498,8 +501,8 @@ export default function CampaignEditor({
                   inset={inset}
                   isValidName={isValidName}
                   mode={campaignEditorState.mapEditorMode}
-                  onCreate={onMapSave}
-                  onUpdate={onMapSave}
+                  onCreate={onSaveMap}
+                  onUpdate={onSaveMap}
                   scenario={campaignEditorState.mapEditorScenario}
                   setHasChanges={setMapHasChanges}
                   slug={campaignEditorState.map?.slug}
