@@ -412,7 +412,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Dinosaur, new Map([[Skill.BuyUnitDinosaur, 600]])],
   [UnitID.SuperAPU, new Map([[Skill.BuyUnitSuperAPU, 650]])],
   [UnitID.Dragon, new Map([[Skill.BuyUnitDragon, 500]])],
-  [UnitID.Ogre, new Map([[Skill.BuyUnitOgre, 300]])],
+  [UnitID.Ogre, new Map([[Skill.BuyUnitOgre, 350]])],
   [UnitID.Bear, new Map([[Skill.BuyUnitBear, 350]])],
 ]);
 
