@@ -28,7 +28,7 @@
     "@pothos/plugin-directives": "^4.1.0",
     "@pothos/plugin-prisma": "^4.2.1",
     "@pothos/plugin-relay": "^4.3.0",
-    "@prisma/client": "~5.20.0",
+    "@prisma/client": "^5.21.1",
     "@quixo3/prisma-session-store": "^3.1.13",
     "@sentry/node": "^8.34.0",
     "@types/express-session": "^1.18.0",
@@ -70,7 +70,7 @@
     "@types/web-push": "^3.6.3",
     "glob": "11.0.0",
     "p-limit": "^6.1.0",
-    "prisma": "~5.20.0",
+    "prisma": "^5.21.1",
     "prisma-json-types-generator": "^3.1.1",
     "terminal-link": "^3.0.0"
   },

@@ -33,7 +33,7 @@
     "playwright": "^1.48.1",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
-    "react-error-boundary": "^4.1.1",
+    "react-error-boundary": "^4.1.2",
     "strip-ansi": "^7.1.0",
     "term-img": "^7.0.0"
   }
