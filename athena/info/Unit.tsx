@@ -2589,7 +2589,7 @@ export const AcidBomber = new UnitInfo(
   MovementTypes.Air,
   {
     cost: Number.POSITIVE_INFINITY,
-    fuel: 20,
+    fuel: 30,
     radius: 4,
     vision: 1,
   },
