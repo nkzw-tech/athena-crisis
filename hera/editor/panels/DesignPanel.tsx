@@ -44,7 +44,7 @@ import { fbt } from 'fbt';
 import { useCallback, useMemo } from 'react';
 import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import navigate from '../../lib/navigate.tsx';
@@ -70,7 +70,7 @@ export default function DesignPanel({
   fillMap: () => void;
   hasContentRestrictions: boolean;
   setEditorState: (setEditorState: Partial<EditorState>) => void;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithUnlocks;
 }) {
   const { map } = state;
   const currentPlayer = map.getCurrentPlayer();
@@ -352,7 +352,6 @@ export default function DesignPanel({
               />
             </InlineTileList>
           </Box>
-
           <Box gap={32}>
             <InlineTileList
               biome={biome}

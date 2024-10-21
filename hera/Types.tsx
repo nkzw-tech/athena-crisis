@@ -10,6 +10,7 @@ import {
 } from '@deities/apollo/Types.tsx';
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
+import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -17,7 +18,7 @@ import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
+import MapData, { ID, ModifierField } from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
@@ -49,6 +50,7 @@ export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
 
 export type PlayerDetail = Readonly<{
   displayName: string;
+  equippedUnitCustomizations: ReadonlyMap<ID, SpriteVariant>;
   factionName: string;
 }>;
 export type PlayerDetails = ReadonlyMap<PlayerID, PlayerDetail>;

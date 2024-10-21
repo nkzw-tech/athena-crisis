@@ -32,7 +32,7 @@ import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { useCallback, useMemo, useState } from 'react';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
 import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedCrystalName from '../../invasions/getTranslatedCrystalName.tsx';
@@ -72,7 +72,7 @@ export default function ObjectiveCard({
   selectEffect: () => void;
   selectLocation: () => void;
   tags: ReadonlyArray<string>;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithUnlocks;
   validate: (objective: Objective) => boolean;
 }) {
   const [rounds, setRounds] = useState<number | null>(

@@ -37,7 +37,7 @@ import { useCallback, useState } from 'react';
 import useTagDataSource, {
   DEFAULT_TAGS,
 } from '../../hooks/useTagDataSource.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getTranslatedPerformanceStyleTypeName from '../../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../../lib/getTranslatedPerformanceTypeName.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -80,7 +80,7 @@ export default function MapEditorSettingsPanel({
   setMapName: (name: string) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
   tags: ReadonlyArray<string>;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithUnlocks;
 }) {
   const { update } = actions;
   const { map } = state;

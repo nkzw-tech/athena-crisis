@@ -144,13 +144,121 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Units-CustomPioneer-2',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomPioneer-3',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomPioneer-4',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomPioneer-5',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomPioneer-6',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomPioneer-7',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Units-Infantry',
     {
       variantNames,
     },
   ],
   [
+    'Units-CustomInfantry-2',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomInfantry-3',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomInfantry-4',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomInfantry-5',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomInfantry-6',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomInfantry-7',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Units-RocketLauncher',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-2',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-3',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-4',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-5',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-6',
+    {
+      variantNames,
+    },
+  ],
+  [
+    'Units-CustomRocketLauncher-7',
     {
       variantNames,
     },

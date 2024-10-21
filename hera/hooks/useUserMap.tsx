@@ -18,15 +18,17 @@ export type UserWithSkills = UserLikeWithID &
     unlockedSkillSlots: ReadonlyArray<number>;
   }>;
 
-type FactionName = Readonly<{
-  factionName: string;
-}>;
-export type UserWithIDAndFactionName = UserLikeWithID & FactionName;
-export type UserWithFactionNameAndUnlocks = UserWithSkills &
+export type GameUser = UserLikeWithID &
+  Readonly<{
+    equippedUnitCustomizations: ReadonlyArray<number>;
+    factionName: string;
+  }>;
+
+export type UserWithUnlocks = UserWithSkills &
   Readonly<{
     biomes: ReadonlyArray<Biome>;
   }> &
-  FactionName;
+  GameUser;
 
 export default function useUserMap(
   map?: MapData | null,

@@ -394,7 +394,7 @@ const playerImageStyle = css`
 
 const disabledStyle = css`
   opacity: 0.7;
-  color: ${applyVar('text-color-inactive')};
+  color: ${applyVar('text-color-light')};
 `;
 
 const botIconStyle = css`
@@ -421,5 +421,5 @@ const skillStyle = css`
 `;
 
 const lightStyle = css`
-  color: ${applyVar('text-color-inactive')};
+  color: ${applyVar('text-color-light')};
 `;

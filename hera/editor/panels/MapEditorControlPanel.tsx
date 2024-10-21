@@ -22,7 +22,7 @@ import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import { fbt } from 'fbt';
 import { useCallback, useRef } from 'react';
 import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import replaceEffect from '../lib/replaceEffect.tsx';
 import { BaseMapEditorProps } from '../MapEditor.tsx';
@@ -99,7 +99,7 @@ export default function MapEditorControlPanel({
     _?: boolean,
     actAsEveryPlayer?: boolean,
   ) => void;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithUnlocks;
   visible: boolean;
 }) {
   const ref = useRef(null);

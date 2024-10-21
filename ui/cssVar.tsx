@@ -52,7 +52,6 @@ type GlobalCSSVariableName =
   | 'text-color-active-light'
   | 'text-color-active'
   | 'text-color-bright'
-  | 'text-color-inactive'
   | 'text-color-light'
   | 'text-color';
 
@@ -121,8 +120,7 @@ ${cssVar('highlight-color', '#3999d4')}
 ${cssVar('text-color-active-light', '#fff')}
 ${cssVar('text-color-bright', '#fff')}
 ${cssVar('text-color-active', '#111')}
-${cssVar('text-color-inactive', '#838383')}
-${cssVar('text-color-light', '#a2a2a2')}
+${cssVar('text-color-light', '#808080')}
 ${cssVar('text-color', '#111')}
 
 // Player Colors
@@ -156,7 +154,6 @@ ${cssVar('highlight-color', '#5e9fff')}
 ${cssVar('text-color-active-light', '#555')}
 ${cssVar('text-color-bright', '#fff')}
 ${cssVar('text-color-active', '#f5f5f5')}
-${cssVar('text-color-inactive', '#999')}
 ${cssVar('text-color-light', '#a7a7a7')}
 ${cssVar('text-color', '#f5f5f5')}
 

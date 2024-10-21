@@ -578,7 +578,7 @@ const itemStyle = css`
 `;
 
 const disabledStyle = css`
-  ${cssVar('text-color', applyVar('text-color-inactive'))}
+  ${cssVar('text-color', applyVar('text-color-light'))}
 
   &:hover,
   &:active {

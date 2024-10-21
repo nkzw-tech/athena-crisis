@@ -1,4 +1,3 @@
-import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
@@ -22,7 +21,6 @@ import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRe
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
-import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
@@ -38,14 +36,12 @@ import Player, {
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
-import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import minBy from '@deities/hephaestus/minBy.tsx';
-import randomEntry from '@deities/hephaestus/randomEntry.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { App } from '@deities/ui/App.tsx';
@@ -77,17 +73,10 @@ import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
 import Volume from '@iconify-icons/pixelarticons/volume-3.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
-import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
-import {
-  ComponentProps,
-  memo,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { memo, ReactNode, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
+import useUnitState from '../hooks/useUnitState.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getAnyBuildingTileField from '../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
@@ -110,101 +99,6 @@ import TileBox from './TileBox.tsx';
 import TilePreview from './TilePreview.tsx';
 
 const defaultVector = vec(1, 1);
-const onComplete = () => null;
-
-type UnitBehavior = 'idle' | 'move' | 'attack' | 'unfold' | 'fold';
-type UnitState = Pick<
-  ComponentProps<typeof UnitTile>,
-  'animation' | 'direction' | 'highlightStyle'
-> &
-  Readonly<{ type: UnitBehavior }>;
-
-const fallbackDirection = new AttackDirection('right');
-const directions = [
-  new AttackDirection('up'),
-  new AttackDirection('down'),
-  new AttackDirection('left'),
-  fallbackDirection,
-];
-
-const idle = (unitState: UnitState) => {
-  const animation = unitState.animation;
-  return {
-    direction:
-      unitState.direction ||
-      (animation && 'direction' in animation && animation.direction) ||
-      fallbackDirection,
-    type: 'idle',
-  } as const;
-};
-
-const attack = (unitState: UnitState, unit: Unit) => {
-  const { info, player } = unit;
-  const { attackStance } = info.sprite;
-  return {
-    animation: {
-      direction: unitState.direction || fallbackDirection,
-      frames: attackStance ? (attackStance === 'long' ? 16 : 8) : undefined,
-      hasAttackStance: !!attackStance,
-      onComplete,
-      style: unit.isUnfolded() ? 'unfold' : null,
-      type: 'attack',
-      variant: player,
-      weapon: info.attack.weapons!.values().next().value!,
-    },
-    type: 'attack',
-  } as const;
-};
-
-const fold = (
-  type: 'unfold' | 'fold',
-  unitState: UnitState,
-  unfoldSprite: { frames: number; position: SpriteVector },
-) =>
-  ({
-    animation: {
-      ...unfoldSprite,
-      onComplete,
-      type: 'unfold',
-    },
-    direction: unitState.direction || fallbackDirection,
-    type,
-  }) as const;
-
-const getNextUnitState = (unitState: UnitState, unit: Unit): UnitState => {
-  const { info } = unit;
-  const { sprite } = info;
-  switch (unitState.type) {
-    case 'idle': {
-      return {
-        direction: randomEntry(directions),
-        highlightStyle: 'move-null',
-        type: 'move',
-      };
-    }
-    case 'move': {
-      if (info.hasAttack()) {
-        if (info.hasAbility(Ability.Unfold) && sprite.unfoldSprite) {
-          return fold('unfold', unitState, sprite.unfoldSprite);
-        }
-        return attack(unitState, unit);
-      }
-      return idle(unitState);
-    }
-    case 'unfold': {
-      return attack(unitState, unit);
-    }
-    case 'attack': {
-      if (info.hasAbility(Ability.Unfold) && sprite.unfoldSprite) {
-        return fold('fold', unitState, sprite.unfoldSprite);
-      }
-      return idle(unitState);
-    }
-    default:
-      return idle(unitState);
-  }
-};
-
 const units = getAllUnits();
 const extractCost = (info: UnitInfo) => info.getCostFor(null);
 const extractFuel = ({ configuration: { fuel } }: UnitInfo) => fuel;
@@ -248,42 +142,8 @@ export default memo(function UnitCard({
   const {
     configuration: { fuel, vision },
   } = info;
-  const [currentState, setUnitState] = useState<UnitState>({ type: 'idle' });
-  const { type, ...props } = currentState;
 
-  const [entity, previewMap] = useMemo(() => {
-    let entity = info.create(player);
-    if (info.hasAbility(Ability.Unfold)) {
-      entity = entity[type === 'attack' ? 'unfold' : 'fold']();
-    }
-    if (unit.isTransportingUnits()) {
-      entity = entity.copy({
-        transports: unit.transports,
-      });
-    }
-    return [
-      entity,
-      withModifiers(
-        MapData.createMap({
-          config: {
-            biome,
-          },
-          map: [(getAnyUnitTile(info) || Plain).id],
-          modifiers: [0],
-        }).copy({ units: ImmutableMap([[defaultVector, entity]]) }),
-      ),
-    ];
-  }, [info, biome, player, type, unit]);
-
-  useEffect(() => {
-    if (unit.player > 0) {
-      const interval = setInterval(() => {
-        setUnitState(getNextUnitState(currentState, entity));
-      }, AnimationConfig.AnimationDuration * 8);
-      return () => clearInterval(interval);
-    }
-  }, [currentState, info.sprite.portrait.variants, entity, unit.player]);
-
+  const [entity, previewMap, props] = useUnitState(unit, map.config.biome);
   const currentPlayer = map.getPlayer(player);
   const cost = info.getCostFor(currentPlayer);
   const radius = info.getRadiusFor(currentPlayer);
@@ -304,6 +164,9 @@ export default memo(function UnitCard({
             animationConfig={AnimationConfig}
             animationKey={defaultVector}
             biome={biome}
+            customSprite={playerDetails
+              .get(unit.player)
+              ?.equippedUnitCustomizations.get(unit.id)}
             firstPlayerID={map.getFirstPlayerID()}
             getLayer={() => 100}
             highlightStyle={undefined}

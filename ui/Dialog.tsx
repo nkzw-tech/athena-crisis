@@ -411,7 +411,7 @@ const iconStyle = css`
 
 const disabledStyle = css`
   opacity: 0.7;
-  color: ${applyVar('text-color-inactive')};
+  color: ${applyVar('text-color-light')};
 `;
 
 const highlightStyle = css`

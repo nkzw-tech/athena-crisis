@@ -1,5 +1,6 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
+import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { isSea, TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import hasLowAmmoSupply from '@deities/athena/lib/hasLowAmmoSupply.tsx';
@@ -297,6 +298,7 @@ export default function UnitTile({
   animationConfig,
   animationKey,
   biome,
+  customSprite,
   dim,
   direction,
   firstPlayerID,
@@ -318,6 +320,7 @@ export default function UnitTile({
   animationConfig: AnimationConfig;
   animationKey?: Vector;
   biome: Biome;
+  customSprite?: SpriteVariant;
   dim?: 'dim' | 'flip';
   direction?: AttackDirection;
   firstPlayerID: PlayerID;
@@ -338,6 +341,7 @@ export default function UnitTile({
   const innerElementRef = useRef<HTMLDivElement>(null);
   const shadowElementRef = useRef<HTMLDivElement>(null);
   const { info, player } = unit;
+  const unitSprite = customSprite || info.sprite.name;
   const isMoving = animation?.type === 'move';
   const isAttacking = animation?.type === 'attack';
   const hasAttackStance = isAttacking && info.sprite.attackStance;
@@ -819,7 +823,8 @@ export default function UnitTile({
     !isAnimating &&
     !isMoving &&
     !animationStyle;
-  const shadowImage = ShadowImages.get(info.sprite.name);
+  const shadowImage =
+    ShadowImages.get(unitSprite) || ShadowImages.get(info.sprite.name);
   const innerStyle = {
     backgroundPositionX,
     backgroundPositionY: currentDirection
@@ -865,7 +870,7 @@ export default function UnitTile({
       )}
       <div
         className={cx(
-          sprite(info.sprite.name, player, biome),
+          sprite(unitSprite, player, biome),
           spriteStyle,
           baseUnitStyle,
           player === 0 && neutralStyle,

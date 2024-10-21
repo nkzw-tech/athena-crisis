@@ -6,6 +6,7 @@ import useClientGame from '@deities/hera/hooks/useClientGame.tsx';
 import useClientGameAction from '@deities/hera/hooks/useClientGameAction.tsx';
 import useClientGamePlayerDetails from '@deities/hera/hooks/useClientGamePlayerDetails.tsx';
 import GameActions from '@deities/hera/ui/GameActions.tsx';
+import DemoViewer from '@deities/hera/ui/lib/DemoViewer.tsx';
 import MapInfo from '@deities/hera/ui/MapInfo.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import { useInView } from 'framer-motion';
@@ -16,12 +17,6 @@ prepareSprites();
 const startAction = {
   type: 'Start',
 } as const;
-
-const viewer = {
-  displayName: 'Player',
-  factionName: 'Athena',
-  id: 'User-Demo',
-};
 
 export default function PlaygroundGame({
   map,
@@ -36,17 +31,17 @@ export default function PlaygroundGame({
 
   const [game, setGame] = useClientGame(
     map,
-    viewer.id,
+    DemoViewer.id,
     metadata?.effects || new Map(),
     startAction,
   );
   const onAction = useClientGameAction(game, setGame);
-  const playerDetails = useClientGamePlayerDetails(game.state, viewer);
+  const playerDetails = useClientGamePlayerDetails(game.state, DemoViewer);
 
   return (
     <div ref={ref}>
       <GameMap
-        currentUserId={viewer.id}
+        currentUserId={DemoViewer.id}
         fogStyle="soft"
         key="play-demo-map"
         lastActionResponse={game.lastAction}

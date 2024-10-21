@@ -524,6 +524,7 @@ const MiniMap = memo(function MiniMap({
         key={`${mapId}-${map.size.height}-${map.size.width}`}
         map={map}
         paused
+        playerDetails={null}
         renderEntities={renderEntities && isInView}
         style="floating"
         tileSize={TileSize}

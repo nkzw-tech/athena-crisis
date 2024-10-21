@@ -41,7 +41,7 @@ import CoverRange from '../card/lib/CoverRange.tsx';
 import { LargeRange } from '../card/Range.tsx';
 import Map from '../Map.tsx';
 import Tick from '../Tick.tsx';
-import { State } from '../Types.tsx';
+import { PlayerDetails, State } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 
@@ -49,6 +49,7 @@ const Tile = ({
   biome,
   field,
   modifier,
+  playerDetails,
   tileSize,
   vector,
   vision,
@@ -56,6 +57,7 @@ const Tile = ({
   biome: Biome;
   field: TileField;
   modifier: ModifierField;
+  playerDetails: PlayerDetails;
   tileSize: number;
   vector: Vector;
   vision: VisionT;
@@ -93,6 +95,7 @@ const Tile = ({
               behavior={null}
               getLayer={() => 1}
               map={map}
+              playerDetails={playerDetails}
               style="clip"
               tileSize={tileSize}
               vision={vision}
@@ -124,6 +127,7 @@ const renderUnit = (
   firstPlayerID: PlayerID,
   tileSize: number,
   animationConfig: AnimationConfig,
+  playerDetails: PlayerDetails,
 ) => {
   if (unit) {
     const { info } = unit;
@@ -139,6 +143,9 @@ const renderUnit = (
         <UnitTile
           animationConfig={animationConfig}
           biome={biome}
+          customSprite={playerDetails
+            .get(unit.player)
+            ?.equippedUnitCustomizations.get(unit.id)}
           firstPlayerID={firstPlayerID}
           size={tileSize}
           tile={tile}
@@ -227,6 +234,7 @@ export default function MapInfo({
   inset = 0,
   leftOffset,
   map,
+  playerDetails,
   position,
   replayState,
   showCursor,
@@ -282,6 +290,7 @@ export default function MapInfo({
           biome={map.config.biome}
           field={map.map[index]}
           modifier={map.modifiers[index]}
+          playerDetails={playerDetails}
           tileSize={tileSize}
           vector={position}
           vision={vision}
@@ -300,6 +309,7 @@ export default function MapInfo({
             map.getFirstPlayerID(),
             tileSize,
             animationConfig,
+            playerDetails,
           )}
       </div>
     </Tick>

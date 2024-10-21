@@ -830,11 +830,12 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.BuyUnitDragon:
       return (
         <fbt desc="Additional skill description">
-          Opponents adjacent to{' '}
           <fbt:param name="fromUnitName">
             <UnitName color={color} unit={Dragon} />
           </fbt:param>{' '}
-          are engulfed in flames and suffer massive damage.
+          engulf adjacent opposing units in flames and cause{' '}
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
+          health points of damage.
         </fbt>
       );
   }

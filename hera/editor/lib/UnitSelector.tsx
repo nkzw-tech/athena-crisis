@@ -19,7 +19,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { memo } from 'react';
 import Portrait from '../../character/Portrait.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 
 export default memo(function UnitSelector({
   border,
@@ -43,7 +43,7 @@ export default memo(function UnitSelector({
   onSelect?: (unit: UnitInfo) => void;
   selectedPlayer: DynamicPlayerID;
   selectedUnit: UnitInfo | null;
-  user: UserWithFactionNameAndUnlocks | null;
+  user: UserWithUnlocks | null;
   width?: 'auto';
 }) {
   const shouldRenderControls = isVisible && !!onSelect;

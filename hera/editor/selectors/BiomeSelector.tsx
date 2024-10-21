@@ -11,7 +11,7 @@ import { fbt } from 'fbt';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 
 const unsortedBiomes = new Set(Biomes);
 unsortedBiomes.delete(Biome.Spaceship);
@@ -30,7 +30,7 @@ export default function BiomeSelector({
   map: MapData;
   navigate?: true;
   onBiomeChange: (map: MapData) => void;
-  user: UserWithFactionNameAndUnlocks | null;
+  user: UserWithUnlocks | null;
 }) {
   const currentBiome = map.config.biome;
   const { alert } = useAlert();

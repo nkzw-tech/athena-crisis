@@ -19,7 +19,7 @@ import Plus from '@iconify-icons/pixelarticons/plus.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
-import { UserWithFactionNameAndUnlocks } from '../../hooks/useUserMap.tsx';
+import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
 import EffectTitle, { EffectObjectiveTitle } from '../lib/EffectTitle.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
@@ -61,7 +61,7 @@ export default function EffectsPanel({
   setMap: SetMapFunction;
   setScenario: (scenario: Scenario) => void;
   updateEffect: (effect: Effect) => void;
-  user: UserWithFactionNameAndUnlocks;
+  user: UserWithUnlocks;
 }) {
   const { action: currentAction, effects } = editor;
   const { effect, trigger } = scenario;

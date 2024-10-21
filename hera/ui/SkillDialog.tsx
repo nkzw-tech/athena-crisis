@@ -82,7 +82,7 @@ const SkillIconInternal = ({
           icon={(borderStyle && SkillBorderIcons[borderStyle]) || SkillBorder}
           style={{
             color: disabled
-              ? applyVar('text-color-inactive')
+              ? applyVar('text-color-light')
               : color
                 ? getColor(color)
                 : undefined,
@@ -726,7 +726,7 @@ const selectedBoxStyle = css`
 
 const blockedStyle = css`
   opacity: 0.7;
-  color: ${applyVar('text-color-inactive')};
+  color: ${applyVar('text-color-light')};
 `;
 
 const costStyle = css`

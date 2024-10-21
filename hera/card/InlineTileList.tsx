@@ -1,4 +1,5 @@
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
+import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import {
   TileField,
   TileInfo,
@@ -25,6 +26,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { useInView } from 'framer-motion';
 import {
+  ComponentProps,
   MouseEvent,
   ReactNode,
   useCallback,
@@ -38,6 +40,7 @@ import Cursor from '../Cursor.tsx';
 import Decorators from '../Decorators.tsx';
 import tileFieldHasAnimation from '../editor/lib/tileFieldHasAnimation.tsx';
 import { useSprites } from '../hooks/useSprites.tsx';
+import useUnitState from '../hooks/useUnitState.tsx';
 import TileDecorators from '../TileDecorators.tsx';
 import Tiles from '../Tiles.tsx';
 import { TimerFunction } from '../Types.tsx';
@@ -65,8 +68,10 @@ export default function InlineTileList({
   biome,
   buildings,
   children,
+  cycleUnitState,
   decorators,
   extraInfos,
+  gap = true,
   lazyDecorators,
   onLongPress,
   onSelect,
@@ -74,14 +79,17 @@ export default function InlineTileList({
   selected,
   size,
   tiles,
+  unitCustomizations,
   unitGroups,
   units,
 }: {
   biome: Biome;
   buildings?: ReadonlyArray<Building | undefined>;
   children?: ReactNode;
+  cycleUnitState?: true;
   decorators?: ReadonlyArray<DecoratorInfo>;
   extraInfos?: ReadonlyArray<ReadonlyArray<ReactNode>>;
+  gap?: ComponentProps<typeof Stack>['gap'];
   lazyDecorators?: boolean;
   onLongPress?: SelectTileFn;
   onSelect?: SelectTileFn;
@@ -89,6 +97,7 @@ export default function InlineTileList({
   selected?: number;
   size?: 'medium' | 'tall';
   tiles: ReadonlyArray<TileInfo>;
+  unitCustomizations?: ReadonlyArray<SpriteVariant>;
   unitGroups?: ReadonlyArray<ReadonlyArray<Unit>>;
   units?: ReadonlyArray<Unit | undefined>;
 }) {
@@ -96,11 +105,12 @@ export default function InlineTileList({
   const [showCursor, setShowCursor] = useState<number | undefined>();
   const hideCursor = useCallback(() => setShowCursor(undefined), []);
   return (
-    <Stack gap start>
+    <Stack gap={gap} start>
       {tilesToTileMap(tiles).map((tile, index) => (
         <InlineTile
           biome={biome}
           building={buildings?.[index]}
+          cycleUnitState={!!cycleUnitState}
           decorator={decorators?.[index]}
           extraInfos={extraInfos?.[index]}
           hasSprites={hasSprites}
@@ -118,6 +128,9 @@ export default function InlineTileList({
           tile={tiles[index]}
           tileField={tile}
           unit={units?.[index]}
+          unitCustomization={
+            !unitGroups?.[index] ? unitCustomizations?.[index] : undefined
+          }
           unitGroup={unitGroups?.[index]}
         />
       ))}
@@ -129,6 +142,7 @@ export default function InlineTileList({
 const InlineTile = ({
   biome,
   building,
+  cycleUnitState,
   decorator,
   extraInfos,
   hasSprites,
@@ -145,10 +159,12 @@ const InlineTile = ({
   tile,
   tileField,
   unit: initialUnit,
+  unitCustomization,
   unitGroup,
 }: {
   biome: Biome;
   building?: Building;
+  cycleUnitState: boolean;
   decorator?: DecoratorInfo;
   extraInfos?: ReadonlyArray<ReactNode>;
   hasSprites: boolean;
@@ -165,16 +181,15 @@ const InlineTile = ({
   tile: TileInfo;
   tileField: TileField;
   unit?: Unit;
+  unitCustomization?: SpriteVariant;
   unitGroup?: ReadonlyArray<Unit>;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const isVisible = useInView(ref);
   const isSelected = selected === index;
   const isHighlighted = showCursor === index;
-
   const [currentUnitId, setCurrentUnitId] = useState(0);
   const interval = useMemo(() => random(5, 15) * 300, []);
-
   const unit = initialUnit || unitGroup?.[currentUnitId];
   const extraInfo = extraInfos?.[currentUnitId];
 
@@ -283,26 +298,29 @@ const InlineTile = ({
             size={TileSize}
           />
         )}
-        {isVisible && hasSprites && unit && (
-          <UnitTile
-            absolute
-            animationConfig={AnimationConfig}
-            animationKey={vector}
-            biome={biome}
-            firstPlayerID={1}
-            getLayer={() => 0}
-            highlightStyle={
-              isSelected ? 'move' : isHighlighted ? 'move-null' : undefined
-            }
-            maybeOutline={isHighlighted}
-            position={vector}
-            requestFrame={requestAnimationFrame}
-            scheduleTimer={scheduleTimer}
-            size={TileSize}
-            tile={map.getTileInfo(vector)}
-            unit={unit}
-          />
-        )}
+        {isVisible &&
+          hasSprites &&
+          unit &&
+          (cycleUnitState ? (
+            <InlineUnitWithUnitState
+              biome={biome}
+              customSprite={unitCustomization}
+              isHighlighted={isHighlighted}
+              isSelected={isSelected}
+              offset={index}
+              tile={tile}
+              unit={unit}
+            />
+          ) : (
+            <InlineUnit
+              biome={biome}
+              customSprite={unitCustomization}
+              isHighlighted={isHighlighted}
+              isSelected={isSelected}
+              tile={tile}
+              unit={unit}
+            />
+          ))}
         {isHighlighted || isSelected ? (
           <Cursor
             color={isSelected ? 'red' : null}
@@ -314,6 +332,78 @@ const InlineTile = ({
       </div>
       {extraInfo != null && <div className={extraInfoStyle}>{extraInfo}</div>}
     </div>
+  );
+};
+
+const InlineUnit = ({
+  biome,
+  isHighlighted,
+  isSelected,
+  tile,
+  unit,
+  ...props
+}: {
+  biome: Biome;
+  isHighlighted: boolean;
+  isSelected: boolean;
+  tile: TileInfo;
+  unit: Unit;
+} & Pick<
+  ComponentProps<typeof UnitTile>,
+  'animation' | 'direction' | 'highlightStyle' | 'customSprite'
+>) => (
+  <UnitTile
+    absolute
+    animationConfig={AnimationConfig}
+    animationKey={vector}
+    biome={biome}
+    firstPlayerID={1}
+    getLayer={() => 0}
+    highlightStyle={
+      isSelected ? 'move' : isHighlighted ? 'move-null' : undefined
+    }
+    maybeOutline={isHighlighted}
+    position={vector}
+    requestFrame={requestAnimationFrame}
+    scheduleTimer={scheduleTimer}
+    size={TileSize}
+    tile={tile}
+    unit={unit}
+    {...props}
+  />
+);
+
+const InlineUnitWithUnitState = ({
+  biome,
+  customSprite,
+  isHighlighted,
+  isSelected,
+  offset,
+  tile,
+  unit,
+}: {
+  biome: Biome;
+  isHighlighted: boolean;
+  isSelected: boolean;
+  offset: number;
+  tile: TileInfo;
+  unit: Unit;
+} & Pick<ComponentProps<typeof UnitTile>, 'customSprite'>) => {
+  const [entity, , props] = useUnitState(
+    unit,
+    biome,
+    AnimationConfig.AnimationDuration * offset,
+  );
+  return (
+    <InlineUnit
+      biome={biome}
+      customSprite={customSprite}
+      isHighlighted={isHighlighted}
+      isSelected={isSelected}
+      tile={tile}
+      unit={entity}
+      {...props}
+    />
   );
 };
 

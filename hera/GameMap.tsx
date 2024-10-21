@@ -1757,6 +1757,7 @@ export default class GameMap extends Component<Props, State> {
         namedPositions,
         objectiveRadius,
         paused,
+        playerDetails,
         position,
         radius,
         replayState,
@@ -1833,6 +1834,7 @@ export default class GameMap extends Component<Props, State> {
               map={map}
               onAnimationComplete={this._animationComplete}
               paused={paused}
+              playerDetails={playerDetails}
               radius={radius}
               requestFrame={this._requestFrame}
               scheduleTimer={this._scheduleTimer}

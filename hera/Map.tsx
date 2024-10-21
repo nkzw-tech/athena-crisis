@@ -47,6 +47,7 @@ import Tiles, { TileStyle } from './Tiles.tsx';
 import {
   GetLayerFunction,
   MapBehavior,
+  PlayerDetails,
   RequestFrameFunction,
   TimerFunction,
 } from './Types.tsx';
@@ -88,6 +89,7 @@ const MapComponent = ({
   map,
   onAnimationComplete = () => void 0,
   paused,
+  playerDetails,
   radius,
   renderEntities = true,
   requestFrame = requestAnimationFrame,
@@ -110,6 +112,7 @@ const MapComponent = ({
   map: MapData;
   onAnimationComplete?: (position: Vector, animation: Animation) => void;
   paused?: boolean;
+  playerDetails: PlayerDetails | null;
   radius?: RadiusInfo | null;
   renderEntities?: boolean;
   requestFrame?: RequestFrameFunction;
@@ -260,6 +263,9 @@ const MapComponent = ({
                   animationConfig={animationConfig}
                   animationKey={vector}
                   biome={biome}
+                  customSprite={playerDetails
+                    ?.get(unit.player)
+                    ?.equippedUnitCustomizations.get(unit.id)}
                   direction={
                     animation?.type === 'explosion'
                       ? animation.direction

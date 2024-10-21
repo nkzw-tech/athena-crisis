@@ -1,5 +1,4 @@
 import { encodeEffects } from '@deities/apollo/Effects.tsx';
-import { Sniper } from '@deities/athena/info/Unit.tsx';
 import toSlug from '@deities/hephaestus/toSlug.tsx';
 import MapEditor from '@deities/hera/editor/MapEditor.tsx';
 import {
@@ -7,24 +6,9 @@ import {
   MapObject,
   MapUpdateVariables,
 } from '@deities/hera/editor/Types.tsx';
+import DemoViewer from '@deities/hera/ui/lib/DemoViewer.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import { useCallback, useEffect, useState } from 'react';
-
-const viewer = {
-  access: 'User',
-  biomes: [],
-  character: {
-    color: 1,
-    unitId: Sniper.id,
-    variant: 0,
-  },
-  displayName: 'Maxima',
-  factionName: 'Atlas',
-  id: 'Demo-User-12',
-  skills: [],
-  unlockedSkillSlots: [1],
-  username: 'demo-maxima',
-} as const;
 
 const decodeMapObject = (data: string | null): MapObject | null => {
   if (!data) {
@@ -44,15 +28,17 @@ const decodeMapObject = (data: string | null): MapObject | null => {
             displayName:
               typeof maybeCreator.displayName === 'string'
                 ? maybeCreator.displayName
-                : viewer.displayName,
+                : DemoViewer.displayName,
             id:
-              typeof maybeCreator.id === 'string' ? maybeCreator.id : viewer.id,
+              typeof maybeCreator.id === 'string'
+                ? maybeCreator.id
+                : DemoViewer.id,
             username:
               typeof maybeCreator.username === 'string'
                 ? maybeCreator.username
-                : viewer.username,
+                : DemoViewer.username,
           }
-        : viewer,
+        : DemoViewer,
       effects:
         typeof maybeMapObject?.effects === 'string'
           ? maybeMapObject.effects
@@ -90,9 +76,9 @@ export default function MapEditorExample() {
         },
         canEdit: true,
         creator: {
-          displayName: viewer.displayName,
-          id: viewer.id,
-          username: viewer.username,
+          displayName: DemoViewer.displayName,
+          id: DemoViewer.id,
+          username: DemoViewer.username,
         },
         effects: JSON.stringify(encodeEffects(variables.effects)),
         id: 'id' in variables ? variables.id : '',
@@ -137,7 +123,7 @@ export default function MapEditorExample() {
         setHasChanges={() => {}}
         tiltStyle="on"
         updateMap={handleMapUpdate}
-        user={viewer}
+        user={DemoViewer}
       />
     </div>
   );
