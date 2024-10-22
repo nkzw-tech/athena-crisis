@@ -11,6 +11,7 @@ import GameMap from '@deities/hera/GameMap.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import { setAnimationSync } from '@deities/ui/lib/syncAnimation.tsx';
 import { css, cx, injectGlobal } from '@emotion/css';
 import { useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -24,6 +25,7 @@ declare global {
 }
 
 initializeCSS();
+setAnimationSync(false);
 
 // Playwright does not like audio.
 AudioPlayer.pause();
