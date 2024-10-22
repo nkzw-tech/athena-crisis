@@ -1327,8 +1327,10 @@ export const Weapons = {
       [EntityType.AirSoldier, 100],
       [EntityType.Amphibious, 100],
       [EntityType.Artillery, 100],
+      [EntityType.Building, 50],
       [EntityType.Ground, 100],
       [EntityType.Soldier, 120],
+      [EntityType.Structure, 30],
     ]),
     EmptyAnimation.withSound('Attack/Club'),
     PowHitAnimation,
@@ -3574,10 +3576,10 @@ export const Ogre = new UnitInfo(
   {
     cost: Number.POSITIVE_INFINITY,
     fuel: 20,
-    radius: 4,
+    radius: 3,
     vision: 1,
   },
-  DefaultUnitAbilities,
+  DefaultUnitAbilitiesWithCapture,
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.Club],
