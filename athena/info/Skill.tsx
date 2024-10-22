@@ -301,6 +301,14 @@ const defenseStatusEffects: SkillMap = new Map([
 
 const defenseUnitStatusEffects = new Map<Skill, UnitModifierMap>([
   [Skill.Sabotage, new Map([[UnitID.Saboteur, 3]])],
+  [
+    Skill.ArtilleryRangeIncrease,
+    new Map([
+      [UnitID.Artillery, 0.4],
+      [UnitID.HeavyArtillery, 0.4],
+      [UnitID.Cannon, 0.4],
+    ]),
+  ],
 ]);
 
 const defensePowerStatusEffects: SkillMap = new Map([
@@ -324,13 +332,6 @@ const defenseMovementTypeStatusEffects: MovementSkillMap = new Map([
     new Map([
       [MovementTypes.Tires, -0.15],
       [MovementTypes.Tread, -0.15],
-    ]),
-  ],
-  [
-    Skill.ArtilleryRangeIncrease,
-    new Map([
-      [MovementTypes.Tires, 0.2],
-      [MovementTypes.Tread, 0.2],
     ]),
   ],
   [
