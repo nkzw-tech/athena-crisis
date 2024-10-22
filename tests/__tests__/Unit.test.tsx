@@ -414,3 +414,22 @@ test('leaders are set correctly when a unit is converted to another faction', as
   expect(lastMap.units.get(vecB)!.isLeader()).toBe(true);
   expect(lastMap.units.get(vecC)!.isLeader()).toBe(false);
 });
+
+test('displays moved units correctly', async () => {
+  let map = withModifiers(
+    MapData.createMap({
+      map: Array(9).fill(1),
+      size: { height: 3, width: 3 },
+    }),
+  );
+
+  map = map.copy({
+    units: map.units
+      .set(vec(1, 1), Pioneer.create(1).move())
+      .set(vec(3, 3), Helicopter.create(2).move()),
+  });
+
+  const screenshot = await captureOne(map, '');
+  printGameState('Moved', screenshot);
+  expect(screenshot).toMatchImageSnapshot();
+});
