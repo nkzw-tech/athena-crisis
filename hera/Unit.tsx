@@ -47,6 +47,7 @@ enum ActionStyle {
   Capture = 1,
   Rescue = 2,
   Transport = 3,
+  Moved = 4,
 }
 
 enum FuelStyle {
@@ -140,7 +141,13 @@ const Action = ({
           ? {
               [vars.set('status-1')]: '-28px',
             }
-          : undefined
+          : actionStyle === ActionStyle.Moved
+            ? {
+                [vars.set('status-1')]: '-35px',
+                bottom: 0,
+                opacity: 0.75,
+              }
+            : undefined
       }
     />
   );
@@ -876,7 +883,9 @@ export default function UnitTile({
       ? ActionStyle.Capture
       : unit.isBeingRescued()
         ? ActionStyle.Rescue
-        : null;
+        : !isCompleted && unit.hasMoved()
+          ? ActionStyle.Moved
+          : null;
   const fuelStyle = getFuelStyle(unit);
   const ammoStyle = getAmmoStyle(unit);
 
