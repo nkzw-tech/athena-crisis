@@ -1,4 +1,5 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import { spriteURL } from '@deities/art/Sprites.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { isSea, TileInfo } from '@deities/athena/info/Tile.tsx';
@@ -17,6 +18,7 @@ import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import syncAnimation from '@deities/ui/lib/syncAnimation.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { ShadowImages, Sprites } from 'athena-crisis:images';
@@ -147,6 +149,7 @@ const Status = ({
             !hide && hasOne && blinkStyle,
             (hide || !hasOne) && hideStyle,
           )}
+          ref={syncAnimation}
           style={{
             [vars.set('status-1')]: fuelStyle || ammoStyle,
             [vars.set('status-2')]: ammoStyle || fuelStyle,
@@ -894,6 +897,17 @@ export default function UnitTile({
         ref={innerElementRef}
         style={innerStyle}
       />
+      {player > 0 && unit.isLeader() && (
+        <div
+          className={leaderStyle}
+          ref={syncAnimation}
+          style={{
+            maskImage: `url(${spriteURL(unitSprite, player)})`,
+            maskPosition: `${innerStyle.backgroundPositionX} ${innerStyle.backgroundPositionY}`,
+            opacity: isCompleted || hide ? 0 : 1,
+          }}
+        />
+      )}
       {unit.statusEffect ? <StatusEffect hide={hide} unit={unit} /> : null}
       <Status
         actionStyle={actionStyle}
@@ -1005,6 +1019,39 @@ const baseUnitStyle = css`
 
 const shadowStyle = css`
   opacity: 0.5;
+`;
+
+const leaderStyle = css`
+  animation: ${keyframes`
+    0%, 100% {
+        opacity: 1;
+        background-position: bottom;
+    }
+    50% {
+        background-position: top;
+        opacity: 0;
+    }
+    99% {
+      opacity: 0;
+    }
+  `} 5s infinite;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0) 55%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 200%;
+  bottom: 0;
+  left: -4px;
+  mask-repeat: no-repeat;
+  mask-size: auto;
+  position: absolute;
+  right: -4px;
+  top: -8px;
+  transform: ${scale};
+  transition: opacity ${applyVar('animation-duration-70')} ease-in-out;
 `;
 
 const maybeOutlineStyle = css`
