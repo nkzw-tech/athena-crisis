@@ -860,6 +860,39 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
   return null;
 };
 
+const hasSameEffect = <K, V>(modifierMap: ReadonlyMap<K, V>) => {
+  let effect = null;
+  for (const [, currentEffect] of modifierMap) {
+    if (effect === null) {
+      effect = currentEffect;
+    } else if (effect !== currentEffect) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const matchesUnitModifierMap = <K, V>(
+  mapA: ReadonlyMap<K, V>,
+  mapB: ReadonlyMap<K, V> | null,
+) => {
+  if (!hasSameEffect(mapA) || !mapB || !hasSameEffect(mapB)) {
+    return false;
+  }
+
+  if (mapA.size !== mapB.size) {
+    return false;
+  }
+
+  for (const [key] of mapA) {
+    if (!mapB.has(key)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export default memo(function SkillDescription({
   color,
   skill,
@@ -909,10 +942,14 @@ export default memo(function SkillDescription({
     unitAttackLeader ? (
       <UnitAttackLeaderStatusEffect effect={unitAttackLeader} />
     ) : null,
-    unitAttack ? (
-      <UnitStatusEffects color={color} effects={unitAttack} type="attack" />
+    unitAttack?.size ? (
+      matchesUnitModifierMap(unitAttack, unitDefense) ? (
+        <AttackStatusEffect effect={unitAttack.values().next().value!} />
+      ) : (
+        <UnitStatusEffects color={color} effects={unitAttack} type="attack" />
+      )
     ) : null,
-    unitDefense ? (
+    unitDefense?.size ? (
       <UnitStatusEffects color={color} effects={unitDefense} type="defense" />
     ) : null,
     movementTypeAttack ? (
@@ -922,10 +959,16 @@ export default memo(function SkillDescription({
     movementTypeDefense ? (
       <MovementTypeStatusEffect effects={movementTypeDefense} type="defense" />
     ) : null,
-    tileAttack ? (
-      <TileTypeStatusEffect effects={tileAttack} type="attack" />
+    tileAttack?.size ? (
+      matchesUnitModifierMap(tileAttack, tileDefense) ? (
+        <AttackStatusEffect
+          effect={tileAttack.values().next().value!.values().next().value!}
+        />
+      ) : (
+        <TileTypeStatusEffect effects={tileAttack} type="attack" />
+      )
     ) : null,
-    tileDefense ? (
+    tileDefense?.size ? (
       <TileTypeStatusEffect effects={tileDefense} type="defense" />
     ) : null,
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,

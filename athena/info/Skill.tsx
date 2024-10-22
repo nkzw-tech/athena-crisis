@@ -161,17 +161,16 @@ export const VampireSkillHeal = 10;
 
 type ID = number;
 type Modifier = number;
-
+type UnitSkillMap = ReadonlyMap<Skill, SkillUnitModifierMap>;
 type SkillMap = ReadonlyMap<Skill, Modifier>;
-type UnitModifierMap = ReadonlyMap<ID, Modifier>;
-type UnitSkillMap = ReadonlyMap<Skill, UnitModifierMap>;
-export type MovementMap = ReadonlyMap<MovementType, Modifier>;
-export type TileMovementMap = ReadonlyMap<TileType, MovementMap>;
 type MovementSkillMap = ReadonlyMap<Skill, MovementMap>;
 type TileMovementSkillMap = ReadonlyMap<Skill, TileMovementMap>;
 type RangeSkillMap = ReadonlyMap<Skill, [number, number]>;
 type RangeMap = ReadonlyMap<ID, RangeSkillMap>;
 
+export type SkillUnitModifierMap = ReadonlyMap<ID, Modifier>;
+export type MovementMap = ReadonlyMap<MovementType, Modifier>;
+export type TileMovementMap = ReadonlyMap<TileType, MovementMap>;
 export type SkillActivationType = 'regular' | 'power';
 export type ActiveUnitTypes = ReadonlySet<MovementType | ID | Vector> | 'all';
 
@@ -192,7 +191,7 @@ const attackStatusEffects: SkillMap = new Map([
   [Skill.AttackAndDefenseDecreaseEasy, -0.1],
 ]);
 
-const attackUnitStatusEffects = new Map<Skill, UnitModifierMap>([
+const attackUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   [
     Skill.ArtilleryRangeIncrease,
     new Map([
@@ -309,7 +308,7 @@ const defenseStatusEffects: SkillMap = new Map([
   [Skill.UnlockZombie, -0.5],
 ]);
 
-const defenseUnitStatusEffects = new Map<Skill, UnitModifierMap>([
+const defenseUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   [Skill.Sabotage, new Map([[UnitID.Saboteur, 3]])],
   [
     Skill.ArtilleryRangeIncrease,
