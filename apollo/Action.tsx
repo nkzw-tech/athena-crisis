@@ -27,8 +27,10 @@ import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getRescuableVectors from '@deities/athena/lib/getRescuableVectors.tsx';
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
+import hasHQ from '@deities/athena/lib/hasHQ.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
+import pickNewHQ from '@deities/athena/lib/pickNewHQ.tsx';
 import powerSpawnUnits from '@deities/athena/lib/powerSpawnUnits.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
@@ -970,6 +972,7 @@ function activateCrystal(
   ) {
     return {
       crystal,
+      hq: hasHQ(map, player) ? undefined : pickNewHQ(map, player),
       player: player.id,
       type: 'ActivateCrystal',
     } as const;

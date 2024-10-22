@@ -11,6 +11,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import {
   ActionResponse,
   ActionResponses,
+  ActivateCrystalActionResponse,
   ActivatePowerActionResponse,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
@@ -107,7 +108,17 @@ const VisibleActionModifiers: Record<
   VisibleModifier<never>
 > = {
   AbandonInvasion: true,
-  ActivateCrystal: true,
+  ActivateCrystal: (
+    actionResponse: ActivateCrystalActionResponse,
+    map: MapData,
+    activeMap: MapData,
+    vision: VisionT,
+  ): ActivateCrystalActionResponse | null => {
+    const { hq, ...baseActionResponse } = actionResponse;
+    return hq && vision.isVisible(map, hq)
+      ? actionResponse
+      : baseActionResponse;
+  },
   ActivatePower: (
     actionResponse: ActivatePowerActionResponse,
     map: MapData,

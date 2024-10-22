@@ -1,6 +1,5 @@
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { RailBridge, RailTrack, River } from '@deities/athena/info/Tile.tsx';
-import convertBiome from '@deities/athena/lib/convertBiome.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
@@ -25,6 +24,7 @@ import { ActionResponse } from '../ActionResponse.tsx';
 import { applyHiddenActionResponse } from '../HiddenAction.tsx';
 import { applyObjectiveActionResponse } from '../Objective.tsx';
 import applyEndTurnActionResponse from './applyEndTurnActionResponse.tsx';
+import applyPartialActivateCrystalActionResponse from './applyPartialActivateCrystalActionResponse.tsx';
 import applyPower from './applyPower.tsx';
 
 export default function applyActionResponse(
@@ -576,10 +576,7 @@ export default function applyActionResponse(
       );
     }
     case 'ActivateCrystal': {
-      if (actionResponse.biome) {
-        map = convertBiome(map, actionResponse.biome);
-      }
-
+      map = applyPartialActivateCrystalActionResponse(map, actionResponse);
       // Crystal activations may happen prior to the player appearing on the map, or
       // are just used for effects.
       const player =

@@ -7,6 +7,7 @@ import {
 } from '../info/Building.tsx';
 import { Skill } from '../info/Skill.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
+import hasHQ from '../lib/hasHQ.tsx';
 import MapData, { ID } from '../MapData.tsx';
 import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
 import { Biome } from './Biome.tsx';
@@ -70,18 +71,9 @@ export default class Building extends Entity {
   }
 
   capture(map: MapData, player: PlayerID): this {
-    if (
-      player !== 0 &&
-      this.info.isHQ() &&
-      !map.buildings.some(
-        (building) =>
-          building.info.isHQ() && map.matchesPlayer(building, player),
-      )
-    ) {
-      return this.copy({ player });
-    }
-
-    return this.convert(map.config.biome, player);
+    return player !== 0 && this.info.isHQ() && !hasHQ(map, player)
+      ? this.copy({ player })
+      : this.convert(map.config.biome, player);
   }
 
   neutralize(biome: Biome, displayOnly = false) {

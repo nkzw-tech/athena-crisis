@@ -582,7 +582,11 @@ const formatValue = (
   }
 
   if (type === 'reference' && value === 'Vector') {
-    return `\${c.red(action.${prefix}${name}.x) + ',' + c.red(action.${prefix}${name}.y)}`;
+    return `${
+      optional ? `\${action.${prefix}${name} ? \`` : ''
+    }\${c.red(action.${prefix}${name}.x) + ',' + c.red(action.${prefix}${name}.y)}${
+      optional ? `\` : c.dim('null')}` : ''
+    }`;
   }
 
   if (type === 'reference' && typeof value === 'string') {

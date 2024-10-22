@@ -266,9 +266,9 @@ export type NoticeAnimation = Readonly<{
 }>;
 
 export type CrystalAnimation = Readonly<{
-  biome?: Biome;
   crystal: Crystal;
   onComplete?: StateToStateLike;
+  onConvert: StateToStateLike;
   type: 'crystal';
 }>;
 

@@ -211,6 +211,7 @@ export type ActivatePowerActionResponse = Readonly<{
 export type ActivateCrystalActionResponse = Readonly<{
   biome?: Biome;
   crystal: Crystal;
+  hq?: Vector;
   player?: PlayerID;
   type: 'ActivateCrystal';
 }>;
