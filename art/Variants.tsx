@@ -17,6 +17,7 @@ export default new Map<SpriteVariant, SpriteVariantDetail | null>([
   ['BuildingsShadow', null],
   ['Decorators', null],
   ['Label', null],
+  ['Medal', null],
   ['NavalExplosion', null],
   ['Portraits', null],
   ['Rescue', null],

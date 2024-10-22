@@ -7,12 +7,11 @@ import {
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
-import Icon from '@deities/ui/Icon.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { memo, useEffect, useState } from 'react';
 import Portrait from '../character/Portrait.tsx';
+import Medal from '../Medal.tsx';
 import CardTitle, { CardInfoHeading } from './CardTitle.tsx';
 import LeaderTitle from './LeaderTitle.tsx';
 
@@ -40,9 +39,9 @@ export default memo(function LeaderCard({
         <Stack gap={16} vertical>
           <Stack gap vertical>
             <CardTitle player={player}>{unit.getName(viewer)}</CardTitle>
-            <Stack center gap={2} start>
+            <Stack gap start>
+              <Medal player={unit.player} />
               <LeaderTitle gender={info.gender} />
-              <Icon icon={Magic} />
             </Stack>
           </Stack>
           <Stack gap vertical>

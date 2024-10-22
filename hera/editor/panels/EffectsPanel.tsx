@@ -11,7 +11,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import Icon from '@deities/ui/Icon.tsx';
-import ZapOn from '@deities/ui/icons/ZapOn.tsx';
+import Magic from '@deities/ui/icons/Magic.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -273,7 +273,7 @@ export default function EffectsPanel({
             className={cx(ellipsis, fitContentStyle, flexStyle)}
             onClick={() => setShowNewEffects(true)}
           >
-            <Icon icon={ZapOn} />
+            <Icon icon={Magic} />
             <fbt desc="Button for choosing a new effect">New Effect</fbt>
           </Button>
         </Stack>

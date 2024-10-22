@@ -54,7 +54,6 @@ import Ammo from '@deities/ui/icons/Ammo.tsx';
 import DropUnit from '@deities/ui/icons/DropUnit.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Sabotage from '@deities/ui/icons/Sabotage.tsx';
@@ -84,6 +83,7 @@ import getTranslatedEntityName, {
   getTranslatedEntityGroupName,
 } from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
+import Medal from '../Medal.tsx';
 import Tick from '../Tick.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
@@ -192,12 +192,13 @@ export default memo(function UnitCard({
                 <fbt:param name="name">
                   <Stack
                     center
+                    gap
                     inline
                     start
                     style={isLeader ? { color } : undefined}
                   >
                     {name}
-                    {isLeader && <Icon icon={Magic} />}
+                    {isLeader && <Medal player={unit.player} />}
                   </Stack>
                 </fbt:param>
               </fbt>

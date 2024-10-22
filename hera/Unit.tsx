@@ -902,9 +902,10 @@ export default function UnitTile({
           className={leaderStyle}
           ref={syncAnimation}
           style={{
+            animationPlayState: hide ? 'paused' : 'running',
             maskImage: `url(${spriteURL(unitSprite, player)})`,
             maskPosition: `${innerStyle.backgroundPositionX} ${innerStyle.backgroundPositionY}`,
-            opacity: isCompleted || hide ? 0 : 1,
+            opacity: hide ? 0 : 1,
           }}
         />
       )}

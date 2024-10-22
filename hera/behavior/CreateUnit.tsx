@@ -13,11 +13,9 @@ import getFirst from '@deities/hephaestus/getFirst.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
-import getColor from '@deities/ui/getColor.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
@@ -31,6 +29,7 @@ import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, {
   ClientCoordinates,
 } from '../lib/toTransformOrigin.tsx';
+import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, {
@@ -151,7 +150,6 @@ export default class CreateUnit {
         (unit) => unit.getCostFor(currentPlayer),
       );
       const { hasLeader } = getLeaders(map, selectedBuilding.player);
-      const color = getColor(selectedBuilding.player);
       const unitsToDisplay =
         units.length > MAX_UNITS
           ? units.slice(cursor, cursor + MAX_UNITS - 1)
@@ -254,11 +252,9 @@ export default class CreateUnit {
                       unit={isDisabled ? entity.complete() : entity}
                     />
                     {entity.isLeader() && (
-                      <Icon
-                        className={leaderIconStyle}
-                        icon={Magic}
-                        style={{ color }}
-                      />
+                      <div className={leaderIconStyle}>
+                        <Medal player={selectedBuilding.player} zoom={1} />
+                      </div>
                     )}
                     <Icon
                       className={infoIconStyle}

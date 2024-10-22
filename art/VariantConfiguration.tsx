@@ -45,6 +45,12 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Medal',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Rescue',
     {
       variantNames,

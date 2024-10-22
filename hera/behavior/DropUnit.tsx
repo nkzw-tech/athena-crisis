@@ -8,12 +8,10 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import getColor from '@deities/ui/getColor.tsx';
-import Icon from '@deities/ui/Icon.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import { css } from '@emotion/css';
 import { useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
+import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import Tick from '../Tick.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
@@ -193,11 +191,9 @@ export default class DropUnit {
                         unit={deployedUnit}
                       />
                       {unit.isLeader() && (
-                        <Icon
-                          className={leaderIconStyle}
-                          icon={Magic}
-                          style={{ color: getColor(unit.player) }}
-                        />
+                        <div className={leaderIconStyle}>
+                          <Medal player={unit.player} zoom={1} />
+                        </div>
                       )}
                     </div>
                   )}

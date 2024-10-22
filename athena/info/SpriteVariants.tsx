@@ -5,6 +5,7 @@ export type SpriteVariant =
   | 'BuildingsShadow'
   | 'Decorators'
   | 'Label'
+  | 'Medal'
   | 'NavalExplosion'
   | 'Portraits'
   | 'Rescue'

@@ -8,9 +8,9 @@ import MapData from '@deities/athena/MapData.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
+import Medal from '../Medal.tsx';
 import FlashFlyout from './FlashFlyout.tsx';
 import { FlyoutItem } from './Flyout.tsx';
 
@@ -41,9 +41,9 @@ export default function NamedPosition({
           <FlyoutItem color={unit.player} key="unit-name">
             <Stack gap={4} nowrap>
               {hasName && (
-                <Stack gap={1} nowrap>
+                <Stack gap={4} nowrap>
                   {unit.getName(currentViewer)}
-                  {unit.isLeader() && <Icon icon={Magic} />}
+                  {unit.isLeader() && <Medal player={unit.player} zoom={1} />}
                 </Stack>
               )}
               {showHealth ? (
