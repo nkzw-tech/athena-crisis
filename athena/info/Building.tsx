@@ -15,11 +15,13 @@ import {
   Bridge,
   Campsite,
   ConstructionSite,
+  DeepSea,
   Path,
   Pier,
   Plain,
   RailBridge,
   RailTrack,
+  Sea,
   ShipyardConstructionSite,
   SpaceBridge,
   Street,
@@ -348,6 +350,7 @@ const barrierTiles = new Set([
   Pier,
   SpaceBridge,
 ]);
+
 export const VerticalBarrier = new BuildingInfo(
   6,
   'Barrier',
@@ -595,6 +598,46 @@ export const DestroyedSuperTank = new BuildingInfo(
   { name: 'Structures', position: new SpriteVector(4, 0), size: 'small' },
 );
 
+const seaBarrierTiles = new Set([Sea, DeepSea]);
+
+export const VerticalSeaBarrier = new BuildingInfo(
+  21,
+  'Sea Barrier',
+  `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
+  {
+    canBeCreated: false,
+    defense: 30,
+    editorPlaceOn: seaBarrierTiles,
+    isAccessible: false,
+    sort: 10,
+    type: EntityType.Structure,
+  },
+  {
+    name: 'Structures',
+    position: new SpriteVector(6, 0),
+    size: 'small',
+  },
+);
+
+export const HorizontalSeaBarrier = new BuildingInfo(
+  22,
+  'Sea Barrier',
+  `This structure is an impassable obstacle on the battlefield that needs to be destroyed in order to clear the path for advancing units and securing strategic positions.`,
+  {
+    canBeCreated: false,
+    defense: 30,
+    editorPlaceOn: seaBarrierTiles,
+    isAccessible: false,
+    sort: 10,
+    type: EntityType.Structure,
+  },
+  {
+    name: 'Structures',
+    position: new SpriteVector(5, 0),
+    size: 'small',
+  },
+);
+
 // The order of buildings must not be changed.
 const Buildings = [
   HQ,
@@ -617,6 +660,8 @@ const Buildings = [
   Medbay,
   SpawnPlatform,
   DestroyedSuperTank,
+  VerticalSeaBarrier,
+  HorizontalSeaBarrier,
 ];
 
 export function getBuildingInfo(id: number): BuildingInfo | null {

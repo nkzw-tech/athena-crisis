@@ -950,6 +950,7 @@ const AntiShipMissile = new Weapon(
     [EntityType.Rail, 50],
     [EntityType.Ship, 75],
     [EntityType.Soldier, 50],
+    [EntityType.Structure, 60],
   ]),
   LightGunAnimation,
   ExplosionImpactAnimation,
@@ -968,6 +969,7 @@ const CruiseMissile = new Weapon(
     [EntityType.Rail, 95],
     [EntityType.Ship, 40],
     [EntityType.Soldier, 80],
+    [EntityType.Structure, 80],
   ]),
   SAMAnimation.withTrailingFrames(6),
   SmokeAnimation,
@@ -1663,6 +1665,7 @@ export const Weapons = {
     new Map([
       [EntityType.Amphibious, 90],
       [EntityType.Ship, 65],
+      [EntityType.Structure, 50],
     ]),
     new WeaponAnimation('Torpedo', 'Attack/Torpedo', {
       frames: 9,
