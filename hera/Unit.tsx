@@ -1071,7 +1071,10 @@ const leaderStyle = css`
     }
     50% {
         background-position: top;
-        opacity: 0;
+        opacity: 0.4;
+    }
+    55% {
+      opacity: 0
     }
     99% {
       opacity: 0;
@@ -1080,7 +1083,7 @@ const leaderStyle = css`
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0) 45%,
-    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0.75) 50%,
     rgba(255, 255, 255, 0) 55%
   );
   background-repeat: no-repeat;
