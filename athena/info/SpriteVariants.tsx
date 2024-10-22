@@ -3,6 +3,7 @@ export type SpriteVariant =
   | 'Building-Create'
   | 'Buildings'
   | 'BuildingsShadow'
+  | 'Capture'
   | 'Decorators'
   | 'Label'
   | 'Medal'

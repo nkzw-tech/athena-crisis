@@ -39,6 +39,12 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Capture',
+    {
+      variantNames,
+    },
+  ],
+  [
     'Label',
     {
       variantNames,

@@ -44,9 +44,9 @@ import {
 } from './Types.tsx';
 
 enum ActionStyle {
-  Capture = '-35px',
-  Rescue = '0px',
-  Transport = '-28px',
+  Capture = 1,
+  Rescue = 2,
+  Transport = 3,
 }
 
 enum FuelStyle {
@@ -115,36 +115,35 @@ const Action = ({
   rescuer: PlayerID | null;
   unit: Unit;
 }) => {
-  if (unit.health && actionStyle) {
-    if (actionStyle === ActionStyle.Rescue && rescuer != null) {
-      return (
-        <div
-          className={cx(
-            absoluteStyle,
-            baseIconStyle,
-            statusStyle,
-            hide && hideStyle,
-            sprite('Rescuing', rescuer),
-          )}
-        />
-      );
-    }
-    return (
-      <div
-        className={cx(
-          absoluteStyle,
-          baseIconStyle,
-          iconStyle,
-          statusStyle,
-          hide && hideStyle,
-        )}
-        style={{
-          [vars.set('status-1')]: actionStyle,
-        }}
-      />
-    );
+  if (unit.health <= 0 || !actionStyle) {
+    return null;
   }
-  return null;
+
+  const className =
+    actionStyle === ActionStyle.Rescue && rescuer != null
+      ? sprite('Rescuing', rescuer)
+      : actionStyle === ActionStyle.Capture
+        ? cx(sprite('Capture', unit.player), captureStyle)
+        : iconStyle;
+
+  return (
+    <div
+      className={cx(
+        absoluteStyle,
+        baseIconStyle,
+        statusStyle,
+        hide && hideStyle,
+        className,
+      )}
+      style={
+        actionStyle === ActionStyle.Transport
+          ? {
+              [vars.set('status-1')]: '-28px',
+            }
+          : undefined
+      }
+    />
+  );
 };
 
 const Status = ({
@@ -1239,6 +1238,10 @@ const hideStyle = css`
 const statusStyle = css`
   right: 0px;
   bottom: -1px;
+`;
+
+const captureStyle = css`
+  bottom: 0px;
 `;
 
 const blinkStyle = css`
