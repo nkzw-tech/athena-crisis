@@ -9,6 +9,7 @@ export type SpriteVariant =
   | 'NavalExplosion'
   | 'Portraits'
   | 'Rescue'
+  | 'Rescuing'
   | 'Spawn'
   | 'StructuresShadow'
   | 'Units-AIU'

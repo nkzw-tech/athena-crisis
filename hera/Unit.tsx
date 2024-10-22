@@ -45,7 +45,7 @@ import {
 
 enum ActionStyle {
   Capture = '-35px',
-  Rescue = '-42px',
+  Rescue = '0px',
   Transport = '-28px',
 }
 
@@ -107,20 +107,44 @@ const getAmmoStyle = (unit: Unit) => {
 const Action = ({
   actionStyle,
   hide,
+  rescuer,
   unit,
 }: {
   actionStyle: ActionStyle | null;
   hide: boolean;
+  rescuer: PlayerID | null;
   unit: Unit;
 }) => {
-  return unit.health && actionStyle ? (
-    <div
-      className={cx(absoluteStyle, iconStyle, hide && hideStyle, statusStyle)}
-      style={{
-        [vars.set('status-1')]: actionStyle,
-      }}
-    />
-  ) : null;
+  if (unit.health && actionStyle) {
+    if (actionStyle === ActionStyle.Rescue && rescuer != null) {
+      return (
+        <div
+          className={cx(
+            absoluteStyle,
+            baseIconStyle,
+            statusStyle,
+            hide && hideStyle,
+            sprite('Rescuing', rescuer),
+          )}
+        />
+      );
+    }
+    return (
+      <div
+        className={cx(
+          absoluteStyle,
+          baseIconStyle,
+          iconStyle,
+          statusStyle,
+          hide && hideStyle,
+        )}
+        style={{
+          [vars.set('status-1')]: actionStyle,
+        }}
+      />
+    );
+  }
+  return null;
 };
 
 const Status = ({
@@ -128,22 +152,30 @@ const Status = ({
   ammoStyle,
   fuelStyle,
   hide,
+  rescuer,
   unit,
 }: {
   actionStyle: ActionStyle | null;
   ammoStyle: AmmoStyle | null;
   fuelStyle: FuelStyle | null;
   hide: boolean;
+  rescuer: PlayerID | null;
   unit: Unit;
 }) => {
   const hasOne = !!(fuelStyle || ammoStyle);
   return (
     <>
-      <Action actionStyle={actionStyle} hide={hide} unit={unit} />
+      <Action
+        actionStyle={actionStyle}
+        hide={hide}
+        rescuer={rescuer}
+        unit={unit}
+      />
       {unit.health ? (
         <div
           className={cx(
             absoluteStyle,
+            baseIconStyle,
             iconStyle,
             statusStyle,
             !hide && hasOne && blinkStyle,
@@ -915,6 +947,7 @@ export default function UnitTile({
         ammoStyle={ammoStyle}
         fuelStyle={fuelStyle}
         hide={hide}
+        rescuer={actionStyle === ActionStyle.Rescue ? unit.getRescuer() : null}
         unit={unit}
       />
       <Health
@@ -1187,13 +1220,16 @@ const healthOffsetStyle = css`
   right: 9px;
 `;
 
-const iconStyle = css`
-  background-image: url('${Sprites.UnitIcons}');
-  background-position: 0 ${vars.apply('status-1')};
+const baseIconStyle = css`
   height: 7px;
   opacity: 1;
   transition: opacity ${applyVar('animation-duration-70')} ease-in-out;
   width: 7px;
+`;
+
+const iconStyle = css`
+  background-image: url('${Sprites.UnitIcons}');
+  background-position: 0 ${vars.apply('status-1')};
 `;
 
 const hideStyle = css`
