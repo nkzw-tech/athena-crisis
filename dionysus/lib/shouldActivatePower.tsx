@@ -64,6 +64,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
     case Skill.UnlockZombie:
+    case Skill.VampireHeal:
       return true;
     default: {
       skill satisfies never;

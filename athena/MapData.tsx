@@ -396,7 +396,7 @@ export default class MapData {
     });
   }
 
-  refill(player: Player, extraPositions?: ReadonlyArray<Vector>) {
+  refill(player: Player, extraPositions?: Iterable<Vector>) {
     let map = applyBeginTurnStatusEffects(subtractFuel(this, player), player);
     const units = getAllUnitsToRefill(map, new Vision(player.id), player);
     map = refillUnits(

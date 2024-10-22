@@ -1,9 +1,6 @@
 import { PowerStation } from '../info/Building.tsx';
-import { Skill } from '../info/Skill.tsx';
-import {
-  PowerStationMultiplier,
-  PowerStationSkillMultiplier,
-} from '../map/Configuration.tsx';
+import { PowerStationSkillMultiplier, Skill } from '../info/Skill.tsx';
+import { PowerStationMultiplier } from '../map/Configuration.tsx';
 import Player from '../map/Player.tsx';
 import MapData from '../MapData.tsx';
 

@@ -4,10 +4,12 @@ import applyBeginTurnStatusEffects, {
 } from '@deities/athena/lib/applyBeginTurnStatusEffects.tsx';
 import getAllUnitsToRefill from '@deities/athena/lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
-import getUnitsToHealOnBuildings from '@deities/athena/lib/getUnitsToHealOnBuildings.tsx';
+import getUnitsToHeal, {
+  HealEntry,
+} from '@deities/athena/lib/getUnitsToHeal.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
-import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
+import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector, {
   sortByVectorKey,
@@ -26,12 +28,22 @@ import getTranslatedFactionName from './getTranslatedFactionName.tsx';
 import isFakeEndTurn from './isFakeEndTurn.tsx';
 
 const emptyUnitMap: ReadonlyMap<Vector, Unit> = new Map();
+const emptyUnitHealMap: ReadonlyMap<Vector, HealEntry> = new Map();
 
-const partitionUnitsToHeal = (units: ImmutableMap<Vector, Unit>) => {
-  const unitsToHeal = new Map();
-  const unitsToSupply = new Map();
-  for (const [vector, unit] of units) {
-    (unit.health < MaxHealth ? unitsToHeal : unitsToSupply).set(vector, unit);
+const partitionUnitsToHeal = (
+  units: ImmutableMap<Vector, HealEntry>,
+): [
+  unitsToHeal: ReadonlyMap<Vector, HealEntry>,
+  unitsToSupply: ReadonlyMap<Vector, Unit>,
+] => {
+  const unitsToHeal = new Map<Vector, HealEntry>();
+  const unitsToSupply = new Map<Vector, Unit>();
+  for (const [vector, [unit, amount]] of units) {
+    if (unit.health < MaxHealth) {
+      unitsToHeal.set(vector, [unit, amount]);
+    } else if (amount >= HealAmount) {
+      unitsToSupply.set(vector, unit);
+    }
   }
   return [unitsToHeal, unitsToSupply];
 };
@@ -67,10 +79,10 @@ export default function addEndTurnAnimations(
                 nextPlayer,
               );
           const [unitsToHeal, unitsToRefill] = isFake
-            ? [emptyUnitMap, emptyUnitMap]
+            ? [emptyUnitHealMap, emptyUnitMap]
             : partitionUnitsToHeal(
-                getUnitsToHealOnBuildings(map, nextPlayer).filter((_, vector) =>
-                  vision.isVisible(map, vector),
+                getUnitsToHeal(map, map.getPlayer(nextPlayer)).filter(
+                  (_, vector) => vision.isVisible(map, vector),
                 ),
               );
 

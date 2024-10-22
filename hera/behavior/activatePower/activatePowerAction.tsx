@@ -2,7 +2,7 @@ import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx'
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import {
   getUnitsToDamage,
-  onPowerUnitOpponentEffect,
+  onPowerUnitDamageEffect,
   onPowerUnitUpgrade,
 } from '@deities/apollo/actions/applyPower.tsx';
 import {
@@ -10,13 +10,18 @@ import {
   getSkillPowerDamage,
   Skill,
 } from '@deities/athena/info/Skill.tsx';
+import { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
+import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
-import { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
+import Vector, {
+  sortByVectorKey,
+  sortVectors,
+} from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import damageUnits from '../../lib/damageUnits.tsx';
@@ -27,15 +32,21 @@ import { Actions, State, StateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
-const getUnitsToHeal = (map: MapData, player: PlayerID, skill: Skill) => {
+const getUnitsToHealSkill = (
+  map: MapData,
+  player: PlayerID,
+  skill: Skill,
+): ImmutableMap<Vector, HealEntry> | null => {
   const healTypes = getHealUnitTypes(skill);
   return healTypes
-    ? map.units.filter(
-        (unit, vector) =>
-          map.matchesPlayer(unit, player) &&
-          unit.health < MaxHealth &&
-          matchesActiveType(healTypes, unit, vector),
-      )
+    ? map.units
+        .filter(
+          (unit, vector) =>
+            map.matchesPlayer(unit, player) &&
+            unit.health < MaxHealth &&
+            matchesActiveType(healTypes, unit, vector),
+        )
+        .map((unit) => [unit, HealAmount] as const)
     : null;
 };
 
@@ -78,7 +89,7 @@ export default async function activatePowerAction(
             skill,
             vision,
           );
-          const unitsToHeal = getUnitsToHeal(state.map, player.id, skill);
+          const unitsToHeal = getUnitsToHealSkill(state.map, player.id, skill);
           const healVectors = new Set(
             unitsToHeal ? [...unitsToHeal.keys()] : [],
           );
@@ -95,8 +106,7 @@ export default async function activatePowerAction(
                   ({ map }, vector) => {
                     const unit = map.units.get(vector);
                     const newMap =
-                      unit &&
-                      onPowerUnitOpponentEffect(skill, map, vector, unit);
+                      unit && onPowerUnitDamageEffect(skill, map, vector, unit);
                     return newMap ? { map: newMap } : null;
                   },
                 )

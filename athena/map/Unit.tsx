@@ -1,6 +1,6 @@
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { Skill } from '../info/Skill.tsx';
+import { LowHealthZombieSkillConversion, Skill } from '../info/Skill.tsx';
 import {
   Ability,
   getUnitInfo,
@@ -15,7 +15,6 @@ import getUnitName from '../info/UnitNames.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
 import { ID } from '../MapData.tsx';
 import { AIBehavior, AIBehaviors } from './AIBehavior.tsx';
-import { LowHealthZombieSkillConversion } from './Configuration.tsx';
 import Entity, { PlainEntity } from './Entity.tsx';
 import Player, { PlayerID, PlayerIDSet, toPlayerID } from './Player.tsx';
 

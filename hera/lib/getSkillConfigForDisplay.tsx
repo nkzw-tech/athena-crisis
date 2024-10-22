@@ -20,6 +20,7 @@ import BullseyeArrow from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Dinosaur from '@iconify-icons/pixelarticons/downasaur.js';
+import DropHalf from '@iconify-icons/pixelarticons/drop-half.js';
 import SuperTank from '@iconify-icons/pixelarticons/label-alt-multiple.js';
 import Loader from '@iconify-icons/pixelarticons/loader.js';
 import Repeat from '@iconify-icons/pixelarticons/repeat.js';
@@ -328,6 +329,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'cyan',
         icon: Ogre,
         name: fbt('Large Footprint', 'Skill name'),
+      };
+    case Skill.VampireHeal:
+      return {
+        alpha: 0.3,
+        borderStyle: 'up',
+        colors: 'red',
+        icon: DropHalf,
+        name: fbt('Blood Moon', 'Skill name'),
       };
     default: {
       skill satisfies never;

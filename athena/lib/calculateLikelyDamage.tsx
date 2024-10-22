@@ -1,9 +1,5 @@
-import { Skill } from '../info/Skill.tsx';
-import {
-  BuildingCover,
-  MinDamage,
-  PoisonSkillPowerDamageMultiplier,
-} from '../map/Configuration.tsx';
+import { PoisonSkillPowerDamageMultiplier, Skill } from '../info/Skill.tsx';
+import { BuildingCover, MinDamage } from '../map/Configuration.tsx';
 import Entity, { isUnit } from '../map/Entity.tsx';
 import Unit, { UnitStatusEffect } from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';

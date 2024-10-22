@@ -63,6 +63,8 @@ export function getUnitsToDamage(
     return getAllOpponents(map, player, vision).filter((_, vector) =>
       vectors.has(vector),
     );
+  } else if (skill === Skill.VampireHeal) {
+    return map.units.filter((unit) => map.matchesPlayer(unit, player));
   }
 
   return null;
@@ -81,7 +83,7 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
   return null;
 }
 
-export function onPowerUnitOpponentEffect(
+export function onPowerUnitDamageEffect(
   skill: Skill,
   map: MapData,
   vector: Vector,
@@ -89,8 +91,13 @@ export function onPowerUnitOpponentEffect(
 ) {
   const damage = getSkillPowerDamage(skill);
   if (damage > 0) {
-    const newUnit = unit.modifyHealth(-damage);
-    const isDead = newUnit.isDead();
+    let newUnit = unit.modifyHealth(-damage);
+    let isDead = newUnit.isDead();
+    if (isDead && skill === Skill.VampireHeal) {
+      newUnit = newUnit.setHealth(1);
+      isDead = false;
+    }
+
     const count = isDead ? newUnit.count() : 0;
     return map.copy({
       teams: updatePlayers(map.teams, [
@@ -149,7 +156,7 @@ export default function applyPower(skill: Skill, map: MapData) {
   const units = getUnitsToDamage(map, player, skill, null);
   if (units) {
     for (const [vector, unit] of units) {
-      map = onPowerUnitOpponentEffect(skill, map, vector, unit) || map;
+      map = onPowerUnitDamageEffect(skill, map, vector, unit) || map;
     }
   }
 

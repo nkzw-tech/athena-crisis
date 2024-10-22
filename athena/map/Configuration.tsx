@@ -55,7 +55,4 @@ export const MaxCharges = 10;
 export const AllowedMisses = 2;
 export const DefaultMapSkillSlots = [1, 2];
 export const PoisonDamage = 20;
-export const PoisonSkillPowerDamageMultiplier = 0.3;
 export const PowerStationMultiplier = 0.3;
-export const PowerStationSkillMultiplier = 0.05;
-export const LowHealthZombieSkillConversion = 10;

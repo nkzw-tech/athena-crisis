@@ -2,6 +2,7 @@ import { Behavior, getBuildingInfo } from '@deities/athena/info/Building.tsx';
 import {
   getSkillConfig,
   hasCounterAttackSkill,
+  PoisonSkillPowerDamageMultiplier,
   Skill,
 } from '@deities/athena/info/Skill.tsx';
 import { Lightning } from '@deities/athena/info/Tile.tsx';
@@ -38,7 +39,6 @@ import {
   CounterAttack,
   CreateTracksCost,
   MinDamage,
-  PoisonSkillPowerDamageMultiplier,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
 import {

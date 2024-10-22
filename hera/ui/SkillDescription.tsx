@@ -24,9 +24,13 @@ import {
   getSkillUnitCosts,
   getSkillUnitMovement,
   getUnitRangeForSkill,
+  LowHealthZombieSkillConversion,
   MovementMap,
+  PoisonSkillPowerDamageMultiplier,
+  PowerStationSkillMultiplier,
   Skill,
   TileMovementMap,
+  VampireSkillHeal,
 } from '@deities/athena/info/Skill.tsx';
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
@@ -52,9 +56,6 @@ import {
   AnimationConfig,
   CounterAttack,
   HealAmount,
-  LowHealthZombieSkillConversion,
-  PoisonSkillPowerDamageMultiplier,
-  PowerStationSkillMultiplier,
   RaisedCounterAttack,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
@@ -682,6 +683,14 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           </fbt:param>% funds increase.
         </fbt>
       );
+    case Skill.VampireHeal:
+      return (
+        <fbt desc="Additional skill description">
+          Each unit heals
+          <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
+          at the beginning of their turn.
+        </fbt>
+      );
   }
   return null;
 };
@@ -836,6 +845,14 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           engulf adjacent opposing units in flames and cause{' '}
           <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
           health points of damage.
+        </fbt>
+      );
+    case Skill.VampireHeal:
+      return (
+        <fbt desc="Additional skill description">
+          Reduces the health of all your units by{' '}
+          <fbt:param name="value">{getSkillPowerDamage(skill)}</fbt:param>{' '}
+          health points.
         </fbt>
       );
   }

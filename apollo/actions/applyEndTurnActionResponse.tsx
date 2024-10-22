@@ -1,6 +1,6 @@
 import applyBeginTurnStatusEffects from '@deities/athena/lib/applyBeginTurnStatusEffects.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
-import getUnitsToHealOnBuildings from '@deities/athena/lib/getUnitsToHealOnBuildings.tsx';
+import getUnitsToHeal from '@deities/athena/lib/getUnitsToHeal.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
@@ -28,8 +28,11 @@ export default function applyEndTurnActionResponse(
   }
 
   let teams = updatePlayers(map.teams, [nextPlayer, currentPlayer]);
-  const supplyVectors = new Set(supply);
-  const unitsToHeal = getUnitsToHealOnBuildings(map, nextPlayer);
+  const unitsToHeal = getUnitsToHeal(map, nextPlayer);
+  const supplyVectors = new Set([
+    ...(supply || []),
+    ...unitsToHeal.filter(([, amount]) => amount >= HealAmount).keys(),
+  ]);
   const mapWithStatusEffects = applyBeginTurnStatusEffects(
     subtractFuel(map, nextPlayer),
     nextPlayer,
@@ -41,7 +44,6 @@ export default function applyEndTurnActionResponse(
       (sum, unit, vector) =>
         sum +
         (!supplyVectors.has(vector) &&
-        !unitsToHeal.has(vector) &&
         shouldRemoveUnit(map, vector, unit, nextPlayer.id)
           ? unit.count()
           : 0),
@@ -81,11 +83,12 @@ export default function applyEndTurnActionResponse(
       round,
       teams,
       units: map.units.merge(
-        unitsToHeal.map((unit) =>
-          unit.refill().modifyHealth(HealAmount).removeStatusEffect(),
-        ),
+        unitsToHeal.map(([unit, amount]) => {
+          unit = unit.modifyHealth(amount).removeStatusEffect();
+          return amount >= HealAmount ? unit.refill() : unit;
+        }),
       ),
     })
     .recover(currentPlayer)
-    .refill(nextPlayer, supply);
+    .refill(nextPlayer, supplyVectors);
 }

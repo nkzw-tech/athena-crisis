@@ -1,5 +1,5 @@
+import { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -7,13 +7,20 @@ import { State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import getUnitDirection from './getUnitDirection.tsx';
 
-const temporarilyHealUnit = (map: MapData, position: Vector): MapData => {
-  const unit = map.units.get(position);
+const temporarilyHealUnit = (
+  map: MapData,
+  position: Vector,
+  amount: number,
+): MapData => {
+  const unit = map.units
+    .get(position)
+    ?.modifyHealth(amount)
+    .removeStatusEffect();
   return unit
     ? map.copy({
         units: map.units.set(
           position,
-          unit.refill().modifyHealth(HealAmount).removeStatusEffect(),
+          amount >= HealAmount ? unit.refill() : unit,
         ),
       })
     : map;
@@ -21,7 +28,7 @@ const temporarilyHealUnit = (map: MapData, position: Vector): MapData => {
 
 export default function animateHeal(
   state: State,
-  unitsToHeal: Iterable<[Vector, Unit]>,
+  unitsToHeal: Iterable<[Vector, HealEntry]>,
   onComplete: StateToStateLike = (state) => state,
 ): StateLike {
   const { animations } = state;
@@ -34,7 +41,11 @@ export default function animateHeal(
             onComplete: (state) => ({
               animations: state.animations.set(position, {
                 onComplete: (state: State) => {
-                  const map = temporarilyHealUnit(state.map, position);
+                  const map = temporarilyHealUnit(
+                    state.map,
+                    position,
+                    item[1][1],
+                  );
                   return {
                     map,
                     ...animateHeal(
@@ -43,9 +54,9 @@ export default function animateHeal(
                         animations: state.animations.set(new AnimationKey(), {
                           change:
                             (map.units.get(position)?.health || MaxHealth) -
-                            item[1].health,
+                            item[1][0].health,
                           position,
-                          previousHealth: item[1].health,
+                          previousHealth: item[1][0].health,
                           type: 'health',
                         }),
                         map,
@@ -58,7 +69,7 @@ export default function animateHeal(
                 type: 'heal',
                 unitDirection: getUnitDirection(
                   state.map.getFirstPlayerID(),
-                  item[1],
+                  item[1][0],
                 ),
               }),
             }),

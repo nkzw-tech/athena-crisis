@@ -48,6 +48,7 @@ export enum Skill {
   BuyUnitDragon = 34,
   BuyUnitOgre = 35,
   BuyUnitBear = 36,
+  VampireHeal = 37,
 }
 
 export const Skills = new Set<Skill>([
@@ -65,6 +66,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitInfantryForestAttackAndDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.Sabotage,
+  Skill.VampireHeal,
   Skill.RecoverAirUnits,
   Skill.BuyUnitBrute,
   Skill.BuyUnitSuperAPU,
@@ -142,6 +144,7 @@ const skillConfig: Record<
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500 },
   [Skill.BuyUnitOgre]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitBear]: { charges: 3, cost: 1500 },
+  [Skill.VampireHeal]: { charges: 5, cost: 1000 },
 };
 
 export const UnobtainableSkills: ReadonlySet<Skill> = new Set([
@@ -150,6 +153,11 @@ export const UnobtainableSkills: ReadonlySet<Skill> = new Set([
   Skill.RecoverAirUnits,
   Skill.BuyUnitAIU,
 ]);
+
+export const PoisonSkillPowerDamageMultiplier = 0.3;
+export const PowerStationSkillMultiplier = 0.05;
+export const LowHealthZombieSkillConversion = 10;
+export const VampireSkillHeal = 10;
 
 type ID = number;
 type Modifier = number;
@@ -194,6 +202,7 @@ const attackUnitStatusEffects = new Map<Skill, UnitModifierMap>([
     ]),
   ],
   [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.5]])],
+  [Skill.VampireHeal, new Map([[UnitID.Medic, 0.5]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -201,6 +210,7 @@ const attackPowerStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.35],
   [Skill.HealVehiclesAttackDecrease, 0.3],
   [Skill.RecoverAirUnits, -0.3],
+  [Skill.VampireHeal, 0.3],
 ]);
 
 const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
@@ -396,7 +406,13 @@ const skillMovementTypeRadiusPowerEffects = new Map<
       [Skill.BuyUnitSuperTank, 2],
     ]),
   ],
-  [MovementTypes.Soldier, new Map([[Skill.BuyUnitOgre, 1]])],
+  [
+    MovementTypes.Soldier,
+    new Map([
+      [Skill.BuyUnitOgre, 1],
+      [Skill.VampireHeal, 2],
+    ]),
+  ],
 ]);
 
 const unitCosts = new Map<ID, Map<Skill, number>>([
@@ -1102,11 +1118,14 @@ export function isRecoverySkill(skill: Skill) {
 
 const octopusPowerDamage = 20;
 const dragonPowerDamage = 80;
+const vampirePowerDamage = 25;
 
 export function getSkillPowerDamage(skill: Skill) {
   return skill === Skill.BuyUnitOctopus
     ? octopusPowerDamage
     : skill === Skill.BuyUnitDragon
       ? dragonPowerDamage
-      : 0;
+      : skill === Skill.VampireHeal
+        ? vampirePowerDamage
+        : 0;
 }

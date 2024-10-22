@@ -6,7 +6,7 @@ export type UnitsWithPosition = ReadonlyMap<Vector, Unit>;
 
 export default function getUnitsByPositions(
   map: MapData,
-  positions: ReadonlyArray<Vector>,
+  positions: Iterable<Vector>,
 ): UnitsWithPosition {
   const result = new Map();
   for (const position of positions) {

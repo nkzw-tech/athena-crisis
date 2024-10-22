@@ -12,6 +12,7 @@ import {
   Dinosaur,
   Dragon,
   InfernoJetpack,
+  Medic,
   Octopus,
   Ogre,
   Pioneer,
@@ -67,6 +68,9 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.UnlockPowerStation:
     case Skill.UnlockZombie:
       return Pioneer;
+    case Skill.HealInfantryMedicPower:
+    case Skill.VampireHeal:
+      return Medic;
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
@@ -75,7 +79,6 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.CounterAttackPower:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.DefenseIncreaseMinor:
-    case Skill.HealInfantryMedicPower:
     case Skill.HealVehiclesAttackDecrease:
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
