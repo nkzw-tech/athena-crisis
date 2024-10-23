@@ -1,12 +1,15 @@
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import {
   PlayerIDs,
   PlayerIDSet,
   toPlayerIDs,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import Vision from '@deities/athena/Vision.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { Action, Actions, executeEffect } from './Action.tsx';
 import { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
+import applyActionResponse from './actions/applyActionResponse.tsx';
 import validateAction from './actions/validateAction.tsx';
 import {
   Conditions,
@@ -81,6 +84,38 @@ const applyActions = (
   return newGameState;
 };
 
+const handleDefaultEffects = (
+  activeMap: MapData,
+  effects: Effects,
+  actionResponse: ActionResponse,
+): GameStateWithEffects | null => {
+  let gameState: GameStateWithEffects = [];
+  if (actionResponse.type === 'Start') {
+    return [[{ type: 'BeginGame' }, activeMap, effects]];
+  } else if (actionResponse.type === 'ActivateCrystal') {
+    const currentPlayer = activeMap.getCurrentPlayer();
+    for (const skill of currentPlayer.skills) {
+      const { activateOnInvasion } = getSkillConfig(skill);
+      if (activateOnInvasion) {
+        const activatePowerActionResponse = {
+          skill,
+          type: 'ActivatePower',
+        } as const;
+        activeMap = applyActionResponse(
+          activeMap,
+          new Vision(currentPlayer.id),
+          activatePowerActionResponse,
+        );
+        gameState = [
+          ...gameState,
+          [activatePowerActionResponse, activeMap, effects],
+        ];
+      }
+    }
+  }
+  return gameState?.length ? gameState : null;
+};
+
 export function applyEffects(
   previousMap: MapData,
   activeMap: MapData,
@@ -89,47 +124,50 @@ export function applyEffects(
 ): GameStateWithEffects | null {
   const trigger = actionResponse.type;
   const possibleEffects = effects.get(trigger);
-  if (!possibleEffects) {
-    return actionResponse.type === 'Start'
-      ? [[{ type: 'BeginGame' }, activeMap, effects]]
-      : null;
-  }
-
   let gameState: GameStateWithEffects = [];
-  for (const effect of possibleEffects) {
-    const { actions, conditions, occurrence, players } = effect;
-    if (
-      (!players || players.has(activeMap.currentPlayer)) &&
-      (!conditions?.length ||
-        conditions.every((condition) =>
-          evaluateCondition(previousMap, activeMap, actionResponse, condition),
-        ))
-    ) {
-      if (occurrence === 'once') {
-        const newEffects = new Map(effects);
-        const list = new Set(possibleEffects);
-        list.delete(effect);
-        if (list.size) {
-          newEffects.set(trigger, list);
-        } else {
-          newEffects.delete(trigger);
+
+  if (possibleEffects) {
+    for (const effect of possibleEffects) {
+      const { actions, conditions, occurrence, players } = effect;
+      if (
+        (!players || players.has(activeMap.currentPlayer)) &&
+        (!conditions?.length ||
+          conditions.every((condition) =>
+            evaluateCondition(
+              previousMap,
+              activeMap,
+              actionResponse,
+              condition,
+            ),
+          ))
+      ) {
+        if (occurrence === 'once') {
+          const newEffects = new Map(effects);
+          const list = new Set(possibleEffects);
+          list.delete(effect);
+          if (list.size) {
+            newEffects.set(trigger, list);
+          } else {
+            newEffects.delete(trigger);
+          }
+          effects = newEffects;
         }
-        effects = newEffects;
+        gameState = [
+          ...gameState,
+          ...applyActions(activeMap, actionResponse, actions, effects),
+        ];
+        const lastMap = gameState.at(-1)?.[1];
+        previousMap =
+          gameState.at(-2)?.[1] || (lastMap ? activeMap : previousMap);
+        activeMap = lastMap || activeMap;
       }
-      gameState = [
-        ...gameState,
-        ...applyActions(activeMap, actionResponse, actions, effects),
-      ];
-      const lastMap = gameState.at(-1)?.[1];
-      previousMap =
-        gameState.at(-2)?.[1] || (lastMap ? activeMap : previousMap);
-      activeMap = lastMap || activeMap;
     }
   }
 
-  if (actionResponse.type === 'Start') {
-    gameState = [...gameState, [{ type: 'BeginGame' }, activeMap, effects]];
-  }
+  gameState = [
+    ...gameState,
+    ...(handleDefaultEffects(activeMap, effects, actionResponse) || []),
+  ];
 
   return gameState?.length ? gameState : null;
 }
