@@ -213,14 +213,9 @@ function applyHiddenSourceAttackBuildingAction(
       to,
       existingBuilding.setHealth(building.health),
     ),
-    ...(existingUnit
-      ? {
-          units: map.units.set(
-            to,
-            existingUnit.copy(unitC).maybeUpdateAIBehavior(),
-          ),
-        }
-      : null),
+    units: existingUnit
+      ? map.units.set(to, existingUnit.copy(unitC).maybeUpdateAIBehavior())
+      : map.units,
   });
 }
 
