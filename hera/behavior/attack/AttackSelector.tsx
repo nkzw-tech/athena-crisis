@@ -42,6 +42,7 @@ export default function AttackSelector({
   const {
     animationConfig,
     map,
+    playerDetails,
     position,
     selectedAttackable,
     selectedPosition,
@@ -87,6 +88,7 @@ export default function AttackSelector({
           firstPlayerID={map.getFirstPlayerID()}
           onSelectBuilding={selectBuilding}
           onSelectUnit={selectUnit}
+          playerDetails={playerDetails}
           position={selectedAttackable}
           resetPosition={actions.resetPosition}
           tileSize={tileSize}
@@ -197,6 +199,9 @@ export default function AttackSelector({
                       <UnitTile
                         animationConfig={animationConfig}
                         biome={map.config.biome}
+                        customSprite={playerDetails
+                          .get(entities.unit.player)
+                          ?.equippedUnitCustomizations.get(entities.unit.id)}
                         firstPlayerID={map.getFirstPlayerID()}
                         size={tileSize}
                         tile={map.getTileInfo(position)}
@@ -224,6 +229,9 @@ export default function AttackSelector({
                     <UnitTile
                       animationConfig={animationConfig}
                       biome={map.config.biome}
+                      customSprite={playerDetails
+                        .get(selectedUnit.player)
+                        ?.equippedUnitCustomizations.get(selectedUnit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
                       size={tileSize}
                       tile={map.getTileInfo(selectedPosition)}

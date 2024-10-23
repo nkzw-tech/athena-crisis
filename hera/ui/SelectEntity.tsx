@@ -19,6 +19,7 @@ export default function SelectEntity({
   const {
     animationConfig,
     map,
+    playerDetails,
     selectedBuilding,
     selectedPosition,
     selectedUnit,
@@ -47,6 +48,7 @@ export default function SelectEntity({
         firstPlayerID={map.getFirstPlayerID()}
         onSelectBuilding={selectBuilding}
         onSelectUnit={selectUnit}
+        playerDetails={playerDetails}
         position={selectedPosition}
         resetPosition={actions.resetPosition}
         tileSize={tileSize}

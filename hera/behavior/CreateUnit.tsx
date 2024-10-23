@@ -118,6 +118,7 @@ export default class CreateUnit {
       currentViewer,
       map,
       navigationDirection,
+      playerDetails,
       position,
       radius,
       selectedBuilding,
@@ -239,6 +240,9 @@ export default class CreateUnit {
                     <UnitTile
                       animationConfig={animationConfig}
                       biome={map.config.biome}
+                      customSprite={playerDetails
+                        .get(currentPlayer.id)
+                        ?.equippedUnitCustomizations.get(unit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
                       highlightStyle={
                         highlight

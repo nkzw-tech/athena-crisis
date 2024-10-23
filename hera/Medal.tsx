@@ -18,7 +18,7 @@ const medalStyle = css`
   background-position: center;
   background-repeat: no-repeat;
   height: 10px;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
   image-rendering: pixelated;
   opacity: 1;
   width: 6px;

@@ -10,7 +10,7 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import { useCallback, useState } from 'react';
 import BuildingTile from '../Building.tsx';
 import Tick from '../Tick.tsx';
-import { Actions } from '../Types.tsx';
+import { Actions, PlayerDetails } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 import Flyout, {
   FlyoutItemWithHighlight,
@@ -24,6 +24,7 @@ export default function EntityPickerFlyout({
   firstPlayerID,
   onSelectBuilding,
   onSelectUnit,
+  playerDetails,
   position,
   resetPosition,
   tileSize,
@@ -37,6 +38,7 @@ export default function EntityPickerFlyout({
   firstPlayerID: PlayerID;
   onSelectBuilding: () => void;
   onSelectUnit: () => void;
+  playerDetails: PlayerDetails;
   position: Vector;
   resetPosition: Actions['resetPosition'];
   tileSize: number;
@@ -113,6 +115,9 @@ export default function EntityPickerFlyout({
               <UnitTile
                 animationConfig={animationConfig}
                 biome={biome}
+                customSprite={playerDetails
+                  .get(unit.player)
+                  ?.equippedUnitCustomizations.get(unit.id)}
                 firstPlayerID={firstPlayerID}
                 highlightStyle={
                   selected === 'unit' || highlight

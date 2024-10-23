@@ -109,6 +109,7 @@ export default class DropUnit {
     const {
       animationConfig,
       map,
+      playerDetails,
       position,
       radius,
       selectedPosition,
@@ -184,6 +185,9 @@ export default class DropUnit {
                       <UnitTile
                         animationConfig={animationConfig}
                         biome={map.config.biome}
+                        customSprite={playerDetails
+                          .get(unit.player)
+                          ?.equippedUnitCustomizations.get(unit.id)}
                         firstPlayerID={map.getFirstPlayerID()}
                         highlightStyle={highlight ? 'idle' : undefined}
                         size={tileSize}
