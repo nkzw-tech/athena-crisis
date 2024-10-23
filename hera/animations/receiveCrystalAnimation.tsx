@@ -12,6 +12,7 @@ import CrystalSprite from '../invasions/CrystalSprite.tsx';
 import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
 import getUserDisplayName from '../lib/getUserDisplayName.tsx';
+import isInvader from '../lib/isInvader.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function receiveCrystalAnimation(
@@ -55,7 +56,7 @@ export default async function receiveCrystalAnimation(
               </Stack>
             ),
             direction: 'up',
-            length: 'medium',
+            length: isInvader(state.map, player) ? 'short' : 'medium',
             onComplete: (state) => {
               requestFrame(() =>
                 resolve({

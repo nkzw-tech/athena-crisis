@@ -5,6 +5,7 @@ import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import getUserDisplayName from '../../lib/getUserDisplayName.tsx';
+import isInvader from '../../lib/isInvader.tsx';
 import { SkillRewardActionResponse } from '../../lib/isSkillRewardActionResponse.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
@@ -25,7 +26,7 @@ export default async function buySkillAction(
       animations: state.animations.set(new AnimationKey(), {
         color: colors,
         direction: 'up',
-        length: 'long',
+        length: isPermanent && isInvader(state.map, player) ? 'medium' : 'long',
         onComplete: (state) => {
           requestFrame(() =>
             resolve({

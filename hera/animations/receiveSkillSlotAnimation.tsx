@@ -27,7 +27,7 @@ export default async function receiveSkillSlotAnimation(
       animations: state.animations.set(new AnimationKey(), {
         color: player,
         direction: 'up',
-        length: 'long',
+        length: 'medium',
         onComplete: (state) => {
           requestFrame(() =>
             resolve({

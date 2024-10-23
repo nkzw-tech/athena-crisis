@@ -17,6 +17,7 @@ import InlineTileList from '../card/InlineTileList.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import getUserDisplayName from '../lib/getUserDisplayName.tsx';
+import isInvader from '../lib/isInvader.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function receiveBiomeAnimation(
@@ -78,7 +79,7 @@ export default async function receiveBiomeAnimation(
           </Stack>
         ),
         direction: 'up',
-        length: 'long',
+        length: isInvader(state.map, player) ? 'medium' : 'long',
         onComplete: (state) => {
           requestFrame(() =>
             resolve({
