@@ -145,6 +145,7 @@ const skillConfig: Record<
   [Skill.BuyUnitDinosaur]: { cost: 1500 },
   [Skill.Sabotage]: { charges: 5, cost: 1500 },
   [Skill.SpawnUnitInfernoJetpack]: {
+    activateOnInvasion: true,
     charges: 5,
     cost: null,
     requiresCrystal: true,
