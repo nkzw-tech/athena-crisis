@@ -53,7 +53,7 @@
     "@emotion/babel-plugin": "^11.12.0",
     "@sentry/vite-plugin": "^2.22.6",
     "@types/babel__core": "^7.20.5",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-relay": "^16.0.6",
     "@types/react-router-dom": "^5.3.3",
