@@ -209,9 +209,11 @@ export default function RestrictionsPanel({
           <h2>
             <fbt desc="Headline for skill restrictions">Skill Restrictions</fbt>
           </h2>
-          <InlineLink onClick={() => setShowSkillSelector(true)}>
-            <fbt desc="Link to restrict skills">Restrict Skills</fbt>
-          </InlineLink>
+          <div>
+            <InlineLink onClick={() => setShowSkillSelector(true)}>
+              <fbt desc="Link to restrict skills">Restrict Skills</fbt>
+            </InlineLink>
+          </div>
         </Box>
       </Stack>
       {showSkillSelector && (

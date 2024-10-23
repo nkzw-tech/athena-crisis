@@ -170,7 +170,7 @@ export default function PlayerSelector({
   );
 }
 
-const PlayerSkillSelectors = ({
+export const PlayerSkillSelectors = ({
   availableSkills,
   blocklistedSkills,
   isFocused,
