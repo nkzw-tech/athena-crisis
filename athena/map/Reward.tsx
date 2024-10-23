@@ -29,7 +29,7 @@ type SkillSlotReward = Readonly<{
   type: 'SkillSlot';
 }>;
 
-type CrystalReward = Readonly<{
+export type CrystalReward = Readonly<{
   crystal: Crystal;
   type: 'Crystal';
 }>;
