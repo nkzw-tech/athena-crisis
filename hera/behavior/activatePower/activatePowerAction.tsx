@@ -123,7 +123,8 @@ export default async function activatePowerAction(
               (!unit.isCompleted() ||
                 skill === Skill.RecoverAirUnits ||
                 skill === Skill.SpawnUnitInfernoJetpack ||
-                skill === Skill.UnlockZombie) &&
+                skill === Skill.UnlockZombie ||
+                skill === Skill.Shield) &&
               state.map.matchesPlayer(unit, player) &&
               matchesActiveType(unitTypes, unit, vector),
           );
