@@ -3948,6 +3948,12 @@ export const SpecialUnits = new Set([
   InfernoJetpack,
 ]);
 
+export const DefaultSupplyUnits = {
+  air: TransportHelicopter,
+  land: Jeep,
+  naval: SupportShip,
+} as const;
+
 export function getUnitInfo(id: number): UnitInfo | null {
   return Units[id - 1] || null;
 }
