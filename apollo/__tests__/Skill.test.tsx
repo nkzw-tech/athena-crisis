@@ -664,3 +664,21 @@ test('unit prices always round up', () => {
     Flamethrower.getCostFor(playerWithTwoSkills),
   );
 });
+
+test('the Charge skill increases charge accumulation', async () => {
+  const skills = new Set([Skill.Charge]);
+  const mapA = map.copy({
+    units: map.units
+      .set(fromA, SmallTank.create(1))
+      .set(toA, SmallTank.create(2)),
+  });
+  const mapB = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
+  });
+  const [, state1] = execute(mapA, vision, AttackUnitAction(fromA, toA))!;
+  const [, state2] = execute(mapB, vision, AttackUnitAction(fromA, toA))!;
+
+  expect(state2.getPlayer(1).charge).toBeGreaterThan(
+    state1.getPlayer(1).charge,
+  );
+});

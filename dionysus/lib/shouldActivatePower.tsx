@@ -31,6 +31,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.BuyUnitBear:
     case Skill.BuyUnitOctopus:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
+    case Skill.Shield:
       return false;
 
     case Skill.ArtilleryRangeIncrease:
@@ -49,6 +50,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.BuyUnitSuperAPU:
     case Skill.BuyUnitSuperTank:
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
+    case Skill.Charge:
     case Skill.CounterAttackPower:
     case Skill.DefenseIncreaseMinor:
     case Skill.HealInfantryMedicPower:

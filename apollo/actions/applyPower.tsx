@@ -1,4 +1,5 @@
 import {
+  ChargeSkillCharges,
   getHealUnitTypes,
   getSkillPowerDamage,
   Skill,
@@ -14,8 +15,9 @@ import {
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
-import { HealAmount } from '@deities/athena/map/Configuration.tsx';
+import { Charge, HealAmount } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -75,6 +77,10 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
     return unit.recover();
   }
 
+  if (skill === Skill.Shield) {
+    return unit.activateShield();
+  }
+
   const conversion = conversions.get(skill);
   if (conversion) {
     return unit.maybeConvert(conversion.from, conversion.to);
@@ -118,7 +124,14 @@ export function onPowerUnitDamageEffect(
 
 export default function applyPower(skill: Skill, map: MapData) {
   const healTypes = getHealUnitTypes(skill);
-  const player = map.getCurrentPlayer();
+  let player = map.getCurrentPlayer();
+
+  if (skill === Skill.Charge) {
+    player = player.setCharge(player.charge + ChargeSkillCharges * Charge);
+    map = map.copy({
+      teams: updatePlayer(map.teams, player),
+    });
+  }
 
   if (healTypes) {
     map = map.copy({
@@ -135,6 +148,14 @@ export default function applyPower(skill: Skill, map: MapData) {
     map = map.copy({
       units: map.units.merge(
         getAirUnitsToRecover(map, player).map((unit) => unit.recover()),
+      ),
+    });
+  }
+
+  if (skill === Skill.Shield) {
+    map = map.copy({
+      units: map.units.map((unit) =>
+        map.matchesPlayer(player, unit) ? unit.activateShield() : unit,
       ),
     });
   }

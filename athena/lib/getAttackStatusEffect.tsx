@@ -49,6 +49,6 @@ export default function getAttackStatusEffect(
     buildingEffect +
     unitEffect +
     (unit.isLeader() ? LeaderStatusEffect : 0) +
-    getSkillAttackStatusEffects(unit, tile, player.skills, player.activeSkills)
+    getSkillAttackStatusEffects(unit, tile, player)
   );
 }

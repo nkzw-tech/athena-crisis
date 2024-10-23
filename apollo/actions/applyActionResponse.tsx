@@ -92,7 +92,13 @@ export default function applyActionResponse(
               from,
               maybeConvertPlayer(
                 map,
-                originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                (hasCounterAttack
+                  ? originalUnitA.deactivateShield()
+                  : originalUnitA
+                )
+                  .copy(unitA)
+                  .maybeUpdateAIBehavior()
+                  .complete(),
                 from,
                 hasCounterAttack ? originalUnitB : null,
                 'recover',
@@ -105,7 +111,10 @@ export default function applyActionResponse(
               to,
               maybeConvertPlayer(
                 map,
-                originalUnitB.copy(unitB).maybeUpdateAIBehavior(),
+                originalUnitB
+                  .copy(unitB)
+                  .maybeUpdateAIBehavior()
+                  .deactivateShield(),
                 to,
                 originalUnitA,
                 'complete',
@@ -186,7 +195,13 @@ export default function applyActionResponse(
               from,
               maybeConvertPlayer(
                 map,
-                originalUnitA.copy(unitA).maybeUpdateAIBehavior().complete(),
+                (hasCounterAttack
+                  ? originalUnitA.deactivateShield()
+                  : originalUnitA
+                )
+                  .copy(unitA)
+                  .maybeUpdateAIBehavior()
+                  .complete(),
                 from,
                 hasCounterAttack ? originalUnitC : null,
                 'recover',

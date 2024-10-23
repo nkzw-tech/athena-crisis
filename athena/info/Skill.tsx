@@ -1,5 +1,6 @@
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
+import { Charge } from '../map/Configuration.tsx';
 import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
@@ -49,6 +50,8 @@ export enum Skill {
   BuyUnitOgre = 35,
   BuyUnitBear = 36,
   VampireHeal = 37,
+  Shield = 38,
+  Charge = 39,
 }
 
 export const Skills = new Set<Skill>([
@@ -67,6 +70,8 @@ export const Skills = new Set<Skill>([
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.Sabotage,
   Skill.VampireHeal,
+  Skill.Shield,
+  Skill.Charge,
   Skill.RecoverAirUnits,
   Skill.BuyUnitBrute,
   Skill.BuyUnitSuperAPU,
@@ -93,7 +98,12 @@ export const Skills = new Set<Skill>([
 
 const skillConfig: Record<
   Skill,
-  Readonly<{ charges?: number; cost: number | null; requiresCrystal?: boolean }>
+  Readonly<{
+    activateOnInvasion?: true;
+    charges?: number;
+    cost: number | null;
+    requiresCrystal?: true;
+  }>
 > = {
   [Skill.AttackIncreaseMinor]: { charges: 3, cost: 300 },
   [Skill.DefenseIncreaseMinor]: { charges: 2, cost: 300 },
@@ -145,6 +155,13 @@ const skillConfig: Record<
   [Skill.BuyUnitOgre]: { charges: 3, cost: 1500 },
   [Skill.BuyUnitBear]: { charges: 3, cost: 1500 },
   [Skill.VampireHeal]: { charges: 5, cost: 1000 },
+  [Skill.Shield]: { activateOnInvasion: true, charges: 6, cost: 1500 },
+  [Skill.Charge]: {
+    activateOnInvasion: true,
+    charges: 6,
+    cost: 1500,
+    requiresCrystal: true,
+  },
 };
 
 export const UnobtainableSkills: ReadonlySet<Skill> = new Set([
@@ -158,6 +175,8 @@ export const PoisonSkillPowerDamageMultiplier = 0.3;
 export const PowerStationSkillMultiplier = 0.05;
 export const LowHealthZombieSkillConversion = 10;
 export const VampireSkillHeal = 10;
+export const ChargeSkillCharges = 2;
+export const ChargeSkillChargeMultiplier = 0.1;
 
 type ID = number;
 type Modifier = number;
@@ -608,19 +627,34 @@ const sumAll = (
     activeSkills,
   );
 
-export const getSkillAttackStatusEffects = sumAll.bind(
-  null,
-  attackStatusEffects,
-  attackUnitStatusEffects,
-  null,
-  attackPowerStatusEffects,
-  attackUnitPowerStatusEffects,
-  attackMovementTypePowerStatusEffects,
-  attackTileStatusEffects,
-  attackTilePowerStatusEffects,
-  null,
-  attackLeaderPowerStatusEffects,
-);
+export const getSkillAttackStatusEffects = (
+  entity: Entity | null,
+  tile: TileInfo | null,
+  { activeSkills, charge, skills }: Player,
+) => {
+  let effect = sumAll(
+    attackStatusEffects,
+    attackUnitStatusEffects,
+    null,
+    attackPowerStatusEffects,
+    attackUnitPowerStatusEffects,
+    attackMovementTypePowerStatusEffects,
+    attackTileStatusEffects,
+    attackTilePowerStatusEffects,
+    null,
+    attackLeaderPowerStatusEffects,
+    entity,
+    tile,
+    skills,
+    activeSkills,
+  );
+
+  if (activeSkills.size && activeSkills.has(Skill.Charge)) {
+    effect += ChargeSkillChargeMultiplier * Math.floor(charge / Charge);
+  }
+
+  return effect;
+};
 
 export const getSkillDefenseStatusEffects = sumAll.bind(
   null,
@@ -980,6 +1014,7 @@ const getSkillActiveUnitTypes = (
   const defenseEffect = defensePowerStatusEffects.get(skill);
   if (
     skill === Skill.CounterAttackPower ||
+    skill === Skill.Shield ||
     (attackEffect != null && attackEffect > 0) ||
     (defenseEffect != null && defenseEffect > 0)
   ) {

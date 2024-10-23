@@ -8,7 +8,7 @@ export default function getChargeValue(
   entity: Entity,
   player: Player,
   newEntity: Entity,
-  modifier = 1,
+  modifier: number,
 ) {
   if (!isUnit(entity)) {
     if (!newEntity.isDead()) {

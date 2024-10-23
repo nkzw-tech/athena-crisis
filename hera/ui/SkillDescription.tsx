@@ -9,6 +9,8 @@ import {
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import {
   ActiveUnitTypes,
+  ChargeSkillChargeMultiplier,
+  ChargeSkillCharges,
   getBlockedUnits,
   getHealUnitTypes,
   getSkillAttackLeaderUnitStatusEffect,
@@ -691,6 +693,15 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           at the beginning of their turn.
         </fbt>
       );
+    case Skill.Charge:
+      return (
+        <fbt desc="Additional skill description">
+          Increases charge accumulation speed by
+          <fbt:param name="value">
+            {ChargeSkillChargeMultiplier * 100}
+          </fbt:param>%.
+        </fbt>
+      );
   }
   return null;
 };
@@ -855,6 +866,24 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           health points.
         </fbt>
       );
+    case Skill.Shield:
+      return (
+        <fbt desc="Additional skill description">
+          Grants each unit a shield for one turn that absorbs nearly all damage
+          from the next attack.
+        </fbt>
+      );
+    case Skill.Charge:
+      return (
+        <fbt desc="Additional skill description">
+          Increases the charge meter by
+          <fbt:param name="value">{ChargeSkillCharges}</fbt:param> charges.
+          Attacks are increased by{' '}
+          <fbt:param name="percentage">
+            {ChargeSkillChargeMultiplier * 100}
+          </fbt:param>% for each available charge.
+        </fbt>
+      );
   }
 
   return null;
@@ -904,7 +933,8 @@ export default memo(function SkillDescription({
 }) {
   const isRegular = type === 'regular';
   const isPower = !isRegular;
-  const { charges, requiresCrystal } = getSkillConfig(skill);
+  const { activateOnInvasion, charges, requiresCrystal } =
+    getSkillConfig(skill);
   if ((charges == null || charges === 0) && isPower) {
     return null;
   }
@@ -994,6 +1024,18 @@ export default memo(function SkillDescription({
     unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     effects.length ? (
       <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
+    ) : null,
+    isPower && activateOnInvasion ? (
+      <div className="paragraph">
+        <span className={typeStyle} style={{ color: getColor(color) }}>
+          <fbt desc="Label for skill status effects when a power is activated">
+            Crystal:
+          </fbt>
+        </span>{' '}
+        <fbt desc="Description for skill behavior">
+          This power activates when you consume a crystal.
+        </fbt>
+      </div>
     ) : null,
     isPower && requiresCrystal ? (
       <div

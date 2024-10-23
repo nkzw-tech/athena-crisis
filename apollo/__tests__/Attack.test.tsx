@@ -7,6 +7,7 @@ import {
   Medic,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { MaxHealth, MinDamage } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -99,4 +100,22 @@ test('Alien units poison opponents on attack', async () => {
   )!;
 
   expect(stateC.units.get(vecB)?.statusEffect).toBeNull();
+});
+
+test('shields absorb damage for one attack', async () => {
+  const vecA = vec(2, 1);
+  const vecB = vec(1, 1);
+  const mapA = map.copy({
+    units: map.units.map((unit) => unit.activateShield()),
+  });
+  const [, state1] = execute(mapA, vision, AttackUnitAction(vecA, vecB))!;
+
+  const unitA1 = state1.units.get(vecA)!;
+  const unitA2 = state1.units.get(vecB)!;
+
+  expect(unitA1.health).toBe(MaxHealth - MinDamage);
+  expect(unitA2.health).toBe(MaxHealth - MinDamage);
+
+  expect(unitA1.shield).toBe(null);
+  expect(unitA2.shield).toBe(null);
 });

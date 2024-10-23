@@ -3,6 +3,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import { SVGIcon } from '@deities/ui/Icon.tsx';
 import Alien from '@deities/ui/icons/Alien.tsx';
+import Bubble from '@deities/ui/icons/Bubble.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Fire from '@deities/ui/icons/Fire.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
@@ -16,6 +17,7 @@ import Skull from '@deities/ui/icons/Skull.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import Tree from '@deities/ui/icons/Tree.tsx';
 import Zombie from '@deities/ui/icons/Zombie.tsx';
+import Charge from '@iconify-icons/pixelarticons/ac.js';
 import BullseyeArrow from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
@@ -337,6 +339,22 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'red',
         icon: DropHalf,
         name: fbt('Blood Moon', 'Skill name'),
+      };
+    case Skill.Shield:
+      return {
+        alpha: 0.1,
+        borderStyle: 'crystal',
+        colors: 'blue',
+        icon: Bubble,
+        name: fbt('Bubble Wrap', 'Skill name'),
+      };
+    case Skill.Charge:
+      return {
+        alpha: 0.1,
+        borderStyle: 'crystal',
+        colors: 'orange',
+        icon: Charge,
+        name: fbt('Charge Overflow', 'Skill name'),
       };
     default: {
       skill satisfies never;

@@ -133,8 +133,8 @@ const Action = ({
         absoluteStyle,
         baseIconStyle,
         statusStyle,
-        hide && hideStyle,
         className,
+        hide && hideStyle,
       )}
       style={
         actionStyle === ActionStyle.Transport
@@ -212,8 +212,8 @@ const Health = ({
       className={cx(
         absoluteStyle,
         healthStyle,
-        hide && hideStyle,
         hasStatus && healthOffsetStyle,
+        hide && hideStyle,
       )}
       style={{
         [vars.set('health')]: health + '%',
@@ -228,44 +228,39 @@ const Health = ({
   ) : null;
 };
 
-const StatusEffect = ({ hide, unit }: { hide: boolean; unit: Unit }) => {
-  return unit.statusEffect ? (
+const StatusEffect = ({
+  hide,
+  unit: { statusEffect },
+}: {
+  hide: boolean;
+  unit: Unit;
+}) => {
+  return statusEffect ? (
     <div
       className={cx(
         absoluteStyle,
+        statusEffect === UnitStatusEffect.Poison && poisonStyle,
         hide && hideStyle,
-        unit.statusEffect === UnitStatusEffect.Poison && poisonStyle,
       )}
     />
   ) : null;
 };
 
-const poisonStyle = css`
-  animation: ${keyframes`
-    0% {
-      background-position-y: 0;
-      opacity: 1;
-    }
-    49% {
-      opacity: 1;
-    }
-    50% {
-      background-position-y: -286px;
-      opacity: 0;
-    }
-    51%, 100% {
-      background-position-y: -286px;
-      opacity: 0;
-    }
-  `} 6s steps(11) infinite;
-
-  background-image: url(${Sprites.Poison});
-  height: 26px;
-  left: -1px;
-  pointer-events: none;
-  right: -1px;
-  top: 4px;
-`;
+const Shield = ({
+  className,
+  hide,
+  unit: { shield },
+}: {
+  className: string;
+  hide: boolean;
+  unit: Unit;
+}) => {
+  return shield ? (
+    <div
+      className={cx(absoluteStyle, className, shieldStyle, hide && hideStyle)}
+    />
+  ) : null;
+};
 
 const getSpritePosition = (
   unit: Unit,
@@ -888,6 +883,12 @@ export default function UnitTile({
           : null;
   const fuelStyle = getFuelStyle(unit);
   const ammoStyle = getAmmoStyle(unit);
+  const completedStyles = cx(
+    isCompleted && completedStyle,
+    isCompleted &&
+      (player === 2 || player === 3 || player === 5 || player === 7) &&
+      darkCompletedStyle,
+  );
 
   return (
     <div
@@ -928,10 +929,7 @@ export default function UnitTile({
                 ? rescuedOutlineStyle
                 : null,
           highlightStyle && highlightStyle !== 'move-null' && brightStyle,
-          isCompleted && completedStyle,
-          isCompleted &&
-            (player === 2 || player === 3 || player === 5 || player === 7) &&
-            darkCompletedStyle,
+          completedStyles,
           animationStyle,
         )}
         ref={innerElementRef}
@@ -950,6 +948,9 @@ export default function UnitTile({
         />
       )}
       {unit.statusEffect ? <StatusEffect hide={hide} unit={unit} /> : null}
+      {unit.shield ? (
+        <Shield className={completedStyles} hide={hide} unit={unit} />
+      ) : null}
       <Status
         actionStyle={actionStyle}
         ammoStyle={ammoStyle}
@@ -1096,7 +1097,7 @@ const leaderStyle = css`
   right: -4px;
   top: -8px;
   transform: ${scale};
-  transition: opacity ${applyVar('animation-duration-70')} ease-in-out;
+  transition: opacity 150ms ease-in-out;
 `;
 
 const maybeOutlineStyle = css`
@@ -1382,3 +1383,51 @@ const flashStyle = getAttackFlashAnimation(keyframes`
     opacity: 0.3;
   }
 `);
+
+const poisonStyle = css`
+  animation: ${keyframes`
+    0% {
+      background-position-y: 0;
+      opacity: 1;
+    }
+    49% {
+      opacity: 1;
+    }
+    50% {
+      background-position-y: -286px;
+      opacity: 0;
+    }
+    51%, 100% {
+      background-position-y: -286px;
+      opacity: 0;
+    }
+  `} 6s steps(11) infinite;
+
+  background-image: url(${Sprites.Poison});
+  height: 26px;
+  left: -1px;
+  pointer-events: none;
+  right: -1px;
+  top: 4px;
+`;
+
+const shieldStyle = css`
+  animation: ${keyframes`
+    0% {
+      background-position-y: 0;
+    }
+    100% {
+      background-position-y: -640px;
+    }
+  `} 6s steps(20) infinite;
+
+  background-image: url(${Sprites.Shield});
+  filter: saturate(${vars.apply('saturation')});
+  bottom: -1px;
+  height: 32px;
+  left: -5.5px;
+  opacity: 1;
+  pointer-events: none;
+  right: -5.5px;
+  transition: opacity 150ms ease-in-out;
+`;

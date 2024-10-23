@@ -151,7 +151,8 @@ function applyHiddenSourceAttackUnitAction(
           existingUnit
             .copy(unitB)
             .maybeUpdateAIBehavior()
-            .maybeSetPlayer(newPlayerB, 'complete'),
+            .maybeSetPlayer(newPlayerB, 'complete')
+            .deactivateShield(),
         )
       : map.units.delete(to),
   });
@@ -225,7 +226,13 @@ function applyHiddenSourceAttackBuildingAction(
 
 function applyHiddenTargetAttackUnitAction(
   map: MapData,
-  { chargeA, from, newPlayerA, unitA }: HiddenTargetAttackUnitActionResponse,
+  {
+    chargeA,
+    from,
+    hasCounterAttack,
+    newPlayerA,
+    unitA,
+  }: HiddenTargetAttackUnitActionResponse,
 ) {
   const unit = map.units.get(from);
   return unit
@@ -245,7 +252,7 @@ function applyHiddenTargetAttackUnitAction(
         units: unitA
           ? map.units.set(
               from,
-              unit
+              (hasCounterAttack ? unit.deactivateShield() : unit)
                 .copy(unitA)
                 .maybeUpdateAIBehavior()
                 .complete()
@@ -261,6 +268,7 @@ function applyHiddenTargetAttackBuildingAction(
   {
     chargeA,
     from,
+    hasCounterAttack,
     newPlayerA,
     to,
     unitA,
@@ -274,7 +282,7 @@ function applyHiddenTargetAttackBuildingAction(
   const units = unitA
     ? map.units.set(
         from,
-        unit
+        (hasCounterAttack ? unit.deactivateShield() : unit)
           .copy(unitA)
           .maybeUpdateAIBehavior()
           .complete()

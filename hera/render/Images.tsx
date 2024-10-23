@@ -120,6 +120,8 @@ const PoisonSprite = 'https://art.athenacrisis.com/v17/assets/Poison.png';
 
 const SabotageSprite = 'https://art.athenacrisis.com/v17/assets/Sabotage.png';
 
+const ShieldSprite = 'https://art.athenacrisis.com/v17/assets/Shield.png';
+
 const StructuresSprite =
   'https://art.athenacrisis.com/v17/assets/Structures.png';
 
@@ -385,6 +387,7 @@ export const Sprites = {
   Noise: NoiseSprite,
   Poison: PoisonSprite,
   Sabotage: SabotageSprite,
+  Shield: ShieldSprite,
   Structures: StructuresSprite,
   TileDecorators: TileDecoratorsSprite,
   UnitIcons: UnitIconsSprite,
@@ -484,6 +487,7 @@ export default [
   NoiseSprite,
   PoisonSprite,
   SabotageSprite,
+  ShieldSprite,
   StructuresSprite,
   TileDecoratorsSprite,
   UnitIconsSprite,

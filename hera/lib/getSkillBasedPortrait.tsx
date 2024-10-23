@@ -71,6 +71,7 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.HealInfantryMedicPower:
     case Skill.VampireHeal:
       return Medic;
+    case Skill.Charge:
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
@@ -83,6 +84,7 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
+    case Skill.Shield:
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
       return null;

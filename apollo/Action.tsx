@@ -1,5 +1,6 @@
 import { Behavior, getBuildingInfo } from '@deities/athena/info/Building.tsx';
 import {
+  ChargeSkillChargeMultiplier,
   getSkillConfig,
   hasCounterAttackSkill,
   PoisonSkillPowerDamageMultiplier,
@@ -43,7 +44,7 @@ import {
   MinDamage,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
-import {
+import Player, {
   DynamicPlayerID,
   PlayerID,
   resolveDynamicPlayerID,
@@ -417,6 +418,9 @@ function _counterAttack(
   return null;
 }
 
+const getChargeModifier = (player: Player) =>
+  1 + (player.skills.has(Skill.Charge) ? ChargeSkillChargeMultiplier : 0);
+
 function attackUnit(
   map: MapData,
   vision: VisionT,
@@ -450,14 +454,16 @@ function attackUnit(
     }
 
     const playerB = map.getPlayer(unitB);
+    const chargeModifierA = getChargeModifier(playerA);
     return {
       chargeA:
         playerA.charge +
-        getChargeValue(unitB, playerB, b, 0.33) +
-        (counter ? getChargeValue(unitA, playerA, a) : 0),
+        getChargeValue(unitB, playerB, b, chargeModifierA * 0.33) +
+        (counter ? getChargeValue(unitA, playerA, a, chargeModifierA) : 0),
       chargeB:
         unitB.player > 0
-          ? playerB.charge + getChargeValue(unitB, playerB, b)
+          ? playerB.charge +
+            getChargeValue(unitB, playerB, b, getChargeModifier(playerB))
           : undefined,
       from,
       hasCounterAttack: !!counter,
@@ -513,7 +519,8 @@ function attackBuilding(
     const playerC = unitC ? map.getPlayer(unitC) : undefined;
     const chargeB =
       buildingB.player > 0
-        ? playerB.charge + getChargeValue(buildingB, playerB, b)
+        ? playerB.charge +
+          getChargeValue(buildingB, playerB, b, getChargeModifier(playerB))
         : undefined;
     return {
       building: b.isDead() ? undefined : b,
@@ -524,7 +531,12 @@ function attackBuilding(
       chargeC:
         playerC && unitC
           ? (playerC.id === playerB.id ? chargeB || 0 : playerC.charge) +
-            getChargeValue(unitC, playerC, c || unitC.setHealth(0))
+            getChargeValue(
+              unitC,
+              playerC,
+              c || unitC.setHealth(0),
+              getChargeModifier(playerC),
+            )
           : undefined,
       from,
       hasCounterAttack: !!c,

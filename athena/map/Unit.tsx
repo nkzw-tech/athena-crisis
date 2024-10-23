@@ -63,6 +63,7 @@ export type PlainUnit = Readonly<
     a?: PlainAmmo | null;
     b?: AIBehavior | null;
     c?: 1 | null;
+    d?: 1 | null;
     g: number;
     l?: number;
     m?: 1 | null;
@@ -177,6 +178,7 @@ export class TransportedUnit {
       this.name,
       this.behavior,
       this.statusEffect,
+      null,
     );
   }
 
@@ -417,6 +419,7 @@ export default class Unit extends Entity {
     private readonly name: number | null,
     private readonly behavior: AIBehavior | null,
     public readonly statusEffect: UnitStatusEffect | null,
+    public readonly shield: true | null,
   ) {
     super(id, health, player, completed, label);
     const unitInfo = getUnitInfo(id);
@@ -433,7 +436,7 @@ export default class Unit extends Entity {
   }
 
   static fromJSON(unit: PlainUnit): Unit {
-    const { a, b, c, f, g, h, i, l, m, n, p, r, s, t, u } = unit;
+    const { a, b, c, d, f, g, h, i, l, m, n, p, r, s, t, u } = unit;
     return new Unit(
       i,
       h,
@@ -450,6 +453,7 @@ export default class Unit extends Entity {
       n ?? null,
       b || null,
       s || null,
+      d === 1 ? true : null,
     );
   }
 
@@ -768,6 +772,7 @@ export default class Unit extends Entity {
             .copy({
               completed: this.isCompleted() ? true : undefined,
               moved: this.hasMoved() ? true : undefined,
+              shield: this.shield,
               transports: this.transports,
             })
         : this;
@@ -874,6 +879,14 @@ export default class Unit extends Entity {
       : unit;
   }
 
+  activateShield(): this {
+    return this.shield ? this : this.copy({ shield: true });
+  }
+
+  deactivateShield(): this {
+    return this.shield ? this.copy({ shield: null }) : this;
+  }
+
   override toJSON(): PlainUnit {
     const {
       ammo,
@@ -888,6 +901,7 @@ export default class Unit extends Entity {
       name: n,
       player: p,
       rescuing: r,
+      shield: d,
       statusEffect: s,
       transports,
       unfolded,
@@ -896,6 +910,7 @@ export default class Unit extends Entity {
       a: ammo?.size ? [...ammo] : null,
       b,
       c: capturing ? 1 : null,
+      d: d ? 1 : null,
       f: completed ? 1 : null,
       g,
       h,
@@ -924,6 +939,7 @@ export default class Unit extends Entity {
       moved,
       player,
       rescuing,
+      shield,
       statusEffect,
       transports,
       unfolded,
@@ -945,6 +961,7 @@ export default class Unit extends Entity {
       completed,
       label,
       behavior,
+      shield,
       /* eslint-enable sort-keys-fix/sort-keys-fix */
     });
   }
@@ -962,6 +979,7 @@ export default class Unit extends Entity {
     name,
     player,
     rescuing,
+    shield,
     statusEffect,
     transports,
     unfolded,
@@ -978,6 +996,7 @@ export default class Unit extends Entity {
     name?: number | null;
     player?: PlayerID;
     rescuing?: PlayerID | null;
+    shield?: true | null;
     statusEffect?: UnitStatusEffect | null;
     transports?: ReadonlyArray<TransportedUnit> | null;
     unfolded?: true | null;
@@ -998,6 +1017,7 @@ export default class Unit extends Entity {
       name !== undefined ? name : this.name,
       behavior !== undefined ? behavior : this.behavior,
       statusEffect !== undefined ? statusEffect : this.statusEffect,
+      shield !== undefined ? shield : this.shield,
     ) as this;
   }
 }

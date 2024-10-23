@@ -822,7 +822,11 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
       </Stack>
       {unit.info.hasAbility(Ability.HeavyEquipment) && (
         <Stack alignCenter gap nowrap start>
-          <Icon icon={WarningBox} style={{ color: heavyEquipmentColor }} />
+          <Icon
+            className={extraIconStyle}
+            icon={WarningBox}
+            style={{ color: heavyEquipmentColor }}
+          />
           <p style={{ color: heavyEquipmentColor }}>
             <fbt desc="Label for a unit that cannot act after being dropped.">
               Heavy Equipment: Can&apos;t act after being dropped by a
@@ -833,7 +837,11 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
       )}
       {unit.info.hasAbility(Ability.Morale) && (
         <Stack alignCenter gap nowrap start>
-          <Icon icon={Volume} style={{ color: moraleColor }} />
+          <Icon
+            className={extraIconStyle}
+            icon={Volume}
+            style={{ color: moraleColor }}
+          />
           <p style={{ color: moraleColor }}>
             <fbt desc="Label for a unit that cannot act after being dropped.">
               Morale Boost: Increases attack of adjacent units by{' '}
@@ -972,6 +980,10 @@ const marginTopStyle = css`
 const iconStyle = css`
   margin-bottom: -2px;
   margin-top: 2px;
+`;
+
+const extraIconStyle = css`
+  flex-shrink: 0;
 `;
 
 const tagStyle = css`

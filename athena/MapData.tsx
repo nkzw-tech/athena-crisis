@@ -407,9 +407,13 @@ export default class MapData {
     );
 
     return map.copy({
-      units: map.units.filter(
-        (unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id),
-      ),
+      units: map.units
+        .filter(
+          (unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id),
+        )
+        .map((unit) =>
+          map.matchesPlayer(player, unit) ? unit.deactivateShield() : unit,
+        ),
     });
   }
 

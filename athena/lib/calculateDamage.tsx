@@ -1,6 +1,6 @@
 import { Weapon } from '../info/Unit.tsx';
 import { MaxHealth, MinDamage } from '../map/Configuration.tsx';
-import Entity, { isEntityWithoutCover } from '../map/Entity.tsx';
+import Entity, { isEntityWithoutCover, isUnit } from '../map/Entity.tsx';
 import Unit from '../map/Unit.tsx';
 
 export default function calculateDamage(
@@ -14,7 +14,10 @@ export default function calculateDamage(
   luckA: number,
 ): number {
   const health = 0.666 * (unitA.health / MaxHealth) + 0.334;
-  const offenseA = weapon.getDamage(entityB) * attackStatusEffect;
+  const offenseA =
+    isUnit(entityB) && entityB.shield
+      ? 0
+      : weapon.getDamage(entityB) * attackStatusEffect;
   const defenseB = entityB.info.defense * defenseStatusEffect;
   const coverA2 = isEntityWithoutCover(unitA) ? 1 : 1 + coverA / 400;
   const coverB2 = isEntityWithoutCover(entityB) ? 1 : 1 + coverB / 100;
