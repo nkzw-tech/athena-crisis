@@ -318,21 +318,13 @@ export function SkillContainer({
 
   useBlockInput('dialog');
 
+  const [hasUsedNavigation, setHasUsedNavigation] = useState(false);
   const offset = initialAvailableSkills.size > 1 ? 1 : 0;
   const [selected, , reset] = useMenuNavigation(
     offset + (enabledSkills?.length || 0),
     'dialog',
     true,
-    0,
-  );
-
-  const setGroup = useCallback(
-    (group: SkillGroupType) => {
-      setFavoriteList(new Set(favorites));
-      _setGroup(group);
-      reset();
-    },
-    [favorites, reset],
+    hasUsedNavigation ? 0 : -1,
   );
 
   const groupItems = 1 + skillGroups.size + (favorites ? 1 : 0);
@@ -345,6 +337,16 @@ export function SkillContainer({
       : group === 'favorite'
         ? groupItems - 1
         : [...skillGroups].indexOf(group) + 1,
+  );
+
+  const setGroup = useCallback(
+    (group: SkillGroupType) => {
+      setFavoriteList(new Set(favorites));
+      _setGroup(group);
+      setHasUsedNavigation(activeGroup !== -1);
+      reset();
+    },
+    [activeGroup, favorites, reset],
   );
 
   useInput(
@@ -405,7 +407,7 @@ export function SkillContainer({
           </h1>
         )}
         {initialAvailableSkills.size > 1 && (
-          <Stack gap={16} nowrap>
+          <Stack gap={16}>
             <InlineLink
               active={activeGroup === 0}
               className={buttonStyle}
@@ -788,7 +790,7 @@ export function SkillIcon({
     <>
       <Stack
         alignCenter
-        className={pointerStyle}
+        className={cx(!hideDialog && pointerStyle)}
         gap
         onClick={!hideDialog ? () => setShowDialog(true) : undefined}
         start
@@ -797,7 +799,7 @@ export function SkillIcon({
           active={active}
           background={background}
           borderStyle={borderStyle}
-          button
+          button={!hideDialog}
           canActivate={canActivate}
           color={color}
           disabled={disabled}
