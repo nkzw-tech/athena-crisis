@@ -7,9 +7,10 @@ import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
-import { ButtonStyle, SquareButtonStyle } from '@deities/ui/Button.tsx';
+import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
+import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuNavigation.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import useMenuNavigation from '@deities/ui/controls/useMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -45,6 +46,7 @@ import {
 } from 'react';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import SkillDescription from './SkillDescription.tsx';
+import StarIcon from './StarIcon.tsx';
 
 const SkillIconInternal = ({
   active,
@@ -180,6 +182,7 @@ export default function SkillDialog({
   canAction,
   children,
   currentSkill,
+  favorites,
   focus,
   onAction,
   onClose,
@@ -189,6 +192,7 @@ export default function SkillDialog({
   size,
   tabs,
   toggleBlocklist,
+  toggleFavorite,
   transformOrigin,
 }: {
   actionName?: ReactElement;
@@ -198,6 +202,7 @@ export default function SkillDialog({
   canAction?: (skill: Skill) => boolean;
   children?: ReactNode;
   currentSkill?: Skill | null;
+  favorites?: ReadonlySet<Skill>;
   focus?: boolean;
   onAction?: (skill: Skill) => void;
   onClose: () => void;
@@ -207,6 +212,7 @@ export default function SkillDialog({
   size?: 'small';
   tabs?: ReactNode;
   toggleBlocklist?: boolean;
+  toggleFavorite?: (skill: Skill) => void;
   transformOrigin?: string;
 }) {
   return (
@@ -222,6 +228,7 @@ export default function SkillDialog({
         blocklistedSkills={blocklistedSkills}
         canAction={canAction}
         currentSkill={currentSkill}
+        favorites={favorites}
         focus={focus}
         onAction={onAction}
         onClose={onClose}
@@ -229,6 +236,7 @@ export default function SkillDialog({
         selectedSkills={selectedSkills}
         showCost={showCost}
         toggleBlocklist={toggleBlocklist}
+        toggleFavorite={toggleFavorite}
       >
         {children}
       </SkillContainer>
@@ -236,6 +244,8 @@ export default function SkillDialog({
     </Dialog>
   );
 }
+
+type SkillGroupType = SkillGroup | 'all' | 'favorite';
 
 export function SkillContainer({
   actionName,
@@ -245,6 +255,7 @@ export function SkillContainer({
   canAction,
   children,
   currentSkill,
+  favorites,
   focus,
   onAction,
   onClose,
@@ -252,6 +263,7 @@ export function SkillContainer({
   selectedSkills,
   showCost,
   toggleBlocklist,
+  toggleFavorite,
 }: {
   actionName?: ReactElement;
   availableSkills: ReadonlySet<Skill>;
@@ -260,6 +272,7 @@ export function SkillContainer({
   canAction?: (skill: Skill) => boolean;
   children?: ReactNode;
   currentSkill?: Skill | null;
+  favorites?: ReadonlySet<Skill>;
   focus?: boolean;
   onAction?: (skill: Skill) => void;
   onClose: () => void;
@@ -267,16 +280,20 @@ export function SkillContainer({
   selectedSkills?: ReadonlySet<Skill> | null;
   showCost?: boolean;
   toggleBlocklist?: boolean;
+  toggleFavorite?: (skill: Skill) => void;
 }) {
   const hasAction = onAction && actionName && currentSkill;
-  const [group, setGroup] = useState<SkillGroup | 'all'>('all');
+  const [group, _setGroup] = useState<SkillGroupType>('all');
+  const [favoriteList, setFavoriteList] = useState(() => new Set(favorites));
   const [availableSkills, skillGroups] = useMemo(() => {
     const availableSkills =
       group === 'all'
         ? initialAvailableSkills
         : new Set(
-            [...initialAvailableSkills].filter(
-              (skill) => getSkillConfig(skill).group === group,
+            [...initialAvailableSkills].filter((skill) =>
+              group === 'favorite'
+                ? favoriteList?.has(skill)
+                : getSkillConfig(skill).group === group,
             ),
           );
     return [
@@ -285,7 +302,7 @@ export function SkillContainer({
         [...initialAvailableSkills].map((skill) => getSkillConfig(skill).group),
       ),
     ] as const;
-  }, [group, initialAvailableSkills]);
+  }, [group, initialAvailableSkills, favoriteList]);
 
   const partition = groupBy(availableSkills, (skill) =>
     selectedSkills?.has(skill)
@@ -301,10 +318,33 @@ export function SkillContainer({
 
   useBlockInput('dialog');
 
-  const [selected] = useMenuNavigation(
-    enabledSkills?.length || 0,
+  const offset = initialAvailableSkills.size > 1 ? 1 : 0;
+  const [selected, , reset] = useMenuNavigation(
+    offset + (enabledSkills?.length || 0),
     'dialog',
     true,
+    0,
+  );
+
+  const setGroup = useCallback(
+    (group: SkillGroupType) => {
+      setFavoriteList(new Set(favorites));
+      _setGroup(group);
+      reset();
+    },
+    [favorites, reset],
+  );
+
+  const groupItems = 1 + skillGroups.size + (favorites ? 1 : 0);
+  const [selectedGroup, activeGroup] = useHorizontalMenuNavigation(
+    offset && selected === 0 ? groupItems : 0,
+    'dialog',
+    false,
+    group === 'all'
+      ? 0
+      : group === 'favorite'
+        ? groupItems - 1
+        : [...skillGroups].indexOf(group) + 1,
   );
 
   useInput(
@@ -364,77 +404,71 @@ export function SkillContainer({
             )}
           </h1>
         )}
-        <Stack gap={16} nowrap>
-          <InlineLink
-            onClick={() => setGroup('all')}
-            selectedText={group === 'all'}
-          >
-            <fbt desc="View all skills">All</fbt>
-          </InlineLink>
-          {skillGroups.has(SkillGroup.Attack) && (
+        {initialAvailableSkills.size > 1 && (
+          <Stack gap={16} nowrap>
             <InlineLink
-              onClick={() => setGroup(SkillGroup.Attack)}
-              selectedText={group === SkillGroup.Attack}
+              active={activeGroup === 0}
+              className={buttonStyle}
+              hover={group === 'all'}
+              onClick={() => setGroup('all')}
+              selected={selectedGroup === 0}
             >
-              <fbt desc="Filter by attack-based skills">Attack</fbt>
+              <fbt desc="View all skills">All</fbt>
             </InlineLink>
-          )}
-          {skillGroups.has(SkillGroup.Defense) && (
-            <InlineLink
-              onClick={() => setGroup(SkillGroup.Defense)}
-              selectedText={group === SkillGroup.Defense}
-            >
-              <fbt desc="Filter by defense-based skills">Defense</fbt>
-            </InlineLink>
-          )}
-          {skillGroups.has(SkillGroup.Unlock) && (
-            <InlineLink
-              onClick={() => setGroup(SkillGroup.Unlock)}
-              selectedText={group === SkillGroup.Unlock}
-            >
-              <fbt desc="Filter by unlock-based skills">Unlock</fbt>
-            </InlineLink>
-          )}
-          {skillGroups.has(SkillGroup.Special) && (
-            <InlineLink
-              onClick={() => setGroup(SkillGroup.Special)}
-              selectedText={group === SkillGroup.Special}
-            >
-              <fbt desc="Filter by special-based skills">Special</fbt>
-            </InlineLink>
-          )}
-          {skillGroups.has(SkillGroup.Invasion) && (
-            <InlineLink
-              onClick={() => setGroup(SkillGroup.Invasion)}
-              selectedText={group === SkillGroup.Invasion}
-            >
-              <fbt desc="Filter by invasion-based skills">Invasion</fbt>
-            </InlineLink>
-          )}
-          {skillGroups.has(SkillGroup.AI) && (
-            <InlineLink
-              onClick={() => setGroup(SkillGroup.AI)}
-              selectedText={group === SkillGroup.AI}
-            >
-              <fbt desc="Filter by AI-based skills">AI</fbt>
-            </InlineLink>
-          )}
-        </Stack>
+            {[...skillGroups].map((currentGroup, index) => (
+              <InlineLink
+                active={activeGroup === 1 + index}
+                className={buttonStyle}
+                hover={group === currentGroup}
+                key={currentGroup}
+                onClick={() => setGroup(currentGroup)}
+                selected={selectedGroup === 1 + index}
+              >
+                {currentGroup === SkillGroup.Attack ? (
+                  <fbt desc="Filter by attack-based skills">Attack</fbt>
+                ) : currentGroup === SkillGroup.Defense ? (
+                  <fbt desc="Filter by defense-based skills">Defense</fbt>
+                ) : currentGroup === SkillGroup.Unlock ? (
+                  <fbt desc="Filter by unlock-based skills">Unlock</fbt>
+                ) : currentGroup === SkillGroup.Special ? (
+                  <fbt desc="Filter by special-based skills">Special</fbt>
+                ) : currentGroup === SkillGroup.Invasion ? (
+                  <fbt desc="Filter by invasion-based skills">Invasion</fbt>
+                ) : currentGroup === SkillGroup.AI ? (
+                  <fbt desc="Filter by AI-based skills">AI</fbt>
+                ) : null}
+              </InlineLink>
+            ))}
+            {favorites && (
+              <InlineLink
+                active={activeGroup === groupItems - 1}
+                className={buttonStyle}
+                hover={group === 'favorite'}
+                onClick={() => setGroup('favorite')}
+                selected={selectedGroup === groupItems - 1}
+              >
+                <fbt desc="View favorite skills">Favorite</fbt>
+              </InlineLink>
+            )}
+          </Stack>
+        )}
         <Stack gap vertical>
           {enabledSkills?.map((skill, index) => (
             <SkillListItem
               blocklistedSkills={blocklistedSkills}
               currentSkill={!focus ? currentSkill : undefined}
+              isFavorite={favorites?.has(skill)}
               key={skill}
               onSelect={
                 !hasAction || !canAction || canAction(skill)
                   ? onSelect
                   : undefined
               }
-              selected={selected === index}
+              selected={selected === index + offset}
               showCost={showCost}
               skill={skill}
               toggleBlocklist={toggleBlocklist}
+              toggleFavorite={toggleFavorite}
             />
           ))}
         </Stack>
@@ -450,11 +484,13 @@ export function SkillContainer({
                 <SkillListItem
                   blocklistedSkills={selectedSkills}
                   currentSkill={currentSkill}
+                  isFavorite={favorites?.has(skill)}
                   key={skill}
                   onSelect={onSelect}
                   showCost={showCost}
                   skill={skill}
                   toggleBlocklist={toggleBlocklist}
+                  toggleFavorite={toggleFavorite}
                 />
               ))}
             </Stack>
@@ -470,11 +506,13 @@ export function SkillContainer({
                 <SkillListItem
                   blocklistedSkills={initialBlocklistedSkills}
                   currentSkill={currentSkill}
+                  isFavorite={favorites?.has(skill)}
                   key={skill}
                   onSelect={onSelect}
                   showCost={showCost}
                   skill={skill}
                   toggleBlocklist={toggleBlocklist}
+                  toggleFavorite={toggleFavorite}
                 />
               ))}
             </Stack>
@@ -489,19 +527,23 @@ export function SkillContainer({
 const SkillListItem = ({
   blocklistedSkills,
   currentSkill,
+  isFavorite,
   onSelect,
   selected,
   showCost,
   skill,
   toggleBlocklist,
+  toggleFavorite,
 }: {
   blocklistedSkills?: ReadonlySet<Skill> | null;
   currentSkill?: Skill | null;
+  isFavorite?: boolean;
   onSelect?: (skill: Skill | null) => void;
   selected?: boolean;
   showCost?: boolean;
   skill: Skill;
   toggleBlocklist?: boolean;
+  toggleFavorite?: (skill: Skill) => void;
 }) => {
   const element = useRef<HTMLDivElement>(null);
   const { alpha, borderStyle, colors, icon, name, textColor } =
@@ -539,7 +581,6 @@ const SkillListItem = ({
       <Stack
         className={cx(
           itemStyle,
-          isInteractive && ButtonStyle,
           isBlocked && blockedStyle,
           selected && 'hover',
         )}
@@ -567,6 +608,20 @@ const SkillListItem = ({
               {name}
             </div>
           </Stack>
+          {toggleFavorite && (
+            <div
+              className={SquareButtonStyle}
+              onClick={(event) => {
+                event.stopPropagation();
+                toggleFavorite(skill);
+              }}
+            >
+              <StarIcon
+                size="small"
+                type={isFavorite ? 'achieved' : 'missed'}
+              />
+            </div>
+          )}
         </Stack>
         <Stack className={descriptionStyle} gap={16} vertical>
           <SkillDescription color={color} skill={skill} type="regular" />
@@ -595,21 +650,25 @@ export function SkillSelector({
   blocklistedAreDisabled: blocklistedAreUnavailable,
   blocklistedSkills,
   currentSkill,
+  favorites,
   isFocused,
   onSelect,
   selectedSkills,
   showCost,
   slot,
+  toggleFavorite,
 }: {
   availableSkills: ReadonlySet<Skill>;
   blocklistedAreDisabled?: boolean;
   blocklistedSkills?: ReadonlySet<Skill> | null;
   currentSkill?: Skill | null;
+  favorites?: ReadonlySet<Skill>;
   isFocused?: boolean;
   onSelect: (skill: Skill | null) => void;
   selectedSkills?: ReadonlySet<Skill> | null;
   showCost?: boolean;
   slot?: number;
+  toggleFavorite?: (skill: Skill) => void;
 }) {
   const [showSkillSelector, setShowSkillSelector] = useState(false);
 
@@ -669,6 +728,7 @@ export function SkillSelector({
             blocklistedAreDisabled={blocklistedAreUnavailable}
             blocklistedSkills={blocklistedSkills}
             currentSkill={currentSkill}
+            favorites={favorites}
             onClose={onClose}
             onSelect={onSelectSkill}
             selectedSkills={selectedSkills}
@@ -682,6 +742,7 @@ export function SkillSelector({
                 </DialogTab>
               ) : undefined
             }
+            toggleFavorite={toggleFavorite}
           />
         </Portal>
       )}
@@ -694,17 +755,21 @@ export function SkillIcon({
   canActivate,
   dialogSize,
   disabled,
+  favorites,
   hideDialog,
   showName,
   skill,
+  toggleFavorite,
 }: {
   active?: boolean;
   canActivate?: boolean;
   dialogSize?: 'small';
   disabled?: boolean;
+  favorites?: ReadonlySet<Skill>;
   hideDialog?: boolean;
   showName?: boolean;
   skill: Skill;
+  toggleFavorite?: (skill: Skill) => void;
 }) {
   const [showDialog, setShowDialog] = useState(false);
 
@@ -755,8 +820,10 @@ export function SkillIcon({
         <Portal>
           <SkillDialog
             availableSkills={new Set([skill])}
+            favorites={favorites}
             onClose={onClose}
             size={dialogSize}
+            toggleFavorite={toggleFavorite}
           />
         </Portal>
       )}
@@ -780,7 +847,6 @@ const tagStyle = css`
 
 const itemStyle = css`
   cursor: pointer;
-  transform-origin: left center;
 `;
 
 const boxStyle = css`
@@ -829,4 +895,8 @@ const descriptionStyle = css`
   ${Breakpoints.lg} {
     padding: 0 40px 0 38px;
   }
+`;
+
+const buttonStyle = css`
+  padding: 1px 4px 4px;
 `;

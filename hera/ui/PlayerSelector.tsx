@@ -38,6 +38,7 @@ export default function PlayerSelector({
   aiRegistry,
   availableSkills,
   children,
+  favoriteSkills,
   hasSkills,
   inline,
   locked,
@@ -50,6 +51,7 @@ export default function PlayerSelector({
   selectedPlayer,
   showFirstPlayer,
   skillSlots,
+  toggleFavoriteSkill,
   users,
   viewerPlayerID,
 }: {
@@ -57,6 +59,7 @@ export default function PlayerSelector({
   aiRegistry?: AIRegistryT | null;
   availableSkills?: ReadonlySet<Skill> | null;
   children?: ReactNode;
+  favoriteSkills?: ReadonlySet<Skill>;
   hasSkills: boolean;
   inline?: boolean;
   locked?: boolean;
@@ -71,6 +74,7 @@ export default function PlayerSelector({
   selectedPlayer?: PlayerID | null;
   showFirstPlayer?: true;
   skillSlots?: number;
+  toggleFavoriteSkill?: (skill: Skill) => void;
   users: ReadonlyMap<PlayerID, UserLike | undefined>;
   viewerPlayerID?: PlayerID;
 }) {
@@ -91,6 +95,7 @@ export default function PlayerSelector({
             aiRegistry={aiRegistry}
             availableSkills={availableSkills}
             blocklistedSkills={map.config.blocklistedSkills}
+            favoriteSkills={favoriteSkills}
             hasSkills={hasSkills}
             isActive={activePlayer === player.id}
             isDisabled={!map.active.includes(player.id)}
@@ -104,6 +109,7 @@ export default function PlayerSelector({
             onSelectSkills={onSelectSkills}
             player={player}
             skillSlots={skillSlots}
+            toggleFavoriteSkill={toggleFavoriteSkill}
             user={users.get(player.id)}
             viewerPlayerID={viewerPlayerID}
           />
@@ -173,14 +179,17 @@ export default function PlayerSelector({
 export const PlayerSkillSelectors = ({
   availableSkills,
   blocklistedSkills,
+  favorites,
   isFocused,
   onSelectSkill,
   onSelectSkills,
   player,
   skillSlots,
+  toggleFavorite,
 }: {
   availableSkills: ReadonlySet<Skill>;
   blocklistedSkills?: ReadonlySet<Skill>;
+  favorites?: ReadonlySet<Skill>;
   isFocused?: boolean;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?:
@@ -188,6 +197,7 @@ export const PlayerSkillSelectors = ({
     | null;
   player: Player;
   skillSlots: number;
+  toggleFavorite?: (skill: Skill) => void;
 }) => {
   const [focused] = useHorizontalMenuNavigation(
     isFocused ? skillSlots : 0,
@@ -211,6 +221,7 @@ export const PlayerSkillSelectors = ({
               availableSkills={availableSkills}
               blocklistedSkills={blocklistedSkills}
               currentSkill={currentSkill}
+              favorites={favorites}
               isFocused={isFocused && focused === id}
               key={id}
               onSelect={(skill) => {
@@ -219,6 +230,7 @@ export const PlayerSkillSelectors = ({
               }}
               selectedSkills={selectedSkills}
               slot={skillSlots > 1 ? id + 1 : undefined}
+              toggleFavorite={toggleFavorite}
             />
           );
         })}
@@ -230,6 +242,7 @@ const PlayerItem = ({
   aiRegistry,
   availableSkills,
   blocklistedSkills,
+  favoriteSkills,
   hasSkills,
   isActive,
   isDisabled,
@@ -242,12 +255,14 @@ const PlayerItem = ({
   onSelectSkills,
   player,
   skillSlots,
+  toggleFavoriteSkill,
   user,
   viewerPlayerID,
 }: {
   aiRegistry?: AIRegistryT | null;
   availableSkills?: ReadonlySet<Skill> | null;
   blocklistedSkills?: ReadonlySet<Skill>;
+  favoriteSkills?: ReadonlySet<Skill>;
   hasSkills: boolean;
   isActive?: boolean;
   isDisabled: boolean;
@@ -262,6 +277,7 @@ const PlayerItem = ({
     | null;
   player: Player;
   skillSlots?: number;
+  toggleFavoriteSkill?: (skill: Skill) => void;
   user: UserLike | undefined;
   viewerPlayerID?: PlayerID;
 }) => {
@@ -313,11 +329,13 @@ const PlayerItem = ({
             <PlayerSkillSelectors
               availableSkills={availableSkills}
               blocklistedSkills={blocklistedSkills}
+              favorites={favoriteSkills}
               isFocused={isFocused}
               onSelectSkill={onSelectSkill}
               onSelectSkills={onSelectSkills}
               player={player}
               skillSlots={skillSlots}
+              toggleFavorite={toggleFavoriteSkill}
             />
           ) : (
             <Stack className={cx(nameStyle, skillStyle)} gap={16} nowrap>
