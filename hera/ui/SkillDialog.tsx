@@ -1,4 +1,8 @@
-import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
+import {
+  getSkillConfig,
+  Skill,
+  SkillGroup,
+} from '@deities/athena/info/Skill.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -31,7 +35,14 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import { Sprites } from 'athena-crisis:images';
-import { ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import SkillDescription from './SkillDescription.tsx';
 
@@ -228,7 +239,7 @@ export default function SkillDialog({
 
 export function SkillContainer({
   actionName,
-  availableSkills,
+  availableSkills: initialAvailableSkills,
   blocklistedAreDisabled,
   blocklistedSkills: initialBlocklistedSkills,
   canAction,
@@ -258,6 +269,24 @@ export function SkillContainer({
   toggleBlocklist?: boolean;
 }) {
   const hasAction = onAction && actionName && currentSkill;
+  const [group, setGroup] = useState<SkillGroup | 'all'>('all');
+  const [availableSkills, skillGroups] = useMemo(() => {
+    const availableSkills =
+      group === 'all'
+        ? initialAvailableSkills
+        : new Set(
+            [...initialAvailableSkills].filter(
+              (skill) => getSkillConfig(skill).group === group,
+            ),
+          );
+    return [
+      availableSkills,
+      new Set(
+        [...initialAvailableSkills].map((skill) => getSkillConfig(skill).group),
+      ),
+    ] as const;
+  }, [group, initialAvailableSkills]);
+
   const partition = groupBy(availableSkills, (skill) =>
     selectedSkills?.has(skill)
       ? 'selected'
@@ -335,6 +364,62 @@ export function SkillContainer({
             )}
           </h1>
         )}
+        <Stack gap={16} nowrap>
+          <InlineLink
+            onClick={() => setGroup('all')}
+            selectedText={group === 'all'}
+          >
+            <fbt desc="View all skills">All</fbt>
+          </InlineLink>
+          {skillGroups.has(SkillGroup.Attack) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.Attack)}
+              selectedText={group === SkillGroup.Attack}
+            >
+              <fbt desc="Filter by attack-based skills">Attack</fbt>
+            </InlineLink>
+          )}
+          {skillGroups.has(SkillGroup.Defense) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.Defense)}
+              selectedText={group === SkillGroup.Defense}
+            >
+              <fbt desc="Filter by defense-based skills">Defense</fbt>
+            </InlineLink>
+          )}
+          {skillGroups.has(SkillGroup.Unlock) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.Unlock)}
+              selectedText={group === SkillGroup.Unlock}
+            >
+              <fbt desc="Filter by unlock-based skills">Unlock</fbt>
+            </InlineLink>
+          )}
+          {skillGroups.has(SkillGroup.Special) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.Special)}
+              selectedText={group === SkillGroup.Special}
+            >
+              <fbt desc="Filter by special-based skills">Special</fbt>
+            </InlineLink>
+          )}
+          {skillGroups.has(SkillGroup.Invasion) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.Invasion)}
+              selectedText={group === SkillGroup.Invasion}
+            >
+              <fbt desc="Filter by invasion-based skills">Invasion</fbt>
+            </InlineLink>
+          )}
+          {skillGroups.has(SkillGroup.AI) && (
+            <InlineLink
+              onClick={() => setGroup(SkillGroup.AI)}
+              selectedText={group === SkillGroup.AI}
+            >
+              <fbt desc="Filter by AI-based skills">AI</fbt>
+            </InlineLink>
+          )}
+        </Stack>
         <Stack gap vertical>
           {enabledSkills?.map((skill, index) => (
             <SkillListItem
