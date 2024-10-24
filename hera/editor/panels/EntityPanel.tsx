@@ -177,6 +177,15 @@ export default function EntityPanel({
     }
   }, [alert, editor, entity, state, updateEntity]);
 
+  const toggleShield = useCallback(() => {
+    if (editor && entity && isUnit(entity)) {
+      updateEntity(
+        'leader',
+        entity[entity.shield ? 'deactivateShield' : 'activateShield'](),
+      );
+    }
+  }, [editor, entity, updateEntity]);
+
   useEffect(() => {
     if (!entity || !selectedPosition || !editor) {
       return;
@@ -361,19 +370,37 @@ export default function EntityPanel({
               </>
             )}
           </AttributeGrid>
-          {isUnit(entity) && entity.player > 0 && (
-            <label>
-              <Stack alignCenter gap start>
-                <input
-                  checked={entity.isLeader()}
-                  onChange={toggleLeader}
-                  type="checkbox"
-                />
-                <span>
-                  <fbt desc="Label for changing the leader unit">Leader</fbt>
-                </span>
-              </Stack>
-            </label>
+          {isUnit(entity) && (
+            <Stack gap={16} start>
+              {entity.player > 0 && (
+                <label>
+                  <Stack alignCenter gap start>
+                    <input
+                      checked={entity.isLeader()}
+                      onChange={toggleLeader}
+                      type="checkbox"
+                    />
+                    <span>
+                      <fbt desc="Label for changing the leader unit">
+                        Leader
+                      </fbt>
+                    </span>
+                  </Stack>
+                </label>
+              )}
+              <label>
+                <Stack alignCenter gap start>
+                  <input
+                    checked={!!entity.shield}
+                    onChange={toggleShield}
+                    type="checkbox"
+                  />
+                  <span>
+                    <fbt desc="Label for activating a shield">Shield</fbt>
+                  </span>
+                </Stack>
+              </label>
+            </Stack>
           )}
         </Box>
         {(isUnit(entity) ||
