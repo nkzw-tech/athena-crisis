@@ -75,7 +75,7 @@ export default function validateTeams(
                           },
                           map.getPlayer(id).skills,
                           map,
-                          true,
+                          { hasSkills: true, isCampaign: false },
                         ),
                       ),
                     ] as const,

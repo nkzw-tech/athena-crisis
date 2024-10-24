@@ -100,6 +100,7 @@ const skillConfig: Record<
   Skill,
   Readonly<{
     activateOnInvasion?: true;
+    campaignOnly?: true;
     charges?: number;
     cost: number | null;
     requiresCrystal?: true;
@@ -114,7 +115,11 @@ const skillConfig: Record<
     charges: 3,
     cost: 600,
   },
-  [Skill.UnitAbilitySniperImmediateAction]: { charges: 3, cost: 2000 },
+  [Skill.UnitAbilitySniperImmediateAction]: {
+    campaignOnly: true,
+    charges: 3,
+    cost: 2000,
+  },
   [Skill.MovementIncreaseGroundUnitDefenseDecrease]: { charges: 2, cost: 2500 },
   [Skill.UnitBattleShipMoveAndAct]: { charges: 5, cost: 2000 },
   [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000 },
@@ -164,6 +169,10 @@ const skillConfig: Record<
     requiresCrystal: true,
   },
 };
+
+export const CampaignOnlySkills = new Set(
+  [...Skills].filter((skill) => skillConfig[skill].campaignOnly),
+);
 
 export const UnobtainableSkills: ReadonlySet<Skill> = new Set([
   ...[...Skills].filter((skill) => skillConfig[skill].cost === null),

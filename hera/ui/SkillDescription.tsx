@@ -74,6 +74,7 @@ import UICrystalIcon from '@deities/ui/icons/UICrystalIcon.tsx';
 import { css, cx } from '@emotion/css';
 import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
+import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
@@ -933,7 +934,7 @@ export default memo(function SkillDescription({
 }) {
   const isRegular = type === 'regular';
   const isPower = !isRegular;
-  const { activateOnInvasion, charges, requiresCrystal } =
+  const { activateOnInvasion, campaignOnly, charges, requiresCrystal } =
     getSkillConfig(skill);
   if ((charges == null || charges === 0) && isPower) {
     return null;
@@ -1006,6 +1007,19 @@ export default memo(function SkillDescription({
   ].filter(isPresent);
 
   const list = [
+    !isPower && campaignOnly ? (
+      <div
+        className="paragraph"
+        style={{
+          color: getColor('red'),
+        }}
+      >
+        <Icon className={chargeIconStyle} icon={WarningBox} />
+        <fbt desc="Skill is only for campaigns">
+          This skill can only be used in campaigns.
+        </fbt>
+      </div>
+    ) : null,
     charges && isPower ? (
       <span className={typeStyle} style={{ color: getColor(color) }}>
         <fbt desc="Label for skill status effects when a power is activated">

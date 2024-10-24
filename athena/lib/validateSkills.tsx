@@ -1,4 +1,4 @@
-import { Skill, Skills } from '../info/Skill.tsx';
+import { CampaignOnlySkills, Skill, Skills } from '../info/Skill.tsx';
 import MapData from '../MapData.tsx';
 
 export default function validateSkills(
@@ -8,7 +8,7 @@ export default function validateSkills(
   }: { skills: Iterable<number>; unlockedSkillSlots: ReadonlyArray<number> },
   playerSkills: Iterable<number> | null | undefined,
   map: MapData,
-  hasSkills: boolean,
+  { hasSkills, isCampaign }: { hasSkills: boolean; isCampaign: boolean },
 ): ReadonlySet<Skill> {
   const validatedSkills = new Set<Skill>();
   const skillSet = new Set(playerSkills);
@@ -26,7 +26,8 @@ export default function validateSkills(
     if (
       Skills.has(skill) &&
       existingSkills.has(skill) &&
-      !map.config.blocklistedSkills.has(skill)
+      !map.config.blocklistedSkills.has(skill) &&
+      (isCampaign || !CampaignOnlySkills.has(skill))
     ) {
       validatedSkills.add(skill);
     }
