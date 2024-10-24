@@ -25,7 +25,7 @@ import getAnyBuildingTileField from '../../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import Tick from '../../Tick.tsx';
 import { StateWithActions } from '../../Types.tsx';
-import SkillDialog from '../../ui/SkillDialog.tsx';
+import SkillDialog, { SkillIcon } from '../../ui/SkillDialog.tsx';
 import { EditorState } from '../Types.tsx';
 
 const mutate = (list: ReadonlySet<ID>, id: ID) => {
@@ -171,10 +171,12 @@ export default function RestrictionsPanel({
     <>
       <Stack alignNormal gap={24} start vertical verticalPadding>
         <Box>
-          <fbt desc="Description for restricting buildings and units on maps">
-            Select the entities that cannot be created by any player during
-            play.
-          </fbt>
+          <p>
+            <fbt desc="Description for restricting buildings and units on maps">
+              Select the entities that cannot be created by any player during
+              play.
+            </fbt>
+          </p>
         </Box>
         <Tick animationConfig={AnimationConfig}>
           <Stack gap={24} vertical>
@@ -209,6 +211,18 @@ export default function RestrictionsPanel({
           <h2>
             <fbt desc="Headline for skill restrictions">Skill Restrictions</fbt>
           </h2>
+          {blocklistedSkills.size ? (
+            <Stack gap={16} start>
+              {[...blocklistedSkills].map((skill) => (
+                <SkillIcon
+                  dialogSize="small"
+                  key={skill}
+                  showName
+                  skill={skill}
+                />
+              ))}
+            </Stack>
+          ) : null}
           <div>
             <InlineLink onClick={() => setShowSkillSelector(true)}>
               <fbt desc="Link to restrict skills">Restrict Skills</fbt>

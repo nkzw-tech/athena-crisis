@@ -242,9 +242,11 @@ export default function EntityPanel({
     return (
       <Stack gap={24} verticalPadding>
         <Box>
-          <fbt desc="Message to request user to select an entity on the map">
-            Select a building or unit on the map to edit their properties.
-          </fbt>
+          <p>
+            <fbt desc="Message to request user to select an entity on the map">
+              Select a building or unit on the map to edit their properties.
+            </fbt>
+          </p>
         </Box>
       </Stack>
     );
