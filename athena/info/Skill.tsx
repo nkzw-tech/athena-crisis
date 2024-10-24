@@ -70,8 +70,6 @@ export const Skills = new Set<Skill>([
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.Sabotage,
   Skill.VampireHeal,
-  Skill.Shield,
-  Skill.Charge,
   Skill.RecoverAirUnits,
   Skill.BuyUnitBrute,
   Skill.BuyUnitSuperAPU,
@@ -90,10 +88,12 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitAIU,
   Skill.UnlockZombie,
   Skill.UnlockPowerStation,
+  Skill.Shield,
+  Skill.Charge,
+  Skill.SpawnUnitInfernoJetpack,
   Skill.AttackAndDefenseDecreaseEasy,
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
-  Skill.SpawnUnitInfernoJetpack,
 ]);
 
 const skillConfig: Record<

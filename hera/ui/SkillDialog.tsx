@@ -1,11 +1,6 @@
-import {
-  Skills as AllSkills,
-  getSkillConfig,
-  Skill,
-} from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { ButtonStyle, SquareButtonStyle } from '@deities/ui/Button.tsx';
@@ -263,18 +258,14 @@ export function SkillContainer({
   toggleBlocklist?: boolean;
 }) {
   const hasAction = onAction && actionName && currentSkill;
-  const partition = groupBy(
-    availableSkills === AllSkills
-      ? availableSkills
-      : sortBy([...availableSkills], (skill) => skill),
-    (skill) =>
-      selectedSkills?.has(skill)
-        ? 'selected'
-        : !blocklistedAreDisabled &&
-            !toggleBlocklist &&
-            initialBlocklistedSkills?.has(skill)
-          ? 'disabled'
-          : 'enabled',
+  const partition = groupBy(availableSkills, (skill) =>
+    selectedSkills?.has(skill)
+      ? 'selected'
+      : !blocklistedAreDisabled &&
+          !toggleBlocklist &&
+          initialBlocklistedSkills?.has(skill)
+        ? 'disabled'
+        : 'enabled',
   );
   const enabledSkills = partition.get('enabled');
   const disabledSkills = partition.get('disabled');
