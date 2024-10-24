@@ -15,11 +15,13 @@ import Portrait from './Portrait.tsx';
 
 export default function MiniPortrait({
   animate,
+  human,
   paused,
   player,
   user,
 }: {
   animate?: boolean;
+  human?: true;
   paused?: boolean;
   player: Player | PlayerID;
   user: Omit<UserLike, 'username'> & { username: string | null };
@@ -32,7 +34,7 @@ export default function MiniPortrait({
 
   const isPlayerID = typeof player === 'number';
   const id = isPlayerID ? player : player.id;
-  const isHuman = !isPlayerID && isHumanPlayer(player);
+  const isHuman = human || (!isPlayerID && isHumanPlayer(player));
   const username = isHuman && user.username?.length ? user.username : null;
   const Component = username ? Link : 'div';
   return (
