@@ -31,6 +31,6 @@
     "licht-theme": "^1.7.1",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
-    "vocs": "1.0.0-alpha.61"
+    "vocs": "1.0.0-alpha.62"
   }
 }
