@@ -170,7 +170,7 @@ function checkObjective(
   isRescue: boolean,
   isMove: boolean,
   objective: Objective,
-) {
+): boolean {
   const player =
     actionResponse.type === 'AttackUnit' && !actionResponse.unitA
       ? actionResponse.playerB
@@ -239,7 +239,7 @@ function checkObjective(
               .filter(filterUnitsByLabels(objective.label))
               .filter(filterSelf(map, targetPlayer)).size)
       ) {
-        return objective;
+        return true;
       }
     }
 
@@ -315,7 +315,7 @@ function checkObjective(
         objective.rounds <= actionResponse.round &&
         matchesPlayerList(objective.players, targetPlayer)) ||
       (objective.type === Criteria.EscortAmount &&
-        objective.label?.size &&
+        !!objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
         map.units
@@ -340,19 +340,50 @@ function checkObjective(
     );
   }
 
-  if (isRescue) {
-    return (
+  if (
+    isRescue &&
+    (objective.type === Criteria.RescueLabel ||
+      objective.type === Criteria.RescueAmount)
+  ) {
+    const previousNeutralUnits = previousMap.units.filter(filterNeutral);
+    const neutralUnits = map.units.filter(filterNeutral);
+    if (
       (objective.type === Criteria.RescueLabel &&
         matchesPlayer &&
-        !map.units.filter(filterNeutral).filter(filterByLabels(objective.label))
-          .size &&
-        previousMap.units
-          .filter(filterNeutral)
-          .filter(filterByLabels(objective.label)).size > 0) ||
+        !neutralUnits.filter(filterByLabels(objective.label)).size &&
+        previousNeutralUnits.filter(filterByLabels(objective.label)).size >
+          0) ||
       (objective.type === Criteria.RescueAmount &&
         matchesPlayer &&
         rescuedUnitsByPlayer(map, player) >= objective.amount)
-    );
+    ) {
+      return true;
+    }
+
+    if (
+      !ignoreIfOptional &&
+      ((objective.type === Criteria.RescueLabel &&
+        !matchesPlayer &&
+        previousNeutralUnits.filter(filterByLabels(objective.label)).size >
+          neutralUnits.filter(filterByLabels(objective.label)).size) ||
+        (objective.type === Criteria.RescueAmount &&
+          !matchesPlayer &&
+          previousNeutralUnits.size > neutralUnits.size))
+    ) {
+      const opponentHasOtherWinnableObjectives = map.config.objectives.some(
+        (currentObjective) =>
+          currentObjective !== objective &&
+          (currentObjective.type === Criteria.Default ||
+            (!currentObjective.optional &&
+              (!currentObjective.players ||
+                currentObjective.players.some((player) =>
+                  matchesPlayerList(objective.players, player),
+                )))),
+      );
+      return !opponentHasOtherWinnableObjectives;
+    }
+
+    return false;
   }
 
   if (isMove) {

@@ -33,7 +33,12 @@ import {
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
+import {
+  Bot,
+  HumanPlayer,
+  PlayerID,
+  PlayerIDs,
+} from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
@@ -67,6 +72,8 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const player2 = HumanPlayer.from(map.getPlayer(2), '4');
+
+const defaultObjective = { hidden: false, type: Criteria.Default } as const;
 
 const defineObjectives = (objectives: ReadonlyArray<Objective>) =>
   ImmutableMap(objectives.map((objective, index) => [index, objective]));
@@ -616,7 +623,7 @@ test('destroy amount win criteria', async () => {
           optional: true,
           type: Criteria.DestroyAmount,
         },
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
       ]),
     }),
     map: Array(3 * 4).fill(1),
@@ -1524,7 +1531,7 @@ test('win by survival in one round', async () => {
       mapWithOptionalObjectives.copy({
         config: mapWithOptionalObjectives.config.copy({
           objectives: defineObjectives([
-            { hidden: false, type: Criteria.Default },
+            defaultObjective,
             {
               hidden: false,
               optional: true,
@@ -2162,7 +2169,7 @@ test('escort units by amount (label)', async () => {
           type: Criteria.EscortAmount,
           vectors: new Set([v8, v9]),
         },
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
       ]),
     }),
   });
@@ -2894,7 +2901,7 @@ test('optional objectives should not be triggered multiple times for the same pl
           optional: true,
           type: Criteria.DefeatAmount,
         },
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
       ]),
     }),
     map: Array(3 * 4).fill(1),
@@ -3023,7 +3030,7 @@ test('optional objectives are processed before game end responses', async () => 
   const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           amount: 1,
           hidden: false,
@@ -3088,7 +3095,7 @@ test('multiple optional objectives can trigger at once', async () => {
     buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([4]),
@@ -3169,7 +3176,7 @@ test('optional and default game ending objectives might be triggered at the same
     buildings: map.buildings.set(v2, HQ.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([4]),
@@ -3206,7 +3213,7 @@ test('multiple optional objectives have their effects applied correctly', async 
     buildings: map.buildings.set(v2, House.create(player2, { label: 4 })),
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([4]),
@@ -3299,7 +3306,7 @@ test('poison at the begin of a turn properly fires objectives', async () => {
     buildings: map.buildings.set(v4, HQ.create(1)),
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([2]),
@@ -3342,7 +3349,7 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const mapB = mapA.copy({
     config: mapA.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([2]),
@@ -3376,7 +3383,7 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const mapC = mapA.copy({
     config: mapA.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([2]),
@@ -3411,7 +3418,7 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const mapD = mapA.copy({
     config: mapA.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           amount: 1,
           hidden: false,
@@ -3451,7 +3458,7 @@ test('counter attack triggers objectives correctly', async () => {
   const mapA = map.copy({
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([2]),
@@ -3483,7 +3490,7 @@ test('counter attack triggers objectives correctly', async () => {
     buildings: mapA.buildings.set(v2, House.create(2)),
     config: map.config.copy({
       objectives: defineObjectives([
-        { hidden: false, type: Criteria.Default },
+        defaultObjective,
         {
           hidden: false,
           label: new Set([2]),
@@ -3513,4 +3520,107 @@ test('counter attack triggers objectives correctly', async () => {
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
   `,
   );
+});
+
+test('rescuing a unit part of an objective of another player ends the game if the other player has no way of winning', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(2, 1);
+  const v3 = vec(1, 2);
+  const v4 = vec(3, 3);
+
+  const rescueAmount = {
+    amount: 1,
+    hidden: false,
+    optional: false,
+    players: [2],
+    type: Criteria.RescueAmount,
+  } as const;
+  const rescueLabel = {
+    hidden: false,
+    label: new Set<PlayerID>([1]),
+    optional: false,
+    players: [2] satisfies PlayerIDs,
+    type: Criteria.RescueLabel,
+  } as const;
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([defaultObjective, rescueAmount]),
+    }),
+    units: map.units
+      .set(v1, Brute.create(0).rescue(1))
+      .set(v2, Pioneer.create(1))
+      .set(v3, Pioneer.create(2))
+      .set(v4, Brute.create(0)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    RescueAction(v2, v1),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(`"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`);
+
+  const mapB = mapA.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([defaultObjective, rescueLabel]),
+    }),
+    units: mapA.units
+      .set(v1, Brute.create(0, { label: 1 }).rescue(1))
+      .set(v4, Brute.create(0, { label: 1 }).rescue(1)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseB] = await executeGameActions(mapB, [
+    RescueAction(v2, v1),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseB),
+  ).toMatchInlineSnapshot(`"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`);
+
+  const mapC = mapA.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([rescueAmount]),
+    }),
+  });
+
+  const [, gameActionResponseC] = await executeGameActions(mapC, [
+    RescueAction(v2, v1),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseC))
+    .toMatchInlineSnapshot(`
+    "Rescue (2,1 → 1,1) { player: 1, name: -13 }
+    GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 13 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
+
+  const mapD = mapB.copy({
+    config: mapA.config.copy({
+      objectives: defineObjectives([rescueLabel]),
+    }),
+  });
+
+  const [, gameActionResponseD] = await executeGameActions(mapD, [
+    RescueAction(v2, v1),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseD))
+    .toMatchInlineSnapshot(`
+    "Rescue (2,1 → 1,1) { player: 1, name: -13 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 2 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
+
+  const mapE = optional(mapD);
+  const [, gameActionResponseE] = await executeGameActions(mapE, [
+    RescueAction(v2, v1),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseE))
+    .toMatchInlineSnapshot(`
+    "Rescue (2,1 → 1,1) { player: 1, name: -13 }"
+  `);
 });
