@@ -247,7 +247,7 @@ const skillConfig: Record<
   [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
   [Skill.Shield]: {
     activateOnInvasion: true,
-    charges: 6,
+    charges: 8,
     cost: 1500,
     group: SkillGroup.Invasion,
   },
