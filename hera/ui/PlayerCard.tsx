@@ -414,6 +414,7 @@ export default memo(function PlayerCard({
                   const isActive = player.activeSkills.has(skill);
                   return (
                     <div
+                      className={pointerStyle}
                       key={skill}
                       onClick={async (event) => {
                         event.stopPropagation();
@@ -659,4 +660,8 @@ const playerStatsBeforeIconStyle = css`
 
 const grayscaleStyle = css`
   filter: grayscale(100%);
+`;
+
+const pointerStyle = css`
+  cursor: pointer;
 `;
