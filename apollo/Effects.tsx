@@ -98,6 +98,7 @@ const handleDefaultEffects = (
       const { activateOnInvasion } = getSkillConfig(skill);
       if (activateOnInvasion) {
         const activatePowerActionResponse = {
+          free: true,
           skill,
           type: 'ActivatePower',
         } as const;

@@ -203,6 +203,7 @@ export type BuySkillActionResponse = Readonly<{
 }>;
 
 export type ActivatePowerActionResponse = Readonly<{
+  free?: boolean;
   skill: Skill;
   type: 'ActivatePower';
   units?: ImmutableMap<Vector, Unit>;

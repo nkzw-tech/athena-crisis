@@ -499,7 +499,7 @@ test('game over through activating a power', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: [] }
+      ActivatePower { skill: 26, units: [], free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
@@ -528,7 +528,7 @@ test('game over through activating a power', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: [] }
+      ActivatePower { skill: 26, units: [], free: false }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 });
@@ -584,7 +584,7 @@ test('game over through activating a power can beat more than one player', async
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: [] }
+      ActivatePower { skill: 26, units: [], free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }"
     `);
 
@@ -600,7 +600,7 @@ test('game over through activating a power can beat more than one player', async
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: [] }
+      ActivatePower { skill: 26, units: [], free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
