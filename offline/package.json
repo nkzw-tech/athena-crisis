@@ -10,7 +10,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "devDependencies": {
-    "vite-plugin-minify": "^2.0.0",
+    "vite-plugin-minify": "^2.0.1",
     "vite-plugin-singlefile": "^2.0.2"
   }
 }
