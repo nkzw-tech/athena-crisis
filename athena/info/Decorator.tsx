@@ -449,7 +449,7 @@ const AnimatedCoffin = new DecoratorInfo(
 );
 
 const SpiderWeb = new DecoratorInfo(
-  'SpiderWeb',
+  'Spider Web',
   DecoratorGroup.SpiderWeb,
   sprite(21, 5),
   PlainTileGroup,
