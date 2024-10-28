@@ -242,22 +242,25 @@ export default function MapEditorSettingsPanel({
                   }
                   placeholder={metrics?.pace ? String(metrics.pace) : ''}
                   style={{ width: 80 }}
-                  value={performance.pace ?? ''}
+                  value={performance.pace === 0 ? '' : performance.pace || ''}
                 />
               </Stack>
             </label>
             <label>
               <Stack alignCenter gap nowrap>
                 <span>{getTranslatedPerformanceTypeName('power')}</span>
-                <NumberInput
+                <input
                   disabled={!canEditPerformance}
                   min={0}
                   onChange={({ target: { value } }) =>
                     setMetric('power', Number.parseFloat(value || '0'))
                   }
+                  pattern="^\d*(\.\d{0,2})?$"
                   placeholder={metrics?.power ? String(metrics.power) : ''}
+                  step="0.1"
                   style={{ width: 80 }}
-                  value={performance.power ?? ''}
+                  type="number"
+                  value={performance.power === 0 ? '' : performance.power || ''}
                 />
               </Stack>
             </label>
@@ -311,7 +314,7 @@ export default function MapEditorSettingsPanel({
                       ? PerformanceStyleComparators[performance.style?.[0]]
                       : ' '}
                   </div>
-                  <NumberInput
+                  <input
                     disabled={!canEditPerformance}
                     min={0}
                     onChange={({ target: { value } }) =>
@@ -321,8 +324,13 @@ export default function MapEditorSettingsPanel({
                         Number.parseFloat(value || '0'),
                       ])
                     }
+                    pattern="^\d*(\.\d{0,2})?$"
+                    step="0.1"
                     style={{ width: 80 }}
-                    value={performance.style?.[1] ?? ''}
+                    type="number"
+                    value={
+                      performance.style?.[1] === 0 ? '' : performance.style?.[1]
+                    }
                   />
                 </Stack>
               </Stack>
