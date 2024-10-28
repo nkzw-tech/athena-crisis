@@ -192,7 +192,7 @@ export default function MapEditorSettingsPanel({
                   <fbt desc="Starting charges for a game">Starting Charges</fbt>
                 </span>
                 <NumberInput
-                  max={String(MaxCharges)}
+                  max={MaxCharges}
                   min={0}
                   onChange={({ target: { value } }) => {
                     const initialCharge = parseInteger(value || '0');
@@ -200,7 +200,10 @@ export default function MapEditorSettingsPanel({
                       update({
                         map: map.copy({
                           config: config.copy({
-                            initialCharge,
+                            initialCharge: Math.max(
+                              0,
+                              Math.min(initialCharge, MaxCharges),
+                            ),
                           }),
                         }),
                       });
@@ -564,12 +567,10 @@ export default function MapEditorSettingsPanel({
                 min={MinSize}
                 onChange={({ target: { value } }) => {
                   const width = parseInteger(value);
-                  if (width != null) {
-                    setWidth(width);
-                  }
+                  setWidth(width || 0);
                 }}
                 style={{ width: 70 }}
-                value={width}
+                value={width === 0 ? '' : width}
               />
             </Stack>
           </label>
@@ -583,12 +584,10 @@ export default function MapEditorSettingsPanel({
                 min={MinSize}
                 onChange={({ target: { value } }) => {
                   const height = parseInteger(value);
-                  if (height != null) {
-                    setHeight(height);
-                  }
+                  setHeight(height || 0);
                 }}
                 style={{ width: 70 }}
-                value={height}
+                value={height === 0 ? '' : height}
               />
             </Stack>
           </label>

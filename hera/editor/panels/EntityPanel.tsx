@@ -278,7 +278,7 @@ export default function EntityPanel({
               <fbt desc="Label for unit health">Health</fbt>
             </Stack>
             <Slider
-              max={String(MaxHealth)}
+              max={MaxHealth}
               min="1"
               onChange={onHealthChange}
               type="range"
@@ -286,7 +286,7 @@ export default function EntityPanel({
             />
             <Stack alignCenter className={textStyle} gap nowrap>
               <NumberInput
-                max={String(MaxHealth)}
+                max={MaxHealth}
                 min="1"
                 onChange={onHealthChange}
                 style={{ width: 80 }}
@@ -301,7 +301,7 @@ export default function EntityPanel({
                   <fbt desc="Label for supplies">Supplies</fbt>
                 </Stack>
                 <Slider
-                  max={String(entity.info.configuration.fuel)}
+                  max={entity.info.configuration.fuel}
                   min="0"
                   onChange={onFuelChange}
                   type="range"
@@ -309,7 +309,7 @@ export default function EntityPanel({
                 />
                 <Stack alignCenter className={textStyle} gap nowrap>
                   <NumberInput
-                    max={String(entity.info.configuration.fuel)}
+                    max={entity.info.configuration.fuel}
                     min="0"
                     onChange={onFuelChange}
                     style={{ width: 80 }}
