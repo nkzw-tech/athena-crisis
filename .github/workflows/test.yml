@@ -16,7 +16,7 @@ jobs:
       deployments: write
     strategy:
       matrix:
-        node-version: [22]
+        node-version: [23]
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
