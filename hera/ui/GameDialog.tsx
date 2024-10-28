@@ -16,6 +16,7 @@ import { Criteria } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useActive from '@deities/ui/controls/useActive.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
@@ -288,8 +289,10 @@ const MapPerformance = ({
       </p>
       <div className={gridStyle}>
         <Stack alignCenter gap start>
-          <Icon className={iconStyle} icon={Trophy} />{' '}
-          <fbt desc="Label for map performance goal">Goal</fbt>
+          <Icon className={iconStyle} icon={Trophy} />
+          <div className={maybeHideStyle}>
+            <fbt desc="Label for map performance goal">Goal</fbt>
+          </div>
         </Stack>
         <div className={alignCenter}>
           <fbt desc="Label for expected performance metric">Expected</fbt>
@@ -301,7 +304,9 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap start>
               <Icon icon={Pace} />
-              <div>{getTranslatedPerformanceTypeName('pace')}</div>
+              <div className={maybeHideStyle}>
+                {getTranslatedPerformanceTypeName('pace')}
+              </div>
             </Stack>
             <div className={alignCenter}>{performance.pace}</div>
             <div
@@ -318,7 +323,9 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap start>
               <Icon icon={Zap} />
-              <div>{getTranslatedPerformanceTypeName('power')}</div>
+              <div className={maybeHideStyle}>
+                {getTranslatedPerformanceTypeName('power')}
+              </div>
             </Stack>
             <div className={alignCenter}>{performance.power}</div>
             <div
@@ -335,7 +342,9 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap start>
               <Icon icon={Subscriptions} />
-              <div>{getTranslatedPerformanceTypeName('style')}</div>
+              <div className={maybeHideStyle}>
+                {getTranslatedPerformanceTypeName('style')}
+              </div>
             </Stack>
             <div className={alignCenter}>
               {getTranslatedPerformanceStyleTypeName(performance.style[0])}{' '}
@@ -1022,6 +1031,14 @@ const gridStyle = css`
   grid-template-columns: auto auto auto;
   padding: 12px;
   row-gap: 12px;
+`;
+
+const maybeHideStyle = css`
+  display: none;
+
+  ${Breakpoints.xs} {
+    display: block;
+  }
 `;
 
 const alignCenter = css`
