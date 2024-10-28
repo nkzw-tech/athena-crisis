@@ -1873,6 +1873,7 @@ export default class GameMap extends Component<Props, State> {
                 currentViewer={currentViewer}
                 getLayer={getLayer}
                 map={map}
+                opposite
                 radius={additionalRadius}
                 selectedPosition={selectedPosition}
                 selectedUnit={selectedUnit}

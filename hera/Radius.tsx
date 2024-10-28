@@ -45,6 +45,7 @@ const Item = memo(function Item({
   dim,
   fields,
   getLayer,
+  opposite,
   position,
   size,
   type,
@@ -53,6 +54,7 @@ const Item = memo(function Item({
   dim?: boolean | null;
   fields: ReadonlyMap<Vector, RadiusItem>;
   getLayer: GetLayerFunction;
+  opposite: boolean | undefined;
   position: Vector;
   size: number;
   type: RadiusType;
@@ -106,6 +108,7 @@ const Item = memo(function Item({
       }}
       className={cx(
         itemStyle,
+        opposite && oppositeMaskStyle,
         ...borderStyles,
         dim && dimStyle,
         type === RadiusType.Attack &&
@@ -210,6 +213,7 @@ export default memo(function Radius({
   currentViewer,
   getLayer,
   map,
+  opposite,
   radius: { dim, fields, path, type },
   selectedPosition,
   selectedUnit,
@@ -219,6 +223,7 @@ export default memo(function Radius({
   currentViewer: PlayerID | null;
   getLayer: GetLayerFunction;
   map: MapData;
+  opposite?: boolean;
   radius: RadiusInfo;
   selectedPosition?: Vector | null;
   selectedUnit?: Unit | null;
@@ -274,6 +279,7 @@ export default memo(function Radius({
             )
           }
           key={'r' + String(vector)}
+          opposite={opposite}
           position={vector}
           size={size}
           type={type}
@@ -357,6 +363,16 @@ const itemStyle = css`
   pointer-events: none;
   position: absolute;
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0);
+`;
+
+const oppositeMaskStyle = css`
+  mask: repeating-linear-gradient(
+    to top right,
+    black,
+    black 1px,
+    ${vars.apply('background-light')} 0%,
+    ${vars.apply('background-light')} 2.13px
+  );
 `;
 
 const radialMaskStyle = css`

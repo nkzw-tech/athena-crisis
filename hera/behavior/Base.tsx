@@ -124,16 +124,15 @@ export default class Base extends AbstractSelectBehavior {
 
         const isLongRange =
           entity.info.isLongRange() && !entity.info.canAct(player);
-        const attackFilter = isLongRange
-          ? Boolean
-          : ([vector]: [Vector, unknown]) => !fields?.has(vector);
-        const moveFilter = isLongRange
-          ? ([vector]: [Vector, unknown]) => !additionalFields?.has(vector)
-          : Boolean;
-
         const additionalRadius = additionalFields?.size
           ? {
-              fields: new Map([...additionalFields].filter(attackFilter)),
+              fields: new Map(
+                [...additionalFields].filter(
+                  isLongRange
+                    ? Boolean
+                    : ([vector]: [Vector, unknown]) => !fields?.has(vector),
+                ),
+              ),
               path: null,
               type: RadiusType.Attack,
             }
@@ -144,9 +143,7 @@ export default class Base extends AbstractSelectBehavior {
           behavior: new Move(),
           position: vector,
           radius: {
-            fields: new Map(
-              fields ? [...fields].filter(moveFilter) : undefined,
-            ),
+            fields: new Map(fields),
             path: null,
             type: RadiusType.Move,
           },
