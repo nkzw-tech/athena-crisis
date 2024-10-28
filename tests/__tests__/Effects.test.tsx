@@ -708,7 +708,7 @@ test('spawns a new unit when a player loses their last unit at the beginning of 
       Move (2,3 → 2,1) { fuel: 28, completed: false, path: [2,2 → 2,1] }
       AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 67, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 6 ] ] }, chargeA: 172, chargeB: 123 }
       CreateUnit (1,3 → 1,2) { unit: Rocket Launcher { id: 3, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: false, skipBehaviorRotation: false }
-      EndTurn { current: { funds: 225, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+      EndTurn { current: { funds: 200, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 
   expect(newEffects?.get('BeginTurnGameOver')).toBeUndefined();

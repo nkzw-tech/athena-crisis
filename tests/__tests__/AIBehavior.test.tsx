@@ -398,7 +398,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', asyn
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "CreateUnit (1,1 → 2,1) { unit: Rocket Launcher { id: 3, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true, behavior: 2 }, free: false, skipBehaviorRotation: false }
-    EndTurn { current: { funds: 725, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+    EndTurn { current: { funds: 700, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
   expect(gameState!.at(-1)![1].buildings.get(vecA)?.getFirstAIBehavior()).toBe(
