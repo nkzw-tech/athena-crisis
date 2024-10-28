@@ -131,7 +131,7 @@ const skillConfig: Record<
     cost: 800,
     group: SkillGroup.Attack,
   },
-  [Skill.BuyUnitCannon]: { cost: 1000, group: SkillGroup.Unlock },
+  [Skill.BuyUnitCannon]: { charges: 4, cost: 1000, group: SkillGroup.Unlock },
   [Skill.BuyUnitBrute]: { charges: 5, cost: 1000, group: SkillGroup.Unlock },
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
     charges: 3,
@@ -1126,6 +1126,18 @@ const getSkillActiveUnitTypes = (
   }
 
   const list = [];
+
+  if (skill === Skill.BuyUnitCannon) {
+    for (const [vector, unit] of map.units) {
+      if (
+        unit.isUnfolded() &&
+        unit.isCompleted() &&
+        map.matchesPlayer(unit, player)
+      ) {
+        list.push(vector);
+      }
+    }
+  }
 
   for (const [vector, unit] of map.units) {
     if (

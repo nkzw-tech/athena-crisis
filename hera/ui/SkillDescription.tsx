@@ -709,6 +709,12 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
 
 const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
   switch (skill) {
+    case Skill.BuyUnitCannon:
+      return (
+        <fbt desc="Additional skill description">
+          All unfolded units recover and can act again.
+        </fbt>
+      );
     case Skill.UnitBattleShipMoveAndAct:
       return (
         <fbt desc="Additional skill description">

@@ -73,7 +73,10 @@ export function getUnitsToDamage(
 }
 
 export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
-  if (skill === Skill.RecoverAirUnits) {
+  if (
+    skill === Skill.RecoverAirUnits ||
+    (skill === Skill.BuyUnitCannon && unit.isUnfolded() && unit.isCompleted())
+  ) {
     return unit.recover();
   }
 
@@ -148,6 +151,18 @@ export default function applyPower(skill: Skill, map: MapData) {
     map = map.copy({
       units: map.units.merge(
         getAirUnitsToRecover(map, player).map((unit) => unit.recover()),
+      ),
+    });
+  }
+
+  if (skill === Skill.BuyUnitCannon) {
+    map = map.copy({
+      units: map.units.map((unit) =>
+        unit.isUnfolded() &&
+        unit.isCompleted() &&
+        map.matchesPlayer(player, unit)
+          ? unit.recover()
+          : unit,
       ),
     });
   }
