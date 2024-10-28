@@ -133,8 +133,13 @@ const style = css`
   ${pixelBorder(undefined, 2)}
   clip-path: inset(-2px -2px -2px -2px);
   font-size: 1em;
-  height: 2.3em;
+  height: 2.1em;
   width: 250px;
+
+  ${Breakpoints.sm} {
+    height: 2.3em;
+    width: 250px;
+  }
 
   &:after {
     background: ${applyVar('highlight-color')};
