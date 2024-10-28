@@ -531,17 +531,6 @@ export default function GameActions({
         className={cx(maybeFade(hide), containerStyle)}
         style={!inlineUI ? insetStyle(inset) : undefined}
       >
-        {undoTurn && (
-          <MenuButton className={cx(actionButtonStyle, undoButtonStyle)}>
-            <Icon
-              button
-              className={cx(iconStyle, !canUndo && disabledButtonStyle)}
-              horizontalFlip
-              icon={Forward}
-              onClick={undo}
-            />
-          </MenuButton>
-        )}
         {setZoom && (
           <ZoomButton
             className={cx(
@@ -553,13 +542,18 @@ export default function GameActions({
             zoom={zoom}
           />
         )}
+        {undoTurn && (
+          <MenuButton className={cx(actionButtonStyle, undoButtonStyle)}>
+            <Icon
+              button
+              className={cx(iconStyle, !canUndo && disabledButtonStyle)}
+              horizontalFlip
+              icon={Forward}
+              onClick={undo}
+            />
+          </MenuButton>
+        )}
         <InfoButton actions={actions} state={state} />
-        <EndTurnButton
-          actions={actions}
-          canEndTurn={playerCanEndTurn}
-          state={state}
-          subscribe={subscribe}
-        />
         <AttackRadiusButton
           actions={actions}
           playerCanEndTurn={playerCanEndTurn}
@@ -569,6 +563,12 @@ export default function GameActions({
           actions={actions}
           playerCanEndTurn={playerCanEndTurn}
           state={state}
+        />
+        <EndTurnButton
+          actions={actions}
+          canEndTurn={playerCanEndTurn}
+          state={state}
+          subscribe={subscribe}
         />
         {children}
       </div>
@@ -651,13 +651,13 @@ const actionButtonStyle = css`
   z-index: calc(${applyVar('inset-z')} + 2);
 `;
 
-const attackRadiusButtonStyle = css`
+const infoButtonStyle = css`
   bottom: calc(
     (${size * 3}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
 `;
 
-const infoButtonStyle = css`
+const attackRadiusButtonStyle = css`
   bottom: calc(
     (${size * 4.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
