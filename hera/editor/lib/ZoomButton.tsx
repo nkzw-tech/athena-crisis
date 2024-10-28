@@ -11,12 +11,14 @@ export default function ZoomButton({
   className,
   hide,
   max,
+  position,
   setZoom,
   zoom,
 }: {
   className?: string;
   hide: boolean;
   max: number;
+  position: 'top' | 'auto';
   setZoom: SetZoomFn;
   zoom: number;
 }) {
@@ -29,7 +31,7 @@ export default function ZoomButton({
 
   return (
     <MenuButton
-      className={cx(zoomButtonStyle, className)}
+      className={cx(position === 'top' && topStyle, className)}
       hide={hide}
       onClick={updateZoom}
     >
@@ -40,7 +42,7 @@ export default function ZoomButton({
   );
 }
 
-const zoomButtonStyle = css`
+const topStyle = css`
   right: env(safe-area-inset-right);
   top: env(safe-area-inset-top);
 `;

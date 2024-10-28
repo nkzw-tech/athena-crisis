@@ -534,10 +534,12 @@ export default function GameActions({
         {setZoom && (
           <ZoomButton
             className={cx(
-              inlineUI && (undoTurn ? inlineZoomButtonStyle : undoButtonStyle),
+              actionButtonStyle,
+              undoTurn ? zoomButtonStyle : undoButtonStyle,
             )}
             hide={false}
             max={maxZoom}
+            position="auto"
             setZoom={setZoom}
             zoom={zoom}
           />
@@ -655,28 +657,26 @@ const infoButtonStyle = css`
   bottom: calc(
     (${size * 3}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
+  pointer-events: auto;
 `;
 
 const attackRadiusButtonStyle = css`
   bottom: calc(
     (${size * 4.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
+  pointer-events: auto;
 `;
 
 const undoButtonStyle = css`
   bottom: calc(
     (${size * 6}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
-  pointer-events: auto;
-  top: auto;
 `;
 
-const inlineZoomButtonStyle = css`
+const zoomButtonStyle = css`
   bottom: calc(
     (${size * 7.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
   );
-  pointer-events: auto;
-  top: auto;
 `;
 
 const expandStyle = css`

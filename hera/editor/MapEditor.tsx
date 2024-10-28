@@ -1019,7 +1019,13 @@ export default function MapEditor({
             </Stack>
           )}
         </PrimaryExpandableMenuButton>
-        <ZoomButton hide={hidden} max={maxZoom} setZoom={setZoom} zoom={zoom} />
+        <ZoomButton
+          hide={hidden}
+          max={maxZoom}
+          position="top"
+          setZoom={setZoom}
+          zoom={zoom}
+        />
       </Portal>
       <div className={getDrawerPaddingStyle(drawerPosition, expand)}>
         <GameMap

@@ -433,7 +433,13 @@ export default function CampaignEditor({
             )}
           </div>
         </PrimaryExpandableMenuButton>
-        <ZoomButton hide={hidden} max={2} setZoom={setZoom} zoom={zoom} />
+        <ZoomButton
+          hide={hidden}
+          max={2}
+          position="top"
+          setZoom={setZoom}
+          zoom={zoom}
+        />
         <MenuButton
           className={mapCreateButtonStyle}
           hide={hidden}
