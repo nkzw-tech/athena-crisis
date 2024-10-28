@@ -17,6 +17,7 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
+import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
@@ -284,12 +285,11 @@ export default function EntityPanel({
               value={entity.health}
             />
             <Stack alignCenter className={textStyle} gap nowrap>
-              <input
+              <NumberInput
                 max={String(MaxHealth)}
                 min="1"
                 onChange={onHealthChange}
                 style={{ width: 80 }}
-                type="number"
                 value={entity.health}
               />
               /{MaxHealth}
@@ -308,12 +308,11 @@ export default function EntityPanel({
                   value={entity.fuel}
                 />
                 <Stack alignCenter className={textStyle} gap nowrap>
-                  <input
+                  <NumberInput
                     max={String(entity.info.configuration.fuel)}
                     min="0"
                     onChange={onFuelChange}
                     style={{ width: 80 }}
-                    type="number"
                     value={entity.fuel}
                   />
                   /{entity.info.configuration.fuel}
@@ -355,12 +354,11 @@ export default function EntityPanel({
                               value={ammo}
                             />
                             <Stack alignCenter className={textStyle} gap nowrap>
-                              <input
+                              <NumberInput
                                 max={String(weapon.supply)}
                                 min="0"
                                 onChange={onAmmoChange}
                                 style={{ width: 80 }}
-                                type="number"
                                 value={ammo}
                               />
                               /{weapon.supply}

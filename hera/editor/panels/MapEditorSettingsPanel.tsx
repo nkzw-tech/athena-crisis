@@ -20,6 +20,7 @@ import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -166,7 +167,7 @@ export default function MapEditorSettingsPanel({
                 <span>
                   <fbt desc="Starting funds for a game">Starting Funds</fbt>
                 </span>
-                <input
+                <NumberInput
                   min={0}
                   onChange={({ target: { value } }) => {
                     const seedCapital = parseInteger(value || '0');
@@ -181,7 +182,6 @@ export default function MapEditorSettingsPanel({
                     }
                   }}
                   style={{ width: 100 }}
-                  type="number"
                   value={config.seedCapital}
                 />
               </Stack>
@@ -191,7 +191,7 @@ export default function MapEditorSettingsPanel({
                 <span>
                   <fbt desc="Starting charges for a game">Starting Charges</fbt>
                 </span>
-                <input
+                <NumberInput
                   max={String(MaxCharges)}
                   min={0}
                   onChange={({ target: { value } }) => {
@@ -207,7 +207,6 @@ export default function MapEditorSettingsPanel({
                     }
                   }}
                   style={{ width: 100 }}
-                  type="number"
                   value={config.initialCharge}
                 />
               </Stack>
@@ -232,7 +231,7 @@ export default function MapEditorSettingsPanel({
             <label>
               <Stack alignCenter gap nowrap>
                 <span>{getTranslatedPerformanceTypeName('pace')}</span>
-                <input
+                <NumberInput
                   disabled={!canEditPerformance}
                   min={1}
                   onChange={({ target: { value } }) =>
@@ -240,7 +239,6 @@ export default function MapEditorSettingsPanel({
                   }
                   placeholder={metrics?.pace ? String(metrics.pace) : ''}
                   style={{ width: 80 }}
-                  type="number"
                   value={performance.pace ?? ''}
                 />
               </Stack>
@@ -248,7 +246,7 @@ export default function MapEditorSettingsPanel({
             <label>
               <Stack alignCenter gap nowrap>
                 <span>{getTranslatedPerformanceTypeName('power')}</span>
-                <input
+                <NumberInput
                   disabled={!canEditPerformance}
                   min={0}
                   onChange={({ target: { value } }) =>
@@ -256,7 +254,6 @@ export default function MapEditorSettingsPanel({
                   }
                   placeholder={metrics?.power ? String(metrics.power) : ''}
                   style={{ width: 80 }}
-                  type="number"
                   value={performance.power ?? ''}
                 />
               </Stack>
@@ -311,7 +308,7 @@ export default function MapEditorSettingsPanel({
                       ? PerformanceStyleComparators[performance.style?.[0]]
                       : ' '}
                   </div>
-                  <input
+                  <NumberInput
                     disabled={!canEditPerformance}
                     min={0}
                     onChange={({ target: { value } }) =>
@@ -322,7 +319,6 @@ export default function MapEditorSettingsPanel({
                       ])
                     }
                     style={{ width: 80 }}
-                    type="number"
                     value={performance.style?.[1] ?? ''}
                   />
                 </Stack>
@@ -563,7 +559,7 @@ export default function MapEditorSettingsPanel({
               <span>
                 <fbt desc="Map size input field width">Width</fbt>
               </span>
-              <input
+              <NumberInput
                 max={MaxSize}
                 min={MinSize}
                 onChange={({ target: { value } }) => {
@@ -573,7 +569,6 @@ export default function MapEditorSettingsPanel({
                   }
                 }}
                 style={{ width: 70 }}
-                type="number"
                 value={width}
               />
             </Stack>
@@ -583,7 +578,7 @@ export default function MapEditorSettingsPanel({
               <span>
                 <fbt desc="Map size input field height">Height</fbt>
               </span>
-              <input
+              <NumberInput
                 max={MaxSize}
                 min={MinSize}
                 onChange={({ target: { value } }) => {
@@ -593,7 +588,6 @@ export default function MapEditorSettingsPanel({
                   }
                 }}
                 style={{ width: 70 }}
-                type="number"
                 value={height}
               />
             </Stack>

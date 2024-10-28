@@ -21,6 +21,7 @@ import Box from '@deities/ui/Box.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import Form from '@deities/ui/Form.tsx';
+import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -210,7 +211,7 @@ export default function ObjectiveCard({
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for objective amount">Amount</fbt>
                 </span>
-                <input
+                <NumberInput
                   className={rounds == null ? 'invalid' : undefined}
                   max={MAX_AMOUNT}
                   min={MIN_AMOUNT}
@@ -229,7 +230,6 @@ export default function ObjectiveCard({
                   }}
                   required
                   style={{ width: 100 }}
-                  type="number"
                   value={amount ?? ''}
                 />
               </Stack>
@@ -241,7 +241,7 @@ export default function ObjectiveCard({
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for objective rounds">Rounds</fbt>
                 </span>
-                <input
+                <NumberInput
                   className={rounds == null ? 'invalid' : undefined}
                   max={MAX_ROUNDS}
                   min={MIN_ROUNDS}
@@ -262,7 +262,6 @@ export default function ObjectiveCard({
                   }}
                   required
                   style={{ width: 100 }}
-                  type="number"
                   value={rounds ?? ''}
                 />
               </Stack>
