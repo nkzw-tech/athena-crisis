@@ -11,6 +11,9 @@ on:
 jobs:
   action:
     timeout-minutes: 20
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     permissions:
       contents: read
       deployments: write
