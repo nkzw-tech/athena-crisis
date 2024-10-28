@@ -92,6 +92,7 @@ import {
 import GameDialog from './ui/GameDialog.tsx';
 import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
 import NamedPosition from './ui/NamedPosition.tsx';
+import PositionHint from './ui/PositionHint.tsx';
 import SkipMessages, { MessageSkipDuration } from './ui/SkipMessages.tsx';
 
 setBaseClass(BaseBehavior);
@@ -1966,6 +1967,16 @@ export default class GameMap extends Component<Props, State> {
                       />
                     ))
                   : null}
+                {editor && position && (
+                  <PositionHint
+                    animationConfig={animationConfig}
+                    key={`named-position-${position}`}
+                    map={map}
+                    tileSize={tileSize}
+                    vector={position}
+                    zIndex={zIndex}
+                  />
+                )}
                 {StateComponent && (
                   <StateComponent
                     actions={this._actions}

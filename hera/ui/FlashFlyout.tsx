@@ -12,6 +12,7 @@ export default function FlashFlyout({
   align,
   animationConfig,
   clearTimer,
+  delay,
   items,
   mini,
   onComplete,
@@ -26,6 +27,7 @@ export default function FlashFlyout({
   align?: 'top' | 'top-lower';
   animationConfig: AnimationConfig;
   clearTimer?: ClearTimerFunction;
+  delay?: number;
   items: ReactNode | ReadonlyArray<ReactNode | null>;
   mini?: boolean;
   onComplete?: () => void;
@@ -75,6 +77,9 @@ export default function FlashFlyout({
       animate={{
         opacity: 1,
         transform: 'translate3d(0px, 0px, 0px)',
+        transition: {
+          delay: delay != null ? delay / 1000 : undefined,
+        },
       }}
       className={flashStyle}
       exit={{
