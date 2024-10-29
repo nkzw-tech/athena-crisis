@@ -101,7 +101,7 @@ export default function MapEditorSettingsPanel({
           config: config.copy({
             performance: {
               ...performance,
-              [metric]: value,
+              [metric]: value === 0 ? undefined : value,
             },
           }),
         }),
@@ -116,7 +116,7 @@ export default function MapEditorSettingsPanel({
           config: config.copy({
             performance: {
               ...performance,
-              style,
+              style: style?.[1] === 0 ? null : style,
             },
           }),
         }),
@@ -291,7 +291,7 @@ export default function MapEditorSettingsPanel({
                       <InlineLink
                         key={type}
                         onClick={() =>
-                          setStyle([type, performance.style?.[1] || 0])
+                          setStyle([type, performance.style?.[1] || 1])
                         }
                         selectedText={type === performance.style?.[0]}
                       >
