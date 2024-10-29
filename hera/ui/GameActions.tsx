@@ -488,6 +488,7 @@ export default function GameActions({
   zoom: number;
 }) {
   const {
+    currentViewer,
     inlineUI,
     lastActionResponse,
     map,
@@ -500,8 +501,12 @@ export default function GameActions({
   const maxZoom = useScale() + 1;
   const playerCanEndTurn =
     !preventRemoteActions && !paused && canEndTurn(state);
+  const viewerPlayer =
+    currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
   const canUndo =
     undoTurn &&
+    viewerPlayer?.isHumanPlayer() &&
+    viewerPlayer.crystal == null &&
     playerCanEndTurn &&
     lastActionResponse &&
     !preventUndoTypes.has(lastActionResponse.type);
