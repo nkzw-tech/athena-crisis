@@ -1058,7 +1058,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "ActivatePower { skill: 3, units: [], free: null }
+    "ActivatePower { skill: 3, units: null, free: null }
     AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 186, chargeB: 356 }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 372, chargeB: 712 }
     AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 378, chargeB: 730 }
@@ -1107,7 +1107,7 @@ test('skills will only be activated if there are enough units that can be acted 
     "AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7654, chargeB: 302 }
     AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7808, chargeB: 604 }
     AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7889, chargeB: 851 }
-    ActivatePower { skill: 24, units: [], free: null }
+    ActivatePower { skill: 24, units: null, free: null }
     Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1] }
     AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 24, ammo: [ [ 1, 6 ] ] }, chargeA: 454, chargeB: 966 }
     Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2] }
@@ -1129,7 +1129,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
-    "ActivatePower { skill: 24, units: [], free: null }
+    "ActivatePower { skill: 24, units: null, free: null }
     CompleteUnit (1,2)
     Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3] }
     Move (3,3 → 2,3) { fuel: 48, completed: null, path: [2,3] }

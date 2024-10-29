@@ -27,6 +27,7 @@ import {
   EncodedActions,
   EncodedConditions,
 } from './EncodedActions.tsx';
+import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 import { GameStateWithEffects } from './Types.tsx';
 
@@ -100,11 +101,12 @@ const handleDefaultEffects = (
     for (const skill of currentPlayer.skills) {
       const { activateOnInvasion } = getSkillConfig(skill);
       if (activateOnInvasion) {
-        const activatePowerActionResponse = {
-          free: true,
+        const activatePowerActionResponse = getActivatePowerActionResponse(
+          activeMap,
+          currentPlayer.id,
           skill,
-          type: 'ActivatePower',
-        } as const;
+          true,
+        );
         activeMap = applyActionResponse(
           activeMap,
           new Vision(currentPlayer.id),

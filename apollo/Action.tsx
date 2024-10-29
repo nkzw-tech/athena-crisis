@@ -32,7 +32,6 @@ import hasHQ from '@deities/athena/lib/hasHQ.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
 import pickNewHQ from '@deities/athena/lib/pickNewHQ.tsx';
-import powerSpawnUnits from '@deities/athena/lib/powerSpawnUnits.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -58,6 +57,7 @@ import { VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
+import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
 
 export type MutateActionResponseFn = (
   map: MapData,
@@ -949,11 +949,7 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
     player.charge >= charges * Charge &&
     (!requiresCrystal || (player.isHumanPlayer() && player.crystal != null))
   ) {
-    return {
-      skill,
-      type: 'ActivatePower',
-      units: powerSpawnUnits(map, player.id, skill) || ImmutableMap(),
-    } as const;
+    return getActivatePowerActionResponse(map, player.id, skill, false);
   }
 
   return null;

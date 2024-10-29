@@ -58,12 +58,11 @@ const getDeployVector = (
   const unit = map.units.get(vector);
   const building = map.buildings.get(vector);
   if (
-    (matchBuilding &&
-      building &&
+    (building &&
+      matchBuilding?.(building) &&
       map.matchesPlayer(building, player) &&
-      (!unit || map.matchesTeam(unit, building)) &&
-      matchBuilding?.(building)) ||
-    (matchUnit && unit && map.matchesPlayer(unit, player) && matchUnit(unit))
+      (!unit || map.matchesTeam(unit, building))) ||
+    (unit && matchUnit?.(unit) && map.matchesPlayer(unit, player))
   ) {
     const deployVector = vector
       .expand()
