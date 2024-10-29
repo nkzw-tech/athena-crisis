@@ -1,3 +1,4 @@
+import { Route } from '@deities/apollo/Routes.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
@@ -125,18 +126,25 @@ const supplyRange = getAttributeRange(
 );
 
 export default memo(function UnitCard({
+  gameId,
   map,
   playerDetails,
   unit,
   vector,
   viewer,
 }: {
+  gameId?: string;
   map: MapData;
   playerDetails: PlayerDetails;
   unit: Unit;
   vector: Vector;
   viewer?: PlayerID | null;
 }) {
+  const { pathname: backURL } = useLocation();
+  const damageChartRoute: Route = gameId?.length
+    ? `/damage-chart/${gameId}?back=${backURL}`
+    : `/damage-chart?back=${backURL}`;
+
   const { biome } = map.config;
   const { info, player } = unit;
   const {
@@ -318,6 +326,7 @@ export default memo(function UnitCard({
         <UnitTransports biome={biome} player={player} unit={unit} />
         <UnitAttack
           biome={biome}
+          damageChartRoute={damageChartRoute}
           map={map}
           player={player}
           unit={unit}
@@ -366,6 +375,7 @@ const getAllAvailableUnits = (
 
 const Weapon = memo(function WeaponAttack({
   biome,
+  damageChartRoute,
   map,
   player,
   supply,
@@ -374,6 +384,7 @@ const Weapon = memo(function WeaponAttack({
   weapon,
 }: {
   biome: Biome;
+  damageChartRoute: Route;
   map: MapData;
   player: PlayerID;
   supply?: number;
@@ -381,7 +392,6 @@ const Weapon = memo(function WeaponAttack({
   vector: Vector;
   weapon: WeaponT;
 }) {
-  const { pathname: backURL } = useLocation();
   const tile = map.getTileInfo(vector);
   const opponent = resolveDynamicPlayerID(map, 'opponent', player);
   const allSkills = useMemo(
@@ -512,14 +522,11 @@ const Weapon = memo(function WeaponAttack({
               damage. See the{' '}
               <fbt:param name="link">
                 {App.canQuit ? (
-                  <InlineLink to={`/damage-chart?back=${backURL}`}>
+                  <InlineLink to={damageChartRoute}>
                     <fbt desc="Damage chart link name">Damage Chart</fbt>
                   </InlineLink>
                 ) : (
-                  <InlineLink
-                    href={`/damage-chart?back=${backURL}`}
-                    target="blank"
-                  >
+                  <InlineLink href={damageChartRoute} target="blank">
                     <fbt desc="Damage chart link name">Damage Chart</fbt>
                   </InlineLink>
                 )}
@@ -535,12 +542,14 @@ const Weapon = memo(function WeaponAttack({
 
 const UnitAttack = ({
   biome,
+  damageChartRoute,
   map,
   player,
   unit,
   vector,
 }: {
   biome: Biome;
+  damageChartRoute: Route;
   map: MapData;
   player: PlayerID;
   unit: Unit;
@@ -562,6 +571,7 @@ const UnitAttack = ({
           {[...weapons].map(([id, weapon]) => (
             <Weapon
               biome={biome}
+              damageChartRoute={damageChartRoute}
               key={id}
               map={map}
               player={player}

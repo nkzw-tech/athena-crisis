@@ -1737,6 +1737,7 @@ export default class GameMap extends Component<Props, State> {
         disablePerformanceMetrics,
         editor,
         fogStyle,
+        gameId,
         margin,
         playerAchievement,
         scale,
@@ -2008,6 +2009,7 @@ export default class GameMap extends Component<Props, State> {
         {gameInfoState && (
           <GameDialog
             endGame={this.props.endGame ? this._endGame : undefined}
+            gameId={gameId}
             onClose={this._hideGameInfo}
             playerAchievement={playerAchievement}
             spectatorCodes={this.props.spectatorCodes}

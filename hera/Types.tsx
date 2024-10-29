@@ -71,6 +71,7 @@ export type Props = Readonly<{
   endGame?: (type: 'Lose') => void;
   events?: EventTarget;
   fogStyle: 'soft' | 'hard';
+  gameId?: string;
   gameInfoPanels?: GameInfoPanels;
   inset?: number;
   lastActionResponse?: ActionResponse | null;

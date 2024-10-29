@@ -467,7 +467,7 @@ export const PowerStation = new BuildingInfo(
 export const Barracks = new BuildingInfo(
   12,
   'Barracks',
-  `Barracks function as training centers, facilitating the recruitment and deployment of various types of infantry units.`,
+  `Barracks function as training centers, facilitating the recruitment and deployment of various types of soldiers.`,
   {
     cost: 150,
     defense: 20,
@@ -486,7 +486,7 @@ export const Barracks = new BuildingInfo(
 export const Shelter = new BuildingInfo(
   BuildingID.Shelter,
   'Shelter',
-  `Shelters automatically heal and resupply infantry units at the beginning of each turn.`,
+  `Shelters automatically heal and resupply soldiers at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -552,7 +552,7 @@ export const RepairShop = new BuildingInfo(
 export const Medbay = new BuildingInfo(
   18,
   'Medbay',
-  `Medbays automatically heal and resupply infantry units at the beginning of each turn.`,
+  `Medbays automatically heal and resupply soldiers at the beginning of each turn.`,
   {
     behaviors: new BuildingBehaviors({ heal: true }),
     cost: 200,
@@ -567,7 +567,7 @@ export const Medbay = new BuildingInfo(
 export const SpawnPlatform = new BuildingInfo(
   19,
   'Spawn Platform',
-  `Spawn Platforms can be used to spawn infantry units.`,
+  `Spawn Platforms can be used to spawn soldiers.`,
   {
     cost: 150,
     defense: 20,

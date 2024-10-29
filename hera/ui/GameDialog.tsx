@@ -94,11 +94,13 @@ type MapInfoPanelState = Readonly<
 
 const MapInfoPanel = memo(function MapInfoPanel({
   currentViewer,
+  gameId,
   info,
   map,
   playerDetails,
 }: {
   currentViewer: PlayerID | null;
+  gameId?: string;
   info: MapInfoState | LeaderInfoState;
   map: MapData;
   playerDetails: PlayerDetails;
@@ -170,6 +172,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
         <Stack gap={16} vertical>
           {panel.type === 'unit' ? (
             <UnitCard
+              gameId={gameId}
               map={map}
               playerDetails={playerDetails}
               {...info}
@@ -625,12 +628,14 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
 const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
+  gameId,
   gameInfoState,
   playerAchievement,
   spectatorCodes,
   state: { currentViewer, lastActionResponse, map, playerDetails },
 }: {
   endGame?: () => void;
+  gameId?: string;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
   playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
@@ -658,6 +663,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
       return (
         <MapInfoPanel
           currentViewer={currentViewer}
+          gameId={gameId}
           info={gameInfoState}
           map={map}
           playerDetails={playerDetails}
@@ -970,12 +976,14 @@ const crystalSelectedBoxStyle = css`
 
 export default memo(function GameDialog({
   endGame,
+  gameId,
   onClose,
   playerAchievement,
   spectatorCodes,
   state,
 }: {
   endGame?: (type: 'Lose') => void;
+  gameId?: string;
   onClose: () => void | Promise<void>;
   playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
@@ -1001,6 +1009,7 @@ export default memo(function GameDialog({
                   }
                 : undefined
             }
+            gameId={gameId}
             gameInfoState={
               create
                 ? {
