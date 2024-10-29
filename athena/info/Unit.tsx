@@ -3454,7 +3454,7 @@ export const Dragon = new UnitInfo(
 export const Bear = new UnitInfo(
   UnitID.Bear,
   'Bear',
-  'Unknown',
+  'Gloria',
   'female',
   `This is a Bear, and Bears tend to be huge. Usually found in forests and mountains, they are hunted for their fur and meat. But this Bear is different. It's a unit in a game. So, don't hunt it, just fight it!`,
   `There is not much known about {name}, except that she is bigger and stronger than most other bears. Many stories circulate about a giant in the forest devouring soldiers and even tanks. But that couldn't be her, right? Right??`,
