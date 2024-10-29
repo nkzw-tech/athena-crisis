@@ -39,7 +39,7 @@ export default function calculateLikelyDamage(
     );
     return isUnit(entityB) &&
       entityB.statusEffect === UnitStatusEffect.Poison &&
-      map.getPlayer(unitA).activeSkills.has(Skill.BuyUnitAcidBomber)
+      map.maybeGetPlayer(unitA)?.activeSkills.has(Skill.BuyUnitAcidBomber)
       ? Math.floor(damage * (1 + PoisonSkillPowerDamageMultiplier))
       : damage;
   }
