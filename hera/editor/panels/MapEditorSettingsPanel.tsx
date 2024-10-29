@@ -314,20 +314,17 @@ export default function MapEditorSettingsPanel({
                       ? PerformanceStyleComparators[performance.style?.[0]]
                       : ' '}
                   </div>
-                  <input
+                  <NumberInput
                     disabled={!canEditPerformance}
                     min={0}
                     onChange={({ target: { value } }) =>
                       setStyle([
                         performance.style?.[0] ||
                           PerformanceStyleType.LostUnits,
-                        Number.parseFloat(value || '0'),
+                        parseInteger(value || '0') || 0,
                       ])
                     }
-                    pattern="^\d*(\.\d{0,2})?$"
-                    step="0.1"
                     style={{ width: 80 }}
-                    type="number"
                     value={
                       performance.style?.[1] === 0 ? '' : performance.style?.[1]
                     }
