@@ -1972,7 +1972,7 @@ export default class GameMap extends Component<Props, State> {
                 {editor && position && (
                   <PositionHint
                     animationConfig={animationConfig}
-                    key={`named-position-${position}`}
+                    key={`position-hint-${position}`}
                     map={map}
                     tileSize={tileSize}
                     vector={position}
