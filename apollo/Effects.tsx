@@ -92,7 +92,10 @@ const handleDefaultEffects = (
   let gameState: GameStateWithEffects = [];
   if (actionResponse.type === 'Start') {
     return [[{ type: 'BeginGame' }, activeMap, effects]];
-  } else if (actionResponse.type === 'ActivateCrystal') {
+  } else if (
+    actionResponse.type === 'ActivateCrystal' &&
+    actionResponse.player
+  ) {
     const currentPlayer = activeMap.getCurrentPlayer();
     for (const skill of currentPlayer.skills) {
       const { activateOnInvasion } = getSkillConfig(skill);

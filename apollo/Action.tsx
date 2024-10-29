@@ -964,16 +964,15 @@ function activateCrystal(
   { biome, crystal }: ActivateCrystalAction,
   isEffect: boolean,
 ) {
-  if (
-    isEffect &&
-    Crystals.includes(crystal) &&
-    (!biome || (Biomes.includes(biome) && biome !== Biome.Spaceship))
-  ) {
-    return {
-      biome,
-      crystal,
-      type: 'ActivateCrystal',
-    } as const;
+  if (isEffect) {
+    return Crystals.includes(crystal) &&
+      (!biome || (Biomes.includes(biome) && biome !== Biome.Spaceship))
+      ? ({
+          biome,
+          crystal,
+          type: 'ActivateCrystal',
+        } as const)
+      : null;
   }
 
   const player = map.getCurrentPlayer();
