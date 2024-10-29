@@ -77,7 +77,10 @@ export default async function activatePowerAction(
             .copy({
               teams: updatePlayer(
                 state.map.teams,
-                finalMap.getPlayer(player.id),
+                finalMap
+                  .getPlayer(player.id)
+                  .disableActiveSkills()
+                  .activateSkill(skill),
               ),
             })
             .getActiveUnitTypes()
