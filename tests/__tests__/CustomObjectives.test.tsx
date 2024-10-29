@@ -2272,6 +2272,44 @@ test('escort units by amount with label fails', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test('escort units by amount with label does not fail if there are no labeled units', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const v3 = vec(1, 3);
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          amount: 1,
+          hidden: false,
+          label: new Set([1]),
+          optional: false,
+          players: [1],
+          type: Criteria.EscortAmount,
+          vectors: new Set([]),
+        },
+      ]),
+    }),
+    units: map.units
+      .set(v1, Pioneer.create(player1))
+      .set(v2, Flamethrower.create(player2))
+      .set(v3, Pioneer.create(player2)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    EndTurnAction(),
+    AttackUnitAction(v2, v1),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (1,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
+  `);
+});
+
 test('escort units by amount does not fail when enough units are remaining', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

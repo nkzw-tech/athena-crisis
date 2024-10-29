@@ -311,16 +311,20 @@ function checkObjective(
           previousMap.units
             .filter(filterUnitsByLabels(objective.label))
             .filter(filterEnemies(map, targetPlayer)).size) ||
-      (isSurvivalAndEndTurn &&
-        objective.rounds <= actionResponse.round &&
-        matchesPlayerList(objective.players, targetPlayer)) ||
-      (objective.type === Criteria.EscortAmount &&
+      (!isEndTurn &&
+        objective.type === Criteria.EscortAmount &&
         !!objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
+        previousMap.units
+          .filter(filterUnitsByLabels(objective.label))
+          .filter(filterEnemies(map, player)).size > 0 &&
         map.units
           .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size < objective.amount)
+          .filter(filterEnemies(map, player)).size < objective.amount) ||
+      (isSurvivalAndEndTurn &&
+        objective.rounds <= actionResponse.round &&
+        matchesPlayerList(objective.players, targetPlayer))
     );
   }
 
