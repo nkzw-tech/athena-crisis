@@ -10,7 +10,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "devDependencies": {
-    "@babel/parser": "^7.26.1",
+    "@babel/parser": "^7.26.2",
     "@babel/traverse": "^7.25.9",
     "@babel/types": "^7.26.0",
     "@deities/apollo": "workspace:*",

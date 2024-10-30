@@ -43,10 +43,10 @@
     "relay-runtime": "^18.1.0",
     "socket.io-client": "^4.8.1",
     "tinybase": "^5.3.6",
-    "workbox-core": "^7.1.0",
-    "workbox-precaching": "^7.1.0",
-    "workbox-routing": "^7.1.0",
-    "workbox-window": "^7.1.0"
+    "workbox-core": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-window": "^7.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
