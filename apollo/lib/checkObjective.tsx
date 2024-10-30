@@ -443,28 +443,10 @@ export default function checkObjectives(
       isRescue,
       isMove,
     );
-    if (objectives.size === 1) {
-      const objective = objectives.first();
-      if (objective && check(objective)) {
-        return [0, objective];
-      }
-    }
 
-    if (objectives.size === 2) {
-      const objectiveA = objectives.first();
-      if (objectiveA && check(objectiveA)) {
-        return [0, objectiveA];
-      }
-
-      const objectiveB = objectives.last();
-      if (objectiveB && check(objectiveB)) {
-        return [1, objectiveB];
-      }
-    } else {
-      for (const [id, objective] of objectives) {
-        if (check(objective)) {
-          return [id, objective];
-        }
+    for (const [id, objective] of objectives) {
+      if (check(objective)) {
+        return [id, objective];
       }
     }
   }
