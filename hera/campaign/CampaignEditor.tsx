@@ -1,4 +1,5 @@
 import { Scenario } from '@deities/apollo/Effects.tsx';
+import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import {
   AttributeRangeWithZero,
@@ -13,6 +14,7 @@ import toPlainCampaign from '@deities/hermes/toPlainCampaign.tsx';
 import { Campaign, ClientLevelID, PlainLevel } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import validateCampaign from '@deities/hermes/validateCampaign.tsx';
+import { App } from '@deities/ui/App.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -26,6 +28,7 @@ import useNavigate from '@deities/ui/hooks/useNavigate.tsx';
 import { usePrompt } from '@deities/ui/hooks/usePrompt.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import CreateMap from '@deities/ui/icons/CreateMap.tsx';
+import InlineLink from '@deities/ui/InlineLink.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
@@ -36,8 +39,10 @@ import {
   TypeaheadDataSource,
   TypeaheadDataSourceEntry,
 } from '@deities/ui/Typeahead.tsx';
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
+import Check from '@iconify-icons/pixelarticons/check.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import Copy from '@iconify-icons/pixelarticons/copy.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import { fbt } from 'fbt';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -86,7 +91,7 @@ export default function CampaignEditor({
   viewer,
 }: {
   addMap: (map: MapNode) => void;
-  campaign: CampaignObject;
+  campaign: CampaignObject & { slug: string | null };
   editorComponent: ComponentType<
     MapEditorContainerProps & {
       slug?: string;
@@ -105,6 +110,7 @@ export default function CampaignEditor({
 }) {
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
+  const { slug } = data;
   const [hasChanges, setHasChanges] = useState(!data.id);
   const [mapHasChanges, setMapHasChanges] = useState(false);
   const [difficulty, setDifficulty] = useState<AttributeRangeWithZero>(
@@ -394,6 +400,23 @@ export default function CampaignEditor({
     }
   }, [campaignEditorState?.map?.id]);
 
+  const [hasCopied, setHasCopied] = useState(false);
+  const onCopy = useCallback(() => {
+    if (slug) {
+      App.writeToClipboard(
+        `${window.location.origin}${getCampaignRoute(slug)}`,
+      );
+      setHasCopied(true);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    if (hasCopied) {
+      const timeout = setTimeout(() => setHasCopied(false), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [hasCopied]);
+
   const isLarge = useMedia(`(min-width: ${sm}px)`);
   const inset = isLarge ? TileSize * 3 : TileSize;
   const hasSaved = saveState && 'id' in saveState && saveState.id === 'saved';
@@ -423,15 +446,30 @@ export default function CampaignEditor({
           isExpanded={false}
           toggleExpanded={() => void 0}
         >
-          <div className={cx(primaryButtonStyle, ellipsis)}>
-            {campaignName || (
-              <span className={lightColorStyle}>
-                <fbt desc="Fallback name for untitled campaign">
-                  Untitled Campaign
-                </fbt>
-              </span>
+          <Stack
+            alignCenter
+            className={primaryButtonStyle}
+            gap
+            nowrap
+            onClick={onCopy}
+          >
+            <div className={ellipsis}>
+              {campaignName || (
+                <span className={lightColorStyle}>
+                  <fbt desc="Fallback name for untitled campaign">
+                    Untitled Campaign
+                  </fbt>
+                </span>
+              )}
+            </div>
+            {slug && (
+              <div>
+                <InlineLink className={iconStyle} selectedText={hasCopied}>
+                  <Icon icon={hasCopied ? Check : Copy} />
+                </InlineLink>
+              </div>
             )}
-          </div>
+          </Stack>
         </PrimaryExpandableMenuButton>
         <ZoomButton
           hide={hidden}
@@ -615,10 +653,6 @@ const containerStyle = css`
   padding-bottom: 440px;
 `;
 
-const primaryButtonStyle = css`
-  margin-top: 6px;
-`;
-
 const mapEditorBackgroundStyle = css`
   background-color: ${applyVar('background-color-light')};
   inset: 0;
@@ -673,4 +707,12 @@ const closeButtonStyle = css`
   // On initial load with a map, the button will be inserted into the DOM before the map editor.
   // This makes the button visible.
   z-index: 1;
+`;
+
+const primaryButtonStyle = css`
+  height: ${TileSize * 1.5}px;
+`;
+
+const iconStyle = css`
+  margin-top: 4px;
 `;
