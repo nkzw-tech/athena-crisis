@@ -44,6 +44,8 @@ import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import {
   Criteria,
+  decodeObjectives,
+  encodeObjectives,
   Objective,
   validateObjectives,
 } from '@deities/athena/Objectives.tsx';
@@ -75,8 +77,13 @@ const player2 = HumanPlayer.from(map.getPlayer(2), '4');
 
 const defaultObjective = { hidden: false, type: Criteria.Default } as const;
 
+// Sort objectives by optional/non-optional.
 const defineObjectives = (objectives: ReadonlyArray<Objective>) =>
-  ImmutableMap(objectives.map((objective, index) => [index, objective]));
+  decodeObjectives(
+    encodeObjectives(
+      ImmutableMap(objectives.map((objective, index) => [index, objective])),
+    ),
+  );
 
 const optional = (map: MapData) =>
   map.copy({
@@ -3661,4 +3668,61 @@ test('rescuing a unit part of an objective of another player ends the game if th
     .toMatchInlineSnapshot(`
     "Rescue (2,1 → 1,1) { player: 1, name: -13 }"
   `);
+});
+
+test('objectives are sorted when decoding so optional objectives are always triggered before non-optional ones', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const mapA = map.copy({
+    buildings: map.buildings.set(v1, House.create(player2, { label: 2 })),
+    config: map.config.copy({
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            hidden: false,
+            label: new Set([2]),
+            optional: false,
+            type: Criteria.DefeatLabel,
+          },
+        ],
+        [
+          1,
+          {
+            hidden: false,
+            label: new Set([2]),
+            optional: true,
+            type: Criteria.DefeatLabel,
+          },
+        ],
+      ]),
+    }),
+    units: map.units
+      .set(v1, Flamethrower.create(player1))
+      .set(v2, Pioneer.create(player2, { label: 2 })),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    AttackUnitAction(v1, v2),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
+
+  const [, gameActionResponseB] = await executeGameActions(
+    MapData.fromJSON(JSON.stringify(mapA)),
+    [AttackUnitAction(v1, v2)],
+  );
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [], reward: null, type: 3 }, objectiveId: 1, toPlayer: 1 }
+      AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+    `);
 });

@@ -627,8 +627,11 @@ export function decodeObjective(objective: PlainObjective): Objective {
   }
 }
 
+const sortObjective = ([, objective]: [number, Objective]) =>
+  objective.type === Criteria.Default ? -1 : objective.optional ? 0 : 1;
+
 export function encodeObjectives(objectives: Objectives): PlainObjectives {
-  return sortBy([...objectives], ([id]) => id).map(([id, objective]) => [
+  return sortBy([...objectives], sortObjective).map(([id, objective]) => [
     id,
     encodeObjective(objective),
   ]);
@@ -636,7 +639,10 @@ export function encodeObjectives(objectives: Objectives): PlainObjectives {
 
 export function decodeObjectives(objectives: PlainObjectives) {
   return ImmutableMap(
-    objectives.map(([id, objective]) => [id, decodeObjective(objective)]),
+    sortBy(
+      objectives.map(([id, objective]) => [id, decodeObjective(objective)]),
+      sortObjective,
+    ),
   );
 }
 

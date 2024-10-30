@@ -12,6 +12,7 @@ import {
   validateObjective,
 } from '@deities/athena/Objectives.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
+import sortBy from '@deities/hephaestus/sortBy.tsx';
 import levelUsesObjective from '@deities/hermes/levelUsesObjective.tsx';
 import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
@@ -251,43 +252,37 @@ export default function ObjectivePanel({
 
   return (
     <Stack className={paddingStyle} gap={24} vertical>
-      {[
-        ...objectives
-          .map((objective, id) => (
-            <ObjectiveCard
-              campaigns={
-                objectivesInCampaigns?.filter(
-                  ({ level }) => level && levelUsesObjective(id, level),
-                ) || null
-              }
-              canDelete={
-                objectives.size > 1 || objective.type !== Criteria.Default
-              }
-              canEditPerformance={canEditPerformance}
-              hasContentRestrictions={hasContentRestrictions}
-              id={id}
-              isAdmin={isAdmin}
-              key={id}
-              map={mapWithActivePlayers}
-              objective={objective}
-              onChange={(objective) => updateObjective(id, objective)}
-              selectEffect={() =>
-                setEditorState(selectObjectiveEffect(editor, id, objective))
-              }
-              selectLocation={() => {
-                if (objectiveHasVectors(objective)) {
-                  setEditorState({
-                    objective: { objective, objectiveId: id },
-                  });
-                }
-              }}
-              tags={tags}
-              user={user}
-              validate={validate}
-            />
-          ))
-          .values(),
-      ]}
+      {sortBy([...objectives], ([id]) => id).map(([id, objective]) => (
+        <ObjectiveCard
+          campaigns={
+            objectivesInCampaigns?.filter(
+              ({ level }) => level && levelUsesObjective(id, level),
+            ) || null
+          }
+          canDelete={objectives.size > 1 || objective.type !== Criteria.Default}
+          canEditPerformance={canEditPerformance}
+          hasContentRestrictions={hasContentRestrictions}
+          id={id}
+          isAdmin={isAdmin}
+          key={id}
+          map={mapWithActivePlayers}
+          objective={objective}
+          onChange={(objective) => updateObjective(id, objective)}
+          selectEffect={() =>
+            setEditorState(selectObjectiveEffect(editor, id, objective))
+          }
+          selectLocation={() => {
+            if (objectiveHasVectors(objective)) {
+              setEditorState({
+                objective: { objective, objectiveId: id },
+              });
+            }
+          }}
+          tags={tags}
+          user={user}
+          validate={validate}
+        />
+      ))}
       <Select
         selectedItem={
           <fbt desc="Headline for adding a new objective">New Objective</fbt>

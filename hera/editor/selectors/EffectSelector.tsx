@@ -1,5 +1,6 @@
 import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
 import { Objectives } from '@deities/athena/Objectives.tsx';
+import sortBy from '@deities/hephaestus/sortBy.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
 import EffectTitle from '../lib/EffectTitle.tsx';
@@ -26,7 +27,13 @@ export default function EffectSelector({
         />
       }
     >
-      {[...effects].flatMap(([trigger, list]) =>
+      {sortBy([...effects], ([trigger]) =>
+        trigger === 'Start'
+          ? Number.NEGATIVE_INFINITY
+          : trigger === 'GameEnd'
+            ? Number.POSITIVE_INFINITY
+            : 0,
+      ).flatMap(([trigger, list]) =>
         [...list].map((effect, key) => (
           <InlineLink
             key={`${trigger}-${key}`}

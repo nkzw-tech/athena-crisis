@@ -136,7 +136,6 @@ export function applyObjectives(
 
     optionalObjective = null;
     reevaluate = true;
-    map = gameState.at(-1)![1];
 
     const [objectiveId, objective] =
       checkObjectives(previousMap, map, lastActionResponse) || [];

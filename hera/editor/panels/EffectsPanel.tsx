@@ -4,6 +4,7 @@ import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
+import sortBy from '@deities/hephaestus/sortBy.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
@@ -92,59 +93,55 @@ export default function EffectsPanel({
   }, [effects]);
 
   const possibleEffects = useMemo(
-    () =>
-      [
-        ...(['win', 'lose', 'draw'] as const).map((id) =>
-          conditionsByID?.has(id) ? null : (
+    () => [
+      ...(['win', 'lose', 'draw'] as const).map((id) =>
+        conditionsByID?.has(id) ? null : (
+          <InlineLink
+            className={fitContentStyle}
+            key={id}
+            onClick={() => {
+              setShowNewEffects(false);
+              setEditorState(selectObjectiveEffect(editor, id));
+            }}
+          >
+            <EffectObjectiveTitle id={id} />
+          </InlineLink>
+        ),
+      ),
+      sortBy([...objectives], ([id]) => id)
+        .map(([id, condition]) => {
+          if (condition.type === Criteria.Default || conditionsByID?.has(id)) {
+            return null;
+          }
+
+          const type = condition.optional ? 'OptionalObjective' : 'GameEnd';
+          return (
             <InlineLink
               className={fitContentStyle}
               key={id}
               onClick={() => {
                 setShowNewEffects(false);
-                setEditorState(selectObjectiveEffect(editor, id));
+                setEditorState(selectObjectiveEffect(editor, id, condition));
               }}
             >
-              <EffectObjectiveTitle id={id} />
-            </InlineLink>
-          ),
-        ),
-        ...objectives
-          .map((condition, id) => {
-            if (
-              condition.type === Criteria.Default ||
-              conditionsByID?.has(id)
-            ) {
-              return null;
-            }
-
-            const type = condition.optional ? 'OptionalObjective' : 'GameEnd';
-            return (
-              <InlineLink
-                className={fitContentStyle}
-                key={id}
-                onClick={() => {
-                  setShowNewEffects(false);
-                  setEditorState(selectObjectiveEffect(editor, id, condition));
+              <EffectTitle
+                effect={{
+                  actions: [],
+                  conditions: [
+                    {
+                      type,
+                      value: id,
+                    },
+                  ],
                 }}
-              >
-                <EffectTitle
-                  effect={{
-                    actions: [],
-                    conditions: [
-                      {
-                        type,
-                        value: id,
-                      },
-                    ],
-                  }}
-                  objectives={objectives}
-                  trigger={type}
-                />
-              </InlineLink>
-            );
-          })
-          .values(),
-      ].filter(isPresent),
+                objectives={objectives}
+                trigger={type}
+              />
+            </InlineLink>
+          );
+        })
+        .filter(isPresent),
+    ],
     [conditionsByID, editor, setEditorState, objectives],
   );
 
