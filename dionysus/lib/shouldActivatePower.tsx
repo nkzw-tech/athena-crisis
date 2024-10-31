@@ -34,6 +34,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.Shield:
       return false;
 
+    case Skill.DragonSaboteur:
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:

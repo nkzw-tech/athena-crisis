@@ -9,7 +9,7 @@ import {
   Flamethrower,
   InfernoJetpack,
   Pioneer,
-  UnitInfo,
+  Saboteur,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
@@ -19,14 +19,18 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { Charge, HealAmount } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import Unit, { UnitConversion } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 
-const conversions = new Map<Skill, Readonly<{ from: UnitInfo; to: UnitInfo }>>([
+const conversions = new Map<Skill, Readonly<UnitConversion>>([
   [Skill.SpawnUnitInfernoJetpack, { from: Flamethrower, to: InfernoJetpack }],
   [Skill.UnlockZombie, { from: Pioneer, to: Zombie }],
+  [
+    Skill.DragonSaboteur,
+    { from: Saboteur, onlyLeader: true, recover: true, to: Dragon },
+  ],
 ]);
 
 const getAllOpponents = (
@@ -86,7 +90,7 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
 
   const conversion = conversions.get(skill);
   if (conversion) {
-    return unit.maybeConvert(conversion.from, conversion.to);
+    return unit.maybeConvert(conversion);
   }
 
   return null;
@@ -179,7 +183,7 @@ export default function applyPower(skill: Skill, map: MapData) {
   if (conversion) {
     const newUnits = map.units
       .filter((unit) => map.matchesPlayer(player, unit))
-      .map((unit) => unit.maybeConvert(conversion.from, conversion.to));
+      .map((unit) => unit.maybeConvert(conversion));
 
     map = map.copy({
       units: map.units.merge(

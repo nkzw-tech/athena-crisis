@@ -6,6 +6,7 @@ import {
   BazookaBear,
   Bear,
   InfernoJetpack,
+  Saboteur,
   UnitInfo,
 } from '../info/Unit.tsx';
 import Building from '../map/Building.tsx';
@@ -28,24 +29,27 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
     matchBuilding: (building) => building.id === Bar.id,
     unitType: BazookaBear,
   },
-
   [Skill.BuyUnitBear]: {
     matchBuilding: (building) =>
       building.id === Shelter.id || building.id === HQ.id,
     unitType: Bear,
   },
-
   [Skill.BuyUnitAlien]: {
     matchBuilding: (building) =>
       building.id === Barracks.id || building.id === HQ.id,
     unitType: Alien,
   },
-
   [Skill.SpawnUnitInfernoJetpack]: {
     matchBuilding: () => true,
     matchUnit: () => true,
     max: 3,
     unitType: InfernoJetpack,
+  },
+  [Skill.DragonSaboteur]: {
+    matchBuilding: (building) => building.id === HQ.id,
+    matchUnit: () => true,
+    max: 1,
+    unitType: Saboteur,
   },
 };
 

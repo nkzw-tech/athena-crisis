@@ -3,6 +3,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { LowHealthZombieSkillConversion, Skill } from '../info/Skill.tsx';
 import {
   Ability,
+  Dragon,
   getUnitInfo,
   Saboteur,
   Sniper,
@@ -26,6 +27,13 @@ export type PlainDryUnit =
   | [health: number, ammo: PlainAmmo | null, statusEffect: UnitStatusEffect];
 
 type Ammo = ReadonlyMap<WeaponID, Supply>;
+
+export type UnitConversion = Readonly<{
+  from: UnitInfo;
+  onlyLeader?: true;
+  recover?: true;
+  to: UnitInfo;
+}>;
 
 export enum UnitStatusEffect {
   Poison = 1,
@@ -212,9 +220,10 @@ export class TransportedUnit {
     return unit.isLeader() ? unit.copy({ name: null }) : unit;
   }
 
-  maybeConvert(from: UnitInfo, to: UnitInfo): TransportedUnit {
+  maybeConvert(conversion: UnitConversion): TransportedUnit {
+    const { from, onlyLeader, recover, to } = conversion;
     let unit =
-      from.id === this.id
+      from.id === this.id && (!onlyLeader || this.isLeader())
         ? to
             .create(this.player, {
               behavior: this.behavior,
@@ -222,7 +231,7 @@ export class TransportedUnit {
             })
             .setHealth(this.health)
             .copy({
-              moved: this.moved ? true : undefined,
+              moved: !recover && this.moved ? true : undefined,
               transports: this.transports,
             })
             .transport()
@@ -230,7 +239,9 @@ export class TransportedUnit {
 
     if (unit.transports?.length) {
       unit = unit.copy({
-        transports: unit.transports.map((unit) => unit.maybeConvert(from, to)),
+        transports: unit.transports.map((unit) =>
+          unit.maybeConvert(conversion),
+        ),
       });
     }
 
@@ -485,7 +496,8 @@ export default class Unit extends Entity {
       (this.info === Sniper &&
         this.isLeader() &&
         !this.isUnfolded() &&
-        player.skills.has(Skill.UnitAbilitySniperImmediateAction))
+        player.skills.has(Skill.UnitAbilitySniperImmediateAction)) ||
+      (this.info === Dragon && player.skills.has(Skill.DragonSaboteur))
     );
   }
 
@@ -760,9 +772,10 @@ export default class Unit extends Entity {
     return unit.isLeader() ? unit.copy({ name: null }) : unit;
   }
 
-  maybeConvert(from: UnitInfo, to: UnitInfo): Unit {
+  maybeConvert(conversion: UnitConversion): Unit {
+    const { from, onlyLeader, recover, to } = conversion;
     let unit =
-      from.id === this.id
+      from.id === this.id && (!onlyLeader || this.isLeader())
         ? to
             .create(this.player, {
               behavior: this.behavior,
@@ -770,8 +783,8 @@ export default class Unit extends Entity {
             })
             .setHealth(this.health)
             .copy({
-              completed: this.isCompleted() ? true : undefined,
-              moved: this.hasMoved() ? true : undefined,
+              completed: !recover && this.isCompleted() ? true : undefined,
+              moved: !recover && this.hasMoved() ? true : undefined,
               shield: this.shield,
               transports: this.transports,
             })
@@ -779,7 +792,9 @@ export default class Unit extends Entity {
 
     if (unit.transports?.length) {
       unit = unit.copy({
-        transports: unit.transports.map((unit) => unit.maybeConvert(from, to)),
+        transports: unit.transports.map((unit) =>
+          unit.maybeConvert(conversion),
+        ),
       });
     }
 

@@ -8,6 +8,7 @@ import {
 import {
   getHealUnitTypes,
   getSkillPowerDamage,
+  shouldUpgradeUnit,
   Skill,
 } from '@deities/athena/info/Skill.tsx';
 import { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
@@ -82,6 +83,9 @@ export default async function activatePowerAction(
                   .disableActiveSkills()
                   .activateSkill(skill),
               ),
+              units: actionResponse.units
+                ? state.map.units.merge(actionResponse.units)
+                : state.map.units,
             })
             .getActiveUnitTypes()
             .get(player.id);
@@ -120,17 +124,15 @@ export default async function activatePowerAction(
                 animateHeal(state, sortByVectorKey(unitsToHeal), next)
             : null;
 
-          const unitsToUpgrade = state.map.units.filter(
+          const shouldUpgradeFirst = skill === Skill.SpawnUnitInfernoJetpack;
+          const unitsToUpgrade = (
+            shouldUpgradeFirst ? state.map : finalMap
+          ).units.filter(
             (unit, vector) =>
               !healVectors.has(vector) &&
-              (!unit.isCompleted() ||
-                skill === Skill.RecoverAirUnits ||
-                skill === Skill.SpawnUnitInfernoJetpack ||
-                skill === Skill.UnlockZombie ||
-                skill === Skill.BuyUnitCannon ||
-                skill === Skill.Shield) &&
               state.map.matchesPlayer(unit, player) &&
-              matchesActiveType(unitTypes, unit, vector),
+              matchesActiveType(unitTypes, unit, vector) &&
+              shouldUpgradeUnit(unit, skill),
           );
 
           const spawnUnits = unitsToSpawn?.size
@@ -162,7 +164,7 @@ export default async function activatePowerAction(
           const queue = [
             damage,
             healUnits,
-            ...(skill === Skill.SpawnUnitInfernoJetpack
+            ...(shouldUpgradeFirst
               ? [upgrade, spawnUnits]
               : [spawnUnits, upgrade]),
           ].filter(isPresent);

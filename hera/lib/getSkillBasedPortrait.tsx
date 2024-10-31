@@ -62,6 +62,7 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.BuyUnitBear:
       return Bear;
     case Skill.BuyUnitDragon:
+    case Skill.DragonSaboteur:
       return Dragon;
     case Skill.BuyUnitOgre:
       return Ogre;

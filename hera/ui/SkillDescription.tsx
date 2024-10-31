@@ -703,6 +703,15 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           </fbt:param>%.
         </fbt>
       );
+    case Skill.DragonSaboteur:
+      return (
+        <fbt desc="Additional skill description.">
+          <fbt:param name="pluralUnitName">
+            <UnitName color={color} unit={Dragon} />
+          </fbt:param>{' '}
+          receive the ability to capture buildings.
+        </fbt>
+      );
   }
   return null;
 };
@@ -889,6 +898,22 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="percentage">
             {ChargeSkillChargeMultiplier * 100}
           </fbt:param>% for each available charge.
+        </fbt>
+      );
+    case Skill.DragonSaboteur:
+      return (
+        <fbt desc="Additional skill description.">
+          Spawns one{' '}
+          <fbt:param name="unitName">
+            <RawUnitName color={color} unit={Saboteur} />
+          </fbt:param>{' '}
+          unit and converts the{' '}
+          <fbt:param name="saboteurName">{Saboteur.name}</fbt:param> leader unit
+          into a
+          <fbt:param name="convertedUnitName">
+            <RawUnitName color={color} unit={Dragon} />
+          </fbt:param>{' '}
+          unit.
         </fbt>
       );
   }

@@ -6,6 +6,7 @@ import Alien from '@deities/ui/icons/Alien.tsx';
 import Bubble from '@deities/ui/icons/Bubble.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Fire from '@deities/ui/icons/Fire.tsx';
+import Glasses from '@deities/ui/icons/Glasses.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
 import Octopus from '@deities/ui/icons/Octopus.tsx';
@@ -355,6 +356,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'orange',
         icon: Charge,
         name: fbt('Charge Overflow', 'Skill name'),
+      };
+    case Skill.DragonSaboteur:
+      return {
+        alpha: 0.1,
+        borderStyle: 'up2x',
+        colors: 'purple',
+        icon: Glasses,
+        name: fbt('Sneaky Dragon', 'Skill name'),
       };
     default: {
       skill satisfies never;

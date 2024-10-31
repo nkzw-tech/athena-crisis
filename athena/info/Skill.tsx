@@ -3,6 +3,7 @@ import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
 import { Charge } from '../map/Configuration.tsx';
 import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
+import type Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import type MapData from '../MapData.tsx';
 import { BuildingInfo } from './Building.tsx';
@@ -52,6 +53,7 @@ export enum Skill {
   VampireHeal = 37,
   Shield = 38,
   Charge = 39,
+  DragonSaboteur = 40,
 }
 
 export const Skills = new Set<Skill>([
@@ -87,6 +89,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitAbilitySniperImmediateAction,
   Skill.UnitInfantryForestAttackAndDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
+  Skill.DragonSaboteur,
   Skill.RecoverAirUnits,
   Skill.Shield,
   Skill.Charge,
@@ -258,6 +261,12 @@ const skillConfig: Record<
     group: SkillGroup.Invasion,
     requiresCrystal: true,
   },
+  [Skill.DragonSaboteur]: {
+    activateOnInvasion: true,
+    charges: 3,
+    cost: 1000,
+    group: SkillGroup.Special,
+  },
 };
 
 export const CampaignOnlySkills = new Set(
@@ -321,6 +330,7 @@ const attackUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   ],
   [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.5]])],
   [Skill.VampireHeal, new Map([[UnitID.Medic, 0.5]])],
+  [Skill.DragonSaboteur, new Map([[UnitID.Dragon, 0.1]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -507,6 +517,7 @@ const skillMovementTypeRadiusEffects = new Map<
     new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
   ],
   [MovementTypes.HeavySoldier, new Map([[Skill.BuyUnitSuperAPU, 1]])],
+  [MovementTypes.AirInfantry, new Map([[Skill.DragonSaboteur, 1]])],
 ]);
 
 const skillMovementTypeRadiusPowerEffects = new Map<
@@ -1157,6 +1168,19 @@ const getSkillActiveUnitTypes = (
     return list;
   }
 
+  if (skill === Skill.DragonSaboteur) {
+    for (const [vector, unit] of map.units) {
+      if (
+        unit.id === UnitID.Saboteur &&
+        unit.isLeader() &&
+        map.matchesPlayer(unit, player)
+      ) {
+        list.push(vector);
+      }
+    }
+    return list;
+  }
+
   if (skill === Skill.SpawnUnitInfernoJetpack) {
     for (const [vector, unit] of map.units) {
       if (unit.id === UnitID.Flamethrower) {
@@ -1274,4 +1298,62 @@ export function getSkillPowerDamage(skill: Skill) {
       : skill === Skill.VampireHeal
         ? vampirePowerDamage
         : 0;
+}
+
+export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
+  if (!unit.isCompleted()) {
+    return true;
+  }
+
+  switch (skill) {
+    case Skill.RecoverAirUnits:
+    case Skill.SpawnUnitInfernoJetpack:
+    case Skill.UnlockZombie:
+    case Skill.BuyUnitCannon:
+    case Skill.Shield:
+    case Skill.DragonSaboteur:
+      return true;
+
+    case Skill.BuyUnitAlien:
+    case Skill.BuyUnitBazookaBear:
+    case Skill.BuyUnitBear:
+    case Skill.BuyUnitOctopus:
+    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
+    case Skill.ArtilleryRangeIncrease:
+    case Skill.AttackAndDefenseDecreaseEasy:
+    case Skill.AttackAndDefenseIncreaseHard:
+    case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
+    case Skill.AttackIncreaseMinor:
+    case Skill.BuyUnitAcidBomber:
+    case Skill.BuyUnitAIU:
+    case Skill.BuyUnitBrute:
+    case Skill.BuyUnitCommander:
+    case Skill.BuyUnitDinosaur:
+    case Skill.BuyUnitDragon:
+    case Skill.BuyUnitOgre:
+    case Skill.BuyUnitSuperAPU:
+    case Skill.BuyUnitSuperTank:
+    case Skill.BuyUnitZombieDefenseDecreaseMajor:
+    case Skill.Charge:
+    case Skill.CounterAttackPower:
+    case Skill.DefenseIncreaseMinor:
+    case Skill.HealInfantryMedicPower:
+    case Skill.HealVehiclesAttackDecrease:
+    case Skill.MovementIncreaseGroundUnitDefenseDecrease:
+    case Skill.NoUnitRestrictions:
+    case Skill.Sabotage:
+    case Skill.UnitAbilitySniperImmediateAction:
+    case Skill.UnitBattleShipMoveAndAct:
+    case Skill.UnitInfantryForestAttackAndDefenseIncrease:
+    case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
+    case Skill.UnlockPowerStation:
+    case Skill.VampireHeal:
+      return false;
+    default: {
+      skill satisfies never;
+      throw new UnknownTypeError('shouldUpgradeUnit', String(skill));
+    }
+  }
+
+  return false;
 }
