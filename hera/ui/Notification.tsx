@@ -9,6 +9,7 @@ import { ReactNode } from 'react';
 export default function Notification({
   center,
   children,
+  delay = 0,
   inline,
   inset = 0,
   offset = 0,
@@ -17,6 +18,7 @@ export default function Notification({
 }: {
   center?: true;
   children?: ReactNode;
+  delay?: number;
   inline?: true;
   inset?: number;
   offset?: number;
@@ -53,6 +55,7 @@ export default function Notification({
       }}
       style={insetStyle(inset)}
       transition={{
+        delay: delay / 1000,
         duration: 0.25,
         ease: [0.34, 1.56, 0.64, 1],
       }}
