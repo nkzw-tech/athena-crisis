@@ -22,7 +22,13 @@ import {
 
 export default new Map<
   -1 | Skill,
-  ReadonlyArray<[CharacterMessageEffectAction, number]>
+  ReadonlyArray<
+    [
+      effect: CharacterMessageEffectAction,
+      probability: number,
+      userIds?: Set<string>,
+    ]
+  >
 >([
   [
     -1,
@@ -336,6 +342,7 @@ export default new Map<
           0,
         ),
         0.3,
+        new Set(['User-2']),
       ],
       [
         CharacterMessage(
@@ -345,6 +352,7 @@ export default new Map<
           1,
         ),
         0.1,
+        new Set(['User-2']),
       ],
     ],
   ],
