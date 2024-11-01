@@ -46,7 +46,11 @@ export default function getInterestingVectors(
 
   if (info.hasAbility(Ability.Supply)) {
     for (const [vector, unit] of map.units) {
-      if (map.matchesPlayer(unit, map.currentPlayer) && needsSupply(unit)) {
+      if (
+        map.matchesPlayer(unit, map.currentPlayer) &&
+        needsSupply(unit) &&
+        info.configuration.supplyTypes?.has(unit.info.type)
+      ) {
         vectors.push(vector);
       }
     }
