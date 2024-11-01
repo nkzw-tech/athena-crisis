@@ -184,6 +184,14 @@ class AudioPlayer {
     } else if (type === 'music') {
       this.currentInstance?.volume(volume);
     }
+
+    if (
+      (type === 'music' || type === 'sound') &&
+      getVolume('music') <= 0 &&
+      getVolume('sound') <= 0
+    ) {
+      this.pause();
+    }
   }
 
   private getInstance(name: SongName | SoundName) {
@@ -216,8 +224,6 @@ class AudioPlayer {
   }
 }
 
-const audioPlayer = new AudioPlayer(new Map([...Music, ...Sounds]));
-
 const getVolume = (type: AudioVolumeType) => {
   const volume = Number.parseFloat(
     localStorage.getItem(storageKeys[type]) || '',
@@ -226,6 +232,8 @@ const getVolume = (type: AudioVolumeType) => {
 };
 
 Howler.volume(getVolume('master') ?? 0.5);
+
+const audioPlayer = new AudioPlayer(new Map([...Music, ...Sounds]));
 
 export default audioPlayer;
 

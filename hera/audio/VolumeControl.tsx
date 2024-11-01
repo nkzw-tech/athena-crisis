@@ -26,7 +26,7 @@ export default function VolumeControl({
   showPauseButton?: boolean;
   type?: AudioVolumeType;
 }) {
-  const [isPaused, setIsPaused] = useState(() => AudioPlayer.isPaused());
+  const [renderKey, setRenderKey] = useState(0);
   const [volume, _setVolume] = useState(() => AudioPlayer.getVolume(type));
   const timerRef = useRef<NativeTimeout>(null);
 
@@ -41,12 +41,8 @@ export default function VolumeControl({
         }
         timerRef.current = setTimeout(() => AudioPlayer.resume(), 300);
       }
-
-      if (showPauseButton) {
-        setIsPaused(AudioPlayer.isPaused());
-      }
     },
-    [showPauseButton, type],
+    [type],
   );
 
   useOptionalInput(
@@ -68,13 +64,13 @@ export default function VolumeControl({
   );
 
   return (
-    <div className={volumeControllerStyle}>
+    <div className={volumeControllerStyle} key={renderKey}>
       {showPauseButton && (
         <Icon
           button
           className={iconStyle}
           icon={
-            volume <= 0.01 || isPaused
+            volume <= 0.01 || AudioPlayer.isPaused()
               ? VolumeXIcon
               : volume <= 0.33
                 ? Volume1Icon
@@ -84,7 +80,7 @@ export default function VolumeControl({
           }
           onClick={() => {
             AudioPlayer.togglePause();
-            setIsPaused(AudioPlayer.isPaused());
+            setRenderKey((key) => key + 1);
           }}
         />
       )}
