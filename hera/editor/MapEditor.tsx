@@ -6,6 +6,7 @@ import {
   encodeEffects,
   Scenario,
 } from '@deities/apollo/Effects.tsx';
+import resizeEffects from '@deities/apollo/lib/resizeEffects.tsx';
 import resizeMap, { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import { Route } from '@deities/apollo/Routes.tsx';
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
@@ -791,13 +792,13 @@ export default function MapEditor({
     (size: SizeVector, origin: Set<ResizeOrigin>) => {
       const map = stateRef.current?.map;
       if (map && !size.equals(map.size)) {
-        const [newMap, newEffects] = resizeMap(
-          map,
+        const newEffects = resizeEffects(
           editor.effects,
+          map.size,
           size,
           origin,
-          editor?.selected?.tile,
         );
+        const newMap = resizeMap(map, size, origin, editor?.selected?.tile);
         setMap('resize', newMap);
         setEditorState({
           action: undefined,

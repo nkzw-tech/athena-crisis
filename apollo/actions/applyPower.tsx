@@ -17,12 +17,17 @@ import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
-import { Charge, HealAmount } from '@deities/athena/map/Configuration.tsx';
+import {
+  Charge,
+  HealAmount,
+  MinSize,
+} from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit, { UnitConversion } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
+import resizeMap from '../lib/resizeMap.tsx';
 
 const conversions = new Map<Skill, Readonly<UnitConversion>>([
   [Skill.SpawnUnitInfernoJetpack, { from: Flamethrower, to: InfernoJetpack }],
@@ -132,6 +137,24 @@ export function onPowerUnitDamageEffect(
 export default function applyPower(skill: Skill, map: MapData) {
   const healTypes = getHealUnitTypes(skill);
   let player = map.getCurrentPlayer();
+
+  if (skill === Skill.HighTide) {
+    map = resizeMap(
+      resizeMap(
+        map,
+        new SizeVector(
+          Math.max(MinSize, map.size.width - 1),
+          Math.max(MinSize, map.size.height - 1),
+        ),
+        new Set(['left', 'top']),
+      ),
+      new SizeVector(
+        Math.max(MinSize, map.size.width - 2),
+        Math.max(MinSize, map.size.height - 2),
+      ),
+      new Set(),
+    );
+  }
 
   if (skill === Skill.Charge) {
     player = player.setCharge(player.charge + ChargeSkillCharges * Charge);

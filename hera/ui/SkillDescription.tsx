@@ -918,6 +918,14 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           unit.
         </fbt>
       );
+    case Skill.HighTide:
+      return (
+        <fbt desc="Additional skill description.">
+          Raises the water level, causing the battlefield to shrink inward by
+          one tile on each side. Eliminates any units or structures located at
+          the edges.
+        </fbt>
+      );
   }
 
   return null;

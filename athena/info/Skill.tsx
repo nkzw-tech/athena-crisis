@@ -54,6 +54,7 @@ export enum Skill {
   Shield = 38,
   Charge = 39,
   DragonSaboteur = 40,
+  HighTide = 41,
 }
 
 export const Skills = new Set<Skill>([
@@ -92,6 +93,7 @@ export const Skills = new Set<Skill>([
   Skill.RecoverAirUnits,
   Skill.Shield,
   Skill.Charge,
+  Skill.HighTide,
   Skill.SpawnUnitInfernoJetpack,
   Skill.AttackAndDefenseDecreaseEasy,
   Skill.AttackAndDefenseIncreaseHard,
@@ -281,6 +283,13 @@ const skillConfig: Record<
     charges: 3,
     cost: 1000,
     group: SkillGroup.Special,
+  },
+  [Skill.HighTide]: {
+    activateOnInvasion,
+    charges: 1,
+    cost: 200,
+    group: SkillGroup.Invasion,
+    requiresCrystal,
   },
 };
 
@@ -1363,6 +1372,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
     case Skill.VampireHeal:
+    case Skill.HighTide:
       return false;
     default: {
       skill satisfies never;

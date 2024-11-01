@@ -14,8 +14,13 @@ import {
 import { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
+import {
+  FastAnimationConfig,
+  HealAmount,
+  MaxHealth,
+} from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
+import vec from '@deities/athena/map/vec.tsx';
 import Vector, {
   sortByVectorKey,
   sortVectors,
@@ -27,6 +32,7 @@ import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import damageUnits from '../../lib/damageUnits.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
+import sleep from '../../lib/sleep.tsx';
 import spawn from '../../lib/spawn.tsx';
 import upgradeUnits from '../../lib/upgradeUnits.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
@@ -56,7 +62,7 @@ export default async function activatePowerAction(
   state: State,
   actionResponse: ActivatePowerActionResponse,
 ): Promise<State> {
-  const { requestFrame, update } = actions;
+  const { requestFrame, scheduleTimer, scrollIntoView, update } = actions;
   const { skill, units: unitsToSpawn } = actionResponse;
   const { colors, name } = getSkillConfigForDisplay(skill);
   const player = state.map.getCurrentPlayer();
@@ -175,9 +181,28 @@ export default async function activatePowerAction(
               return fn(state);
             }
 
-            requestFrame(() =>
-              resolve({ ...state, map: finalMap, ...resetBehavior() }),
-            );
+            requestFrame(async () => {
+              if (skill === Skill.HighTide) {
+                await scrollIntoView([
+                  vec(
+                    Math.floor(state.map.size.width / 2),
+                    Math.floor(state.map.size.height / 2),
+                  ),
+                ]);
+                await update({
+                  animations: state.animations.set(new AnimationKey(), {
+                    type: 'shake',
+                  }),
+                });
+                await sleep(scheduleTimer, FastAnimationConfig, 'long');
+                await update({
+                  animations: state.animations.set(new AnimationKey(), {
+                    type: 'shake',
+                  }),
+                });
+              }
+              resolve({ ...state, map: finalMap, ...resetBehavior() });
+            });
             return null;
           };
 

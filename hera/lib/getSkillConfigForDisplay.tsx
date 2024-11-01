@@ -15,6 +15,7 @@ import Paw from '@deities/ui/icons/Paw.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
+import Tide from '@deities/ui/icons/Tide.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import Tree from '@deities/ui/icons/Tree.tsx';
 import Zombie from '@deities/ui/icons/Zombie.tsx';
@@ -361,9 +362,17 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
       return {
         alpha: 0.1,
         borderStyle: 'up2x',
-        colors: 'purple',
+        colors: ['purple', 'blue'],
         icon: Glasses,
         name: fbt('Sneaky Dragon', 'Skill name'),
+      };
+    case Skill.HighTide:
+      return {
+        alpha: 0.3,
+        borderStyle: 'down',
+        colors: ['blue', 'purple'],
+        icon: Tide,
+        name: fbt('High Tide', 'Skill name'),
       };
     default: {
       skill satisfies never;

@@ -112,9 +112,8 @@ test('displays all units and all possible states correctly', async () => {
 
   const finalMap = map.copy({ map: newMap });
 
-  const [mapA] = resizeMap(
+  const mapA = resizeMap(
     finalMap,
-    new Map(),
     new SizeVector(size.width, Math.ceil(size.height / 2)),
     new Set(['bottom']),
   );
@@ -125,9 +124,8 @@ test('displays all units and all possible states correctly', async () => {
   printGameState('Units Part 1', screenshotA);
   expect(screenshotA).toMatchImageSnapshot();
 
-  const [mapB] = resizeMap(
+  const mapB = resizeMap(
     finalMap,
-    new Map(),
     new SizeVector(size.width, Math.floor(size.height / 2)),
     new Set(['top']),
   );

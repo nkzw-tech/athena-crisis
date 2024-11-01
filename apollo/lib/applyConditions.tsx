@@ -1,10 +1,13 @@
-import MapData from '@deities/athena/MapData.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
+import { MinSize } from '@deities/athena/map/Configuration.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
 import { applyEffects, Effects } from '../Effects.tsx';
 import { applyObjectives } from '../Objective.tsx';
 import { GameState, GameStateWithEffects } from '../Types.tsx';
 import getLosingPlayer from './getLosingPlayer.tsx';
+import resizeEffects from './resizeEffects.tsx';
 
 export default function applyConditions(
   currentMap: MapData,
@@ -22,7 +25,31 @@ export default function applyConditions(
 
   while (queue.length) {
     const previousMap = currentMap;
-    const [actionResponse, currentEffects, _addToGameState] = queue.shift()!;
+    const [actionResponse, _currentEffects, _addToGameState] = queue.shift()!;
+    let currentEffects = _currentEffects;
+    if (
+      actionResponse.type === 'ActivatePower' &&
+      actionResponse.skill === Skill.HighTide
+    ) {
+      effects = currentEffects = resizeEffects(
+        resizeEffects(
+          effects,
+          currentMap.size,
+          new SizeVector(
+            Math.max(MinSize, currentMap.size.width - 1),
+            Math.max(MinSize, currentMap.size.height - 1),
+          ),
+          new Set(['left', 'top']),
+        ),
+        currentMap.size,
+        new SizeVector(
+          Math.max(MinSize, currentMap.size.width - 2),
+          Math.max(MinSize, currentMap.size.height - 2),
+        ),
+        new Set(),
+      );
+    }
+
     const activeMap = applyActionResponse(
       previousMap,
       previousMap.createVisionObject(previousMap.currentPlayer),

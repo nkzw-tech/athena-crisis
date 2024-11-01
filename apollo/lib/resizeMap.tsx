@@ -13,11 +13,10 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Effects } from '../Effects.tsx';
 
 export type ResizeOrigin = 'top' | 'right' | 'bottom' | 'left';
 
-const updateEntities = <T extends Entity>(
+export const resizeEntities = <T extends Entity>(
   entities: ImmutableMap<Vector, T>,
   size: SizeVector,
   offsetX: number,
@@ -27,12 +26,11 @@ const updateEntities = <T extends Entity>(
     .mapKeys((vector) =>
       new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY),
     )
-    .filter((_: unknown, vector: Vector): boolean => size.contains(vector))
+    .filter((_: unknown, vector: Vector) => size.contains(vector))
     .mapKeys((vector) => vec(vector.x, vector.y));
 
 export default function resizeMap(
   map: MapData,
-  effects: Effects,
   size: SizeVector,
   origin: Set<ResizeOrigin>,
   fill?: number,
@@ -63,14 +61,7 @@ export default function resizeMap(
           Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
         ),
       )
-        ? [
-            ...decorators,
-            [subVector.x, subVector.y, decorator.id] as [
-              number,
-              number,
-              number,
-            ],
-          ]
+        ? [...decorators, [subVector.x, subVector.y, decorator.id] as const]
         : decorators;
     },
     [] as PlainEntitiesList<Decorator>,
@@ -92,36 +83,16 @@ export default function resizeMap(
       : objective,
   );
 
-  return [
-    verifyMap(
-      withModifiers(
-        map.copy({
-          buildings: updateEntities(map.buildings, size, offsetX, offsetY),
-          config: map.config.copy({ objectives }),
-          decorators: decodeDecorators(size, decorators),
-          map: tiles,
-          size,
-          units: updateEntities(map.units, size, offsetX, offsetY),
-        }),
-      ),
+  return verifyMap(
+    withModifiers(
+      map.copy({
+        buildings: resizeEntities(map.buildings, size, offsetX, offsetY),
+        config: map.config.copy({ objectives }),
+        decorators: decodeDecorators(size, decorators),
+        map: tiles,
+        size,
+        units: resizeEntities(map.units, size, offsetX, offsetY),
+      }),
     ),
-    new Map(
-      [...effects].map(([trigger, effectList]) => [
-        trigger,
-        new Set(
-          [...effectList].map((effect) => ({
-            ...effect,
-            actions: [...effect.actions].map((action) =>
-              action.type === 'SpawnEffect'
-                ? ({
-                    ...action,
-                    units: updateEntities(action.units, size, offsetX, offsetY),
-                  } as const)
-                : action,
-            ),
-          })),
-        ),
-      ]),
-    ),
-  ] as const;
+  );
 }
