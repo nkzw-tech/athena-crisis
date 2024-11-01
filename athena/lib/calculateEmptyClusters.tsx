@@ -9,7 +9,7 @@ export default function calculateEmptyClusters(map: MapData) {
     [
       ...map.units.keys(),
       ...map.buildings.filter((building) => building.info.isHQ()).keys(),
-    ].flatMap((vector) => vector.expandWithDiagonals()),
+    ].flatMap((vector) => vector.expandStar()),
   );
   return calculateClusters(
     map.size,

@@ -53,7 +53,6 @@ export default function Notice(
           },
           opacity: {
             duration: 0.15,
-            ease: 'ease',
           },
         }}
       >

@@ -45,7 +45,10 @@ import {
 } from '../behavior/attack/hiddenAttackActions.tsx';
 import buySkillAction from '../behavior/buySkill/buySkillAction.tsx';
 import captureAction from '../behavior/capture/captureAction.tsx';
-import { addCreateBuildingAnimation } from '../behavior/createBuilding/createBuildingAction.tsx';
+import {
+  addCreateBuildingAnimation,
+  animateCreateBuilding,
+} from '../behavior/createBuilding/createBuildingAction.tsx';
 import createTracksAction from '../behavior/createTracks/createTracksAction.tsx';
 import createUnitAction from '../behavior/createUnit/createUnitAction.tsx';
 import dropUnitAction from '../behavior/drop/dropUnitAction.tsx';
@@ -393,20 +396,31 @@ async function processActionResponse(
       break;
     }
     case 'Spawn': {
+      const { buildings, teams, units } = actionResponse;
       await update((state) =>
         spawn(
           actions,
           state,
-          actionResponse.units.toArray(),
-          actionResponse.teams,
-          actionResponse.units.size >= 5 ? 'fast' : 'slow',
+          units.toArray(),
+          teams,
+          units.size >= 5 ? 'fast' : 'slow',
           (state) => {
-            requestFrame(() =>
+            requestFrame(async () => {
+              if (buildings) {
+                for (const [from, building] of buildings) {
+                  state = await animateCreateBuilding(actions, state, {
+                    building,
+                    free: true,
+                    from,
+                    type: 'CreateBuilding',
+                  });
+                }
+              }
               resolve({
                 ...state,
                 map: newMap,
-              }),
-            );
+              });
+            });
             return null;
           },
         ),

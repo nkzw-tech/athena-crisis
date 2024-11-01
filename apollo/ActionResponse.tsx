@@ -80,6 +80,7 @@ export type DropUnitActionResponse = Readonly<{
 
 export type CreateBuildingActionResponse = Readonly<{
   building: Building;
+  free?: boolean;
   from: Vector;
   type: 'CreateBuilding';
 }>;
@@ -141,6 +142,7 @@ export type ToggleLightningActionResponse = Readonly<{
 }>;
 
 export type SpawnActionResponse = Readonly<{
+  buildings?: ImmutableMap<Vector, Building>;
   teams?: Teams;
   type: 'Spawn';
   units: ImmutableMap<Vector, Unit>;

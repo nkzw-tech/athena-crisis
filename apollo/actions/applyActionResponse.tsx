@@ -6,6 +6,7 @@ import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import maybeConvertPlayer from '@deities/athena/lib/maybeConvertPlayer.tsx';
 import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
+import spawnBuildings from '@deities/athena/lib/spawnBuildings.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
@@ -353,14 +354,14 @@ export default function applyActionResponse(
       });
     }
     case 'CreateBuilding': {
-      const { building, from } = actionResponse;
+      const { building, free, from } = actionResponse;
       const player = map.getPlayer(building);
       const teams = map.isNeutral(building)
         ? map.teams
         : updatePlayer(
             map.teams,
             player
-              .modifyFunds(-building.info.getCostFor(player))
+              .modifyFunds(free ? 0 : -building.info.getCostFor(player))
               .modifyStatistic('createdBuildings', 1),
           );
       return map.copy({
@@ -493,10 +494,13 @@ export default function applyActionResponse(
       });
     }
     case 'Spawn': {
-      const { teams, units } = actionResponse;
-      const newMap = mergeTeams(map, teams).copy({
-        units: map.units.merge(units),
-      });
+      const { buildings, teams, units } = actionResponse;
+      const newMap = spawnBuildings(
+        mergeTeams(map, teams).copy({
+          units: map.units.merge(units),
+        }),
+        buildings,
+      );
       return newMap.copy({
         active: getActivePlayers(newMap, map.active),
       });

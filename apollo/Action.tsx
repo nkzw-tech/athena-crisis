@@ -18,6 +18,7 @@ import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import canLoad from '@deities/athena/lib/canLoad.tsx';
 import canPlaceLightning from '@deities/athena/lib/canPlaceLightning.tsx';
 import canPlaceRailTrack from '@deities/athena/lib/canPlaceRailTrack.tsx';
+import couldSpawnBuilding from '@deities/athena/lib/couldSpawnBuilding.tsx';
 import followMovementPath from '@deities/athena/lib/followMovementPath.tsx';
 import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
 import getChargeValue from '@deities/athena/lib/getChargeValue.tsx';
@@ -174,6 +175,7 @@ type SabotageAction = Readonly<{
 }>;
 
 export type SpawnEffectAction = Readonly<{
+  buildings?: ImmutableMap<Vector, Building>;
   player?: DynamicPlayerID;
   teams?: Teams;
   type: 'SpawnEffect';
@@ -857,10 +859,11 @@ function sabotage(map: MapData, { from, to }: SabotageAction) {
 
 function spawnEffect(
   map: MapData,
-  { player: dynamicPlayer, teams, units }: SpawnEffectAction,
+  { buildings, player: dynamicPlayer, teams, units }: SpawnEffectAction,
 ) {
   const player =
     dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
+  let newBuildings = ImmutableMap<Vector, Building>();
   let newUnits = ImmutableMap<Vector, Unit>();
 
   for (const [vector, unit] of units) {
@@ -885,9 +888,18 @@ function spawnEffect(
     }
   }
 
+  if (buildings) {
+    for (const [vector, building] of buildings) {
+      if (couldSpawnBuilding(map, vector, building.info, building.player)) {
+        newBuildings = newBuildings.set(vector, building);
+      }
+    }
+  }
+
   teams = maybeCreatePlayers(map, teams, newUnits);
-  return newUnits.size || teams
+  return newUnits.size || newBuildings.size || teams
     ? ({
+        buildings: newBuildings,
         teams,
         type: 'Spawn',
         units: assignDeterministicUnitNames(map, newUnits),

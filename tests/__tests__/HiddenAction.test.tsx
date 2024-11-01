@@ -149,18 +149,18 @@ test('create building and create unit actions', async () => {
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: null, supply: null, miss: null }
-    CreateBuilding (5,4) { building: House { id: 2, health: 100, player: 2, completed: true } }
+    CreateBuilding (5,4) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CompleteUnit (1,1)
-    CreateBuilding (4,5) { building: House { id: 2, health: 100, player: 2, completed: true } }
+    CreateBuilding (4,5) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CreateUnit (5,5 → 5,5) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 200, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      CreateBuilding (5,4) { building: House { id: 2, health: 100, player: 0 } }
+      CreateBuilding (5,4) { building: House { id: 2, health: 100, player: 0 }, free: false }
       CompleteUnit (1,1)
-      CreateBuilding (4,5) { building: House { id: 2, health: 100, player: 0 } }
+      CreateBuilding (4,5) { building: House { id: 2, health: 100, player: 0 }, free: false }
       EndTurn { current: { funds: 200, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
 

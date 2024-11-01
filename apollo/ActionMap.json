@@ -48,7 +48,7 @@
     [5, ["type", "from", "id", "to", "unit", "free", "skipBehaviorRotation"]]
   ],
   ["DropUnit", [6, ["type", "from", "index", "to"]]],
-  ["CreateBuilding", [7, ["type", "from", "id", "building"]]],
+  ["CreateBuilding", [7, ["type", "from", "id", "building", "free"]]],
   ["Fold", [8, ["type", "from"]]],
   ["Unfold", [9, ["type", "from"]]],
   ["CompleteUnit", [10, ["type", "from"]]],
@@ -152,7 +152,7 @@
   ["HiddenFundAdjustment", [23, ["type", "funds"]]],
   ["ToggleLightning", [24, ["type", "from", "to", "player"]]],
   ["CompleteBuilding", [25, ["type", "from"]]],
-  ["Spawn", [26, ["type", "units", "teams"]]],
+  ["Spawn", [26, ["type", "units", "teams", "buildings"]]],
   ["Heal", [27, ["type", "from", "to"]]],
   ["MoveUnit", [28, ["type", "from"]]],
   ["Sabotage", [29, ["type", "from", "to"]]],
@@ -161,7 +161,7 @@
     [30, ["type", "message", "player", "unitId", "variant"]]
   ],
   ["CreateTracks", [31, ["type", "from"]]],
-  ["SpawnEffect", [32, ["type", "units", "player", "teams"]]],
+  ["SpawnEffect", [32, ["type", "units", "player", "teams", "buildings"]]],
   [
     "CharacterMessageEffect",
     [33, ["type", "message", "player", "unitId", "variant"]]

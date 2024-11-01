@@ -151,7 +151,7 @@ test('creating buildings', () => {
   expect(
     formatActionResponse(responseA, { colors: false }),
   ).toMatchInlineSnapshot(
-    `"CreateBuilding (1,1) { building: Factory { id: 3, health: 100, player: 1, completed: true } }"`,
+    `"CreateBuilding (1,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
   expect(execute(map, vision, CreateBuildingAction(vecA, House.id))).toBe(null);
@@ -167,7 +167,7 @@ test('creating buildings', () => {
   expect(
     formatActionResponse(responseB, { colors: false }),
   ).toMatchInlineSnapshot(
-    `"CreateBuilding (1,1) { building: House { id: 2, health: 100, player: 1, completed: true } }"`,
+    `"CreateBuilding (1,1) { building: House { id: 2, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
   expect(
@@ -205,7 +205,7 @@ test('Radar Stations are only available if Lightning can be placed', () => {
   expect(
     formatActionResponse(responseC, { colors: false }),
   ).toMatchInlineSnapshot(
-    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
   expect(
@@ -226,7 +226,7 @@ test('Radar Stations are only available if Lightning can be placed', () => {
   expect(
     formatActionResponse(responseD, { colors: false }),
   ).toMatchInlineSnapshot(
-    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
   const [responseE] = execute(
@@ -240,6 +240,6 @@ test('Radar Stations are only available if Lightning can be placed', () => {
   expect(
     formatActionResponse(responseE, { colors: false }),
   ).toMatchInlineSnapshot(
-    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true } }"`,
+    `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 });

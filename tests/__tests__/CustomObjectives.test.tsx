@@ -313,7 +313,7 @@ test('capture amount win criteria also works when creating buildings', async () 
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
-      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true } }
+      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: false }
       GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
 
@@ -334,7 +334,7 @@ test('capture amount win criteria also works when creating buildings', async () 
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
-      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true } }
+      CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: false }
       OptionalObjective { objective: { amount: 3, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
@@ -3312,7 +3312,7 @@ test('multiple optional objectives have their effects applied correctly', async 
     .toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
-      Spawn { units: [1,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Uli' }], teams: null }
+      Spawn { units: [1,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Uli' }], teams: null, buildings: [] }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, objectiveId: 2, toPlayer: 1 }"
     `);
 

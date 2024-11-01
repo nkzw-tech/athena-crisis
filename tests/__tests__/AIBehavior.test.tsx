@@ -367,7 +367,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', async (
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
     "AttackUnit (2,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 14, ammo: [ [ 1, 7 ] ] }, chargeA: 106, chargeB: 322 }
     Move (2,3 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
-    CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true } }
+    CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CreateUnit (1,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true, behavior: 1 }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 50, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -820,7 +820,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
-    CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true } }
+    CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CompleteUnit (2,2)
     EndTurn { current: { funds: 100, player: 2 }, next: { funds: 200, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
