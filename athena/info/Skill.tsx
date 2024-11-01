@@ -66,7 +66,6 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitSuperTank,
   Skill.BuyUnitAcidBomber,
   Skill.BuyUnitBazookaBear,
-  Skill.BuyUnitZombieDefenseDecreaseMajor,
   Skill.BuyUnitOctopus,
   Skill.BuyUnitAlien,
   Skill.BuyUnitDinosaur,
@@ -97,6 +96,7 @@ export const Skills = new Set<Skill>([
   Skill.AttackAndDefenseDecreaseEasy,
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
+  Skill.BuyUnitZombieDefenseDecreaseMajor,
 ]);
 
 export enum SkillGroup {
@@ -107,6 +107,9 @@ export enum SkillGroup {
   Invasion = 5,
   AI = 6,
 }
+
+const activateOnInvasion = true;
+const requiresCrystal = true;
 
 const skillConfig: Record<
   Skill,
@@ -125,6 +128,7 @@ const skillConfig: Record<
     group: SkillGroup.Attack,
   },
   [Skill.DefenseIncreaseMinor]: {
+    activateOnInvasion,
     charges: 2,
     cost: 300,
     group: SkillGroup.Defense,
@@ -160,7 +164,7 @@ const skillConfig: Record<
   [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000, group: SkillGroup.Unlock },
   [Skill.BuyUnitZombieDefenseDecreaseMajor]: {
     cost: 1500,
-    group: SkillGroup.Unlock,
+    group: SkillGroup.AI,
   },
   [Skill.BuyUnitBazookaBear]: {
     charges: 6,
@@ -188,6 +192,7 @@ const skillConfig: Record<
   },
   [Skill.NoUnitRestrictions]: { cost: null, group: SkillGroup.AI },
   [Skill.CounterAttackPower]: {
+    activateOnInvasion,
     charges: 3,
     cost: 1500,
     group: SkillGroup.Special,
@@ -208,6 +213,7 @@ const skillConfig: Record<
   },
   [Skill.BuyUnitAIU]: { cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitCommander]: {
+    activateOnInvasion,
     charges: 4,
     cost: 1500,
     group: SkillGroup.Unlock,
@@ -217,7 +223,12 @@ const skillConfig: Record<
     cost: 3000,
     group: SkillGroup.Special,
   },
-  [Skill.BuyUnitAlien]: { charges: 4, cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitAlien]: {
+    activateOnInvasion,
+    charges: 4,
+    cost: 1500,
+    group: SkillGroup.Unlock,
+  },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitSuperTank]: {
     charges: 4,
@@ -232,14 +243,15 @@ const skillConfig: Record<
   [Skill.BuyUnitDinosaur]: { cost: 1500, group: SkillGroup.Unlock },
   [Skill.Sabotage]: { charges: 5, cost: 1500, group: SkillGroup.Attack },
   [Skill.SpawnUnitInfernoJetpack]: {
-    activateOnInvasion: true,
+    activateOnInvasion,
     charges: 5,
     cost: null,
     group: SkillGroup.Invasion,
-    requiresCrystal: true,
+    requiresCrystal,
   },
   [Skill.UnlockZombie]: { charges: 10, cost: 1500, group: SkillGroup.Special },
   [Skill.UnlockPowerStation]: {
+    activateOnInvasion,
     charges: 4,
     cost: 600,
     group: SkillGroup.Unlock,
@@ -249,20 +261,20 @@ const skillConfig: Record<
   [Skill.BuyUnitBear]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
   [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
   [Skill.Shield]: {
-    activateOnInvasion: true,
+    activateOnInvasion,
     charges: 8,
     cost: 1500,
     group: SkillGroup.Invasion,
   },
   [Skill.Charge]: {
-    activateOnInvasion: true,
+    activateOnInvasion,
     charges: 6,
     cost: 1500,
     group: SkillGroup.Invasion,
-    requiresCrystal: true,
+    requiresCrystal,
   },
   [Skill.DragonSaboteur]: {
-    activateOnInvasion: true,
+    activateOnInvasion,
     charges: 3,
     cost: 1000,
     group: SkillGroup.Special,
