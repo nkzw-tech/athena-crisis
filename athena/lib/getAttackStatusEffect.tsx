@@ -43,12 +43,13 @@ export default function getAttackStatusEffect(
       ? CrystalAttackEffect
       : 0;
 
-  return (
+  return Math.max(
+    0,
     1 +
-    crystalEffect +
-    buildingEffect +
-    unitEffect +
-    (unit.isLeader() ? LeaderStatusEffect : 0) +
-    getSkillAttackStatusEffects(unit, tile, player)
+      crystalEffect +
+      buildingEffect +
+      unitEffect +
+      (unit.isLeader() ? LeaderStatusEffect : 0) +
+      getSkillAttackStatusEffects(unit, tile, player),
   );
 }

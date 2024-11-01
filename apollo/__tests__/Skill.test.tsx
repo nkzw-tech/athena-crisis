@@ -10,9 +10,11 @@ import {
   Saboteur,
   SmallTank,
   Sniper,
+  SuperTank,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import { generateUnitName } from '@deities/athena/info/UnitNames.tsx';
+import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
@@ -681,4 +683,22 @@ test('the Charge skill increases charge accumulation', async () => {
   expect(state2.getPlayer(1).charge).toBeGreaterThan(
     state1.getPlayer(1).charge,
   );
+});
+
+test('defense cannot go negative', async () => {
+  const skills = new Set([
+    Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
+    Skill.BuyUnitZombieDefenseDecreaseMajor,
+    Skill.UnlockZombie,
+  ]);
+  const mapA = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
+    units: map.units
+      .set(fromA, SuperTank.create(1))
+      .set(toA, SmallTank.create(2)),
+  });
+
+  expect(
+    getDefenseStatusEffect(mapA, mapA.units.get(fromA)!, null),
+  ).toBeGreaterThanOrEqual(0);
 });

@@ -10,14 +10,15 @@ export default function getDefenseStatusEffect(
   tile: TileInfo | null,
 ) {
   const player = map.getPlayer(entity);
-  return (
+  return Math.max(
+    0,
     1 +
-    (isUnit(entity) && entity.isLeader() ? LeaderStatusEffect : 0) +
-    getSkillDefenseStatusEffects(
-      entity,
-      tile,
-      player.skills,
-      player.activeSkills,
-    )
+      (isUnit(entity) && entity.isLeader() ? LeaderStatusEffect : 0) +
+      getSkillDefenseStatusEffects(
+        entity,
+        tile,
+        player.skills,
+        player.activeSkills,
+      ),
   );
 }
