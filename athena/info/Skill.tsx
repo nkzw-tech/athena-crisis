@@ -110,6 +110,7 @@ export enum SkillGroup {
 
 const activateOnInvasion = true;
 const requiresCrystal = true;
+const ignoreCommandCrystal = true;
 
 const skillConfig: Record<
   Skill,
@@ -119,6 +120,7 @@ const skillConfig: Record<
     charges?: number;
     cost: number | null;
     group: SkillGroup;
+    ignoreCommandCrystal?: true;
     requiresCrystal?: true;
   }>
 > = {
@@ -265,6 +267,7 @@ const skillConfig: Record<
     charges: 8,
     cost: 1500,
     group: SkillGroup.Invasion,
+    ignoreCommandCrystal,
   },
   [Skill.Charge]: {
     activateOnInvasion,

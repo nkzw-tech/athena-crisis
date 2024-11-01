@@ -1,4 +1,3 @@
-import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import {
   PlayerIDs,
   PlayerIDSet,
@@ -27,6 +26,7 @@ import {
   EncodedActions,
   EncodedConditions,
 } from './EncodedActions.tsx';
+import shouldActivateCrystalPower from './invasions/shouldActivateCrystalPower.tsx';
 import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 import { GameStateWithEffects } from './Types.tsx';
@@ -99,8 +99,7 @@ const handleDefaultEffects = (
   ) {
     const currentPlayer = activeMap.getCurrentPlayer();
     for (const skill of currentPlayer.skills) {
-      const { activateOnInvasion } = getSkillConfig(skill);
-      if (activateOnInvasion) {
+      if (shouldActivateCrystalPower(currentPlayer, skill)) {
         const activatePowerActionResponse = getActivatePowerActionResponse(
           activeMap,
           currentPlayer.id,

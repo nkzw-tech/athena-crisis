@@ -53,6 +53,7 @@ import {
   UnitInfo,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
@@ -78,6 +79,7 @@ import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
+import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
 import UnitTile from '../Unit.tsx';
 
@@ -965,8 +967,13 @@ export default memo(function SkillDescription({
 }) {
   const isRegular = type === 'regular';
   const isPower = !isRegular;
-  const { activateOnInvasion, campaignOnly, charges, requiresCrystal } =
-    getSkillConfig(skill);
+  const {
+    activateOnInvasion,
+    campaignOnly,
+    charges,
+    ignoreCommandCrystal,
+    requiresCrystal,
+  } = getSkillConfig(skill);
   if ((charges == null || charges === 0) && isPower) {
     return null;
   }
@@ -1077,9 +1084,19 @@ export default memo(function SkillDescription({
             Crystal:
           </fbt>
         </span>{' '}
-        <fbt desc="Description for skill behavior">
-          This power activates when you consume a crystal.
-        </fbt>
+        {ignoreCommandCrystal ? (
+          <fbt desc="Description for skill behavior">
+            Consume any crystal except a{' '}
+            <fbt:param name="crystalName">
+              {getTranslatedCrystalName(Crystal.Command)}
+            </fbt:param>{' '}
+            to activate this power.
+          </fbt>
+        ) : (
+          <fbt desc="Description for skill behavior">
+            Consume a crystal to activate this power.
+          </fbt>
+        )}
       </div>
     ) : null,
     isPower && requiresCrystal ? (
