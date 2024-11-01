@@ -27,10 +27,10 @@ export default function getUnitsToHeal(
       map.matchesPlayer(building, unit) &&
       building.info.canHeal(unit.info)
     ) {
-      amount = HealAmount;
+      amount += HealAmount;
     }
     if (hasVampireSkill) {
-      amount = VampireSkillHeal;
+      amount += VampireSkillHeal;
     }
 
     if (amount > 0) {
