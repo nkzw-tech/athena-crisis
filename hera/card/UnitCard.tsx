@@ -339,6 +339,26 @@ export default memo(function UnitCard({
           unit={unit}
           vector={vector}
         />
+        {!process.env.IS_DEMO && (
+          <p className={lightColorStyle}>
+            <fbt desc="Explanation for damage information">
+              Note: Cover, status effects and unit defense affect the inflicted
+              damage. See the{' '}
+              <fbt:param name="link">
+                {App.canQuit ? (
+                  <InlineLink to={damageChartRoute}>
+                    <fbt desc="Damage chart link name">Damage Chart</fbt>
+                  </InlineLink>
+                ) : (
+                  <InlineLink href={damageChartRoute} target="blank">
+                    <fbt desc="Damage chart link name">Damage Chart</fbt>
+                  </InlineLink>
+                )}
+              </fbt:param>{' '}
+              for more information.
+            </fbt>
+          </p>
+        )}
         <UnitMovement
           biome={biome}
           movementType={info.movementType}
@@ -515,26 +535,6 @@ const Weapon = memo(function WeaponAttack({
             ) : null;
           })}
         </Stack>
-        {!process.env.IS_DEMO && (
-          <p className={lightColorStyle}>
-            <fbt desc="Explanation for damage information">
-              Note: Cover, status effects and unit defense affect the inflicted
-              damage. See the{' '}
-              <fbt:param name="link">
-                {App.canQuit ? (
-                  <InlineLink to={damageChartRoute}>
-                    <fbt desc="Damage chart link name">Damage Chart</fbt>
-                  </InlineLink>
-                ) : (
-                  <InlineLink href={damageChartRoute} target="blank">
-                    <fbt desc="Damage chart link name">Damage Chart</fbt>
-                  </InlineLink>
-                )}
-              </fbt:param>{' '}
-              for more information.
-            </fbt>
-          </p>
-        )}
       </Stack>
     </Tick>
   );
