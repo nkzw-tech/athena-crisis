@@ -923,26 +923,26 @@ export function getHiddenLabels(objectives: Objectives): PlayerIDSet | null {
     return null;
   }
 
-  let labels: Set<PlayerID> | null = null;
+  const labels: Array<PlayerID> = [];
+  const visibleLabels = new Set<PlayerID>();
   for (const [, objective] of objectives) {
-    if (
-      objective.hidden &&
-      objectiveHasLabel(objective) &&
-      objective.label &&
-      (!objective.optional ||
-        !objective.completed ||
-        objective.completed.size < 1)
-    ) {
+    if (objectiveHasLabel(objective) && objective.label) {
       for (const label of objective.label) {
-        if (!labels) {
-          labels = new Set();
+        if (
+          objective.hidden &&
+          (!objective.optional ||
+            !objective.completed ||
+            objective.completed.size < 1)
+        ) {
+          labels.push(label);
+        } else {
+          visibleLabels.add(label);
         }
-
-        labels.add(label);
       }
     }
   }
-  return labels;
+  const hiddenLabels = labels.filter((label) => !visibleLabels.has(label));
+  return hiddenLabels.length ? new Set(hiddenLabels) : null;
 }
 
 export function getInitialObjective(

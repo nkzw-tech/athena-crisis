@@ -82,7 +82,7 @@ test('carries labels forward when creating buildings or units', async () => {
   );
 });
 
-test('carries labels forward when transporting units', async () => {
+test('does not lose labels when transporting units', async () => {
   const from = vec(1, 1);
   const toA = vec(2, 1);
   const initialMap = map.copy({
@@ -166,4 +166,36 @@ test('drops labels from hidden objectives', () => {
   expect(jeep.transports![0].deploy().label).toBeNull();
 
   expect(mapA.units.get(vecC)!.label).toBe(2);
+});
+
+test('does not drops labels from hidden objectives if they are also part of a visible objective', () => {
+  const vecA = vec(1, 1);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(vecA, Barracks.create(1, { label: 3 })),
+    config: map.config.copy({
+      objectives: ImmutableMap([
+        [
+          0,
+          {
+            hidden: false,
+            label: new Set([3]),
+            optional: false,
+            type: Criteria.CaptureLabel,
+          } as const,
+        ],
+        [
+          1,
+          {
+            hidden: true,
+            label: new Set([3]),
+            optional: false,
+            type: Criteria.CaptureLabel,
+          } as const,
+        ],
+      ]),
+    }),
+  });
+
+  const mapA = dropLabels(initialMap);
+  expect(mapA.buildings.get(vecA)!.label).toBe(3);
 });

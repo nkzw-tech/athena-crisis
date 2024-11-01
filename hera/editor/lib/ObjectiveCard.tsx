@@ -267,9 +267,9 @@ export default function ObjectiveCard({
               </Stack>
             </label>
           )}
-          <Stack alignCenter className={lineHeightStyle} gap>
-            <label>
-              <Stack gap start>
+          <Stack className={lineHeightStyle} gap={16} nowrap>
+            <label className={labelStyle}>
+              <Stack gap nowrap start>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for secret objective checkbox">Secret</fbt>
                 </span>
@@ -285,20 +285,20 @@ export default function ObjectiveCard({
                 />
               </Stack>
             </label>
-            {objective.hidden && hasLabel && (
+            {objective.hidden && hasLabel && objective.label?.size ? (
               <p className={lightStyle}>
                 <fbt desc="Description for secret objective labels">
-                  Labels associated with this objective will be hidden from all
-                  players.
+                  Labels for this objective are hidden from players unless they
+                  are used by a non-secret objective.
                 </fbt>
               </p>
-            )}
+            ) : null}
           </Stack>
           {!isDefaultObjective && (
             <>
-              <Stack alignCenter className={lineHeightStyle} gap>
-                <label>
-                  <Stack gap start>
+              <Stack className={lineHeightStyle} gap={16} nowrap>
+                <label className={labelStyle}>
+                  <Stack gap nowrap start>
                     <span className={labelWidthStyle}>
                       <fbt desc="Label for optional objective checkbox">
                         Optional
@@ -694,4 +694,8 @@ const lineHeightStyle = css`
 
 const crystalScaleStyle = css`
   transform: scale(0.66);
+`;
+
+const labelStyle = css`
+  height: fit-content;
 `;
