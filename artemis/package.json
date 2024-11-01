@@ -30,7 +30,7 @@
     "@pothos/plugin-relay": "^4.3.0",
     "@prisma/client": "^5.21.1",
     "@quixo3/prisma-session-store": "^3.1.13",
-    "@sentry/node": "^8.35.0",
+    "@sentry/node": "^8.36.0",
     "@types/express-session": "^1.18.0",
     "array-shuffle": "^3.0.0",
     "body-parser": "^1.20.3",
