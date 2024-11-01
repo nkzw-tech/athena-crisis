@@ -9,7 +9,7 @@ import generateFrames from './generateFrames.tsx';
 
 const spriteSize = 80;
 const frameCount = 23;
-const upgrade = 3;
+const upgrade = 2;
 const frames = generateFrames(spriteSize, frameCount, 'vertical');
 
 export default function UpgradeAnimation({

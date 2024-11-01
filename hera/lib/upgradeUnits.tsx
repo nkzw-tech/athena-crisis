@@ -24,7 +24,8 @@ export default function upgradeUnits(
                 requestFrame(async () => {
                   const newPosition = remainingUnits[0];
                   if (newPosition) {
-                    await scrollIntoView([newPosition]);
+                    // Do not wait for scrollIntoView to complete.
+                    scrollIntoView([newPosition]);
                   }
 
                   const newState = await update(null);

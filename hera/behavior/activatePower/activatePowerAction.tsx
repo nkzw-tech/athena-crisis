@@ -65,7 +65,7 @@ export default async function activatePowerAction(
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
         color: colors,
-        length: 'long',
+        length: 'medium',
         onComplete: (state) => {
           const { vision } = state;
           const finalMap = applyActionResponse(
