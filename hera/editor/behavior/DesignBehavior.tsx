@@ -512,6 +512,7 @@ export default class DesignBehavior {
       updateUndoStack(actions, editor, [
         `design-tile-${finalMap.map.join(',')}`,
         finalMap,
+        editor.effects,
       ]);
       playPutSound();
     }
@@ -540,6 +541,7 @@ export default class DesignBehavior {
         updateUndoStack(actions, editor, [
           `design-decorator-${map.decorators.join(',')}`,
           map,
+          editor.effects,
         ]);
         AudioPlayer.playSound('UI/Put');
         return {
@@ -586,6 +588,7 @@ export default class DesignBehavior {
               updateUndoStack(actions, editor, [
                 `design-unit-${encodeEntities(map.units)}`,
                 map,
+                editor.effects,
               ]);
               return {
                 map: map.copy({
@@ -698,6 +701,7 @@ export default class DesignBehavior {
                 updateUndoStack(actions, editor, [
                   `design-building-${encodeEntities(newState.map.buildings)}`,
                   newState.map,
+                  editor.effects,
                 ]);
               }
               return newState;

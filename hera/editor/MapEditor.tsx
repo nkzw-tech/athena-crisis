@@ -143,7 +143,7 @@ const getEditorBaseState = (
     selected: {
       tile: Plain.id,
     },
-    undoStack: [['initial', map]],
+    undoStack: [['initial', map, effects]],
     undoStackIndex: null,
   };
 };
@@ -390,7 +390,7 @@ export default function MapEditor({
     });
 
   const setMap: SetMapFunction = useCallback(
-    (type, map) => {
+    (type, map, effects) => {
       _setMap(map);
       if (type !== 'cleanup') {
         updateUndoStack({ setEditorState }, editor, [
@@ -400,6 +400,7 @@ export default function MapEditor({
               ? `biome-${map.config.biome}`
               : 'checkpoint',
           map,
+          effects || editor.effects,
         ]);
       }
       setInternalMapID(internalMapID + 1);
@@ -628,9 +629,11 @@ export default function MapEditor({
               ),
             );
             if (index > -1 && index < undoStack.length) {
-              const [, newMap] = undoStack.at(index) || [];
-              if (newMap) {
+              const [, newMap, effects] = undoStack.at(index) || [];
+              if (newMap && effects) {
                 setEditorState({
+                  effects,
+                  scenario: getDefaultScenario(effects),
                   undoStackIndex: index,
                 });
 
@@ -799,7 +802,7 @@ export default function MapEditor({
           origin,
         );
         const newMap = resizeMap(map, size, origin, editor?.selected?.tile);
-        setMap('resize', newMap);
+        setMap('resize', newMap, newEffects);
         setEditorState({
           action: undefined,
           effects: newEffects,

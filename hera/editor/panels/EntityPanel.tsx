@@ -95,6 +95,7 @@ export default function EntityPanel({
             entityIsUnit ? 'unit' : 'building'
           }-${undoKey}-${selectedPosition}-${entity.id}`,
           newState.map,
+          editor.effects,
         ]);
 
         return update(newState);

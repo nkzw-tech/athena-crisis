@@ -40,7 +40,7 @@ type UndoKey =
   | `entity-${'building' | 'unit'}-${EntityUndoKey}-${string}-${string}`
   | `resize-${string}-${string}`;
 
-export type UndoEntry = readonly [UndoKey, MapData];
+export type UndoEntry = readonly [UndoKey, MapData, Effects];
 export type UndoStack = ReadonlyArray<UndoEntry>;
 export type DrawingMode =
   | 'regular'
@@ -80,6 +80,7 @@ export type SetEditorStateFunction = (editor: Partial<EditorState>) => void;
 export type SetMapFunction = (
   type: 'biome' | 'cleanup' | 'heal' | 'reset' | 'resize' | 'teams' | 'units',
   map: MapData,
+  effects?: Effects,
 ) => void;
 
 type MapSaveType = 'New' | 'Update' | 'Disk' | 'Export';
