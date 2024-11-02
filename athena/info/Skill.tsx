@@ -286,7 +286,7 @@ const skillConfig: Record<
   },
   [Skill.HighTide]: {
     activateOnInvasion,
-    charges: 1,
+    charges: 4,
     cost: 200,
     group: SkillGroup.Invasion,
     requiresCrystal,
