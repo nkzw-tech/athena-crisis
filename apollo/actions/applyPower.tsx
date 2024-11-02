@@ -62,10 +62,7 @@ export function getUnitsToDamage(
       [
         ...map.units
           .filter(
-            (unit) =>
-              unit.id === Dragon.id &&
-              !unit.isCompleted() &&
-              map.matchesPlayer(unit, player),
+            (unit) => unit.id === Dragon.id && map.matchesPlayer(unit, player),
           )
           .keys(),
       ].flatMap((vector) => vector.adjacent()),
