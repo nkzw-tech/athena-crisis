@@ -3,6 +3,7 @@ import {
   Skill,
   SkillGroup,
 } from '@deities/athena/info/Skill.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import groupBy from '@deities/hephaestus/groupBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -29,6 +30,7 @@ import SkillBorder, {
   SkillIconBorderStyle,
 } from '@deities/ui/icons/SkillBorder.tsx';
 import Skills from '@deities/ui/icons/Skills.tsx';
+import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowStyle, SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
@@ -44,6 +46,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import SkillDescription from './SkillDescription.tsx';
 import StarIcon from './StarIcon.tsx';
@@ -647,11 +650,42 @@ const SkillListItem = ({
   );
 };
 
+const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
+  useInput('cancel', onClose, 'dialog');
+
+  useBlockInput('dialog');
+
+  return (
+    <Dialog onClose={onClose} size={'small'} transformOrigin={'center center'}>
+      <DialogScrollContainer key="skill" navigate={false}>
+        <Stack gap={16} vertical>
+          <h1>
+            <fbt desc="Headline to view a skill">Skill</fbt>
+          </h1>
+          <InfoBox>
+            <p>
+              <fbt desc="Explanation for why a skill slot is disabled.">
+                You cannot bring more skills into an invasion than the player
+                with the{' '}
+                <fbt:param name="crystalName">
+                  {getTranslatedCrystalName(Crystal.Power)}
+                </fbt:param>. They currently have fewer unlocked skill slots
+                than you.
+              </fbt>
+            </p>
+          </InfoBox>
+        </Stack>
+      </DialogScrollContainer>
+    </Dialog>
+  );
+};
+
 export function SkillSelector({
   availableSkills,
   blocklistedAreDisabled: blocklistedAreUnavailable,
   blocklistedSkills,
   currentSkill,
+  disabled,
   favorites,
   isFocused,
   onSelect,
@@ -664,6 +698,7 @@ export function SkillSelector({
   blocklistedAreDisabled?: boolean;
   blocklistedSkills?: ReadonlySet<Skill> | null;
   currentSkill?: Skill | null;
+  disabled?: boolean;
   favorites?: ReadonlySet<Skill>;
   isFocused?: boolean;
   onSelect: (skill: Skill | null) => void;
@@ -717,6 +752,7 @@ export function SkillSelector({
         background={background}
         borderStyle="plus"
         color={color}
+        disabled={disabled}
         icon={Skills}
         isFocused={isFocused}
         key={currentSkill}
@@ -725,27 +761,31 @@ export function SkillSelector({
       />
       {showSkillSelector && (
         <Portal>
-          <SkillDialog
-            availableSkills={availableSkills}
-            blocklistedAreDisabled={blocklistedAreUnavailable}
-            blocklistedSkills={blocklistedSkills}
-            currentSkill={currentSkill}
-            favorites={favorites}
-            onClose={onClose}
-            onSelect={onSelectSkill}
-            selectedSkills={selectedSkills}
-            showCost={showCost}
-            tabs={
-              slot ? (
-                <DialogTab highlight>
-                  <fbt desc="Skill selector tabs">
-                    Slot <fbt:param name="slot">{slot}</fbt:param>
-                  </fbt>
-                </DialogTab>
-              ) : undefined
-            }
-            toggleFavorite={toggleFavorite}
-          />
+          {disabled ? (
+            <DisabledSkillDialog onClose={onClose} />
+          ) : (
+            <SkillDialog
+              availableSkills={availableSkills}
+              blocklistedAreDisabled={blocklistedAreUnavailable}
+              blocklistedSkills={blocklistedSkills}
+              currentSkill={currentSkill}
+              favorites={favorites}
+              onClose={onClose}
+              onSelect={onSelectSkill}
+              selectedSkills={selectedSkills}
+              showCost={showCost}
+              tabs={
+                slot ? (
+                  <DialogTab highlight>
+                    <fbt desc="Skill selector tabs">
+                      Slot <fbt:param name="slot">{slot}</fbt:param>
+                    </fbt>
+                  </DialogTab>
+                ) : undefined
+              }
+              toggleFavorite={toggleFavorite}
+            />
+          )}
         </Portal>
       )}
     </>

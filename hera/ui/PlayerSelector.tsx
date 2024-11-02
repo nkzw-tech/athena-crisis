@@ -179,6 +179,7 @@ export default function PlayerSelector({
 export const PlayerSkillSelectors = ({
   availableSkills,
   blocklistedSkills,
+  disabledSkillSlots,
   favorites,
   isFocused,
   onSelectSkill,
@@ -189,6 +190,7 @@ export const PlayerSkillSelectors = ({
 }: {
   availableSkills: ReadonlySet<Skill>;
   blocklistedSkills?: ReadonlySet<Skill>;
+  disabledSkillSlots?: number;
   favorites?: ReadonlySet<Skill>;
   isFocused?: boolean;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
@@ -221,6 +223,10 @@ export const PlayerSkillSelectors = ({
               availableSkills={availableSkills}
               blocklistedSkills={blocklistedSkills}
               currentSkill={currentSkill}
+              disabled={
+                disabledSkillSlots != null &&
+                id + 1 > skillSlots - disabledSkillSlots
+              }
               favorites={favorites}
               isFocused={isFocused && focused === id}
               key={id}
