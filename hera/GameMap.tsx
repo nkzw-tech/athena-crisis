@@ -1738,6 +1738,7 @@ export default class GameMap extends Component<Props, State> {
         editor,
         fogStyle,
         gameId,
+        mapName,
         margin,
         playerAchievement,
         scale,
@@ -2000,6 +2001,7 @@ export default class GameMap extends Component<Props, State> {
               <MapPerformanceMetrics
                 key="performance-metrics"
                 map={map}
+                mapName={mapName}
                 player={currentViewer}
                 playerAchievement={playerAchievement}
                 scrollIntoView={this._scrollIntoView}

@@ -875,6 +875,7 @@ export default function MapEditor({
         key="play-test-map"
         lastActionResponse={game?.lastAction || undefined}
         map={game?.state || map}
+        mapName={mapName}
         mutateAction={
           actAsEveryPlayer ? ActionResponseMutator.actAsEveryPlayer : undefined
         }

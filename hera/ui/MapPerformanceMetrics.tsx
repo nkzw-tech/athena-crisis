@@ -13,8 +13,10 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import getTagColor from '@deities/ui/lib/getTagColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
@@ -23,6 +25,7 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import usePerformanceResult from '../hooks/usePerformanceResult.tsx';
+import getMapName from '../i18n/getMapName.tsx';
 import getTranslatedPerformanceStyleTypeName from '../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../lib/getTranslatedPerformanceTypeName.tsx';
 import { PlayerAchievement } from '../Types.tsx';
@@ -247,11 +250,13 @@ const SummaryCard = ({
 
 export default function MapPerformanceMetrics({
   map,
+  mapName,
   player,
   playerAchievement,
   scrollIntoView,
 }: {
   map: MapData;
+  mapName: string | undefined;
   player: PlayerID;
   playerAchievement: PlayerAchievement | null;
   scrollIntoView: (vectors: ReadonlyArray<Vector>) => void;
@@ -333,6 +338,13 @@ export default function MapPerformanceMetrics({
         }}
       >
         <Box className={cx(fullStyle, mapPerformanceStyle)} vertical>
+          {mapName && (
+            <Stack center>
+              <h2 style={{ color: getColor(getTagColor(mapName)) }}>
+                {getMapName(mapName)}
+              </h2>
+            </Stack>
+          )}
           {hide ? (
             <>
               <Stack alignCenter center className={fadeStyle}>
