@@ -48,10 +48,10 @@ import ReplayBar from './ReplayBar.tsx';
 const InfoButton = ({
   actions: { showGameInfo },
   bottom,
-  state: { gameInfoState, preventRemoteActions },
+  state: { gameInfoState },
 }: StateWithActions & Readonly<{ bottom?: true }>) => {
   useInput('detail', () => {
-    if (!preventRemoteActions && !gameInfoState) {
+    if (!gameInfoState) {
       showGameInfo({
         origin: 'center center',
         type: 'game-info',
@@ -68,16 +68,14 @@ const InfoButton = ({
     >
       <Icon
         button
-        className={cx(iconStyle, preventRemoteActions && disabledButtonStyle)}
+        className={cx(iconStyle)}
         icon={Info}
         onClick={(event) => {
-          if (!preventRemoteActions) {
-            AudioPlayer.playSound('UI/Accept');
-            showGameInfo({
-              origin: toTransformOrigin(event),
-              type: 'game-info',
-            });
-          }
+          AudioPlayer.playSound('UI/Accept');
+          showGameInfo({
+            origin: toTransformOrigin(event),
+            type: 'game-info',
+          });
         }}
       />
     </MenuButton>
