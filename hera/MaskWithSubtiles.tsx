@@ -10,7 +10,7 @@ import { MapEnterType } from './Types.tsx';
 export default memo(function MaskWithSubtiles({
   enter,
   map,
-  maskRef,
+  ref,
   select,
   tileSize: size,
   zIndex,
@@ -21,7 +21,7 @@ export default memo(function MaskWithSubtiles({
   const decoratorSize = size / DecoratorsPerSide;
   return useMemo(
     () => (
-      <div className={cx(maskStyle, MaskPointerClassName)} ref={maskRef}>
+      <div className={cx(maskStyle, MaskPointerClassName)} ref={ref}>
         {map
           .mapFields((vector) => {
             const list = [];

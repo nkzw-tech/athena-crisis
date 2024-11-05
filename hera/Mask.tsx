@@ -6,7 +6,7 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
-import { memo, MutableRefObject, RefObject, useCallback, useMemo } from 'react';
+import { memo, MutableRefObject, useCallback, useMemo } from 'react';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import toTransformOrigin from './lib/toTransformOrigin.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
@@ -101,7 +101,7 @@ export type BaseMaskProps = Readonly<{
   ) => void;
   enter: (vector: Vector, _: undefined, type: MapEnterType) => void;
   map: MapData;
-  maskRef: RefObject<HTMLDivElement>;
+  ref: MutableRefObject<HTMLDivElement | null>;
   select: (vector: Vector) => void;
   tileSize: number;
   zIndex: number;
@@ -114,9 +114,9 @@ export default memo(function Mask({
   enter,
   expand,
   map,
-  maskRef,
   pointerLock,
   radius,
+  ref,
   select,
   selectedPosition,
   showFieldInfo,
@@ -222,7 +222,7 @@ export default memo(function Mask({
             false,
           );
         }}
-        ref={maskRef}
+        ref={ref}
         {...props()}
       >
         {fields.map(([vector, [up, right, down, left, priority]]) => (

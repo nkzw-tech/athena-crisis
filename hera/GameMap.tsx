@@ -1944,7 +1944,7 @@ export default class GameMap extends Component<Props, State> {
               <MaskWithSubtiles
                 enter={this._enter}
                 map={map}
-                maskRef={this._maskRef}
+                ref={this._maskRef}
                 select={this._select}
                 tileSize={tileSize}
                 zIndex={zIndex - 2}
@@ -1957,9 +1957,9 @@ export default class GameMap extends Component<Props, State> {
                 enter={this._enter}
                 expand={!editor}
                 map={map}
-                maskRef={this._maskRef}
                 pointerLock={this._pointerLock}
                 radius={radius}
+                ref={this._maskRef}
                 select={this._select}
                 selectedPosition={selectedPosition}
                 showFieldInfo={editor ? () => void 0 : this._showFieldInfo}
