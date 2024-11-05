@@ -1,3 +1,4 @@
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
@@ -14,7 +15,7 @@ export default function PlayerAchievement({
   const [playerPerformance, count] = usePlayerAchievement(result);
   const performance = usePerformanceResult(playerPerformance);
   return (
-    <Stack alignCenter gap nowrap>
+    <Stack alignCenter center className={nowrapStyle} gap>
       <Stack gap={4} nowrap>
         {performance.map(([type, achieved]) => (
           <StarIcon
@@ -39,4 +40,10 @@ const countStyle = css`
   text-align: right;
   white-space: nowrap;
   width: 60px;
+`;
+
+const nowrapStyle = css`
+  ${Breakpoints.lg} {
+    flex-wrap: nowrap;
+  }
 `;

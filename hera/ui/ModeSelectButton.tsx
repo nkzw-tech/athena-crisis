@@ -27,7 +27,7 @@ export type ModeSelectButtonProps = Omit<
     onClick?: () => void;
     scaleDisabled?: boolean;
     selected?: boolean;
-    size?: 'small' | 'medium' | 'large';
+    size?: 'narrow' | 'small' | 'medium' | 'large';
     to?: Route;
     wide?: true;
   };
@@ -60,6 +60,7 @@ export function useModeSelectButton({
         style,
         className,
         blur && blurStyle,
+        size === 'narrow' && narrowStyle,
         size === 'medium' && mediumStyle,
         size === 'large' && largeStyle,
         wide && wideStyle,
@@ -133,13 +134,8 @@ const style = css`
   ${pixelBorder(undefined, 2)}
   clip-path: inset(-2px -2px -2px -2px);
   font-size: 1em;
-  height: 2.1em;
-  width: 250px;
-
-  ${Breakpoints.sm} {
-    height: 2.3em;
-    width: 250px;
-  }
+  height: 2.3em;
+  width: min(90vw, 336px);
 
   &:after {
     background: ${applyVar('highlight-color')};
@@ -211,11 +207,15 @@ const style = css`
   }
 `;
 
+const narrowStyle = css`
+  width: 252px;
+`;
+
 const mediumStyle = css`
   ${Breakpoints.xs} {
     font-size: 1.3em;
     height: 2.4em;
-    width: 340px;
+    width: 348px;
   }
 
   ${Breakpoints.sm} {
@@ -223,7 +223,7 @@ const mediumStyle = css`
 
     clip-path: inset(-3px -3px -3px -3px);
     font-size: 1.4em;
-    width: 380px;
+    width: 372px;
   }
 `;
 
@@ -231,7 +231,7 @@ const largeStyle = css`
   ${Breakpoints.xs} {
     font-size: 1.3em;
     height: 2.4em;
-    width: 340px;
+    width: 348px;
   }
 
   ${Breakpoints.sm} {
@@ -265,7 +265,7 @@ const wideStyle = css`
 
   font-size: 1em;
   height: auto;
-  max-width: 220px;
+  max-width: 240px;
   padding: 8px;
 
   ${Breakpoints.xs} {
