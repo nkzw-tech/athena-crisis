@@ -8,6 +8,7 @@ module.exports = {
         '@deities/no-inline-css': 2,
         '@deities/no-lazy-import': 2,
         '@deities/require-fbt-description': 2,
+        '@deities/require-use-effect-arguments': 2,
         '@deities/use-relay-types': 2,
       },
     },
@@ -19,6 +20,7 @@ module.exports = {
     'no-inline-css': require('./no-inline-css'),
     'no-lazy-import': require('./no-lazy-import'),
     'require-fbt-description': require('./require-fbt-description'),
+    'require-use-effect-arguments': require('./require-use-effect-arguments'),
     'use-relay-types': require('./use-relay-types'),
   },
 };

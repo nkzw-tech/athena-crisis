@@ -14,6 +14,9 @@ import { BannerAnimation, BaseAnimationProps } from '../MapAnimations.tsx';
 import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
+const smallSize = 3;
+const largeSize = 4;
+
 const multiplier = process.env.NODE_ENV === 'development' ? 3 : 1.5;
 const transition = {
   damping: 14 * multiplier,
@@ -56,7 +59,7 @@ export default function Banner(
     () =>
       measureText(
         text.toLocaleUpperCase(),
-        (clientWidth - sizes.padding) / (isLarge ? 4 : 2),
+        (clientWidth - sizes.padding) / (isLarge ? largeSize : smallSize),
         sizes,
       ),
     [text, clientWidth, isLarge],
@@ -218,7 +221,7 @@ const containerStyle = css`
 `;
 
 const innerStyle = css`
-  ${vars.set('multiplier', 3)}
+  ${vars.set('multiplier', smallSize)}
 
   border-bottom: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
   border-top: calc(${vars.apply('multiplier')} * 1.5px) solid #fff;
@@ -238,7 +241,7 @@ const innerStyle = css`
   width: 100%;
 
   ${Breakpoints.sm} {
-    ${vars.set('multiplier', 4)}
+    ${vars.set('multiplier', largeSize)}
 
     padding: 8px ${sizes.padding}px 16px;
     line-height: calc(${vars.apply('multiplier')} * 14px);

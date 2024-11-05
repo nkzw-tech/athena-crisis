@@ -11,6 +11,8 @@ dist/
 electron/out/
 git-hooks/
 halting-problem-failure.json
+mobile/android
+mobile/ios
 patches/
 pnpm-lock.yaml
 source_strings.json

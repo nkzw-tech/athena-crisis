@@ -131,6 +131,9 @@ importers:
 
   ares:
     dependencies:
+      '@capacitor/core':
+        specifier: ^6.1.2
+        version: 6.1.2
       '@deities/apollo':
         specifier: workspace:*
         version: link:../apollo
@@ -179,6 +182,12 @@ importers:
       '@stripe/stripe-js':
         specifier: ^4.9.0
         version: 4.9.0
+      capacitor-suppress-longpress-gesture:
+        specifier: ^0.0.8
+        version: 0.0.8(@capacitor/core@6.1.2)
+      cordova-plugin-purchase:
+        specifier: ^13.11.1
+        version: 13.11.1
       fbt:
         specifier: ^1.0.2
         version: 1.0.2(patch_hash=h3le5xcbsw44ybdi7qpcrzppny)(babel-plugin-fbt-runtime@1.0.0(babel-plugin-fbt@1.0.0))(babel-plugin-fbt@1.0.0)(react@19.0.0-rc.0)
@@ -1743,6 +1752,9 @@ packages:
   '@babel/types@7.26.0':
     resolution: {integrity: sha512-Z/yiTPj+lDVnF7lWeKCIJzaIkI0vYO87dMpZ4bg4TDrFe4XXLFWL1TbXU27gBP3QccxV9mZICCrnjnYlJjXHOA==}
     engines: {node: '>=6.9.0'}
+
+  '@capacitor/core@6.1.2':
+    resolution: {integrity: sha512-xFy1/4qLFLp5WCIzIhtwUuVNNoz36+V7/BzHmLqgVJcvotc4MMjswW/TshnPQaLLujEOaLkA4h8ZJ0uoK3ImGg==}
 
   '@clack/core@0.3.4':
     resolution: {integrity: sha512-H4hxZDXgHtWTwV3RAVenqcC4VbJZNegbBjlPvzOzCouXtS2y3sDvlO3IsbrPNWuLWPPlYVYPghQdSF64683Ldw==}
@@ -4359,6 +4371,11 @@ packages:
     resolution: {integrity: sha512-ItanGBMrmRV7Py2Z+Xhs7cT+FNt5K0vPL4p9EZ/UX/Mu7hFbkxSjKF2KVtPwX7UYWp7dRKnrTvReflgrItJbdw==}
     engines: {node: '>=6'}
 
+  capacitor-suppress-longpress-gesture@0.0.8:
+    resolution: {integrity: sha512-gaMoPnOQeg/2DpAzi7oXzEQTJfdRzYdoiiJ5JnA2BYzeSx/CUlOGqO4baRuOUG29Ibqy1TEbLJhYFPHikp4LOQ==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
+
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
 
@@ -4529,6 +4546,9 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
+
+  cordova-plugin-purchase@13.11.1:
+    resolution: {integrity: sha512-24KpOIgRaNFFH2F8TWE8lYhY6T3mYereqGNGGXJPi5j60MKx/CHqOuyvbCuMdAfLG+7XiGhcEi7XSXbOrFrEzw==}
 
   core-js-compat@3.39.0:
     resolution: {integrity: sha512-VgEUx3VwlExr5no0tXlBt+silBvhTryPwCXRI2Id1PN8WTKu7MreethvddqOubrYxkFdv/RnYrqlv1sFNAUelw==}
@@ -5067,6 +5087,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@6.2.1:
@@ -9714,6 +9735,10 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
+  '@capacitor/core@6.1.2':
+    dependencies:
+      tslib: 2.8.1
+
   '@clack/core@0.3.4':
     dependencies:
       picocolors: 1.1.1
@@ -12745,6 +12770,10 @@ snapshots:
       - encoding
       - supports-color
 
+  capacitor-suppress-longpress-gesture@0.0.8(@capacitor/core@6.1.2):
+    dependencies:
+      '@capacitor/core': 6.1.2
+
   ccount@2.0.1: {}
 
   chai@5.1.2:
@@ -12894,6 +12923,8 @@ snapshots:
   cookie@0.7.1: {}
 
   cookie@0.7.2: {}
+
+  cordova-plugin-purchase@13.11.1: {}
 
   core-js-compat@3.39.0:
     dependencies:

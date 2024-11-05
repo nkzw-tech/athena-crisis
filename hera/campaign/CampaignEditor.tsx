@@ -684,7 +684,7 @@ const lightColorStyle = css`
 
 const mapCreateButtonStyle = css`
   right: ${TileSize * 3}px;
-  top: 0;
+  top: env(safe-area-inset-top);
 `;
 
 const dialogueButtonStyle = css`
@@ -692,7 +692,7 @@ const dialogueButtonStyle = css`
   display: inline-flex;
   justify-content: center;
   right: ${TileSize * 6}px;
-  top: 0;
+  top: env(safe-area-inset-top);
 
   > svg {
     height: 40px;

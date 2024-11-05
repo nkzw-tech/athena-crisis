@@ -4,7 +4,9 @@ import {
   DynamicPlayerID,
   encodeDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
+import { sm } from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import useMedia from '@deities/ui/hooks/useMedia.tsx';
 import { css, cx } from '@emotion/css';
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useSprites } from '../hooks/useSprites.tsx';
@@ -25,13 +27,16 @@ export default memo(function Portrait({
   clip?: boolean;
   paused?: boolean;
   player: DynamicPlayerID;
-  scale?: number;
+  scale?: number | 'adaptive';
   unit: UnitInfo;
   variant?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const hasPortraits = useSprites('portraits');
   const { position } = unit.sprite.portrait;
+
+  const isLarge = useMedia(`(min-width: ${sm}px)`);
+  const zoom = scale === 'adaptive' ? (isLarge ? 2 : 1) : scale;
 
   useLayoutEffect(() => {
     if (!hasPortraits) {
@@ -87,7 +92,7 @@ export default memo(function Portrait({
       height={PortraitHeight}
       ref={ref}
       style={{
-        zoom: scale,
+        zoom,
       }}
       width={PortraitWidth}
     />

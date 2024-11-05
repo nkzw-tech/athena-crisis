@@ -36,7 +36,6 @@ import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
-import { isIOS } from '@deities/ui/Browser.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
@@ -1170,7 +1169,7 @@ const lightColorStyle = css`
 `;
 
 const togglePlaytestButtonStyle = css`
-  bottom: calc(${isIOS ? TileSize : 0}px + ${applyVar('inset')});
+  bottom: calc(env(safe-area-inset-bottom, 0) + ${applyVar('inset')});
   color: transparent;
   left: ${applyVar('inset')};
   overflow: hidden;

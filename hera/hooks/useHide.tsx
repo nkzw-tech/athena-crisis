@@ -24,7 +24,7 @@ export const HideContext = ({ children }: { children: ReactNode }) => {
     };
     document.addEventListener('keydown', listener);
     return () => document.removeEventListener('keydown', listener);
-  });
+  }, []);
 
   return <Context.Provider value={hidden}>{children}</Context.Provider>;
 };

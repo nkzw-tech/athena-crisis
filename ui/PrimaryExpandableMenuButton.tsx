@@ -38,7 +38,7 @@ const style = css`
   min-height: ${size}px;
   overflow: hidden;
   pointer-events: auto;
-  top: ${applyVar('inset')};
+  top: calc(env(safe-area-inset-top) + ${applyVar('inset')});
   width: calc(100vw - ${size * 3}px);
   z-index: max(calc(${applyVar('inset-z')} + 2), 20);
 

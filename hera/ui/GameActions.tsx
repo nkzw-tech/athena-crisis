@@ -60,12 +60,7 @@ const InfoButton = ({
   });
 
   return (
-    <MenuButton
-      className={cx(
-        actionButtonStyle,
-        bottom ? bottomButtonStyle : infoButtonStyle,
-      )}
-    >
+    <MenuButton className={cx(actionButtonStyle, !bottom && infoButtonStyle)}>
       <Icon
         button
         className={cx(iconStyle)}
@@ -259,7 +254,7 @@ const NextButton = ({
   );
 
   return (
-    <MenuButton className={actionButtonStyle}>
+    <MenuButton className={cx(actionButtonStyle, nextButtonStyle)}>
       <Icon
         button
         className={cx(
@@ -609,7 +604,7 @@ export default function GameActions({
 }
 
 const size = DoubleSize;
-const vars = new CSSVariables<'multiplier'>('ga');
+const vars = new CSSVariables<'multiplier' | 'bottom-offset'>('ga');
 
 const inlineContainerStyle = css`
   inset: 0;
@@ -631,12 +626,20 @@ const containerStyle = css`
   }
 `;
 
-const bottomButtonStyle = css`
-  bottom: calc(${applyVar('inset')});
+const actionButtonStyle = css`
+  ${vars.set('bottom-offset', 0)}
+
+  bottom: calc(
+    env(safe-area-inset-bottom, 0) + (${vars.apply(
+    'bottom-offset',
+  )} * ${size}px) + ${applyVar('inset')}
+  );
+  pointer-events: auto;
+  right: calc(${applyVar('inset')} + env(safe-area-inset-right));
+  z-index: calc(${applyVar('inset-z')} + 2);
 `;
 
 const endTurnButtonStyle = css`
-  bottom: calc(${applyVar('inset')});
   color: transparent;
   overflow: hidden;
   pointer-events: auto;
@@ -647,39 +650,24 @@ const endTurnButtonStyle = css`
   z-index: calc(${applyVar('inset-z')} + 2);
 `;
 
-const actionButtonStyle = css`
-  bottom: calc(
-    (${size * 1.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
-  );
-  pointer-events: auto;
-  right: calc(${applyVar('inset')} + env(safe-area-inset-right));
-  z-index: calc(${applyVar('inset-z')} + 2);
+const nextButtonStyle = css`
+  ${vars.set('bottom-offset', 1.5)}
 `;
 
 const infoButtonStyle = css`
-  bottom: calc(
-    (${size * 3}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
-  );
-  pointer-events: auto;
+  ${vars.set('bottom-offset', 3)}
 `;
 
 const attackRadiusButtonStyle = css`
-  bottom: calc(
-    (${size * 4.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
-  );
-  pointer-events: auto;
+  ${vars.set('bottom-offset', 4.5)}
 `;
 
 const undoButtonStyle = css`
-  bottom: calc(
-    (${size * 6}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
-  );
+  ${vars.set('bottom-offset', 6)}
 `;
 
 const zoomButtonStyle = css`
-  bottom: calc(
-    (${size * 7.5}px * ${vars.apply('multiplier')}) + ${applyVar('inset')}
-  );
+  ${vars.set('bottom-offset', 7.5)}
 `;
 
 const expandStyle = css`

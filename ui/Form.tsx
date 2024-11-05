@@ -23,7 +23,7 @@ export default memo(function Form({
       form.addEventListener('blur', listener, true);
       return () => form.removeEventListener('blur', listener, true);
     }
-  });
+  }, []);
   return (
     <form ref={formRef} {...props} onSubmit={onSubmit || preventDefault} />
   );

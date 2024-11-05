@@ -38,7 +38,7 @@ const actionBarStyle = css`
   pointer-events: none;
   position: fixed;
   right: 0;
-  top: ${DoubleSize * 1.3}px;
+  top: calc(env(safe-area-inset-top) + ${DoubleSize * 1.3}px);
   transform: translate3d(${vars.apply('x')}, -100%, 0) scale(0.9);
   transition:
     opacity 150ms ease,
@@ -50,7 +50,7 @@ const actionBarStyle = css`
 const regularStyle = css`
   @media (min-width: 1100px) {
     ${vars.set('x', '24px')}
-    top: 8px;
+    top: calc(env(safe-area-inset-top) + 8px);
   }
 
   @media (min-width: 1300px) {

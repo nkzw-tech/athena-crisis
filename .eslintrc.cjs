@@ -8,6 +8,8 @@ module.exports = {
     'dist/',
     'electron/out/',
     'hera/i18n/CampaignMap.tsx',
+    'mobile/android',
+    'mobile/ios',
   ],
   overrides: [
     {
@@ -93,6 +95,7 @@ module.exports = {
           './docs/vocs.config.tsx',
           './electron/**',
           './infra/**',
+          './mobile/capacitor.config.ts',
           './scripts/**',
           './tests/**',
           './vitest.config.ts',
@@ -100,6 +103,7 @@ module.exports = {
         ],
         packageDir: [__dirname].concat(
           existsSync(join(__dirname, './electron')) ? ['./electron'] : [],
+          existsSync(join(__dirname, './mobile')) ? ['./mobile'] : [],
           readFileSync('./pnpm-workspace.yaml', 'utf8')
             .split('\n')
             .slice(1)

@@ -271,8 +271,8 @@ const dotStyle = css`
 `;
 
 const buttonStyle = css`
-  left: 0;
-  top: 0;
+  left: env(safe-area-inset-left);
+  top: env(safe-area-inset-top);
 `;
 
 const openButtonStyle = css`
@@ -293,6 +293,7 @@ const openStyle = css`
 
   background-color: ${applyVar('background-color-light')};
   border-width: ${size}px;
+  border-top-width: calc(${size}px + env(safe-area-inset-top));
   height: 100%;
   transition:
     border-width 300ms ease,
@@ -376,7 +377,7 @@ const controlsContainerStyle = css`
   pointer-events: none;
   position: fixed;
   right: 0;
-  top: 0;
+  top: env(safe-area-inset-top);
 
   > div {
     opacity: 0;

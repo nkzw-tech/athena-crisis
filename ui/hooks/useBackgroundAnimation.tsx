@@ -49,5 +49,5 @@ export default function useBackgroundAnimation() {
       element.style.transform = getComputedStyle(element).transform;
       element.classList.remove(animate);
     };
-  });
+  }, []);
 }

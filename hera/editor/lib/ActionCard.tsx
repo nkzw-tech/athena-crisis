@@ -164,19 +164,21 @@ export default memo(function ActionCard({
     const player = hasCurrentPlayer
       ? resolveDynamicPlayerID(map, action.player, currentPlayer)
       : action.player;
-    const message =
-      formatText && playerDetails && map && userDisplayName
-        ? formatCharacterText(
-            translateMessage(action),
-            unit,
-            hasCurrentPlayer && currentPlayer === player
-              ? 'characterName'
-              : 'name',
-            map,
-            currentPlayer || 0,
-            playerDetails,
-          )
-        : action.message;
+    const shouldFormatText =
+      formatText && playerDetails && map && userDisplayName;
+    const message = shouldFormatText
+      ? formatCharacterText(
+          translateMessage(action),
+          unit,
+          hasCurrentPlayer && currentPlayer === player
+            ? 'characterName'
+            : 'name',
+          map,
+          currentPlayer || 0,
+          playerDetails,
+        )
+      : action.message;
+    const MessageComponent = shouldFormatText ? Stack : Box;
 
     return (
       <Stack
@@ -203,6 +205,7 @@ export default memo(function ActionCard({
             <Portrait
               animate={isVisible && animate}
               player={player}
+              scale="adaptive"
               unit={unit}
               variant={action.variant}
             />
@@ -234,7 +237,12 @@ export default memo(function ActionCard({
             )}
           </Stack>
         </Dropdown>
-        <Box className={boxMarginStyle} gap start vertical>
+        <MessageComponent
+          className={cx(messageBoxStyle, !shouldFormatText && marginStyle)}
+          gap
+          start
+          vertical
+        >
           <Stack className={headlineStyle} nowrap>
             <Stack gap nowrap start stretch>
               {!hasCurrentPlayer && (
@@ -313,7 +321,7 @@ export default memo(function ActionCard({
               {message}
             </div>
           )}
-        </Box>
+        </MessageComponent>
       </Stack>
     );
   } else if (action.type === 'SpawnEffect') {
@@ -618,10 +626,14 @@ const messageStyle = css`
   margin: 0 2px 0 -4px;
 `;
 
-const boxMarginStyle = css`
+const messageBoxStyle = css`
   align-content: start;
   align-items: start;
   flex-grow: 1;
+  margin: 0 0 0 16px;
+`;
+
+const marginStyle = css`
   margin: 4px 0 4px 16px;
 `;
 

@@ -317,10 +317,13 @@ const containerStyle = css`
   align-items: start;
   display: flex;
   image-rendering: pixelated;
-  inset: 0;
   pointer-events: none;
   position: fixed;
   z-index: 3001;
+  inset: 0;
+
+  top: env(safe-area-inset-top);
+  bottom: env(safe-area-inset-bottom);
 `;
 
 const bottomStyle = css`
