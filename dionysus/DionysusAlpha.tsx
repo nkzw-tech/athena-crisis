@@ -124,10 +124,11 @@ export default class DionysusAlpha extends BaseAI {
         continue;
       }
 
-      const { charges } = getSkillConfig(skill);
+      const { charges, requiresCrystal } = getSkillConfig(skill);
       if (
         charges &&
         charges * Charge <= charge &&
+        !requiresCrystal &&
         shouldActivatePower(map, skill)
       ) {
         potentialSkills.push([skill, charges]);
