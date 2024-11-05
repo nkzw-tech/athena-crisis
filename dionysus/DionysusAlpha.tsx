@@ -135,7 +135,7 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     if (potentialSkills.length) {
-      const [skill] = randomEntry(potentialSkills);
+      const [skill] = randomEntry(potentialSkills) || potentialSkills[0];
       const currentMap = this.execute(map, ActivatePowerAction(skill));
       if (currentMap) {
         this.tryAttacking();
@@ -718,8 +718,10 @@ export default class DionysusAlpha extends BaseAI {
     });
 
     if (buyableSkills.length) {
-      const skill = randomEntry(buyableSkills);
-      return this.execute(map, BuySkillAction(from, skill));
+      return this.execute(
+        map,
+        BuySkillAction(from, randomEntry(buyableSkills) || buyableSkills[0]),
+      );
     }
 
     return null;

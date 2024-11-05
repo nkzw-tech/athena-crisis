@@ -443,7 +443,7 @@ export function generateRandomMap(
   ];
   const length = size.width * size.height;
   for (let i = 0; i < length; i++) {
-    map.push(randomEntry(tiles).id);
+    map.push((randomEntry(tiles) || tiles[0]).id);
   }
 
   return MapData.createMap({

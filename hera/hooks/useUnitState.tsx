@@ -93,7 +93,7 @@ const getNextUnitState = (unitState: UnitState, unit: Unit): UnitState => {
   switch (stateType) {
     case 'idle':
       return {
-        direction: randomEntry(directions),
+        direction: randomEntry(directions) || directions[0],
         highlightStyle: 'move-null',
         type: 'move',
       };

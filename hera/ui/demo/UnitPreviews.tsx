@@ -48,10 +48,12 @@ const UnitPreview = ({
   </div>
 );
 
+const playerIDs = PlayerIDs.slice(1);
+
 const map = MapData.createMap({
   map: [1],
   modifiers: [0],
-  teams: PlayerIDs.slice(1).map((id) => ({
+  teams: playerIDs.map((id) => ({
     id,
     name: '',
     players: [{ funds: 0, id, name: `User-${id}`, teamId: id }],
@@ -84,7 +86,7 @@ export default function UnitPreviews() {
               unit.characterDescription !== 'Unknown',
           )
           .map((unit) => {
-            const player = randomEntry(PlayerIDs.slice(1));
+            const player = randomEntry(playerIDs) || playerIDs[0];
             return (
               <UnitPreview
                 key={unit.id}
