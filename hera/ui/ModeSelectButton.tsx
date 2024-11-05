@@ -60,8 +60,8 @@ export function useModeSelectButton({
         style,
         className,
         blur && blurStyle,
+        (size === 'narrow' || size === 'medium') && mediumStyle,
         size === 'narrow' && narrowStyle,
-        size === 'medium' && mediumStyle,
         size === 'large' && largeStyle,
         wide && wideStyle,
         disabled && disabledStyle,
@@ -208,22 +208,28 @@ const style = css`
 `;
 
 const narrowStyle = css`
-  width: 252px;
+  width: min(65vw, 252px);
+
+  ${Breakpoints.xs} {
+    width: min(70vw, 348px);
+  }
 `;
 
 const mediumStyle = css`
-  ${Breakpoints.xs} {
-    font-size: 1.3em;
-    height: 2.4em;
-    width: 348px;
-  }
+  ${Breakpoints.landscape} {
+    ${Breakpoints.xs} {
+      font-size: 1.3em;
+      height: 2.4em;
+      width: 348px;
+    }
 
-  ${Breakpoints.sm} {
-    ${pixelBorder()}
+    ${Breakpoints.sm} {
+      ${pixelBorder()}
 
-    clip-path: inset(-3px -3px -3px -3px);
-    font-size: 1.4em;
-    width: 372px;
+      clip-path: inset(-3px -3px -3px -3px);
+      font-size: 1.4em;
+      width: 372px;
+    }
   }
 `;
 

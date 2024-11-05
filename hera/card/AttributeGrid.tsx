@@ -53,8 +53,10 @@ const gridStyle = css`
   }
 
   column-gap: 4px;
+  font-size: 0.9em;
 
   ${Breakpoints.xs} {
+    font-size: 1em;
     column-gap: 8px;
   }
 

@@ -256,6 +256,7 @@ export const DialogTab = ({
   <div
     className={cx(
       tabStyle,
+      smallFontStyle,
       isIcon && iconStyle,
       highlight && highlightStyle,
       end && tabEndStyle,
@@ -408,6 +409,14 @@ const tabStyle = css`
     &:after {
       opacity: 1;
     }
+  }
+`;
+
+const smallFontStyle = css`
+  font-size: 0.75em;
+
+  ${Breakpoints.sm} {
+    font-size: 1em;
   }
 `;
 

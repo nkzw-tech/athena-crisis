@@ -183,6 +183,7 @@ export type GameInfoPanels = Map<
       lastActionResponse: ActionResponse | null;
       map: MapData;
     }>;
+    shortTitle: ReactNode;
     title: ReactNode;
   }>
 >;

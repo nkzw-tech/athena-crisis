@@ -3,6 +3,7 @@ import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
+import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   evaluatePlayerPerformance,
@@ -599,18 +600,33 @@ const GameInfoPanel = memo(function GameInfoPanel({
           highlight={panel === objectivesPanel}
           onClick={() => setPanel(objectivesPanel)}
         >
-          <fbt desc="Label for win condition tab">Objectives</fbt>
+          {panel !== objectivesPanel && (
+            <div className={shortStyle}>
+              <Icon icon={Trophy} />
+            </div>
+          )}
+          <div className={cx(panel !== objectivesPanel && longStyle)}>
+            <fbt desc="Label for win condition tab">Objectives</fbt>
+          </div>
         </DialogTab>
         {gameInfoState.panels &&
-          [...gameInfoState.panels].map(([panelName, { title }]) => (
-            <DialogTab
-              highlight={panel === panelName}
-              key={panelName}
-              onClick={() => setPanel(panelName)}
-            >
-              {title}
-            </DialogTab>
-          ))}
+          [...gameInfoState.panels].map(
+            ([panelName, { shortTitle, title }]) => {
+              const isSelected = panel === panelName;
+              return (
+                <DialogTab
+                  highlight={isSelected}
+                  key={panelName}
+                  onClick={() => setPanel(panelName)}
+                >
+                  {!isSelected && (
+                    <div className={shortStyle}>{shortTitle}</div>
+                  )}
+                  <div className={cx(!isSelected && longStyle)}>{title}</div>
+                </DialogTab>
+              );
+            },
+          )}
         {!hasEnded && endGame && (
           <DialogTab
             disabled={!isCurrentPlayer}
@@ -1068,4 +1084,20 @@ const failedStyle = css`
 
 const zapStyle = css`
   margin: -2px 4px 2px 0;
+`;
+
+const shortStyle = css`
+  height: ${TileSize - 4}px;
+
+  ${Breakpoints.sm} {
+    display: none;
+  }
+`;
+
+const longStyle = css`
+  display: none;
+
+  ${Breakpoints.sm} {
+    display: block;
+  }
 `;

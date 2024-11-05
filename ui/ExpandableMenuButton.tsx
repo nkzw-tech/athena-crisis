@@ -101,7 +101,7 @@ const expandedInnerStyle = css`
 const size = 30;
 const iconStyle = css`
   ${clipBorder(2)}
-  backdrop-filter: blur(4px);
+
   background: ${applyVar('background-color-light')};
   height: ${size}px;
   opacity: 0;
@@ -114,6 +114,7 @@ const iconStyle = css`
     opacity ${duration}ms ease-in-out,
     transform ${duration}ms ease-in-out;
   width: ${size}px;
+  z-index: 3;
 `;
 
 const visibleStyle = css`

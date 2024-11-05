@@ -215,8 +215,16 @@
     </div>
     <script type="text/javascript">
       let timer;
-      const reload = () =>
-        window.$__AC__ ? window.$__AC__.reload() : location.reload();
+      const reload = () => {
+        if (window.$__AC__) {
+          window.$__AC__.reload();
+          return;
+        }
+
+        if ($SERVER_URL) {
+          location.href = $SERVER_URL;
+        }
+      };
       const setTimer = () => {
         timer = setTimeout(() => {
           if (navigator.onLine) {
