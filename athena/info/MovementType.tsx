@@ -35,7 +35,7 @@ export const MovementTypes = {
   ),
   AirInfantry: new MovementType(
     7,
-    'Air Infantry',
+    'Air Soldier',
     'Movement/AirInfantry',
     'Movement/AirInfantryEnd',
     'quarter',

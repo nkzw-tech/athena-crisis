@@ -3,6 +3,7 @@ import {
   getHealUnitTypes,
   getSkillPowerDamage,
   Skill,
+  VampireSoldierMovementTypes,
 } from '@deities/athena/info/Skill.tsx';
 import {
   Dragon,
@@ -72,7 +73,11 @@ export function getUnitsToDamage(
       vectors.has(vector),
     );
   } else if (skill === Skill.VampireHeal) {
-    return map.units.filter((unit) => map.matchesPlayer(unit, player));
+    return map.units.filter(
+      (unit) =>
+        map.matchesPlayer(unit, player) &&
+        VampireSoldierMovementTypes.has(unit.info.movementType),
+    );
   }
 
   return null;

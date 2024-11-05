@@ -1,6 +1,8 @@
 import { ActivatePowerActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import getActivatePowerMessage from '@deities/hermes/messages/getActivatePowerMessage.tsx';
 import { Actions, State } from '../../Types.tsx';
+import { resetBehavior } from '../Behavior.tsx';
+import NullBehavior from '../NullBehavior.tsx';
 import activatePowerAction from './activatePowerAction.tsx';
 
 export default async function clientActivatePowerAction(
@@ -8,18 +10,18 @@ export default async function clientActivatePowerAction(
   state: State,
   actionResponse: ActivatePowerActionResponse,
 ): Promise<State> {
-  const { processGameActionResponse } = actions;
+  const { processGameActionResponse, update } = actions;
   const { vision } = state;
 
-  const message =
-    getActivatePowerMessage(
-      state.map,
-      state.map,
-      vision,
-      actionResponse.skill,
-    ) || getActivatePowerMessage(state.map, state.map, vision, -1);
+  const message = getActivatePowerMessage(
+    state.map,
+    state.map,
+    vision,
+    actionResponse.skill,
+  );
 
   if (message) {
+    state = await update(resetBehavior(NullBehavior));
     const [actionResponse] = message;
     state = await processGameActionResponse({
       others: [{ actionResponse }],

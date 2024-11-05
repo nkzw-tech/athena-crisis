@@ -33,6 +33,7 @@ import {
   Skill,
   TileMovementMap,
   VampireSkillHeal,
+  VampireSoldierMovementTypes,
 } from '@deities/athena/info/Skill.tsx';
 import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
@@ -287,7 +288,7 @@ const UnitRange = ({
           Conjunctions.AND,
           Delimiters.COMMA,
         )}
-      </fbt:param>.
+      </fbt:param>
     </fbt>
   ) : null;
 
@@ -591,7 +592,7 @@ const MovementTypeRadius = ({
         Conjunctions.AND,
         Delimiters.COMMA,
       )}
-    </fbt:param>.
+    </fbt:param>
   </fbt>
 );
 
@@ -691,7 +692,12 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
     case Skill.VampireHeal:
       return (
         <fbt desc="Additional skill description">
-          Each unit heals
+          <fbt:param name="movementTypes">
+            <MovementTypeNames
+              movementTypes={[...VampireSoldierMovementTypes]}
+            />
+          </fbt:param>{' '}
+          units heal
           <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
           at the beginning of their turn.
         </fbt>
@@ -845,7 +851,11 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.UnlockZombie:
       return (
         <fbt desc="Additional skill description">
-          Converts all
+          Spawns one{' '}
+          <fbt:param name="unitName">
+            <RawUnitName color={color} unit={Pioneer} />
+          </fbt:param>{' '}
+          unit and converts all
           <fbt:param name="fromUnitName">
             <UnitName color={color} unit={Pioneer} />
           </fbt:param>{' '}
@@ -879,7 +889,13 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.VampireHeal:
       return (
         <fbt desc="Additional skill description">
-          Reduces the health of all your units by{' '}
+          Reduces the health of your{' '}
+          <fbt:param name="movementTypes">
+            <MovementTypeNames
+              movementTypes={[...VampireSoldierMovementTypes]}
+            />
+          </fbt:param>{' '}
+          units by{' '}
           <fbt:param name="value">{getSkillPowerDamage(skill)}</fbt:param>{' '}
           health points.
         </fbt>
@@ -975,13 +991,8 @@ export default memo(function SkillDescription({
 }) {
   const isRegular = type === 'regular';
   const isPower = !isRegular;
-  const {
-    activateOnInvasion,
-    campaignOnly,
-    charges,
-    ignoreCommandCrystal,
-    requiresCrystal,
-  } = getSkillConfig(skill);
+  const { activateOnInvasion, campaignOnly, charges, requiresCrystal } =
+    getSkillConfig(skill);
   if ((charges == null || charges === 0) && isPower) {
     return null;
   }
@@ -1016,6 +1027,7 @@ export default memo(function SkillDescription({
   const healTypes = isPower ? getHealUnitTypes(skill) : null;
   const effects = [
     attack ? <AttackStatusEffect effect={attack} /> : null,
+    defense ? <DefenseStatusEffect effect={defense} /> : null,
     unitAttackLeader ? (
       <UnitAttackLeaderStatusEffect effect={unitAttackLeader} />
     ) : null,
@@ -1030,9 +1042,15 @@ export default memo(function SkillDescription({
       <UnitStatusEffects color={color} effects={unitDefense} type="defense" />
     ) : null,
     movementTypeAttack ? (
-      <MovementTypeStatusEffect effects={movementTypeAttack} type="attack" />
+      matchesUnitModifierMap(movementTypeAttack, unitMovement) ? (
+        <AttackStatusEffect
+          effect={movementTypeAttack.values().next().value!}
+        />
+      ) : (
+        <MovementTypeStatusEffect effects={movementTypeAttack} type="attack" />
+      )
     ) : null,
-    defense ? <DefenseStatusEffect effect={defense} /> : null,
+    unitMovement.size ? <MovementTypeRadius movement={unitMovement} /> : null,
     movementTypeDefense ? (
       <MovementTypeStatusEffect effects={movementTypeDefense} type="defense" />
     ) : null,
@@ -1048,6 +1066,7 @@ export default memo(function SkillDescription({
     tileDefense?.size ? (
       <TileTypeStatusEffect effects={tileDefense} type="defense" />
     ) : null,
+    unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,
     cost ? <CostEffect effect={cost} /> : null,
   ].filter(isPresent);
@@ -1080,8 +1099,6 @@ export default memo(function SkillDescription({
     blockedUnits?.size ? (
       <UnitBlocks blocked={blockedUnits} color={color} />
     ) : null,
-    unitMovement.size ? <MovementTypeRadius movement={unitMovement} /> : null,
-    unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     effects.length ? (
       <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
     ) : null,
@@ -1092,11 +1109,19 @@ export default memo(function SkillDescription({
             Crystal:
           </fbt>
         </span>{' '}
-        {ignoreCommandCrystal ? (
+        {activateOnInvasion === 'no-command' ? (
           <fbt desc="Description for skill behavior">
             Consume any crystal except a{' '}
             <fbt:param name="crystalName">
               {getTranslatedCrystalName(Crystal.Command)}
+            </fbt:param>{' '}
+            to activate this power.
+          </fbt>
+        ) : activateOnInvasion === 'phantom-only' ? (
+          <fbt desc="Description for skill behavior">
+            Consume a{' '}
+            <fbt:param name="crystalNameB">
+              {getTranslatedCrystalName(Crystal.Phantom)}
             </fbt:param>{' '}
             to activate this power.
           </fbt>

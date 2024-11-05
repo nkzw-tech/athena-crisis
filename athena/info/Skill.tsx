@@ -110,19 +110,19 @@ export enum SkillGroup {
   AI = 6,
 }
 
-const activateOnInvasion = true;
+export type CrystalPowerActivationType = 'all' | 'no-command' | 'phantom-only';
+
+const activateOnInvasion = 'all';
 const requiresCrystal = true;
-const ignoreCommandCrystal = true;
 
 const skillConfig: Record<
   Skill,
   Readonly<{
-    activateOnInvasion?: true;
+    activateOnInvasion?: CrystalPowerActivationType;
     campaignOnly?: true;
     charges?: number;
     cost: number | null;
     group: SkillGroup;
-    ignoreCommandCrystal?: true;
     requiresCrystal?: true;
   }>
 > = {
@@ -253,7 +253,12 @@ const skillConfig: Record<
     group: SkillGroup.Invasion,
     requiresCrystal,
   },
-  [Skill.UnlockZombie]: { charges: 10, cost: 1500, group: SkillGroup.Special },
+  [Skill.UnlockZombie]: {
+    activateOnInvasion: 'phantom-only',
+    charges: 10,
+    cost: 1500,
+    group: SkillGroup.Special,
+  },
   [Skill.UnlockPowerStation]: {
     activateOnInvasion,
     charges: 4,
@@ -265,11 +270,10 @@ const skillConfig: Record<
   [Skill.BuyUnitBear]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
   [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
   [Skill.Shield]: {
-    activateOnInvasion,
+    activateOnInvasion: 'no-command',
     charges: 8,
     cost: 1500,
     group: SkillGroup.Invasion,
-    ignoreCommandCrystal,
   },
   [Skill.Charge]: {
     activateOnInvasion,
@@ -354,6 +358,7 @@ const attackUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   [Skill.Sabotage, new Map([[UnitID.Saboteur, 0.5]])],
   [Skill.VampireHeal, new Map([[UnitID.Medic, 0.5]])],
   [Skill.DragonSaboteur, new Map([[UnitID.Dragon, 0.1]])],
+  [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 0.5]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -361,7 +366,6 @@ const attackPowerStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.35],
   [Skill.HealVehiclesAttackDecrease, 0.3],
   [Skill.RecoverAirUnits, -0.3],
-  [Skill.VampireHeal, 0.3],
 ]);
 
 const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
@@ -374,7 +378,7 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
       [UnitID.Cannon, 0.2],
     ]),
   ],
-  [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 2.5]])],
+  [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 2]])],
 ]);
 
 const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
@@ -386,6 +390,13 @@ const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
     new Map([
       [MovementTypes.AirInfantry, 0.2],
       [MovementTypes.Soldier, 0.2],
+    ]),
+  ],
+  [
+    Skill.VampireHeal,
+    new Map([
+      [MovementTypes.Soldier, 0.3],
+      [MovementTypes.AirInfantry, 0.3],
     ]),
   ],
 ]);
@@ -561,10 +572,12 @@ const skillMovementTypeRadiusPowerEffects = new Map<
   [
     MovementTypes.Soldier,
     new Map([
+      [Skill.AttackIncreaseMinor, 1],
       [Skill.BuyUnitOgre, 1],
       [Skill.VampireHeal, 2],
     ]),
   ],
+  [MovementTypes.AirInfantry, new Map([[Skill.VampireHeal, 2]])],
 ]);
 
 const unitCosts = new Map<ID, Map<Skill, number>>([
@@ -574,7 +587,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Zombie, new Map([[Skill.BuyUnitZombieDefenseDecreaseMajor, 250]])],
   [UnitID.AIU, new Map([[Skill.BuyUnitAIU, 500]])],
   [UnitID.Commander, new Map([[Skill.BuyUnitCommander, 225]])],
-  [UnitID.Alien, new Map([[Skill.BuyUnitAlien, 450]])],
+  [UnitID.Alien, new Map([[Skill.BuyUnitAlien, 400]])],
   [UnitID.Octopus, new Map([[Skill.BuyUnitOctopus, 600]])],
   [UnitID.SuperTank, new Map([[Skill.BuyUnitSuperTank, 900]])],
   [UnitID.AcidBomber, new Map([[Skill.BuyUnitAcidBomber, 750]])],
@@ -1308,6 +1321,11 @@ export function hasCounterAttackSkill(skills: ReadonlySet<Skill>) {
 export function isRecoverySkill(skill: Skill) {
   return skill === Skill.RecoverAirUnits;
 }
+
+export const VampireSoldierMovementTypes = new Set([
+  MovementTypes.Soldier,
+  MovementTypes.AirInfantry,
+]);
 
 const octopusPowerDamage = 20;
 const dragonPowerDamage = 80;

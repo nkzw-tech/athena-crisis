@@ -6,6 +6,7 @@ import {
   BazookaBear,
   Bear,
   InfernoJetpack,
+  Pioneer,
   Saboteur,
   UnitInfo,
 } from '../info/Unit.tsx';
@@ -50,6 +51,12 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
     matchUnit: () => true,
     max: 1,
     unitType: Saboteur,
+  },
+  [Skill.UnlockZombie]: {
+    matchBuilding: (building) => building.id === HQ.id,
+    matchUnit: () => true,
+    max: 1,
+    unitType: Pioneer,
   },
 };
 
