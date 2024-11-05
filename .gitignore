@@ -18,6 +18,7 @@ electron/log-output
 electron/offline
 electron/out
 halting-problem-failure.json
+mobile/dist/
 source_strings.json
 tests/testSetup
 tsconfig.tsbuildinfo

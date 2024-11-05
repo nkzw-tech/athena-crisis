@@ -206,8 +206,9 @@ export default memo(function CurrentGameCard({
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}
         key={players.length}
-        size={hasSkills || invasions ? 'large' : undefined}
+        size={hasSkills || invasions ? 'wide' : undefined}
         toggleExpanded={toggleExpanded}
+        wideOnNarrowScreen
       >
         <TeamsCard
           actions={actions}

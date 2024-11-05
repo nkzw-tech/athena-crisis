@@ -355,7 +355,9 @@ export default memo(function PlayerCard({
                 )}
                 value={shouldShow ? player.funds : '???'}
               />
-              <Stack gap>{objectiveList}</Stack>
+              <Stack gap nowrap>
+                {objectiveList}
+              </Stack>
             </Stack>
             {wide && (
               <Stack className={offsetStyle} gap={16} nowrap start>
@@ -365,7 +367,7 @@ export default memo(function PlayerCard({
                     {shouldShow ? calculateFunds(map, player) : '???'}
                   </span>
                 </Stack>
-                <Stack gap>
+                <Stack gap nowrap>
                   {(
                     [
                       [

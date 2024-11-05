@@ -9,10 +9,12 @@ export default function PrimaryExpandableMenuButton({
   className,
   inset,
   size,
+  wideOnNarrowScreen,
   ...props
 }: ComponentProps<typeof ExpandableMenuButton> & {
   inset: number;
-  size?: 'large';
+  size?: 'wide';
+  wideOnNarrowScreen?: true;
 }) {
   const { isExpanded } = props;
   return (
@@ -20,7 +22,8 @@ export default function PrimaryExpandableMenuButton({
       {...props}
       className={cx(
         style,
-        size === 'large' && largeStyle,
+        wideOnNarrowScreen && wideOnNarrowScreenStyle,
+        size === 'wide' && wideStyle,
         inset > 0 && withInsetStyle,
         isExpanded && expandedStyle,
         className,
@@ -33,7 +36,7 @@ export default function PrimaryExpandableMenuButton({
 const size = DoubleSize;
 const style = css`
   font-size: 0.9em;
-  left: ${size * 1.5}px;
+  left: calc(env(safe-area-inset-left) + ${size * 1.5}px);
   line-height: 1.2em;
   min-height: ${size}px;
   overflow: hidden;
@@ -47,14 +50,19 @@ const style = css`
   }
 `;
 
-const largeStyle = css`
+const wideOnNarrowScreenStyle = css`
+  width: calc(100vw - ${size * 1.5}px);
+`;
+
+const wideStyle = css`
   ${Breakpoints.xs} {
+    max-width: calc(100vw - ${size * 1.5}px);
     width: 320px;
   }
 `;
 
 const withInsetStyle = css`
-  left: ${applyVar('inset')};
+  left: calc(env(safe-area-inset-left) + ${applyVar('inset')});
 `;
 
 const expandedStyle = css`

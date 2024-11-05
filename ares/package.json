@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^6.1.2",
+    "@capacitor/status-bar": "^6.0.1",
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
@@ -33,7 +34,6 @@
     "@sentry/browser": "^8.36.0",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
-    "capacitor-suppress-longpress-gesture": "^0.0.8",
     "cordova-plugin-purchase": "^13.11.1",
     "fbt": "^1.0.2",
     "framer-motion": "^11.11.11",

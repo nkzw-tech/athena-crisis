@@ -134,6 +134,9 @@ importers:
       '@capacitor/core':
         specifier: ^6.1.2
         version: 6.1.2
+      '@capacitor/status-bar':
+        specifier: ^6.0.1
+        version: 6.0.1(@capacitor/core@6.1.2)
       '@deities/apollo':
         specifier: workspace:*
         version: link:../apollo
@@ -182,9 +185,6 @@ importers:
       '@stripe/stripe-js':
         specifier: ^4.9.0
         version: 4.9.0
-      capacitor-suppress-longpress-gesture:
-        specifier: ^0.0.8
-        version: 0.0.8(@capacitor/core@6.1.2)
       cordova-plugin-purchase:
         specifier: ^13.11.1
         version: 13.11.1
@@ -1755,6 +1755,11 @@ packages:
 
   '@capacitor/core@6.1.2':
     resolution: {integrity: sha512-xFy1/4qLFLp5WCIzIhtwUuVNNoz36+V7/BzHmLqgVJcvotc4MMjswW/TshnPQaLLujEOaLkA4h8ZJ0uoK3ImGg==}
+
+  '@capacitor/status-bar@6.0.1':
+    resolution: {integrity: sha512-Usd9hZZQVAqy+jJfL7jRcYI7dcsxN09Na1yttwdl+F1bk3Ztoukk7CGPDm5VgKUSs53ihQBOy1+sczCACxhNiw==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
 
   '@clack/core@0.3.4':
     resolution: {integrity: sha512-H4hxZDXgHtWTwV3RAVenqcC4VbJZNegbBjlPvzOzCouXtS2y3sDvlO3IsbrPNWuLWPPlYVYPghQdSF64683Ldw==}
@@ -4370,11 +4375,6 @@ packages:
   canvas@2.11.2:
     resolution: {integrity: sha512-ItanGBMrmRV7Py2Z+Xhs7cT+FNt5K0vPL4p9EZ/UX/Mu7hFbkxSjKF2KVtPwX7UYWp7dRKnrTvReflgrItJbdw==}
     engines: {node: '>=6'}
-
-  capacitor-suppress-longpress-gesture@0.0.8:
-    resolution: {integrity: sha512-gaMoPnOQeg/2DpAzi7oXzEQTJfdRzYdoiiJ5JnA2BYzeSx/CUlOGqO4baRuOUG29Ibqy1TEbLJhYFPHikp4LOQ==}
-    peerDependencies:
-      '@capacitor/core': ^6.0.0
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -9739,6 +9739,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@capacitor/status-bar@6.0.1(@capacitor/core@6.1.2)':
+    dependencies:
+      '@capacitor/core': 6.1.2
+
   '@clack/core@0.3.4':
     dependencies:
       picocolors: 1.1.1
@@ -12769,10 +12773,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
-
-  capacitor-suppress-longpress-gesture@0.0.8(@capacitor/core@6.1.2):
-    dependencies:
-      '@capacitor/core': 6.1.2
 
   ccount@2.0.1: {}
 

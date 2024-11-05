@@ -66,7 +66,6 @@
       body {
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
-        background: #48b0d6;
         color: #111;
         font-family: Athena, ui-sans-serif, system-ui, sans-serif;
         font-size: 20px;
@@ -79,19 +78,55 @@
         user-select: none;
       }
 
+      div.background {
+        background-image: url('./Background.png');
+        bottom: 0;
+        image-rendering: pixelated;
+        left: -144px;
+        overflow: hidden;
+        pointer-events: none;
+        position: fixed;
+        right: -144px;
+        top: -144px;
+        transform: perspective(125px) rotateX(2deg);
+        z-index: 0;
+        zoom: 2;
+      }
+
+      div.relative {
+        position: relative;
+      }
+
       img#keyart {
         user-select: none;
         width: 100%;
+        position: relative;
+        z-index: 1;
       }
 
-      @keyframes pulse {
-        0%,
-        50%,
-        100% {
-          transform: scale(1);
+      div#gradient {
+        background-image: linear-gradient(
+          0deg,
+          #f2f2f2 10px,
+          rgba(255, 255, 255, 0) 30px
+        );
+        inset: 0;
+        bottom: -1px;
+        position: absolute;
+        z-index: 2;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        div.background {
+          filter: invert(1);
         }
-        75% {
-          transform: scale(1.1);
+
+        div#gradient {
+          background-image: linear-gradient(
+            0deg,
+            #28282b 10px,
+            rgba(255, 255, 255, 0) 30px
+          );
         }
       }
 
@@ -116,14 +151,37 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-        left: 100px;
         line-height: 1.4em;
         min-height: 32px;
         padding: 16px;
         position: absolute;
         text-wrap: balance;
-        top: 50px;
-        width: 400px;
+        z-index: 2;
+
+        left: 50px;
+        top: 50%;
+        transform: translate3d(0, -50%, 0);
+        width: calc(100vw - 96px);
+      }
+
+      @media (min-width: 640px) {
+        div#box {
+          left: 100px;
+          top: 50px;
+          width: 400px;
+          transform: unset;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        50%,
+        100% {
+          transform: scale(1);
+        }
+        75% {
+          transform: scale(1.1);
+        }
       }
 
       div#box {
@@ -132,18 +190,22 @@
 
       a {
         color: #3999d4;
+        text-align: center;
       }
 
       p {
         margin: 0;
         padding: 0;
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <div class="background"></div>
-    <div id="app"></div>
-    <img src="/keyart.jpg" id="keyart" />
+    <div class="relative">
+      <img src="/keyart.jpg" id="keyart" />
+      <div id="gradient"></div>
+    </div>
     <div id="box">
       <p>
         Please connect to the Internet to update to the latest version of Athena
@@ -153,7 +215,8 @@
     </div>
     <script type="text/javascript">
       let timer;
-      const reload = () => window.$__AC__.reload();
+      const reload = () =>
+        window.$__AC__ ? window.$__AC__.reload() : location.reload();
       const setTimer = () => {
         timer = setTimeout(() => {
           if (navigator.onLine) {

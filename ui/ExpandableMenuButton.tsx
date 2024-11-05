@@ -1,4 +1,3 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import {
@@ -8,6 +7,8 @@ import {
   useRef,
   useState,
 } from 'react';
+import clipBorder from './clipBorder.tsx';
+import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
 import Stack from './Stack.tsx';
@@ -67,7 +68,6 @@ export default function ExpandableMenuButton({
       >
         {children}
       </Stack>
-
       <Icon
         button
         className={cx(iconStyle, isExpanded && visibleStyle)}
@@ -98,14 +98,17 @@ const expandedInnerStyle = css`
   padding-bottom: 8px;
 `;
 
-const size = DoubleSize;
+const size = 30;
 const iconStyle = css`
+  ${clipBorder(2)}
+  backdrop-filter: blur(4px);
+  background: ${applyVar('background-color-light')};
   height: ${size}px;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   right: 0;
-  top: 0;
+  top: 13px;
   transform: scale(0);
   transition:
     opacity ${duration}ms ease-in-out,
