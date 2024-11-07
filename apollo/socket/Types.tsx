@@ -22,6 +22,7 @@ export type ServerToClientEvents = {
     response: EncodedGameActionResponseWithError,
   ) => void;
   '/pending-game/update': (pendingGameID: string) => void;
+  '/restart-server': () => void;
 };
 
 export type ServerEventName = keyof ServerToClientEvents;
@@ -32,6 +33,7 @@ export function isValidServerEvent(action: string): action is ServerEventName {
     case '/campaign-state/update':
     case '/game/action':
     case '/pending-game/update':
+    case '/restart-server':
       return true;
     default:
       serverAction satisfies never;
