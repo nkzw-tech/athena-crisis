@@ -217,18 +217,20 @@ const narrowStyle = css`
 
 const mediumStyle = css`
   ${Breakpoints.landscape} {
-    ${Breakpoints.xs} {
-      font-size: 1.3em;
-      height: 2.4em;
-      width: 348px;
-    }
+    ${Breakpoints.height.xs} {
+      ${Breakpoints.xs} {
+        font-size: 1.3em;
+        height: 2.4em;
+        width: 348px;
+      }
 
-    ${Breakpoints.sm} {
-      ${pixelBorder()}
+      ${Breakpoints.sm} {
+        ${pixelBorder()}
 
-      clip-path: inset(-3px -3px -3px -3px);
-      font-size: 1.4em;
-      width: 372px;
+        clip-path: inset(-3px -3px -3px -3px);
+        font-size: 1.4em;
+        width: 372px;
+      }
     }
   }
 `;

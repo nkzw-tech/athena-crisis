@@ -10,6 +10,7 @@ export default {
     lg: `@media (min-height: ${height.lg}px)`,
     sm: `@media (min-height: ${sm}px)`,
     xl: `@media (min-height: ${height.xl}px)`,
+    xs: `@media (min-height: ${xs}px)`,
   },
   landscape: `@media (min-aspect-ratio: 4/3)`,
   lg: `@media (min-width: ${lg}px)`,

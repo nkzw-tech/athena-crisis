@@ -629,14 +629,20 @@ const containerStyle = css`
 const actionButtonStyle = css`
   ${vars.set('bottom-offset', 0)}
 
-  bottom: calc(
-    env(safe-area-inset-bottom, 0) + (${vars.apply(
-    'bottom-offset',
-  )} * ${size}px) + ${applyVar('inset')}
-  );
   pointer-events: auto;
   right: calc(${applyVar('inset')} + env(safe-area-inset-right));
   z-index: calc(${applyVar('inset-z')} + 2);
+
+  bottom: calc(
+    env(safe-area-inset-bottom, 0) +
+      (${vars.apply('bottom-offset')} * ${size - 6}px) + ${applyVar('inset')}
+  );
+  ${Breakpoints.height.xs} {
+    bottom: calc(
+      env(safe-area-inset-bottom, 0) +
+        (${vars.apply('bottom-offset')} * ${size - 4}px) + ${applyVar('inset')}
+    );
+  }
 `;
 
 const endTurnButtonStyle = css`
