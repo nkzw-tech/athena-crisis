@@ -19,5 +19,9 @@
   },
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.reportStyleChecksAsWarnings": false,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "search.exclude": {
+    "mobile/android/app/build/**": true,
+    "mobile/ios/DerivedData/**": true
+  }
 }
