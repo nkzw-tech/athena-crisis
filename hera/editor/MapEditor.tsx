@@ -53,6 +53,7 @@ import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton
 import Stack from '@deities/ui/Stack.tsx';
 import Storage from '@deities/ui/Storage.tsx';
 import { css, cx } from '@emotion/css';
+import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
 import { fbt } from 'fbt';
 import { AnimatePresence } from 'framer-motion';
@@ -945,15 +946,22 @@ export default function MapEditor({
           isExpanded={menuIsExpanded}
           toggleExpanded={() => setMenuIsExpanded((isExpanded) => !isExpanded)}
         >
-          <Stack nowrap start>
-            <BiomeIcon biome={map.config.biome} />{' '}
-            <div className={cx(mapNameStyle, ellipsis)}>
-              {mapName || (
-                <span className={lightColorStyle}>
-                  <fbt desc="Fallback name for untitled map">Untitled Map</fbt>
-                </span>
-              )}
-            </div>
+          <Stack alignCenter gap nowrap>
+            <Stack alignCenter className={ellipsis} gap nowrap>
+              <BiomeIcon biome={map.config.biome} />{' '}
+              <div className={ellipsis}>
+                {mapName || (
+                  <span className={lightColorStyle}>
+                    <fbt desc="Fallback name for untitled map">
+                      Untitled Map
+                    </fbt>
+                  </span>
+                )}
+              </div>
+            </Stack>
+            <InlineLink className={cx(linkStyle, menuIsExpanded && hideStyle)}>
+              <Icon icon={ChevronDown} />
+            </InlineLink>
           </Stack>
           {menuIsExpanded && (
             <Stack className={campaignListStyle} gap={16} nowrap vertical>
@@ -1156,10 +1164,6 @@ const menuButtonStyle = css`
   display: -webkit-box;
 `;
 
-const mapNameStyle = css`
-  margin: 6px 0 0 8px;
-`;
-
 const campaignListStyle = css`
   margin-top: ${TileSize}px;
 `;
@@ -1186,4 +1190,14 @@ const iconStyle = css`
   position: absolute;
   right: 0;
   top: 0;
+`;
+
+const linkStyle = css`
+  color: ${applyVar('text-color')};
+  opacity: 1;
+  transition: opacity 150ms ease;
+`;
+
+const hideStyle = css`
+  opacity: 0;
 `;
