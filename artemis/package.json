@@ -10,8 +10,8 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.685.0",
-    "@aws-sdk/s3-request-presigner": "^3.685.0",
+    "@aws-sdk/client-s3": "^3.686.0",
+    "@aws-sdk/s3-request-presigner": "^3.686.0",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/dionysus": "workspace:*",
@@ -28,9 +28,9 @@
     "@pothos/plugin-directives": "^4.1.0",
     "@pothos/plugin-prisma": "^4.3.1",
     "@pothos/plugin-relay": "^4.3.0",
-    "@prisma/client": "^5.21.1",
+    "@prisma/client": "^5.22.0",
     "@quixo3/prisma-session-store": "^3.1.13",
-    "@sentry/node": "^8.36.0",
+    "@sentry/node": "^8.37.1",
     "@types/express-session": "^1.18.0",
     "array-shuffle": "^3.0.0",
     "body-parser": "^1.20.3",
@@ -56,8 +56,8 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-sso-oidc": "^3.682.0",
-    "@aws-sdk/client-sts": "^3.682.0",
+    "@aws-sdk/client-sso-oidc": "^3.686.0",
+    "@aws-sdk/client-sts": "^3.686.0",
     "@rollup/plugin-replace": "^6.0.1",
     "@sentry/vite-plugin": "^2.22.6",
     "@types/body-parser": "^1.19.5",
@@ -70,7 +70,7 @@
     "@types/web-push": "^3.6.4",
     "glob": "11.0.0",
     "p-limit": "^6.1.0",
-    "prisma": "^5.21.1",
+    "prisma": "^5.22.0",
     "prisma-json-types-generator": "^3.1.1",
     "terminal-link": "^3.0.0"
   },
