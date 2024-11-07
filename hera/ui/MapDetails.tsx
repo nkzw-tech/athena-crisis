@@ -2,13 +2,13 @@ import { isValidTimer } from '@deities/apollo/lib/GameTimerValue.tsx';
 import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import getMapSize from '@deities/athena/lib/getMapSize.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import NoSkill from '@deities/ui/icons/NoSkill.tsx';
 import Size from '@deities/ui/icons/Size.tsx';
 import Skills from '@deities/ui/icons/Skills.tsx';
-import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagList from '@deities/ui/TagList.tsx';
@@ -72,7 +72,7 @@ export default function MapDetails({
 }: MapDetailsProps) {
   const { initialCharge, seedCapital } = map.config;
   return map ? (
-    <Stack className={contentStyle} gap={24} vertical>
+    <Stack gap={16} stretch vertical>
       <Stack gap={16} vertical>
         {creator &&
         !SpecialUsers.has(creator.id) &&
@@ -194,23 +194,13 @@ export default function MapDetails({
         )}
       </Stack>
       {buttons && (
-        <Stack
-          alignCenter
-          className={cx(containerStyle, buttonStyle)}
-          gap={24}
-          start
-        >
+        <Stack alignCenter className={buttonStyle} gap={24} start>
           {buttons}
         </Stack>
       )}
     </Stack>
   ) : null;
 }
-
-const contentStyle = css`
-  height: 100%;
-  justify-content: space-between;
-`;
 
 const containerStyle = css`
   backdrop-filter: blur(8px);
@@ -229,7 +219,11 @@ const iconOffsetStyle = css`
 `;
 
 const buttonStyle = css`
-  ${pixelBorder(applyVar('background-color-light'), 2)}
+  ${Breakpoints.sm} {
+    max-width: 240px;
+  }
 
-  padding: 2px 2px 0;
+  ${Breakpoints.lg} {
+    max-width: unset;
+  }
 `;
