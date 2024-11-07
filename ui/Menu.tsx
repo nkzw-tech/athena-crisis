@@ -16,7 +16,6 @@ import {
   useState,
 } from 'react';
 import { App } from './App.tsx';
-import Breakpoints from './Breakpoints.tsx';
 import { rumbleEffect } from './controls/setupGamePad.tsx';
 import useBlockInput from './controls/useBlockInput.tsx';
 import useInput from './controls/useInput.tsx';
@@ -303,6 +302,7 @@ const openStyle = css`
 `;
 
 const overlayStyle = css`
+  align-items: center;
   align-self: center;
   display: flex;
   height: 100%;
@@ -312,11 +312,6 @@ const overlayStyle = css`
   overscroll-behavior: contain;
   padding: 16px;
   position: absolute;
-
-  align-items: start;
-  ${Breakpoints.height.sm} {
-    align-items: center;
-  }
 `;
 
 const linkContainerStyle = css`
