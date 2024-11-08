@@ -1,6 +1,5 @@
 import { DropUnitAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { Plain } from '@deities/athena/info/Tile.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import { TransportedUnit } from '@deities/athena/map/Unit.tsx';
@@ -8,15 +7,13 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import { css } from '@emotion/css';
 import { useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
-import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import Tick from '../Tick.tsx';
+import TransportedUnitTile from '../TransportedUnitTile.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import Flyout, { FlyoutItemWithHighlight } from '../ui/Flyout.tsx';
-import UnitTile from '../Unit.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import dropUnitAction from './drop/dropUnitAction.tsx';
 
@@ -181,25 +178,15 @@ export default class DropUnit {
                 <FlyoutItemWithHighlight
                   highlight={currentIndex === index}
                   icon={(highlight) => (
-                    <div style={{ position: 'relative' }}>
-                      <UnitTile
-                        animationConfig={animationConfig}
-                        biome={map.config.biome}
-                        customSprite={playerDetails
-                          .get(unit.player)
-                          ?.equippedUnitCustomizations.get(unit.id)}
-                        firstPlayerID={map.getFirstPlayerID()}
-                        highlightStyle={highlight ? 'idle' : undefined}
-                        size={tileSize}
-                        tile={Plain}
-                        unit={deployedUnit}
-                      />
-                      {unit.isLeader() && (
-                        <div className={leaderIconStyle}>
-                          <Medal player={unit.player} zoom={1} />
-                        </div>
-                      )}
-                    </div>
+                    <TransportedUnitTile
+                      animationConfig={animationConfig}
+                      highlight={highlight}
+                      key={index}
+                      map={map}
+                      playerDetails={playerDetails}
+                      tileSize={tileSize}
+                      unit={unit}
+                    />
                   )}
                   key={index}
                   onClick={() => actions.update(getRadius(unit, index, state))}
@@ -220,9 +207,3 @@ export default class DropUnit {
     return null;
   };
 }
-
-const leaderIconStyle = css`
-  position: absolute;
-  right: 0;
-  top: 1px;
-`;

@@ -12,6 +12,7 @@ import {
   Dinosaur,
   Dragon,
   InfernoJetpack,
+  Jeep,
   Medic,
   Octopus,
   Ogre,
@@ -72,6 +73,8 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.HealInfantryMedicPower:
     case Skill.VampireHeal:
       return Medic;
+    case Skill.Jeep:
+      return Jeep;
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:

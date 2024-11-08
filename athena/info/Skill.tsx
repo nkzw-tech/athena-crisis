@@ -55,6 +55,7 @@ export enum Skill {
   Charge = 39,
   DragonSaboteur = 40,
   HighTide = 41,
+  Jeep = 42,
 }
 
 export const Skills = new Set<Skill>([
@@ -90,6 +91,7 @@ export const Skills = new Set<Skill>([
   Skill.UnitInfantryForestAttackAndDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
   Skill.DragonSaboteur,
+  Skill.Jeep,
   Skill.RecoverAirUnits,
   Skill.Shield,
   Skill.Charge,
@@ -293,6 +295,11 @@ const skillConfig: Record<
     cost: 200,
     group: SkillGroup.Invasion,
     requiresCrystal,
+  },
+  [Skill.Jeep]: {
+    charges: 2,
+    cost: 800,
+    group: SkillGroup.Special,
   },
 };
 
@@ -560,7 +567,10 @@ const skillMovementTypeRadiusPowerEffects = new Map<
 >([
   [
     MovementTypes.Tires,
-    new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
+    new Map([
+      [Skill.MovementIncreaseGroundUnitDefenseDecrease, 1],
+      [Skill.Jeep, 1],
+    ]),
   ],
   [
     MovementTypes.Tread,
@@ -1219,7 +1229,7 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.SpawnUnitInfernoJetpack) {
     for (const [vector, unit] of map.units) {
-      if (unit.id === UnitID.Flamethrower) {
+      if (unit.id === UnitID.Flamethrower && map.matchesPlayer(unit, player)) {
         list.push(vector);
       }
     }
@@ -1228,7 +1238,7 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.UnlockZombie) {
     for (const [vector, unit] of map.units) {
-      if (unit.id === UnitID.Pioneer) {
+      if (unit.id === UnitID.Pioneer && map.matchesPlayer(unit, player)) {
         list.push(vector);
       }
     }
@@ -1347,19 +1357,15 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
   }
 
   switch (skill) {
+    case Skill.BuyUnitCannon:
+    case Skill.DragonSaboteur:
+    case Skill.Jeep:
     case Skill.RecoverAirUnits:
+    case Skill.Shield:
     case Skill.SpawnUnitInfernoJetpack:
     case Skill.UnlockZombie:
-    case Skill.BuyUnitCannon:
-    case Skill.Shield:
-    case Skill.DragonSaboteur:
       return true;
 
-    case Skill.BuyUnitAlien:
-    case Skill.BuyUnitBazookaBear:
-    case Skill.BuyUnitBear:
-    case Skill.BuyUnitOctopus:
-    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
@@ -1367,19 +1373,25 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.AttackIncreaseMinor:
     case Skill.BuyUnitAcidBomber:
     case Skill.BuyUnitAIU:
+    case Skill.BuyUnitAlien:
+    case Skill.BuyUnitBazookaBear:
+    case Skill.BuyUnitBear:
     case Skill.BuyUnitBrute:
     case Skill.BuyUnitCommander:
     case Skill.BuyUnitDinosaur:
     case Skill.BuyUnitDragon:
+    case Skill.BuyUnitOctopus:
     case Skill.BuyUnitOgre:
     case Skill.BuyUnitSuperAPU:
     case Skill.BuyUnitSuperTank:
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
     case Skill.Charge:
     case Skill.CounterAttackPower:
+    case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.DefenseIncreaseMinor:
     case Skill.HealInfantryMedicPower:
     case Skill.HealVehiclesAttackDecrease:
+    case Skill.HighTide:
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.Sabotage:
@@ -1389,7 +1401,6 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
     case Skill.VampireHeal:
-    case Skill.HighTide:
       return false;
     default: {
       skill satisfies never;

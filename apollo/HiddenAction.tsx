@@ -1,3 +1,5 @@
+import { Skill } from '@deities/athena/info/Skill.tsx';
+import { Jeep } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -126,35 +128,48 @@ function applyHiddenSourceAttackUnitAction(
   map: MapData,
   { chargeB, newPlayerB, to, unitB }: HiddenSourceAttackUnitActionResponse,
 ) {
-  const existingUnit = map.units.get(to);
-  if (!existingUnit) {
+  const originalUnitB = map.units.get(to);
+  if (!originalUnitB) {
     return map;
+  }
+
+  let units = unitB
+    ? map.units.set(
+        to,
+        originalUnitB
+          .copy(unitB)
+          .maybeUpdateAIBehavior()
+          .maybeSetPlayer(newPlayerB, 'complete')
+          .deactivateShield(),
+      )
+    : map.units.delete(to);
+
+  const actualPlayerB = map.getPlayer(originalUnitB);
+  let lostUnits = unitB && newPlayerB == null ? 0 : originalUnitB.count();
+
+  if (
+    !unitB &&
+    actualPlayerB.skills.has(Skill.Jeep) &&
+    originalUnitB?.info === Jeep &&
+    originalUnitB.transports?.length
+  ) {
+    units = units.set(to, originalUnitB.transports[0].deploy());
+    lostUnits = Math.max(0, lostUnits - 1);
   }
 
   return map.copy({
     teams:
-      existingUnit.player > 0
+      originalUnitB.player > 0
         ? updatePlayer(
             map.teams,
-            map
-              .getPlayer(existingUnit)
+            actualPlayerB
               .modifyStatistics({
-                lostUnits:
-                  unitB && newPlayerB == null ? 0 : existingUnit.count(),
+                lostUnits,
               })
               .maybeSetCharge(chargeB),
           )
         : map.teams,
-    units: unitB
-      ? map.units.set(
-          to,
-          existingUnit
-            .copy(unitB)
-            .maybeUpdateAIBehavior()
-            .maybeSetPlayer(newPlayerB, 'complete')
-            .deactivateShield(),
-        )
-      : map.units.delete(to),
+    units,
   });
 }
 

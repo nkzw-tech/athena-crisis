@@ -35,7 +35,6 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.Shield:
       return false;
 
-    case Skill.DragonSaboteur:
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
@@ -55,8 +54,10 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.Charge:
     case Skill.CounterAttackPower:
     case Skill.DefenseIncreaseMinor:
+    case Skill.DragonSaboteur:
     case Skill.HealInfantryMedicPower:
     case Skill.HealVehiclesAttackDecrease:
+    case Skill.Jeep:
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:

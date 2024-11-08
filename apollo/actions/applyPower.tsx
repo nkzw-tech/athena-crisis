@@ -9,6 +9,7 @@ import {
   Dragon,
   Flamethrower,
   InfernoJetpack,
+  Jeep,
   Pioneer,
   Saboteur,
   Zombie,
@@ -21,6 +22,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   Charge,
   HealAmount,
+  MaxHealth,
   MinSize,
 } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
@@ -200,6 +202,20 @@ export default function applyPower(skill: Skill, map: MapData) {
     map = map.copy({
       units: map.units.map((unit) =>
         map.matchesPlayer(player, unit) ? unit.activateShield() : unit,
+      ),
+    });
+  }
+
+  if (skill === Skill.Jeep) {
+    map = map.copy({
+      units: map.units.map((unit) =>
+        unit.info === Jeep && map.matchesPlayer(player, unit)
+          ? unit.copy({
+              transports: unit.transports?.map((unit) =>
+                unit.copy({ health: MaxHealth }),
+              ),
+            })
+          : unit,
       ),
     });
   }

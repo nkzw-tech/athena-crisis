@@ -1945,7 +1945,7 @@ const GroundSupplyTypes = new Set([
 ]);
 
 export const Jeep = new UnitInfo(
-  6,
+  UnitID.Jeep,
   'Jeep',
   'Remy',
   'male',

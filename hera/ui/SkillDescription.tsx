@@ -46,6 +46,7 @@ import {
   Flamethrower,
   getUnitInfoOrThrow,
   InfernoJetpack,
+  Jeep,
   Pioneer,
   Saboteur,
   Sniper,
@@ -720,6 +721,16 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           receive the ability to capture buildings.
         </fbt>
       );
+    case Skill.Jeep:
+      return (
+        <fbt desc="Additional skill description.">
+          Each time a{' '}
+          <fbt:param name="pluralUnitName">
+            <RawUnitName color={color} unit={Jeep} />
+          </fbt:param>{' '}
+          unit is defeated, it deploys one of the units it carries.
+        </fbt>
+      );
   }
   return null;
 };
@@ -940,6 +951,15 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Raises the water level, causing the battlefield to shrink inward by
           one tile on each side. Eliminates any units or structures located at
           the edges.
+        </fbt>
+      );
+    case Skill.Jeep:
+      return (
+        <fbt desc="Additional skill description.">
+          Fully heals all units carried by
+          <fbt:param name="convertedUnitName">
+            <UnitName color={color} unit={Jeep} />
+          </fbt:param>.
         </fbt>
       );
   }

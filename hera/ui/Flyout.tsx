@@ -81,7 +81,7 @@ type FlyoutProps = Readonly<{
   onClick?: () => void;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
-  small?: boolean;
+  size?: 'large';
 }>;
 
 export function FlyoutItem({
@@ -95,6 +95,7 @@ export function FlyoutItem({
   onClick,
   onPointerEnter,
   onPointerLeave,
+  size,
 }: FlyoutProps) {
   const itemColor =
     color === 'error' ? applyVar('error-color') : color && getColor(color);
@@ -107,7 +108,7 @@ export function FlyoutItem({
         center && centerStyle,
         disabled && disabledItemStyle,
         highlight && 'highlight',
-        icon ? largeStyle : null,
+        icon || size === 'large' ? largeStyle : null,
       )}
       onClick={disabled ? undefined : onClick}
       onPointerEnter={onPointerEnter}
@@ -161,11 +162,11 @@ const FlyoutSeparator = () => (
 const vars = new CSSVariables<'size'>('f');
 
 const mini = TileSize / 2;
-const small = (TileSize / 3) * 2;
+const regular = (TileSize / 3) * 2;
 const large = TileSize;
 
 const baseStyle = css`
-  ${vars.set('size', small + 'px')}
+  ${vars.set('size', regular + 'px')}
 
   ${pixelBorder(applyVar('background-color'), 2)}
 

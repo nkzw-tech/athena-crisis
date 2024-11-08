@@ -28,17 +28,19 @@ export async function hiddenSourceAttackAction(
   const isDestroyedBuilding = type === 'HiddenDestroyedBuilding';
   const isBuilding =
     isDestroyedBuilding || type === 'HiddenSourceAttackBuilding';
+  const initialMap = state.map;
   const entityB = isBuilding
-    ? state.map.buildings.get(to)
-    : state.map.units.get(to);
+    ? initialMap.buildings.get(to)
+    : initialMap.units.get(to);
   const newEntityB = isDestroyedBuilding
     ? null
     : isBuilding
       ? actionResponse.building
       : actionResponse.unitB;
+
   const applyHiddenState = (state: State) => ({
     ...state,
-    map: applyHiddenActionResponse(state.map, state.vision, actionResponse),
+    map: applyHiddenActionResponse(initialMap, state.vision, actionResponse),
   });
 
   state = await attackFlashAnimation(actions, state, {
@@ -70,12 +72,7 @@ export async function hiddenSourceAttackAction(
       await explosionAnimation(
         actions,
         state,
-        state.map.copy({
-          ...(isBuilding
-            ? { buildings: state.map.buildings.delete(to) }
-            : null),
-          units: state.map.units.delete(to),
-        }),
+        applyHiddenState(state).map,
         entityB,
         to,
         ('direction' in actionResponse && actionResponse.direction) ||
@@ -144,7 +141,7 @@ export async function hiddenTargetAttackAction(
     | HiddenTargetAttackUnitActionResponse
     | HiddenTargetAttackBuildingActionResponse,
 ): Promise<State> {
-  const { map } = state;
+  const initialMap = state.map;
   const {
     direction,
     from,
@@ -155,12 +152,12 @@ export async function hiddenTargetAttackAction(
   } = actionResponse;
   const isBuilding = type === 'HiddenTargetAttackBuilding';
   const to = isBuilding ? actionResponse.to : null;
-  const building = to && isBuilding && map.buildings.get(to);
-  const unitA = map.units.get(from);
+  const building = to && isBuilding && initialMap.buildings.get(to);
+  const unitA = initialMap.units.get(from);
 
   const applyHiddenState = (state: State) => ({
     ...state,
-    map: applyHiddenActionResponse(state.map, state.vision, actionResponse),
+    map: applyHiddenActionResponse(initialMap, state.vision, actionResponse),
   });
 
   state = await attackActionAnimation(actions, state, {

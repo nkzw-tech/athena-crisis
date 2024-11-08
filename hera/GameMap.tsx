@@ -1976,6 +1976,7 @@ export default class GameMap extends Component<Props, State> {
                         currentViewer={currentViewer}
                         key={`named-position-${vector}`}
                         map={map}
+                        playerDetails={playerDetails}
                         tileSize={tileSize}
                         vector={vector}
                         zIndex={zIndex}

@@ -141,7 +141,7 @@ export default class Heal {
                   </span>
                 </FlyoutItem>
               ) : (
-                <FlyoutItem color="red" key="change" small>
+                <FlyoutItem color="red" key="change">
                   <fbt desc="Not enough funds label">Not enough funds!</fbt>
                 </FlyoutItem>
               ),

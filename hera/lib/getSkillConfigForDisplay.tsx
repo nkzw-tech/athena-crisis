@@ -13,6 +13,7 @@ import Octopus from '@deities/ui/icons/Octopus.tsx';
 import Ogre from '@deities/ui/icons/Ogre.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
+import Seatbelt from '@deities/ui/icons/Seatbelt.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
 import Tide from '@deities/ui/icons/Tide.tsx';
@@ -373,6 +374,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: ['blue', 'purple'],
         icon: Tide,
         name: fbt('High Tide', 'Skill name'),
+      };
+    case Skill.Jeep:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'pink',
+        icon: Seatbelt,
+        name: fbt('Seatbelts On', 'Skill name'),
       };
     default: {
       skill satisfies never;

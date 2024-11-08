@@ -2,6 +2,7 @@
 export default {
   Pioneer: 1,
   Infantry: 2,
+  Jeep: 6,
   Artillery: 7,
   HeavyArtillery: 12,
   Sniper: 14,

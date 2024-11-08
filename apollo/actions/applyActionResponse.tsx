@@ -1,5 +1,6 @@
-import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { RailBridge, RailTrack, River } from '@deities/athena/info/Tile.tsx';
+import { Jeep } from '@deities/athena/info/Unit.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
@@ -123,26 +124,40 @@ export default function applyActionResponse(
             )
           : units.delete(to);
 
+      const actualPlayerA = map.getPlayer(playerA);
+      const actualPlayerB = map.getPlayer(playerB);
+
       const lostUnits =
         unitA &&
         originalUnitA &&
         units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
-      const destroyedUnits =
+      let destroyedUnits =
         unitB &&
         originalUnitB &&
         units.get(to)?.player === originalUnitB?.player
           ? 0
           : originalUnitB?.count() || 1;
+
       const oneShotB =
         originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
       const oneShotA =
         originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
+
+      if (
+        !unitB &&
+        actualPlayerB.skills.has(Skill.Jeep) &&
+        originalUnitB?.info === Jeep &&
+        originalUnitB.transports?.length
+      ) {
+        units = units.set(to, originalUnitB.transports[0].deploy());
+        destroyedUnits = Math.max(0, destroyedUnits - 1);
+      }
+
       return map.copy({
         teams: updatePlayers(map.teams, [
-          map
-            .getPlayer(playerA)
+          actualPlayerA
             .modifyStatistics({
               damage: originalUnitB
                 ? Math.max(0, originalUnitB.health - (unitB?.health || 0))
@@ -153,8 +168,7 @@ export default function applyActionResponse(
             })
             .maybeSetCharge(chargeA),
           playerB !== 0
-            ? map
-                .getPlayer(playerB)
+            ? actualPlayerB
                 .modifyStatistics({
                   damage: Math.max(
                     0,
