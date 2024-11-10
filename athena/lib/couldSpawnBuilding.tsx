@@ -1,5 +1,5 @@
+import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import { BuildingInfo } from '../info/Building.tsx';
-import { ConstructionSite, Plain } from '../info/Tile.tsx';
 import { PlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -12,12 +12,19 @@ export default function couldSpawnBuilding(
   building: BuildingInfo,
   player: PlayerID,
 ) {
-  if (map.getTileInfo(vector) === Plain) {
-    const tiles = map.map.slice();
+  const { editorPlaceOn, placeOn } = building.configuration;
+  const tiles = new Set([...(placeOn || []), ...editorPlaceOn]);
+  if (!tiles.has(map.getTileInfo(vector))) {
+    const tileMap = map.map.slice();
     const modifiers = map.modifiers.slice();
-    writeTile(tiles, modifiers, map.getTileIndex(vector), ConstructionSite);
+    writeTile(
+      tileMap,
+      modifiers,
+      map.getTileIndex(vector),
+      getFirstOrThrow(tiles),
+    );
     map = map.copy({
-      map: tiles,
+      map: tileMap,
     });
   }
 
