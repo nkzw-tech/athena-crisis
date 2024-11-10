@@ -42,10 +42,7 @@ export default memo(function Button({
   const click = useCallback(() => {
     AudioPlayer.playSound('UI/Accept');
     onClick?.();
-    if (!to && props.href) {
-      window.open(props.href);
-    }
-  }, [onClick, props.href, to]);
+  }, [onClick]);
 
   const setRefs = useCallback(
     (anchorElement: HTMLAnchorElement | null) => {
