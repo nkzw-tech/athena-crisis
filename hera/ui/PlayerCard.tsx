@@ -409,7 +409,13 @@ export default memo(function PlayerCard({
             )}
           </Stack>
           {player.skills.size || invasions ? (
-            <Stack className={skillStyle} nowrap>
+            <Stack
+              className={cx(
+                skillBoxStyle,
+                charge > 0 && skillBoxWithChargeStyle,
+              )}
+              nowrap
+            >
               {[...new Set([...player.activeSkills, ...player.skills])].map(
                 (skill) => {
                   const { charges, requiresCrystal } = getSkillConfig(skill);
@@ -642,9 +648,13 @@ const winConditionIconStyle = css`
   margin: 3px 6px 0 0;
 `;
 
-const skillStyle = css`
-  padding: 13px 0 0 8px;
+const skillBoxStyle = css`
+  padding: 9px 0 0 8px;
   gap: 12px;
+`;
+
+const skillBoxWithChargeStyle = css`
+  padding-top: 13px;
 `;
 
 const fundStyle = css`

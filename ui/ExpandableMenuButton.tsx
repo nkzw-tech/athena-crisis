@@ -98,7 +98,7 @@ const expandedInnerStyle = css`
   padding-bottom: 8px;
 `;
 
-const size = 30;
+const size = 28;
 const iconStyle = css`
   ${clipBorder(2)}
 
@@ -107,8 +107,8 @@ const iconStyle = css`
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  right: 0;
-  top: 13px;
+  right: 2px;
+  top: 10px;
   transform: scale(0);
   transition:
     opacity ${duration}ms ease-in-out,
