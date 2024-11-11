@@ -3871,7 +3871,7 @@ export const InfernoJetpack = new UnitInfo(
     },
     name: 'Units-InfernoJetpack',
     portrait: {
-      position: sprite(5, 0),
+      position: sprite(56, 0),
       variants: 3,
     },
     withNavalExplosion: true,
