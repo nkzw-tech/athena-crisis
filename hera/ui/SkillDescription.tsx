@@ -1147,7 +1147,7 @@ export default memo(function SkillDescription({
           </fbt>
         ) : (
           <fbt desc="Description for skill behavior">
-            Consume a crystal to activate this power.
+            Consume any crystal to activate this power.
           </fbt>
         )}
       </div>
