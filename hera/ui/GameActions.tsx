@@ -37,6 +37,7 @@ import Base from '../behavior/Base.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import canEndTurn from '../behavior/endTurn/canEndTurn.tsx';
 import endTurnAction from '../behavior/endTurn/endTurnAction.tsx';
+import NullBehavior from '../behavior/NullBehavior.tsx';
 import { SetZoomFn } from '../editor/hooks/useZoom.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
@@ -507,9 +508,10 @@ export default function GameActions({
   const undo = useCallback(() => {
     if (canUndo && undoTurn) {
       AudioPlayer.playSound('UI/Accept');
+      actions.update(resetBehavior(NullBehavior));
       undoTurn();
     }
-  }, [canUndo, undoTurn]);
+  }, [actions, canUndo, undoTurn]);
   useInput('undo', undo);
 
   const replayBar = !hasEnded && (
