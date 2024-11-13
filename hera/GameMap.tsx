@@ -1086,7 +1086,7 @@ export default class GameMap extends Component<Props, State> {
         }
       }
 
-      if (state.map.config.fog && (self.buildings || self.units)) {
+      if (state.map.config.fog) {
         state = await this._update((state) => ({
           // Ensure that attack action buttons are shown if attackable units
           // are now in range.
