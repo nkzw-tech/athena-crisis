@@ -10,12 +10,14 @@ import Stack from './Stack.tsx';
 
 export default function Select({
   children,
+  dropdownClassName,
   forceOpen,
   outline,
   selectedItem,
   size = 'medium',
 }: {
   children: ReactNode;
+  dropdownClassName?: string;
   forceOpen?: boolean;
   outline?: true;
   selectedItem: ReactNode;
@@ -31,7 +33,7 @@ export default function Select({
         outline && outlineStyle,
       )}
       closeOnSelect
-      dropdownClassName={cx(BoxStyle, selectorStyle)}
+      dropdownClassName={cx(BoxStyle, selectorStyle, dropdownClassName)}
       forceOpen={forceOpen}
       title={
         <Stack gap nowrap stretch>
