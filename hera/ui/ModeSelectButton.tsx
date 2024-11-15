@@ -234,7 +234,7 @@ const mediumStyle = css`
     }
   }
 
-  ${Breakpoints.height.lg} {
+  ${Breakpoints.height.xl} {
     ${Breakpoints.xs} {
       font-size: 1.3em;
       height: 2.4em;
