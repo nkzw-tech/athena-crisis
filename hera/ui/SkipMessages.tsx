@@ -66,8 +66,8 @@ export default function SkipMessages() {
 const absoluteStyle = css`
   pointer-events: none;
   position: fixed;
-  right: env(safe-area-inset-right);
-  top: env(safe-area-inset-top);
+  right: 0;
+  top: 0;
   z-index: 3002;
 `;
 
@@ -79,8 +79,8 @@ const skipMessagesStyle = css`
   height: ${DoubleSize}px;
   line-height: ${DoubleSize}px;
   position: fixed;
-  right: env(safe-area-inset-right);
-  top: env(safe-area-inset-top);
+  right: 0;
+  top: 0;
   z-index: 3003;
 `;
 
