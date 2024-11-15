@@ -269,7 +269,12 @@ const skillConfig: Record<
   },
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitOgre]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
-  [Skill.BuyUnitBear]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitBear]: {
+    activateOnInvasion,
+    charges: 3,
+    cost: 1500,
+    group: SkillGroup.Unlock,
+  },
   [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
   [Skill.Shield]: {
     activateOnInvasion: 'no-command',

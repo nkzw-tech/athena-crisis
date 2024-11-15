@@ -13,6 +13,7 @@ import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import getWinningInvaders from '@deities/athena/lib/getWinningInvaders.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
+import spawnBuildings from '@deities/athena/lib/spawnBuildings.tsx';
 import {
   isHumanPlayer,
   PlayerID,
@@ -24,6 +25,7 @@ import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
 import animateFireworks, {
@@ -406,8 +408,18 @@ async function processActionResponse(
           units.size >= 5 ? 'fast' : 'slow',
           (state) => {
             requestFrame(async () => {
+              state = await update(state);
+
               if (buildings) {
                 for (const [from, building] of buildings) {
+                  state = await update({
+                    map: spawnBuildings(
+                      state.map,
+                      ImmutableMap([[from, building]]),
+                    ).copy({
+                      buildings: state.map.buildings,
+                    }),
+                  });
                   state = await animateCreateBuilding(actions, state, {
                     building,
                     free: true,
@@ -416,11 +428,13 @@ async function processActionResponse(
                   });
                 }
               }
+
               resolve({
                 ...state,
                 map: newMap,
               });
             });
+
             return null;
           },
         ),

@@ -80,9 +80,8 @@ export function addCreateBuildingAnimation(
 export function animateCreateBuilding(
   { requestFrame, update }: Actions,
   state: State,
-  actionResponse: CreateBuildingActionResponse,
+  { building, from }: CreateBuildingActionResponse,
 ): Promise<State> {
-  const { building, from } = actionResponse;
   return new Promise((resolve) =>
     update({
       animations: state.animations.set(from, {
@@ -97,18 +96,12 @@ export function animateCreateBuilding(
             position: from,
           };
         },
-        onCreate: (state) => {
-          const map = applyActionResponse(
-            state.map,
-            state.vision,
-            actionResponse,
-          );
-          return {
-            map: map.copy({
-              buildings: map.buildings.set(from, building.recover()),
-            }),
-          };
-        },
+        onCreate: (state) => ({
+          ...state,
+          map: state.map.copy({
+            buildings: state.map.buildings.set(from, building.recover()),
+          }),
+        }),
         type: 'createBuilding',
         variant: building.player,
       }),

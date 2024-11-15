@@ -1719,6 +1719,9 @@ const DefaultUnitAbilities = new UnitAbilities({
   accessBuildings: true,
   moveAndAct: true,
 });
+const DefaultShipUnitAbilities = new UnitAbilities({
+  moveAndAct: true,
+});
 const PioneerUnitAbilities = DefaultUnitAbilities.copy({
   capture: true,
   createBuildings: true,
@@ -2222,9 +2225,7 @@ export const Lander = new UnitInfo(
     radius: 7,
     vision: 1,
   },
-  new UnitAbilities({
-    moveAndAct: true,
-  }),
+  DefaultShipUnitAbilities,
   null,
   {
     limit: 2,
@@ -2801,7 +2802,7 @@ export const Destroyer = new UnitInfo(
     radius: 6,
     vision: 3,
   },
-  DefaultUnitAbilities,
+  DefaultShipUnitAbilities,
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.SAM.withSupply(6), CruiseMissile.withSupply(4)],
@@ -2834,7 +2835,7 @@ export const Frigate = new UnitInfo(
     radius: 5,
     vision: 3,
   },
-  DefaultUnitAbilities,
+  DefaultShipUnitAbilities,
   {
     range: [1, 2],
     type: AttackType.LongRange,
@@ -2867,9 +2868,7 @@ export const Hovercraft = new UnitInfo(
     radius: 7,
     vision: 3,
   },
-  new UnitAbilities({
-    moveAndAct: true,
-  }),
+  DefaultShipUnitAbilities,
   null,
   {
     limit: 4,
@@ -2952,7 +2951,6 @@ export const SupportShip = new UnitInfo(
     vision: 5,
   },
   new UnitAbilities({
-    accessBuildings: true,
     heal: true,
     moveAndAct: true,
     rescue: true,
@@ -2986,7 +2984,7 @@ export const Corvette = new UnitInfo(
     radius: 6,
     vision: 1,
   },
-  DefaultUnitAbilities,
+  DefaultShipUnitAbilities,
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.Torpedo.withSupply(5)],
@@ -3369,7 +3367,7 @@ export const Octopus = new UnitInfo(
     radius: 5,
     vision: 2,
   },
-  DefaultUnitAbilities,
+  DefaultShipUnitAbilities,
   {
     type: AttackType.ShortRange,
     weapons: [Weapons.TentacleWhip.withSupply(10)],

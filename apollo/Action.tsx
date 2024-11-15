@@ -889,8 +889,14 @@ function spawnEffect(
   }
 
   if (buildings) {
+    const futureMap = map.copy({
+      units: map.units.merge(newUnits),
+    });
+
     for (const [vector, building] of buildings) {
-      if (couldSpawnBuilding(map, vector, building.info, building.player)) {
+      if (
+        couldSpawnBuilding(futureMap, vector, building.info, building.player)
+      ) {
         newBuildings = newBuildings.set(vector, building);
       }
     }
