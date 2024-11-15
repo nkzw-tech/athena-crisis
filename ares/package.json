@@ -36,7 +36,7 @@
     "@stripe/stripe-js": "^4.10.0",
     "cordova-plugin-purchase": "^13.11.1",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.11.15",
+    "framer-motion": "^11.11.17",
     "p-limit": "^6.1.0",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
@@ -65,7 +65,7 @@
     "glob": "11.0.0",
     "relay-compiler": "^18.1.0",
     "vite-plugin-minify": "^2.0.1",
-    "vite-plugin-pwa": "^0.20.5",
+    "vite-plugin-pwa": "^0.21.0",
     "vite-plugin-restart": "^0.4.1"
   }
 }
