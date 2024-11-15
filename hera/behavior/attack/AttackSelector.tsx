@@ -102,12 +102,18 @@ export default function AttackSelector({
     if (entities.building || entities.unit) {
       const isShortRange = selectedUnit.info.isShortRange();
       const targetPosition = origin || selectedPosition;
+      const futureMap =
+        targetPosition === selectedPosition
+          ? map
+          : map.copy({
+              units: map.units.delete(selectedPosition),
+            });
       const unitDamage =
         entities.unit &&
         getDamageInformation(
           selectedUnit,
           entities.unit,
-          map,
+          futureMap,
           targetPosition,
           position,
         );
@@ -116,7 +122,7 @@ export default function AttackSelector({
         getDamageInformation(
           selectedUnit,
           entities.building,
-          map,
+          futureMap,
           targetPosition,
           position,
         );

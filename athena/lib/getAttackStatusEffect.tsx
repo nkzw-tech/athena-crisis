@@ -29,8 +29,7 @@ export default function getAttackStatusEffect(
     for (const adjacent of vector.adjacent()) {
       const unit = map.units.get(adjacent);
       if (
-        unit &&
-        unit.info.hasAbility(Ability.Morale) &&
+        unit?.info.hasAbility(Ability.Morale) &&
         map.matchesPlayer(unit, player)
       ) {
         unitEffect += MoraleStatusEffect;
