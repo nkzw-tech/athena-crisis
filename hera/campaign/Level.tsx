@@ -352,7 +352,7 @@ export default memo(function Level({
                     </Stack>
                   )}
                   {hasBonusObjective(map, map.active[0]) && (
-                    <Stack gap nowrap start>
+                    <Stack alignCenter gap nowrap start>
                       <input
                         checked
                         className={cx('disabled', 'checkmark')}

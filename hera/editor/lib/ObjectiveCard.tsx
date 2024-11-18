@@ -269,7 +269,7 @@ export default function ObjectiveCard({
           )}
           <Stack className={lineHeightStyle} gap={16} nowrap>
             <label className={labelStyle}>
-              <Stack gap nowrap start>
+              <Stack alignCenter gap nowrap start>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for secret objective checkbox">Secret</fbt>
                 </span>
@@ -298,7 +298,7 @@ export default function ObjectiveCard({
             <>
               <Stack className={lineHeightStyle} gap={16} nowrap>
                 <label className={labelStyle}>
-                  <Stack gap nowrap start>
+                  <Stack alignCenter gap nowrap start>
                     <span className={labelWidthStyle}>
                       <fbt desc="Label for optional objective checkbox">
                         Optional
@@ -330,7 +330,7 @@ export default function ObjectiveCard({
               {canEditPerformance && isOptional && (
                 <Stack alignCenter className={lineHeightStyle} gap>
                   <label>
-                    <Stack gap start>
+                    <Stack alignCenter gap start>
                       <span className={labelWidthStyle}>
                         <fbt desc="Label for enabling this objective to reward a bonus star">
                           Bonus
