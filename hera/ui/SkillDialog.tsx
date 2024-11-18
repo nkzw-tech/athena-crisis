@@ -628,7 +628,7 @@ const SkillListItem = ({
             </div>
           )}
         </Stack>
-        <Stack className={descriptionStyle} gap={16} vertical>
+        <Stack className={descriptionStyle} gap vertical>
           <SkillDescription color={color} skill={skill} type="regular" />
           <SkillDescription color={color} skill={skill} type="power" />
         </Stack>

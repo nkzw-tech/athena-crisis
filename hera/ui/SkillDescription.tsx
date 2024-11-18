@@ -74,6 +74,7 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
+import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import UICrystalIcon from '@deities/ui/icons/UICrystalIcon.tsx';
 import { css, cx } from '@emotion/css';
@@ -84,6 +85,7 @@ import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';
 import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
+import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
 import UnitTile from '../Unit.tsx';
 
@@ -1025,10 +1027,11 @@ export default memo(function SkillDescription({
   const isPower = !isRegular;
   const { activateOnInvasion, campaignOnly, charges, requiresCrystal } =
     getSkillConfig(skill);
-  if ((charges == null || charges === 0) && isPower) {
+  if (isPower && (charges == null || charges === 0)) {
     return null;
   }
 
+  const { colors } = getSkillConfigForDisplay(skill);
   const attack = getSkillEffect(isRegular ? 'attack' : 'attack-power', skill);
   const cost = getSkillEffect(
     isRegular ? 'unit-cost' : 'unit-cost-power',
@@ -1192,7 +1195,20 @@ export default memo(function SkillDescription({
       item ? <Fragment key={index}>{item} </Fragment> : null,
     );
 
-  return list?.length ? <div className="paragraph">{list}</div> : null;
+  return list?.length ? (
+    <div
+      className={cx('paragraph', isPower && powerStyle)}
+      style={
+        isPower
+          ? {
+              background: gradient(colors, 0.05),
+            }
+          : undefined
+      }
+    >
+      {list}
+    </div>
+  ) : null;
 });
 
 const mapEditorUnitUnlocks = new Map<Skill, UnitInfo>([
@@ -1308,4 +1324,12 @@ const iconStyle = css`
 
 const chargeIconStyle = css`
   margin: -4px 4px 0 0;
+`;
+
+const powerStyle = css`
+  ${clipBorder()}
+
+  background: ${applyVar('background-color')};
+  margin-left: -12px;
+  padding: 6px 12px;
 `;
