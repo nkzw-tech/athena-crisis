@@ -114,7 +114,10 @@ const maybeSwapEffect = (
 
   const newEffects = new Map(effects);
   if (target) {
-    newEffects.set(newTrigger, new Set(target));
+    newEffects.set(
+      newTrigger,
+      new Set([...(newEffects.get(newTrigger) || []), ...target]),
+    );
   }
 
   const origin = partition.get('origin');
