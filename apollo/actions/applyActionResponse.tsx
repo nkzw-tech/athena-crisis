@@ -450,19 +450,26 @@ export default function applyActionResponse(
     case 'Heal': {
       const { from, to } = actionResponse;
       const unitA = from && map.units.get(from);
-      const unitB = map.units.get(to)!;
-      const player = map.getPlayer(unitB);
-      const units = map.units.set(
-        to,
-        unitB.modifyHealth(HealAmount).removeStatusEffect(),
-      );
-      return map.copy({
-        teams: updatePlayer(
-          map.teams,
-          player.modifyFunds(-getHealCost(unitB, player)),
-        ),
-        units: unitA ? units.set(from, unitA.complete()) : units,
-      });
+      let unitB = map.units.get(to);
+      if (unitB) {
+        const player = map.getPlayer(unitB);
+        if (player.skills.has(Skill.Shield)) {
+          unitB = unitB.activateShield();
+        }
+        const units = map.units.set(
+          to,
+          unitB.modifyHealth(HealAmount).removeStatusEffect(),
+        );
+        return map.copy({
+          teams: updatePlayer(
+            map.teams,
+            player.modifyFunds(-getHealCost(unitB, player)),
+          ),
+          units: unitA ? units.set(from, unitA.complete()) : units,
+        });
+      }
+
+      return map;
     }
     case 'Message':
     case 'CharacterMessage':

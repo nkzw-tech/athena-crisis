@@ -47,11 +47,13 @@ import {
   getUnitInfoOrThrow,
   InfernoJetpack,
   Jeep,
+  Medic,
   Pioneer,
   Saboteur,
   Sniper,
   SpecialUnits,
   SuperTank,
+  SupportShip,
   UnitInfo,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
@@ -701,6 +703,16 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           units heal
           <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
           at the beginning of their turn.
+        </fbt>
+      );
+    case Skill.Shield:
+      return (
+        <fbt desc="Additional skill description">
+          Units healed by{' '}
+          <fbt:param name="unitNames">
+            <UnitNames color={color} units={[Medic, SupportShip]} />
+          </fbt:param>{' '}
+          receive a shield for one turn.
         </fbt>
       );
     case Skill.Charge:

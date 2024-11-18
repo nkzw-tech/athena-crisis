@@ -6,6 +6,7 @@ import {
   Cannon,
   Flamethrower,
   Infantry,
+  Medic,
   Pioneer,
   Saboteur,
   SmallTank,
@@ -26,6 +27,7 @@ import {
   ActivatePowerAction,
   AttackUnitAction,
   CaptureAction,
+  HealAction,
 } from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
 
@@ -701,4 +703,22 @@ test('defense cannot go negative', async () => {
   expect(
     getDefenseStatusEffect(mapA, mapA.units.get(fromA)!, null),
   ).toBeGreaterThanOrEqual(0);
+});
+
+test('adds a shield when healing units with the shield skill', async () => {
+  const skills = new Set([Skill.Shield]);
+  const mapA = map.copy({
+    units: map.units
+      .set(fromA, Medic.create(1))
+      .set(toA, Infantry.create(1).setHealth(50)),
+  });
+
+  const [, resultMapA] = execute(mapA, vision, HealAction(fromA, toA))!;
+  expect(resultMapA.units.get(toA)!.shield).toBe(null);
+
+  const mapB = mapA.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
+  });
+  const [, resultMapB] = execute(mapB, vision, HealAction(fromA, toA))!;
+  expect(resultMapB.units.get(toA)!.shield).toBe(true);
 });

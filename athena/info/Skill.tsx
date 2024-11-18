@@ -393,6 +393,10 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
   [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 2]])],
 ]);
 
+const attackMovementTypeStatusEffects: MovementSkillMap = new Map([
+  [Skill.HighTide, new Map([[MovementTypes.Ship, 0.2]])],
+]);
+
 const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
   [Skill.UnitBattleShipMoveAndAct, new Map([[MovementTypes.Ship, 0.5]])],
   [Skill.BuyUnitBrute, new Map([[MovementTypes.Soldier, 0.5]])],
@@ -797,7 +801,7 @@ export const getSkillAttackStatusEffects = (
   let effect = sumAll(
     attackStatusEffects,
     attackUnitStatusEffects,
-    null,
+    attackMovementTypeStatusEffects,
     attackPowerStatusEffects,
     attackUnitPowerStatusEffects,
     attackMovementTypePowerStatusEffects,
@@ -1111,7 +1115,7 @@ export function getSkillAttackMovementTypeStatusEffect(
   type: SkillActivationType,
 ) {
   return type === 'regular'
-    ? null
+    ? attackMovementTypeStatusEffects.get(skill)
     : attackMovementTypePowerStatusEffects.get(skill) || null;
 }
 
