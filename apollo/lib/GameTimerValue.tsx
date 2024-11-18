@@ -1,4 +1,4 @@
-const GameTimerValue = [null, -1, 3600, 86_400, 604_800] as const;
+const GameTimerValue = [null, -1, 86_400, 345_600, 604_800] as const;
 
 export default GameTimerValue;
 
