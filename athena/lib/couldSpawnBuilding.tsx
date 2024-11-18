@@ -13,7 +13,7 @@ export default function couldSpawnBuilding(
   building: BuildingInfo,
   player: PlayerID,
 ) {
-  if (map.buildings.has(vector)) {
+  if (!map.contains(vector) || map.buildings.has(vector)) {
     return false;
   }
 
