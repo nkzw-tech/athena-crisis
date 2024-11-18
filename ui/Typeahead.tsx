@@ -300,18 +300,6 @@ export default function Typeahead<T>({
     [onSelect, resetResults],
   );
 
-  useInput(
-    'cancel',
-    useCallback(() => {
-      if (input.current) {
-        input.current.value = '';
-      }
-      hide();
-      (document.activeElement as HTMLInputElement)?.blur?.();
-    }, [hide]),
-    'dialog',
-  );
-
   const select = useCallback(() => {
     if (results.length === 0) {
       return;
@@ -372,6 +360,16 @@ export default function Typeahead<T>({
       }
 
       switch (event.key) {
+        case 'Escape': {
+          if (input.current) {
+            input.current.value = '';
+            if (input.current === document.activeElement) {
+              hide();
+              input.current.blur();
+            }
+          }
+          break;
+        }
         case 'ArrowDown': {
           event.preventDefault();
           down();
@@ -391,7 +389,7 @@ export default function Typeahead<T>({
           break;
       }
     },
-    [down, onBackspace, select, up],
+    [down, hide, onBackspace, select, up],
   );
 
   useEffect(() => {

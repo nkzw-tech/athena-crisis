@@ -351,11 +351,16 @@ export default function CampaignEditor({
 
   useInput(
     'cancel',
-    useCallback(() => {
-      if (showMapEditor) {
-        closeMap();
-      }
-    }, [closeMap, showMapEditor]),
+    useCallback(
+      (event) => {
+        if (showMapEditor) {
+          event.preventDefault();
+          closeMap();
+        }
+      },
+      [closeMap, showMapEditor],
+    ),
+    'dialog',
   );
 
   useInput(
