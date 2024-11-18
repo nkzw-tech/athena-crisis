@@ -33,7 +33,7 @@
     "@nkzw/use-relative-time": "^1.1.0",
     "@sentry/browser": "^8.38.0",
     "@stripe/react-stripe-js": "^2.9.0",
-    "@stripe/stripe-js": "^4.10.0",
+    "@stripe/stripe-js": "^5.0.0",
     "cordova-plugin-purchase": "^13.11.1",
     "fbt": "^1.0.2",
     "framer-motion": "^11.11.17",
