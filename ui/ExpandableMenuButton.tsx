@@ -68,12 +68,14 @@ export default function ExpandableMenuButton({
       >
         {children}
       </Stack>
-      <Icon
-        button
-        className={cx(iconStyle, isExpanded && visibleStyle)}
-        icon={Close}
-        onClick={toggleExpanded}
-      />
+      <div className={cx(iconContainerStyle, isExpanded && visibleStyle)}>
+        <Icon
+          button
+          className={iconStyle}
+          icon={Close}
+          onClick={toggleExpanded}
+        />
+      </div>
     </MenuButton>
   );
 }
@@ -99,7 +101,7 @@ const expandedInnerStyle = css`
 `;
 
 const size = 28;
-const iconStyle = css`
+const iconContainerStyle = css`
   ${clipBorder(2)}
 
   background: ${applyVar('background-color-light')};
@@ -107,7 +109,7 @@ const iconStyle = css`
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  right: 2px;
+  right: 4px;
   top: 10px;
   transform: scale(0);
   transition:
@@ -121,4 +123,9 @@ const visibleStyle = css`
   opacity: 1;
   pointer-events: auto;
   transform: scale(1);
+`;
+
+const iconStyle = css`
+  height: ${size}px;
+  width: ${size}px;
 `;
