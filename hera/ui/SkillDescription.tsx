@@ -1197,7 +1197,7 @@ export default memo(function SkillDescription({
 
   return list?.length ? (
     <div
-      className={cx('paragraph', isPower && powerStyle)}
+      className={isPower && powerStyle}
       style={
         isPower
           ? {
@@ -1206,7 +1206,7 @@ export default memo(function SkillDescription({
           : undefined
       }
     >
-      {list}
+      <p>{list}</p>
     </div>
   ) : null;
 });
