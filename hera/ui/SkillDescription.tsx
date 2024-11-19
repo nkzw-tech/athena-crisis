@@ -1197,7 +1197,7 @@ export default memo(function SkillDescription({
 
   return list?.length ? (
     <div
-      className={isPower && powerStyle}
+      className={cx(isPower && powerStyle)}
       style={
         isPower
           ? {
