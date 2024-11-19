@@ -64,10 +64,12 @@ const PortraitItem = ({
 };
 
 export default memo(function PortraitPicker({
+  center,
   character,
   onSelect,
   portraits: initialPortraits,
 }: {
+  center?: true;
   character: CharacterImage;
   onSelect: (character: CharacterImage) => void;
   portraits: ReadonlySet<UnitInfo>;
@@ -154,7 +156,7 @@ export default memo(function PortraitPicker({
           />
         ))}
       </Stack>
-      <Stack gap ref={setRef} start>
+      <Stack center={center} gap ref={setRef} start={center ? undefined : true}>
         {portraits.map(([unit, variant]) => (
           <PortraitItem
             character={character}

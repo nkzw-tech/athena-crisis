@@ -39,10 +39,18 @@ export default memo(function Button({
   to?: Route;
 }) {
   const element = useRef<HTMLAnchorElement | null>(null);
+
   const click = useCallback(() => {
     AudioPlayer.playSound('UI/Accept');
     onClick?.();
   }, [onClick]);
+
+  const onActive = useCallback(() => {
+    click();
+    if (!to && props.href) {
+      window.open(props.href);
+    }
+  }, [click, props.href, to]);
 
   const setRefs = useCallback(
     (anchorElement: HTMLAnchorElement | null) => {
@@ -57,7 +65,7 @@ export default memo(function Button({
   );
 
   useScrollIntoView(element, selected);
-  useActive(active, click, to);
+  useActive(active, onActive, to);
 
   const className = cx(
     'link',
