@@ -18,7 +18,7 @@
     "@deities/hermes": "workspace:*",
     "@deities/i18n": "workspace:*",
     "@deities/ui": "workspace:*",
-    "@emotion/css": "^11.13.4",
+    "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/use-relative-time": "^1.1.0",
