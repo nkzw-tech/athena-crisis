@@ -123,6 +123,7 @@ export type UpgradeAnimation = Readonly<{
 export type DamageAnimation = Readonly<{
   animation: 'fire' | 'power';
   onComplete: StateToStateLike;
+  onDamage?: StateToStateLike;
   type: 'damage';
 }>;
 

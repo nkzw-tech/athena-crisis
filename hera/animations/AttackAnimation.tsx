@@ -47,6 +47,7 @@ export default function AttackAnimation({
   initialDelay,
   mirror,
   onComplete,
+  onStep,
   position,
   rate,
   requestFrame,
@@ -92,6 +93,7 @@ export default function AttackAnimation({
       frames={frames}
       initialDelay={(initialDelay || 0) + animation.leadingFrames * delay}
       onComplete={onComplete}
+      onStep={onStep}
       position={
         new SpriteVector(
           (x - 1) * tileSize - spriteOffset / 2,

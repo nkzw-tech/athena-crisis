@@ -24,7 +24,8 @@ export default function damageUnits(
             onComplete: (state) => ({
               animations: state.animations.set(position, {
                 animation,
-                onComplete: (state: State) => {
+                onComplete: (state: State) => state,
+                onDamage: (state: State) => {
                   const healthAnimation = {
                     animations: state.animations.set(new AnimationKey(), {
                       change: -damage,
