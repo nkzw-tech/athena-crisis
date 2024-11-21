@@ -74,6 +74,7 @@ const containerStyle = css`
   backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
+  max-width: 90vw;
   opacity: 0;
   pointer-events: none;
   position: fixed;
@@ -90,12 +91,12 @@ const bottomStyle = css`
 
 const topStyle = css`
   margin: 0 auto;
-  top: ${applyVar('inset')};
+  top: calc(env(safe-area-inset-top) + ${applyVar('inset')});
 `;
 
 const topRightStyle = css`
   right: ${applyVar('inset')};
-  top: ${applyVar('inset')};
+  top: calc(env(safe-area-inset-top) + ${applyVar('inset')});
 `;
 
 const boxStyle = css`

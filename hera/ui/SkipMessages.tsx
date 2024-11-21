@@ -76,6 +76,7 @@ const skipMessagesStyle = css`
 
   background-color: ${applyVar('background-color')};
   gap: 12px;
+  padding: 12px 16px;
   height: ${DoubleSize}px;
   line-height: ${DoubleSize}px;
   position: fixed;
