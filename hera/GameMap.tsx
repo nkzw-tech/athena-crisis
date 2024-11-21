@@ -575,17 +575,17 @@ export default class GameMap extends Component<Props, State> {
       preventRemoteActions,
       skipDialogue,
     } = this.state;
-    if (behavior?.type === 'null' && this._skipDialogueTimer == null) {
-      if (
-        !skipDialogue &&
-        ((!lastActionResponse && preventRemoteActions) ||
-          lastActionResponse?.type === 'Start' ||
-          lastActionResponse?.type === 'CharacterMessage' ||
-          lastActionResponse?.type === 'SetPlayer' ||
-          hasCharacterMessage(animations))
-      ) {
-        this.setState({ showSkipDialogue: true });
-      }
+    if (
+      behavior?.type === 'null' &&
+      this._skipDialogueTimer == null &&
+      !skipDialogue &&
+      ((!lastActionResponse && preventRemoteActions) ||
+        lastActionResponse?.type === 'Start' ||
+        lastActionResponse?.type === 'CharacterMessage' ||
+        lastActionResponse?.type === 'SetPlayer' ||
+        hasCharacterMessage(animations))
+    ) {
+      this.setState({ showSkipDialogue: true });
 
       this._skipDialogueTimer = setTimeout(() => {
         this._skipDialogueTimer = null;
