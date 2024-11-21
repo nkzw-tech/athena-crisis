@@ -6,8 +6,8 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { useLocation } from 'react-router-dom';
 import { PageTransitionDuration } from '../PageTransition.tsx';
+import useLocation from './useLocation.tsx';
 
 const Context = createContext<MutableRefObject<boolean | null>>({
   current: false,
