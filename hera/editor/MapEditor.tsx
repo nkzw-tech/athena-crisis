@@ -970,6 +970,7 @@ export default function MapEditor({
               </h2>
               <MapDetails
                 creator={mapObject?.creator || null}
+                gap={8}
                 map={map}
                 tags={tags}
                 teamPlay={map.getPlayers().length !== map.teams.size}

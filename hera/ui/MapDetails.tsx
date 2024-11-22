@@ -38,6 +38,7 @@ export type MapCreator = Readonly<{
 export type MapDetailsProps = Readonly<{
   buttons?: ReactNode;
   creator: MapCreator | null;
+  gap?: 8 | 16;
   hasSkills?: boolean;
   isCampaign?: boolean;
   isRanked?: boolean;
@@ -57,6 +58,7 @@ export const SpecialUsers = new Set(['User-1']);
 export default function MapDetails({
   buttons,
   creator,
+  gap = 16,
   hasSkills,
   isCampaign,
   isRanked,
@@ -73,7 +75,7 @@ export default function MapDetails({
   const { initialCharge, seedCapital } = map.config;
   return map ? (
     <Stack gap={16} stretch vertical>
-      <Stack gap={16} vertical>
+      <Stack gap={gap === 8 ? true : gap} vertical>
         {creator &&
         !SpecialUsers.has(creator.id) &&
         !tags?.includes('official') ? (
