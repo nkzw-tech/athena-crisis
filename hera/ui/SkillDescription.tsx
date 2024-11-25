@@ -1206,7 +1206,7 @@ export default memo(function SkillDescription({
           : undefined
       }
     >
-      <p>{list}</p>
+      <div className="paragraph">{list}</div>
     </div>
   ) : null;
 });
