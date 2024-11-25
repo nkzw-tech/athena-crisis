@@ -551,8 +551,16 @@ const SkillListItem = ({
   toggleFavorite?: (skill: Skill) => void;
 }) => {
   const element = useRef<HTMLDivElement>(null);
+  const isPointerRef = useRef(false);
   const { alpha, borderStyle, colors, icon, name, textColor } =
     getSkillConfigForDisplay(skill);
+
+  const onClick = useCallback(() => {
+    if (!isPointerRef.current) {
+      onSelect?.(skill);
+    }
+    isPointerRef.current = false;
+  }, [onSelect, skill]);
 
   useInput(
     'accept',
@@ -590,7 +598,10 @@ const SkillListItem = ({
           selected && 'hover',
         )}
         gap
-        onClick={isInteractive ? () => onSelect(skill) : undefined}
+        onClick={isInteractive ? onClick : undefined}
+        onPointerDown={(event) => {
+          isPointerRef.current = event.pointerType === 'touch';
+        }}
         vertical
       >
         <Stack alignCenter gap nowrap>
@@ -896,9 +907,11 @@ const boxStyle = css`
   position: relative;
   transition: background-color 150ms ease;
 
-  &:hover {
-    ${clipBorder()}
-    background-color: ${applyVar('background-color')};
+  @media (hover: hover) {
+    &:hover {
+      ${clipBorder()}
+      background-color: ${applyVar('background-color')};
+    }
   }
 `;
 

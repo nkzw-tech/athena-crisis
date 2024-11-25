@@ -49,6 +49,7 @@ import {
   ReactElement,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import BuildingCard from '../card/BuildingCard.tsx';
@@ -880,12 +881,20 @@ const CrystalContainer = ({
 }) => {
   const isPowerCrystal = crystal === Crystal.Power;
   const isActive = activeCrystal === crystal;
+  const isPointerRef = useRef(false);
 
   const onSelect = useCallback(() => {
     if (!canAction || canAction({ crystal, type: 'Crystal' })) {
       onAction({ crystal, type: 'Crystal' });
     }
   }, [canAction, crystal, onAction]);
+
+  const onClick = useCallback(() => {
+    if (!isPointerRef.current) {
+      onSelect();
+    }
+    isPointerRef.current = false;
+  }, [onSelect]);
 
   useInput(
     'accept',
@@ -933,7 +942,10 @@ const CrystalContainer = ({
             crystalBoxStyle,
             selected === 0 && crystalSelectedBoxStyle,
           )}
-          onClick={onSelect}
+          onClick={onClick}
+          onPointerDown={(event) => {
+            isPointerRef.current = event.pointerType === 'touch';
+          }}
         >
           <CrystalCard active={isActive} crystal={crystal} />
         </div>
@@ -978,9 +990,11 @@ const crystalBoxStyle = css`
   padding: 8px 4px;
   transition: background-color 150ms ease;
 
-  &:hover {
-    ${clipBorder()}
-    background-color: ${applyVar('background-color')};
+  @media (hover: hover) {
+    &:hover {
+      ${clipBorder()}
+      background-color: ${applyVar('background-color')};
+    }
   }
 `;
 
