@@ -178,5 +178,9 @@
   ["OptionalObjective", [43, ["type", "objective", "objectiveId", "toPlayer"]]],
   ["ActivateCrystal", [44, ["type", "crystal", "player", "biome", "hq"]]],
   ["AbandonInvasion", [45, ["type", "name", "chaosStars", "fromPlayer"]]],
-  ["SetPlayer", [46, ["type", "player"]]]
+  ["SetPlayer", [46, ["type", "player"]]],
+  ["IncreaseChargeEffect", [47, ["type", "charges", "player"]]],
+  ["IncreaseFundsEffect", [48, ["type", "funds", "player"]]],
+  ["IncreaseCharge", [49, ["type", "charges", "player"]]],
+  ["IncreaseFunds", [50, ["type", "funds", "player"]]]
 ]

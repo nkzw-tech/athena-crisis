@@ -2,7 +2,10 @@ import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import { validateUnit } from '@deities/athena/lib/validateMap.tsx';
 import { Biomes } from '@deities/athena/map/Biome.tsx';
-import { MaxMessageLength } from '@deities/athena/map/Configuration.tsx';
+import {
+  MaxCharges,
+  MaxMessageLength,
+} from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import sanitizeText from '@deities/hephaestus/sanitizeText.tsx';
@@ -10,6 +13,8 @@ import {
   Action,
   ActivateCrystalAction,
   CharacterMessageEffectAction,
+  IncreaseChargeEffectAction,
+  IncreaseFundsEffectAction,
   SpawnEffectAction,
 } from '../Action.tsx';
 
@@ -78,6 +83,24 @@ const validateActivateCrystal = (action: ActivateCrystalAction) => {
   return Crystals.includes(action.crystal) ? action : null;
 };
 
+const validateIncreaseCharge = (action: IncreaseChargeEffectAction) => {
+  const { charges, player } = action;
+  if (!isDynamicPlayerID(player)) {
+    return null;
+  }
+
+  return charges > 0 && charges <= MaxCharges ? action : null;
+};
+
+const validateIncreaseFunds = (action: IncreaseFundsEffectAction) => {
+  const { funds, player } = action;
+  if (!isDynamicPlayerID(player)) {
+    return null;
+  }
+
+  return funds > 0 && funds <= Number.MAX_SAFE_INTEGER ? action : null;
+};
+
 export default function validateAction(map: MapData, action: Action) {
   switch (action.type) {
     case 'CharacterMessageEffect':
@@ -86,6 +109,10 @@ export default function validateAction(map: MapData, action: Action) {
       return validateSpawnEffect(map, action);
     case 'ActivateCrystal':
       return validateActivateCrystal(action);
+    case 'IncreaseChargeEffect':
+      return validateIncreaseCharge(action);
+    case 'IncreaseFundsEffect':
+      return validateIncreaseFunds(action);
   }
 
   return null;

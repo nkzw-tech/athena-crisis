@@ -28,6 +28,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbt';
+import addIncreaseValueAnimation from '../animations/addIncreaseValueAnimation.tsx';
 import animateFireworks, {
   getPossibleFireworksPositions,
 } from '../animations/animateFireworks.tsx';
@@ -707,7 +708,10 @@ async function processActionResponse(
       return activateCrystalAction(actions, actionResponse);
     case 'OptionalObjective':
     case 'SecretDiscovered':
-      return objectiveAnimation(newMap, actions, state, actionResponse);
+      return objectiveAnimation(actions, newMap, state, actionResponse);
+    case 'IncreaseCharge':
+    case 'IncreaseFunds':
+      return addIncreaseValueAnimation(actions, newMap, actionResponse);
     default: {
       actionResponse satisfies never;
       throw new UnknownTypeError('processActionResponse', type);

@@ -181,7 +181,7 @@ const prepareEffects = (
         .map((effect) => ({
           ...effect,
           actions: effect.actions.filter(
-            (action) => action.type === 'SpawnEffect',
+            (action) => action.type !== 'CharacterMessageEffect',
           ),
         }))
         .filter((effect) => effect.actions.length),

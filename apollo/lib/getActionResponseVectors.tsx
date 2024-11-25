@@ -88,6 +88,8 @@ export default function getActionResponseVectors(
     case 'CaptureGameOver':
     case 'GameEnd':
     case 'HiddenFundAdjustment':
+    case 'IncreaseCharge':
+    case 'IncreaseFunds':
     case 'Message':
     case 'OptionalObjective':
     case 'PreviousTurnGameOver':

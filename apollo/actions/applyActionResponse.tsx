@@ -662,6 +662,24 @@ export default function applyActionResponse(
         }
       }
     }
+    case 'IncreaseCharge': {
+      const player = map.getPlayer(actionResponse.player);
+      return map.copy({
+        teams: updatePlayer(
+          map.teams,
+          player.setCharge(player.charge + actionResponse.charges * Charge),
+        ),
+      });
+    }
+    case 'IncreaseFunds': {
+      const player = map.getPlayer(actionResponse.player);
+      return map.copy({
+        teams: updatePlayer(
+          map.teams,
+          player.modifyFunds(actionResponse.funds),
+        ),
+      });
+    }
     case 'BeginGame':
     case 'SecretDiscovered':
     case 'Start':

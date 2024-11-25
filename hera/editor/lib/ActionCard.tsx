@@ -7,6 +7,7 @@ import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
+  MaxCharges,
   MaxMessageLength,
 } from '@deities/athena/map/Configuration.tsx';
 import {
@@ -16,11 +17,13 @@ import {
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
+import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -33,7 +36,7 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbt';
 import { useInView } from 'framer-motion';
-import { memo, ReactNode, RefObject, useRef, useState } from 'react';
+import { memo, ReactNode, RefObject, useMemo, useRef, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import Portrait from '../../character/Portrait.tsx';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
@@ -64,6 +67,8 @@ const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
   const number = encodeDynamicPlayerID(id);
   return number < 0 ? 1 / number : number;
 });
+
+const playerIDsWithoutNeutral = playerIDs.filter((id) => id !== 0);
 
 const biomes = Biomes.filter((biome) => biome !== Biome.Spaceship);
 
@@ -157,6 +162,23 @@ export default memo(function ActionCard({
   const shouldRenderControls = (!scrollRef || isVisible) && canChange;
   const [animate, setAnimate] = useState(false);
   const hasCurrentPlayer = map && currentPlayer != null;
+
+  const gameEndNotice = useMemo(
+    () =>
+      trigger === 'GameEnd' ? (
+        <InfoBox>
+          <p className={lightStyle}>
+            <fbt desc="Game end spawn effect conflict note">
+              Note: This Action is associated with a Game End Effect and will be
+              removed upon saving. If you want to keep this action, please
+              change the effect type, for example by changing the objective to
+              be optional.
+            </fbt>
+          </p>
+        </InfoBox>
+      ) : null,
+    [trigger],
+  );
 
   if (action.type === 'CharacterMessageEffect') {
     const unit = getUnitInfoOrThrow(action.unitId);
@@ -438,18 +460,7 @@ export default memo(function ActionCard({
             </InlineLink>
           </Stack>
         ) : null}
-        {trigger === 'GameEnd' && (
-          <InfoBox>
-            <p className={lightStyle}>
-              <fbt desc="Game end spawn effect conflict note">
-                Note: This Action is associated with a Game End Effect and will
-                be removed upon saving. If you want to keep this action, please
-                change the effect type, for example by changing the objective to
-                be optional.
-              </fbt>
-            </p>
-          </InfoBox>
-        )}
+        {gameEndNotice}
       </Box>
     );
   } else if (action.type === 'ActivateCrystal') {
@@ -523,6 +534,85 @@ export default memo(function ActionCard({
             </Stack>
           )}
         </Stack>
+      </Box>
+    );
+  } else if (
+    action.type === 'IncreaseChargeEffect' ||
+    action.type === 'IncreaseFundsEffect'
+  ) {
+    const isCharge = action.type === 'IncreaseChargeEffect';
+    const max = isCharge ? MaxCharges : Number.MAX_SAFE_INTEGER;
+    const value = isCharge ? action.charges : action.funds;
+    const { player } = action;
+    return (
+      <Box className={boxStyle} gap={16} vertical>
+        <ActionHeadline
+          first={first}
+          focused={focused}
+          index={index}
+          last={last}
+          onChange={onChange}
+        >
+          {isCharge ? (
+            <fbt desc="Label for Increase Charge Effect">Increase Charge</fbt>
+          ) : (
+            <fbt desc="Label for Increase Funds Effect">Increase Funds</fbt>
+          )}
+        </ActionHeadline>
+        <Stack alignCenter gap>
+          <span>
+            {isCharge ? (
+              <fbt desc="Label for Increase Charge Effect">Charges:</fbt>
+            ) : (
+              <fbt desc="Label for Increase Funds Effect">Funds:</fbt>
+            )}
+          </span>
+          {canChange ? (
+            <NumberInput
+              max={max}
+              min={1}
+              onChange={({ target: { value } }) => {
+                const amount = parseInteger(value) || 0;
+                if (amount != null) {
+                  onChange(index, 'update', {
+                    ...action,
+                    [isCharge ? 'charges' : 'funds']: Math.min(amount, max),
+                  });
+                }
+              }}
+              required
+              style={{ width: 100 }}
+              value={value}
+            />
+          ) : (
+            value
+          )}
+        </Stack>
+        <Stack alignCenter gap={16}>
+          <fbt desc="Label to pick a player">Player:</fbt>
+          <Stack gap={16} nowrap>
+            {canChange ? (
+              <>
+                {playerIDsWithoutNeutral.map((id) => (
+                  <PlayerIcon
+                    id={id}
+                    key={id}
+                    onClick={() =>
+                      onChange(index, 'update', {
+                        ...action,
+                        player: id,
+                      })
+                    }
+                    selected={player === id}
+                  />
+                ))}
+              </>
+            ) : (
+              <PlayerIcon id={player} />
+            )}
+          </Stack>
+        </Stack>
+        {gameEndNotice}
       </Box>
     );
   }

@@ -225,8 +225,17 @@ export function decodeEffects(encodedEffects: EncodedEffects): Effects {
   );
 }
 
-const spawnEffectsOnGameEnd = (trigger: EffectTrigger, action: Action) =>
-  trigger !== 'GameEnd' || action.type !== 'SpawnEffect';
+const filterActionsOnGameEnd = (trigger: EffectTrigger, { type }: Action) => {
+  if (trigger !== 'GameEnd') {
+    return true;
+  }
+
+  return type === 'SpawnEffect' ||
+    type === 'IncreaseChargeEffect' ||
+    type === 'IncreaseFundsEffect'
+    ? false
+    : true;
+};
 
 export function validateEffects(map: MapData, effects: Effects): Effects {
   const newEffects = new Map();
@@ -239,7 +248,7 @@ export function validateEffects(map: MapData, effects: Effects): Effects {
       const newActions = actions
         .map((action) => validateAction(map, action))
         .filter(isPresent)
-        .filter(spawnEffectsOnGameEnd.bind(null, trigger));
+        .filter(filterActionsOnGameEnd.bind(null, trigger));
 
       const newConditions = conditions?.filter(
         validateCondition.bind(null, map),

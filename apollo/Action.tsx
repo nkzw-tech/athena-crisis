@@ -41,6 +41,7 @@ import {
   Charge,
   CounterAttack,
   CreateTracksCost,
+  MaxCharges,
   MinDamage,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
@@ -204,6 +205,18 @@ export type CharacterMessageEffectAction = Readonly<{
   variant?: number;
 }>;
 
+export type IncreaseChargeEffectAction = Readonly<{
+  charges: number;
+  player: DynamicPlayerID;
+  type: 'IncreaseChargeEffect';
+}>;
+
+export type IncreaseFundsEffectAction = Readonly<{
+  funds: number;
+  player: DynamicPlayerID;
+  type: 'IncreaseFundsEffect';
+}>;
+
 type StartAction = Readonly<{
   type: 'Start';
 }>;
@@ -224,6 +237,8 @@ export type Action =
   | EndTurnAction
   | FoldAction
   | HealAction
+  | IncreaseChargeEffectAction
+  | IncreaseFundsEffectAction
   | MessageAction
   | MoveAction
   | RescueAction
@@ -1006,6 +1021,34 @@ function activateCrystal(
   return null;
 }
 
+function increaseCharge(
+  map: MapData,
+  { charges, player }: IncreaseChargeEffectAction,
+) {
+  if (charges > 0 && charges <= MaxCharges) {
+    return {
+      charges,
+      player: resolveDynamicPlayerID(map, player),
+      type: 'IncreaseCharge',
+    } as const;
+  }
+  return null;
+}
+
+function increaseFunds(
+  map: MapData,
+  { funds, player }: IncreaseFundsEffectAction,
+) {
+  if (funds > 0 && funds <= Number.MAX_SAFE_INTEGER) {
+    return {
+      funds,
+      player: resolveDynamicPlayerID(map, player),
+      type: 'IncreaseFunds',
+    } as const;
+  }
+  return null;
+}
+
 function applyAction(
   map: MapData,
   vision: VisionT,
@@ -1064,6 +1107,10 @@ function applyAction(
       return activatePower(map, action);
     case 'ActivateCrystal':
       return activateCrystal(map, action, isEffect);
+    case 'IncreaseChargeEffect':
+      return isEffect ? increaseCharge(map, action) : null;
+    case 'IncreaseFundsEffect':
+      return isEffect ? increaseFunds(map, action) : null;
     default: {
       const _exhaustiveCheck: never = action;
       return _exhaustiveCheck;

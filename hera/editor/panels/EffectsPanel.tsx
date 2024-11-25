@@ -1,6 +1,5 @@
 import { Action } from '@deities/apollo/Action.tsx';
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
-import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import isPresent from '@deities/hephaestus/isPresent.tsx';
@@ -17,11 +16,11 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Plus from '@iconify-icons/pixelarticons/plus.js';
-import ImmutableMap from '@nkzw/immutable-map';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import ActionCard from '../lib/ActionCard.tsx';
+import AddActionButton from '../lib/AddActionButton.tsx';
 import EffectTitle, { EffectObjectiveTitle } from '../lib/EffectTitle.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
@@ -257,7 +256,7 @@ export default function EffectsPanel({
   }
 
   return (
-    <Stack gap={24} vertical verticalPadding>
+    <Stack className={verticalPaddingStyle} gap={24} vertical>
       <Stack gap={16} vertical>
         <Stack alignCenter gap={16} nowrap>
           <EffectSelector
@@ -313,8 +312,7 @@ export default function EffectsPanel({
             )}
           </div>
         ))}
-
-        <Stack gap={16} start>
+        <Stack alignCenter gap={16} start>
           <Button
             onClick={() =>
               updateEffect({
@@ -335,51 +333,27 @@ export default function EffectsPanel({
               Add Message
             </fbt>
           </Button>
-          {trigger !== 'GameEnd' ? (
-            <Button
-              onClick={() =>
-                updateEffect({
-                  ...effect,
-                  actions: [
-                    ...actions,
-                    {
-                      type: 'SpawnEffect',
-                      units: ImmutableMap(),
-                    },
-                  ],
-                })
-              }
-            >
-              <fbt desc="Button to add a new spawn effect in the map editor">
-                Add Spawn Effect
-              </fbt>
-            </Button>
-          ) : null}
-          {isAdmin ? (
-            <Button
-              onClick={() =>
-                updateEffect({
-                  ...effect,
-                  actions: [
-                    ...actions,
-                    {
-                      crystal: Crystal.Memory,
-                      type: 'ActivateCrystal',
-                    },
-                  ],
-                })
-              }
-            >
-              <fbt desc="Button to add a new crystal effect in the map editor">
-                Add Activate Crystal Effect
-              </fbt>
-            </Button>
-          ) : null}
+          <AddActionButton
+            isAdmin={!!isAdmin}
+            onSelect={(action: Action) =>
+              updateEffect({
+                ...effect,
+                actions: [...actions, action],
+              })
+            }
+            trigger={trigger}
+          />
         </Stack>
       </Stack>
     </Stack>
   );
 }
+
+// Add enough space for the add action button to be visible.
+const verticalPaddingStyle = css`
+  padding-bottom: 240px;
+  padding-top: 24px;
+`;
 
 const actionStyle = css`
   position: relative;

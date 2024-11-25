@@ -225,6 +225,18 @@ export type SecretDiscoveredActionResponse = Readonly<{
   type: 'SecretDiscovered';
 }>;
 
+export type IncreaseChargeActionResponse = Readonly<{
+  charges: number;
+  player: PlayerID;
+  type: 'IncreaseCharge';
+}>;
+
+export type IncreaseFundsActionResponse = Readonly<{
+  funds: number;
+  player: PlayerID;
+  type: 'IncreaseFunds';
+}>;
+
 export type ActionResponse =
   | ActivateCrystalActionResponse
   | ActivatePowerActionResponse
@@ -243,6 +255,8 @@ export type ActionResponse =
   | EndTurnActionResponse
   | FoldActionResponse
   | HealActionResponse
+  | IncreaseChargeActionResponse
+  | IncreaseFundsActionResponse
   | MessageActionResponse
   | MoveActionResponse
   | MoveUnitActionResponse

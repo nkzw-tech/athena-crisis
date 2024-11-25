@@ -9,8 +9,8 @@ import getCriteriaName from '../lib/getCriteriaName.tsx';
 import { Actions, State } from '../Types.tsx';
 
 export default async function objectiveAnimation(
-  newMap: MapData,
   actions: Actions,
+  newMap: MapData,
   state: State,
   actionResponse:
     | SecretDiscoveredActionResponse

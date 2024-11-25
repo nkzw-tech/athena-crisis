@@ -56,6 +56,8 @@ export default function dropLabelsFromActionResponse(
     case 'HiddenSourceAttackUnit':
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
+    case 'IncreaseCharge':
+    case 'IncreaseFunds':
     case 'Message':
     case 'Move':
     case 'MoveUnit':

@@ -346,6 +346,8 @@ const VisibleActionModifiers: Record<
   HiddenSourceAttackUnit: false,
   HiddenTargetAttackBuilding: false,
   HiddenTargetAttackUnit: false,
+  IncreaseCharge: true,
+  IncreaseFunds: true,
   Message: true,
   Move: (
     actionResponse: MoveActionResponse,
