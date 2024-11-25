@@ -43,7 +43,7 @@ export type Scenario = Readonly<{ effect: Effect; trigger: EffectTrigger }>;
 export type EffectList = ReadonlySet<Effect>;
 export type Effects = ReadonlyMap<EffectTrigger, EffectList>;
 
-type EncodedEffect = [
+export type EncodedEffect = [
   actions: EncodedActions,
   conditions?: EncodedConditions | null,
   players?: PlayerIDs | null,
