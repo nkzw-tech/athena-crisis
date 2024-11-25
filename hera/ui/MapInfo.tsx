@@ -27,6 +27,7 @@ import cssVar, {
   CSSVariables,
   insetStyle,
 } from '@deities/ui/cssVar.tsx';
+import ellipsis from '@deities/ui/ellipsis.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
@@ -103,8 +104,8 @@ const Tile = ({
           </div>
         </div>
         <div className={textStyle}>
-          <div className={overflowStyle}>{info.name}</div>
-          <Stack className={overflowStyle} gap nowrap start>
+          <div className={cx(ellipsis, overflowStyle)}>{info.name}</div>
+          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap start>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
               <LargeRange
@@ -152,8 +153,8 @@ const renderUnit = (
           unit={unit}
         />
         <div className={textStyle}>
-          <Stack className={overflowStyle} gap nowrap stretch>
-            <div>{info.name}</div>
+          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap stretch>
+            <div className={ellipsis}>{info.name}</div>
             <Stack alignCenter gap={4} nowrap start>
               <Icon className={iconStyle} icon={Heart} />
               <div
@@ -165,7 +166,7 @@ const renderUnit = (
               </div>
             </Stack>
           </Stack>
-          <Stack className={overflowStyle} gap nowrap>
+          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap>
             <Stack alignCenter gap={4} nowrap start>
               <Icon className={iconStyle} icon={Supply} />
               {unit.fuel}/{info.configuration.fuel}
@@ -207,10 +208,13 @@ const renderBuilding = (
           position={vec(1, 2)}
           size={tileSize}
         />
-        <Stack alignCenter className={overflowStyle} gap={4} nowrap>
-          <div>
-            <div>{building.info.name}</div>
-          </div>
+        <Stack
+          alignCenter
+          className={cx(ellipsis, overflowStyle)}
+          gap={4}
+          nowrap
+        >
+          <div className={ellipsis}>{building.info.name}</div>
           <Stack alignCenter gap={4} start>
             <Icon className={iconStyle} icon={Heart} />
             <div
@@ -344,19 +348,21 @@ const style = css`
   pointer-events: none;
   position: fixed;
   z-index: calc(${applyVar('inset-z')} + 1);
-  gap: 14px;
+  gap: 16px;
 
   flex-direction: column;
   left: calc(${applyVar('inset')} + ${vars.apply('left-offset')});
 
-  ${Breakpoints.sm} {
-    gap: 24px;
-    left: ${left};
-    right: calc(
-      ${applyVar('inset')} + ${applyVar('mouse-position-right')} +
-        env(safe-area-inset-right)
-    );
-    flex-direction: row;
+  ${Breakpoints.height.sm} {
+    ${Breakpoints.sm} {
+      gap: 24px;
+      left: ${left};
+      right: calc(
+        ${applyVar('inset')} + ${applyVar('mouse-position-right')} +
+          env(safe-area-inset-right)
+      );
+      flex-direction: row;
+    }
   }
 `;
 
@@ -416,9 +422,6 @@ const textStyle = css`
 `;
 
 const overflowStyle = css`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   width: calc(${vars.apply('width')} - ${textPosition}px);
 `;
 
