@@ -488,7 +488,7 @@ const defenseStatusEffects: SkillMap = new Map([
 ]);
 
 const defenseUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
-  [Skill.Sabotage, new Map([[UnitID.Saboteur, 3]])],
+  [Skill.Sabotage, new Map([[UnitID.Saboteur, 1]])],
   [
     Skill.ArtilleryRangeIncrease,
     new Map([
