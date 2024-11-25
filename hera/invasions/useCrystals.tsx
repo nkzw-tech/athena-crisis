@@ -4,7 +4,7 @@ import {
   Crystals,
 } from '@deities/athena/invasions/Crystal.tsx';
 import { useMemo } from 'react';
-import safeParseArray from '../lib/safeParse.tsx';
+import safeParseArray from '../lib/safeParseArray.tsx';
 
 export default function useCrystals(crystals: string | undefined): CrystalMap {
   return useMemo(() => {

@@ -79,7 +79,7 @@ const containerStyle = css`
   pointer-events: none;
   position: fixed;
   width: fit-content;
-  z-index: ${applyVar('inset-z')};
+  z-index: calc(1 + ${applyVar('inset-z')});
 `;
 
 const bottomStyle = css`
