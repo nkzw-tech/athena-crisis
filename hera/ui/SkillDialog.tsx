@@ -179,6 +179,7 @@ const iconStyle = css`
 
 export default function SkillDialog({
   actionName,
+  allowTouch,
   availableSkills,
   blocklistedAreDisabled,
   blocklistedSkills,
@@ -199,6 +200,7 @@ export default function SkillDialog({
   transformOrigin,
 }: {
   actionName?: ReactElement;
+  allowTouch: boolean;
   availableSkills: ReadonlySet<Skill>;
   blocklistedAreDisabled?: boolean;
   blocklistedSkills?: ReadonlySet<Skill> | null;
@@ -226,6 +228,7 @@ export default function SkillDialog({
     >
       <SkillContainer
         actionName={actionName}
+        allowTouch={allowTouch}
         availableSkills={availableSkills}
         blocklistedAreDisabled={blocklistedAreDisabled}
         blocklistedSkills={blocklistedSkills}
@@ -252,6 +255,7 @@ type SkillGroupType = SkillGroup | 'all' | 'favorite';
 
 export function SkillContainer({
   actionName,
+  allowTouch,
   availableSkills: initialAvailableSkills,
   blocklistedAreDisabled,
   blocklistedSkills: initialBlocklistedSkills,
@@ -269,6 +273,7 @@ export function SkillContainer({
   toggleFavorite,
 }: {
   actionName?: ReactElement;
+  allowTouch: boolean;
   availableSkills: ReadonlySet<Skill>;
   blocklistedAreDisabled?: boolean;
   blocklistedSkills?: ReadonlySet<Skill> | null;
@@ -460,6 +465,7 @@ export function SkillContainer({
         <Stack gap vertical>
           {enabledSkills?.map((skill, index) => (
             <SkillListItem
+              allowTouch={allowTouch}
               blocklistedSkills={blocklistedSkills}
               currentSkill={!focus ? currentSkill : undefined}
               isFavorite={favorites?.has(skill)}
@@ -487,6 +493,7 @@ export function SkillContainer({
             <Stack gap vertical>
               {[...selectedSkills].map((skill) => (
                 <SkillListItem
+                  allowTouch={false}
                   blocklistedSkills={selectedSkills}
                   currentSkill={currentSkill}
                   isFavorite={favorites?.has(skill)}
@@ -509,6 +516,7 @@ export function SkillContainer({
             <Stack gap={16} vertical>
               {disabledSkills.map((skill) => (
                 <SkillListItem
+                  allowTouch={false}
                   blocklistedSkills={initialBlocklistedSkills}
                   currentSkill={currentSkill}
                   isFavorite={favorites?.has(skill)}
@@ -530,6 +538,7 @@ export function SkillContainer({
 }
 
 const SkillListItem = ({
+  allowTouch,
   blocklistedSkills,
   currentSkill,
   isFavorite,
@@ -540,6 +549,7 @@ const SkillListItem = ({
   toggleBlocklist,
   toggleFavorite,
 }: {
+  allowTouch: boolean;
   blocklistedSkills?: ReadonlySet<Skill> | null;
   currentSkill?: Skill | null;
   isFavorite?: boolean;
@@ -600,7 +610,9 @@ const SkillListItem = ({
         gap
         onClick={isInteractive ? onClick : undefined}
         onPointerDown={(event) => {
-          isPointerRef.current = event.pointerType === 'touch';
+          if (!allowTouch) {
+            isPointerRef.current = event.pointerType === 'touch';
+          }
         }}
         vertical
       >
@@ -776,6 +788,7 @@ export function SkillSelector({
             <DisabledSkillDialog onClose={onClose} />
           ) : (
             <SkillDialog
+              allowTouch={true}
               availableSkills={availableSkills}
               blocklistedAreDisabled={blocklistedAreUnavailable}
               blocklistedSkills={blocklistedSkills}
@@ -872,6 +885,7 @@ export function SkillIcon({
       {showDialog && (
         <Portal>
           <SkillDialog
+            allowTouch={true}
             availableSkills={new Set([skill])}
             favorites={favorites}
             onClose={onClose}

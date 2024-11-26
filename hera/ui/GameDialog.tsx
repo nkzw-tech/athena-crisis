@@ -803,6 +803,7 @@ const GamePlayerEffectDialog = ({
       {currentSkill != null ? (
         <SkillContainer
           actionName={actionName}
+          allowTouch={false}
           availableSkills={new Set([currentSkill])}
           canAction={
             canAction

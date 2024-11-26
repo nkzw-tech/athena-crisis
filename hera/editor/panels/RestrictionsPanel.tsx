@@ -233,6 +233,7 @@ export default function RestrictionsPanel({
       {showSkillSelector && (
         <Portal>
           <SkillDialog
+            allowTouch={true}
             availableSkills={Skills}
             blocklistedSkills={blocklistedSkills}
             onClose={onClose}
