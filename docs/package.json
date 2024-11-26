@@ -29,8 +29,8 @@
     "fbt": "^1.0.2",
     "framer-motion": "^11.11.17",
     "licht-theme": "^1.7.1",
-    "react": "19.0.0-rc.0",
-    "react-dom": "19.0.0-rc.0",
+    "react": "19.0.0-rc.1",
+    "react-dom": "19.0.0-rc.1",
     "vocs": "1.0.0-alpha.62"
   }
 }
