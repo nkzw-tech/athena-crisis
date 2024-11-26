@@ -203,7 +203,7 @@ ul li {
 }
 
 h1, h2 {
-  font-size: 1.25em;
+  font-size: 1.2em;
   font-weight: normal;
   letter-spacing: 1px;
   line-height: 1.1em;
