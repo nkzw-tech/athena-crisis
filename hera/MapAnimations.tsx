@@ -414,6 +414,7 @@ const MapAnimation = ({
   width: number;
   zIndex: number;
 }) => {
+  const { completed } = animation;
   const [animationConfig] = useState(initialAnimationConfig);
 
   // `playerDetails` should never change during an animation.
@@ -435,6 +436,11 @@ const MapAnimation = ({
     };
 
     const { type } = animation;
+
+    if (completed) {
+      return null;
+    }
+
     switch (type) {
       case 'explosion':
         return (
@@ -719,6 +725,7 @@ const MapAnimation = ({
     animationConfig,
     biome,
     clearTimer,
+    completed,
     getLayer,
     onComplete,
     playerDetails,
