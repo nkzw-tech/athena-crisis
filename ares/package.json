@@ -31,12 +31,12 @@
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^8.40.0",
+    "@sentry/browser": "^8.41.0",
     "@stripe/react-stripe-js": "^3.0.0",
     "@stripe/stripe-js": "^5.2.0",
     "cordova-plugin-purchase": "^13.11.1",
     "fbt": "^1.0.2",
-    "framer-motion": "^11.11.17",
+    "framer-motion": "^11.12.0",
     "p-limit": "^6.1.0",
     "react": "19.0.0-rc.1",
     "react-dom": "19.0.0-rc.1",
@@ -64,8 +64,8 @@
     "babel-plugin-relay": "^18.2.0",
     "glob": "11.0.0",
     "relay-compiler": "^18.2.0",
-    "vite-plugin-minify": "^2.0.1",
+    "vite-plugin-minify": "^2.1.0",
     "vite-plugin-pwa": "^0.21.0",
-    "vite-plugin-restart": "^0.4.1"
+    "vite-plugin-restart": "^0.4.2"
   }
 }
