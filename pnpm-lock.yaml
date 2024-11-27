@@ -766,6 +766,9 @@ importers:
 
   offline:
     devDependencies:
+      '@capacitor/core':
+        specifier: ^6.2.0
+        version: 6.2.0
       vite-plugin-minify:
         specifier: ^2.0.1
         version: 2.0.1(vite@5.4.11(@types/node@22.10.0)(terser@5.36.0))
