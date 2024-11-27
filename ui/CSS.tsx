@@ -1,6 +1,7 @@
 import { injectGlobal } from '@emotion/css';
 import Background from './assets/Background.png';
 import Breakpoints from './Breakpoints.tsx';
+import { isLinux } from './Browser.tsx';
 import { applyVar, initializeCSSVariables } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import pixelBorder from './pixelBorder.tsx';
@@ -269,7 +270,7 @@ body {
   background: ${applyVar('background-color')};
   color: ${applyVar('text-color')};
   font-family: Athena, ui-sans-serif, system-ui, sans-serif;
-  font-size: 20px;
+  font-size: ${isLinux ? 19.5 : 20}px;
   font-weight: normal;
   line-height: 1em;
   margin: 0;
