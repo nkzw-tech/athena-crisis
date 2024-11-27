@@ -270,7 +270,7 @@ body {
   background: ${applyVar('background-color')};
   color: ${applyVar('text-color')};
   font-family: Athena, ui-sans-serif, system-ui, sans-serif;
-  font-size: ${isLinux ? 19.5 : 20}px;
+  font-size: ${isLinux ? 19 : 20}px;
   font-weight: normal;
   line-height: 1em;
   margin: 0;
