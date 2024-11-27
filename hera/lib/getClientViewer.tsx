@@ -17,7 +17,7 @@ export default function getClientViewer(
   return (
     currentViewer ||
     (spectatorCodes?.length && spectatorCodeToPlayerID(spectatorCodes[0])) ||
-    (!isPvP(map) && getFirstHumanPlayer(map)?.id) ||
+    (!isPvP(map) && getFirstHumanPlayer(map)) ||
     0
   );
 }
