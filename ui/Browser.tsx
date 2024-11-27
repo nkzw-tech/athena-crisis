@@ -1,3 +1,5 @@
+import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+
 declare global {
   // eslint-disable-next-line no-var
   var safari: Record<string, { toString: () => string }>;
@@ -13,15 +15,16 @@ const maybeWindow =
     : window;
 
 const navigator = maybeWindow.navigator;
+const { userAgent } = navigator;
 
-export const isIPhone = /iphone/i.test(navigator.userAgent);
+export const isIPhone = /iphone/i.test(userAgent);
 
 export const isIOS =
-  !!navigator.userAgent.match(/i(?:pad|phone)/i) ||
-  (/(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent) &&
+  !!userAgent.match(/i(?:pad|phone)/i) ||
+  (/(macintosh|macintel|macppc|mac68k|macos)/i.test(userAgent) &&
     navigator.maxTouchPoints > 0);
 
-export const isAndroid = /android/i.test(navigator.userAgent);
+export const isAndroid = /android/i.test(userAgent);
 
 export const isSafari =
   /constructor/i.test(maybeWindow.HTMLElement as unknown as string) ||
@@ -32,7 +35,11 @@ export const isSafari =
   ) ||
   isIOS;
 
-export const isLinux = /Linux/.test(navigator.userAgent);
-export const isWindows = /Win(dows|32|64|NT)/.test(navigator.userAgent);
+export const isChrome = /Chrome/.test(userAgent);
+export const ChromeVersion =
+  (isChrome && parseInteger(userAgent.match(/Chrome\/(\d+)/)?.[1] || '')) || 0;
 
-export const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+export const isLinux = /Linux/.test(userAgent);
+export const isWindows = /Win(dows|32|64|NT)/.test(userAgent);
+
+export const isFirefox = userAgent.toLowerCase().includes('firefox');

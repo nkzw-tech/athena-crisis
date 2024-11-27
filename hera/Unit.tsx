@@ -17,6 +17,7 @@ import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
+import { ChromeVersion, isChrome } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import syncAnimation from '@deities/ui/lib/syncAnimation.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -935,7 +936,7 @@ export default function UnitTile({
         ref={innerElementRef}
         style={innerStyle}
       />
-      {player > 0 && unit.isLeader() && (
+      {player > 0 && unit.isLeader() && (!isChrome || ChromeVersion >= 120) && (
         <div
           className={leaderStyle}
           ref={syncAnimation}
