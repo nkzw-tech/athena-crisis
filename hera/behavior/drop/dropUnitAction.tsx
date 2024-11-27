@@ -14,10 +14,10 @@ export default function dropUnitAction(
 ): StateLike {
   const { from, to } = actionResponse;
   const { vision } = state;
-  const originalUnitA = state.map.units.get(from)!;
+  const originalUnitA = state.map.units.get(from);
   const newUnitB = map.units.get(to);
-  const unitB = originalUnitA.getTransportedUnit(actionResponse.index)!;
-  if (!newUnitB) {
+  const unitB = originalUnitA?.getTransportedUnit(actionResponse.index);
+  if (!originalUnitA || !unitB || !newUnitB) {
     return {
       map,
       ...resetBehavior(),
