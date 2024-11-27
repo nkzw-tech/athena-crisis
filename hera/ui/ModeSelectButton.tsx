@@ -211,7 +211,7 @@ const narrowStyle = css`
   width: min(65vw, 252px);
 
   ${Breakpoints.xs} {
-    width: min(70vw, 348px);
+    width: min(70vw, 252px);
   }
 `;
 
