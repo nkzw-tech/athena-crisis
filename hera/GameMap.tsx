@@ -961,6 +961,18 @@ export default class GameMap extends Component<Props, State> {
             };
           }
 
+          if (
+            newState.animations &&
+            this.state.animations !== newState.animations
+          ) {
+            newState = {
+              ...newState,
+              animations: newState.animations.filter(
+                ({ completed }) => !completed,
+              ),
+            };
+          }
+
           return newState as State;
         },
         () => resolve(this.state),
