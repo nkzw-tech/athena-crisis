@@ -119,16 +119,16 @@ const style = css`
   -webkit-user-drag: none;
   align-items: center;
   display: inline-flex;
-  text-align: center;
-  text-wrap: balance;
   justify-content: center;
   overflow: hidden;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
   position: relative;
   transform: scaleX(1) scaleY(1);
   transition:
     transform 300ms ease,
     color 300ms ease;
+  text-align: center;
+  text-wrap: balance;
   z-index: 0;
 
   ${pixelBorder(undefined, 2)}
