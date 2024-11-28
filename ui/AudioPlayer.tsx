@@ -231,7 +231,9 @@ const getVolume = (type: AudioVolumeType) => {
   return Number.isFinite(volume) && volume >= 0 && volume <= 1 ? volume : 1;
 };
 
-Howler.volume(getVolume('master') ?? 0.5);
+const hasMasterVolume = () => localStorage.getItem(storageKeys.master) !== null;
+
+Howler.volume(hasMasterVolume() ? getVolume('master') : 0.66);
 
 const audioPlayer = new AudioPlayer(new Map([...Music, ...Sounds]));
 
