@@ -944,6 +944,7 @@ export default function MapEditor({
           hide={hidden}
           inset={inset}
           isExpanded={menuIsExpanded}
+          size="wide"
           toggleExpanded={() => setMenuIsExpanded((isExpanded) => !isExpanded)}
         >
           <Stack alignCenter gap nowrap>
@@ -960,7 +961,7 @@ export default function MapEditor({
               </div>
             </Stack>
             <InlineLink className={cx(linkStyle, menuIsExpanded && hideStyle)}>
-              <Icon icon={ChevronDown} />
+              <Icon className={menuIconStyle} icon={ChevronDown} />
             </InlineLink>
           </Stack>
           {menuIsExpanded && (
@@ -1197,6 +1198,11 @@ const linkStyle = css`
   color: ${applyVar('text-color')};
   opacity: 1;
   transition: opacity 150ms ease;
+`;
+
+const menuIconStyle = css`
+  width: 24px;
+  height: 24px;
 `;
 
 const hideStyle = css`

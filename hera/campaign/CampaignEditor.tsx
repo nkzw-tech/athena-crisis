@@ -449,6 +449,7 @@ export default function CampaignEditor({
           hide={hidden}
           inset={0}
           isExpanded={false}
+          size="wide"
           toggleExpanded={() => void 0}
         >
           <Stack
@@ -469,8 +470,20 @@ export default function CampaignEditor({
             </div>
             {slug && (
               <div>
-                <InlineLink className={iconStyle} selectedText={hasCopied}>
-                  <Icon icon={hasCopied ? Check : Copy} />
+                <InlineLink selectedText={hasCopied}>
+                  {hasCopied ? (
+                    <Stack
+                      alignCenter
+                      className={smallTextStyle}
+                      gap={2}
+                      nowrap
+                    >
+                      <Icon height={18} icon={Check} width={18} />
+                      <fbt desc="Text for copying a link">Copied</fbt>
+                    </Stack>
+                  ) : (
+                    <Icon className={iconStyle} icon={Copy} />
+                  )}
                 </InlineLink>
               </div>
             )}
@@ -718,6 +731,12 @@ const primaryButtonStyle = css`
   height: ${TileSize * 1.5}px;
 `;
 
+const smallTextStyle = css`
+  font-size: 0.75em;
+`;
+
 const iconStyle = css`
+  height: 24px;
   margin-top: 4px;
+  width: 24px;
 `;
