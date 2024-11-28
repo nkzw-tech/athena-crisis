@@ -9,7 +9,8 @@ const reload = () => {
     return;
   }
 
-  if (Capacitor.getPlatform() === 'android' && ReloadWebViewPlugin) {
+  const platform = Capacitor.getPlatform();
+  if ((platform === 'ios' || platform === 'android') && ReloadWebViewPlugin) {
     ReloadWebViewPlugin.reload();
     return;
   }
