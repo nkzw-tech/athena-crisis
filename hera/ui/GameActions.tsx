@@ -478,9 +478,10 @@ export default function GameActions({
   inset?: number;
   setZoom?: SetZoomFn;
   subscribe?: (map: MapData) => Promise<void>;
-  undoTurn?: () => void | Promise<void>;
+  undoTurn?: (onCancel: () => void) => void | Promise<void>;
   zoom: number;
 }) {
+  const { update } = actions;
   const {
     currentViewer,
     inlineUI,
@@ -499,6 +500,7 @@ export default function GameActions({
     currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
   const canUndo =
     undoTurn &&
+    !hasEnded &&
     viewerPlayer?.isHumanPlayer() &&
     viewerPlayer.crystal == null &&
     playerCanEndTurn &&
@@ -508,10 +510,10 @@ export default function GameActions({
   const undo = useCallback(() => {
     if (canUndo && undoTurn) {
       AudioPlayer.playSound('UI/Accept');
-      actions.update(resetBehavior(NullBehavior));
-      undoTurn();
+      update(resetBehavior(NullBehavior));
+      undoTurn(() => update(resetBehavior()));
     }
-  }, [actions, canUndo, undoTurn]);
+  }, [canUndo, undoTurn, update]);
   useInput('undo', undo);
 
   const replayBar = !hasEnded && (
