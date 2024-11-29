@@ -5,13 +5,13 @@ import { Howl, Howler } from 'howler';
 
 export type AudioVolumeType = 'master' | 'music' | 'sound';
 
+// Keep in sync with `ares/index.html`.
 const storageKeys = {
   master: '::AC::volume',
   music: '::AC::volume-music',
   sound: '::AC::volume-sound',
 } as const;
 
-// Keep in sync with `ares/index.html`.
 const pausedKey = '::AC::paused';
 
 const isMusic = (name: SoundName | SongName): name is SongName =>
