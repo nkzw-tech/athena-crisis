@@ -114,7 +114,7 @@ class AudioPlayer {
     const instance = this.getInstance(name);
     instance.off('fade');
     if (instance.playing() && duration > 0) {
-      instance.fade(1, 0, duration);
+      instance.fade(instance.volume() || 1, 0, duration);
       instance.once('fade', () => instance.stop());
     } else {
       instance.stop();
