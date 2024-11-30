@@ -213,6 +213,10 @@ const narrowStyle = css`
   ${Breakpoints.xs} {
     width: min(70vw, 252px);
   }
+
+  ${Breakpoints.lg} {
+    width: 372px;
+  }
 `;
 
 const mediumStyle = css`
