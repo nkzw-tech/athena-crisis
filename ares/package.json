@@ -65,7 +65,7 @@
     "glob": "11.0.0",
     "relay-compiler": "^18.2.0",
     "vite-plugin-minify": "^2.1.0",
-    "vite-plugin-pwa": "^0.21.0",
+    "vite-plugin-pwa": "^0.21.1",
     "vite-plugin-restart": "^0.4.2"
   }
 }
