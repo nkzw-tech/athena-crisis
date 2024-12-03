@@ -16,6 +16,7 @@
     "fbt:translate": "mkdir -p src/generated/ && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/translations.js"
   },
   "dependencies": {
+    "@capacitor/app": "^6.0.2",
     "@capacitor/core": "^6.2.0",
     "@capacitor/status-bar": "^6.0.2",
     "@deities/apollo": "workspace:*",
