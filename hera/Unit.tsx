@@ -109,11 +109,13 @@ const getAmmoStyle = (unit: Unit) => {
 const Action = ({
   actionStyle,
   hide,
+  position,
   rescuer,
   unit,
 }: {
   actionStyle: ActionStyle | null;
   hide: boolean;
+  position?: 'secondary';
   rescuer: PlayerID | null;
   unit: Unit;
 }) => {
@@ -134,6 +136,7 @@ const Action = ({
         absoluteStyle,
         baseIconStyle,
         statusStyle,
+        position === 'secondary' ? secondaryStyle : null,
         className,
         hide && hideStyle,
       )}
@@ -160,6 +163,7 @@ const Status = ({
   fuelStyle,
   hide,
   rescuer,
+  secondaryActionStyle,
   unit,
 }: {
   actionStyle: ActionStyle | null;
@@ -167,9 +171,12 @@ const Status = ({
   fuelStyle: FuelStyle | null;
   hide: boolean;
   rescuer: PlayerID | null;
+  secondaryActionStyle: ActionStyle | null;
   unit: Unit;
 }) => {
   const hasOne = !!(fuelStyle || ammoStyle);
+  const hasSecondaryAction =
+    secondaryActionStyle && secondaryActionStyle !== actionStyle;
   return (
     <>
       <Action
@@ -178,6 +185,15 @@ const Status = ({
         rescuer={rescuer}
         unit={unit}
       />
+      {hasSecondaryAction && (
+        <Action
+          actionStyle={secondaryActionStyle}
+          hide={hide}
+          position="secondary"
+          rescuer={rescuer}
+          unit={unit}
+        />
+      )}
       {unit.health ? (
         <div
           className={cx(
@@ -873,15 +889,15 @@ export default function UnitTile({
   };
 
   const hide = !!animation;
+  const secondaryActionStyle =
+    !isCompleted && unit.hasMoved() ? ActionStyle.Moved : null;
   const actionStyle = unit.isTransportingUnits()
     ? ActionStyle.Transport
     : unit.isCapturing()
       ? ActionStyle.Capture
       : unit.isBeingRescued()
         ? ActionStyle.Rescue
-        : !isCompleted && unit.hasMoved()
-          ? ActionStyle.Moved
-          : null;
+        : secondaryActionStyle;
   const fuelStyle = getFuelStyle(unit);
   const ammoStyle = getAmmoStyle(unit);
   const completedStyles = cx(
@@ -958,6 +974,7 @@ export default function UnitTile({
         fuelStyle={fuelStyle}
         hide={hide}
         rescuer={actionStyle === ActionStyle.Rescue ? unit.getRescuer() : null}
+        secondaryActionStyle={secondaryActionStyle}
         unit={unit}
       />
       <Health
@@ -1252,6 +1269,10 @@ const hideStyle = css`
 const statusStyle = css`
   right: 0px;
   bottom: -1px;
+`;
+
+const secondaryStyle = css`
+  transform: translate3d(0, -100%, 0);
 `;
 
 const captureStyle = css`
