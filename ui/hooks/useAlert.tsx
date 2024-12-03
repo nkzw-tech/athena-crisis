@@ -16,6 +16,7 @@ import useBlockInput from '../controls/useBlockInput.tsx';
 import useHorizontalMenuNavigation from '../controls/useHorizontalMenuNavigation.tsx';
 import useInput from '../controls/useInput.tsx';
 import { applyVar } from '../cssVar.tsx';
+import getColor from '../getColor.tsx';
 import pixelBorder from '../pixelBorder.tsx';
 import Portal from '../Portal.tsx';
 import { PulseStyle } from '../PulseStyle.tsx';
@@ -57,6 +58,8 @@ export default function useAlert() {
 
 const Alert = ({
   acceptText = <fbt desc="Button to accept a dialog">Ok</fbt>,
+  buttonColor,
+  disableAccept,
   onAccept,
   onCancel,
   preventCancel,
@@ -64,6 +67,8 @@ const Alert = ({
   title,
 }: {
   acceptText?: ReactNode;
+  buttonColor?: 'red';
+  disableAccept?: boolean;
   onAccept?: () => void;
   onCancel?: () => void;
   preventCancel?: true;
@@ -107,7 +112,7 @@ const Alert = ({
   );
 
   useBlockInput('top');
-  useInput('accept', accept, 'top');
+  useInput('accept', disableAccept ? () => {} : accept, 'top');
   useInput('cancel', cancel, 'top');
   useInput('menu', (event) => event.preventDefault(), 'top');
 
@@ -156,7 +161,9 @@ const Alert = ({
                 <button
                   className={cx(
                     acceptStyle,
-                    selected === (showCancel ? 1 : 0) &&
+                    buttonColor === 'red' && redStyle,
+                    !disableAccept &&
+                      selected === (showCancel ? 1 : 0) &&
                       cx('focus', PulseStyle),
                   )}
                   onClick={accept}
@@ -204,4 +211,15 @@ const reverseStyle = css`
 const acceptStyle = css`
   ${pixelBorder(applyVar('highlight-color'), 2)}
   color: ${applyVar('highlight-color')};
+`;
+
+const redStyle = css`
+  &,
+  &:hover,
+  &:focus,
+  &:active {
+    ${pixelBorder(getColor('red'), 2)}
+
+    color: ${getColor('red')};
+  }
 `;

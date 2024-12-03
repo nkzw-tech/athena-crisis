@@ -53,7 +53,7 @@ export type MapDetailsProps = Readonly<{
   timer?: number | null;
 }>;
 
-export const SpecialUsers = new Set(['User-1']);
+export const SpecialUsers = new Set(['User-1', 'User-2876']);
 
 export default function MapDetails({
   buttons,
