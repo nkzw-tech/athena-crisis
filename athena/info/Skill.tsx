@@ -677,7 +677,7 @@ const getMovementStatusEffect = (
   entity: Readonly<{ type: EntityType }> | UnitInfo,
 ) =>
   movementStatusEffects && isUnitInfo(entity)
-    ? movementStatusEffects.get(skill)?.get(entity.movementType) ?? 0
+    ? (movementStatusEffects.get(skill)?.get(entity.movementType) ?? 0)
     : 0;
 
 const getTileStatusEffect = (
@@ -687,8 +687,10 @@ const getTileStatusEffect = (
   tile: TileInfo | null,
 ) =>
   tile && tileStatusEffects && isUnitInfo(entity)
-    ? tileStatusEffects.get(skill)?.get(tile.group)?.get(entity.movementType) ??
-      0
+    ? (tileStatusEffects
+        .get(skill)
+        ?.get(tile.group)
+        ?.get(entity.movementType) ?? 0)
     : 0;
 
 const someOneSkill = (

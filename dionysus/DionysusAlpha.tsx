@@ -367,8 +367,8 @@ export default class DionysusAlpha extends BaseAI {
 
     if (from && unit) {
       const rescuable = getRescuableVectors(map, from);
-      const to = [...rescuable].find(
-        (vector) => map.units.get(vector)?.isBeingRescuedBy(unit.player),
+      const to = [...rescuable].find((vector) =>
+        map.units.get(vector)?.isBeingRescuedBy(unit.player),
       );
       if (to) {
         this.tryAttacking();

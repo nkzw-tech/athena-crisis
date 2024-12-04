@@ -39,6 +39,6 @@ export default function decodeGameActionResponse(
           units: self[2] && decodeUnits(self[2]),
         }
       : null,
-    timeout: response[2] === null ? null : response[2] ?? undefined,
+    timeout: response[2] === null ? null : (response[2] ?? undefined),
   };
 }

@@ -670,7 +670,9 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="raisedCounterAttack">
             {RaisedCounterAttack * 100}
           </fbt:param>% as effective as initial attacks instead of
-          <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
+          <fbt:param name="counterAttack">
+            {CounterAttack * 100}
+          </fbt:param>%.
         </fbt>
       );
     case Skill.UnlockZombie:
@@ -703,8 +705,9 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
             />
           </fbt:param>{' '}
           units heal
-          <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
-          at the beginning of their turn.
+          <fbt:param name="value">
+            {VampireSkillHeal}
+          </fbt:param> health points at the beginning of their turn.
         </fbt>
       );
     case Skill.Shield:

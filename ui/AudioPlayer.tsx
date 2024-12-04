@@ -174,7 +174,7 @@ class AudioPlayer {
   }
 
   getVolume(type: AudioVolumeType) {
-    return type === 'master' ? Howler.volume() : getVolume(type) ?? 1;
+    return type === 'master' ? Howler.volume() : (getVolume(type) ?? 1);
   }
 
   setVolume(type: AudioVolumeType, volume: number) {

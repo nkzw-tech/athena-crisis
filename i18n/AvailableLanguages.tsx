@@ -12,11 +12,7 @@ const AvailableLanguages = new Map([
   ['zh_CN', '简体中文 (Simplified Chinese)'],
 ] as const);
 
-export type AvailableLanguage = typeof AvailableLanguages extends Map<
-  infer K,
-  unknown
->
-  ? K
-  : never;
+export type AvailableLanguage =
+  typeof AvailableLanguages extends Map<infer K, unknown> ? K : never;
 
 export default AvailableLanguages;

@@ -24,9 +24,8 @@ type MaybePaletteSwapParameters = [
   ...DropFirstInTuple<PaletteSwapParameters>,
 ];
 
-type Canvas = ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V>
-  ? V
-  : never;
+type Canvas =
+  ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V> ? V : never;
 
 type CanvasToURLFn = (canvas: Canvas, name: string) => Promise<string>;
 

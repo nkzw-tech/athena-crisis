@@ -77,16 +77,15 @@ export default function EffectsPanel({
       ...(effects.get('OptionalObjective') || []),
     ]);
     return new Set(
-      [...effectList].flatMap(
-        ({ conditions }) =>
-          conditions
-            ?.map((condition) =>
-              condition.type === 'GameEnd' ||
-              condition.type === 'OptionalObjective'
-                ? condition.value
-                : null,
-            )
-            .filter(isPresent),
+      [...effectList].flatMap(({ conditions }) =>
+        conditions
+          ?.map((condition) =>
+            condition.type === 'GameEnd' ||
+            condition.type === 'OptionalObjective'
+              ? condition.value
+              : null,
+          )
+          .filter(isPresent),
       ),
     );
   }, [effects]);
