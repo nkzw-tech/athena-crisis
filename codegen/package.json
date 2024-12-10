@@ -11,7 +11,7 @@
   "type": "module",
   "devDependencies": {
     "@babel/parser": "^7.26.3",
-    "@babel/traverse": "^7.26.3",
+    "@babel/traverse": "^7.26.4",
     "@babel/types": "^7.26.3",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
