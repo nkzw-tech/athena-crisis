@@ -18,7 +18,7 @@ export default function shouldCaptureBuilding(
     return (
       !maybeUnit ||
       (!map.matchesPlayer(maybeUnit, building) &&
-        !maybeUnit.canCapture(map.getPlayer(maybeUnit)))
+        !maybeUnit.canCapture(map.maybeGetPlayer(maybeUnit) || null))
     );
   }
 

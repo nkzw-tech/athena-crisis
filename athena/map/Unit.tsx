@@ -490,14 +490,14 @@ export default class Unit extends Entity {
     );
   }
 
-  canCapture(player: Player) {
+  canCapture(player: Player | null) {
     return (
       this.info.hasAbility(Ability.Capture) ||
       (this.info === Sniper &&
         this.isLeader() &&
         !this.isUnfolded() &&
-        player.skills.has(Skill.UnitAbilitySniperImmediateAction)) ||
-      (this.info === Dragon && player.skills.has(Skill.DragonSaboteur))
+        player?.skills.has(Skill.UnitAbilitySniperImmediateAction)) ||
+      (this.info === Dragon && player?.skills.has(Skill.DragonSaboteur))
     );
   }
 

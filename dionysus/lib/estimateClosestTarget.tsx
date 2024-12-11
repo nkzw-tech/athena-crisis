@@ -56,7 +56,7 @@ const maybeOptimizeTargets = (
     return targets;
   }
 
-  if (unit.canCapture(map.getPlayer(unit))) {
+  if (unit.canCapture(map.maybeGetPlayer(unit) || null)) {
     const sortedTargets = sortBy(
       targets.map((vector) => radius.get(vector)).filter(isPresent),
       minByCost,
