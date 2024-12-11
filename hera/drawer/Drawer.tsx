@@ -26,7 +26,7 @@ export default function Drawer({
   inset?: number;
   mode?: string;
   position?: DrawerPosition;
-  ref?: RefObject<HTMLDivElement>;
+  ref?: RefObject<HTMLDivElement | null>;
   sidebar?: ReactNode;
   visible: boolean;
 }>) {

@@ -2,7 +2,7 @@ import Building from '@deities/athena/map/Building.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { useCallback } from 'react';
+import { ReactElement, useCallback } from 'react';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import SelectEntity from '../ui/SelectEntity.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
@@ -76,7 +76,7 @@ export default abstract class AbstractSelectBehavior {
     );
   }
 
-  component = ({ actions, state }: StateWithActions): JSX.Element | null => {
+  component = ({ actions, state }: StateWithActions): ReactElement | null => {
     return (
       <SelectEntity
         actions={actions}

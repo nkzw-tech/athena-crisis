@@ -10,6 +10,7 @@ import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
 import { init as initFbt, IntlVariations } from 'fbt';
+import { ReactElement } from 'react';
 
 initializeCSSVariables();
 
@@ -68,7 +69,7 @@ if (import.meta.env.DEV) {
   import('@deities/hera/ui/fps/Fps.tsx');
 }
 
-export default function ClientScope({ children }: { children: JSX.Element }) {
+export default function ClientScope({ children }: { children: ReactElement }) {
   return (
     <ScaleContext>
       <HideContext>

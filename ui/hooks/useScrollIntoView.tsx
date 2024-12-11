@@ -1,7 +1,7 @@
 import { RefObject, useEffect } from 'react';
 
 export default function useScrollIntoView(
-  element: RefObject<HTMLElement>,
+  element: RefObject<HTMLElement | null>,
   scrollIntoView: boolean | undefined,
 ) {
   useEffect(() => {

@@ -24,7 +24,7 @@ export default function TagInput<T>({
   tags: ReadonlyArray<T>;
   toValue?: (tag: T) => string;
 }) {
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(undefined);
   const ignoreList = useMemo(() => new Set(tags.map(toValue)), [tags, toValue]);
   return (
     <Stack

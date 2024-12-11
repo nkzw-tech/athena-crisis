@@ -77,7 +77,7 @@ export default function Animation({
   }, [initialDelay, rate, rumble, rumbleDuration, sound]);
 
   const setRef = useCallback(
-    async (element: HTMLDivElement) => {
+    (element: HTMLDivElement) => {
       if (!element) {
         return;
       }
@@ -107,7 +107,7 @@ export default function Animation({
           }
         }
       };
-      await scheduleTimer(next, initialDelay);
+      scheduleTimer(next, initialDelay);
     },
     [
       delay,

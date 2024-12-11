@@ -102,7 +102,7 @@ export default function MapEditorControlPanel({
   user: UserWithUnlocks;
   visible: boolean;
 }) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const updateEffect = useCallback(
     (effect: Effect) => {
       const { effect: currentEffect, trigger } = editor.scenario;

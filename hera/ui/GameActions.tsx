@@ -284,8 +284,8 @@ const EndTurnButton = ({
   const { currentViewer, lastActionResponse, map, vision } = state;
   const [endTurnIsExpanded, setEndTurnIsExpanded] = useState<boolean>(false);
   const [cooldown, setCooldown] = useState(false);
-  const timerRef = useRef<NativeTimeout>();
-  const highlightTimerRef = useRef<NativeTimeout>();
+  const timerRef = useRef<NativeTimeout>(null);
+  const highlightTimerRef = useRef<NativeTimeout>(null);
 
   useEffect(() => {
     if (cooldown) {

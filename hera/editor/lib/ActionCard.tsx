@@ -147,7 +147,7 @@ export default memo(function ActionCard({
   onChange?: ActionChangeFn;
   playerDetails?: PlayerDetails;
   position?: DrawerPosition;
-  scrollRef: RefObject<HTMLElement> | null;
+  scrollRef: RefObject<HTMLElement | null> | null;
   setMap?: SetMapFunction;
   trigger?: EffectTrigger;
   user: UserWithUnlocks | null;

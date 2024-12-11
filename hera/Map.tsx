@@ -17,7 +17,7 @@ import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import Images from 'athena-crisis:images';
 // eslint-disable-next-line @deities/no-lazy-import
-import { lazy } from 'react';
+import { lazy, ReactElement } from 'react';
 import Building from './Building.tsx';
 import Decorators from './Decorators.tsx';
 import Fog from './Fog.tsx';
@@ -144,7 +144,7 @@ const MapComponent = ({
       <Decorators map={map} paused={paused} tileSize={tileSize} />
       {renderEntities && (
         <Tick animationConfig={animationConfig} paused={paused}>
-          {map.reduceEachField<Array<JSX.Element>>((list, vector) => {
+          {map.reduceEachField<Array<ReactElement>>((list, vector) => {
             const animation = animations?.get(vector);
             const building = map.buildings.get(vector);
             const unit = map.units.get(vector);

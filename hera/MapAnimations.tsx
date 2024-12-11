@@ -17,6 +17,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
 import {
   ComponentType,
+  ReactElement,
   ReactNode,
   useCallback,
   useEffect,
@@ -767,8 +768,8 @@ export function MapAnimations({
   skipBanners?: boolean;
   state: State;
 }) {
-  const animationsWithTransitions: Array<JSX.Element> = [];
-  const mainAnimations: Array<JSX.Element> = [];
+  const animationsWithTransitions: Array<ReactElement> = [];
+  const mainAnimations: Array<ReactElement> = [];
   animations.forEach((animation, position) => {
     const { type } = animation;
     if (

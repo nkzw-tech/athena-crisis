@@ -56,7 +56,7 @@ export default function EffectsPanel({
   map: MapData;
   position: DrawerPosition;
   scenario: Scenario;
-  scrollRef: RefObject<HTMLElement>;
+  scrollRef: RefObject<HTMLElement | null>;
   setEditorState: SetEditorStateFunction;
   setMap: SetMapFunction;
   setScenario: (scenario: Scenario) => void;

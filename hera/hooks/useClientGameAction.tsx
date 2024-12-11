@@ -62,7 +62,7 @@ export default function useClientGameAction(
   onError?: ((error: Error) => void) | null,
   mutateAction?: MutateActionResponseFnName | null,
 ) {
-  const actionQueue = useRef<Promise<GameActionResponse>>();
+  const actionQueue = useRef<Promise<GameActionResponse>>(undefined);
   return useCallback(
     (action: Action): Promise<GameActionResponse> =>
       (actionQueue.current = (actionQueue.current || Promise.resolve(null))

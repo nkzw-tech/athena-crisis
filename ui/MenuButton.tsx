@@ -19,7 +19,7 @@ export default memo(function MenuButton({
   delay?: boolean;
   hide?: boolean;
   onClick?: (event: MouseEvent) => void;
-  ref?: RefObject<HTMLDivElement>;
+  ref?: RefObject<HTMLDivElement | null>;
   style?: MotionStyle;
 }) {
   return (

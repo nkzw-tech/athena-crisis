@@ -256,7 +256,7 @@ export default function Typeahead<T>({
   );
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const input = useRef<HTMLInputElement>();
+  const input = useRef<HTMLInputElement>(undefined);
 
   const resetResults = useCallback(() => {
     setResults(emptySuggestions?.length ? emptySuggestions : []);

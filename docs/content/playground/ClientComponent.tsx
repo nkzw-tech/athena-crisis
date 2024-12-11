@@ -1,13 +1,13 @@
 import Spinner from '@deities/ui/Spinner.tsx';
 import Stack from '@deities/ui/Stack.tsx';
-import { Suspense, useEffect, useState } from 'react';
+import { ReactElement, Suspense, useEffect, useState } from 'react';
 
 export default function ClientComponent({
   module: Module,
 }: {
-  module: () => JSX.Element;
+  module: () => ReactElement;
 }) {
-  const [element, setElement] = useState<JSX.Element | null>(null);
+  const [element, setElement] = useState<ReactElement | null>(null);
 
   useEffect(() => {
     import('./ClientScope.tsx').then(({ default: ClientScope }) =>

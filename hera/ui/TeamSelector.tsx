@@ -239,7 +239,7 @@ const PlayerIconWithDrag = ({
   onLeave,
   selected,
 }: {
-  container: RefObject<Element>;
+  container: RefObject<HTMLElement | null>;
   id: PlayerID;
   navigate: [Team | undefined, Team | undefined];
   onDrag: (id: PlayerID | null, ghost: boolean) => void;

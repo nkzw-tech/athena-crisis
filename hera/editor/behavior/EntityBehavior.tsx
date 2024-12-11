@@ -3,7 +3,7 @@ import Building from '@deities/athena/map/Building.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { useCallback } from 'react';
+import { ReactElement, useCallback } from 'react';
 import AbstractSelectBehavior from '../../behavior/AbstractSelectBehavior.tsx';
 import { MenuItemProps } from '../../behavior/Menu.tsx';
 import Cursor from '../../Cursor.tsx';
@@ -148,7 +148,10 @@ export default class EntityBehavior extends AbstractSelectBehavior {
     return { building, unit };
   }
 
-  override component = ({ actions, state }: StateWithActions) => {
+  override component = ({
+    actions,
+    state,
+  }: StateWithActions): ReactElement | null => {
     const { update } = actions;
     const {
       map,
