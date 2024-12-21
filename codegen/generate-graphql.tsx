@@ -25,10 +25,13 @@ if (files.length) {
   writeFileSync(
     outputFile,
     sign(
-      await format(`${files.map((name) => `import './${name}';`).join('\n')}`, {
-        filepath: outputFile,
-        singleQuote: true,
-      }),
+      await format(
+        `${files.map((name) => `import './${name}.tsx';`).join('\n')}`,
+        {
+          filepath: outputFile,
+          singleQuote: true,
+        },
+      ),
     ),
   );
 } else {
