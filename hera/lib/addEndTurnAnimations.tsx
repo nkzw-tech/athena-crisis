@@ -16,7 +16,7 @@ import Vector, {
   sortVectors,
 } from '@deities/athena/map/Vector.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { Actions, State, StateToStateLike } from '../Types.tsx';
 import animateHeal from './animateHeal.tsx';

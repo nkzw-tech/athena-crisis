@@ -1,6 +1,6 @@
 import { EntityGroup, EntityType } from '@deities/athena/map/Entity.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 export default function getTranslatedEntityName(entityType: EntityType) {
   switch (entityType) {

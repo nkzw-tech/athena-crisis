@@ -1,7 +1,7 @@
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import { sortVectors } from '@deities/athena/map/Vector.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { Actions, State, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';

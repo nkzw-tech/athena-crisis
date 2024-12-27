@@ -19,7 +19,7 @@
     "@deities/ui": "workspace:*",
     "@emotion/css": "^11.13.5",
     "array-shuffle": "^3.0.0",
-    "fbt": "^1.0.2",
+    "fbtee": "^0.2.0",
     "framer-motion": "^11.15.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

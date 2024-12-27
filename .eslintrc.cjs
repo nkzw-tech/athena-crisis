@@ -2,7 +2,11 @@ const { join } = require('node:path');
 const { existsSync, readFileSync } = require('node:fs');
 
 module.exports = {
-  extends: ['@nkzw', 'plugin:@deities/strict'],
+  extends: [
+    '@nkzw',
+    'plugin:@deities/strict',
+    'plugin:@nkzw/eslint-plugin-fbtee/recommended',
+  ],
   ignorePatterns: [
     'artemis/prisma/pothos-types.ts',
     'dist/',
@@ -25,7 +29,7 @@ module.exports = {
       },
     },
     {
-      files: ['i18n/**/*.cjs', 'hera/i18n/**/EntityMap.tsx'],
+      files: ['i18n/**/*.ts', 'hera/i18n/**/EntityMap.tsx'],
       rules: {
         'sort-keys-fix/sort-keys-fix': 0,
       },
@@ -50,8 +54,7 @@ module.exports = {
       files: [
         '.eslintrc.cjs',
         'eslint-plugin/index.js',
-        'i18n/Common.cjs',
-        'infra/babelPlugins.tsx',
+        'infra/babelPresets.tsx',
       ],
       rules: {
         '@typescript-eslint/no-require-imports': 0,
@@ -64,7 +67,7 @@ module.exports = {
       },
     },
   ],
-  plugins: ['@deities', 'workspaces'],
+  plugins: ['@deities', 'workspaces', '@nkzw/eslint-plugin-fbtee'],
   rules: {
     '@typescript-eslint/array-type': [2, { default: 'generic' }],
     '@typescript-eslint/no-restricted-imports': [

@@ -16,7 +16,7 @@ import {
   TypeaheadDataSourceEntry,
 } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { RangeSelector } from '../../card/Range.tsx';
 import useTagDataSource from '../../hooks/useTagDataSource.tsx';
 import getTranslatedPlayStyleName from '../lib/getTranslatedPlayStyleName.tsx';

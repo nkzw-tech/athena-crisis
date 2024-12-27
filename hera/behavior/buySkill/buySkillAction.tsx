@@ -1,6 +1,6 @@
 import { BuySkillActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getSkillConfigForDisplay from '../../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';

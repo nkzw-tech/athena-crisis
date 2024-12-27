@@ -55,7 +55,7 @@ import Storage from '@deities/ui/Storage.tsx';
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { AnimatePresence } from 'framer-motion';
 import {
   ReactNode,

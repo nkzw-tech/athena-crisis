@@ -15,12 +15,11 @@ import MapData from '@deities/athena/MapData.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import { css } from '@emotion/css';
-import { fbt } from 'fbt';
+import { fbt, TranslatedString } from 'fbtee';
 import { useCallback, useMemo } from 'react';
 import BuildingTile from '../../Building.tsx';
 import Tick from '../../Tick.tsx';
 import { Actions, State } from '../../Types.tsx';
-import { Fbt } from '../../types/Fbt.tsx';
 import EntityPickerFlyout from '../../ui/EntityPickerFlyout.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutColor, FlyoutItem } from '../../ui/Flyout.tsx';
@@ -278,7 +277,11 @@ const getDamageInformation = (
   from: Vector,
   to: Vector,
   modifier = 1,
-): { color: FlyoutColor; damage: number | null; text: Fbt | null } => {
+): {
+  color: FlyoutColor;
+  damage: number | null;
+  text: TranslatedString | null;
+} => {
   const damage = calculateLikelyDamage(
     unitA,
     entityB,

@@ -44,7 +44,7 @@ import Check from '@iconify-icons/pixelarticons/check.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Copy from '@iconify-icons/pixelarticons/copy.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ComponentType,

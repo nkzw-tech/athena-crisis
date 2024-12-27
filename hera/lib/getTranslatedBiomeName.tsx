@@ -1,6 +1,6 @@
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 export default function getTranslatedBiomeName(biome: Biome) {
   switch (biome) {

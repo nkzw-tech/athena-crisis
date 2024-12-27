@@ -3,7 +3,7 @@ import {
   IncreaseFundsActionResponse,
 } from '@deities/apollo/ActionResponse.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';

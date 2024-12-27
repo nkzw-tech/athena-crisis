@@ -35,7 +35,7 @@ import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import addExplosionAnimation from '../../animations/addExplosionAnimation.tsx';
 import Decorators from '../../Decorators.tsx';
 import addFlashAnimation from '../../lib/addFlashAnimation.tsx';

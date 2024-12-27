@@ -7,7 +7,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';

@@ -11,8 +11,8 @@
   "type": "module",
   "scripts": {
     "fbt": "pnpm run fbt:manifest && pnpm run fbt:collect && pnpm run fbt:translate",
-    "fbt:collect": "../node_modules/.bin/fbt-collect --transform $(pwd)/scripts/collectionTransform.cjs --pretty --manifest < .src_manifest.json > ../source_strings.json",
-    "fbt:manifest": "../node_modules/.bin/fbt-manifest --src src ../hera ../ui",
+    "fbt:collect": "../node_modules/.bin/fbtee collect --fbt-common-path ../i18n/Common.ts --pretty --manifest < .src_manifest.json > ../source_strings.json",
+    "fbt:manifest": "../node_modules/.bin/fbtee manifest --src src ../hera ../ui",
     "fbt:translate": "mkdir -p src/generated/ && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/translations.js"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.4.0",
     "cordova-plugin-purchase": "^13.12.1",
-    "fbt": "^1.0.2",
+    "fbtee": "^0.2.0",
     "framer-motion": "^11.15.0",
     "p-limit": "^6.2.0",
     "react": "19.0.0",

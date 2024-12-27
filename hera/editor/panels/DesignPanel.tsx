@@ -40,7 +40,7 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Fill from '@iconify-icons/pixelarticons/fill-half.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useCallback, useMemo } from 'react';
 import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';

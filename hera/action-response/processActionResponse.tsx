@@ -27,7 +27,7 @@ import dateNow from '@deities/hephaestus/dateNow.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import arrayShuffle from 'array-shuffle';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import addIncreaseValueAnimation from '../animations/addIncreaseValueAnimation.tsx';
 import animateFireworks, {
   getPossibleFireworksPositions,
@@ -65,7 +65,6 @@ import sabotageAction, {
   addSabotageAnimation,
 } from '../behavior/sabotage/sabotageAction.tsx';
 import unfoldAction from '../behavior/unfold/unfoldAction.tsx';
-import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import translateMessage from '../i18n/translateMessage.tsx';
 import abandonInvasion from '../lib/abandonInvasion.tsx';
 import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
@@ -522,7 +521,12 @@ async function processActionResponse(
             length: 'medium',
             player: 0,
             sound: null,
-            text: String(fbt(`The game ended in a draw!`, 'Draw')),
+            text: String(
+              fbt(
+                `The game ended in a draw!`,
+                'Text for when a game ended in a draw.',
+              ),
+            ),
             type: 'banner',
           }),
         }));
@@ -544,11 +548,6 @@ async function processActionResponse(
           ).map(({ id }) => id),
         ]),
       ];
-      const winnerList = intlList(
-        winners.map(getTranslatedFactionName.bind(null, playerDetails)),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      );
       const fireworks =
         state.currentViewer && winners.includes(state.currentViewer) ? 5 : 3;
       await update((currentState) => ({
@@ -581,7 +580,10 @@ async function processActionResponse(
           sound: null,
           text: String(
             fbt(
-              fbt.param('winners', winnerList) +
+              fbt.list(
+                'winners',
+                winners.map(getTranslatedFactionName.bind(null, playerDetails)),
+              ) +
                 ' ' +
                 fbt.plural('wins', winners.length, {
                   many: 'win',

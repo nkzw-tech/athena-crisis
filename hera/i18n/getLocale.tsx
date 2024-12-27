@@ -1,17 +1,19 @@
+/// <reference types="fbtee/ReactTypes.d.ts" />
+
 import isPresent from '@deities/hephaestus/isPresent.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
-import { TranslationDict } from 'fbt';
+import { TranslationDictionary, TranslationTable } from 'fbtee';
 
 type LocaleLoaderFn = (
   locale: string,
-) => Promise<{ [hashKey: string]: unknown }>;
+) => Promise<{ [hashKey: string]: TranslationTable }>;
 
 const key = 'locale';
 const _defaultLanguage = 'en_US';
 const availableLocales = new Map<string, string>();
-const translations: TranslationDict = { [_defaultLanguage]: {} };
+const translations: TranslationDictionary = { [_defaultLanguage]: {} };
 
 for (const [locale] of AvailableLanguages) {
   availableLocales.set(locale, locale);

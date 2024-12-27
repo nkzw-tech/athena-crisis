@@ -9,7 +9,7 @@ import { SizeVector } from '@deities/athena/MapData.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { motion } from 'framer-motion';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';

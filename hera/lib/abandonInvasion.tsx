@@ -1,4 +1,4 @@
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { State, StateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import getUserDisplayName from './getUserDisplayName.tsx';

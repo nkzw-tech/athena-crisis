@@ -11,7 +11,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
+import { list } from 'fbtee';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import UILabel from '../ui/UILabel.tsx';
@@ -27,14 +27,13 @@ const PlayerList = ({
   players: PlayerIDs;
 }) =>
   players.length ? (
-    intlList(
+    list(
       players.map((id) => (
         <span key={`player-${id}`} style={{ color: getColor(id) }}>
           {getTranslatedFactionName(playerDetails, id)}
         </span>
       )),
-      Conjunctions[conjunction === 'or' ? 'OR' : 'AND'],
-      Delimiters.COMMA,
+      conjunction,
     )
   ) : (
     <fbt desc="Player list name that applies to any player, like 'Any player can achieve the objective…'">
@@ -65,12 +64,7 @@ const ObjectiveText = ({
       ))) ||
     null;
   const labelList =
-    labels &&
-    intlList(
-      labels,
-      type === Criteria.DefeatOneLabel ? Conjunctions.OR : Conjunctions.AND,
-      Delimiters.COMMA,
-    );
+    labels && list(labels, type === Criteria.DefeatOneLabel ? 'or' : 'and');
 
   switch (type) {
     case Criteria.Default:

@@ -34,7 +34,7 @@ import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';
 import { memo, ReactNode, RefObject, useMemo, useRef, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';

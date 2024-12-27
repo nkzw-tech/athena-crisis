@@ -9,12 +9,12 @@ import { AlertContext } from '@deities/ui/hooks/useAlert.tsx';
 import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
-import { init as initFbt, IntlVariations } from 'fbt';
+import { IntlVariations, setupFbtee } from 'fbtee';
 import { ReactElement } from 'react';
 
 initializeCSSVariables();
 
-initFbt({
+setupFbtee({
   hooks: {
     getViewerContext: () => ({
       GENDER: IntlVariations.GENDER_UNKNOWN,

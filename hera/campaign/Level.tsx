@@ -49,7 +49,7 @@ import EmptyDialogueIcon from '@iconify-icons/pixelarticons/message.js';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';
 import { memo, MouseEvent, useCallback, useRef, useState } from 'react';
 import Portrait from '../character/Portrait.tsx';

@@ -6,7 +6,7 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import ZapOn from '@deities/ui/icons/ZapOn.tsx';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, {

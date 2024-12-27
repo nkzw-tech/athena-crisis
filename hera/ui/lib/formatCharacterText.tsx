@@ -9,8 +9,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import { formatInputNames } from '@deities/ui/controls/formatInputNames.tsx';
 import { getGamepadType } from '@deities/ui/controls/setupGamePad.tsx';
-import { fbt } from 'fbt';
-import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
+import { fbt, list } from 'fbtee';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import getUserDisplayName from '../../lib/getUserDisplayName.tsx';
 import { PlayerDetails } from '../../Types.tsx';
@@ -29,7 +28,7 @@ export default function formatCharacterText(
       [
         'opponents',
         String(
-          intlList(
+          list(
             [...playerDetails]
               .filter(
                 ([playerID]) =>
@@ -37,8 +36,6 @@ export default function formatCharacterText(
                   map.isOpponent(playerID, player),
               )
               .map(([playerID]) => getUserDisplayName(playerDetails, playerID)),
-            Conjunctions.AND,
-            Delimiters.COMMA,
           ),
         ) ||
           fbt(

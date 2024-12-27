@@ -17,7 +17,7 @@ import { CreateTracksCost } from '@deities/athena/map/Configuration.tsx';
 import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import animateSupply from '../lib/animateSupply.tsx';
 import { RadiusType } from '../Radius.tsx';

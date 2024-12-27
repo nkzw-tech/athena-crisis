@@ -1,6 +1,6 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { playerToColor } from '@deities/ui/getColor.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 const capitalizedColor = (player: PlayerID) => {
   const color = playerToColor(player);

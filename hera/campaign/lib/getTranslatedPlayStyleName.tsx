@@ -1,5 +1,5 @@
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 export default function getTranslatedPlayStyleName(playStyle: PlayStyle) {
   switch (playStyle) {

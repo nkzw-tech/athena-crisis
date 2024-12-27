@@ -44,7 +44,6 @@ import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
 import {
-  Fragment,
   memo,
   ReactElement,
   useCallback,
@@ -383,10 +382,10 @@ const MapPerformance = ({
             without losing a unit to secure the{' '}
             <fbt:param name="starName">
               {
-                <Fragment>
+                <>
                   <Icon className={zapStyle} icon={Zap} />
                   <span>{getTranslatedPerformanceTypeName('power')}</span>
-                </Fragment>
+                </>
               }
             </fbt:param>{' '}
             star.
@@ -461,19 +460,19 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const endGameText = useMemo(
     () => (
-      <Fragment>
+      <>
         {canAbandon ? (
           <fbt desc="Button to abandon (give up)">Abandon</fbt>
         ) : (
           <fbt desc="Button to give up">Give Up</fbt>
         )}
-      </Fragment>
+      </>
     ),
     [canAbandon],
   );
   const endGameExplanation = useMemo(
     () => (
-      <Fragment>
+      <>
         {canAbandon ? (
           <fbt desc="Confirmation dialog to abandon (give up) a map.">
             Are you sure you want to abandon this map? You will not receive any
@@ -484,7 +483,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
             Are you sure you want to give up and restart this map?
           </fbt>
         )}
-      </Fragment>
+      </>
     ),
     [canAbandon],
   );

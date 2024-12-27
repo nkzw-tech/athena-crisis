@@ -1,5 +1,5 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { PlayerDetails } from '../Types.tsx';
 
 export default function getUserDisplayName(

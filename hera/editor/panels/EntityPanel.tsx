@@ -28,7 +28,7 @@ import Slider from '@deities/ui/Slider.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { ChangeEvent, Fragment, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';

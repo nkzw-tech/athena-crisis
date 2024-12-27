@@ -1,6 +1,6 @@
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { PlayerDetails } from '../Types.tsx';
 import getTranslatedColorName from './getTranslatedColorName.tsx';
 

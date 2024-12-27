@@ -59,15 +59,13 @@
     "@babel/plugin-syntax-typescript": "^7.25.9",
     "@deities/eslint-plugin": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@nkzw/babel-preset-fbtee": "^0.2.0",
     "@nkzw/eslint-config": "^1.19.0",
+    "@nkzw/eslint-plugin-fbtee": "^0.2.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.10.4",
-    "@types/fbt": "^1.0.5",
     "@types/node": "^22.10.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "babel-plugin-fbt": "^1.0.0",
-    "babel-plugin-fbt-import": "^0.1.0",
-    "babel-plugin-fbt-runtime": "^1.0.0",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.0",
@@ -93,9 +91,6 @@
         "react",
         "react-dom",
         "utf-8-validate"
-      ],
-      "ignoreMissing": [
-        "@fbtjs/default-collection-transform"
       ]
     },
     "neverBuiltDependencies": [
@@ -113,7 +108,6 @@
     "patchedDependencies": {
       "@remix-run/router": "patches/@remix-run__router.patch",
       "eslint-plugin-import": "patches/eslint-plugin-import.patch",
-      "fbt@1.0.2": "patches/fbt@1.0.2.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",

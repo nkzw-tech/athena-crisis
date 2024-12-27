@@ -7,7 +7,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';

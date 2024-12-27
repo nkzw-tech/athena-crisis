@@ -73,11 +73,10 @@ import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
 import Volume from '@iconify-icons/pixelarticons/volume-3.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { memo, ReactNode, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import useUnitState from '../hooks/useUnitState.tsx';
-import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getAnyBuildingTileField from '../lib/getAnyBuildingTileField.tsx';
 import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
 import getTranslatedEntityName, {
@@ -879,12 +878,7 @@ const UnitTransports = ({
   }
 
   const { limit, types } = transports;
-  const entities = intlList(
-    [...types].map(getTranslatedEntityName),
-    Conjunctions.OR,
-    Delimiters.COMMA,
-  );
-
+  const entities = [...types].map(getTranslatedEntityName);
   const units = unit.transports?.map((transportedUnit) =>
     transportedUnit.deploy(),
   );
@@ -898,13 +892,13 @@ const UnitTransports = ({
           {limit === 1 ? (
             <fbt desc="Unit transport description">
               This unit can transport one unit of type{' '}
-              <fbt:param name="entities">{entities}</fbt:param>.
+              <fbt:list conjunction="or" items={entities} name="entities" />.
             </fbt>
           ) : (
             <fbt desc="Unit transport description">
               This unit can transport up to{' '}
               <fbt:param name="limit">{limit}</fbt:param> units of type{' '}
-              <fbt:param name="entities">{entities}</fbt:param>.
+              <fbt:list conjunction="or" items={entities} name="entities" />.
             </fbt>
           )}
         </p>

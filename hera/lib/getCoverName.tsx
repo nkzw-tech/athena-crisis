@@ -1,4 +1,4 @@
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 const getCover = (cover: number) => {
   if (cover === Number.POSITIVE_INFINITY) {

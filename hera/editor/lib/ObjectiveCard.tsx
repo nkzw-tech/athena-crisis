@@ -32,10 +32,9 @@ import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
-import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedCrystalName from '../../invasions/getTranslatedCrystalName.tsx';
 import getTranslatedBiomeName from '../../lib/getTranslatedBiomeName.tsx';
 import ObjectiveTitle from '../../objectives/ObjectiveTitle.tsx';
@@ -83,22 +82,6 @@ export default function ObjectiveCard({
     objectiveHasAmounts(objective) ? objective.amount : 0,
   );
   const { alert } = useAlert();
-  const campaignList = useMemo(
-    () =>
-      campaigns
-        ? intlList(
-            campaigns.map(({ name, slug }) => (
-              <InlineLink key={slug} to={getCampaignRoute(slug, 'edit')}>
-                {getCampaignTranslation(name)}
-              </InlineLink>
-            )),
-            Conjunctions.AND,
-            Delimiters.COMMA,
-          )
-        : null,
-    [campaigns],
-  );
-
   const onDelete = useCallback(() => {
     if (!canDelete) {
       return;
@@ -113,13 +96,10 @@ export default function ObjectiveCard({
       text: (
         <fbt desc="Explanation for why the objective cannot be deleted">
           This objective is associated with the
-          <fbt:param name="campaigns">
-            {intlList(
-              campaigns.map(({ name }) => getCampaignTranslation(name)),
-              Conjunctions.AND,
-              Delimiters.COMMA,
-            )}
-          </fbt:param>{' '}
+          <fbt:list
+            items={campaigns.map(({ name }) => getCampaignTranslation(name))}
+            name="campaigns"
+          />
           <fbt:plural count={campaigns.length} many="campaigns">
             campaign
           </fbt:plural>. If you want to delete the objective, you must first
@@ -622,7 +602,17 @@ export default function ObjectiveCard({
               <p>
                 <fbt desc="Explanation for where the objective is used">
                   This objective is used in the{' '}
-                  <fbt:param name="campaigns">{campaignList}</fbt:param>{' '}
+                  <fbt:list
+                    items={campaigns.map(({ name, slug }) => (
+                      <InlineLink
+                        key={slug}
+                        to={getCampaignRoute(slug, 'edit')}
+                      >
+                        {getCampaignTranslation(name)}
+                      </InlineLink>
+                    ))}
+                    name="campaigns"
+                  />{' '}
                   <fbt:plural count={campaigns.length} many="campaigns">
                     campaign
                   </fbt:plural>.

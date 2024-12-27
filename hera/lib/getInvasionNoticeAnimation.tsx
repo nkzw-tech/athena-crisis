@@ -1,6 +1,6 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { Animations } from '../MapAnimations.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';

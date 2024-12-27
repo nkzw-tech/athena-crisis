@@ -14,9 +14,9 @@ import ErrorText from '@deities/ui/ErrorText.tsx';
 import Spinner from '@deities/ui/Spinner.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import { List } from 'fbtee';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import useClientGameAction from '../../hooks/useClientGameAction.tsx';
-import intlList, { Conjunctions, Delimiters } from '../../i18n/intlList.tsx';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import MiniPlayerIcon from '../../ui/MiniPlayerIcon.tsx';
@@ -30,10 +30,10 @@ type Result = Readonly<{
 const RUNS = 10;
 
 const Rounds = ({ results }: { results: ReadonlyArray<Result> }) => (
-  <Fragment>
+  <>
     <fbt desc="Label for rounds">Rounds:</fbt>{' '}
     {results.map(({ turns }) => turns).join(', ')}
-  </Fragment>
+  </>
 );
 
 export default function EvaluationPanel({
@@ -143,7 +143,10 @@ export default function EvaluationPanel({
                       </Stack>
                       <Stack gap vertical>
                         <Stack gap start>
-                          <fbt desc="Draw">Draw</fbt>:{' '}
+                          <fbt desc="Label for games that ended in a draw">
+                            Draw
+                          </fbt>
+                          :{' '}
                           <fbt desc="Number of draws">
                             <fbt:param name="draws">{results.length}</fbt:param>{' '}
                             <fbt:plural
@@ -167,13 +170,6 @@ export default function EvaluationPanel({
                     .players.map(({ id }) => id)
                     .values(),
                 ];
-                const winnerList = intlList(
-                  winners.map(
-                    getTranslatedFactionName.bind(null, state.playerDetails),
-                  ),
-                  Conjunctions.AND,
-                  Delimiters.COMMA,
-                );
 
                 return (
                   <Fragment key={player}>
@@ -184,7 +180,15 @@ export default function EvaluationPanel({
                     </Stack>
                     <Stack gap vertical>
                       <Stack gap start>
-                        {winnerList}:{' '}
+                        <List
+                          items={winners.map(
+                            getTranslatedFactionName.bind(
+                              null,
+                              state.playerDetails,
+                            ),
+                          )}
+                        />
+                        :{' '}
                         <fbt desc="Number of wins">
                           <fbt:param name="wins">{results.length}</fbt:param>{' '}
                           <fbt:plural

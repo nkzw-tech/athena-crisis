@@ -1,5 +1,5 @@
 import { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 export default function getValidationErrorText(error?: ErrorReason) {
   const errors = {

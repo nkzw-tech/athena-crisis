@@ -23,7 +23,7 @@ import More from '@iconify-icons/pixelarticons/more-horizontal.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { MouseEvent, useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, {

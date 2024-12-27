@@ -33,7 +33,7 @@ import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 type SkillConfig = Readonly<{
   alpha?: number;

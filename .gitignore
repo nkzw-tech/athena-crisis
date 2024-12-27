@@ -31,4 +31,4 @@ artemis/graphql/schemaImportMap.tsx
 hera/i18n/CampaignMap.tsx
 hera/i18n/EntityMap.tsx
 hermes/CampaignMapName.tsx
-i18n/Entities.cjs
+i18n/Entities.ts

@@ -81,9 +81,9 @@ import { css, cx } from '@emotion/css';
 import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
+import { List, list } from 'fbtee';
 import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';
-import intlList, { Conjunctions, Delimiters } from '../i18n/intlList.tsx';
 import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
@@ -95,7 +95,7 @@ const canBuildBar = (unitCosts: ReadonlyMap<ID, number>) =>
   );
 
 const RawUnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
-  <Fragment>
+  <>
     <span className={inlineStyle}>
       <UnitTile
         animationConfig={AnimationConfig}
@@ -115,7 +115,7 @@ const RawUnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
     >
       {unit.name}
     </span>
-  </Fragment>
+  </>
 );
 
 const UnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
@@ -135,15 +135,12 @@ const UnitNames = ({
   units: ReadonlyArray<UnitInfo>;
 }) => (
   <fbt desc="List of units">
-    <fbt:param name="units">
-      {intlList(
-        units.map((unit, index) => (
-          <RawUnitName color={color} key={index} unit={unit} />
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      )}
-    </fbt:param>{' '}
+    <fbt:list
+      items={units.map((unit, index) => (
+        <RawUnitName color={color} key={index} unit={unit} />
+      ))}
+      name="units"
+    />{' '}
     units
   </fbt>
 );
@@ -236,7 +233,7 @@ const UnitStatusEffects = ({
   type: 'attack' | 'defense';
 }) =>
   effects.size
-    ? intlList(
+    ? list(
         groupUnitTypes(effects).map(([effect, units], index) => (
           <UnitsStatusEffect
             color={color}
@@ -246,8 +243,6 @@ const UnitStatusEffects = ({
             units={units.map(getUnitInfoOrThrow)}
           />
         )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
       )
     : null;
 
@@ -280,20 +275,17 @@ const UnitRange = ({
   range.size ? (
     <fbt desc="Description of unit range changes">
       Changes the range of{' '}
-      <fbt:param name="list">
-        {intlList(
-          [...range].map(([unit, range], index) => (
-            <UnitRangeEffect
-              color={color}
-              key={index}
-              range={range}
-              unit={getUnitInfoOrThrow(unit)}
-            />
-          )),
-          Conjunctions.AND,
-          Delimiters.COMMA,
-        )}
-      </fbt:param>
+      <fbt:list
+        items={[...range].map(([unit, range], index) => (
+          <UnitRangeEffect
+            color={color}
+            key={index}
+            range={range}
+            unit={getUnitInfoOrThrow(unit)}
+          />
+        ))}
+        name="list"
+      />
     </fbt>
   ) : null;
 
@@ -331,20 +323,20 @@ const MovementTypeStatusEffect = ({
   effects: ReadonlyMap<MovementType, number>;
   type: 'attack' | 'defense';
 }) =>
-  effects.size
-    ? intlList(
-        groupMovementTypes(effects).map(([effect, movementTypes], index) => (
+  effects.size ? (
+    <List
+      items={groupMovementTypes(effects).map(
+        ([effect, movementTypes], index) => (
           <UnitMovementTypeStatusEffect
             effect={effect}
             key={index}
             movementTypes={movementTypes}
             type={type}
           />
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      )
-    : null;
+        ),
+      )}
+    />
+  ) : null;
 
 const TileTypeStatusEffect = ({
   effects: initialEffects,
@@ -368,32 +360,27 @@ const TileTypeStatusEffect = ({
     ]);
   }
 
-  return inverseEffects.size
-    ? intlList(
-        [...inverseEffects].map(([movementTypes, tileTypes], index) => (
-          <Fragment key={index}>
-            <fbt desc="List item of tiletypes with status effects for specific movement types">
-              <fbt:param name="movementTypeEffect">
-                <MovementTypeStatusEffect effects={movementTypes} type={type} />
-              </fbt:param>{' '}
-              on{' '}
-              <fbt:param name="tileType">
-                {intlList(
-                  tileTypes.map((tileType, index) => (
-                    <TileTypeName key={index} tileType={tileType} />
-                  )),
-                  Conjunctions.AND,
-                  Delimiters.COMMA,
-                )}
-              </fbt:param>{' '}
-              fields
-            </fbt>
-          </Fragment>
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      )
-    : null;
+  return inverseEffects.size ? (
+    <List
+      items={[...inverseEffects].map(([movementTypes, tileTypes], index) => (
+        <Fragment key={index}>
+          <fbt desc="List item of tiletypes with status effects for specific movement types">
+            <fbt:param name="movementTypeEffect">
+              <MovementTypeStatusEffect effects={movementTypes} type={type} />
+            </fbt:param>{' '}
+            on{' '}
+            <fbt:list
+              items={tileTypes.map((tileType, index) => (
+                <TileTypeName key={index} tileType={tileType} />
+              ))}
+              name="tileType"
+            />{' '}
+            fields
+          </fbt>
+        </Fragment>
+      ))}
+    />
+  ) : null;
 };
 
 const BuildingName = ({
@@ -445,9 +432,9 @@ const UnitCost = ({
       </fbt:param>{' '}
       for
       <fbt:param name="cost">
-        <Fragment>
+        <>
           <Icon className={iconStyle} icon={Coin} /> {cost}
-        </Fragment>
+        </>
       </fbt:param>
     </fbt>
   ) : (
@@ -457,9 +444,9 @@ const UnitCost = ({
       </fbt:param>
       for
       <fbt:param name="cost">
-        <Fragment>
+        <>
           <Icon className={iconStyle} icon={Coin} /> {cost}
-        </Fragment>
+        </>
       </fbt:param>
     </fbt>
   );
@@ -471,26 +458,23 @@ const UnitCosts = ({
   color: BaseColor;
   costs: ReadonlyMap<ID, number>;
 }) => (
-  <Fragment>
+  <>
     <fbt desc="List of one or more units that can be built using this skill">
       Build
-      <fbt:param name="list">
-        {intlList(
-          [...costs].map(([unit, cost], index) => (
-            <UnitCost
-              color={color}
-              cost={cost}
-              key={index}
-              unit={getUnitInfoOrThrow(unit)}
-            />
-          )),
-          Conjunctions.AND,
-          Delimiters.COMMA,
-        )}
-      </fbt:param>.
+      <fbt:list
+        items={[...costs].map(([unit, cost], index) => (
+          <UnitCost
+            color={color}
+            cost={cost}
+            key={index}
+            unit={getUnitInfoOrThrow(unit)}
+          />
+        ))}
+        name="list"
+      />.
     </fbt>
     {canBuildBar(costs) ? (
-      <Fragment>
+      <>
         {' '}
         <fbt desc="List item explaining that the Bar can be built.">
           Enables constructing
@@ -499,9 +483,9 @@ const UnitCosts = ({
           </fbt:param>{' '}
           buildings.
         </fbt>
-      </Fragment>
+      </>
     ) : null}
-  </Fragment>
+  </>
 );
 
 const UnitBlocks = ({
@@ -513,15 +497,12 @@ const UnitBlocks = ({
 }) => (
   <fbt desc="List of one or more units that can be built using this skill">
     Cannot build
-    <fbt:param name="list">
-      {intlList(
-        [...blocked].map((unit, index) => (
-          <UnitName color={color} key={index} unit={getUnitInfoOrThrow(unit)} />
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
-      )}
-    </fbt:param>.
+    <fbt:list
+      items={[...blocked].map((unit, index) => (
+        <UnitName color={color} key={index} unit={getUnitInfoOrThrow(unit)} />
+      ))}
+      name="list"
+    />.
   </fbt>
 );
 
@@ -541,14 +522,13 @@ const MovementTypeNames = ({
   movementTypes,
 }: {
   movementTypes: ReadonlyArray<MovementType>;
-}) =>
-  intlList(
-    movementTypes.map((movementType, index) => (
+}) => (
+  <List
+    items={movementTypes.map((movementType, index) => (
       <MovementTypeName key={index} movementType={movementType} />
-    )),
-    Conjunctions.AND,
-    Delimiters.COMMA,
-  );
+    ))}
+  />
+);
 
 const TileTypeName = ({ tileType }: { tileType: TileType }) => (
   <span
@@ -585,19 +565,18 @@ const MovementTypeRadius = ({
   movement: ReadonlyMap<MovementType, number>;
 }) => (
   <fbt desc="List of one or more movement types that can incresae or decrease their radius using this skill">
-    <fbt:param name="list">
-      {intlList(
-        groupMovementTypes(movement).map(([radius, movementTypes], index) => (
+    <fbt:list
+      items={groupMovementTypes(movement).map(
+        ([radius, movementTypes], index) => (
           <UnitMovement
             key={index}
             movementTypes={movementTypes}
             radius={radius}
           />
-        )),
-        Conjunctions.AND,
-        Delimiters.COMMA,
+        ),
       )}
-    </fbt:param>
+      name="list"
+    />
   </fbt>
 );
 
@@ -611,7 +590,7 @@ const ActiveUnitType = ({
   return typeof type === 'number' ? (
     <UnitName color={color} unit={getUnitInfoOrThrow(type)} />
   ) : isVector(type) ? (
-    <fbt desc="Position">
+    <fbt desc="Position of a unit">
       Position <fbt:param name="position">{`(${type.x},${type.y})`}</fbt:param>
     </fbt>
   ) : (
@@ -629,15 +608,15 @@ const HealTypes = ({
   <fbt desc="Additional skill description">
     <fbt:param name="unitTypes">
       {types === 'all' ? (
-        <fbt desc="All units">all units</fbt>
+        <fbt desc="Label for a skill heal effect that applies to all units">
+          all units
+        </fbt>
       ) : (
-        intlList(
-          [...types].map((type, index) => (
+        <List
+          items={[...types].map((type, index) => (
             <ActiveUnitType color={color} key={index} type={type} />
-          )),
-          Conjunctions.AND,
-          Delimiters.COMMA,
-        )
+          ))}
+        />
       )}
     </fbt:param>{' '}
     units are healed by <fbt:param name="effect">{`${HealAmount}%`}</fbt:param>
@@ -1138,7 +1117,9 @@ export default memo(function SkillDescription({
       <UnitBlocks blocked={blockedUnits} color={color} />
     ) : null,
     effects.length ? (
-      <>{intlList(effects, Conjunctions.AND, Delimiters.COMMA)}.</>
+      <>
+        <List items={effects} />.
+      </>
     ) : null,
     isPower && activateOnInvasion ? (
       <div className="paragraph">
@@ -1263,19 +1244,16 @@ export const SkillUnlockDescription = ({
       unlockContent = (
         <fbt desc="Description for unlocks">
           Unlocks{' '}
-          <fbt:param name="list">
-            {intlList(
-              [...costs].map(([unit], index) => (
-                <UnitName
-                  color={color}
-                  key={index}
-                  unit={getUnitInfoOrThrow(unit)}
-                />
-              )),
-              Conjunctions.AND,
-              Delimiters.COMMA,
-            )}
-          </fbt:param>{' '}
+          <fbt:list
+            items={[...costs].map(([unit], index) => (
+              <UnitName
+                color={color}
+                key={index}
+                unit={getUnitInfoOrThrow(unit)}
+              />
+            ))}
+            name="list"
+          />{' '}
           and the{' '}
           <fbt:param name="buildingName">
             <BuildingName building={Bar} color={color} />

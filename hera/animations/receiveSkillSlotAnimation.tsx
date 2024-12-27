@@ -1,6 +1,6 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import AnimationKey from '../lib/AnimationKey.tsx';

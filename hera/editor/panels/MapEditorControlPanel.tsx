@@ -19,7 +19,7 @@ import { css } from '@emotion/css';
 import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
 import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useCallback, useRef } from 'react';
 import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';

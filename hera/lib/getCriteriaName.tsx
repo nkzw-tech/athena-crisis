@@ -1,6 +1,6 @@
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 
 export default function getCriteriaName(criteria: Criteria) {
   switch (criteria) {

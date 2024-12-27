@@ -3,7 +3,7 @@ import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import captureException from '@deities/ui/lib/captureException.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
-import { fbt } from 'fbt';
+import { fbt } from 'fbtee';
 import { useEffect } from 'react';
 
 export class SpriteLoadError extends Error {}

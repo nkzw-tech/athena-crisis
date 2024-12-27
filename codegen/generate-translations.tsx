@@ -45,7 +45,7 @@ const publishedCampaigns = new Map([
   ['tutorial', Number.POSITIVE_INFINITY],
 ]);
 
-const COMMON_OUTPUT_FILE = join(root, 'i18n/Entities.cjs');
+const COMMON_OUTPUT_FILE = join(root, 'i18n/Entities.ts');
 const FBT_ENTITY_MAP_OUTPUT_FILE = join(root, 'hera/i18n/EntityMap.tsx');
 const FBT_CAMPAIGN_MAP_OUTPUT_FILE = join(root, 'hera/i18n/CampaignMap.tsx');
 
@@ -369,7 +369,7 @@ for (const { description, key, message, unitId } of characterMessages) {
 const plugins = ['@ianvs/prettier-plugin-sort-imports'];
 writeFileSync(
   COMMON_OUTPUT_FILE,
-  await format(sign(`module.exports = {${common.join(',\n')}};`), {
+  await format(sign(`export default {${common.join(',\n')}};`), {
     filepath: COMMON_OUTPUT_FILE,
     plugins,
     singleQuote: true,
@@ -382,7 +382,7 @@ writeFileSync(
     sign(
       [
         `import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';`,
-        `import { fbt } from 'fbt';`,
+        `import { fbt } from 'fbtee';`,
         ...entities,
       ].join('\n'),
     ),
@@ -400,7 +400,7 @@ writeFileSync(
     sign(
       [
         `import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';`,
-        `import { fbt } from 'fbt';`,
+        `import { fbt } from 'fbtee';`,
         `export const CampaignMetadata = {${campaignMetadata.join('\n')}};\n`,
         `export default {`,
         campaign.join('\n'),
