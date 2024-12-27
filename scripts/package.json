@@ -16,8 +16,8 @@
     "@deities/hephaestus": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@types/glob": "^8.1.0",
-    "canvas": "^2.11.2",
-    "chalk": "^5.4.0",
+    "canvas": "^3.0.0",
+    "chalk": "^5.4.1",
     "glob": "11.0.0"
   }
 }

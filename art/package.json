@@ -13,6 +13,6 @@
     "@deities/athena": "workspace:*",
     "@deities/hephaestus": "workspace:*",
     "@emotion/css": "^11.13.5",
-    "@nkzw/palette-swap": "^2.1.2"
+    "@nkzw/palette-swap": "^3.0.0"
   }
 }
