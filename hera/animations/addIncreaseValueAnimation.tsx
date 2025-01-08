@@ -28,7 +28,7 @@ export default async function addIncreaseValueAnimation(
         },
         player,
         sound: 'UI/Start',
-        text:
+        text: String(
           actionResponse.type === 'IncreaseCharge'
             ? fbt(
                 fbt.param(
@@ -56,6 +56,7 @@ export default async function addIncreaseValueAnimation(
                   '!',
                 'Charge increased message',
               ),
+        ),
         type: 'banner',
       }),
       map: newMap,
