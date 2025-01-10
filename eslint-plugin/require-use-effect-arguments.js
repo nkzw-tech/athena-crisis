@@ -1,10 +1,4 @@
-module.exports.meta = {
-  fixable: false,
-  hasSuggestions: false,
-  type: 'problem',
-};
-
-module.exports = {
+export default {
   create(context) {
     const useEffectNames = new Set();
     return {
@@ -45,5 +39,10 @@ module.exports = {
         }
       },
     };
+  },
+  meta: {
+    fixable: false,
+    hasSuggestions: false,
+    type: 'problem',
   },
 };

@@ -1,4 +1,11 @@
-module.exports = {
+import noCopyExpression from './no-copy-expression.js';
+import noDateNow from './no-date-now.js';
+import noInlineCSS from './no-inline-css.js';
+import noLazyImport from './no-lazy-import.js';
+import requireUseEffectArguments from './require-use-effect-arguments.js';
+import useRelayTypes from './use-relay-types.js';
+
+export default {
   configs: {
     strict: {
       rules: {
@@ -11,12 +18,15 @@ module.exports = {
       },
     },
   },
+  meta: {
+    name: '@deities',
+  },
   rules: {
-    'no-copy-expression': require('./no-copy-expression'),
-    'no-date-now': require('./no-date-now'),
-    'no-inline-css': require('./no-inline-css'),
-    'no-lazy-import': require('./no-lazy-import'),
-    'require-use-effect-arguments': require('./require-use-effect-arguments'),
-    'use-relay-types': require('./use-relay-types'),
+    'no-copy-expression': noCopyExpression,
+    'no-date-now': noDateNow,
+    'no-inline-css': noInlineCSS,
+    'no-lazy-import': noLazyImport,
+    'require-use-effect-arguments': requireUseEffectArguments,
+    'use-relay-types': useRelayTypes,
   },
 };

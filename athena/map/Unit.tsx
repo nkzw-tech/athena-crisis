@@ -118,7 +118,6 @@ export class DryUnit {
   format() {
     const { ammo: a, health, statusEffect } = this;
     const ammo = a?.size ? { ammo: [...a] } : null;
-    // eslint-disable-next-line sort-keys-fix/sort-keys-fix
     return {
       health,
       ...ammo,

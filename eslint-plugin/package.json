@@ -8,5 +8,6 @@
     "url": "git://github.com/nkzw-tech/athena-crisis.git"
   },
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
+  "type": "module",
   "main": "./index.js"
 }
