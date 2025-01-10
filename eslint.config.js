@@ -2,11 +2,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import deities from '@deities/eslint-plugin';
 import nkzw from '@nkzw/eslint-config';
-// eslint-disable-next-line import/no-unresolved
-import { configs, meta, rules } from '@nkzw/eslint-plugin-fbtee';
+import fbtee from '@nkzw/eslint-plugin-fbtee';
 import workspaces from 'eslint-plugin-workspaces';
-
-const fbteePlugin = { configs, meta, rules };
 
 export default [
   ...nkzw,
@@ -26,7 +23,7 @@ export default [
   {
     plugins: {
       '@deities': deities,
-      '@nkzw/fbtee': fbteePlugin,
+      '@nkzw/fbtee': fbtee,
       workspaces,
     },
     rules: {

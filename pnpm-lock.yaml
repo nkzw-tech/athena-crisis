@@ -51,8 +51,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@typescript-eslint/eslint-plugin@8.19.1(@typescript-eslint/parser@8.19.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu)))(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu)))(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))
       '@nkzw/eslint-plugin-fbtee':
-        specifier: ^0.2.0
-        version: 0.2.0(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))
+        specifier: ^0.2.1
+        version: 0.2.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))
       '@styled/typescript-styled-plugin':
         specifier: ^1.0.1
         version: 1.0.1
@@ -2445,8 +2445,8 @@ packages:
     peerDependencies:
       eslint: '>= 9'
 
-  '@nkzw/eslint-plugin-fbtee@0.2.0':
-    resolution: {integrity: sha512-J70+6sKZdB8ie0tOUO0iiXBwrnryxNTuMUVZr1GKJb5/xu9374ux1Qtzd36sOKRYdjUzWEafpJsm13gyve/mCA==}
+  '@nkzw/eslint-plugin-fbtee@0.2.1':
+    resolution: {integrity: sha512-sVGpZtoQPPEnWmzK5XPs/IvlQ6opcgeNWM5w2IY2E6FZVfAiQ5LBkgHQG9cFBDXqfI6Ymz8dZBD1jBgOMT0RoA==}
 
   '@nkzw/eslint-plugin@1.8.0':
     resolution: {integrity: sha512-doODSLfA7C6fA/wF20uk9whJIeH0ZydyVb8PlhDBZE0kJaOUSKfZqTKzxflxPF9sGG+Lhr2v/Ih//dzBHp/rxw==}
@@ -10540,7 +10540,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@nkzw/eslint-plugin-fbtee@0.2.0(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))':
+  '@nkzw/eslint-plugin-fbtee@0.2.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))':
     dependencies:
       '@typescript-eslint/utils': 8.19.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.3(patch_hash=icxwwkq44uizmbsct6du47zdsu))
     transitivePeerDependencies:
