@@ -1,49 +1,63 @@
 diff --git a/dist/index.js b/dist/index.js
-index 6dc469d499266c0c6e0ec02d0682396eeca6a984..de32109eb72e92221880604ec7736ad8553cecb7 100644
+index a7061681a5b5f69961780b4c9d92d33ab485f415..6c8e1bd3d2eed33ed00687082de18dbc3b7574c2 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -135,7 +135,6 @@ var Audiences = class {
- };
- 
- // src/batch/batch.ts
--var import_render = require("@react-email/render");
- var Batch = class {
-   constructor(resend) {
-     this.resend = resend;
-@@ -147,12 +146,6 @@ var Batch = class {
-   }
-   create(_0) {
+@@ -159,14 +159,9 @@ var Batch = class {
+       for (const email of payload) {
+         if (email.react) {
+           if (!this.renderAsync) {
+-            try {
+-              const { renderAsync } = yield import("@react-email/render");
+-              this.renderAsync = renderAsync;
+-            } catch (error) {
+-              throw new Error(
+-                "Failed to render React component. Make sure to install `@react-email/render`"
+-              );
+-            }
++            throw new Error(
++              "Failed to render React component. Make sure to install `@react-email/render`"
++            );
+           }
+           email.html = yield this.renderAsync(email.react);
+           email.react = void 0;
+@@ -191,14 +186,9 @@ var Broadcasts = class {
      return __async(this, arguments, function* (payload, options = {}) {
--      for (const email of payload) {
--        if (email.react) {
--          email.html = yield (0, import_render.renderAsync)(email.react);
--          delete email.react;
--        }
--      }
-       const data = yield this.resend.post(
-         "/emails/batch",
-         payload,
-@@ -283,7 +276,6 @@ var Domains = class {
- };
- 
- // src/emails/emails.ts
--var import_render2 = require("@react-email/render");
- var Emails = class {
-   constructor(resend) {
-     this.resend = resend;
-@@ -295,10 +287,6 @@ var Emails = class {
-   }
-   create(_0) {
+       if (payload.react) {
+         if (!this.renderAsync) {
+-          try {
+-            const { renderAsync } = yield import("@react-email/render");
+-            this.renderAsync = renderAsync;
+-          } catch (error) {
+-            throw new Error(
+-              "Failed to render React component. Make sure to install `@react-email/render`"
+-            );
+-          }
++          throw new Error(
++            "Failed to render React component. Make sure to install `@react-email/render`"
++          );
+         }
+         payload.html = yield this.renderAsync(
+           payload.react
+@@ -405,14 +395,9 @@ var Emails = class {
      return __async(this, arguments, function* (payload, options = {}) {
--      if (payload.react) {
--        payload.html = yield (0, import_render2.renderAsync)(payload.react);
--        delete payload.react;
--      }
-       const data = yield this.resend.post(
-         "/emails",
-         {
+       if (payload.react) {
+         if (!this.renderAsync) {
+-          try {
+-            const { renderAsync } = yield import("@react-email/render");
+-            this.renderAsync = renderAsync;
+-          } catch (error) {
+-            throw new Error(
+-              "Failed to render React component. Make sure to install `@react-email/render`"
+-            );
+-          }
++          throw new Error(
++            "Failed to render React component. Make sure to install `@react-email/render`"
++          );
+         }
+         payload.html = yield this.renderAsync(
+           payload.react
 diff --git a/package.json b/package.json
-index fe39c8a6fa6cfc3805c870bbb04bceec0e0619fd..eaf5e7450beaf6ff081fe3fb79bb736f0db283f5 100644
+index f0ade031dfcdc572f983935254eb191dcabbeac4..2e21dca55761bed7105018e3cb8bf539065e9f94 100644
 --- a/package.json
 +++ b/package.json
 @@ -41,9 +41,6 @@
@@ -51,8 +65,8 @@ index fe39c8a6fa6cfc3805c870bbb04bceec0e0619fd..eaf5e7450beaf6ff081fe3fb79bb736f
    },
    "homepage": "https://github.com/resendlabs/resend-node#readme",
 -  "dependencies": {
--    "@react-email/render": "0.0.17"
+-    "@react-email/render": "1.0.1"
 -  },
    "devDependencies": {
-     "@biomejs/biome": "1.8.3",
+     "@biomejs/biome": "1.9.4",
      "@types/jest": "29.5.12",
