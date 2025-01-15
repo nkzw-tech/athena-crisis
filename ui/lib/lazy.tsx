@@ -39,7 +39,9 @@ export function importErrorHandler(): { default: ComponentType<unknown> } {
                   <p>
                     <fbt desc="Generic error message">
                       Oops, something went wrong.
-                    </fbt>{' '}
+                    </fbt>
+                  </p>
+                  <p>
                     <Reload />
                   </p>
                 </Box>

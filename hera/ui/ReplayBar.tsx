@@ -30,7 +30,7 @@ const TurnTimer = ({
       <span className={textStyle}>
         <div className={miniIconStyle}>
           <MiniPlayerIcon gap id={player} />
-        </div>{' '}
+        </div>
         <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
           Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
         </fbt>
@@ -168,6 +168,7 @@ const textStyle = css`
 
 const miniIconStyle = css`
   display: inline-block;
+  margin-right: 4px;
   margin-top: -2px;
   vertical-align: top;
 `;
