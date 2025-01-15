@@ -8,6 +8,7 @@ import workspaces from 'eslint-plugin-workspaces';
 export default [
   ...nkzw,
   deities.configs.strict,
+  fbtee.configs.recommended,
   {
     ignores: [
       'ares/vite.config.ts.timestamp-*',
