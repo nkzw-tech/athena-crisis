@@ -10,8 +10,8 @@ export class SpriteLoadError extends Error {}
 
 export class FetchError extends Error {
   constructor(
-    message: string,
-    public readonly url: string,
+    public override readonly message: string,
+    public readonly info: Record<string, string>,
     cause?: unknown,
     public readonly skipInDev?: true,
   ) {
