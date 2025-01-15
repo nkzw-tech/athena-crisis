@@ -1,0 +1,12 @@
+diff --git a/www/store.js b/www/store.js
+index 6b26e36fb02bf3d483ebbeaf1a86476c28206ec1..f2ab848afd49e49e3d993c7866e6b05f73f8d165 100644
+--- a/www/store.js
++++ b/www/store.js
+@@ -2009,7 +2009,6 @@ else {
+ /** @private */
+ function initCDVPurchase() {
+     var _a;
+-    console.log('Create CdvPurchase...');
+     const oldStore = (_a = window.CdvPurchase) === null || _a === void 0 ? void 0 : _a.store;
+     window.CdvPurchase = CdvPurchase;
+     if (oldStore) {

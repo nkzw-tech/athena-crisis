@@ -12,6 +12,9 @@ patchedDependencies:
   '@remix-run/router':
     hash: 7q564giuhwnsmh7vzwdxsozvom
     path: patches/@remix-run__router.patch
+  cordova-plugin-purchase:
+    hash: yv6ljt7ihlwa2yukurdqjqdxd4
+    path: patches/cordova-plugin-purchase.patch
   eslint-plugin-import:
     hash: bydsny2voedhnuh2ubrznxjhie
     path: patches/eslint-plugin-import.patch
@@ -181,7 +184,7 @@ importers:
         version: 5.5.0
       cordova-plugin-purchase:
         specifier: ^13.12.1
-        version: 13.12.1
+        version: 13.12.1(patch_hash=yv6ljt7ihlwa2yukurdqjqdxd4)
       fbtee:
         specifier: ^0.2.0
         version: 0.2.0(@nkzw/babel-plugin-fbtee-runtime@0.2.0(@nkzw/babel-plugin-fbtee@0.2.0))(@nkzw/babel-plugin-fbtee@0.2.0)(react@19.0.0)
@@ -13206,7 +13209,7 @@ snapshots:
 
   cookie@1.0.2: {}
 
-  cordova-plugin-purchase@13.12.1: {}
+  cordova-plugin-purchase@13.12.1(patch_hash=yv6ljt7ihlwa2yukurdqjqdxd4): {}
 
   core-js-compat@3.40.0:
     dependencies:

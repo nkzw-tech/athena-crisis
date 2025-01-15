@@ -102,6 +102,7 @@
     },
     "patchedDependencies": {
       "@remix-run/router": "patches/@remix-run__router.patch",
+      "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "eslint-plugin-import": "patches/eslint-plugin-import.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
