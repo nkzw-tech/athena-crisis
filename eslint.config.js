@@ -138,16 +138,6 @@ export default [
     },
   },
   {
-    files: [
-      'electron/forge.config.cjs',
-      'electron/preload.cjs',
-      'infra/babelPresets.tsx',
-    ],
-    rules: {
-      '@typescript-eslint/no-require-imports': 0,
-    },
-  },
-  {
     files: ['**/__tests__/**/*.tsx'],
     rules: {
       'workspaces/no-relative-imports': 0,
