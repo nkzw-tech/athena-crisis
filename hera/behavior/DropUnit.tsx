@@ -33,7 +33,10 @@ const getRadius = (
       .filter(
         (vector) =>
           canDeploy(map, transportedUnit.info, vector, true) &&
-          selectedUnit.info.canDropFrom(map.getTileInfo(selectedPosition)),
+          selectedUnit.info.canDropFrom(
+            transportedUnit.info,
+            map.getTileInfo(selectedPosition),
+          ),
       )
       .map((vector) => [vector, RadiusItem(vector, 0, selectedPosition)]),
   );

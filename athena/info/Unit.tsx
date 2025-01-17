@@ -19,6 +19,7 @@ import {
 } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
 import type { TileInfo } from './Tile.tsx';
+import TileID from './TileID.tsx';
 import UnitID from './UnitID.tsx';
 
 let _unitClass: typeof Unit;
@@ -494,10 +495,10 @@ type UnitAttackConfiguration = Readonly<{
   weapons: Map<WeaponID, Weapon> | null;
 }>;
 
+type UnitTransportEntityConfig = ReadonlySet<ID> | true;
 type UnitTransportConfiguration = Readonly<{
+  entities: ReadonlyMap<EntityType, UnitTransportEntityConfig>;
   limit: number;
-  tiles?: ReadonlySet<number> | null;
-  types: ReadonlySet<EntityType>;
 }>;
 
 export class UnitInfo {
@@ -525,11 +526,11 @@ export class UnitInfo {
     public readonly movementType: MovementType,
     configuration: UnitConfiguration,
     public readonly abilities: UnitAbilities,
-    attack: {
+    attack: Readonly<{
       range?: [number, number];
       type: AttackType;
       weapons?: ReadonlyArray<Weapon>;
-    } | null,
+    }> | null,
     public readonly transports: UnitTransportConfiguration | null,
     sprite: Omit<
       SpriteConfig,
@@ -698,18 +699,19 @@ export class UnitInfo {
   }
 
   canTransportUnitType(info: UnitInfo) {
-    return this.transports?.types.has(info.type);
+    return this.transports?.entities.has(info.type);
   }
 
-  canTransport(info: UnitInfo, tile: TileInfo) {
-    return !!(this.transports?.types.has(info.type) && this.canDropFrom(tile));
-  }
-
-  canDropFrom(tile: TileInfo) {
+  canTransport(unitInfo: UnitInfo, tile: TileInfo) {
     return !!(
-      this.transports &&
-      (!this.transports.tiles || this.transports.tiles.has(tile.id))
+      this.transports?.entities.has(unitInfo.type) &&
+      this.canDropFrom(unitInfo, tile)
     );
+  }
+
+  canDropFrom(unitInfo: UnitInfo, tile: TileInfo) {
+    const config = this.transports?.entities.get(unitInfo.type);
+    return config && (config === true || config.has(tile.id));
   }
 
   canSabotageUnitType(info: UnitInfo) {
@@ -1971,8 +1973,11 @@ export const Jeep = new UnitInfo(
   }),
   null,
   {
+    entities: new Map([
+      [EntityType.AirSoldier, true],
+      [EntityType.Soldier, true],
+    ]),
     limit: 2,
-    types: new Set([EntityType.Soldier, EntityType.AirSoldier]),
   },
   {
     direction: 'left',
@@ -2228,9 +2233,11 @@ export const Lander = new UnitInfo(
   DefaultShipUnitAbilities,
   null,
   {
+    entities: new Map<EntityType, UnitTransportEntityConfig>([
+      [EntityType.AirSoldier, true],
+      [EntityType.Soldier, new Set([TileID.Beach])],
+    ]),
     limit: 2,
-    tiles: new Set([10]),
-    types: new Set([EntityType.AirSoldier, EntityType.Soldier]),
   },
   {
     direction: 'left',
@@ -2404,8 +2411,11 @@ export const TransportHelicopter = new UnitInfo(
   }),
   null,
   {
+    entities: new Map([
+      [EntityType.AirSoldier, true],
+      [EntityType.Soldier, true],
+    ]),
     limit: 2,
-    types: new Set([EntityType.AirSoldier, EntityType.Soldier]),
   },
   {
     direction: 'right',
@@ -2871,14 +2881,13 @@ export const Hovercraft = new UnitInfo(
   DefaultShipUnitAbilities,
   null,
   {
-    limit: 4,
-    tiles: new Set([10]),
-    types: new Set([
-      EntityType.Soldier,
-      EntityType.AirSoldier,
-      EntityType.Ground,
-      EntityType.Artillery,
+    entities: new Map<EntityType, UnitTransportEntityConfig>([
+      [EntityType.Soldier, new Set([TileID.Beach])],
+      [EntityType.AirSoldier, true],
+      [EntityType.Ground, new Set([TileID.Beach])],
+      [EntityType.Artillery, new Set([TileID.Beach])],
     ]),
+    limit: 4,
   },
   {
     direction: 'left',
@@ -3072,14 +3081,14 @@ export const TransportTrain = new UnitInfo(
     ],
   },
   {
-    limit: 4,
-    types: new Set([
-      EntityType.Soldier,
-      EntityType.AirSoldier,
-      EntityType.Ground,
-      EntityType.Artillery,
-      EntityType.Amphibious,
+    entities: new Map([
+      [EntityType.AirSoldier, true],
+      [EntityType.Soldier, true],
+      [EntityType.Ground, true],
+      [EntityType.Artillery, true],
+      [EntityType.Amphibious, true],
     ]),
+    limit: 4,
   },
   {
     direction: 'left',
@@ -3338,8 +3347,11 @@ export const Truck = new UnitInfo(
   }),
   null,
   {
+    entities: new Map([
+      [EntityType.AirSoldier, true],
+      [EntityType.Soldier, true],
+    ]),
     limit: 4,
-    types: new Set([EntityType.Soldier, EntityType.AirSoldier]),
   },
   {
     direction: 'left',

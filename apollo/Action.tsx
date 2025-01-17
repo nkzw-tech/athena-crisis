@@ -669,7 +669,7 @@ function dropUnit(map: MapData, { from, index, to }: DropUnitAction) {
     !unitA.isCompleted() &&
     unitA.isTransportingUnits() &&
     canDeploy(map, infoB, to, true) &&
-    infoA.canDropFrom(map.getTileInfo(from))
+    infoA.canDropFrom(infoB, map.getTileInfo(from))
   ) {
     return { from, index, to, type: 'DropUnit' } as const;
   }

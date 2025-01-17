@@ -877,8 +877,7 @@ const UnitTransports = ({
     return null;
   }
 
-  const { limit, types } = transports;
-  const entities = [...types].map(getTranslatedEntityName);
+  const entities = [...transports.entities.keys()].map(getTranslatedEntityName);
   const units = unit.transports?.map((transportedUnit) =>
     transportedUnit.deploy(),
   );
@@ -889,7 +888,7 @@ const UnitTransports = ({
           <fbt desc="Headline for transport information">Transport</fbt>
         </CardInfoHeading>
         <p>
-          {limit === 1 ? (
+          {transports.limit === 1 ? (
             <fbt desc="Unit transport description">
               This unit can transport one unit of type{' '}
               <fbt:list conjunction="or" items={entities} name="entities" />.
@@ -897,7 +896,8 @@ const UnitTransports = ({
           ) : (
             <fbt desc="Unit transport description">
               This unit can transport up to{' '}
-              <fbt:param name="limit">{limit}</fbt:param> units of type{' '}
+              <fbt:param name="limit">{transports.limit}</fbt:param> units of
+              type{' '}
               <fbt:list conjunction="or" items={entities} name="entities" />.
             </fbt>
           )}

@@ -58,7 +58,9 @@ export default function getAvailableUnitActions(
 
   if (
     unit.isTransportingUnits() &&
-    info.canDropFrom(map.getTileInfo(position))
+    unit.transports.some((unit) =>
+      info.canDropFrom(unit.info, map.getTileInfo(position)),
+    )
   ) {
     actions.add('drop');
   }

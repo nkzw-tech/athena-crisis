@@ -1,4 +1,5 @@
 import { Lightning } from '@deities/athena/info/Tile.tsx';
+import { Pioneer } from '@deities/athena/info/Unit.tsx';
 import getVectorRadius from '@deities/athena/lib/getVectorRadius.tsx';
 import { getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -159,7 +160,7 @@ export default function estimateClosestTarget(
       for (const vector of sortBy(
         getVectorRadius(map, target, 4).filter(
           (vector) =>
-            unit.info.canDropFrom(map.getTileInfo(vector)) &&
+            unit.info.canDropFrom(Pioneer, map.getTileInfo(vector)) &&
             MoveConfiguration.isAccessible(map, unit, vector) &&
             !map.units.has(vector),
         ),
@@ -227,7 +228,10 @@ export default function estimateClosestTarget(
         const inverseTargets = [];
         for (const [vector] of inverseRadius) {
           if (
-            unit.info.canDropFrom(map.getTileInfo(vector)) &&
+            unit.info.canDropFrom(
+              transportedUnit.info,
+              map.getTileInfo(vector),
+            ) &&
             MoveConfiguration.isAccessible(map, unit, vector) &&
             !map.units.has(vector)
           ) {

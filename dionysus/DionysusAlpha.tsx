@@ -1160,7 +1160,14 @@ export default class DionysusAlpha extends BaseAI {
       unit &&
       target &&
       unit.isTransportingUnits() &&
-      unit.info.canDropFrom(currentMap.getTileInfo(position))
+      unit.transports.some(
+        (transportedUnit) =>
+          currentMap &&
+          unit.info.canDropFrom(
+            transportedUnit.info,
+            currentMap.getTileInfo(position),
+          ),
+      )
     ) {
       const player = currentMap.getCurrentPlayer();
       const isNaval = isNavalUnit(unit);

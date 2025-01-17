@@ -5,6 +5,7 @@ import SpriteVector from '../map/SpriteVector.tsx';
 import { isVector } from '../map/Vector.tsx';
 import { ID, TileMap } from '../MapData.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
+import TileID from './TileID.tsx';
 
 export enum RenderType {
   Composite = 0,
@@ -748,7 +749,7 @@ export const Reef = new TileInfo(
 );
 
 export const Beach = new TileInfo(
-  10,
+  TileID.Beach,
   'Beach',
   `Coastal areas with low cover allowing sea units to load and unload ground units.`,
   {

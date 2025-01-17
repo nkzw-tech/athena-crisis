@@ -1,3 +1,4 @@
+import { Pioneer } from '@deities/athena/info/Unit.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -81,13 +82,13 @@ export default function findPathToTarget(
         unit.info.canTransportUnits() &&
         !unit.isTransportingUnits() &&
         getEntityGroup(unit) === 'naval' &&
-        !unit.info.canDropFrom(map.getTileInfo(target.vector))
+        !unit.info.canDropFrom(Pioneer, map.getTileInfo(target.vector))
       ) {
         const dropTarget =
           minByDistance(
             targetVector,
             (vector) =>
-              unit.info.canDropFrom(map.getTileInfo(vector)) &&
+              unit.info.canDropFrom(Pioneer, map.getTileInfo(vector)) &&
               canAccess(vector),
           ) || target.vector;
 
