@@ -109,7 +109,7 @@ test('can turn lightning barriers on and off', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "ToggleLightning (1,2 → 3,2)
-      ToggleLightning (1,1 → 4,3)
+      ToggleLightning (1,1 → 4,3) { player: null, unit: Helicopter { id: 9, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 8 ] ] } }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);

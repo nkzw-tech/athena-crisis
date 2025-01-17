@@ -455,17 +455,18 @@ const VisibleActionModifiers: Record<
     Source: supplyActionWithDefault(completeUnit),
   },
   ToggleLightning: (
-    { from, to, type }: ToggleLightningActionResponse,
+    { from, to, type, unit }: ToggleLightningActionResponse,
     map: MapData,
     _: MapData,
     vision: VisionT,
   ): ToggleLightningActionResponse =>
     from && vision.isVisible(map, from)
-      ? { from, to, type }
+      ? { from, to, type, unit }
       : {
           player: map.buildings.get(from!)!.player,
           to,
           type,
+          unit,
         },
   Unfold: { Source: true },
 };

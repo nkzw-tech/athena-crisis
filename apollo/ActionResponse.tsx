@@ -139,6 +139,7 @@ export type ToggleLightningActionResponse = Readonly<{
   player?: PlayerID;
   to: Vector;
   type: 'ToggleLightning';
+  unit?: Unit;
 }>;
 
 export type SpawnActionResponse = Readonly<{

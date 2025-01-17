@@ -529,7 +529,7 @@ export default function applyActionResponse(
     case 'ToggleLightning': {
       const { from, player: playerID, to } = actionResponse;
       const building = from && map.buildings.get(from);
-      const unit = map.units.get(to);
+      const unit = actionResponse.unit || map.units.get(to);
       const player = map.getPlayer((playerID || building?.player)!);
       return toggleLightningTile(map, to).copy({
         buildings: building

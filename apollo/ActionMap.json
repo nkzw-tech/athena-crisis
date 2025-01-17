@@ -150,7 +150,7 @@
   ],
   ["HiddenDestroyedBuilding", [22, ["type", "to"]]],
   ["HiddenFundAdjustment", [23, ["type", "funds"]]],
-  ["ToggleLightning", [24, ["type", "from", "to", "player"]]],
+  ["ToggleLightning", [24, ["type", "from", "to", "player", "unit"]]],
   ["CompleteBuilding", [25, ["type", "from"]]],
   ["Spawn", [26, ["type", "units", "teams", "buildings"]]],
   ["Heal", [27, ["type", "from", "to"]]],

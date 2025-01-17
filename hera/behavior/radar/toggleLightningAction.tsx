@@ -1,4 +1,5 @@
 import { ToggleLightningAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import explosionAnimation from '../../animations/explosionAnimation.tsx';
@@ -34,9 +35,10 @@ export default async function toggleLightningAction(
   state: State,
 ): Promise<State> {
   const { action, update } = actions;
+  const { map } = state;
   const [remoteAction, newMap] = action(state, ToggleLightningAction(from, to));
 
-  await update(
+  state = await update(
     await toggleLightningAnimation(
       actions,
       to,
@@ -44,6 +46,13 @@ export default async function toggleLightningAction(
       newMap,
     ),
   );
+
+  const { self } = await remoteAction;
+  if (self?.actionResponse) {
+    await update({
+      map: applyActionResponse(map, state.vision, self.actionResponse),
+    });
+  }
 
   return handleRemoteAction(actions, remoteAction);
 }

@@ -802,7 +802,7 @@ function toggleLightning(map: MapData, { from, to }: ToggleLightningAction) {
   }
 
   return tile === Lightning || canPlaceLightning(map, to)
-    ? ({ from, to, type: 'ToggleLightning' } as const)
+    ? ({ from, to, type: 'ToggleLightning', unit: map.units.get(to) } as const)
     : null;
 }
 
