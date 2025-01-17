@@ -1,0 +1,77 @@
+diff --git a/src/index.js b/src/index.js
+index 537193eaed4317bb557a9d0bb5d2cb82c58eb5bc..64f99294526c94eb14e181f3621b391face0ba0b 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -13,7 +13,6 @@
+  */
+ /* eslint-disable no-underscore-dangle */
+ const kebabCase = require('lodash/kebabCase');
+-const merge = require('lodash/merge');
+ const path = require('path');
+ const Chalk = require('chalk').Instance;
+ const { diffImageToSnapshot, runDiffImageToSnapshot } = require('./diff-snapshot');
+@@ -24,17 +23,11 @@ const timesCalled = new Map();
+ 
+ const SNAPSHOTS_DIR = '__image_snapshots__';
+ 
+-function updateSnapshotState(originalSnapshotState, partialSnapshotState) {
+-  if (global.UNSTABLE_SKIP_REPORTING) {
+-    return originalSnapshotState;
+-  }
+-  return merge(originalSnapshotState, partialSnapshotState);
+-}
+-
+ function checkResult({
+   result,
+   snapshotState,
+   retryTimes,
++  currentTestName,
+   snapshotIdentifier,
+   chalk,
+   dumpDiffToConsole,
+@@ -51,18 +44,18 @@ function checkResult({
+   if (result.updated) {
+     // once transition away from jasmine is done this will be a lot more elegant and pure
+     // https://github.com/facebook/jest/pull/3668
+-    updateSnapshotState(snapshotState, { updated: snapshotState.updated + 1 });
++    snapshotState.updated.increment(currentTestName);
+   } else if (result.added) {
+-    updateSnapshotState(snapshotState, { added: snapshotState.added + 1 });
++    snapshotState.added.increment(currentTestName);
+   } else {
+     ({ pass } = result);
+ 
+     if (pass) {
+-      updateSnapshotState(snapshotState, { matched: snapshotState.matched + 1 });
++      snapshotState.matched.increment(currentTestName);
+     } else {
+       const currentRun = timesCalled.get(snapshotIdentifier);
+       if (!retryTimes || (currentRun > retryTimes)) {
+-        updateSnapshotState(snapshotState, { unmatched: snapshotState.unmatched + 1 });
++        snapshotState.unmatched.increment(currentTestName);
+       }
+ 
+       const differencePercentage = result.diffRatio * 100;
+@@ -194,7 +187,7 @@ function configureToMatchImageSnapshot({
+ 
+     if (isNot) { throw new Error('Jest: `.not` cannot be used with `.toMatchImageSnapshot()`.'); }
+ 
+-    updateSnapshotState(snapshotState, { _counters: snapshotState._counters.set(currentTestName, (snapshotState._counters.get(currentTestName) || 0) + 1) }); // eslint-disable-line max-len
++    snapshotState._counters.increment(currentTestName);
+ 
+     const snapshotIdentifier = createSnapshotIdentifier({
+       retryTimes,
+@@ -249,6 +242,7 @@ function configureToMatchImageSnapshot({
+ 
+     return checkResult({
+       result,
++      currentTestName,
+       snapshotState,
+       retryTimes,
+       snapshotIdentifier,
+@@ -263,5 +257,4 @@ function configureToMatchImageSnapshot({
+ module.exports = {
+   toMatchImageSnapshot: configureToMatchImageSnapshot(),
+   configureToMatchImageSnapshot,
+-  updateSnapshotState,
+ };

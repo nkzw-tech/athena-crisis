@@ -64,7 +64,7 @@
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.10.7",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.10.7",
     "@vitejs/plugin-react": "^4.3.4",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
@@ -78,7 +78,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.1"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -106,6 +106,7 @@
       "eslint-plugin-import": "patches/eslint-plugin-import.patch",
       "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
+      "jest-image-snapshot": "patches/jest-image-snapshot.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
       "typescript": "patches/typescript.patch"
