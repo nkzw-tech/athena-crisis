@@ -25,7 +25,10 @@ type Offsets = [
   priority: Priority,
 ];
 
-const parseVector = (maybeVector: string | null) => {
+const parseVector = (target: EventTarget | null) => {
+  const maybeVector = (target as HTMLElement | null)?.getAttribute(
+    'data-vector',
+  );
   if (maybeVector) {
     try {
       const [x, y] = maybeVector.split(',').map((value) => parseInteger(value));
@@ -133,9 +136,7 @@ export default memo(function Mask({
 }) {
   const onLongPress = useCallback(
     (event: LongPressReactEvents<Element>) => {
-      const vector = parseVector(
-        (event.target as HTMLElement)?.getAttribute('data-vector'),
-      );
+      const vector = parseVector(event.target);
       if (!pointerLock.current && vector) {
         showFieldInfo(vector, toTransformOrigin(event));
       }
@@ -148,9 +149,7 @@ export default memo(function Mask({
     onLongPress,
     onPress: useCallback(
       (event) => {
-        const vector = parseVector(
-          (event.target as HTMLElement)?.getAttribute('data-vector'),
-        );
+        const vector = parseVector(event.target);
         if (vector) {
           select(vector);
         }
@@ -214,9 +213,7 @@ export default memo(function Mask({
         onContextMenu={(event) => {
           event.preventDefault();
           cancel(
-            parseVector(
-              (event.target as HTMLElement)?.getAttribute('data-vector'),
-            ),
+            parseVector(event.target),
             toTransformOrigin(event),
             null,
             false,
