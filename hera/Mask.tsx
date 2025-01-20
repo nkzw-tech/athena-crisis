@@ -6,7 +6,14 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
-import { memo, MutableRefObject, useCallback, useMemo } from 'react';
+import {
+  memo,
+  MutableRefObject,
+  TouchEvent,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import toTransformOrigin from './lib/toTransformOrigin.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
@@ -25,7 +32,7 @@ type Offsets = [
   priority: Priority,
 ];
 
-const parseVector = (target: EventTarget | null) => {
+export const parseVector = (target: EventTarget | null) => {
   const maybeVector = (target as HTMLElement | null)?.getAttribute(
     'data-vector',
   );
@@ -144,6 +151,7 @@ export default memo(function Mask({
     [pointerLock, showFieldInfo],
   );
 
+  const lastVectors = useRef<Array<Vector>>([]);
   const props = usePress({
     cancelOnMovement: size,
     onLongPress,
@@ -157,6 +165,33 @@ export default memo(function Mask({
       [select],
     ),
   });
+
+  const onTouchMove = useCallback(
+    (event: TouchEvent) => {
+      const touch = event.touches[0];
+      const vector = parseVector(
+        document.elementFromPoint(touch.clientX, touch.clientY),
+      );
+      if (vector) {
+        enter(vector, undefined, 'move');
+        if (lastVectors.current.at(-1) !== vector) {
+          lastVectors.current.push(vector);
+        }
+      }
+    },
+    [enter],
+  );
+
+  const onTouchEnd = useCallback(() => {
+    if (lastVectors.current.length >= 2) {
+      const lastVector = lastVectors.current.at(-1)!;
+      if (radius?.fields.has(lastVector) || attackable?.has(lastVector)) {
+        select(lastVector);
+      }
+    }
+
+    lastVectors.current = [];
+  }, [attackable, radius?.fields, select]);
 
   return useMemo(() => {
     const defaultOffsets: Offsets = [0, 0, 0, 0, Priority.None];
@@ -219,6 +254,7 @@ export default memo(function Mask({
             false,
           );
         }}
+        onTouchMove={onTouchMove}
         ref={ref}
         {...props()}
       >
@@ -228,6 +264,7 @@ export default memo(function Mask({
             data-vector={vector}
             key={String(vector)}
             onPointerEnter={() => enter(vector, undefined, 'pointer')}
+            onTouchEnd={onTouchEnd}
             style={{
               height: size + up + down,
               left: (vector.x - 1) * size - left,

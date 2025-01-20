@@ -17,7 +17,7 @@ export default function usePress(
   const { onLongPress, onPress, ...actualOptions } = options;
   const hasLongPress = useRef(false);
 
-  const onCancel = useCallback(() => {
+  const reset = useCallback(() => {
     hasLongPress.current = false;
   }, []);
 
@@ -34,8 +34,8 @@ export default function usePress(
     ),
     {
       ...actualOptions,
-      onCancel,
-      onStart: onCancel,
+      onCancel: reset,
+      onStart: reset,
       threshold: 380,
     },
   );

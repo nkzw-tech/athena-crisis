@@ -73,7 +73,7 @@ import {
   hasCharacterMessage,
   MapAnimations,
 } from './MapAnimations.tsx';
-import Mask from './Mask.tsx';
+import Mask, { parseVector } from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
 import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
@@ -528,6 +528,7 @@ export default class GameMap extends Component<Props, State> {
     document.addEventListener('pointermove', this._pointerMove);
     document.addEventListener('mousedown', this._mouseDown);
     document.addEventListener('mouseup', this._mouseUp);
+    document.addEventListener('touchmove', this._touchMove, { passive: false });
     window.addEventListener('resize', this._resize);
     events?.addEventListener('action', this._processRemoteActionResponse);
   }
@@ -561,6 +562,7 @@ export default class GameMap extends Component<Props, State> {
     document.removeEventListener('pointermove', this._pointerMove);
     document.removeEventListener('mousedown', this._mouseDown);
     document.removeEventListener('mouseup', this._mouseUp);
+    document.removeEventListener('touchmove', this._touchMove);
     window.removeEventListener('resize', this._resize);
     events?.removeEventListener('action', this._processRemoteActionResponse);
 
@@ -712,6 +714,10 @@ export default class GameMap extends Component<Props, State> {
 
     const { map, position, radius } = this.state;
     if (!map.contains(vector) || radius?.locked) {
+      return;
+    }
+
+    if (type === 'move' && vector.equals(position)) {
       return;
     }
 
@@ -1643,6 +1649,19 @@ export default class GameMap extends Component<Props, State> {
       distance: this._pointerPosition.distance + distance,
       initial: false,
     };
+  };
+
+  private _touchMove = (event: TouchEvent) => {
+    const vector = parseVector(event.target);
+    const { behavior, radius, selectedPosition } = this.state;
+
+    if (
+      vector &&
+      behavior?.type === 'move' &&
+      (vector === selectedPosition || radius?.fields.has(vector))
+    ) {
+      event.preventDefault();
+    }
   };
 
   private _clearPanState = () => {

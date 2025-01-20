@@ -269,7 +269,7 @@ export type StateWithActions = Readonly<{
   state: State;
 }>;
 
-export type MapEnterType = 'pointer' | 'synthetic';
+export type MapEnterType = 'pointer' | 'synthetic' | 'move';
 
 export type MapBehavior = Readonly<{
   readonly activate?: (
