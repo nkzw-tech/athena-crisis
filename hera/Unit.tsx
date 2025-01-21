@@ -23,7 +23,7 @@ import syncAnimation from '@deities/ui/lib/syncAnimation.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { ShadowImages, Sprites } from 'athena-crisis:images';
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { AnimationDirection } from './animations/Animation.tsx';
 import Label from './Label.tsx';
 import getFlashDelay from './lib/getFlashDelay.tsx';
@@ -69,57 +69,61 @@ const getFuelStyle = (unit: Unit) => {
       : null;
 };
 
-const getAmmoStyle = (unit: Unit) => {
+const useAmmoStyle = (unit: Unit) => {
   const { ammo } = unit;
-  if (ammo?.size) {
-    if (ammo.size === 1) {
-      const [weaponA, supplyA] = ammo.entries().next().value!;
-      return supplyA === 0
-        ? AmmoStyle.None
-        : hasLowAmmoSupply(unit, weaponA, supplyA)
-          ? AmmoStyle.Low
-          : null;
-    } else if (ammo.size === 2) {
-      const iterator = ammo.entries();
-      const [weaponA, supplyA] = iterator.next().value!;
-      const [weaponB, supplyB] = iterator.next().value!;
-      return supplyA === 0 && supplyB === 0
-        ? AmmoStyle.None
-        : hasLowAmmoSupply(unit, weaponA, supplyA) ||
-            hasLowAmmoSupply(unit, weaponB, supplyB)
-          ? AmmoStyle.Low
-          : null;
+  return useMemo(() => {
+    if (ammo?.size) {
+      if (ammo.size === 1) {
+        const [weaponA, supplyA] = ammo.entries().next().value!;
+        return supplyA === 0
+          ? AmmoStyle.None
+          : hasLowAmmoSupply(unit.info, weaponA, supplyA)
+            ? AmmoStyle.Low
+            : null;
+      } else if (ammo.size === 2) {
+        const iterator = ammo.entries();
+        const [weaponA, supplyA] = iterator.next().value!;
+        const [weaponB, supplyB] = iterator.next().value!;
+        return supplyA === 0 && supplyB === 0
+          ? AmmoStyle.None
+          : hasLowAmmoSupply(unit.info, weaponA, supplyA) ||
+              hasLowAmmoSupply(unit.info, weaponB, supplyB)
+            ? AmmoStyle.Low
+            : null;
+      }
+
+      const ammoArray = [...ammo];
+      if (ammoArray.every(([, s]) => s === 0)) {
+        return AmmoStyle.None;
+      } else if (
+        ammoArray.some(([weapon, supply]) =>
+          hasLowAmmoSupply(unit.info, weapon, supply),
+        )
+      ) {
+        return AmmoStyle.Low;
+      }
     }
 
-    const ammoArray = [...ammo];
-    if (ammoArray.every(([, s]) => s === 0)) {
-      return AmmoStyle.None;
-    } else if (
-      ammoArray.some(([weapon, supply]) =>
-        hasLowAmmoSupply(unit, weapon, supply),
-      )
-    ) {
-      return AmmoStyle.Low;
-    }
-  }
-
-  return null;
+    return null;
+  }, [ammo, unit.info]);
 };
 
-const Action = ({
+const Action = memo(function Action({
   actionStyle,
+  health,
   hide,
+  player,
   position,
   rescuer,
-  unit,
 }: {
   actionStyle: ActionStyle | null;
+  health: number;
   hide: boolean;
+  player: PlayerID;
   position?: 'secondary';
   rescuer: PlayerID | null;
-  unit: Unit;
-}) => {
-  if (unit.health <= 0 || !actionStyle) {
+}) {
+  if (health <= 0 || !actionStyle) {
     return null;
   }
 
@@ -127,7 +131,7 @@ const Action = ({
     actionStyle === ActionStyle.Rescue && rescuer != null
       ? sprite('Rescuing', rescuer)
       : actionStyle === ActionStyle.Capture
-        ? cx(sprite('Capture', unit.player), captureStyle)
+        ? cx(sprite('Capture', player), captureStyle)
         : iconStyle;
 
   return (
@@ -155,25 +159,27 @@ const Action = ({
       }
     />
   );
-};
+});
 
-const Status = ({
+const Status = memo(function Status({
   actionStyle,
   ammoStyle,
   fuelStyle,
+  health,
   hide,
+  player,
   rescuer,
   secondaryActionStyle,
-  unit,
 }: {
   actionStyle: ActionStyle | null;
   ammoStyle: AmmoStyle | null;
   fuelStyle: FuelStyle | null;
+  health: number;
   hide: boolean;
+  player: PlayerID;
   rescuer: PlayerID | null;
   secondaryActionStyle: ActionStyle | null;
-  unit: Unit;
-}) => {
+}) {
   const hasOne = !!(fuelStyle || ammoStyle);
   const hasSecondaryAction =
     secondaryActionStyle && secondaryActionStyle !== actionStyle;
@@ -181,20 +187,22 @@ const Status = ({
     <>
       <Action
         actionStyle={actionStyle}
+        health={health}
         hide={hide}
+        player={player}
         rescuer={rescuer}
-        unit={unit}
       />
       {hasSecondaryAction && (
         <Action
           actionStyle={secondaryActionStyle}
+          health={health}
           hide={hide}
+          player={player}
           position="secondary"
           rescuer={rescuer}
-          unit={unit}
         />
       )}
-      {unit.health ? (
+      {health > 0 ? (
         <div
           className={cx(
             absoluteStyle,
@@ -213,7 +221,7 @@ const Status = ({
       ) : null}
     </>
   );
-};
+});
 
 const Health = ({
   hasStatus,
@@ -406,7 +414,10 @@ export default function UnitTile({
       animation.type === 'unfold' ||
       animation.type === 'unitExplosion' ||
       animation.type === 'unitHeal');
-  const spritePosition = getSpritePosition(unit, animation, tile);
+  const spritePosition = useMemo(
+    () => getSpritePosition(unit, animation, tile),
+    [unit, animation, tile],
+  );
   const spriteAnimationOffset =
     isMoving ||
     isAnimating ||
@@ -431,13 +442,18 @@ export default function UnitTile({
   // completes. This is necessary because the background position gets mutated
   // directly via the DOM, without React's knowledge. There is no other trigger
   // within this unit for the animation complete event.
-  const backgroundPositionX = `calc(${hasAttackStance ? '1/1' : '1'} * ${
-    animationIsLocked
-      ? ''
-      : `(${Tick.vars.apply('unit')} * ${-spriteSize}px) - `
-  }${(spritePosition.x + animationOffset) * spriteSize}px)`;
+  const backgroundPositionX = useMemo(
+    () =>
+      `calc(${hasAttackStance ? '1/1' : '1'} * ${
+        animationIsLocked
+          ? ''
+          : `(${Tick.vars.apply('unit')} * ${-spriteSize}px) - `
+      }${(spritePosition.x + animationOffset) * spriteSize}px)`,
+    [animationIsLocked, animationOffset, hasAttackStance, spritePosition.x],
+  );
   const backgroundPositionY = -(spritePosition.y * spriteSize) + 'px';
-  const { x, y } = isMoving ? animation.from : position;
+  const positionOffset =
+    (isAnimating && animation?.offset) || info.sprite.offset || {};
   const unitDirection =
     getUnitDirection(firstPlayerID, unit) === 'left' ? -1 : 1;
   const { direction: currentDirection = null } =
@@ -445,46 +461,65 @@ export default function UnitTile({
     direction ||
     {};
 
-  const actualUnitDirection = currentDirection
-    ? info.sprite.direction * (currentDirection === 'left' ? 1 : -1)
-    : unitDirection;
-  const positionOffset =
-    (isAnimating && animation?.offset) || info.sprite.offset || {};
-  const zIndex = getLayer(
-    position.y + (currentDirection === 'up' && unit.health > 0 ? 1 : 0),
-    'unit',
-  );
-  const style = {
-    [vars.set('direction')]: '' + actualUnitDirection,
-    [vars.set('x')]: `${
-      (x - 1) * size + (positionOffset.x || 0) * actualUnitDirection
-    }px`,
-    [vars.set('recoil-delay')]: `${
-      animationConfig.ExplosionStep *
-      (hasAttackStance &&
-      animation.hasAttackStance &&
-      animation.weapon.animation.recoil
-        ? 8
-        : isAttacking
-          ? animation.weapon.animation.recoilDelay
-          : 4)
-    }ms`,
-    [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
-    [vars.set('z-index')]: zIndex,
-    height: size + 'px',
-    width: size + 'px',
-    // Do not cut unit off during recoil animation.
-    // Also use the "reset" hack because zIndex is set imperatively.
-    zIndex: `calc(${isMoving ? '1/1' : '1'} * ${zIndex})`,
+  const style = useMemo(() => {
+    const { x, y } = isMoving ? animation.from : position;
 
-    ...(isMoving && animation.pathVisibility?.length
-      ? {
-          opacity: animation.pathVisibility[0] ? '1' : '0',
-        }
-      : isSpawning
-        ? { opacity: '0' }
-        : null),
-  };
+    const actualUnitDirection = currentDirection
+      ? info.sprite.direction * (currentDirection === 'left' ? 1 : -1)
+      : unitDirection;
+    const zIndex = getLayer(
+      position.y + (currentDirection === 'up' && unit.health > 0 ? 1 : 0),
+      'unit',
+    );
+    const style = {
+      [vars.set('direction')]: '' + actualUnitDirection,
+      [vars.set('x')]: `${
+        (x - 1) * size + (positionOffset.x || 0) * actualUnitDirection
+      }px`,
+      [vars.set('recoil-delay')]: `${
+        animationConfig.ExplosionStep *
+        (hasAttackStance &&
+        animation.hasAttackStance &&
+        animation.weapon.animation.recoil
+          ? 8
+          : isAttacking
+            ? animation.weapon.animation.recoilDelay
+            : 4)
+      }ms`,
+      [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
+      [vars.set('z-index')]: zIndex,
+      height: size + 'px',
+      width: size + 'px',
+      // Do not cut unit off during recoil animation.
+      // Also use the "reset" hack because zIndex is set imperatively.
+      zIndex: `calc(${isMoving ? '1/1' : '1'} * ${zIndex})`,
+
+      ...(isMoving && animation.pathVisibility?.length
+        ? {
+            opacity: animation.pathVisibility[0] ? '1' : '0',
+          }
+        : isSpawning
+          ? { opacity: '0' }
+          : null),
+    };
+    return style;
+  }, [
+    animation,
+    animationConfig.ExplosionStep,
+    currentDirection,
+    getLayer,
+    hasAttackStance,
+    info.sprite.direction,
+    isAttacking,
+    isMoving,
+    isSpawning,
+    position,
+    positionOffset.x,
+    positionOffset.y,
+    size,
+    unit.health,
+    unitDirection,
+  ]);
 
   useEffect(() => {
     if (isAnimating) {
@@ -899,12 +934,46 @@ export default function UnitTile({
         ? ActionStyle.Rescue
         : secondaryActionStyle;
   const fuelStyle = getFuelStyle(unit);
-  const ammoStyle = getAmmoStyle(unit);
+  const ammoStyle = useAmmoStyle(unit);
   const completedStyles = cx(
     isCompleted && completedStyle,
     isCompleted &&
       (player === 2 || player === 3 || player === 5 || player === 7) &&
       darkCompletedStyle,
+  );
+
+  const innerClassName = useMemo(
+    () =>
+      cx(
+        sprite(unitSprite, player, biome),
+        spriteStyle,
+        baseUnitStyle,
+        player === 0 && neutralStyle,
+        (maybeOutline || highlightOutline) && maybeOutlineStyle,
+        outline === 'attack' || outline === 'sabotage'
+          ? biome === Biome.Volcano || biome === Biome.Luna
+            ? alternateAttackOutlineStyle
+            : attackOutlineStyle
+          : outline === 'defense'
+            ? defenseOutlineStyle
+            : outline === 'rescue'
+              ? rescuedOutlineStyle
+              : null,
+        highlightStyle && highlightStyle !== 'move-null' && brightStyle,
+        completedStyles,
+        animationStyle,
+      ),
+    [
+      animationStyle,
+      biome,
+      completedStyles,
+      highlightOutline,
+      highlightStyle,
+      maybeOutline,
+      outline,
+      player,
+      unitSprite,
+    ],
   );
 
   return (
@@ -930,25 +999,7 @@ export default function UnitTile({
         />
       )}
       <div
-        className={cx(
-          sprite(unitSprite, player, biome),
-          spriteStyle,
-          baseUnitStyle,
-          player === 0 && neutralStyle,
-          (maybeOutline || highlightOutline) && maybeOutlineStyle,
-          outline === 'attack' || outline === 'sabotage'
-            ? biome === Biome.Volcano || biome === Biome.Luna
-              ? alternateAttackOutlineStyle
-              : attackOutlineStyle
-            : outline === 'defense'
-              ? defenseOutlineStyle
-              : outline === 'rescue'
-                ? rescuedOutlineStyle
-                : null,
-          highlightStyle && highlightStyle !== 'move-null' && brightStyle,
-          completedStyles,
-          animationStyle,
-        )}
+        className={innerClassName}
         ref={innerElementRef}
         style={innerStyle}
       />
@@ -972,10 +1023,11 @@ export default function UnitTile({
         actionStyle={actionStyle}
         ammoStyle={ammoStyle}
         fuelStyle={fuelStyle}
+        health={unit.health}
         hide={hide}
+        player={unit.player}
         rescuer={actionStyle === ActionStyle.Rescue ? unit.getRescuer() : null}
         secondaryActionStyle={secondaryActionStyle}
-        unit={unit}
       />
       <Health
         hasStatus={!!(ammoStyle || fuelStyle || actionStyle)}

@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import { CSSProperties, HTMLAttributes, ReactNode, Ref, useMemo } from 'react';
 import Breakpoints from './Breakpoints.tsx';
 
 export type Gap = 1 | 2 | 4 | 16 | 24 | 32 | true;
@@ -35,7 +35,7 @@ export default function Stack({
   alignEnd,
   alignNormal,
   center,
-  className,
+  className: initialClassName,
   end,
   flex1,
   gap: _gap,
@@ -64,10 +64,9 @@ export default function Stack({
     }
   }
 
-  return (
-    <div
-      {...props}
-      className={cx(
+  const className = useMemo(
+    () =>
+      cx(
         baseStyle,
         inline && inlineStyle,
         adaptive && adaptiveStyle,
@@ -84,12 +83,28 @@ export default function Stack({
         selfCenter && selfCenterStyle,
         nowrap && nowrapStyle,
         stretch && stretchStyle,
-        className,
-      )}
-      ref={ref}
-      style={style}
-    />
+        initialClassName,
+      ),
+    [
+      adaptive,
+      alignCenter,
+      alignEnd,
+      alignNormal,
+      center,
+      initialClassName,
+      end,
+      flex1,
+      inline,
+      nowrap,
+      reverse,
+      selfCenter,
+      start,
+      stretch,
+      vertical,
+    ],
   );
+
+  return <div {...props} className={className} ref={ref} style={style} />;
 }
 
 const defaultGap = 8;

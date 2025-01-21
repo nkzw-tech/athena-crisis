@@ -8,7 +8,9 @@ const needsAmmo = (unit: Unit) => {
   const { ammo } = unit;
   return (
     !!ammo?.size &&
-    [...ammo].some(([weapon, supply]) => hasLowAmmoSupply(unit, weapon, supply))
+    [...ammo].some(([weapon, supply]) =>
+      hasLowAmmoSupply(unit.info, weapon, supply),
+    )
   );
 };
 

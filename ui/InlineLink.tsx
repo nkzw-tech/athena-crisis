@@ -7,6 +7,7 @@ import {
   RefCallback,
   RefObject,
   useCallback,
+  useMemo,
   useRef,
 } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
@@ -47,15 +48,19 @@ export const useInlineLink = ({
   style,
   ...props
 }: InlineLinkProps = {}) => {
-  const className = cx(
-    'link',
-    linkStyle,
-    initialClassName,
-    hover && 'hover',
-    selected && 'selected',
-    selectedText && 'selected-text',
-    active && 'active',
-    alignCenter && alignCenterStyle,
+  const className = useMemo(
+    () =>
+      cx(
+        'link',
+        linkStyle,
+        initialClassName,
+        hover && 'hover',
+        selected && 'selected',
+        selectedText && 'selected-text',
+        active && 'active',
+        alignCenter && alignCenterStyle,
+      ),
+    [active, alignCenter, hover, initialClassName, selected, selectedText],
   );
   const gap = _gap === true ? defaultGap : _gap;
 

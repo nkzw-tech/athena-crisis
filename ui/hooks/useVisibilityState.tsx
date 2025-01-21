@@ -13,7 +13,12 @@ export default function useVisibilityState(
         setIsVisible(newState);
       }
     };
-    const setVisible = () => setIsVisible(true);
+    const setVisible = () => {
+      if (!isVisible) {
+        setIsVisible(true);
+      }
+    };
+
     if (document.visibilityState === 'hidden') {
       // When the computer goes to sleep, sometimes the visibilitychange event is not fired.
       // In that case, we can use `mouseenter` or `keydown` to detect when the window is focused.

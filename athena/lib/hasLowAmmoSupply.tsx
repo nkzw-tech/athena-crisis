@@ -1,10 +1,10 @@
-import Unit from '../map/Unit.tsx';
+import { UnitInfo } from '../info/Unit.tsx';
 
 export default function hasLowAmmoSupply(
-  unit: Unit,
+  info: UnitInfo,
   weaponId: number,
   currentSupply: number,
 ): boolean {
-  const supply = unit.info.attack.weapons?.get(weaponId)?.supply || 0;
+  const supply = info.attack.weapons?.get(weaponId)?.supply || 0;
   return !!(supply && currentSupply <= supply * 0.3);
 }

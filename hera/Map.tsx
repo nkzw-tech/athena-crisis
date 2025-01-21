@@ -17,7 +17,7 @@ import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
 import Images from 'athena-crisis:images';
 // eslint-disable-next-line @deities/no-lazy-import
-import { lazy, ReactElement } from 'react';
+import { lazy, memo, ReactElement } from 'react';
 import Building from './Building.tsx';
 import Decorators from './Decorators.tsx';
 import Fog from './Fog.tsx';
@@ -338,6 +338,8 @@ const MapComponent = ({
   );
 };
 
+const MemoizedMapComponent = memo(MapComponent);
+
 const pixelatedStyle = css`
   image-rendering: pixelated;
 `;
@@ -350,7 +352,8 @@ const pausedStyle = css`
 
 // Keep images in memory forever.
 const imageCache = [];
-let loaderPromise: Promise<{ default: typeof MapComponent }> | null = null;
+let loaderPromise: Promise<{ default: typeof MemoizedMapComponent }> | null =
+  null;
 const load = () => {
   return (
     loaderPromise ||
@@ -366,7 +369,7 @@ const load = () => {
           }),
       ),
     ])
-      .then(() => ({ default: MapComponent }))
+      .then(() => ({ default: MemoizedMapComponent }))
       .catch((error) => {
         if (process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
@@ -374,12 +377,14 @@ const load = () => {
         }
         const spriteLoadError = new SpriteLoadError(error.message);
         return {
-          default: (props) => (
-            <>
-              <MapComponent {...props} renderEntities={false} />
-              <ErrorOverlay error={spriteLoadError} />
-            </>
-          ),
+          default: memo(function MapComponentFallback(props) {
+            return (
+              <>
+                <MemoizedMapComponent {...props} renderEntities={false} />
+                <ErrorOverlay error={spriteLoadError} />
+              </>
+            );
+          }),
         };
       }))
   );
