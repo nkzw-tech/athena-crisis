@@ -20,13 +20,14 @@ import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
 import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import { fbt } from 'fbtee';
-import { useCallback, useRef } from 'react';
+import { RefObject, useCallback, useRef } from 'react';
 import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import replaceEffect from '../lib/replaceEffect.tsx';
 import { BaseMapEditorProps } from '../MapEditor.tsx';
 import {
+  EditorHistory,
   EditorState,
   MapObject,
   MapPerformanceMetricsEstimationFunction,
@@ -50,6 +51,7 @@ export default function MapEditorControlPanel({
   campaignLock,
   drawerPosition,
   editor,
+  editorHistory,
   estimateMapPerformance,
   expand,
   fillMap,
@@ -76,6 +78,7 @@ export default function MapEditorControlPanel({
   campaignLock: BaseMapEditorProps['campaignLock'];
   drawerPosition: DrawerPosition;
   editor: EditorState;
+  editorHistory: RefObject<EditorHistory>;
   estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
   expand: boolean;
   fillMap: () => void;
@@ -156,11 +159,13 @@ export default function MapEditorControlPanel({
             return (
               <DesignPanel
                 actions={actions}
-                editor={editor}
+                config={state.map.config}
+                currentPlayer={state.map.getCurrentPlayer()}
+                drawingMode={editor.drawingMode}
                 fillMap={fillMap}
                 hasContentRestrictions={!isAdmin}
+                selected={editor.selected}
                 setEditorState={setEditorState}
-                state={state}
                 user={user}
               />
             );
@@ -180,6 +185,7 @@ export default function MapEditorControlPanel({
               <EntityPanel
                 actions={actions}
                 editor={editor}
+                editorHistory={editorHistory}
                 key={String(state.selectedPosition)}
                 state={state}
               />

@@ -59,6 +59,7 @@ import { fbt } from 'fbtee';
 import { AnimatePresence } from 'framer-motion';
 import {
   ReactNode,
+  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -93,11 +94,12 @@ import BiomeIcon from './lib/BiomeIcon.tsx';
 import canFillTile from './lib/canFillTile.tsx';
 import getMapValidationErrorText from './lib/getMapValidationErrorText.tsx';
 import getValidationErrorText from './lib/getMapValidationErrorText.tsx';
-import updateUndoStack from './lib/updateUndoStack.tsx';
+import updateEditorHistory from './lib/updateEditorHistory.tsx';
 import ZoomButton from './lib/ZoomButton.tsx';
 import MapEditorControlPanel from './panels/MapEditorControlPanel.tsx';
 import ResizeHandle from './ResizeHandle.tsx';
 import {
+  EditorHistory,
   EditorMode,
   EditorState,
   MapCreateFunction,
@@ -123,6 +125,7 @@ const getEditorBaseState = (
   map: MapData,
   mapObject: Pick<MapObject, 'effects'> | null = null,
   mode: EditorMode = 'design',
+  editorHistory: RefObject<EditorHistory>,
   scenario?: Scenario,
 ): EditorState => {
   const startScenario = new Set([{ actions: [] }]);
@@ -132,9 +135,16 @@ const getEditorBaseState = (
   if (!effects.has('Start')) {
     effects = new Map([...effects, ['Start', startScenario]]);
   }
+
+  editorHistory.current = {
+    undoStack: [['initial', map, effects]],
+    undoStackIndex: null,
+  };
+
   return {
     drawingMode: 'regular',
     effects,
+    historyRef: editorHistory,
     isDrawing: false,
     isErasing: false,
     mode,
@@ -143,8 +153,6 @@ const getEditorBaseState = (
     selected: {
       tile: Plain.id,
     },
-    undoStack: [['initial', map, effects]],
-    undoStackIndex: null,
   };
 };
 
@@ -301,9 +309,15 @@ export default function MapEditor({
   useBiomeMusic(map.config.biome, tags);
   usePlayMusic(map.config.biome);
 
+  const editorHistory = useRef<EditorHistory>({
+    undoStack: [],
+    undoStackIndex: null,
+  });
+
   const [editor, _setEditorState] = useState<EditorState>(() =>
-    getEditorBaseState(map, mapObject, mode, scenario),
+    getEditorBaseState(map, mapObject, mode, editorHistory, scenario),
   );
+
   const [previousEffects, setPreviousEffects] = useState(editor.effects);
 
   const setEditorState = useCallback((newState: Partial<EditorState>) => {
@@ -359,10 +373,13 @@ export default function MapEditor({
   }, []);
 
   useEffect(() => {
-    if (previousEffects !== editor.effects || editor.undoStack.length > 1) {
+    if (
+      previousEffects !== editor.effects ||
+      editorHistory.current.undoStack.length > 1
+    ) {
       setHasChanges(true);
     }
-  }, [editor.effects, editor.undoStack, previousEffects, setHasChanges]);
+  }, [editor.effects, previousEffects, setHasChanges]);
 
   const [isPlayTesting, setIsPlayTesting] = useState(false);
   const [mapName, setMapName] = useState<string>(mapObject?.name || '');
@@ -393,7 +410,7 @@ export default function MapEditor({
     (type, map, effects) => {
       _setMap(map);
       if (type !== 'cleanup') {
-        updateUndoStack({ setEditorState }, editor, [
+        updateEditorHistory(editorHistory, [
           type === 'resize'
             ? `resize-${map.size.height}-${map.size.width}`
             : type === 'biome'
@@ -405,7 +422,7 @@ export default function MapEditor({
       }
       setInternalMapID(internalMapID + 1);
     },
-    [editor, internalMapID, setEditorState],
+    [editor.effects, internalMapID],
   );
 
   const updatePreviousMap = useCallback(
@@ -616,7 +633,7 @@ export default function MapEditor({
         } else if (event.key === 'z') {
           event.preventDefault();
 
-          const { undoStack, undoStackIndex } = editor;
+          const { undoStack, undoStackIndex } = editorHistory.current;
           if (undoStack.length) {
             const direction = event.shiftKey ? 1 : -1;
             const index = Math.max(
@@ -634,8 +651,8 @@ export default function MapEditor({
                 setEditorState({
                   effects,
                   scenario: getDefaultScenario(effects),
-                  undoStackIndex: index,
                 });
+                editorHistory.current.undoStackIndex = index;
 
                 const position = state.selectedPosition;
                 const selectedBuilding =
@@ -746,7 +763,9 @@ export default function MapEditor({
   const resetMap = useCallback(() => {
     const newMap = getInitialMap();
     setMap('reset', newMap);
-    _setEditorState(getEditorBaseState(newMap, mapObject, mode, scenario));
+    _setEditorState(
+      getEditorBaseState(newMap, mapObject, mode, editorHistory, scenario),
+    );
     updatePreviousMap();
   }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
 
@@ -785,6 +804,7 @@ export default function MapEditor({
             effects: previousState.effects,
           },
           editor.mode,
+          editorHistory,
           editor.scenario,
         ),
       );
@@ -1086,6 +1106,7 @@ export default function MapEditor({
                   campaignLock={campaignLock}
                   drawerPosition={drawerPosition}
                   editor={editor}
+                  editorHistory={editorHistory}
                   estimateMapPerformance={estimateMapPerformance}
                   expand={expand}
                   fillMap={fillMap}

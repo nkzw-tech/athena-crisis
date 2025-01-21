@@ -29,7 +29,14 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
 import { fbt } from 'fbtee';
-import { ChangeEvent, Fragment, useCallback, useEffect, useMemo } from 'react';
+import {
+  ChangeEvent,
+  Fragment,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -38,9 +45,9 @@ import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import UnitTile from '../../Unit.tsx';
 import AIBehaviorLink from '../lib/AIBehaviorLink.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
-import updateUndoStack from '../lib/updateUndoStack.tsx';
+import updateEditorHistory from '../lib/updateEditorHistory.tsx';
 import LabelSelector from '../selectors/LabelSelector.tsx';
-import { EntityUndoKey } from '../Types.tsx';
+import { EditorHistory, EntityUndoKey } from '../Types.tsx';
 
 const SkillsWithoutCosts = new Set(
   [...Skills].filter((skill) => getSkillConfig(skill).cost != null),
@@ -49,8 +56,12 @@ const SkillsWithoutCosts = new Set(
 export default function EntityPanel({
   actions,
   editor,
+  editorHistory,
   state,
-}: StateWithActions) {
+}: StateWithActions &
+  Readonly<{
+    editorHistory: RefObject<EditorHistory>;
+  }>) {
   const { update } = actions;
   const {
     map: {
@@ -90,7 +101,7 @@ export default function EntityPanel({
           : null;
 
       if (newState) {
-        updateUndoStack(actions, editor, [
+        updateEditorHistory(editorHistory, [
           `entity-${
             entityIsUnit ? 'unit' : 'building'
           }-${undoKey}-${selectedPosition}-${entity.id}`,
@@ -101,7 +112,7 @@ export default function EntityPanel({
         return update(newState);
       }
     },
-    [actions, currentState, editor, selectedPosition, update],
+    [currentState, selectedPosition, editor, editorHistory, update],
   );
 
   const updatePlayer = useCallback(

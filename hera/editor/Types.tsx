@@ -8,6 +8,7 @@ import {
   ObjectiveID,
   ObjectivesWithVectors,
 } from '@deities/athena/Objectives.tsx';
+import { RefObject } from 'react';
 import { Edges } from '../lib/Edges.tsx';
 import { MapCreator } from '../ui/MapDetails.tsx';
 
@@ -49,10 +50,27 @@ export type DrawingMode =
   | 'horizontal-vertical'
   | 'diagonal';
 
+export type EditorSelection = Readonly<{
+  building?: Building;
+  decorator?: Decorator;
+  eraseBuildings?: boolean;
+  eraseDecorators?: boolean;
+  eraseTiles?: boolean;
+  eraseUnits?: boolean;
+  tile?: number;
+  unit?: Unit;
+}>;
+
+export type EditorHistory = {
+  undoStack: UndoStack;
+  undoStackIndex: number | null;
+};
+
 export type EditorState = Readonly<{
   action?: Readonly<{ action: Action; actionId: number }>;
   drawingMode: DrawingMode;
   effects: Effects;
+  historyRef: RefObject<EditorHistory>;
   isDrawing: boolean;
   isErasing: boolean;
   mode: EditorMode;
@@ -61,18 +79,7 @@ export type EditorState = Readonly<{
     objectiveId: ObjectiveID;
   }>;
   scenario: Scenario;
-  selected?: Readonly<{
-    building?: Building;
-    decorator?: Decorator;
-    eraseBuildings?: boolean;
-    eraseDecorators?: boolean;
-    eraseTiles?: boolean;
-    eraseUnits?: boolean;
-    tile?: number;
-    unit?: Unit;
-  }>;
-  undoStack: UndoStack;
-  undoStackIndex: number | null;
+  selected?: EditorSelection;
 }>;
 
 export type SaveMapFunction = (currentMap: MapData, type?: MapSaveType) => void;

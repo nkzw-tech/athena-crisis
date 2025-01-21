@@ -23,8 +23,10 @@ import {
   DoubleSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
+import { MapConfig } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
@@ -41,7 +43,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Fill from '@iconify-icons/pixelarticons/fill-half.js';
 import { fbt } from 'fbtee';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
@@ -50,33 +52,35 @@ import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import navigate from '../../lib/navigate.tsx';
 import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
 import Tick from '../../Tick.tsx';
-import { StateWithActions } from '../../Types.tsx';
+import { Actions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
 import canFillTile from '../lib/canFillTile.tsx';
 import DeleteTile from '../lib/DeleteTile.tsx';
 import EditorPlayerSelector from '../selectors/EditorPlayerSelector.tsx';
-import { EditorState } from '../Types.tsx';
+import { DrawingMode, EditorSelection, EditorState } from '../Types.tsx';
 
-export default function DesignPanel({
+export default memo(function DesignPanel({
   actions,
-  editor,
+  config,
+  currentPlayer,
+  drawingMode,
   fillMap,
   hasContentRestrictions,
+  selected,
   setEditorState,
-  state,
   user,
-}: StateWithActions & {
-  editor: EditorState;
+}: {
+  actions: Actions;
+  config: MapConfig;
+  currentPlayer: Player;
+  drawingMode: DrawingMode;
   fillMap: () => void;
   hasContentRestrictions: boolean;
+  selected: EditorSelection | undefined;
   setEditorState: (setEditorState: Partial<EditorState>) => void;
   user: UserWithUnlocks;
 }) {
-  const { map } = state;
-  const currentPlayer = map.getCurrentPlayer();
-  const { config } = map;
   const { biome, blocklistedBuildings, blocklistedUnits } = config;
-  const selected = editor?.selected;
   const tile = selected?.tile ? getTileInfo(selected?.tile) : null;
   const building = selected?.building || null;
   const unit = selected?.unit || null;
@@ -282,100 +286,122 @@ export default function DesignPanel({
     [actions],
   );
 
+  const panelContent = useMemo(
+    () => (
+      <Stack gap={24} vertical verticalPadding>
+        <Box gap={32} ref={setRef}>
+          <InlineTileList
+            biome={biome}
+            onLongPress={onLongPress}
+            onSelect={(_, { tile }) => selectTile(tile)}
+            selected={
+              tile
+                ? tiles.findIndex((currentTile) => currentTile.id === tile.id)
+                : undefined
+            }
+            tiles={tiles}
+          >
+            <DeleteTile
+              active={selected?.eraseTiles}
+              onClick={() => setEditorState({ selected: { eraseTiles: true } })}
+              scale={2}
+              tileSize={TileSize}
+            />
+            <InlineLink
+              className={cx(fillStyle, ellipsis)}
+              onClick={() =>
+                alert({
+                  onAccept: fillMap,
+                  text: fbt(
+                    `Fill the map with tile "${fbt.param(
+                      'tile name',
+                      (canFillTile(tile) ? tile : Plain).name,
+                    )}"?`,
+                    'Confirmation dialog to fill the map in the editor',
+                  ),
+                })
+              }
+            >
+              <Icon height={32} icon={Fill} width={32} />
+            </InlineLink>
+          </InlineTileList>
+        </Box>
+        <Box gap={32}>
+          <InlineTileList
+            biome={biome}
+            buildings={buildings}
+            onLongPress={onLongPress}
+            onSelect={(_, { building }) => selectBuilding(building)}
+            selected={
+              building
+                ? buildings.findIndex((entity) => entity.id === building.id)
+                : undefined
+            }
+            size="tall"
+            tiles={buildings.map((building) =>
+              getTileInfo(getAnyBuildingTileField(building.info)),
+            )}
+          >
+            <DeleteTile
+              active={selected?.eraseBuildings}
+              onClick={() =>
+                setEditorState({ selected: { eraseBuildings: true } })
+              }
+              scale={2}
+              tall
+              tileSize={TileSize}
+            />
+          </InlineTileList>
+        </Box>
+        <Box gap={32}>
+          <InlineTileList
+            biome={biome}
+            onLongPress={onLongPress}
+            onSelect={(_, { unit }) => selectUnit(unit)}
+            selected={
+              unit
+                ? units.findIndex((entity) => entity.id === unit.id)
+                : undefined
+            }
+            tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
+            units={units}
+          >
+            <DeleteTile
+              active={selected?.eraseUnits}
+              onClick={() => setEditorState({ selected: { eraseUnits: true } })}
+              scale={2}
+              tileSize={TileSize}
+            />
+          </InlineTileList>
+        </Box>
+      </Stack>
+    ),
+    [
+      alert,
+      biome,
+      building,
+      buildings,
+      fillMap,
+      onLongPress,
+      selectBuilding,
+      selectTile,
+      selectUnit,
+      selected?.eraseBuildings,
+      selected?.eraseTiles,
+      selected?.eraseUnits,
+      setEditorState,
+      setRef,
+      tile,
+      tiles,
+      unit,
+      units,
+    ],
+  );
+
   return (
     <Tick animationConfig={AnimationConfig}>
       <Stack alignNormal gap={24} nowrap>
-        <Stack gap={24} vertical verticalPadding>
-          <Box gap={32} ref={setRef}>
-            <InlineTileList
-              biome={biome}
-              onLongPress={onLongPress}
-              onSelect={(_, { tile }) => selectTile(tile)}
-              selected={
-                tile
-                  ? tiles.findIndex((currentTile) => currentTile.id === tile.id)
-                  : undefined
-              }
-              tiles={tiles}
-            >
-              <DeleteTile
-                active={selected?.eraseTiles}
-                onClick={() =>
-                  setEditorState({ selected: { eraseTiles: true } })
-                }
-                scale={2}
-                tileSize={TileSize}
-              />
-              <InlineLink
-                className={cx(fillStyle, ellipsis)}
-                onClick={() =>
-                  alert({
-                    onAccept: fillMap,
-                    text: fbt(
-                      `Fill the map with tile "${fbt.param(
-                        'tile name',
-                        (canFillTile(tile) ? tile : Plain).name,
-                      )}"?`,
-                      'Confirmation dialog to fill the map in the editor',
-                    ),
-                  })
-                }
-              >
-                <Icon height={32} icon={Fill} width={32} />
-              </InlineLink>
-            </InlineTileList>
-          </Box>
-          <Box gap={32}>
-            <InlineTileList
-              biome={biome}
-              buildings={buildings}
-              onLongPress={onLongPress}
-              onSelect={(_, { building }) => selectBuilding(building)}
-              selected={
-                building
-                  ? buildings.findIndex((entity) => entity.id === building.id)
-                  : undefined
-              }
-              size="tall"
-              tiles={buildings.map((building) =>
-                getTileInfo(getAnyBuildingTileField(building.info)),
-              )}
-            >
-              <DeleteTile
-                active={selected?.eraseBuildings}
-                onClick={() =>
-                  setEditorState({ selected: { eraseBuildings: true } })
-                }
-                scale={2}
-                tall
-                tileSize={TileSize}
-              />
-            </InlineTileList>
-          </Box>
-          <Box gap={32}>
-            <InlineTileList
-              biome={biome}
-              onLongPress={onLongPress}
-              onSelect={(_, { unit }) => selectUnit(unit)}
-              selected={
-                unit
-                  ? units.findIndex((entity) => entity.id === unit.id)
-                  : undefined
-              }
-              tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
-              units={units}
-            >
-              <DeleteTile
-                active={selected?.eraseUnits}
-                onClick={() =>
-                  setEditorState({ selected: { eraseUnits: true } })
-                }
-                scale={2}
-                tileSize={TileSize}
-              />
-            </InlineTileList>
-          </Box>
-        </Stack>
+        {panelContent}
         <Stack gap={24} vertical>
           <Box className={drawingModeContainerStyle}>
             <Stack gap={16} start vertical>
@@ -384,7 +410,7 @@ export default function DesignPanel({
                 onClick={() => {
                   setEditorState({ drawingMode: 'regular' });
                 }}
-                selected={editor.drawingMode === 'regular'}
+                selected={drawingMode === 'regular'}
               >
                 <Icon height={32} icon={RegularDrawingMode} width={32} />
               </InlineLink>
@@ -393,7 +419,7 @@ export default function DesignPanel({
                 onClick={() => {
                   setEditorState({ drawingMode: 'horizontal' });
                 }}
-                selected={editor.drawingMode === 'horizontal'}
+                selected={drawingMode === 'horizontal'}
               >
                 <Icon height={32} icon={HorizontalDrawingMode} width={32} />
               </InlineLink>
@@ -402,7 +428,7 @@ export default function DesignPanel({
                 onClick={() => {
                   setEditorState({ drawingMode: 'vertical' });
                 }}
-                selected={editor.drawingMode === 'vertical'}
+                selected={drawingMode === 'vertical'}
               >
                 <Icon height={32} icon={VerticalDrawingMode} width={32} />
               </InlineLink>
@@ -411,7 +437,7 @@ export default function DesignPanel({
                 onClick={() => {
                   setEditorState({ drawingMode: 'diagonal' });
                 }}
-                selected={editor.drawingMode === 'diagonal'}
+                selected={drawingMode === 'diagonal'}
               >
                 <Icon height={32} icon={DiagonalDrawingMode} width={32} />
               </InlineLink>{' '}
@@ -420,7 +446,7 @@ export default function DesignPanel({
                 onClick={() => {
                   setEditorState({ drawingMode: 'horizontal-vertical' });
                 }}
-                selected={editor.drawingMode === 'horizontal-vertical'}
+                selected={drawingMode === 'horizontal-vertical'}
               >
                 <Icon
                   height={32}
@@ -433,9 +459,8 @@ export default function DesignPanel({
           <Box center gap={32}>
             <EditorPlayerSelector
               actions={actions}
-              editor={editor}
+              currentPlayer={currentPlayer}
               setEditorState={setEditorState}
-              state={state}
               vertical
             />
           </Box>
@@ -443,7 +468,7 @@ export default function DesignPanel({
       </Stack>
     </Tick>
   );
-}
+});
 
 const fillStyle = css`
   align-items: center;

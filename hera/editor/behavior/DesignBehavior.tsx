@@ -53,7 +53,7 @@ import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
 import getSymmetricPositions from '../lib/getSymmetricPositions.ts';
-import updateUndoStack from '../lib/updateUndoStack.tsx';
+import updateEditorHistory from '../lib/updateEditorHistory.tsx';
 import { EditorState } from '../Types.tsx';
 
 const playPutSound = throttle(() => AudioPlayer.playSound('UI/Put'), 300);
@@ -509,7 +509,7 @@ export default class DesignBehavior {
     }
 
     if (!skipMutations) {
-      updateUndoStack(actions, editor, [
+      updateEditorHistory(editor.historyRef, [
         `design-tile-${finalMap.map.join(',')}`,
         finalMap,
         editor.effects,
@@ -538,7 +538,7 @@ export default class DesignBehavior {
         const map = state.map.copy({
           decorators,
         });
-        updateUndoStack(actions, editor, [
+        updateEditorHistory(editor.historyRef, [
           `design-decorator-${map.decorators.join(',')}`,
           map,
           editor.effects,
@@ -585,7 +585,7 @@ export default class DesignBehavior {
             maybeCreatePlayers(map, undefined, newUnits),
             'slow',
             ({ map }) => {
-              updateUndoStack(actions, editor, [
+              updateEditorHistory(editor.historyRef, [
                 `design-unit-${encodeEntities(map.units)}`,
                 map,
                 editor.effects,
@@ -698,7 +698,7 @@ export default class DesignBehavior {
             onCreate: (state) => {
               const newState = tryToPlaceBuilding(state);
               if (newState?.map) {
-                updateUndoStack(actions, editor, [
+                updateEditorHistory(editor.historyRef, [
                   `design-building-${encodeEntities(newState.map.buildings)}`,
                   newState.map,
                   editor.effects,
