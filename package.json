@@ -63,7 +63,7 @@
     "@nkzw/eslint-config": "^2.0.0",
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.10.8",
+    "@swc/core": "^1.10.9",
     "@types/node": "^22.10.7",
     "@vitejs/plugin-react": "^4.3.4",
     "chalk": "^5.4.1",
@@ -77,8 +77,8 @@
     "react-refresh": "^0.16.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
-    "vite": "^6.0.10",
-    "vitest": "^3.0.2"
+    "vite": "^6.0.11",
+    "vitest": "^3.0.3"
   },
   "engines": {
     "node": ">=20.0.0",

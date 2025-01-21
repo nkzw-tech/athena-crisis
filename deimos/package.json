@@ -20,7 +20,7 @@
     "@emotion/css": "^11.13.5",
     "array-shuffle": "^3.0.0",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.0.0",
+    "framer-motion": "^12.0.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-error-boundary": "^5.0.0"
