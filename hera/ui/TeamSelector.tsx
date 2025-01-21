@@ -18,7 +18,7 @@ import { SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import ImmutableMap from '@nkzw/immutable-map';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   RefObject,
   useCallback,
@@ -319,54 +319,56 @@ const PlayerIconWithDrag = ({
   const applySelectedStyle = selected || isSelected;
 
   return (
-    <motion.div
-      className={cx(
-        dragHandleStyle,
-        !applySelectedStyle && isDragging && dragStyle,
-        applySelectedStyle && selectedStyle,
-        applySelectedStyle && isDragging && SquarePulseStyle,
-      )}
-      drag
-      dragConstraints={container}
-      dragSnapToOrigin
-      onDragEnd={() => {
-        setIsDragging(false);
-        setIsSelected(false);
-        onDrop(id);
-      }}
-      onDragStart={() => {
-        setIsDragging(true);
-        setIsSelected(false);
-        onDrag(id, false);
-      }}
-      onPointerMove={(event) => {
-        if (isDragging) {
-          const element = [
-            ...document.elementsFromPoint(event.clientX, event.clientY),
-          ].find((element) => element.hasAttribute('data-drop-target'));
-          if (element) {
-            const maybePlayerID = parseInteger(
-              element.getAttribute('data-drop-target') || '',
-            );
-            if (maybePlayerID) {
-              onEnter(toPlayerID(maybePlayerID));
+    <AnimatePresence>
+      <motion.div
+        className={cx(
+          dragHandleStyle,
+          !applySelectedStyle && isDragging && dragStyle,
+          applySelectedStyle && selectedStyle,
+          applySelectedStyle && isDragging && SquarePulseStyle,
+        )}
+        drag
+        dragConstraints={container}
+        dragSnapToOrigin
+        onDragEnd={() => {
+          setIsDragging(false);
+          setIsSelected(false);
+          onDrop(id);
+        }}
+        onDragStart={() => {
+          setIsDragging(true);
+          setIsSelected(false);
+          onDrag(id, false);
+        }}
+        onPointerMove={(event) => {
+          if (isDragging) {
+            const element = [
+              ...document.elementsFromPoint(event.clientX, event.clientY),
+            ].find((element) => element.hasAttribute('data-drop-target'));
+            if (element) {
+              const maybePlayerID = parseInteger(
+                element.getAttribute('data-drop-target') || '',
+              );
+              if (maybePlayerID) {
+                onEnter(toPlayerID(maybePlayerID));
+              }
+            } else {
+              onLeave();
             }
-          } else {
-            onLeave();
           }
-        }
-      }}
-      whileDrag={{
-        scale: 1.2,
-      }}
-    >
-      <PlayerIcon
-        button
-        cursorStyle={isDragging ? 'grabbing' : 'grab'}
-        id={id}
-        selected={selected || isSelected}
-      />
-    </motion.div>
+        }}
+        whileDrag={{
+          scale: 1.2,
+        }}
+      >
+        <PlayerIcon
+          button
+          cursorStyle={isDragging ? 'grabbing' : 'grab'}
+          id={id}
+          selected={selected || isSelected}
+        />
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
