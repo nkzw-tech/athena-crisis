@@ -135,7 +135,7 @@ export default function MapEditorSetupPanel({
         <InfoBox>
           <p>
             <fbt desc="Explanation for the main faction">
-              In a campaign, the first faction will be controlled by the user.
+              In a campaign, the first faction will be controlled by the player.
             </fbt>
           </p>
         </InfoBox>
