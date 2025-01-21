@@ -16,9 +16,9 @@
     "fbt:translate": "mkdir -p src/generated/ && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/translations.js"
   },
   "dependencies": {
-    "@capacitor/app": "^6.0.2",
-    "@capacitor/core": "^6.2.0",
-    "@capacitor/status-bar": "^6.0.2",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0",
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
@@ -37,7 +37,7 @@
     "@stripe/stripe-js": "^5.5.0",
     "cordova-plugin-purchase": "^13.12.1",
     "fbtee": "^0.2.0",
-    "framer-motion": "^11.18.1",
+    "framer-motion": "^12.0.0",
     "p-limit": "^6.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
