@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css';
-import { MutableRefObject, ReactNode, RefCallback } from 'react';
+import { ReactNode, RefCallback, RefObject } from 'react';
 
 let currentScrollContainer: HTMLElement | null = null;
 
@@ -20,7 +20,7 @@ export default function ScrollContainer({
 }: {
   children: ReactNode;
   className?: string;
-  ref?: RefCallback<HTMLElement> | MutableRefObject<HTMLElement | null>;
+  ref?: RefCallback<HTMLElement> | RefObject<HTMLElement | null>;
 }) {
   return (
     <div

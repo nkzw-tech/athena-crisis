@@ -4,8 +4,8 @@ import {
   ChangeEvent,
   FocusEvent,
   KeyboardEvent,
-  MutableRefObject,
   ReactNode,
+  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -225,7 +225,7 @@ export default function Typeahead<T>({
   ignoreList?: ReadonlySet<string>;
   initialValue?: string;
   inputClassName?: string;
-  inputRef?: MutableRefObject<HTMLInputElement | undefined>;
+  inputRef?: RefObject<HTMLInputElement | undefined>;
   onBackspace?: () => void;
   onSelect?: (result: TypeaheadDataSourceEntry<T>) => string | void;
   placeholder?: string;

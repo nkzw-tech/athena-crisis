@@ -8,7 +8,7 @@ import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
 import {
   memo,
-  MutableRefObject,
+  RefObject,
   TouchEvent,
   useCallback,
   useMemo,
@@ -111,7 +111,7 @@ export type BaseMaskProps = Readonly<{
   ) => void;
   enter: (vector: Vector, _: undefined, type: MapEnterType) => void;
   map: MapData;
-  ref: MutableRefObject<HTMLDivElement | null>;
+  ref: RefObject<HTMLDivElement | null>;
   select: (vector: Vector) => void;
   tileSize: number;
   zIndex: number;
@@ -136,7 +136,7 @@ export default memo(function Mask({
   attackable: ReadonlyMap<Vector, RadiusItem> | null;
   currentViewer: PlayerID | null;
   expand: boolean;
-  pointerLock: MutableRefObject<boolean>;
+  pointerLock: RefObject<boolean>;
   radius: RadiusInfo | null;
   selectedPosition: Vector | null;
   showFieldInfo: (vector: Vector, origin: string) => void;

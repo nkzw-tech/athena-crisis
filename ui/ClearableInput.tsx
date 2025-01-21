@@ -4,7 +4,7 @@ import {
   InputHTMLAttributes,
   memo,
   MouseEvent,
-  MutableRefObject,
+  RefObject,
   useRef,
 } from 'react';
 
@@ -20,7 +20,7 @@ export default memo(function ClearableInput({
 > & {
   hidden?: boolean;
   onClear?: () => string;
-  ref?: MutableRefObject<HTMLInputElement | null>;
+  ref?: RefObject<HTMLInputElement | null>;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (

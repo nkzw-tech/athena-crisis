@@ -3,9 +3,9 @@ import { css, cx } from '@emotion/css';
 import {
   AnchorHTMLAttributes,
   memo,
-  MutableRefObject,
   ReactNode,
   RefCallback,
+  RefObject,
   useCallback,
   useRef,
 } from 'react';
@@ -32,9 +32,7 @@ export default memo(function Button({
   active?: boolean;
   children?: ReactNode;
   onClick?: OnClickFn;
-  ref?:
-    | RefCallback<HTMLAnchorElement>
-    | MutableRefObject<HTMLAnchorElement | null>;
+  ref?: RefCallback<HTMLAnchorElement> | RefObject<HTMLAnchorElement | null>;
   selected?: boolean;
   to?: Route;
 }) {

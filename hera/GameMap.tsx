@@ -48,8 +48,8 @@ import { AnimatePresence } from 'framer-motion';
 import {
   Component,
   createRef,
-  MutableRefObject,
   PointerEvent as ReactPointerEvent,
+  RefObject,
 } from 'react';
 import processActionResponses from './action-response/processActionResponse.tsx';
 import BaseBehavior from './behavior/Base.tsx';
@@ -435,7 +435,7 @@ export default class GameMap extends Component<Props, State> {
           this._maskRef.current?.closest(`.${ScrollContainerClassName}`)) ||
         window;
       if (container === window) {
-        (this.context as MutableRefObject<boolean>).current = true;
+        (this.context as RefObject<boolean>).current = true;
       }
       scrollToCenter(container);
     }

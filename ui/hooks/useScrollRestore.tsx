@@ -1,7 +1,7 @@
 import {
   createContext,
-  MutableRefObject,
   ReactNode,
+  RefObject,
   useContext,
   useEffect,
   useRef,
@@ -9,7 +9,7 @@ import {
 import { PageTransitionDuration } from '../PageTransition.tsx';
 import useLocation from './useLocation.tsx';
 
-const Context = createContext<MutableRefObject<boolean | null>>({
+const Context = createContext<RefObject<boolean | null>>({
   current: false,
 });
 

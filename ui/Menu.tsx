@@ -6,8 +6,8 @@ import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
 import { motion } from 'framer-motion';
 import {
   createContext,
-  MutableRefObject,
   ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -30,7 +30,7 @@ import Stack from './Stack.tsx';
 
 export const MenuClassName = 'menu-button';
 
-export type MenuContext = MutableRefObject<boolean>;
+export type MenuContext = RefObject<boolean>;
 
 const Context = createContext<MenuContext>({ current: false });
 

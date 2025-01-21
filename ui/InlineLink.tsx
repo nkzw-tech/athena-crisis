@@ -4,8 +4,8 @@ import {
   AnchorHTMLAttributes,
   CSSProperties,
   MouseEvent,
-  MutableRefObject,
   RefCallback,
+  RefObject,
   useCallback,
   useRef,
 } from 'react';
@@ -28,9 +28,7 @@ type InlineLinkProps = Readonly<{
   hover?: boolean;
   onClick?: (event?: MouseEvent) => void;
   pixelBorderSize?: number;
-  ref?:
-    | RefCallback<HTMLAnchorElement>
-    | MutableRefObject<HTMLAnchorElement | null>;
+  ref?: RefCallback<HTMLAnchorElement> | RefObject<HTMLAnchorElement | null>;
   selected?: boolean;
   selectedText?: boolean;
   style?: CSSProperties;
