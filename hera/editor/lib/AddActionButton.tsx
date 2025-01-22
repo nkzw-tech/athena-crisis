@@ -35,8 +35,8 @@ export default function AddActionButton({
               })
             }
           >
-            <fbt desc="Button to add a new spawn effect in the map editor">
-              Spawn Effect
+            <fbt desc="Button to add a new spawn action in the map editor">
+              Spawn Action
             </fbt>
           </InlineLink>
           <InlineLink
@@ -48,8 +48,8 @@ export default function AddActionButton({
               })
             }
           >
-            <fbt desc="Button to add a new increase funds effect in the map editor">
-              Increase Funds Effect
+            <fbt desc="Button to add a new increase funds action in the map editor">
+              Increase Funds Action
             </fbt>
           </InlineLink>
           <InlineLink
@@ -61,8 +61,8 @@ export default function AddActionButton({
               })
             }
           >
-            <fbt desc="Button to add a new increase charge effect in the map editor">
-              Increase Charge Effect
+            <fbt desc="Button to add a new increase charge action in the map editor">
+              Increase Charge Action
             </fbt>
           </InlineLink>
         </>
@@ -76,8 +76,8 @@ export default function AddActionButton({
             })
           }
         >
-          <fbt desc="Button to add a new crystal effect in the map editor">
-            Activate Crystal Effect
+          <fbt desc="Button to add a new crystal action in the map editor">
+            Activate Crystal Action
           </fbt>
         </InlineLink>
       ) : null}
