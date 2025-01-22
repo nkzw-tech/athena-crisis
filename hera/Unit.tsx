@@ -137,9 +137,7 @@ const Action = memo(function Action({
   return (
     <div
       className={cx(
-        absoluteStyle,
-        baseIconStyle,
-        statusStyle,
+        actionStyles,
         position === 'secondary' ? secondaryStyle : null,
         className,
         hide && hideStyle,
@@ -205,10 +203,7 @@ const Status = memo(function Status({
       {health > 0 ? (
         <div
           className={cx(
-            absoluteStyle,
-            baseIconStyle,
-            iconStyle,
-            statusStyle,
+            statusStyles,
             !hide && hasOne && blinkStyle,
             (hide || !hasOne) && hideStyle,
           )}
@@ -234,12 +229,7 @@ const Health = ({
 }) => {
   return health > 0 && health < MaxHealth ? (
     <div
-      className={cx(
-        absoluteStyle,
-        healthStyle,
-        hasStatus && healthOffsetStyle,
-        hide && hideStyle,
-      )}
+      className={healthStyle}
       style={{
         [vars.set('health')]: health + '%',
         [vars.set('health-color')]:
@@ -248,6 +238,8 @@ const Health = ({
             : health < (MaxHealth / 3) * 2
               ? '#ee0'
               : '#0e0',
+        opacity: hide ? 0 : 1,
+        right: hasStatus ? 9 : 2,
       }}
     />
   ) : null;
@@ -1002,17 +994,19 @@ export default function UnitTile({
     ],
   );
 
-  return (
-    <div
-      className={cx(
+  const className = useMemo(
+    () =>
+      cx(
         baseStyle,
         absolute ? absoluteStyle : relativeStyle,
         dim && dimStyle,
         dim === 'flip' && dimFlipStyle,
-      )}
-      ref={elementRef}
-      style={style}
-    >
+      ),
+    [absolute, dim],
+  );
+
+  return (
+    <div className={className} ref={elementRef} style={style}>
       <Label entity={unit} hide={hide} />
       {shadowImage && (
         <div
@@ -1315,17 +1309,13 @@ const healthStyle = css`
     ${vars.apply('health-color')} 0%,
     ${vars.apply('health-color')} ${vars.apply('health')},
     rgba(0, 0, 0, 0) calc(${vars.apply('health')} + 1%)
-  );
+    );
   bottom: 0px;
   height: 3px;
   left: 2px;
   opacity: 0.85;
-  right: 2px;
+  position: absolute;
   transition: opacity ${applyVar('animation-duration-70')} ease-in-out;
-`;
-
-const healthOffsetStyle = css`
-  right: 9px;
 `;
 
 const baseIconStyle = css`
@@ -1375,6 +1365,9 @@ const blinkStyle = css`
     }
   `};
 `;
+
+const actionStyles = cx(absoluteStyle, baseIconStyle, statusStyle);
+const statusStyles = cx(absoluteStyle, baseIconStyle, iconStyle, statusStyle);
 
 const getRecoilAnimation = (keyframes: string) => css`
   animation-delay: ${vars.apply('recoil-delay')};

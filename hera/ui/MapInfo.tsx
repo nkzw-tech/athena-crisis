@@ -22,6 +22,7 @@ import MapData, {
 import { VisionT } from '@deities/athena/Vision.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
+import throttle from '@deities/ui/controls/throttle.tsx';
 import cssVar, {
   applyVar,
   CSSVariables,
@@ -35,7 +36,7 @@ import Supply from '@deities/ui/icons/Supply.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
 import CoverRange from '../card/lib/CoverRange.tsx';
@@ -139,6 +140,7 @@ const renderUnit = (
           ? String(unit.ammo?.get(weapon.id) || 0) + '/' + weapon.supply
           : '∞',
       );
+
     return (
       <Box blur className={boxStyle}>
         <UnitTile
@@ -239,12 +241,21 @@ export default function MapInfo({
   leftOffset,
   map,
   playerDetails,
-  position,
+  position: newPosition,
   replayState,
   showCursor,
   tileSize,
   vision,
 }: State & { hide?: boolean; inset?: number; leftOffset?: true }) {
+  const [position, _setPosition] = useState<Vector | null>(null);
+  const setPosition = useMemo(() => throttle(_setPosition, 100), []);
+
+  useEffect(() => {
+    if (newPosition !== position) {
+      setPosition(newPosition);
+    }
+  }, [newPosition, position, setPosition]);
+
   const isLeft = useRef(true);
   useEffect(() => {
     const listener = (event: MouseEvent) => {
