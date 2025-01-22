@@ -892,8 +892,34 @@ export default function UnitTile({
         }
       }, animationConfig.ExplosionStep / 2);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animation]);
+  }, [
+    animation,
+    animationConfig.AnimationDuration,
+    animationConfig.ExplosionStep,
+    animationConfig.UnitAnimationStep,
+    animationConfig.UnitMoveDuration,
+    animationKey,
+    animationOffset,
+    backgroundPositionY,
+    getLayer,
+    hasAttackStance,
+    info,
+    isAnimating,
+    isMoving,
+    isSpawning,
+    onAnimationComplete,
+    player,
+    position,
+    positionOffset.x,
+    positionOffset.y,
+    requestFrame,
+    scheduleTimer,
+    size,
+    spritePosition,
+    tile,
+    unit,
+    unitDirection,
+  ]);
 
   const isCompleted = unit.isCompleted();
   const animationStyle =

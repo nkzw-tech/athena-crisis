@@ -113,6 +113,7 @@ export default function CampaignEditor({
   const { slug } = data;
   const [hasChanges, setHasChanges] = useState(!data.id);
   const [mapHasChanges, setMapHasChanges] = useState(false);
+  const [origin, setOrigin] = useState('');
   const [difficulty, setDifficulty] = useState<AttributeRangeWithZero>(
     validateAttributeRange(data.difficulty) ? data.difficulty : 0,
   );
@@ -285,6 +286,7 @@ export default function CampaignEditor({
           navigate(getMapRoute(node.slug, 'edit'));
           return;
         }
+        setOrigin(transformRef.current);
         setShowAllDialogue(false);
         setCampaignEditorState({
           map: node,
@@ -547,9 +549,7 @@ export default function CampaignEditor({
                 transform: 'scale(0)',
               }}
               style={{
-                transformOrigin: transformRef.current?.length
-                  ? transformRef.current
-                  : 'center center',
+                transformOrigin: origin?.length ? origin : 'center center',
               }}
               transition={{
                 duration: 0.25,

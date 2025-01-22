@@ -36,6 +36,13 @@ window.renderMap = (url: string) => {
   root.render(<DisplayMap url={url} />);
 };
 
+const initializeHasRendered = (gameActionResponses: ReadonlyArray<string>) => {
+  // Initialize global state for listeners.
+  gameActionResponses?.forEach((_, index) => {
+    window.MapHasRendered[index] = false;
+  });
+};
+
 const animationSpeed = {
   human: InstantAnimationConfig,
   regular: InstantAnimationConfig,
@@ -64,10 +71,7 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
     [maps],
   );
 
-  // Initialize global state for listeners.
-  gameActionResponses?.forEach((_, index) => {
-    window.MapHasRendered[index] = false;
-  });
+  initializeHasRendered(gameActionResponses);
 
   useEffect(() => {
     if (gameActionResponses?.length) {

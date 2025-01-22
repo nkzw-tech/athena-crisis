@@ -57,7 +57,6 @@ export default function Tick({
         );
       }
     }, []),
-    [],
   );
 
   return (

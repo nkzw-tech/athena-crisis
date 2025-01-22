@@ -122,8 +122,17 @@ const BuildingTile = memo(function BuildingTile({
 
       animate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animation]);
+  }, [
+    animation,
+    animationConfig,
+    height,
+    isBeingCreated,
+    position,
+    positionY,
+    requestFrame,
+    scheduleTimer,
+    size,
+  ]);
 
   const showHighlight = highlight && player > 0;
   const isCompleted = building.isCompleted();

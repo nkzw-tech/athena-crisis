@@ -59,16 +59,11 @@ export default function tick(fn: TickFunction) {
   };
 }
 
-export function useTick(
-  paused: boolean | undefined,
-  fn: TickFunction,
-  dependencies: Array<unknown>,
-) {
+export function useTick(paused: boolean | undefined, fn: TickFunction) {
   const isVisible = useVisibilityState();
   useEffect(() => {
     if (!paused && isVisible) {
       return tick(fn);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fn, isVisible, paused, ...dependencies]);
+  }, [fn, isVisible, paused]);
 }

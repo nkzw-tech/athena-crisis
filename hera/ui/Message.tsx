@@ -81,8 +81,7 @@ const MessageComponent = ({
     }, 100);
     window.addEventListener('resize', listener);
     return () => window.removeEventListener('resize', listener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLine, clientWidth, lines]);
+  }, [currentLine, clientWidth, lines, onComplete]);
 
   // Avoid double invocations of onComplete.
   const done = useRef(false);
@@ -106,8 +105,7 @@ const MessageComponent = ({
       done.current = true;
       onComplete();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timer, animationComplete, hasNext, clearTimer, currentLine]);
+  }, [timer, animationComplete, hasNext, clearTimer, currentLine, onComplete]);
 
   useInput('accept', next);
   useEffect(() => {

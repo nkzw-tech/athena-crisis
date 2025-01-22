@@ -173,8 +173,7 @@ const MessageComponent = ({
     }, 100);
     window.addEventListener('resize', listener);
     return () => window.removeEventListener('resize', listener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLine, clientWidth, lines]);
+  }, [currentLine, clientWidth, lines, onComplete]);
 
   useEffect(() => {
     AudioPlayer.playSound(sound);

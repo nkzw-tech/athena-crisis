@@ -13,6 +13,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { App } from './App.tsx';
@@ -41,16 +42,16 @@ export const MenuContext = ({ children }: { children: ReactNode }) => {
 };
 
 export const useDisableOpenMenuOnCancel = () => {
-  const context = useContext(Context);
+  const context = useRef(useContext(Context));
   useEffect(() => {
-    context.current = false;
+    context.current.current = false;
   }, [context]);
 };
 
 export const useOpenMenuOnCancel = () => {
-  const context = useContext(Context);
+  const context = useRef(useContext(Context));
   useEffect(() => {
-    context.current = true;
+    context.current.current = true;
   }, [context]);
 };
 

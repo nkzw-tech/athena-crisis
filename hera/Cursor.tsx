@@ -42,7 +42,6 @@ export default memo(function Cursor({
     useCallback((tick: number) => {
       ref.current?.style.setProperty(vars.set('tick'), String(tick % 4));
     }, []),
-    [],
   );
 
   return (

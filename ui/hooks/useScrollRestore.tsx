@@ -21,11 +21,11 @@ export const ScrollRestoreContext = ({ children }: { children: ReactNode }) => (
 
 export default function useScrollRestore() {
   const { hash, pathname } = useLocation();
-  const context = useContext(Context);
+  const context = useRef(useContext(Context));
   useEffect(() => {
     let timer = setTimeout(() => {
       if (context.current) {
-        context.current = false;
+        context.current.current = false;
       } else if (hash.length > 1) {
         timer = setTimeout(() => {
           document.getElementById(hash.slice(1))?.scrollIntoView({
@@ -41,8 +41,8 @@ export default function useScrollRestore() {
 }
 
 export function useSkipScrollRestore() {
-  const scrollRestoreContext = useContext(ScrollRestore);
+  const scrollRestoreContext = useRef(useContext(ScrollRestore));
   useEffect(() => {
-    scrollRestoreContext.current = true;
+    scrollRestoreContext.current.current = true;
   }, [scrollRestoreContext]);
 }

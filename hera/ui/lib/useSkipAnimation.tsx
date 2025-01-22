@@ -15,8 +15,7 @@ export default function useSkipAnimation({
     if (animationConfig.Instant) {
       scheduleTimer(onComplete, 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [animationConfig.Instant, onComplete, scheduleTimer]);
 
   return animationConfig.Instant;
 }

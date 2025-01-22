@@ -7,7 +7,7 @@ import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 type MusicContext = {
   songByRoute: Map<string, SongName | null>;
@@ -64,11 +64,12 @@ const onVisibilityChange = (isVisible: boolean) => {
 
 export function usePlayMusic(dep?: unknown) {
   const { pathname } = useLocation();
-  const context = useContext(Context);
+  const contextRef = useRef(useContext(Context));
 
   useVisibilityState(onVisibilityChange);
 
   useEffect(() => {
+    const context = contextRef.current;
     if (context.timer != null) {
       clearTimeout(context.timer);
     }
@@ -82,7 +83,7 @@ export function usePlayMusic(dep?: unknown) {
         ? 3000
         : 100,
     );
-  }, [context, pathname, dep]);
+  }, [pathname, dep]);
 }
 
 export function biomeToSong(
