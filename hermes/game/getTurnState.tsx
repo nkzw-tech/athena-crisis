@@ -4,34 +4,56 @@ import { EncodedActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 
-export type PreviousGameState<M> = readonly [
+type RecentActionState<TAction, Effects> = [ReadonlyArray<TAction>, Effects];
+
+export type PreviousGameState<
+  M,
+  TAction = M extends MapData ? ActionResponse : EncodedActionResponse,
+  E = M extends MapData ? Effects : EncodedEffects,
+> = readonly [
   state: M,
-  lastActionResponse:
-    | (M extends MapData ? ActionResponse : EncodedActionResponse)
-    | null,
-  effects: M extends MapData ? Effects : EncodedEffects,
+  lastActionResponse: TAction | null,
+  effects: E,
+  recentActions?: ReadonlyArray<RecentActionState<TAction, E>> | null,
 ];
 
 export default function getTurnState<
   M extends PlainMap | MapData,
-  T extends M extends MapData ? ActionResponse : EncodedActionResponse,
-  S extends M extends MapData ? Effects : EncodedEffects,
+  TAction extends M extends MapData ? ActionResponse : EncodedActionResponse,
+  E extends M extends MapData ? Effects : EncodedEffects,
 >(
   previousMap: MapData,
   activeMap: M,
-  effects: S,
+  effects: E,
   turnState: PreviousGameState<M> | null,
   isStart: boolean,
   ended: boolean,
-  lastAction: T | null,
+  lastAction: TAction | null,
+  actionResponses: ReadonlyArray<TAction>,
 ): PreviousGameState<M> | null {
-  return (
-    (!ended &&
-      (isStart ||
-      previousMap.currentPlayer !== activeMap.currentPlayer ||
-      previousMap.round !== activeMap.round
-        ? [activeMap, lastAction, effects]
-        : turnState)) ||
-    null
-  );
+  if (ended) {
+    return null;
+  }
+
+  if (
+    isStart ||
+    previousMap.currentPlayer !== activeMap.currentPlayer ||
+    previousMap.round !== activeMap.round
+  ) {
+    return [activeMap, lastAction, effects, []];
+  }
+
+  if (!turnState || !lastAction) {
+    return turnState;
+  }
+
+  const [state, lastActionResponse, turnEffects, recentActions] = turnState;
+  return [
+    state,
+    lastActionResponse,
+    turnEffects,
+    actionResponses.length
+      ? [...(recentActions || []), [actionResponses, effects]]
+      : recentActions,
+  ];
 }

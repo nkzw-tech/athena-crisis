@@ -6,6 +6,7 @@ import Vector, { sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { attackable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
+import { UndoType } from '@deities/hermes/game/undo.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
@@ -14,6 +15,7 @@ import { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
+import Undo from '@deities/ui/icons/Undo.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
@@ -26,6 +28,7 @@ import Next from '@iconify-icons/pixelarticons/reply.js';
 import {
   MouseEvent,
   ReactNode,
+  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -49,8 +52,9 @@ import ReplayBar from './ReplayBar.tsx';
 const InfoButton = ({
   actions: { showGameInfo },
   bottom,
+  fade,
   state: { gameInfoState },
-}: StateWithActions & Readonly<{ bottom?: true }>) => {
+}: StateWithActions & Readonly<{ bottom?: true; fade?: boolean }>) => {
   useInput('detail', () => {
     if (!gameInfoState) {
       showGameInfo({
@@ -61,7 +65,10 @@ const InfoButton = ({
   });
 
   return (
-    <MenuButton className={cx(actionButtonStyle, !bottom && infoButtonStyle)}>
+    <MenuButton
+      className={cx(actionButtonStyle, !bottom && infoButtonStyle)}
+      fade={fade}
+    >
       <Icon
         button
         className={cx(iconStyle)}
@@ -80,9 +87,10 @@ const InfoButton = ({
 
 const AttackRadiusButton = ({
   actions: { update },
+  fade,
   playerCanEndTurn,
   state: { behavior, currentViewer, map },
-}: StateWithActions & { playerCanEndTurn: boolean | null }) => {
+}: StateWithActions & { fade?: boolean; playerCanEndTurn: boolean | null }) => {
   const fields = useMemo(
     () =>
       currentViewer
@@ -118,7 +126,10 @@ const AttackRadiusButton = ({
   useInput('keyboard:tertiary', show);
 
   return (
-    <MenuButton className={cx(actionButtonStyle, attackRadiusButtonStyle)}>
+    <MenuButton
+      className={cx(actionButtonStyle, attackRadiusButtonStyle)}
+      fade={fade}
+    >
       <Icon
         button
         className={cx(
@@ -163,11 +174,41 @@ const rotatePositions = (
   return newPositions;
 };
 
+const useExpandable = (
+  ref: RefObject<HTMLElement | null>,
+  canExpand: boolean,
+) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  if (isExpanded && !canExpand) {
+    setIsExpanded(false);
+  }
+
+  useEffect(() => {
+    if (isExpanded) {
+      const listener = (event: Event) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          setIsExpanded(false);
+        }
+      };
+
+      document.addEventListener('click', listener);
+      return () => {
+        document.removeEventListener('click', listener);
+      };
+    }
+  }, [ref, isExpanded]);
+  useInput('cancel', () => setIsExpanded(false));
+
+  return [isExpanded, setIsExpanded] as const;
+};
+
 const NextButton = ({
   actions,
+  fade,
   playerCanEndTurn,
   state,
-}: StateWithActions & { playerCanEndTurn: boolean | null }) => {
+}: StateWithActions & { fade?: boolean; playerCanEndTurn: boolean | null }) => {
   const { scrollIntoView, update } = actions;
   const { behavior, currentViewer, map, selectedPosition, vision } = state;
   const [positions, setPositions] = useState<ReadonlyArray<Vector>>([]);
@@ -255,7 +296,7 @@ const NextButton = ({
   );
 
   return (
-    <MenuButton className={cx(actionButtonStyle, nextButtonStyle)}>
+    <MenuButton className={cx(actionButtonStyle, nextButtonStyle)} fade={fade}>
       <Icon
         button
         className={cx(
@@ -274,18 +315,30 @@ const NextButton = ({
 const EndTurnButton = ({
   actions,
   canEndTurn,
+  fade,
   state,
   subscribe,
 }: StateWithActions & {
   canEndTurn: boolean;
+  fade?: boolean;
   subscribe?: (map: MapData) => Promise<void>;
 }) => {
   const { scrollIntoView, update } = actions;
   const { currentViewer, lastActionResponse, map, vision } = state;
-  const [endTurnIsExpanded, setEndTurnIsExpanded] = useState<boolean>(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useExpandable(ref, canEndTurn);
   const [cooldown, setCooldown] = useState(false);
   const timerRef = useRef<NativeTimeout>(null);
   const highlightTimerRef = useRef<NativeTimeout>(null);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) {
+        clearTimeout(highlightTimerRef.current);
+        highlightTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (cooldown) {
@@ -293,12 +346,6 @@ const EndTurnButton = ({
       return () => clearTimeout(timer);
     }
   }, [cooldown]);
-
-  const ref = useRef<HTMLDivElement>(null);
-
-  if (endTurnIsExpanded && !canEndTurn) {
-    setEndTurnIsExpanded(false);
-  }
 
   const availableUnits = getAvailableUnits(map, currentViewer, vision);
   const fastEndTurn =
@@ -318,11 +365,8 @@ const EndTurnButton = ({
       if (highlightTimerRef.current != null) {
         clearTimeout(highlightTimerRef.current);
       }
-      if (
-        !cooldown &&
-        (endTurnIsExpanded || fastEndTurn || event.detail >= 2)
-      ) {
-        setEndTurnIsExpanded(false);
+      if (!cooldown && (isExpanded || fastEndTurn || event.detail >= 2)) {
+        setIsExpanded(false);
         setCooldown(true);
         if (timerRef.current != null) {
           clearTimeout(timerRef.current);
@@ -331,7 +375,7 @@ const EndTurnButton = ({
         subscribe?.(state.map);
       } else {
         timerRef.current = setTimeout(() => {
-          setEndTurnIsExpanded(true);
+          setIsExpanded(true);
           update({ position: null });
           highlightTimerRef.current = setTimeout(() => {
             const { attackable, behavior, radius, selectedPosition } = state;
@@ -367,8 +411,9 @@ const EndTurnButton = ({
     [
       canEndTurn,
       cooldown,
-      endTurnIsExpanded,
+      isExpanded,
       fastEndTurn,
+      setIsExpanded,
       actions,
       state,
       subscribe,
@@ -378,68 +423,49 @@ const EndTurnButton = ({
     ],
   );
 
-  useEffect(() => {
-    if (endTurnIsExpanded) {
-      const listener = (event: Event) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-          setEndTurnIsExpanded(false);
-        }
-      };
-      document.addEventListener('click', listener);
-      return () => {
-        if (highlightTimerRef.current != null) {
-          clearTimeout(highlightTimerRef.current);
-        }
-        document.removeEventListener('click', listener);
-      };
-    }
-  }, [endTurnIsExpanded]);
-
   useInput(
     'secondary',
     useCallback(() => {
       endTurn(new CustomEvent('click', { detail: 1 }));
     }, [endTurn]),
   );
-  useInput('cancel', () => setEndTurnIsExpanded(false));
 
   return (
     <MenuButton
       className={cx(
         actionButtonStyle,
         endTurnButtonStyle,
-        endTurnIsExpanded && expandStyle,
+        isExpanded && expandStyle,
       )}
+      fade={fade}
       ref={ref}
     >
-      <>
-        <div className={textStyle}>
-          {lastActionResponse?.type !== 'EndTurn' && availableUnits.length ? (
-            <fbt desc="end turn confirmation">
-              Skip
-              <fbt:plural
-                count={availableUnits.length}
-                many="available units"
-                name="number of units"
-                showCount="ifMany"
-              >
-                one available unit
-              </fbt:plural>
-              and end turn?
-            </fbt>
-          ) : (
-            <fbt desc="Confirmation to skip the turn">
-              Do you want to skip this turn?
-            </fbt>
-          )}
-        </div>
-        <Icon
-          button
-          className={closeIconStyle}
-          icon={Close}
-          onClick={() => setEndTurnIsExpanded(false)}
-        />
-      </>
+      <div className={textStyle}>
+        {lastActionResponse?.type !== 'EndTurn' && availableUnits.length ? (
+          <fbt desc="end turn confirmation">
+            Skip
+            <fbt:plural
+              count={availableUnits.length}
+              many="available units"
+              name="number of units"
+              showCount="ifMany"
+            >
+              one available unit
+            </fbt:plural>
+            and end turn?
+          </fbt>
+        ) : (
+          <fbt desc="Confirmation to skip the turn">
+            Do you want to skip this turn?
+          </fbt>
+        )}
+      </div>
+      <Icon
+        button
+        className={closeIconStyle}
+        icon={Close}
+        onClick={() => setIsExpanded(false)}
+      />
       <Icon
         button
         className={cx(
@@ -460,25 +486,113 @@ const EndTurnButton = ({
   );
 };
 
+export type UndoOptions = Readonly<{
+  onCancel?: () => void;
+  skipAlert?: boolean;
+}>;
+
+const UndoButton = ({
+  canUndo,
+  canUndoAction,
+  fade,
+  undo,
+}: {
+  canUndo: boolean;
+  canUndoAction: boolean;
+  fade?: boolean;
+  undo: (type: UndoType, options?: UndoOptions) => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useExpandable(ref, canUndo);
+
+  const toggle = useCallback(() => {
+    if (!canUndoAction) {
+      undo('Turn');
+    } else if (isExpanded) {
+      undo('Action');
+    } else {
+      setIsExpanded(true);
+    }
+  }, [canUndoAction, isExpanded, undo, setIsExpanded]);
+
+  useInput('undo', toggle);
+
+  useEffect(() => {
+    const keydownListener = (event: KeyboardEvent) => {
+      if (!canUndo || !canUndoAction) {
+        return;
+      }
+
+      const metaKey = event.metaKey || event.ctrlKey;
+      // Use `event.key` to ensure consistency on qwertz keyboards.
+      if (metaKey && event.key === 'z') {
+        event.preventDefault();
+        undo('Action', { skipAlert: true });
+      }
+    };
+
+    document.addEventListener('keydown', keydownListener);
+    return () => {
+      document.removeEventListener('keydown', keydownListener);
+    };
+  }, [canUndo, canUndoAction, undo]);
+
+  return (
+    <MenuButton
+      className={cx(
+        actionButtonStyle,
+        endTurnButtonStyle,
+        undoButtonStyle,
+        isExpanded && undoExpandStyle,
+      )}
+      fade={fade}
+      ref={ref}
+    >
+      {canUndoAction && (
+        <>
+          <Icon button icon={Close} onClick={() => setIsExpanded(false)} />
+          <Icon
+            button
+            horizontalFlip
+            icon={Undo}
+            onClick={() => undo('Turn')}
+          />
+        </>
+      )}
+      <Icon
+        button
+        className={cx(iconStyle, !canUndo && disabledButtonStyle)}
+        horizontalFlip
+        icon={canUndoAction ? Forward : Undo}
+        onClick={toggle}
+      />
+    </MenuButton>
+  );
+};
+
 const preventUndoTypes = new Set(['BeginGame', 'EndTurn', 'Start']);
 
 export default function GameActions({
   actions,
+  canUndoAction = true,
   children,
+  fade,
   hide,
   inset = 0,
   setZoom,
   state,
   subscribe,
-  undoTurn,
+  undo,
   zoom,
 }: StateWithActions & {
+  canUndoAction?: boolean;
   children?: ReactNode;
+  fade?: boolean;
   hide?: boolean;
   inset?: number;
   setZoom?: SetZoomFn;
   subscribe?: (map: MapData) => Promise<void>;
-  undoTurn?: (onCancel: () => void) => void | Promise<void>;
+  undo?: (type: UndoType, options?: UndoOptions) => void | Promise<void>;
   zoom: number;
 }) {
   const { update } = actions;
@@ -498,23 +612,29 @@ export default function GameActions({
     !preventRemoteActions && !paused && canEndTurn(state);
   const viewerPlayer =
     currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
-  const canUndo =
-    undoTurn &&
+  const canUndo = !!(
+    undo &&
     !hasEnded &&
     viewerPlayer?.isHumanPlayer() &&
     viewerPlayer.crystal == null &&
     playerCanEndTurn &&
     lastActionResponse &&
-    !preventUndoTypes.has(lastActionResponse.type);
+    !preventUndoTypes.has(lastActionResponse.type)
+  );
 
-  const undo = useCallback(() => {
-    if (canUndo && undoTurn) {
-      AudioPlayer.playSound('UI/Accept');
-      update(resetBehavior(NullBehavior));
-      undoTurn(() => update(resetBehavior()));
-    }
-  }, [canUndo, undoTurn, update]);
-  useInput('undo', undo);
+  const onUndo = useCallback(
+    (type: UndoType, options?: UndoOptions) => {
+      if (canUndo && undo) {
+        AudioPlayer.playSound('UI/Accept');
+        update(resetBehavior(NullBehavior));
+        undo(type, {
+          ...options,
+          onCancel: () => update(resetBehavior()),
+        });
+      }
+    },
+    [canUndo, undo, update],
+  );
 
   const replayBar = !hasEnded && (
     <ReplayBar
@@ -537,8 +657,9 @@ export default function GameActions({
           <ZoomButton
             className={cx(
               actionButtonStyle,
-              undoTurn ? zoomButtonStyle : undoButtonStyle,
+              undo ? zoomButtonStyle : undoButtonStyle,
             )}
+            fade={fade}
             hide={false}
             max={maxZoom}
             position="auto"
@@ -546,31 +667,31 @@ export default function GameActions({
             zoom={zoom}
           />
         )}
-        {undoTurn && (
-          <MenuButton className={cx(actionButtonStyle, undoButtonStyle)}>
-            <Icon
-              button
-              className={cx(iconStyle, !canUndo && disabledButtonStyle)}
-              horizontalFlip
-              icon={Forward}
-              onClick={undo}
-            />
-          </MenuButton>
+        {undo && (
+          <UndoButton
+            canUndo={canUndo}
+            canUndoAction={canUndoAction}
+            fade={fade}
+            undo={onUndo}
+          />
         )}
-        <InfoButton actions={actions} state={state} />
+        <InfoButton actions={actions} fade={fade} state={state} />
         <AttackRadiusButton
           actions={actions}
+          fade={fade}
           playerCanEndTurn={playerCanEndTurn}
           state={state}
         />
         <NextButton
           actions={actions}
+          fade={fade}
           playerCanEndTurn={playerCanEndTurn}
           state={state}
         />
         <EndTurnButton
           actions={actions}
           canEndTurn={playerCanEndTurn}
+          fade={fade}
           state={state}
           subscribe={subscribe}
         />
@@ -581,7 +702,7 @@ export default function GameActions({
           className={containerStyle}
           style={!inlineUI ? insetStyle(inset) : undefined}
         >
-          <InfoButton actions={actions} bottom state={state} />
+          <InfoButton actions={actions} bottom fade={fade} state={state} />
         </div>
       )}
     </>
@@ -653,11 +774,9 @@ const endTurnButtonStyle = css`
   color: transparent;
   overflow: hidden;
   pointer-events: auto;
-  right: calc(${applyVar('inset')} + env(safe-area-inset-right));
   transition:
     width 300ms ease,
     color 75ms ease 0ms;
-  z-index: calc(${applyVar('inset-z')} + 2);
 `;
 
 const nextButtonStyle = css`
@@ -690,6 +809,14 @@ const expandStyle = css`
   ${Breakpoints.xs} {
     width: 320px;
   }
+`;
+
+const undoExpandStyle = css`
+  color: ${applyVar('text-color')};
+  transition:
+    width 300ms ease,
+    color 150ms ease 150ms;
+  width: 148px;
 `;
 
 const iconStyle = css`

@@ -6,6 +6,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import undo, { UndoType } from '@deities/hermes/game/undo.tsx';
 import { useCallback, useState } from 'react';
 
 const prepareMap = (map: MapData, userId: string) =>
@@ -28,7 +29,7 @@ export default function useClientGame(
 ): [
   game: ClientGame,
   setGame: (game: ClientGame) => void,
-  undoTurn: () => void,
+  undo: (type: UndoType) => void,
 ] {
   const [game, setGame] = useState<ClientGame>(() => {
     const state = prepareMap(map, userId);
@@ -37,25 +38,13 @@ export default function useClientGame(
       ended: false,
       lastAction,
       state,
-      turnState: [state, lastAction || { type: 'Start' }, effects],
+      turnState: [state, lastAction || { type: 'Start' }, effects, []],
     };
   });
 
   return [
     game,
     setGame,
-    useCallback(() => {
-      if (!game.turnState || !game.state.getCurrentPlayer().isHumanPlayer()) {
-        return;
-      }
-
-      const [state, lastAction, effects] = game.turnState;
-      setGame({
-        ...game,
-        effects,
-        lastAction,
-        state,
-      });
-    }, [game]),
+    useCallback((type: UndoType) => setGame(undo(game, type)), [game]),
   ];
 }

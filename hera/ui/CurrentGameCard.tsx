@@ -136,6 +136,7 @@ export default memo(function CurrentGameCard({
   actions,
   animations,
   currentViewer,
+  fade,
   gameInfoState,
   hide,
   hideIfNoCrystals,
@@ -151,6 +152,7 @@ export default memo(function CurrentGameCard({
 }: Omit<GameCardProps, OptionalFields> &
   Partial<Pick<GameCardProps, OptionalFields>> & {
     animations: Animations;
+    fade?: boolean;
     gameInfoState: GameInfoState | null;
     hide?: boolean;
     inlineUI: boolean;
@@ -199,9 +201,10 @@ export default memo(function CurrentGameCard({
   );
 
   const content = (
-    <div className={cx(maybeFade(hide), hasMessages && diabledStyle)}>
+    <div className={cx(maybeFade(hide), hasMessages && disabledStyle)}>
       <PrimaryExpandableMenuButton
         className={cx(canActivatePower && BorderRainbowAnimation)}
+        fade={fade}
         gap={16}
         inset={inlineUI ? 1 : inset}
         isExpanded={isExpanded}
@@ -247,7 +250,7 @@ const inlineContainerStyle = css`
   zoom: 0.333334;
 `;
 
-const diabledStyle = css`
+const disabledStyle = css`
   pointer-events: none;
 
   * {

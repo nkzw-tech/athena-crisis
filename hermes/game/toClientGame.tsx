@@ -17,7 +17,7 @@ export default function toClientGame(
   initialActiveMap: MapData,
   gameState: GameState,
   newEffects: Effects | null,
-  actionResponse?: ActionResponse | null,
+  actionResponse: ActionResponse,
 ): ClientGame {
   const map = game.state;
   const [lastActionResponse, activeMap] =
@@ -39,6 +39,7 @@ export default function toClientGame(
       actionResponse?.type === 'Start',
       ended,
       lastActionResponse || null,
+      [actionResponse, ...gameState.map(([actionResponse]) => actionResponse)],
     ),
   };
 }

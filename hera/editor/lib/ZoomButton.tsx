@@ -9,6 +9,7 @@ import { SetZoomFn } from '../hooks/useZoom.tsx';
 
 export default function ZoomButton({
   className,
+  fade,
   hide,
   max,
   position,
@@ -16,6 +17,7 @@ export default function ZoomButton({
   zoom,
 }: {
   className?: string;
+  fade?: boolean;
   hide: boolean;
   max: number;
   position: 'top' | 'auto';
@@ -32,6 +34,7 @@ export default function ZoomButton({
   return (
     <MenuButton
       className={cx(position === 'top' && topStyle, className)}
+      fade={fade}
       hide={hide}
       onClick={updateZoom}
     >

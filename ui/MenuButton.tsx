@@ -9,6 +9,7 @@ export default memo(function MenuButton({
   children,
   className,
   delay,
+  fade = true,
   hide,
   ref,
   ...props
@@ -17,6 +18,7 @@ export default memo(function MenuButton({
   children?: ReactNode;
   className?: string;
   delay?: boolean;
+  fade?: boolean;
   hide?: boolean;
   onClick?: (event: MouseEvent) => void;
   ref?: RefObject<HTMLDivElement | null>;
@@ -29,7 +31,7 @@ export default memo(function MenuButton({
         opacity: hide ? 0 : 1,
       }}
       className={cx(BoxStyle, buttonStyle, blur && blurStyle, className)}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: fade ? 0 : 1 }}
       ref={ref}
       transition={{
         delay: delay ? 0.25 : 0,
