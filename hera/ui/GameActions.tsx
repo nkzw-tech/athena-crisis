@@ -585,7 +585,7 @@ export default function GameActions({
   undo,
   zoom,
 }: StateWithActions & {
-  canUndoAction?: boolean;
+  canUndoAction: boolean;
   children?: ReactNode;
   fade?: boolean;
   hide?: boolean;

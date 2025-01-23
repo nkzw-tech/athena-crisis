@@ -35,6 +35,7 @@ import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
+import undo, { UndoType } from '@deities/hermes/game/undo.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -301,7 +302,7 @@ export default function MapEditor({
   );
 
   const [eventEmitter] = useState(() => new EventTarget());
-  const [internalMapID, setInternalMapID] = useState(0);
+  const [renderKey, setRenderKey] = useState(0);
   const [map, _setMap] = useState<MapData>(getInitialMap);
   const [tags, _setTags] = useState<ReadonlyArray<string>>(
     mapObject?.tags || [],
@@ -389,6 +390,15 @@ export default function MapEditor({
   const stateRef = useRef<State | null>(null);
   const actionsRef = useRef<Actions | null>(null);
   const [game, setGame] = useState<ClientGame | null>(null);
+  const onUndo = useCallback(
+    (type: UndoType) => {
+      if (game) {
+        setGame(undo(game, type));
+        setRenderKey((renderKey) => renderKey + 1);
+      }
+    },
+    [game],
+  );
   const [saveState, setSaveState] = useState<MapEditorSaveState | null>(null);
   const [tilted, setIsTilted] = useState(true);
   const [menuIsExpanded, setMenuIsExpanded] = useState(false);
@@ -420,9 +430,9 @@ export default function MapEditor({
           effects || editor.effects,
         ]);
       }
-      setInternalMapID(internalMapID + 1);
+      setRenderKey((renderKey) => renderKey + 1);
     },
-    [editor.effects, internalMapID],
+    [editor.effects],
   );
 
   const updatePreviousMap = useCallback(
@@ -470,17 +480,19 @@ export default function MapEditor({
       setIsPlayTesting(playTest);
       setMenuIsExpanded(false);
       setSaveState(null);
+      const { effects, lastAction } = prepareEffects(
+        editor.effects,
+        editor.mode === 'effects',
+        editor.scenario,
+      );
       setGame(
         playTest
           ? {
+              effects,
               ended: false,
+              lastAction,
               state: newMap,
-              turnState: null,
-              ...prepareEffects(
-                editor.effects,
-                editor.mode === 'effects',
-                editor.scenario,
-              ),
+              turnState: [newMap, lastAction || { type: 'Start' }, effects, []],
             }
           : null,
       );
@@ -877,7 +889,7 @@ export default function MapEditor({
     _setDrawerPosition('bottom');
   }
 
-  const delay = internalMapID === 0;
+  const fade = renderKey === 0;
   const hidden = useHide();
   if (isPlayTesting) {
     return (
@@ -893,7 +905,7 @@ export default function MapEditor({
         events={eventEmitter}
         fogStyle={fogStyle}
         inset={inset}
-        key="play-test-map"
+        key={`play-test-${renderKey}`}
         lastActionResponse={game?.lastAction || undefined}
         map={game?.state || map}
         mapName={mapName}
@@ -918,6 +930,7 @@ export default function MapEditor({
                 actions={actions}
                 animations={props.animations}
                 currentViewer={props.currentViewer}
+                fade={fade}
                 gameInfoState={props.gameInfoState}
                 hide={hidden}
                 inlineUI={props.inlineUI}
@@ -932,6 +945,7 @@ export default function MapEditor({
                   // Use `hidden` instead of `hide` as this button should be visible
                   // even if the game ended.
                   className={cx(togglePlaytestButtonStyle, maybeFade(hidden))}
+                  fade={fade}
                   style={insetStyle(inset)}
                   {...togglePlaytestProps()}
                 >
@@ -940,13 +954,21 @@ export default function MapEditor({
               </Portal>
               <GameActions
                 actions={actions}
+                canUndoAction
+                fade={fade}
                 hide={hide}
                 inset={inset}
                 setZoom={setZoom}
                 state={props}
+                undo={onUndo}
                 zoom={zoom}
               />
-              {children?.({ actions, delay, isPlayTesting, state: props })}
+              {children?.({
+                actions,
+                delay: fade,
+                isPlayTesting,
+                state: props,
+              })}
             </>
           );
         }}
@@ -961,7 +983,7 @@ export default function MapEditor({
       <Portal>
         <PrimaryExpandableMenuButton
           className={menuButtonStyle}
-          delay={hidden ? false : delay}
+          delay={hidden ? false : fade}
           hide={hidden}
           inset={inset}
           isExpanded={menuIsExpanded}
@@ -1088,11 +1110,11 @@ export default function MapEditor({
           effects={editor.effects}
           fogStyle={fogStyle}
           inset={inset}
-          key={`editor-map-${internalMapID}`}
+          key={`editor-map-${renderKey}`}
           map={map}
           playerDetails={playerDetails}
           scale={zoom}
-          scroll={internalMapID === 0}
+          scroll={renderKey === 0}
           setEditorState={setEditorState}
           style="floating"
           tilted={tiltStyle === 'on' && tilted}
@@ -1129,9 +1151,14 @@ export default function MapEditor({
                   tags={tags}
                   togglePlaytest={togglePlaytest}
                   user={user}
-                  visible={internalMapID !== 0}
+                  visible={!fade}
                 />
-                {children?.({ actions, delay, isPlayTesting, state: props })}
+                {children?.({
+                  actions,
+                  delay: fade,
+                  isPlayTesting,
+                  state: props,
+                })}
               </>
             );
           }}

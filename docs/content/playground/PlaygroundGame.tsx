@@ -29,7 +29,7 @@ export default function PlaygroundGame({
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: '-20% 0px 6% 0px' });
 
-  const [game, setGame] = useClientGame(
+  const [game, setGame, undo] = useClientGame(
     map,
     DemoViewer.id,
     metadata?.effects || new Map(),
@@ -65,8 +65,10 @@ export default function PlaygroundGame({
               <MapInfo hide={hide} {...props} />
               <GameActions
                 actions={actions}
+                canUndoAction
                 hide={hide}
                 state={props}
+                undo={undo}
                 zoom={zoom}
               />
             </>
