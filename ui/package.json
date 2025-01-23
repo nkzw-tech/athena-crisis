@@ -15,7 +15,7 @@
     "@deities/hephaestus": "workspace:*",
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
-    "@nkzw/joymap": "^3.0.0",
+    "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.2.0",
     "framer-motion": "^12.0.1",
     "howler": "^2.2.4",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^19.0.7",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3"
   }
 }
