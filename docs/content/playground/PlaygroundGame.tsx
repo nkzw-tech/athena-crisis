@@ -8,9 +8,10 @@ import useClientGamePlayerDetails from '@deities/hera/hooks/useClientGamePlayerD
 import GameActions from '@deities/hera/ui/GameActions.tsx';
 import DemoViewer from '@deities/hera/ui/lib/DemoViewer.tsx';
 import MapInfo from '@deities/hera/ui/MapInfo.tsx';
+import { UndoType } from '@deities/hermes/game/undo.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 prepareSprites();
 
@@ -25,6 +26,7 @@ export default function PlaygroundGame({
   map: MapData;
   metadata?: MapMetadata;
 }) {
+  const [renderKey, setRenderKey] = useState(0);
   const zoom = useScale();
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: '-20% 0px 6% 0px' });
@@ -37,13 +39,21 @@ export default function PlaygroundGame({
   );
   const onAction = useClientGameAction(game, setGame);
   const playerDetails = useClientGamePlayerDetails(game.state, DemoViewer);
+  const onUndo = useCallback(
+    (type: UndoType) => {
+      undo(type);
+      setRenderKey((renderKey) => renderKey + 1);
+    },
+    [undo],
+  );
+  const fade = renderKey === 0;
 
   return (
     <div ref={ref}>
       <GameMap
         currentUserId={DemoViewer.id}
         fogStyle="soft"
-        key="play-demo-map"
+        key={`play-demo-map-${renderKey}`}
         lastActionResponse={game.lastAction}
         map={game.state}
         margin="minimal"
@@ -66,9 +76,10 @@ export default function PlaygroundGame({
               <GameActions
                 actions={actions}
                 canUndoAction
+                fade={fade}
                 hide={hide}
                 state={props}
-                undo={undo}
+                undo={onUndo}
                 zoom={zoom}
               />
             </>

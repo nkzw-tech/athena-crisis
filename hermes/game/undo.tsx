@@ -11,7 +11,11 @@ export default function undo(game: ClientGame, type: UndoType): ClientGame {
   const [state, lastAction, effects, actions] = game.turnState;
   let newGame: ClientGame;
   if (type === 'Action' && actions?.length && actions.length > 1) {
-    const recentActions = actions.slice(0, actions.length - 1) || [];
+    let recentActions = [...actions];
+    while (recentActions.at(-1)?.[0][0].type === 'CompleteUnit') {
+      recentActions = recentActions.slice(0, recentActions.length - 1);
+    }
+    recentActions = recentActions.slice(0, recentActions.length - 1);
     let newState = state;
     let newLastAction = lastAction;
     let newEffects = effects;
