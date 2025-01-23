@@ -4,7 +4,6 @@
 /dist/
 /node_modules/
 /package-lock.json
-/yarn.lock
 ares/.enum_manifest.json
 ares/.src_manifest.json
 ares/**/__generated__
