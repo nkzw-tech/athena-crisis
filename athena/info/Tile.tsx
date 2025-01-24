@@ -660,6 +660,7 @@ export const DeepSea = new TileInfo(
   { fallback: Sea, isolated: true },
 );
 
+// Keep in sync with `getFloatingEdgeAnimation`.
 export const WaterfallModifiers = new Set([
   Modifier.RiverFlowsFromTop,
   Modifier.RiverFlowsFromBottom,
@@ -1570,12 +1571,21 @@ export const FloatingWaterEdge = new TileInfo(
   },
 );
 
-export const getFloatingEdgeAnimation = (modifier: Modifier, biome: Biome) => {
+const wallAreaAnimation = { ...SeaAnimation, offset: 1 };
+const areaAnimation = { ...SeaAnimation, offset: 2 };
+
+export function getFloatingEdgeAnimation(modifier: Modifier, biome: Biome) {
   if (biome === Biome.Spaceship) {
     return null;
   }
 
-  if (WaterfallModifiers.has(modifier)) {
+  // Keep in sync with `WaterfallModifiers`.
+  if (
+    modifier === Modifier.RiverFlowsFromTop ||
+    modifier === Modifier.RiverFlowsFromBottom ||
+    modifier === Modifier.RiverFlowsFromLeft ||
+    modifier === Modifier.RiverFlowsFromRight
+  ) {
     return WaterfallAnimation;
   }
 
@@ -1585,7 +1595,7 @@ export const getFloatingEdgeAnimation = (modifier: Modifier, biome: Biome) => {
     modifier === Modifier.LeftWallAreaDecorator ||
     modifier === Modifier.RightWallAreaDecorator
   ) {
-    return { ...SeaAnimation, offset: 1 };
+    return wallAreaAnimation;
   }
 
   if (
@@ -1594,11 +1604,11 @@ export const getFloatingEdgeAnimation = (modifier: Modifier, biome: Biome) => {
     modifier === Modifier.BottomLeftAreaDecorator ||
     modifier === Modifier.BottomRightAreaDecorator
   ) {
-    return { ...SeaAnimation, offset: 2 };
+    return areaAnimation;
   }
 
   return null;
-};
+}
 
 export type MaybeTileID = number | null | false;
 

@@ -12,7 +12,6 @@ import renderTile, { TileSet } from './renderTile.tsx';
 
 export default function renderFloatingTile(
   context: CanvasRenderingContext2D,
-  mainContext: CanvasRenderingContext2D,
   tileset: TileSet,
   map: MapData,
   vision: VisionT,
@@ -27,7 +26,6 @@ export default function renderFloatingTile(
     const targetX = vector.x * size;
     const targetY = vector.y * size;
     context.clearRect(targetX, targetY, size, size);
-    mainContext.clearRect(targetX, targetY, size, size);
   }
 
   const [modifier0, modifier1] = Array.isArray(modifier)

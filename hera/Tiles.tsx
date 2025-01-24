@@ -9,6 +9,7 @@ import {
 } from '@deities/athena/info/Tile.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getFloatingEdgeModifier from '@deities/athena/lib/getFloatingEdgeModifier.tsx';
+import indexToVector from '@deities/athena/lib/indexToVector.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -65,16 +66,6 @@ const sprites = {
   [Biome.Luna]: Tiles6,
 } as const;
 
-const createCanvas = (
-  mapSize: { height: number; width: number },
-  size: number,
-) => {
-  const canvas = document.createElement('canvas');
-  canvas.height = (mapSize.height + 2) * size;
-  canvas.width = (mapSize.width + 2) * size;
-  return canvas;
-};
-
 export default memo(function Tiles({
   map,
   paused,
@@ -91,22 +82,15 @@ export default memo(function Tiles({
   vision: VisionT;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const canvasRefs = useRef<Array<HTMLCanvasElement>>([]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const isVisible = useVisibilityState();
   const hasSprites = useSprites('all');
   const { biome } = map.config;
   const biomeStyle = getBiomeStyle(biome);
 
   useLayoutEffect(() => {
-    if (!hasSprites) {
+    if (!hasSprites || !canvasRef.current) {
       return;
-    }
-
-    if (!canvasRefs.current.length) {
-      canvasRefs.current = [
-        createCanvas(map.size, size),
-        createCanvas(map.size, size),
-      ];
     }
 
     const tileset = {
@@ -115,13 +99,11 @@ export default memo(function Tiles({
       tiles: sprites[biome],
     };
 
-    const [visibleCanvas, mainCanvas] = canvasRefs.current;
-    const context = visibleCanvas.getContext('2d')!;
-    const mainContext = mainCanvas.getContext('2d')!;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d')!;
     const currentTick = getTick();
 
-    context.clearRect(0, 0, visibleCanvas.width, visibleCanvas.height);
-    mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     map.forEachTile(
       (vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number) => {
@@ -153,7 +135,6 @@ export default memo(function Tiles({
             }
             renderFloatingTile(
               context,
-              mainContext,
               tileset,
               map,
               vision,
@@ -168,22 +149,14 @@ export default memo(function Tiles({
       }
     }
 
-    mainContext.drawImage(visibleCanvas, 0, 0);
-
     if (style === 'clip') {
-      clip(mainContext, size, map);
-    }
-
-    if (ref.current) {
-      ref.current.innerHTML = '';
-      if (!mainCanvas.parentNode) {
-        ref.current.append(mainCanvas);
-      }
+      clip(context, size, map);
     }
 
     if (!paused && isVisible) {
       return tick((tick) => {
-        map.forEachField((vector: Vector) => {
+        for (let i = 0; i < map.map.length; i++) {
+          const vector = indexToVector(i, map.size.width);
           const tile =
             map.buildings.get(vector)?.info === Shelter
               ? Campsite
@@ -199,8 +172,6 @@ export default memo(function Tiles({
             frame != null ||
             (layer1TileInfo?.sprite?.animation && !tile.sprite.animation);
           if (renderLayer0) {
-            mainContext.clearRect(vector.x * size, vector.y * size, size, size);
-            context.clearRect(vector.x * size, vector.y * size, size, size);
             renderTile(
               context,
               tileset,
@@ -233,12 +204,11 @@ export default memo(function Tiles({
               renderEntities,
             );
           }
-        });
+        }
 
         for (const [vector, modifier] of floatingTiles) {
           renderFloatingTile(
             context,
-            mainContext,
             tileset,
             map,
             vision,
@@ -251,9 +221,8 @@ export default memo(function Tiles({
           );
         }
 
-        mainContext.drawImage(visibleCanvas, 0, 0);
         if (style === 'clip') {
-          clip(mainContext, size, map);
+          clip(context, size, map);
         }
       });
     }
@@ -295,7 +264,13 @@ export default memo(function Tiles({
           position: 'absolute',
           top: -size,
         }}
-      />
+      >
+        <canvas
+          height={(map.size.height + 2) * size}
+          ref={canvasRef}
+          width={(map.size.width + 2) * size}
+        />
+      </div>
     </div>
   );
 });

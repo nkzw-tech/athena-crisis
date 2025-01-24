@@ -1,6 +1,6 @@
 import SpriteVector from '../map/SpriteVector.tsx';
 
-export default function indexToVector(
+export default function indexToSpriteVector(
   index: number,
   width: number,
 ): SpriteVector {
