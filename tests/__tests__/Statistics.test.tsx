@@ -9,7 +9,7 @@ import {
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import { Barracks, House } from '@deities/athena/info/Building.tsx';
+import { Barracks, House, HQ } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
@@ -350,6 +350,71 @@ test('collects statistics on captures and creating units', async () => {
       "captured": 1,
       "createdBuildings": 1,
       "createdUnits": 1,
+      "damage": 0,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 0,
+      "lostBuildings": 0,
+      "lostUnits": 0,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+});
+
+test('capturing a HQ will add each captured building to the statistics', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 3);
+  const vecC = vec(3, 3);
+  const initialMap = map.copy({
+    buildings: map.buildings
+      .set(vecA, HQ.create(player2))
+      .set(vecB, Barracks.create(player2))
+      .set(vecC, House.create(player2)),
+    units: map.units.set(vecA, Pioneer.create(player1).capture()),
+  });
+
+  const [gameState] = await executeGameActions(initialMap, [
+    CaptureAction(vecA),
+  ]);
+
+  const statsA = gameState.at(0)![1].getPlayer(player1.id).stats;
+  const statsB = gameState.at(1)![1].getPlayer(player1.id).stats;
+  const statsC = gameState.at(2)![1].getPlayer(player1.id).stats;
+  expect(statsA).toMatchInlineSnapshot(`
+    {
+      "captured": 1,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 0,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 0,
+      "lostBuildings": 0,
+      "lostUnits": 0,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+
+  expect(statsB).toMatchInlineSnapshot(`
+    {
+      "captured": 3,
+      "createdBuildings": 0,
+      "createdUnits": 0,
+      "damage": 0,
+      "destroyedBuildings": 0,
+      "destroyedUnits": 0,
+      "lostBuildings": 0,
+      "lostUnits": 0,
+      "oneShots": 0,
+      "rescuedUnits": 0,
+    }
+  `);
+
+  expect(statsC).toMatchInlineSnapshot(`
+    {
+      "captured": 3,
+      "createdBuildings": 0,
+      "createdUnits": 0,
       "damage": 0,
       "destroyedBuildings": 0,
       "destroyedUnits": 0,

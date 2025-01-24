@@ -269,10 +269,19 @@ export function applyObjectiveActionResponse(
     case 'CaptureGameOver': {
       const fromPlayer = map.getPlayer(actionResponse.fromPlayer);
       const toPlayer = map.getPlayer(actionResponse.toPlayer);
+      const captured = map.buildings.filter((building) =>
+        map.matchesPlayer(building, fromPlayer),
+      ).size;
       return updateCapture(
         removePlayer(
           map.copy({
             buildings: convertBuildings(map, fromPlayer, toPlayer.id),
+            teams: updatePlayer(
+              map.teams,
+              toPlayer.modifyStatistics({
+                captured,
+              }),
+            ),
             units: deleteUnits(map, fromPlayer),
           }),
           fromPlayer,
