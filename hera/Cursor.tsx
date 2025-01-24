@@ -1,9 +1,8 @@
 import Vector from '@deities/athena/map/Vector.tsx';
-import { CSSVariables } from '@deities/ui/cssVar.tsx';
-import { css, cx } from '@emotion/css';
+import syncAnimation from '@deities/ui/lib/syncAnimation.tsx';
+import { css, cx, keyframes } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
-import { memo, useCallback, useRef, useState } from 'react';
-import { useTick } from './lib/tick.tsx';
+import { memo, useState } from 'react';
 
 export default memo(function Cursor({
   color,
@@ -36,18 +35,10 @@ export default memo(function Cursor({
     );
   }
 
-  const ref = useRef<HTMLDivElement>(null);
-  useTick(
-    paused,
-    useCallback((tick: number) => {
-      ref.current?.style.setProperty(vars.set('tick'), String(tick % 4));
-    }, []),
-  );
-
   return (
     <div
       className={cx(baseStyle, color && colors[color])}
-      ref={ref}
+      ref={syncAnimation}
       style={{
         opacity: position ? 1 : 0,
         transform,
@@ -57,25 +48,28 @@ export default memo(function Cursor({
   );
 });
 
-const vars = new CSSVariables<'tick' | 'background-position-y' | 'size'>('c');
-
+const size = '26px';
 const baseStyle = css`
-  ${vars.set('background-position-y', 0)}
-  ${vars.set('size', '26px')}
-  ${vars.set('tick', 0)}
-
   background-image: url('${Sprites.Cursor}');
-  background-position: calc(${vars.apply('tick')} * ${vars.apply('size')} * -1)
-    ${vars.apply('background-position-y')};
-  height: ${vars.apply('size')};
+  background-position-y: 0;
+  height: ${size};
   pointer-events: none;
   position: absolute;
   transition: opacity 250ms ease-in-out;
-  width: ${vars.apply('size')};
+  width: ${size};
+
+  animation: ${keyframes`
+    0% {
+      background-position-x: 0;
+    }
+    100% {
+      background-position-x: -104px;
+    }
+  `} 720ms steps(4) infinite;
 `;
 
 const colors = {
   red: css`
-    ${vars.set('background-position-y', `calc(${vars.apply('size')} * -1)`)}
+    background-position-y: -${size};
   `,
 };
