@@ -4,10 +4,9 @@ import fbtCommon from '../i18n/Common.ts';
 import isOpenSource from './isOpenSource.tsx';
 
 const manifestFile = join(process.cwd(), './ares/.enum_manifest.json');
-
 const getEnumManifest = async () => {
   try {
-    return await import(manifestFile);
+    return await import(manifestFile, { with: { type: 'json' } });
   } catch {
     if (!isOpenSource()) {
       throw new Error('babelPresets: Missing enum manifest.');
