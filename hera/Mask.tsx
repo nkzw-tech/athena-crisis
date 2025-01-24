@@ -185,13 +185,16 @@ export default memo(function Mask({
   const onTouchEnd = useCallback(() => {
     if (lastVectors.current.length >= 2) {
       const lastVector = lastVectors.current.at(-1)!;
-      if (radius?.fields.has(lastVector) || attackable?.has(lastVector)) {
+      if (
+        !radius?.locked &&
+        (radius?.fields.has(lastVector) || attackable?.has(lastVector))
+      ) {
         select(lastVector);
       }
     }
 
     lastVectors.current = [];
-  }, [attackable, radius?.fields, select]);
+  }, [attackable, radius?.fields, radius?.locked, select]);
 
   return useMemo(() => {
     const defaultOffsets: Offsets = [0, 0, 0, 0, Priority.None];

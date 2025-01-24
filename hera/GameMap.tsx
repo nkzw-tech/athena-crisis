@@ -1658,7 +1658,9 @@ export default class GameMap extends Component<Props, State> {
     if (
       vector &&
       behavior?.type === 'move' &&
-      (vector === selectedPosition || radius?.fields.has(vector))
+      radius &&
+      !radius.locked &&
+      (vector === selectedPosition || radius.fields.has(vector))
     ) {
       event.preventDefault();
     }

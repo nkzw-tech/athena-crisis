@@ -261,21 +261,32 @@ export default class Move {
       confirmAction,
       currentViewer,
       map,
-      radius,
       selectedPosition,
       selectedUnit,
       vision,
     } = state;
 
-    if (currentViewer && radius && selectedPosition && selectedUnit) {
+    if (currentViewer && state.radius && selectedPosition && selectedUnit) {
+      let radius = state.radius;
       if (!isPlayable(map, currentViewer, selectedUnit)) {
         return selectFallback(vector, state, actions);
       }
 
       if (confirmAction) {
-        return confirmAction.position.equals(vector)
-          ? confirmAction.onAction(state)
-          : selectFallback(vector, state, actions);
+        if (confirmAction?.position.equals(vector)) {
+          return confirmAction.onAction(state);
+        } else {
+          const enterState = this.enter(vector, {
+            ...state,
+            radius: { ...radius, locked: false },
+          });
+
+          if (enterState?.radius) {
+            radius = enterState.radius;
+          } else {
+            return selectFallback(vector, state, actions);
+          }
+        }
       }
 
       if (attackable?.has(vector)) {
@@ -346,6 +357,7 @@ export default class Move {
           ...(!selectedUnit.isCapturing()
             ? {
                 behavior: new MenuBehavior(),
+                position: vector,
                 selectedPosition,
                 selectedUnit,
               }
@@ -425,6 +437,10 @@ export default class Move {
                   position: vector,
                   showComplete,
                 },
+                // Update `navigationDirection` and `position` if `confirmAction` was previously set but
+                // a different position was selected (See `enterState` above).
+                navigationDirection: null,
+                position: vector,
                 radius: {
                   ...radius,
                   locked: true,
