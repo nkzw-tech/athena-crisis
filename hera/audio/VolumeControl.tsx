@@ -11,7 +11,7 @@ import VolumeXIcon from '@deities/ui/icons/VolumeX.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
 import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 export default function VolumeControl({
   enableInputControls,
@@ -26,9 +26,18 @@ export default function VolumeControl({
   showPauseButton?: boolean;
   type?: AudioVolumeType;
 }) {
-  const [renderKey, setRenderKey] = useState(0);
   const [volume, _setVolume] = useState(() => AudioPlayer.getVolume(type));
+  const [isPaused, setPaused] = useState(AudioPlayer.isPaused());
   const timerRef = useRef<NativeTimeout>(null);
+
+  // eslint-disable-next-line react-compiler/react-compiler
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const audioPlayerIsPaused = AudioPlayer.isPaused();
+    if (isPaused != audioPlayerIsPaused) {
+      setPaused(audioPlayerIsPaused);
+    }
+  }, undefined);
 
   const setVolume = useCallback(
     (volume: number) => {
@@ -64,13 +73,13 @@ export default function VolumeControl({
   );
 
   return (
-    <div className={volumeControllerStyle} key={renderKey}>
+    <div className={volumeControllerStyle}>
       {showPauseButton && (
         <Icon
           button
           className={iconStyle}
           icon={
-            volume <= 0.01 || AudioPlayer.isPaused()
+            volume <= 0.01 || isPaused
               ? VolumeXIcon
               : volume <= 0.33
                 ? Volume1Icon
@@ -80,7 +89,7 @@ export default function VolumeControl({
           }
           onClick={() => {
             AudioPlayer.togglePause();
-            setRenderKey((key) => key + 1);
+            setPaused(() => AudioPlayer.isPaused());
           }}
         />
       )}
