@@ -27,7 +27,7 @@
     "@types/react": "^19.0.8",
     "dunkel-theme": "^1.7.1",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.0.1",
+    "framer-motion": "^12.0.3",
     "licht-theme": "^1.7.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
