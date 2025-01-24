@@ -3,17 +3,12 @@ import { Modifier } from '@deities/athena/lib/Modifier.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { isSafari } from '@deities/ui/Browser.tsx';
 import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
 import { memo } from 'react';
 import Tick from './Tick.tsx';
 
 const defaultPosition = vec(1, 1);
-
-// Add 0.1px to prevent a tiny gap between the tile and the decorator.
-// This washes out pixels completely in Safari, so we only do this in Chrome.
-const pixelGap = isSafari ? 0 : 0.1;
 
 export default memo(function TileDecorator({
   absolute,
@@ -55,8 +50,8 @@ export default memo(function TileDecorator({
         backgroundImage: `url('${Sprites.TileDecorators}')`,
         backgroundPositionX: -positionX * size + 'px',
         backgroundPositionY: decorator.animation
-          ? `calc(${Tick.vars.apply('tile-decorator')} * ${-size}px + ${pixelGap}px)`
-          : -positionY * size + pixelGap + 'px',
+          ? `calc(${Tick.vars.apply('tile-decorator')} * ${-size}px)`
+          : -positionY * size + 'px',
         height: size + 3 + 'px',
         opacity: dim ? 0.65 : 1,
         pointerEvents: 'none',

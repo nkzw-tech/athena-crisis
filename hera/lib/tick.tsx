@@ -4,8 +4,6 @@ import {
   WaterfallModifiers,
 } from '@deities/athena/info/Tile.tsx';
 import { AnimationSpeed } from '@deities/athena/map/Configuration.tsx';
-import useVisibilityState from '@nkzw/use-visibility-state';
-import { useEffect } from 'react';
 
 type TickFunction = (tick: number) => void;
 
@@ -45,25 +43,9 @@ export function getFrame(
     : null;
 }
 
-export function getIdleFrame(
-  info: { animation: TileAnimation | null },
-  tick: number,
-) {
-  return getFrame(info, null, tick);
-}
-
 export default function tick(fn: TickFunction) {
   listeners.add(fn);
   return () => {
     listeners.delete(fn);
   };
-}
-
-export function useTick(paused: boolean | undefined, fn: TickFunction) {
-  const isVisible = useVisibilityState();
-  useEffect(() => {
-    if (!paused && isVisible) {
-      return tick(fn);
-    }
-  }, [fn, isVisible, paused]);
 }
