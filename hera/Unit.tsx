@@ -1,5 +1,4 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import { spriteURL } from '@deities/art/Sprites.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { isSea, TileInfo } from '@deities/athena/info/Tile.tsx';
@@ -17,7 +16,6 @@ import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
-import { ChromeVersion, isChrome } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import syncAnimation from '@deities/ui/lib/syncAnimation.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -1023,18 +1021,6 @@ export default function UnitTile({
         ref={innerElementRef}
         style={innerStyle}
       />
-      {player > 0 && unit.isLeader() && (!isChrome || ChromeVersion >= 120) && (
-        <div
-          className={leaderStyle}
-          ref={syncAnimation}
-          style={{
-            animationPlayState: hide ? 'paused' : 'running',
-            maskImage: `url(${spriteURL(unitSprite, player)})`,
-            maskPosition: `${innerStyle.backgroundPositionX} ${innerStyle.backgroundPositionY}`,
-            opacity: hide ? 0 : 1,
-          }}
-        />
-      )}
       {unit.statusEffect ? <StatusEffect hide={hide} unit={unit} /> : null}
       {unit.shield ? (
         <Shield className={completedStyles} hide={hide} unit={unit} />
@@ -1152,42 +1138,6 @@ const baseUnitStyle = css`
 
 const shadowStyle = css`
   opacity: 0.5;
-`;
-
-const leaderStyle = css`
-  animation: ${keyframes`
-    0%, 100% {
-        opacity: 1;
-        background-position: bottom;
-    }
-    50% {
-        background-position: top;
-        opacity: 0.4;
-    }
-    55% {
-      opacity: 0
-    }
-    99% {
-      opacity: 0;
-    }
-  `} 5s infinite;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 45%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 255, 255, 0) 55%
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 200%;
-  bottom: 0;
-  left: -4px;
-  mask-repeat: no-repeat;
-  mask-size: auto;
-  position: absolute;
-  right: -4px;
-  top: -8px;
-  transform: ${scale};
-  transition: opacity 150ms ease-in-out;
 `;
 
 const maybeOutlineStyle = css`
