@@ -10,8 +10,8 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.734.0",
-    "@aws-sdk/s3-request-presigner": "^3.734.0",
+    "@aws-sdk/client-s3": "^3.735.0",
+    "@aws-sdk/s3-request-presigner": "^3.735.0",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/dionysus": "workspace:*",
@@ -57,10 +57,10 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-sso-oidc": "^3.734.0",
+    "@aws-sdk/client-sso-oidc": "^3.735.0",
     "@aws-sdk/client-sts": "^3.734.0",
     "@rollup/plugin-replace": "^6.0.2",
-    "@sentry/vite-plugin": "^3.0.0",
+    "@sentry/vite-plugin": "^3.1.0",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",

@@ -69,7 +69,7 @@
     "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "eslint-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.9",

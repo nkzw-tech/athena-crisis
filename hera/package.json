@@ -24,7 +24,7 @@
     "@nkzw/use-relative-time": "^1.1.0",
     "array-shuffle": "^3.0.0",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.0.3",
+    "framer-motion": "^12.0.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-fps": "^1.0.6"
