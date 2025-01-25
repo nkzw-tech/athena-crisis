@@ -1,6 +1,7 @@
 import Entity from '@deities/athena/map/Entity.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import getFirst from '@deities/hephaestus/getFirst.tsx';
+import useInput from '@deities/ui/controls/useInput.tsx';
 import { useCallback } from 'react';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
@@ -122,6 +123,8 @@ export default class Attack {
   }
 
   component = ({ actions, state }: StateWithActions) => {
+    const { position } = state;
+
     const onSelect = useCallback(
       (entity: Entity) => {
         const { selectedAttackable, selectedPosition, selectedUnit } = state;
@@ -138,6 +141,16 @@ export default class Attack {
       },
       [actions, state],
     );
+
+    const select = useCallback(() => {
+      if (position) {
+        actions.update(this.select(position, state, actions));
+      }
+    }, [actions, position, state]);
+
+    useInput('tertiary', select, 'menu');
+    useInput('gamepad:tertiary', select, 'menu');
+
     return (
       <>
         <AttackSelector
