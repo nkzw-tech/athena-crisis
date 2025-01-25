@@ -121,8 +121,6 @@ const keydownListener = (event: KeyboardEvent) => {
     }
   } else if (!isRepeat && code === 'Escape') {
     Input.fire('cancel', { isEscape: true });
-  } else if (!isRepeat && code === 'KeyI') {
-    Input.fire('field-info');
   } else if (code === 'KeyP') {
     if (isMeta) {
       event.preventDefault();
@@ -139,6 +137,8 @@ const keydownListener = (event: KeyboardEvent) => {
       Input.fire('detail');
     } else if (code === 'KeyA') {
       Input.fire('keyboard:tertiary');
+    } else if (code === 'KeyI') {
+      Input.fire('field-info');
     }
   }
 };
