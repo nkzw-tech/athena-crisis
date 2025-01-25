@@ -3,10 +3,20 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { State } from '../../Types.tsx';
 
-type AttackableEntities = {
-  building: Building | null;
-  unit: Unit | null;
-};
+type AttackableEntities =
+  | Readonly<{
+      building: Building;
+      unit: Unit;
+    }>
+  | {
+      building: Building;
+      unit?: null;
+    }
+  | {
+      building?: null;
+      unit: Unit;
+    }
+  | null;
 
 export default function getAttackableEntities(
   vector: Vector,
@@ -19,22 +29,28 @@ export default function getAttackableEntities(
     attackable.has(vector) &&
     vision.isVisible(map, vector)
   ) {
-    const unit = map.units.get(vector);
-    const building = map.buildings.get(vector);
-    return {
-      building:
-        building &&
-        map.isOpponent(building, selectedUnit) &&
-        selectedUnit.getAttackWeapon(building)
-          ? building
-          : null,
-      unit:
-        unit &&
-        map.isOpponent(unit, selectedUnit) &&
-        selectedUnit.getAttackWeapon(unit)
-          ? unit
-          : null,
-    };
+    const targetUnit = map.units.get(vector);
+    const targetBuilding = map.buildings.get(vector);
+    const building =
+      targetBuilding &&
+      map.isOpponent(targetBuilding, selectedUnit) &&
+      selectedUnit.getAttackWeapon(targetBuilding)
+        ? targetBuilding
+        : null;
+    const unit =
+      targetUnit &&
+      map.isOpponent(targetUnit, selectedUnit) &&
+      selectedUnit.getAttackWeapon(targetUnit)
+        ? targetUnit
+        : null;
+
+    return building && unit
+      ? { building, unit }
+      : building
+        ? { building }
+        : unit
+          ? { unit }
+          : null;
   }
-  return { building: null, unit: null };
+  return null;
 }

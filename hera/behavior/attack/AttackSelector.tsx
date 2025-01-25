@@ -58,27 +58,27 @@ export default function AttackSelector({
         return getAttackableEntities(position, state);
       }
     }
-    return { building: null, unit: null };
+    return null;
   }, [position, selectedAttackable, selectedPosition, selectedUnit, state]);
 
   const selectBuilding = useCallback(() => {
-    if (entities.building) {
+    if (entities?.building) {
       onSelect(entities.building);
     }
-  }, [entities.building, onSelect]);
+  }, [entities, onSelect]);
 
   const selectUnit = useCallback(() => {
-    if (entities.unit) {
+    if (entities?.unit) {
       onSelect(entities.unit);
     }
-  }, [entities.unit, onSelect]);
+  }, [entities, onSelect]);
 
   if (!selectedPosition || !selectedUnit) {
     return null;
   }
 
   if (selectedAttackable) {
-    if (entities.unit && entities.building) {
+    if (entities?.unit && entities.building) {
       return (
         <EntityPickerFlyout
           animationConfig={animationConfig}
@@ -98,7 +98,7 @@ export default function AttackSelector({
       );
     }
   } else if (position) {
-    if (entities.building || entities.unit) {
+    if (entities) {
       const isShortRange = selectedUnit.info.isShortRange();
       const targetPosition = origin || selectedPosition;
       const futureMap =

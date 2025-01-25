@@ -22,53 +22,51 @@ export default class Attack {
   ): StateLike | null {
     const entities = getAttackableEntities(vector, state);
     const { attackable, radius, selectedUnit } = state;
-    if (attackable && radius) {
+    if (attackable && radius && entities) {
       const entityB = entities.unit || entities.building;
-      if (entityB) {
-        const onAction = (state: State) => {
-          if (entities.unit && entities.building) {
-            return {
-              attackable: new Map([[vector, attackable.get(vector)!]]),
-              confirmAction: null,
-              radius: {
-                ...radius,
-                fields: new Map([[vector, radius.fields.get(vector)!]]),
-              },
-              selectedAttackable: vector,
-              showCursor: false,
-            };
-          } else if (entityB && selectedUnit?.getAttackWeapon(entityB)) {
-            const { selectedPosition, selectedUnit } = state;
-            if (selectedPosition && selectedUnit) {
-              requestAnimationFrame(() =>
-                attackAction(
-                  actions,
-                  selectedPosition,
-                  selectedUnit,
-                  vector,
-                  entityB,
-                  state,
-                ),
-              );
-            }
+      const onAction = (state: State) => {
+        if (entities.unit && entities.building) {
+          return {
+            attackable: new Map([[vector, attackable.get(vector)!]]),
+            confirmAction: null,
+            radius: {
+              ...radius,
+              fields: new Map([[vector, radius.fields.get(vector)!]]),
+            },
+            selectedAttackable: vector,
+            showCursor: false,
+          };
+        } else if (entityB && selectedUnit?.getAttackWeapon(entityB)) {
+          const { selectedPosition, selectedUnit } = state;
+          if (selectedPosition && selectedUnit) {
+            requestAnimationFrame(() =>
+              attackAction(
+                actions,
+                selectedPosition,
+                selectedUnit,
+                vector,
+                entityB,
+                state,
+              ),
+            );
           }
-          return { confirmAction: null };
-        };
+        }
+        return { confirmAction: null };
+      };
 
-        return shouldConfirm
-          ? {
-              confirmAction: {
-                icon: 'attack',
-                onAction,
-                position: vector,
-              },
-              radius: {
-                ...radius,
-                locked: true,
-              },
-            }
-          : onAction(state);
-      }
+      return shouldConfirm
+        ? {
+            confirmAction: {
+              icon: 'attack',
+              onAction,
+              position: vector,
+            },
+            radius: {
+              ...radius,
+              locked: true,
+            },
+          }
+        : onAction(state);
     }
 
     return null;

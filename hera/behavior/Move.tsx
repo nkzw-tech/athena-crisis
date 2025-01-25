@@ -300,7 +300,6 @@ export default class Move {
         );
         const moveToField = field || (parent ? RadiusItem(parent) : null);
         const entities = getAttackableEntities(vector, state);
-
         if (moveToField && parent && entities) {
           const onAction = (state: State) => {
             const entity = entities.unit || entities.building;
@@ -320,7 +319,7 @@ export default class Move {
                 selectedAttackable: vector,
                 showCursor: false,
               };
-            } else if (entity && selectedUnit.getAttackWeapon(entity)) {
+            } else if (selectedUnit.getAttackWeapon(entity)) {
               requestAnimationFrame(() =>
                 moveAndAttack(
                   actions,
@@ -328,7 +327,7 @@ export default class Move {
                   parent,
                   vector,
                   path,
-                  (entities.unit || entities.building)!,
+                  entity,
                   radius.fields,
                   state,
                 ),
