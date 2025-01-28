@@ -51,7 +51,7 @@
     "resend": "4.1.1",
     "socket.io": "^4.8.1",
     "strip-ansi": "^7.1.0",
-    "stripe": "^17.5.0",
+    "stripe": "^17.6.0",
     "ua-parser-js": "2.0.0",
     "utf-8-validate": "^6.0.5",
     "web-push": "^3.6.7"
@@ -65,7 +65,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/glob": "^8.1.0",
-    "@types/json-stable-stringify": "^1.1.0",
+    "@types/json-stable-stringify": "^1.2.0",
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
     "@types/web-push": "^3.6.4",

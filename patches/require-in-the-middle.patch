@@ -1,14 +1,117 @@
 diff --git a/index.js b/index.js
-index dfeea3814d61f496ce40f39ca9b89c3ff7fcacd1..6b13d89612bfb1fd3b86b195e4a3407661755789 100644
+index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b3011d838 100644
 --- a/index.js
 +++ b/index.js
-@@ -103,6 +103,9 @@ class ExportsCache {
+@@ -3,7 +3,6 @@
+ const path = require('path')
+ const Module = require('module')
+ const debug = require('debug')('require-in-the-middle')
+-const moduleDetailsFromPath = require('module-details-from-path')
+ 
+ // Using the default export is discouraged, but kept for backward compatibility.
+ // Use this instead:
+@@ -34,46 +33,12 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
+ 
+     return builtinModules.has(moduleName)
+   }
+-} else {
+-  const _resolve = require('resolve')
+-  const [major, minor] = process.versions.node.split('.').map(Number)
+-  if (major === 8 && minor < 8) {
+-    // For node versions `[8.0, 8.8)` the "http2" module was built-in but
+-    // behind the `--expose-http2` flag. `resolve` only considers unflagged
+-    // modules to be core: https://github.com/browserify/resolve/issues/139
+-    // However, for `ExportsCache` to work for "http2" we need it to be
+-    // considered core.
+-    isCore = moduleName => {
+-      if (moduleName === 'http2') {
+-        return true
+-      }
+-      // Prefer `resolve.core` lookup to `resolve.isCore(moduleName)` because
+-      // the latter is doing version range matches for every call.
+-      return !!_resolve.core[moduleName]
+-    }
+-  } else {
+-    isCore = moduleName => {
+-      // Prefer `resolve.core` lookup to `resolve.isCore(moduleName)` because
+-      // the latter is doing version range matches for every call.
+-      return !!_resolve.core[moduleName]
+-    }
+-  }
+ }
+ 
+ // Feature detection: This property was added in Node.js 8.9.0, the same time
+ // as the `paths` options argument was added to the `require.resolve` function,
+ // which is the one we want
+-let resolve
+-if (require.resolve.paths) {
+-  resolve = function (moduleName, basedir) {
+-    return require.resolve(moduleName, { paths: [basedir] })
+-  }
+-} else {
+-  const _resolve = require('resolve')
+-  resolve = function (moduleName, basedir) {
+-    return _resolve.sync(moduleName, { basedir })
+-  }
+-}
++const resolve = function (moduleName, basedir) {}
+ 
+ // 'foo/bar.js' or 'foo/bar/index.js' => 'foo/bar'
+ const normalize = /([/\\]index)?(\.js)?$/
+@@ -132,6 +97,9 @@ class ExportsCache {
  
  function Hook (modules, options, onrequire) {
    if ((this instanceof Hook) === false) return new Hook(modules, options, onrequire)
-+
++  
 +  return
 +
    if (typeof modules === 'function') {
      onrequire = modules
      modules = null
+@@ -267,7 +235,7 @@ function Hook (modules, options, onrequire) {
+       moduleName = parsedPath.name
+       basedir = parsedPath.dir
+     } else {
+-      const stat = moduleDetailsFromPath(filename)
++      const stat = undefined;
+       if (stat === undefined) {
+         debug('could not parse filename: %s', filename)
+         return exports // abort if filename could not be parsed
+@@ -346,22 +314,6 @@ function Hook (modules, options, onrequire) {
+ 
+ Hook.prototype.unhook = function () {
+   this._unhooked = true
+-
+-  if (this._require === Module.prototype.require) {
+-    Module.prototype.require = this._origRequire
+-    debug('require unhook successful')
+-  } else {
+-    debug('require unhook unsuccessful')
+-  }
+-
+-  if (process.getBuiltinModule !== undefined) {
+-    if (this._getBuiltinModule === process.getBuiltinModule) {
+-      process.getBuiltinModule = this._origGetBuiltinModule
+-      debug('process.getBuiltinModule unhook successful')
+-    } else {
+-      debug('process.getBuiltinModule unhook unsuccessful')
+-    }
+-  }
+ }
+ 
+ function resolveModuleName (stat) {
+diff --git a/package.json b/package.json
+index 738dd06d6779a31bfb6eb5a8bdffdb3b5354a935..1cce247af143bd1c1d10bbed56e2338aa3512767 100644
+--- a/package.json
++++ b/package.json
+@@ -5,9 +5,7 @@
+   "main": "index.js",
+   "types": "types/index.d.ts",
+   "dependencies": {
+-    "debug": "^4.3.5",
+-    "module-details-from-path": "^1.0.3",
+-    "resolve": "^1.22.8"
++    "debug": "^4.3.5"
+   },
+   "devDependencies": {
+     "@babel/core": "^7.9.0",
