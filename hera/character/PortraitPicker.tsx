@@ -11,7 +11,7 @@ import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useColumns from '../editor/hooks/useColumns.tsx';
 import useGridNavigation from '../hooks/useGridNavigation.tsx';
 import navigate from '../lib/navigate.tsx';
@@ -25,36 +25,36 @@ export type CharacterImage = Readonly<{
 }>;
 
 const PortraitItem = ({
-  character,
   color,
   onSelect,
+  selected,
   unit,
   variant,
 }: {
-  character: CharacterImage;
   color: PlayerID;
   onSelect: (character: CharacterImage) => void;
+  selected: boolean;
   unit: UnitInfo;
   variant: number;
 }) => {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const isSelected =
-    unit.id === character.unitId && variant === character.variant;
+  const [rendered, setHasRendered] = useState(false);
+  useEffect(() => {
+    setHasRendered(true);
+  }, []);
 
-  useScrollIntoView(ref, isSelected);
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  useScrollIntoView(ref, rendered && selected);
 
   return (
     <a
-      className={cx(
-        SquareButtonStyle,
-        isSelected ? selectedPortraitStyle : null,
-      )}
+      className={cx(SquareButtonStyle, selected ? selectedPortraitStyle : null)}
       onClick={() => onSelect({ color, unitId: unit.id, variant })}
       ref={ref}
     >
       <Portrait
         animate
-        clip={!isSelected}
+        clip={!selected}
         player={color}
         unit={unit}
         variant={variant}
@@ -66,7 +66,7 @@ const PortraitItem = ({
 export default memo(function PortraitPicker({
   center,
   character,
-  onSelect,
+  onSelect: select,
   portraits: initialPortraits,
 }: {
   center?: true;
@@ -74,6 +74,8 @@ export default memo(function PortraitPicker({
   onSelect: (character: CharacterImage) => void;
   portraits: ReadonlySet<UnitInfo>;
 }) {
+  const [initialCharacter, setInitialCharacter] =
+    useState<CharacterImage | null>(character);
   const color = PlayerIDs.includes(character.color as PlayerID)
     ? (character.color as PlayerID)
     : 1;
@@ -86,6 +88,14 @@ export default memo(function PortraitPicker({
         ([0, 1, 2] as const).map((variant) => [unit, variant] as const),
       ),
     [initialPortraits],
+  );
+
+  const onSelect = useCallback(
+    (character: CharacterImage) => {
+      setInitialCharacter(null);
+      select(character);
+    },
+    [select],
   );
 
   useInput(
@@ -159,10 +169,14 @@ export default memo(function PortraitPicker({
       <Stack center={center} gap ref={setRef} start={center ? undefined : true}>
         {portraits.map(([unit, variant]) => (
           <PortraitItem
-            character={character}
             color={color}
             key={`${unit.id}-${variant}`}
             onSelect={onSelect}
+            selected={
+              !initialCharacter &&
+              unit.id === character.unitId &&
+              variant === character.variant
+            }
             unit={unit}
             variant={variant}
           />
