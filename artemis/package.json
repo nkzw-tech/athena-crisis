@@ -40,6 +40,7 @@
     "discord.js": "^14.17.3",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "googleapis": "^144.0.0",
     "graphql": "^16.10.0",
     "graphql-helix": "^1.13.0",
     "ioredis": "^5.4.2",
