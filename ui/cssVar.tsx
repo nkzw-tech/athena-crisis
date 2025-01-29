@@ -36,6 +36,7 @@ type GlobalCSSVariableName =
   | 'transform-origin'
   | 'ui-is-scaled'
   | 'ui-scale'
+  | 'safe-area-top'
   // Map Editor insets
   | 'inset'
   | 'inset-z'

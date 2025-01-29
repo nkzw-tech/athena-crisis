@@ -91,12 +91,12 @@ const bottomStyle = css`
 
 const topStyle = css`
   margin: 0 auto;
-  top: calc(env(safe-area-inset-top) + ${applyVar('inset')});
+  top: calc(${applyVar('safe-area-top')} + ${applyVar('inset')});
 `;
 
 const topRightStyle = css`
   right: ${applyVar('inset')};
-  top: calc(env(safe-area-inset-top) + ${applyVar('inset')});
+  top: calc(${applyVar('safe-area-top')} + ${applyVar('inset')});
 `;
 
 const boxStyle = css`

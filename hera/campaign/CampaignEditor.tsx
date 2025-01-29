@@ -16,7 +16,7 @@ import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
 import validateCampaign from '@deities/hermes/validateCampaign.tsx';
 import { App } from '@deities/ui/App.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
-import { isIOS } from '@deities/ui/Browser.tsx';
+import { isAndroid, isIOS } from '@deities/ui/Browser.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Dialog, { DialogScrollContainer } from '@deities/ui/Dialog.tsx';
@@ -282,7 +282,7 @@ export default function CampaignEditor({
     (mapId: string, mode?: EditorMode, scenario?: Scenario) => {
       const node = maps.get(mapId);
       if (node) {
-        if (isIOS) {
+        if (isIOS || isAndroid) {
           navigate(getMapRoute(node.slug, 'edit'));
           return;
         }
@@ -702,7 +702,7 @@ const lightColorStyle = css`
 
 const mapCreateButtonStyle = css`
   right: ${TileSize * 3}px;
-  top: env(safe-area-inset-top);
+  top: ${applyVar('safe-area-top')};
 `;
 
 const dialogueButtonStyle = css`
@@ -710,7 +710,7 @@ const dialogueButtonStyle = css`
   display: inline-flex;
   justify-content: center;
   right: ${TileSize * 6}px;
-  top: env(safe-area-inset-top);
+  top: ${applyVar('safe-area-top')};
 
   > svg {
     height: 40px;

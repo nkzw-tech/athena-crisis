@@ -2,7 +2,7 @@ import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import { CSSVariables } from '@deities/ui/cssVar.tsx';
+import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Portal from '@deities/ui/Portal.tsx';
@@ -204,7 +204,7 @@ const containerStyle = css`
   z-index: 3001;
 
   inset: 0;
-  top: env(safe-area-inset-top);
+  top: ${applyVar('safe-area-top')};
   bottom: env(safe-area-inset-bottom);
 `;
 

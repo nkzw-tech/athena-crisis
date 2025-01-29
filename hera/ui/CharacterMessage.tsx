@@ -4,7 +4,7 @@ import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints, { lg, sm } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import cssVar, { CSSVariables } from '@deities/ui/cssVar.tsx';
+import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { MenuClassName } from '@deities/ui/Menu.tsx';
@@ -321,7 +321,7 @@ const containerStyle = css`
   z-index: 3001;
   inset: 0;
 
-  top: env(safe-area-inset-top);
+  top: ${applyVar('safe-area-top')};
   bottom: env(safe-area-inset-bottom);
 `;
 

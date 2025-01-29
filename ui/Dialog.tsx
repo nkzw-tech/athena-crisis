@@ -294,7 +294,7 @@ const containerStyle = css`
   bottom: ${DoubleSize}px;
   pointer-events: all;
   position: fixed;
-  top: calc(env(safe-area-inset-top) + ${DoubleSize * 2.2}px);
+  top: calc(${applyVar('safe-area-top')} + ${DoubleSize * 2.2}px);
   transform: ${isSafari ? '' : `scale(${applyVar('ui-scale')})`};
   transition: transform 300ms ease;
   width: 93vw;
@@ -333,7 +333,7 @@ const sizes = {
     ${Breakpoints.sm} {
       height: min(480px, 46vh);
       top: calc(
-        env(safe-area-inset-top) +
+        ${applyVar('safe-area-top')} +
           max(${DoubleSize * 2.2}px, calc(50vh - max(20vh, 210px)))
       );
       width: min(90vw, 600px);

@@ -47,7 +47,7 @@ export default function ZoomButton({
 
 const topStyle = css`
   right: env(safe-area-inset-right);
-  top: env(safe-area-inset-top);
+  top: ${applyVar('safe-area-top')};
 `;
 
 const zoomContainerStyle = css`

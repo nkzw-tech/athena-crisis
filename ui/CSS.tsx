@@ -1,8 +1,9 @@
+import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { injectGlobal } from '@emotion/css';
 import Background from './assets/Background.png';
 import Breakpoints from './Breakpoints.tsx';
-import { isLinux } from './Browser.tsx';
-import { applyVar, initializeCSSVariables } from './cssVar.tsx';
+import { isAndroid, isLinux } from './Browser.tsx';
+import cssVar, { applyVar, initializeCSSVariables } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import pixelBorder from './pixelBorder.tsx';
 
@@ -124,7 +125,7 @@ input[type="checkbox"] {
   &:not(.disabled):active {
     transform: scale(0.9);
   }
-  
+
   &:before {
     color: rgba(0, 0, 0, 0);
     content: 'X';
@@ -179,11 +180,11 @@ label.focus {
 button {
   cursor: pointer;
   width: fit-content;
-  
+
   &:hover, &:focus, &:active {
     color: ${getColor('pink')};
   }
-  
+
   &:active {
     margin-top: 6px;
     margin-bottom: 2px;
@@ -320,9 +321,17 @@ body .all-fonts {
   font-family: Athena, PressStart2P, MadouFutoMaru, ui-sans-serif, system-ui, sans-serif;
 }
 
+:root {
+  ${cssVar('safe-area-top', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-top)')}
+}
+
 @media (orientation: portrait) {
+  :root {
+    ${cssVar('safe-area-top', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-top)')}
+  }
+
   body {
-    margin-top: env(safe-area-inset-top);
+    margin-top: ${applyVar('safe-area-top')};
   }
 }
 
