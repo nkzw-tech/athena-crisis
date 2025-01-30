@@ -342,7 +342,11 @@ export default function MapPerformanceMetrics({
       >
         <Box className={cx(fullStyle, mapPerformanceStyle)} vertical>
           {mapName && (
-            <Stack center className={headlineStyle}>
+            <Stack
+              center
+              className={headlineStyle}
+              onClick={hide ? () => setHide(false) : undefined}
+            >
               <h2
                 className={ellipsis}
                 style={{ color: getColor(getTagColor(mapName)) }}
