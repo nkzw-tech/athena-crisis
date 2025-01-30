@@ -45,6 +45,7 @@ type GlobalCSSVariableName =
   | 'background-color-bright'
   | 'background-color-dark'
   | 'background-color-light'
+  | 'background-color-light7'
   | 'background-color-light9'
   | 'background-color'
   | 'border-color-light'
@@ -112,6 +113,7 @@ ${cssVar('background-color-active', '#a7c2f5')}
 ${cssVar('background-color-bright', '#ffffff')}
 ${cssVar('background-color-dark', 'rgba(40, 40, 40, 1)')}
 ${cssVar('background-color-light', 'rgba(255, 255, 255, 0.8)')}
+${cssVar('background-color-light7', 'rgba(255, 255, 255, 0.7)')}
 ${cssVar('background-color-light9', 'rgba(255, 255, 255, 0.9)')}
 ${cssVar('background-color', '#f2f2f2')}
 ${cssVar('border-color-light', 'rgba(0, 0, 0, 0.2)')}
@@ -145,6 +147,7 @@ ${cssVar('background-color-active', '#596884')}
 ${cssVar('background-color-bright', '#121212')}
 ${cssVar('background-color-dark', '#d7d7d7')}
 ${cssVar('background-color-light', 'rgba(50, 50, 50, 0.8)')}
+${cssVar('background-color-light7', 'rgba(50, 50, 50, 0.7)')}
 ${cssVar('background-color-light9', 'rgba(50, 50, 50, 0.9)')}
 ${cssVar('background-color', '#28282b')}
 

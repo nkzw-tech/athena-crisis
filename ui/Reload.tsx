@@ -1,7 +1,6 @@
-import { css, cx } from '@emotion/css';
 import { useMemo } from 'react';
 import { hasGamepad } from './controls/setupGamePad.tsx';
-import { useInlineLink } from './InlineLink.tsx';
+import InlineLink, { useInlineLink } from './InlineLink.tsx';
 
 const _reload = () => location.reload();
 
@@ -17,19 +16,11 @@ export default function Reload({ reload = _reload }: { reload?: () => void }) {
       ) : (
         <fbt desc="Reload description">
           Tap here to{' '}
-          <a
-            className={cx(className, inlineDisplayStyle)}
-            onClick={reload}
-            {...linkProps}
-          >
+          <InlineLink inline onClick={reload} {...linkProps}>
             reload the game
-          </a>.
+          </InlineLink>.
         </fbt>
       )}
     </>
   );
 }
-
-const inlineDisplayStyle = css`
-  display: inline;
-`;

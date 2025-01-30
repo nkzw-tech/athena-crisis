@@ -27,6 +27,7 @@ type InlineLinkProps = Readonly<{
   className?: string;
   gap?: Gap;
   hover?: boolean;
+  inline?: true;
   onClick?: (event?: MouseEvent) => void;
   pixelBorderSize?: number;
   ref?: RefCallback<HTMLAnchorElement> | RefObject<HTMLAnchorElement | null>;
@@ -42,6 +43,7 @@ export const useInlineLink = ({
   className: initialClassName,
   gap: _gap,
   hover,
+  inline,
   pixelBorderSize,
   selected,
   selectedText,
@@ -59,8 +61,17 @@ export const useInlineLink = ({
         selectedText && 'selected-text',
         active && 'active',
         alignCenter && alignCenterStyle,
+        inline && inlineStyle,
       ),
-    [active, alignCenter, hover, initialClassName, selected, selectedText],
+    [
+      active,
+      alignCenter,
+      hover,
+      initialClassName,
+      inline,
+      selected,
+      selectedText,
+    ],
   );
   const gap = _gap === true ? defaultGap : _gap;
 
@@ -215,6 +226,10 @@ const linkStyle = css`
 
 const alignCenterStyle = css`
   align-items: center;
+`;
+
+const inlineStyle = css`
+  display: inline;
 `;
 
 export const KeyboardShortcut = ({
