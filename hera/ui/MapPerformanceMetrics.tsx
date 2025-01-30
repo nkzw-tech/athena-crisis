@@ -1,3 +1,4 @@
+import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   evaluatePlayerPerformance,
@@ -13,6 +14,7 @@ import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
+import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -21,6 +23,7 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
+import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
@@ -339,20 +342,22 @@ export default function MapPerformanceMetrics({
       >
         <Box className={cx(fullStyle, mapPerformanceStyle)} vertical>
           {mapName && (
-            <Stack center>
-              <h2 style={{ color: getColor(getTagColor(mapName)) }}>
+            <Stack center className={headlineStyle}>
+              <h2
+                className={ellipsis}
+                style={{ color: getColor(getTagColor(mapName)) }}
+              >
                 {getMapName(mapName)}
               </h2>
             </Stack>
           )}
           {hide ? (
-            <>
-              <Stack alignCenter center className={fadeStyle}>
-                <InlineLink onClick={() => setHide(false)}>
-                  <fbt desc="Button to show a stats dialog">Show Stats</fbt>
-                </InlineLink>
-              </Stack>
-            </>
+            <InlineLink
+              className={cx(fadeStyle, buttonStyle)}
+              onClick={() => setHide(false)}
+            >
+              <Icon icon={ChevronUp} />
+            </InlineLink>
           ) : (
             <>
               <AnimatePresence>
@@ -369,7 +374,7 @@ export default function MapPerformanceMetrics({
                   <InlineLink
                     className={cx(
                       fadeStyle,
-                      hideButtonStyle,
+                      buttonStyle,
                       hasPreviousResult && !wasHidden && delayHideButtonStyle,
                     )}
                     onClick={() => {
@@ -416,17 +421,19 @@ export default function MapPerformanceMetrics({
   );
 }
 
-const vars = new CSSVariables<'results'>('mp');
+const vars = new CSSVariables<'results' | 'width'>('mp');
 
 const wrapperStyle = css`
+  ${vars.set('width', 'min(90%, 480px)')}
+
   backdrop-filter: blur(4px);
   bottom: 45%;
   min-height: 192px;
   position: fixed;
   top: 35%;
 
-  left: calc(50% - 240px);
-  width: 480px;
+  left: calc(50% - ${vars.apply('width')} / 2);
+  width: ${vars.apply('width')};
   zoom: 0.8;
   ${Breakpoints.sm} {
     zoom: 1;
@@ -450,6 +457,17 @@ const mapPerformanceStyle = css`
   ${pixelBorder(applyVar('border-color-light'))}
 
   overflow: hidden;
+  padding: 12px;
+  min-height: 44px;
+`;
+
+const headlineStyle = css`
+  margin: 0 ${TileSize / 2}px 0 ${TileSize * 1.5}px;
+  max-width: 86%;
+
+  ${Breakpoints.sm} {
+    max-width: 90%;
+  }
 `;
 
 const fullStyle = css`
@@ -458,15 +476,27 @@ const fullStyle = css`
 `;
 
 const innerStyle = css`
-  padding: 48px;
+  padding: ${TileSize}px;
+
+  ${Breakpoints.sm} {
+    padding: ${DoubleSize}px;
+  }
 `;
 
 const summaryInnerStyle = css`
-  padding: 48px 32px 48px 48px;
+  padding: ${DoubleSize}px ${TileSize}px ${DoubleSize}px ${TileSize}px;
+
+  ${Breakpoints.sm} {
+    padding: ${DoubleSize}px 32px ${DoubleSize}px ${DoubleSize}px;
+  }
 `;
 
 const textStyle = css`
-  font-size: 1.4em;
+  font-size: 1.2em;
+
+  ${Breakpoints.sm} {
+    font-size: 1.4em;
+  }
 `;
 
 const achievedAnimationStyle = css`
@@ -548,19 +578,19 @@ const summaryStarStyle = css`
 
   &:nth-child(2) {
     animation-delay: ${starDuration * 1.2}ms;
-    margin-left: -48px;
+    margin-left: -${DoubleSize}px;
     top: 12px;
   }
 
   &:nth-child(3) {
     animation-delay: ${starDuration * 1.4}ms;
-    margin-left: -48px;
-    top: 24px;
+    margin-left: -${DoubleSize}px;
+    top: ${TileSize}px;
   }
 
   &:nth-child(4) {
     animation-delay: ${starDuration * 1.6}ms;
-    margin-left: -48px;
+    margin-left: -${DoubleSize}px;
     top: 36px;
   }
 `;
@@ -587,10 +617,10 @@ const fadeStyle = css`
   opacity: 0;
 `;
 
-const hideButtonStyle = css`
+const buttonStyle = css`
   position: absolute;
-  right: 8px;
-  top: 8px;
+  right: 10px;
+  top: 12px;
   color: ${applyVar('text-color')};
 `;
 
