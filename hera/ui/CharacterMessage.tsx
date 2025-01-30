@@ -1,7 +1,7 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
-import Breakpoints, { lg, sm } from '@deities/ui/Breakpoints.tsx';
+import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -85,7 +85,7 @@ const MessageComponent = ({
   const [clientWidth, setClientWidth] = useState<number>(
     () => document.body.clientWidth,
   );
-  const isLarge = clientWidth >= sm;
+  const isLarge = clientWidth >= lg;
   const [multiplier, width] = isLarge
     ? [4, Math.min(clientWidth * 0.8, lg)]
     : [2, clientWidth];
@@ -342,7 +342,7 @@ const innerStyle = css`
   position: relative;
   width: 100%;
 
-  ${Breakpoints.sm} {
+  ${Breakpoints.lg} {
     gap: 24px;
     padding: ${DoubleSize * 2}px 0 0;
     width: min(80vw, ${lg}px);
@@ -350,7 +350,7 @@ const innerStyle = css`
 `;
 
 const innerBottomStyle = css`
-  ${Breakpoints.sm} {
+  ${Breakpoints.lg} {
     padding: 0 0 ${DoubleSize * 2}px;
   }
 `;
@@ -372,7 +372,7 @@ const messageStyle = css`
     calc(${vars.apply('multiplier')} * 0.75px) 0;
 
   padding: calc(${vars.apply('multiplier')} * 3.5px) ${sizes.padding / 2}px 0;
-  ${Breakpoints.sm} {
+  ${Breakpoints.lg} {
     padding: calc(${vars.apply('multiplier')} * 3.5px) ${sizes.padding}px 0;
     ${vars.set('multiplier', 4)}
   }
@@ -391,7 +391,7 @@ const backgroundStyle = css`
 
 const borderStyle = css`
   ${pixelBorder(vars.apply('color'), 2)}
-  ${Breakpoints.sm} {
+  ${Breakpoints.lg} {
     ${pixelBorder(vars.apply('color'), 4)}
   }
 `;
