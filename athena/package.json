@@ -17,6 +17,6 @@
     "skmeans": "^0.11.3"
   },
   "devDependencies": {
-    "@types/skmeans": "^0.11.7"
+    "@types/skmeans": "^0.11.8"
   }
 }
