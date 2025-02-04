@@ -14,7 +14,7 @@ import { BannerAnimation, BaseAnimationProps } from '../MapAnimations.tsx';
 import measureText from './lib/measureText.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
-const smallSize = 3;
+const smallSize = 2;
 const largeSize = 4;
 
 const multiplier = process.env.NODE_ENV === 'development' ? 3 : 1.5;

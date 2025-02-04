@@ -87,4 +87,5 @@ export default function AddActionButton({
 
 const addStyle = css`
   color: ${applyVar('highlight-color')};
+  white-space: nowrap;
 `;
