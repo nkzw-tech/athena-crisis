@@ -63,8 +63,8 @@
     "@nkzw/eslint-config": "^2.0.0",
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.10.12",
-    "@types/node": "^22.13.0",
+    "@swc/core": "^1.10.14",
+    "@types/node": "^22.13.1",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "chalk": "^5.4.1",
@@ -80,7 +80,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",
-    "vitest": "^3.0.4"
+    "vitest": "^3.0.5"
   },
   "engines": {
     "node": ">=20.0.0",
