@@ -18,6 +18,7 @@
   "dependencies": {
     "@capacitor/app": "^7.0.0",
     "@capacitor/core": "^7.0.1",
+    "@capacitor/push-notifications": "^7.0.0",
     "@capacitor/status-bar": "^7.0.0",
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
