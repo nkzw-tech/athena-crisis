@@ -1,5 +1,6 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
@@ -95,8 +96,13 @@ const topStyle = css`
 `;
 
 const topRightStyle = css`
+  left: ${DoubleSize * 1.5}px;
   right: ${applyVar('inset')};
   top: calc(${applyVar('safe-area-top')} + ${applyVar('inset')});
+
+  ${Breakpoints.sm} {
+    left: auto;
+  }
 `;
 
 const boxStyle = css`
