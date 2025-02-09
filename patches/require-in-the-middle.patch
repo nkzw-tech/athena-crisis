@@ -1,5 +1,5 @@
 diff --git a/index.js b/index.js
-index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b3011d838 100644
+index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7a6e68b5b 100644
 --- a/index.js
 +++ b/index.js
 @@ -3,7 +3,6 @@
@@ -10,7 +10,7 @@ index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b
  
  // Using the default export is discouraged, but kept for backward compatibility.
  // Use this instead:
-@@ -34,46 +33,12 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
+@@ -34,49 +33,9 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
  
      return builtinModules.has(moduleName)
    }
@@ -40,11 +40,14 @@ index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b
 -  }
  }
  
- // Feature detection: This property was added in Node.js 8.9.0, the same time
- // as the `paths` options argument was added to the `require.resolve` function,
- // which is the one we want
+-// Feature detection: This property was added in Node.js 8.9.0, the same time
+-// as the `paths` options argument was added to the `require.resolve` function,
+-// which is the one we want
 -let resolve
--if (require.resolve.paths) {
+-// require.resolve might be undefined when using Node SEA mode:
+-// https://nodejs.org/api/single-executable-applications.html
+-// Also see https://github.com/nodejs/require-in-the-middle/issues/105
+-if (require.resolve && require.resolve.paths) {
 -  resolve = function (moduleName, basedir) {
 -    return require.resolve(moduleName, { paths: [basedir] })
 -  }
@@ -58,26 +61,26 @@ index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b
  
  // 'foo/bar.js' or 'foo/bar/index.js' => 'foo/bar'
  const normalize = /([/\\]index)?(\.js)?$/
-@@ -132,6 +97,9 @@ class ExportsCache {
+@@ -135,6 +94,9 @@ class ExportsCache {
  
  function Hook (modules, options, onrequire) {
    if ((this instanceof Hook) === false) return new Hook(modules, options, onrequire)
-+  
++
 +  return
 +
    if (typeof modules === 'function') {
      onrequire = modules
      modules = null
-@@ -267,7 +235,7 @@ function Hook (modules, options, onrequire) {
+@@ -270,7 +232,7 @@ function Hook (modules, options, onrequire) {
        moduleName = parsedPath.name
        basedir = parsedPath.dir
      } else {
 -      const stat = moduleDetailsFromPath(filename)
-+      const stat = undefined;
++      const stat = undefined
        if (stat === undefined) {
          debug('could not parse filename: %s', filename)
          return exports // abort if filename could not be parsed
-@@ -346,22 +314,6 @@ function Hook (modules, options, onrequire) {
+@@ -349,22 +311,6 @@ function Hook (modules, options, onrequire) {
  
  Hook.prototype.unhook = function () {
    this._unhooked = true
@@ -101,7 +104,7 @@ index 00b91eab75aa60ec598f46f7292d48120a4b6328..bb58e141d2954cd3a381d13275a1df8b
  
  function resolveModuleName (stat) {
 diff --git a/package.json b/package.json
-index 738dd06d6779a31bfb6eb5a8bdffdb3b5354a935..1cce247af143bd1c1d10bbed56e2338aa3512767 100644
+index 0da29054a19cbc53424a56221f947ebfe48d361c..3c6cea6a005ec3217dc0a48987cd5ca2c5541279 100644
 --- a/package.json
 +++ b/package.json
 @@ -5,9 +5,7 @@
