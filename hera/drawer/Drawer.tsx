@@ -64,7 +64,7 @@ export default function Drawer({
           vertical
         >
           {sidebar && (
-            <Stack className={panelStyle[position]} nowrap>
+            <Stack className={cx(panelStyle[position], sidebarStyle)} nowrap>
               {sidebar}
             </Stack>
           )}
@@ -239,6 +239,12 @@ const expandedPaddingStyles = {
     }
   `,
 };
+
+const sidebarStyle = css`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+`;
 
 export const getDrawerPaddingStyle = (
   position: DrawerPosition,

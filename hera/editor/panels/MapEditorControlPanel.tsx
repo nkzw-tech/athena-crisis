@@ -483,35 +483,45 @@ const Sidebar = ({
 
   return (
     <Stack alignCenter className={topPaddingStyle} flex1 gap={16} nowrap>
-      <Box alignCenter flex1 gap={16} nowrap>
-        {primary}
-        {secondary.length && (
-          <Dropdown
-            className={moreContainerStyle}
-            dropdownClassName={moreStyle}
-            title={<Icon icon={More} />}
-          >
-            <Box className={moreInnerStyle} gap vertical>
-              {secondary}
-            </Box>
-          </Dropdown>
-        )}
-      </Box>
-      <Button className={buttonStyle} {...buttonProps}>
-        <KeyboardShortcut button shortcut="p" />
-        {partition <= 3 ? (
-          <fbt desc="Button to playtest a map">Test</fbt>
-        ) : (
-          <fbt desc="Button to playtest a map">Playtest</fbt>
-        )}
-      </Button>
+      <Stack className={boxShadowStyle} flex1 nowrap>
+        <Box alignCenter flex1 gap={16} nowrap>
+          {primary}
+          {secondary.length && (
+            <Dropdown
+              className={moreContainerStyle}
+              dropdownClassName={moreStyle}
+              title={<Icon icon={More} />}
+            >
+              <Box className={moreInnerStyle} gap vertical>
+                {secondary}
+              </Box>
+            </Dropdown>
+          )}
+        </Box>
+      </Stack>
+      <Stack className={boxShadowStyle}>
+        <Button className={buttonStyle} {...buttonProps}>
+          <KeyboardShortcut button shortcut="p" />
+          {partition <= 3 ? (
+            <fbt desc="Button to playtest a map">Test</fbt>
+          ) : (
+            <fbt desc="Button to playtest a map">Playtest</fbt>
+          )}
+        </Button>
+      </Stack>
     </Stack>
   );
 };
 
+const boxShadowStyle = css`
+  backdrop-filter: blur(4px);
+  box-shadow: ${applyVar('border-color-light')} 0 8px 10px;
+`;
+
 const topPaddingStyle = css`
   padding-top: 24px;
 `;
+
 const linkStyle = css`
   position: relative;
 
