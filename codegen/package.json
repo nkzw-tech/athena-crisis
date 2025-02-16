@@ -10,9 +10,9 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "devDependencies": {
-    "@babel/parser": "^7.26.8",
-    "@babel/traverse": "^7.26.8",
-    "@babel/types": "^7.26.8",
+    "@babel/parser": "^7.26.9",
+    "@babel/traverse": "^7.26.9",
+    "@babel/types": "^7.26.9",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hephaestus": "workspace:*",
