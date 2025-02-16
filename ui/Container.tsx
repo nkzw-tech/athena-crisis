@@ -17,7 +17,7 @@ export default memo(function Container({
   );
 });
 
-export const ContainerWidth = `min(max(360px, 80vw), 1024px)`;
+export const ContainerWidth = `min(90vw, 1024px)`;
 
 const containerStyle = css`
   width: ${ContainerWidth};
