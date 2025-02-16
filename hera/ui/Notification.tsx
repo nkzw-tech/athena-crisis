@@ -75,12 +75,16 @@ const containerStyle = css`
   backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
-  max-width: 90vw;
   opacity: 0;
   pointer-events: none;
   position: fixed;
   width: fit-content;
   z-index: calc(1 + ${applyVar('inset-z')});
+
+  max-width: 80vw;
+  ${Breakpoints.sm} {
+    max-width: 90vw;
+  }
 `;
 
 const bottomStyle = css`
