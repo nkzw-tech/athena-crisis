@@ -345,7 +345,7 @@ const inlineStyle = css`
 
 const style = css`
   ${vars.set('left-offset', '0px')}
-  bottom: ${applyVar('inset')};
+  bottom: calc(env(safe-area-inset-bottom, 0) + ${applyVar('inset')});
   display: flex;
   pointer-events: none;
   position: fixed;
