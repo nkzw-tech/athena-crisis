@@ -17,6 +17,14 @@ export type TurnPushNotification = Readonly<{
   tag: 'turn';
 }>;
 
+export type InvasionPushNotification = Readonly<{
+  data: Readonly<{
+    campaignStateId: string;
+    game: string;
+  }>;
+  tag: 'invasion';
+}>;
+
 export type DeviceInfo = Readonly<{
   browser: string;
   os: {
@@ -26,4 +34,5 @@ export type DeviceInfo = Readonly<{
   type: string;
 }>;
 
-export type PushNotification = BaseNotification & TurnPushNotification;
+export type PushNotification = BaseNotification &
+  (TurnPushNotification | InvasionPushNotification);
