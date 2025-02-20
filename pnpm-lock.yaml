@@ -336,6 +336,9 @@ importers:
       '@graphql-tools/utils':
         specifier: ^10.8.1
         version: 10.8.1(graphql@16.10.0)
+      '@nkzw/define-env':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@nkzw/histogram':
         specifier: ^1.1.0
         version: 1.1.0
@@ -2688,6 +2691,9 @@ packages:
   '@nkzw/babel-preset-fbtee@0.2.0':
     resolution: {integrity: sha512-ref96cHAP83Lo3li7XGr+YfWj5Kkhe7VW8isnQDxz6C+eK+noij4Bk4RQLbnPCpkzK7qT9OH+eu2FuF+5wyb3g==}
     hasBin: true
+
+  '@nkzw/define-env@1.0.0':
+    resolution: {integrity: sha512-rYDWpCqe2tcr3n4uKOP3zf+Zw+v47DLKUQzHonTcdUS0ZnFO/iO2z4nHnG3OxAZFhy6Dy4JKt4yMqxVRCzrHcA==}
 
   '@nkzw/eslint-config@2.0.0':
     resolution: {integrity: sha512-1UzZI++iFOOyzWZWcoPtaeSNDbcwHKE0mJBZIvpt/8ZD2KV15IDFC9zIwCWNGmN0INsbPaJVJ8UjGZshT+DI5w==}
@@ -11392,6 +11398,8 @@ snapshots:
       '@nkzw/babel-plugin-fbtee-runtime': 0.2.0(@nkzw/babel-plugin-fbtee@0.2.0)
     transitivePeerDependencies:
       - supports-color
+
+  '@nkzw/define-env@1.0.0': {}
 
   '@nkzw/eslint-config@2.0.0(@typescript-eslint/eslint-plugin@8.24.1(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3(patch_hash=9cff4a9292a9b88f0db50623b3069066d0ad9df3526c7f5f0f46881e474630a1)))(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3(patch_hash=9cff4a9292a9b88f0db50623b3069066d0ad9df3526c7f5f0f46881e474630a1)))(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3(patch_hash=9cff4a9292a9b88f0db50623b3069066d0ad9df3526c7f5f0f46881e474630a1))':
     dependencies:
