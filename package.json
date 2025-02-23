@@ -63,13 +63,13 @@
     "@nkzw/eslint-config": "^2.0.0",
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.10.17",
-    "@types/node": "^22.13.4",
+    "@swc/core": "^1.10.18",
+    "@types/node": "^22.13.5",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
-    "eslint": "^9.20.1",
+    "eslint": "^9.21.0",
     "eslint-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.9",
@@ -79,7 +79,7 @@
     "react-refresh": "^0.16.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
-    "vite": "^6.1.0",
+    "vite": "^6.1.1",
     "vitest": "^3.0.6"
   },
   "engines": {
@@ -103,6 +103,7 @@
       "rollup@^2.0.0": "^4.16.4"
     },
     "patchedDependencies": {
+      "@prettier/cli": "patches/@prettier__cli.patch",
       "@remix-run/router": "patches/@remix-run__router.patch",
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "eslint-plugin-import": "patches/eslint-plugin-import.patch",

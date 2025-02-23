@@ -1,0 +1,14 @@
+diff --git a/dist/bin.js b/dist/bin.js
+index 89ec5b71e153c10c08a2b3f8216e656f3eb29073..b2868084f8826dbb7bf9ad65f52a5be9485bb78c 100644
+--- a/dist/bin.js
++++ b/dist/bin.js
+@@ -147,9 +147,6 @@ const makeBin = () => {
+     })
+         .option("--cache-location <path>", "Path to the cache file", {
+         section: "Other",
+-    })
+-        .option("--no-color", "Do not colorize output messages", {
+-        section: "Other",
+     })
+         .option("--no-error-on-unmatched-pattern", "Prevent errors when pattern is unmatched", {
+         section: "Other",
