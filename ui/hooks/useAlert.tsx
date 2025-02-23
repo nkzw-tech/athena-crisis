@@ -143,7 +143,7 @@ const Alert = ({
             <Stack gap={32} stretch vertical>
               <Stack gap vertical>
                 {title && <h2>{title}</h2>}
-                <p>{text}</p>
+                <div className="paragraph">{text}</div>
               </Stack>
 
               <Stack

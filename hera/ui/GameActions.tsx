@@ -488,7 +488,6 @@ const EndTurnButton = ({
 
 export type UndoOptions = Readonly<{
   onCancel?: () => void;
-  skipAlert?: boolean;
 }>;
 
 const UndoButton = ({
@@ -527,7 +526,7 @@ const UndoButton = ({
       // Use `event.key` to ensure consistency on qwertz keyboards.
       if (metaKey && event.key === 'z') {
         event.preventDefault();
-        undo('Action', { skipAlert: true });
+        undo('Action');
       }
     };
 
