@@ -86,15 +86,9 @@ type AttackBuildingAction = Readonly<{
   type: 'AttackBuilding';
 }>;
 
-type CaptureAction = Readonly<{
-  from: Vector;
-  type: 'Capture';
-}>;
+type CaptureAction = Readonly<{ from: Vector; type: 'Capture' }>;
 
-type SupplyAction = Readonly<{
-  from: Vector;
-  type: 'Supply';
-}>;
+type SupplyAction = Readonly<{ from: Vector; type: 'Supply' }>;
 
 type CreateUnitAction = Readonly<{
   from: Vector;
@@ -116,34 +110,20 @@ type CreateBuildingAction = Readonly<{
   type: 'CreateBuilding';
 }>;
 
-type CreateTracksAction = Readonly<{
-  from: Vector;
-  type: 'CreateTracks';
-}>;
+type CreateTracksAction = Readonly<{ from: Vector; type: 'CreateTracks' }>;
 
-type FoldAction = Readonly<{
-  from: Vector;
-  type: 'Fold';
-}>;
+type FoldAction = Readonly<{ from: Vector; type: 'Fold' }>;
 
-type UnfoldAction = Readonly<{
-  from: Vector;
-  type: 'Unfold';
-}>;
+type UnfoldAction = Readonly<{ from: Vector; type: 'Unfold' }>;
 
-type CompleteUnitAction = Readonly<{
-  from: Vector;
-  type: 'CompleteUnit';
-}>;
+type CompleteUnitAction = Readonly<{ from: Vector; type: 'CompleteUnit' }>;
 
 type CompleteBuildingAction = Readonly<{
   from: Vector;
   type: 'CompleteBuilding';
 }>;
 
-type EndTurnAction = Readonly<{
-  type: 'EndTurn';
-}>;
+type EndTurnAction = Readonly<{ type: 'EndTurn' }>;
 
 type MessageAction = Readonly<{
   message: string;
@@ -157,23 +137,11 @@ type ToggleLightningAction = Readonly<{
   type: 'ToggleLightning';
 }>;
 
-type HealAction = Readonly<{
-  from: Vector;
-  to: Vector;
-  type: 'Heal';
-}>;
+type HealAction = Readonly<{ from: Vector; to: Vector; type: 'Heal' }>;
 
-type RescueAction = Readonly<{
-  from: Vector;
-  to: Vector;
-  type: 'Rescue';
-}>;
+type RescueAction = Readonly<{ from: Vector; to: Vector; type: 'Rescue' }>;
 
-type SabotageAction = Readonly<{
-  from: Vector;
-  to: Vector;
-  type: 'Sabotage';
-}>;
+type SabotageAction = Readonly<{ from: Vector; to: Vector; type: 'Sabotage' }>;
 
 export type SpawnEffectAction = Readonly<{
   buildings?: ImmutableMap<Vector, Building>;
@@ -189,7 +157,11 @@ type BuySkillAction = Readonly<{
   type: 'BuySkill';
 }>;
 
-type ActivatePowerAction = Readonly<{ skill: Skill; type: 'ActivatePower' }>;
+type ActivatePowerAction = Readonly<{
+  from?: Vector;
+  skill: Skill;
+  type: 'ActivatePower';
+}>;
 
 export type ActivateCrystalAction = Readonly<{
   biome?: Biome;
@@ -217,9 +189,7 @@ export type IncreaseFundsEffectAction = Readonly<{
   type: 'IncreaseFundsEffect';
 }>;
 
-type StartAction = Readonly<{
-  type: 'Start';
-}>;
+type StartAction = Readonly<{ type: 'Start' }>;
 
 export type Action =
   | ActivateCrystalAction
@@ -302,13 +272,7 @@ function move(
   const unitB = map.units.get(to);
   if (unitB) {
     if (canLoad(map, unitB, unitA, to)) {
-      return {
-        from,
-        fuel: unitA.fuel - cost,
-        path,
-        to,
-        type: 'Move',
-      } as const;
+      return { from, fuel: unitA.fuel - cost, path, to, type: 'Move' } as const;
     }
   } else if (
     !map.buildings.has(to) ||
@@ -716,10 +680,7 @@ function createTracks(map: MapData, { from }: CreateTracksAction) {
     map.getPlayer(unit).funds >= CreateTracksCost &&
     canPlaceRailTrack(map, from)
   ) {
-    return {
-      from,
-      type: 'CreateTracks',
-    } as const;
+    return { from, type: 'CreateTracks' } as const;
   }
   return null;
 }
@@ -780,11 +741,7 @@ function endTurn(map: MapData) {
 }
 
 function message(_: MapData, { message, player }: MessageAction) {
-  return {
-    message,
-    player,
-    type: 'Message',
-  } as const;
+  return { message, player, type: 'Message' } as const;
 }
 
 function toggleLightning(map: MapData, { from, to }: ToggleLightningAction) {
@@ -904,9 +861,7 @@ function spawnEffect(
   }
 
   if (buildings) {
-    const futureMap = map.copy({
-      units: map.units.merge(newUnits),
-    });
+    const futureMap = map.copy({ units: map.units.merge(newUnits) });
 
     for (const [vector, building] of buildings) {
       if (
@@ -959,12 +914,7 @@ function buySkill(map: MapData, { from, skill }: BuySkillAction) {
     (!unit || map.matchesTeam(unit, building)) &&
     map.isCurrentPlayer(building)
   ) {
-    return {
-      from,
-      player: player.id,
-      skill,
-      type: 'BuySkill',
-    } as const;
+    return { from, player: player.id, skill, type: 'BuySkill' } as const;
   }
   return null;
 }
@@ -996,11 +946,7 @@ function activateCrystal(
   if (isEffect) {
     return Crystals.includes(crystal) &&
       (!biome || (Biomes.includes(biome) && biome !== Biome.Spaceship))
-      ? ({
-          biome,
-          crystal,
-          type: 'ActivateCrystal',
-        } as const)
+      ? ({ biome, crystal, type: 'ActivateCrystal' } as const)
       : null;
   }
 
