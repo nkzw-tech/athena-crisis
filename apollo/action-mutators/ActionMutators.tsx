@@ -74,8 +74,10 @@ export const StartAction = () => ({ type: 'Start' }) as const;
 export const BuySkillAction = (from: Vector, skill: Skill) =>
   ({ from, skill, type: 'BuySkill' }) as const;
 
-export const ActivatePowerAction = (skill: Skill, from?: Vector) =>
-  ({ from, skill, type: 'ActivatePower' }) as const;
+export const ActivatePowerAction = (skill: Skill, from: Vector | null) =>
+  from
+    ? ({ from, skill, type: 'ActivatePower' } as const)
+    : ({ skill, type: 'ActivatePower' } as const);
 
 export const ActivateCrystalAction = (crystal: Crystal) =>
   ({ crystal, type: 'ActivateCrystal' }) as const;

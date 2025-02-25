@@ -17,6 +17,7 @@ import {
   ToggleLightningAction,
   UnfoldAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { getActivatePowerTargetCluster } from '@deities/apollo/lib/getActivatePowerActionResponse.tsx';
 import {
   Behavior,
   BuildableTiles,
@@ -118,26 +119,36 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
-    const potentialSkills = [];
+    const potentialSkills: Array<
+      Readonly<{ charges: number; from: Vector | null; skill: Skill }>
+    > = [];
     for (const skill of skills) {
       if (activeSkills.has(skill)) {
         continue;
       }
 
-      const { charges, requiresCrystal } = getSkillConfig(skill);
+      const { charges, requiresCrystal, requiresTarget } =
+        getSkillConfig(skill);
       if (
         charges &&
         charges * Charge <= charge &&
         !requiresCrystal &&
         shouldActivatePower(map, skill)
       ) {
-        potentialSkills.push([skill, charges]);
+        potentialSkills.push({
+          charges,
+          from: requiresTarget
+            ? getActivatePowerTargetCluster(map, player.id)
+            : null,
+          skill,
+        } as const);
       }
     }
 
     if (potentialSkills.length) {
-      const [skill] = randomEntry(potentialSkills) || potentialSkills[0];
-      const currentMap = this.execute(map, ActivatePowerAction(skill));
+      const { from, skill } =
+        randomEntry(potentialSkills) || potentialSkills[0];
+      const currentMap = this.execute(map, ActivatePowerAction(skill, from));
       if (currentMap) {
         this.tryAttacking();
       }
@@ -864,12 +875,7 @@ export default class DionysusAlpha extends BaseAI {
             to,
             true,
           );
-          combinations.push({
-            from,
-            to,
-            unitInfo,
-            weight: item?.cost || 0,
-          });
+          combinations.push({ from, to, unitInfo, weight: item?.cost || 0 });
         }
         continue;
       }

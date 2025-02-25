@@ -108,10 +108,7 @@ const RawUnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
     </span>
     <span
       className={tagStyle}
-      style={{
-        backgroundColor: getColor(color, 0.2),
-        color: getColor(color),
-      }}
+      style={{ backgroundColor: getColor(color, 0.2), color: getColor(color) }}
     >
       {unit.name}
     </span>
@@ -402,10 +399,7 @@ const BuildingName = ({
     </span>
     <span
       className={tagStyle}
-      style={{
-        backgroundColor: getColor(color, 0.2),
-        color: getColor(color),
-      }}
+      style={{ backgroundColor: getColor(color, 0.2), color: getColor(color) }}
     >
       {building.name}
     </span>
@@ -509,10 +503,7 @@ const UnitBlocks = ({
 const MovementTypeName = ({ movementType }: { movementType: MovementType }) => (
   <span
     className={tagStyle}
-    style={{
-      backgroundColor: getColor('team', 0.2),
-      color: getColor('team'),
-    }}
+    style={{ backgroundColor: getColor('team', 0.2), color: getColor('team') }}
   >
     {movementType.name}
   </span>
@@ -533,10 +524,7 @@ const MovementTypeNames = ({
 const TileTypeName = ({ tileType }: { tileType: TileType }) => (
   <span
     className={tagStyle}
-    style={{
-      backgroundColor: getColor('team', 0.2),
-      color: getColor('team'),
-    }}
+    style={{ backgroundColor: getColor('team', 0.2), color: getColor('team') }}
   >
     {getTranslatedTileTypeName(tileType)}
   </span>
@@ -893,6 +881,15 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           health points of damage.
         </fbt>
       );
+    case Skill.BuyUnitDinosaur:
+      return (
+        <fbt desc="Additional skill description">
+          Triggers a meteor shower, causing all opponent units in the target
+          area to take
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
+          health points of damage.
+        </fbt>
+      );
     case Skill.VampireHeal:
       return (
         <fbt desc="Additional skill description">
@@ -1090,12 +1087,7 @@ export default memo(function SkillDescription({
 
   const list = [
     !isPower && campaignOnly ? (
-      <div
-        className="paragraph"
-        style={{
-          color: getColor('red'),
-        }}
-      >
+      <div className="paragraph" style={{ color: getColor('red') }}>
         <Icon className={chargeIconStyle} icon={WarningBox} />
         <fbt desc="Skill is only for campaigns">
           This skill can only be used in campaigns.
@@ -1152,12 +1144,7 @@ export default memo(function SkillDescription({
       </div>
     ) : null,
     isPower && requiresCrystal ? (
-      <div
-        className="paragraph"
-        style={{
-          color: getColor('red'),
-        }}
-      >
+      <div className="paragraph" style={{ color: getColor('red') }}>
         <Icon className={chargeIconStyle} icon={UICrystalIcon} />
         <fbt desc="Power charge cost">Requires an active crystal.</fbt>
       </div>
@@ -1182,13 +1169,7 @@ export default memo(function SkillDescription({
   return list?.length ? (
     <div
       className={cx(isPower && powerStyle)}
-      style={
-        isPower
-          ? {
-              background: gradient(colors, 0.05),
-            }
-          : undefined
-      }
+      style={isPower ? { background: gradient(colors, 0.05) } : undefined}
     >
       <div className="paragraph">{list}</div>
     </div>

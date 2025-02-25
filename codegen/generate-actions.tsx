@@ -621,11 +621,7 @@ const formatProp = (
     : `${name}: ${formatValue(name, optional, value, prefix)}`;
 };
 
-const formatAction = ({
-  name: actionName,
-  props,
-  type,
-}: ExtractedType): string => {
+const formatAction = ({ name: actionName, props }: ExtractedType): string => {
   const shortName = getShortName(actionName);
   const from = props.find(({ name }) => name === 'from');
   const to = props.find(({ name }) => name === 'to');

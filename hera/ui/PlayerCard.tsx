@@ -1,8 +1,4 @@
 import {
-  ActivateCrystalAction,
-  ActivatePowerAction,
-} from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import {
   capturedByPlayer,
   destroyedBuildingsByPlayer,
   escortedByPlayer,
@@ -47,10 +43,9 @@ import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import { memo, useCallback, useMemo } from 'react';
-import activateCrystalAction from '../behavior/activateCrystal/activateCrystalAction.tsx';
-import clientActivatePowerAction from '../behavior/activatePower/clientActivatePowerAction.tsx';
+import activateAction from '../behavior/activate/activateAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
-import handleRemoteAction from '../behavior/handleRemoteAction.tsx';
+import SelectTargetBehavior from '../behavior/SelectTargetBehavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
@@ -85,7 +80,7 @@ export default memo(function PlayerCard({
   user: UserLike & { crystals?: string };
   wide?: boolean;
 }) {
-  const { action, showGameInfo, update } = actions;
+  const { showGameInfo, update } = actions;
   const { objectives } = map.config;
   const color = getColor(player.id);
   const crystalMap = useCrystals(user.crystals);
@@ -155,35 +150,16 @@ export default memo(function PlayerCard({
           ? async (item: PlayerEffectItem) => {
               const state = await update(resetBehavior());
 
-              const getActionMutator = (item: PlayerEffectItem) => {
-                const itemType = item.type;
-                switch (itemType) {
-                  case 'Skill':
-                    return ActivatePowerAction(item.skill);
-                  case 'Crystal':
-                    return ActivateCrystalAction(Crystal.Power);
-                  default: {
-                    itemType satisfies never;
-                    throw new UnknownTypeError('PlayerCard.action', itemType);
-                  }
-                }
-              };
-
-              const [remoteAction, , actionResponse] = action(
-                state,
-                getActionMutator(item),
-              );
               if (
-                actionResponse.type === 'ActivatePower' ||
-                actionResponse.type === 'ActivateCrystal'
+                item.type === 'Skill' &&
+                getSkillConfig(item.skill).requiresTarget
               ) {
                 await update({
-                  ...(await (actionResponse.type === 'ActivatePower'
-                    ? clientActivatePowerAction(actions, state, actionResponse)
-                    : activateCrystalAction(actions, actionResponse))),
+                  behavior: new SelectTargetBehavior(item.skill),
                 });
-                await handleRemoteAction(actions, remoteAction);
               }
+
+              await activateAction(actions, state, item, null);
             }
           : undefined,
         actionName: <fbt desc="Button to activate a skill">Activate</fbt>,
@@ -214,7 +190,6 @@ export default memo(function PlayerCard({
       crystal,
       player.skills,
       spectatorLink,
-      action,
       actions,
     ],
   );

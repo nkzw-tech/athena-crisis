@@ -29,6 +29,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.BuyUnitAlien:
     case Skill.BuyUnitBazookaBear:
     case Skill.BuyUnitBear:
+    case Skill.BuyUnitDinosaur:
     case Skill.BuyUnitOctopus:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.HighTide:
@@ -45,7 +46,6 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.BuyUnitBrute:
     case Skill.BuyUnitCannon:
     case Skill.BuyUnitCommander:
-    case Skill.BuyUnitDinosaur:
     case Skill.BuyUnitDragon:
     case Skill.BuyUnitOgre:
     case Skill.BuyUnitSuperAPU:

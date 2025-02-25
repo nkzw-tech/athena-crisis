@@ -44,16 +44,8 @@ const map = withModifiers(
     ],
     size: { height: 5, width: 5 },
     teams: [
-      {
-        id: 1,
-        name: '',
-        players: [{ funds: 500, id: 1, userId: '1' }],
-      },
-      {
-        id: 2,
-        name: '',
-        players: [{ funds: 500, id: 2, userId: '4' }],
-      },
+      { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+      { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '4' }] },
     ],
   }),
 );
@@ -221,21 +213,9 @@ test('if the player self-destructs, an end-turn action is issued', async () => {
       map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
       size: { height: 3, width: 3 },
       teams: [
-        {
-          id: 1,
-          name: '',
-          players: [{ funds: 500, id: 1, userId: '1' }],
-        },
-        {
-          id: 2,
-          name: '',
-          players: [{ funds: 500, id: 2, userId: '4' }],
-        },
-        {
-          id: 3,
-          name: '',
-          players: [{ funds: 500, id: 3, userId: '5' }],
-        },
+        { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '4' }] },
+        { id: 3, name: '', players: [{ funds: 500, id: 3, userId: '5' }] },
       ],
     }),
   );
@@ -373,10 +353,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
   const initialMap = withModifiers(
     MapData.createMap({
       map: [1, 8, 1, 1, 1, 1, 1, 1, 1],
-      size: {
-        height: 3,
-        width: 3,
-      },
+      size: { height: 3, width: 3 },
       teams: [
         { id: 1, name: '', players: [{ funds: 0, id: 1, userId: '1' }] },
         { id: 2, name: '', players: [{ funds: 0, id: 2, name: 'Bot' }] },
@@ -478,10 +455,7 @@ test('game over through activating a power', async () => {
   const mapA = map.copy({
     teams: updatePlayer(
       map.teams,
-      map.getPlayer(2).copy({
-        charge: (charges || 0) * Charge,
-        skills,
-      }),
+      map.getPlayer(2).copy({ charge: (charges || 0) * Charge, skills }),
     ),
     units: map.units
       .set(
@@ -493,13 +467,13 @@ test('game over through activating a power', async () => {
 
   const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
-    ActivatePowerAction(skill),
+    ActivatePowerAction(skill, null),
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: null, free: false }
+      ActivatePower () { skill: 26, units: null, free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
@@ -522,13 +496,13 @@ test('game over through activating a power', async () => {
 
   const [, gameActionResponseB] = await executeGameActions(mapB, [
     EndTurnAction(),
-    ActivatePowerAction(skill),
+    ActivatePowerAction(skill, null),
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: null, free: false }
+      ActivatePower () { skill: 26, units: null, free: false }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 });
@@ -565,10 +539,7 @@ test('game over through activating a power can beat more than one player', async
           ]),
         ),
       ),
-      map.getPlayer(2).copy({
-        charge: (charges || 0) * Charge,
-        skills,
-      }),
+      map.getPlayer(2).copy({ charge: (charges || 0) * Charge, skills }),
     ),
     units: map.units
       .set(vec(2, 2), Flamethrower.create(player1).setHealth(1))
@@ -578,13 +549,13 @@ test('game over through activating a power can beat more than one player', async
 
   const [, gameActionResponseA] = await executeGameActions(mapA, [
     EndTurnAction(),
-    ActivatePowerAction(skill),
+    ActivatePowerAction(skill, null),
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: null, free: false }
+      ActivatePower () { skill: 26, units: null, free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }"
     `);
 
@@ -594,13 +565,13 @@ test('game over through activating a power can beat more than one player', async
 
   const [, gameActionResponseB] = await executeGameActions(mapB, [
     EndTurnAction(),
-    ActivatePowerAction(skill),
+    ActivatePowerAction(skill, null),
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      ActivatePower { skill: 26, units: null, free: false }
+      ActivatePower () { skill: 26, units: null, free: false }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"

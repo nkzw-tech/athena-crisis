@@ -261,9 +261,7 @@ export default function applyActionResponse(
             originalBuilding.player > 0
               ? map
                   .getPlayer(originalBuilding.player)
-                  .modifyStatistics({
-                    lostBuildings: building ? 0 : 1,
-                  })
+                  .modifyStatistics({ lostBuildings: building ? 0 : 1 })
                   .maybeSetCharge(chargeB)
               : null,
           ])
@@ -308,9 +306,7 @@ export default function applyActionResponse(
             ),
             teams: updatePlayer(
               map.teams,
-              map.getPlayer(building.player).modifyStatistics({
-                captured: 1,
-              }),
+              map.getPlayer(building.player).modifyStatistics({ captured: 1 }),
             ),
             units: unit
               ? map.units.set(from, unit.move().complete())
@@ -417,18 +413,14 @@ export default function applyActionResponse(
       const { from } = actionResponse;
       const unit = map.units.get(from);
       return unit
-        ? map.copy({
-            units: map.units.set(from, unit.fold().complete()),
-          })
+        ? map.copy({ units: map.units.set(from, unit.fold().complete()) })
         : map;
     }
     case 'Unfold': {
       const { from } = actionResponse;
       const unit = map.units.get(from);
       return unit
-        ? map.copy({
-            units: map.units.set(from, unit.unfold().complete()),
-          })
+        ? map.copy({ units: map.units.set(from, unit.unfold().complete()) })
         : map;
     }
     case 'CompleteUnit': {
@@ -517,14 +509,10 @@ export default function applyActionResponse(
     case 'Spawn': {
       const { buildings, teams, units } = actionResponse;
       const newMap = spawnBuildings(
-        mergeTeams(map, teams).copy({
-          units: map.units.merge(units),
-        }),
+        mergeTeams(map, teams).copy({ units: map.units.merge(units) }),
         buildings,
       );
-      return newMap.copy({
-        active: getActivePlayers(newMap, map.active),
-      });
+      return newMap.copy({ active: getActivePlayers(newMap, map.active) });
     }
     case 'ToggleLightning': {
       const { from, player: playerID, to } = actionResponse;
@@ -573,11 +561,7 @@ export default function applyActionResponse(
           ? actionResponse.player
           : vision.currentViewer,
       )?.id;
-      return currentPlayer
-        ? map.copy({
-            currentPlayer,
-          })
-        : map;
+      return currentPlayer ? map.copy({ currentPlayer }) : map;
     }
     case 'BuySkill': {
       const { from, player, skill } = actionResponse;
@@ -591,19 +575,20 @@ export default function applyActionResponse(
             : map.buildings,
         teams: updatePlayer(
           map.teams,
-          playerA.modifyFunds(cost != null ? -cost : 0).copy({
-            skills: new Set([...playerA.skills, skill]),
-          }),
+          playerA
+            .modifyFunds(cost != null ? -cost : 0)
+            .copy({ skills: new Set([...playerA.skills, skill]) }),
         ),
       });
     }
     case 'ActivatePower': {
-      const { free, skill, units } = actionResponse;
+      const { free, from, skill, units } = actionResponse;
       const playerA = map.getCurrentPlayer();
       const { charges } = getSkillConfig(skill);
 
       return applyPower(
         skill,
+        from,
         map.copy({
           teams: updatePlayer(
             map.teams,

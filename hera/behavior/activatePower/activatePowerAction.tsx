@@ -63,7 +63,7 @@ export default async function activatePowerAction(
   actionResponse: ActivatePowerActionResponse,
 ): Promise<State> {
   const { requestFrame, scheduleTimer, scrollIntoView, update } = actions;
-  const { skill, units: unitsToSpawn } = actionResponse;
+  const { from, skill, units: unitsToSpawn } = actionResponse;
   const { colors, name } = getSkillConfigForDisplay(skill);
   const player = state.map.getCurrentPlayer();
 
@@ -100,6 +100,7 @@ export default async function activatePowerAction(
             state.map,
             player,
             skill,
+            from,
             vision,
           );
           const unitsToHeal = getUnitsToHealSkill(state.map, player.id, skill);

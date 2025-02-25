@@ -116,6 +116,7 @@ export type CrystalPowerActivationType = 'all' | 'no-command' | 'phantom-only';
 
 const activateOnInvasion = 'all';
 const requiresCrystal = true;
+const requiresTarget = true;
 
 const skillConfig: Record<
   Skill,
@@ -126,6 +127,7 @@ const skillConfig: Record<
     cost: number | null;
     group: SkillGroup;
     requiresCrystal?: true;
+    requiresTarget?: true;
   }>
 > = {
   [Skill.AttackIncreaseMinor]: {
@@ -177,10 +179,7 @@ const skillConfig: Record<
     cost: 2000,
     group: SkillGroup.Unlock,
   },
-  [Skill.AttackAndDefenseIncreaseHard]: {
-    cost: null,
-    group: SkillGroup.AI,
-  },
+  [Skill.AttackAndDefenseIncreaseHard]: { cost: null, group: SkillGroup.AI },
   [Skill.HealVehiclesAttackDecrease]: {
     charges: 3,
     cost: 1000,
@@ -203,10 +202,7 @@ const skillConfig: Record<
     cost: 1500,
     group: SkillGroup.Special,
   },
-  [Skill.AttackAndDefenseDecreaseEasy]: {
-    cost: null,
-    group: SkillGroup.AI,
-  },
+  [Skill.AttackAndDefenseDecreaseEasy]: { cost: null, group: SkillGroup.AI },
   [Skill.UnitInfantryForestAttackAndDefenseIncrease]: {
     charges: 3,
     cost: 2000,
@@ -246,7 +242,12 @@ const skillConfig: Record<
     cost: 1500,
     group: SkillGroup.Unlock,
   },
-  [Skill.BuyUnitDinosaur]: { cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitDinosaur]: {
+    charges: 5,
+    cost: 1500,
+    group: SkillGroup.Unlock,
+    requiresTarget,
+  },
   [Skill.Sabotage]: { charges: 5, cost: 1500, group: SkillGroup.Attack },
   [Skill.SpawnUnitInfernoJetpack]: {
     activateOnInvasion,
@@ -301,11 +302,7 @@ const skillConfig: Record<
     group: SkillGroup.Invasion,
     requiresCrystal,
   },
-  [Skill.Jeep]: {
-    charges: 2,
-    cost: 800,
-    group: SkillGroup.Special,
-  },
+  [Skill.Jeep]: { charges: 2, cost: 800, group: SkillGroup.Special },
 };
 
 export const CampaignOnlySkills = new Set(
@@ -1351,15 +1348,23 @@ export const VampireSoldierMovementTypes = new Set([
 const octopusPowerDamage = 20;
 const dragonPowerDamage = 80;
 const vampirePowerDamage = 25;
+const dinosaurPowerDamage = 50;
 
 export function getSkillPowerDamage(skill: Skill) {
-  return skill === Skill.BuyUnitOctopus
-    ? octopusPowerDamage
-    : skill === Skill.BuyUnitDragon
-      ? dragonPowerDamage
-      : skill === Skill.VampireHeal
-        ? vampirePowerDamage
-        : 0;
+  if (skill === Skill.BuyUnitOctopus) {
+    return octopusPowerDamage;
+  }
+  if (skill === Skill.BuyUnitDragon) {
+    return dragonPowerDamage;
+  }
+  if (skill === Skill.VampireHeal) {
+    return vampirePowerDamage;
+  }
+  if (skill === Skill.BuyUnitDinosaur) {
+    return dinosaurPowerDamage;
+  }
+
+  return 0;
 }
 
 export function shouldUpgradeUnit(unit: Unit, skill: Skill) {

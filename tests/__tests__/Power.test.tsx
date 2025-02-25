@@ -21,24 +21,14 @@ import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx'
 
 const initialMap = withModifiers(
   MapData.createMap({
-    config: {
-      fog: true,
-    },
+    config: { fog: true },
     map: [
       1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1,
     ],
     size: { height: 5, width: 5 },
     teams: [
-      {
-        id: 1,
-        name: '',
-        players: [{ funds: 500, id: 1, userId: 'User-1' }],
-      },
-      {
-        id: 2,
-        name: '',
-        players: [{ funds: 500, id: 2, userId: 'User-2' }],
-      },
+      { id: 1, name: '', players: [{ funds: 500, id: 1, userId: 'User-1' }] },
+      { id: 2, name: '', players: [{ funds: 500, id: 2, userId: 'User-2' }] },
     ],
   }),
 );
@@ -53,10 +43,7 @@ test('skills are active until the beginning of the next turn', async () => {
   const map = initialMap.copy({
     teams: updatePlayer(
       initialMap.teams,
-      initialMap.getPlayer(1).copy({
-        charge: Charge * MaxCharges,
-        skills,
-      }),
+      initialMap.getPlayer(1).copy({ charge: Charge * MaxCharges, skills }),
     ),
     units: initialMap.units
       .set(vecA, SmallTank.create(1))
@@ -71,7 +58,7 @@ test('skills are active until the beginning of the next turn', async () => {
     AttackUnitAction(vecB, vecA),
     EndTurnAction(),
     AttackUnitAction(vecA, vecB),
-    ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor),
+    ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor, null),
     AttackUnitAction(vecC, vecD),
     EndTurnAction(),
     AttackUnitAction(vecE, vecC),
@@ -84,7 +71,7 @@ test('skills are active until the beginning of the next turn', async () => {
       AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 87, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 40, ammo: [ [ 1, 6 ] ] }, chargeA: 133, chargeB: 15259 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 9, ammo: [ [ 1, 5 ] ] }, unitB: DryUnit { health: 70, ammo: [ [ 1, 5 ] ] }, chargeA: 15154, chargeB: 196 }
-      ActivatePower { skill: 3, units: null, free: false }
+      ActivatePower () { skill: 3, units: null, free: false }
       AttackUnit (2,2 → 2,3) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 6186, chargeB: 552 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (3,2 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 6, ammo: [ [ 1, 5 ] ] }, chargeA: 693, chargeB: 6522 }
@@ -99,9 +86,7 @@ test('crystals activate powers', async () => {
   const mapA = initialMap.copy({
     teams: updatePlayer(
       initialMap.teams,
-      initialMap.getPlayer(1).copy({
-        skills,
-      }),
+      initialMap.getPlayer(1).copy({ skills }),
     ),
     units: initialMap.units
       .set(vecA, SmallTank.create(1))
@@ -114,9 +99,9 @@ test('crystals activate powers', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-    "ActivateCrystal { crystal: 0, player: 1, biome: null, hq: null }
-    ActivatePower { skill: 38, units: null, free: true }"
-  `);
+      "ActivateCrystal { crystal: 0, player: 1, biome: null, hq: null }
+      ActivatePower () { skill: 38, units: null, free: true }"
+    `);
 
   expect(gameStateA.at(-1)?.[1].units.get(vecA)?.shield).toBe(true);
 

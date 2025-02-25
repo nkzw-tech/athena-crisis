@@ -30,10 +30,7 @@ import { Animations } from './MapAnimations.tsx';
 import { RadiusInfo } from './Radius.tsx';
 import { TileStyle } from './Tiles.tsx';
 
-export type Size = Readonly<{
-  height: number;
-  width: number;
-}>;
+export type Size = Readonly<{ height: number; width: number }>;
 
 export type AnimationSpeed = Readonly<{
   human: AnimationConfig;
@@ -320,6 +317,7 @@ export type MapBehavior = Readonly<{
     | 'radar'
     | 'rescue'
     | 'sabotage'
+    | 'selectTarget'
     | 'transport'
     | 'vector';
 }>;

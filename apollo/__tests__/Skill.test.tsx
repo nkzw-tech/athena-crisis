@@ -58,12 +58,8 @@ const fromB = vec(1, 2);
 const toB = vec(2, 2);
 
 test('status effects from leaders are applied', async () => {
-  const leader = {
-    name: generateUnitName(true),
-  };
-  const regular = {
-    name: generateUnitName(false),
-  };
+  const leader = { name: generateUnitName(true) };
+  const regular = { name: generateUnitName(false) };
   const [, state1] = execute(
     map.copy({
       units: map.units
@@ -160,9 +156,7 @@ test('status effects from research labs are applied', async () => {
 });
 
 test('status effects from skills are applied', async () => {
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
   const [, state1] = execute(
     map.copy({
       teams: updatePlayer(
@@ -215,9 +209,7 @@ test('status effects from skills are applied', async () => {
 });
 
 test('status effects from skills can increase and decrease attack or defense', async () => {
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
   const initialMap = map.copy({
     units: map.units
       .set(fromA, SmallTank.create(1, options))
@@ -238,9 +230,7 @@ test('status effects from skills can increase and decrease attack or defense', a
     AttackUnitAction(fromA, toA),
   )!;
   const [, defaultAttackBtoA] = execute(
-    initialMap.copy({
-      currentPlayer: 2,
-    }),
+    initialMap.copy({ currentPlayer: 2 }),
     vision,
     AttackUnitAction(toA, fromA),
   )!;
@@ -251,9 +241,7 @@ test('status effects from skills can increase and decrease attack or defense', a
     AttackUnitAction(fromA, toA),
   )!;
   const [, skillAttackBtoA] = execute(
-    initialMapWithSkills.copy({
-      currentPlayer: 2,
-    }),
+    initialMapWithSkills.copy({ currentPlayer: 2 }),
     vision,
     AttackUnitAction(toA, fromA),
   )!;
@@ -270,9 +258,7 @@ test('status effects from skills can increase and decrease attack or defense', a
 });
 
 test('status effects can increase defense on specific tiles', async () => {
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
 
   const newMapA = map.map.slice();
   const newMapB = map.map.slice();
@@ -332,9 +318,7 @@ test('status effects can increase defense on specific tiles', async () => {
 });
 
 test('status effects can increase attack on specific tiles', async () => {
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
   const newMap = map.map.slice();
   newMap[map.getTileIndex(fromA)] = RailTrack.id;
 
@@ -435,13 +419,8 @@ test('sniper leader units can capture with a skill', async () => {
 test('skills can extend the range of units', async () => {
   const skills = new Set([Skill.MovementIncreaseGroundUnitDefenseDecrease]);
   const player = map.getPlayer(1);
-  const playerWithSkill = player.copy({
-    skills,
-  });
-  const playerWithActiveSkill = player.copy({
-    activeSkills: skills,
-    skills,
-  });
+  const playerWithSkill = player.copy({ skills });
+  const playerWithActiveSkill = player.copy({ activeSkills: skills, skills });
 
   expect(SmallTank.getRadiusFor(player1)).toBeLessThan(
     SmallTank.getRadiusFor(playerWithSkill),
@@ -458,9 +437,7 @@ test('skills can extend the range of units', async () => {
 
 test('activating a power adds the active status effect of a power', () => {
   const skills = new Set([Skill.AttackIncreaseMinor]);
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
   const [, state1] = execute(
     map.copy({
       teams: updatePlayer(
@@ -504,13 +481,13 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
     execute(
       mapA,
       vision,
-      ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor),
+      ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor, null),
     ),
   ).toBe(null);
 
   // Player does not have enough charges.
   expect(
-    execute(mapA, vision, ActivatePowerAction(Skill.AttackIncreaseMinor)),
+    execute(mapA, vision, ActivatePowerAction(Skill.AttackIncreaseMinor, null)),
   ).toBe(null);
 
   // Skill is already activated.
@@ -525,7 +502,7 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
         ),
       }),
       vision,
-      ActivatePowerAction(Skill.AttackIncreaseMinor),
+      ActivatePowerAction(Skill.AttackIncreaseMinor, null),
     ),
   ).toBe(null);
 
@@ -538,7 +515,7 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
       ),
     }),
     vision,
-    ActivatePowerAction(Skill.AttackIncreaseMinor),
+    ActivatePowerAction(Skill.AttackIncreaseMinor, null),
   )!;
 
   expect(actionResponse.type).toBe('ActivatePower');
@@ -567,13 +544,8 @@ test('can enable some units and disable others', async () => {
 test('can modify the range of units using a skill', async () => {
   const player = map.getPlayer(1);
   const skills = new Set([Skill.BuyUnitBazookaBear]);
-  const playerWithSkill = player.copy({
-    skills,
-  });
-  const playerWithActiveSkill = player.copy({
-    activeSkills: skills,
-    skills,
-  });
+  const playerWithSkill = player.copy({ skills });
+  const playerWithActiveSkill = player.copy({ activeSkills: skills, skills });
 
   expect(BazookaBear.getRangeFor(player)).toMatchInlineSnapshot(`
     [
@@ -602,9 +574,7 @@ test('can modify the range of units using a skill', async () => {
 
 test('the counter attack skill makes counter attacks more powerful', () => {
   const skills = new Set([Skill.CounterAttackPower]);
-  const options = {
-    name: generateUnitName(false),
-  };
+  const options = { name: generateUnitName(false) };
   const [, state1] = execute(map, vision, AttackUnitAction(fromA, toA))!;
   const [, state2] = execute(
     map.copy({
@@ -630,9 +600,7 @@ test('the counter attack skill makes counter attacks more powerful', () => {
 
 test('the commander skill makes leader units stronger', () => {
   const skills = new Set([Skill.BuyUnitCommander]);
-  const options = {
-    name: generateUnitName(true),
-  };
+  const options = { name: generateUnitName(true) };
   const mapA = map.copy({
     teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
     units: map.units.set(fromA, SmallTank.create(1, options)),
@@ -721,4 +689,31 @@ test('adds a shield when healing units with the shield skill', async () => {
   });
   const [, resultMapB] = execute(mapB, vision, HealAction(fromA, toA))!;
   expect(resultMapB.units.get(toA)!.shield).toBe(true);
+});
+
+test(`some skills require a target to be provided`, () => {
+  const skills = new Set([Skill.BuyUnitDinosaur]);
+  const from = vec(1, 1);
+  const mapA = map.copy({
+    teams: updatePlayer(
+      map.teams,
+      map.getPlayer(1).copy({ charge: Charge * MaxCharges, skills }),
+    ),
+  });
+
+  expect(
+    execute(mapA, vision, ActivatePowerAction(Skill.BuyUnitDinosaur, null)),
+  ).toBe(null);
+
+  const [actionResponse] = execute(
+    mapA,
+    vision,
+    ActivatePowerAction(Skill.BuyUnitDinosaur, from),
+  )!;
+
+  expect(actionResponse.type).toBe('ActivatePower');
+  if (actionResponse.type !== 'ActivatePower') {
+    throw new Error(`Expected 'actionResponse' type to be 'ActivatePower'.`);
+  }
+  expect(actionResponse.from).toBe(from);
 });

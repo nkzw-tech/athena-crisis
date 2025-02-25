@@ -90,15 +90,9 @@ export type CreateTracksActionResponse = Readonly<{
   type: 'CreateTracks';
 }>;
 
-export type FoldActionResponse = Readonly<{
-  from: Vector;
-  type: 'Fold';
-}>;
+export type FoldActionResponse = Readonly<{ from: Vector; type: 'Fold' }>;
 
-export type UnfoldActionResponse = Readonly<{
-  from: Vector;
-  type: 'Unfold';
-}>;
+export type UnfoldActionResponse = Readonly<{ from: Vector; type: 'Unfold' }>;
 
 export type CompleteUnitActionResponse = Readonly<{
   from: Vector;
@@ -174,17 +168,11 @@ export type MoveUnitActionResponse = Readonly<{
   type: 'MoveUnit';
 }>;
 
-export type StartActionResponse = Readonly<{
-  type: 'Start';
-}>;
+export type StartActionResponse = Readonly<{ type: 'Start' }>;
 
-export type BeginGameActionResponse = Readonly<{
-  type: 'BeginGame';
-}>;
+export type BeginGameActionResponse = Readonly<{ type: 'BeginGame' }>;
 
-export type SetViewerActionResponse = Readonly<{
-  type: 'SetViewer';
-}>;
+export type SetViewerActionResponse = Readonly<{ type: 'SetViewer' }>;
 
 export type SetPlayerActionResponse = Readonly<{
   player: PlayerID;
@@ -207,6 +195,7 @@ export type BuySkillActionResponse = Readonly<{
 
 export type ActivatePowerActionResponse = Readonly<{
   free?: boolean;
+  from?: Vector;
   skill: Skill;
   type: 'ActivatePower';
   units?: ImmutableMap<Vector, Unit>;

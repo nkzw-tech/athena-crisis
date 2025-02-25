@@ -919,9 +919,9 @@ function buySkill(map: MapData, { from, skill }: BuySkillAction) {
   return null;
 }
 
-function activatePower(map: MapData, { skill }: ActivatePowerAction) {
+function activatePower(map: MapData, { from, skill }: ActivatePowerAction) {
   const player = map.getCurrentPlayer();
-  const { charges, requiresCrystal } = getSkillConfig(skill);
+  const { charges, requiresCrystal, requiresTarget } = getSkillConfig(skill);
 
   if (
     player &&
@@ -932,7 +932,12 @@ function activatePower(map: MapData, { skill }: ActivatePowerAction) {
     player.charge >= charges * Charge &&
     (!requiresCrystal || (player.isHumanPlayer() && player.crystal != null))
   ) {
-    return getActivatePowerActionResponse(map, player.id, skill, false);
+    const target = requiresTarget && from ? from : null;
+    if (requiresTarget && (!target || !map.contains(target))) {
+      return null;
+    }
+
+    return getActivatePowerActionResponse(map, player.id, skill, target, false);
   }
 
   return null;

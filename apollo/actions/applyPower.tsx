@@ -56,6 +56,7 @@ export function getUnitsToDamage(
   map: MapData,
   player: Player,
   skill: Skill,
+  from: Vector | undefined,
   vision: VisionT | null,
 ) {
   if (skill === Skill.BuyUnitOctopus) {
@@ -79,6 +80,11 @@ export function getUnitsToDamage(
       (unit) =>
         map.matchesPlayer(unit, player) &&
         VampireSoldierMovementTypes.has(unit.info.movementType),
+    );
+  } else if (skill === Skill.BuyUnitDinosaur && from) {
+    const vectors = new Set(from.expandStar());
+    return map.units.filter(
+      (unit, vector) => vectors.has(vector) && map.isOpponent(player, unit),
     );
   }
 
@@ -123,13 +129,10 @@ export function onPowerUnitDamageEffect(
     const count = isDead ? newUnit.count() : 0;
     return map.copy({
       teams: updatePlayers(map.teams, [
-        map.getCurrentPlayer().modifyStatistics({
-          damage,
-          destroyedUnits: count,
-        }),
-        map.getPlayer(unit).modifyStatistics({
-          lostUnits: count,
-        }),
+        map
+          .getCurrentPlayer()
+          .modifyStatistics({ damage, destroyedUnits: count }),
+        map.getPlayer(unit).modifyStatistics({ lostUnits: count }),
       ]),
       units: isDead ? map.units.delete(vector) : map.units.set(vector, newUnit),
     });
@@ -138,7 +141,11 @@ export function onPowerUnitDamageEffect(
   return null;
 }
 
-export default function applyPower(skill: Skill, map: MapData) {
+export default function applyPower(
+  skill: Skill,
+  from: Vector | undefined,
+  map: MapData,
+) {
   const healTypes = getHealUnitTypes(skill);
   let player = map.getCurrentPlayer();
 
@@ -162,9 +169,7 @@ export default function applyPower(skill: Skill, map: MapData) {
 
   if (skill === Skill.Charge) {
     player = player.setCharge(player.charge + ChargeSkillCharges * Charge);
-    map = map.copy({
-      teams: updatePlayer(map.teams, player),
-    });
+    map = map.copy({ teams: updatePlayer(map.teams, player) });
   }
 
   if (healTypes) {
@@ -234,7 +239,7 @@ export default function applyPower(skill: Skill, map: MapData) {
     });
   }
 
-  const units = getUnitsToDamage(map, player, skill, null);
+  const units = getUnitsToDamage(map, player, skill, from, null);
   if (units) {
     for (const [vector, unit] of units) {
       map = onPowerUnitDamageEffect(skill, map, vector, unit) || map;

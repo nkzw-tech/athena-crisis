@@ -10,9 +10,7 @@ import { Action, SpawnEffectAction } from '../Action.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 import { Condition } from '../Condition.tsx';
 
-type Mutable<T> = {
-  -readonly [Key in keyof T]: T[Key];
-};
+type Mutable<T> = { -readonly [Key in keyof T]: T[Key] };
 
 export const RelativeVectors = {
   Any: vec(-2, -2),
@@ -73,7 +71,7 @@ export default function transformEffectValue<T extends Action | Condition>(
   value: T,
 ): T {
   const newValue = { ...value } as Mutable<T>;
-  const from = 'from' in value ? value.from : null;
+  const from = 'from' in value ? value.from || null : null;
   const to = 'to' in value ? value.to : null;
 
   if ('from' in newValue) {

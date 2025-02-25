@@ -104,6 +104,7 @@ const handleDefaultEffects = (
           activeMap,
           currentPlayer.id,
           skill,
+          null,
           true,
         );
         activeMap = applyActionResponse(
