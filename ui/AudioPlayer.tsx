@@ -154,9 +154,10 @@ class AudioPlayer {
     this.paused = false;
     localStorage.removeItem(pausedKey);
     const instance = this.currentInstance;
-    if (instance) {
+    const volume = getVolume('music');
+    if (instance && volume > 0) {
       if (instance.volume() <= 0) {
-        instance.volume(getVolume('music'));
+        instance.volume(volume);
       }
 
       if (!instance.playing()) {
@@ -178,11 +179,18 @@ class AudioPlayer {
   }
 
   setVolume(type: AudioVolumeType, volume: number) {
+    const previousVolume = getVolume('music');
     localStorage.setItem(storageKeys[type], String(volume));
     if (type === 'master') {
       Howler.volume(volume);
     } else if (type === 'music') {
       this.currentInstance?.volume(volume);
+      const song = this.currentSong;
+      if (song && previousVolume <= 0 && volume > 0) {
+        this.currentInstance?.stop();
+        this.currentInstance = null;
+        requestAnimationFrame(() => this.play(song));
+      }
     }
 
     if (

@@ -42,7 +42,8 @@ const isPlaying = (video: HTMLVideoElement | null | undefined) =>
 
 let resume = false;
 let timer: NativeTimeout = null;
-const onVisibilityChange = (isVisible: boolean) => {
+
+export function updateMusicOnVisibilityChange(isVisible: boolean) {
   if (timer != null) {
     clearTimeout(timer);
   }
@@ -60,13 +61,13 @@ const onVisibilityChange = (isVisible: boolean) => {
       }, 100);
     }
   }
-};
+}
 
 export function usePlayMusic(dep?: unknown) {
   const { pathname } = useLocation();
   const contextRef = useRef(useContext(Context));
 
-  useVisibilityState(onVisibilityChange);
+  useVisibilityState(updateMusicOnVisibilityChange);
 
   useEffect(() => {
     const context = contextRef.current;
