@@ -15,7 +15,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import InlineLink, { KeyboardShortcut } from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Stack from '@deities/ui/Stack.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
 import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
@@ -514,7 +514,12 @@ const Sidebar = ({
               dropdownClassName={moreStyle}
               title={<Icon icon={More} />}
             >
-              <Box className={moreInnerStyle} gap vertical>
+              <Box
+                className={cx(moreInnerStyle, 'dropdown-content')}
+                gap
+                nowrap
+                vertical
+              >
                 {secondary}
               </Box>
             </Dropdown>
@@ -552,23 +557,6 @@ const linkStyle = css`
   }
 `;
 
-const textStyle = css`
-  min-height: 24px;
-  overflow-x: hidden;
-  position: relative;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  max-width: 20vw;
-  ${Breakpoints.xs} {
-    max-width: 30vw;
-  }
-
-  ${Breakpoints.sm} {
-    max-width: auto;
-  }
-`;
-
 const buttonStyle = css`
   min-width: fit-content;
   position: relative;
@@ -590,8 +578,38 @@ const moreStyle = css`
 
 const moreInnerStyle = css`
   ${pixelBorder(applyVar('background-color'))}
-
   background: ${applyVar('background-color')};
+
   overflow-y: auto;
   white-space: nowrap;
+
+  width: 200px;
+  max-height: 180px;
+`;
+
+const textStyle = css`
+  min-height: 24px;
+  overflow-x: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  max-width: 20vw;
+  .dropdown-content & {
+    max-width: 200px;
+  }
+
+  ${Breakpoints.xs} {
+    .dropdown-content & {
+      max-width: 200px;
+    }
+  }
+
+  ${Breakpoints.xs} {
+    max-width: 30vw;
+  }
+
+  ${Breakpoints.sm} {
+    max-width: auto;
+  }
 `;
