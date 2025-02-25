@@ -18,21 +18,20 @@ export type TurnPushNotification = Readonly<{
 }>;
 
 export type InvasionPushNotification = Readonly<{
-  data: Readonly<{
-    campaignStateId: string;
-    game: string;
-  }>;
+  data: Readonly<{ campaignStateId: string; game: string }>;
   tag: 'invasion';
+}>;
+
+export type GameStartPushNotification = Readonly<{
+  data: Readonly<{ game: string; mapName: string; userId: string }>;
+  tag: 'gameStart';
 }>;
 
 export type DeviceInfo = Readonly<{
   browser: string;
-  os: {
-    name: string;
-    version: string;
-  };
+  os: { name: string; version: string };
   type: string;
 }>;
 
 export type PushNotification = BaseNotification &
-  (TurnPushNotification | InvasionPushNotification);
+  (GameStartPushNotification | InvasionPushNotification | TurnPushNotification);
