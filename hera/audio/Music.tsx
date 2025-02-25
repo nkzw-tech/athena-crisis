@@ -22,7 +22,7 @@ const context: MusicContext = {
 const Context = createContext<MusicContext>(context);
 
 export const MusicContext = ({ children }: { children: ReactNode }) => (
-  <Context.Provider value={context}>{children}</Context.Provider>
+  <Context value={context}>{children}</Context>
 );
 
 export default function useMusic(song: SongName) {

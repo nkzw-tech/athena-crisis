@@ -1,14 +1,7 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import createContextHook from '@deities/ui/hooks/createContextHook.tsx';
+import { useEffect, useState } from 'react';
 
-export const Context = createContext(false);
-
-export const HideContext = ({ children }: { children: ReactNode }) => {
+const [HideContext, useHide] = createContextHook(() => {
   const [hidden, setHidden] = useState(false);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -26,9 +19,8 @@ export const HideContext = ({ children }: { children: ReactNode }) => {
     return () => document.removeEventListener('keydown', listener);
   }, []);
 
-  return <Context.Provider value={hidden}>{children}</Context.Provider>;
-};
+  return hidden;
+}, false);
 
-export default function useHide() {
-  return useContext(Context);
-}
+export { HideContext };
+export default useHide;

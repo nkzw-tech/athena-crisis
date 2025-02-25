@@ -36,9 +36,7 @@ export type MenuContext = RefObject<boolean>;
 const Context = createContext<MenuContext>({ current: false });
 
 export const MenuContext = ({ children }: { children: ReactNode }) => {
-  return (
-    <Context.Provider value={{ current: false }}>{children}</Context.Provider>
-  );
+  return <Context value={{ current: false }}>{children}</Context>;
 };
 
 export const useDisableOpenMenuOnCancel = () => {

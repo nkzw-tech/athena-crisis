@@ -16,7 +16,7 @@ const Context = createContext<RefObject<boolean | null>>({
 export const ScrollRestore = Context;
 
 export const ScrollRestoreContext = ({ children }: { children: ReactNode }) => (
-  <Context.Provider value={useRef(false)}>{children}</Context.Provider>
+  <Context value={useRef(false)}>{children}</Context>
 );
 
 export default function useScrollRestore() {

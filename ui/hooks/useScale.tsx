@@ -1,13 +1,8 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 import { isIOS } from '../Browser.tsx';
 import cssVar, { applyVar } from '../cssVar.tsx';
+import createContextHook from './createContextHook.tsx';
 
 let div: HTMLDivElement | null = null;
 const CACHE = new Map<string, number>();
@@ -49,9 +44,7 @@ export const getScale = (tileSize: number) => {
   return maxScale;
 };
 
-const Context = createContext<number>(1);
-
-export const ScaleContext = ({ children }: { children: ReactNode }) => {
+const [ScaleContext, useScale] = createContextHook(() => {
   const [scale, setScale] = useState(() => getScale(TileSize));
 
   useEffect(() => {
@@ -66,9 +59,8 @@ export const ScaleContext = ({ children }: { children: ReactNode }) => {
     };
   }, [scale]);
 
-  return <Context.Provider value={scale}>{children}</Context.Provider>;
-};
+  return scale;
+});
 
-export default function useScale() {
-  return useContext(Context);
-}
+export default useScale;
+export { ScaleContext };

@@ -37,7 +37,7 @@ const Context = createContext<AlertContext>({
 export const AlertContext = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<Props | null>(null);
   return (
-    <Context.Provider
+    <Context
       value={useMemo(
         () => ({
           alert: setState,
@@ -48,7 +48,7 @@ export const AlertContext = ({ children }: { children: ReactNode }) => {
     >
       {children}
       {state && <Alert {...state} />}
-    </Context.Provider>
+    </Context>
   );
 };
 
