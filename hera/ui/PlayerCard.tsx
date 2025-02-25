@@ -11,6 +11,7 @@ import {
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
+import calculateUnitValue from '@deities/athena/lib/calculateUnitValue.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -22,6 +23,7 @@ import {
   objectiveHasAmounts,
 } from '@deities/athena/Objectives.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -38,6 +40,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
+import Chart from '@iconify-icons/pixelarticons/chart.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
@@ -345,7 +348,7 @@ export default memo(function PlayerCard({
                 : user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
-            <Stack className={offsetStyle} gap={16} nowrap start>
+            <Stack className={infoStyle} nowrap start>
               <Funds
                 className={cx(
                   ellipsis,
@@ -355,56 +358,58 @@ export default memo(function PlayerCard({
                 )}
                 value={shouldShow ? player.funds : '???'}
               />
-              <Stack gap nowrap>
-                {objectiveList}
-              </Stack>
+              {objectiveList}
             </Stack>
             {wide && (
-              <Stack className={offsetStyle} gap={16} nowrap start>
+              <Stack className={infoStyle} nowrap start>
                 <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
                     {shouldShow ? calculateFunds(map, player) : '???'}
                   </span>
                 </Stack>
-                <Stack gap nowrap>
-                  {(
-                    [
-                      [
-                        HumanHandsdown,
-                        () =>
-                          map.units.reduce(
-                            (count, unit) =>
-                              count +
-                              (map.matchesPlayer(unit, player)
-                                ? unit.count()
-                                : 0),
-                            0,
-                          ),
-                      ],
-                      [
-                        Buildings,
-                        () =>
-                          map.buildings.filter((building) =>
-                            map.matchesPlayer(building, player),
-                          ).size,
-                      ],
-                    ] as const
-                  ).map(([icon, getValue], index) => (
-                    <Stack
-                      className={cx(playerStatsStyle, nowrapStyle)}
-                      key={index}
-                      nowrap
-                    >
-                      <Icon
-                        className={playerStatsBeforeIconStyle}
-                        icon={icon}
-                        key="icon"
-                      />
-                      <span>{shouldShow ? getValue() : '???'}</span>
-                    </Stack>
-                  ))}
+                <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
+                  <Icon className={playerStatsBeforeIconStyle} icon={Chart} />
+                  <span>
+                    {shouldShow ? calculateUnitValue(map, player) : '???'}
+                  </span>
                 </Stack>
+                {(
+                  [
+                    [
+                      HumanHandsdown,
+                      () =>
+                        map.units.reduce(
+                          (count, unit) =>
+                            count +
+                            (map.matchesPlayer(unit, player)
+                              ? unit.count()
+                              : 0),
+                          0,
+                        ),
+                    ],
+                    [
+                      Buildings,
+                      () =>
+                        map.buildings.filter((building) =>
+                          map.matchesPlayer(building, player),
+                        ).size,
+                    ],
+                  ] as const
+                ).map(([icon, getValue], index) => (
+                  <Stack
+                    className={cx(playerStatsStyle, nowrapStyle)}
+                    key={index}
+                    nowrap
+                  >
+                    <Icon
+                      className={playerStatsBeforeIconStyle}
+                      icon={icon}
+                      key="icon"
+                    />
+                    <span>{shouldShow ? getValue() : '???'}</span>
+                  </Stack>
+                ))}
               </Stack>
             )}
           </Stack>
@@ -618,8 +623,14 @@ const widePlayerInfoStyle = css`
   width: calc(100% - ${TileSize * 2 + width + 8}px);
 `;
 
-const offsetStyle = css`
+const infoStyle = css`
   margin-top: -2px;
+
+  gap: 8px;
+
+  ${Breakpoints.sm} {
+    gap: 16px;
+  }
 `;
 
 const textStyle = css`
