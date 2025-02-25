@@ -1294,7 +1294,16 @@ export default class GameMap extends Component<Props, State> {
         map.getCurrentPlayer().isHumanPlayer();
 
       if (isWaitingOnHumanPlayer) {
-        this._waitingTimer = setTimeout(this._waitingTimerFn, waitingInterval);
+        this._waitingTimer = setTimeout(
+          () =>
+            this.setState((state) => ({
+              replayState: {
+                ...state.replayState,
+                isWaiting: false,
+              },
+            })),
+          waitingInterval,
+        );
       }
 
       return {
@@ -1302,16 +1311,6 @@ export default class GameMap extends Component<Props, State> {
           ...state.replayState,
           isLive: false,
           isWaiting: true,
-        },
-      };
-    });
-
-  private _waitingTimerFn = () =>
-    this.setState((state) => {
-      return {
-        replayState: {
-          ...state.replayState,
-          isWaiting: false,
         },
       };
     });

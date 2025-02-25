@@ -10,11 +10,14 @@ import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
+import Reload from '@iconify-icons/pixelarticons/reload.js';
 import useRelativeTime from '@nkzw/use-relative-time';
 import { getShortLocale } from '../i18n/getLocale.tsx';
 import { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
 import MiniPlayerIcon from './MiniPlayerIcon.tsx';
+
+const reload = () => location.reload();
 
 const TurnTimer = ({
   player,
@@ -71,7 +74,7 @@ export default function ReplayBar({
           <TurnTimer player={currentPlayer.id} timeout={timeout} />
         ) : null}
         {replayIsVisible && (
-          <Stack alignCenter stretch>
+          <Stack alignCenter nowrap stretch>
             {currentViewer !== currentPlayer.id ? (
               <span
                 className={cx(
@@ -81,7 +84,7 @@ export default function ReplayBar({
                   isWaiting && waitingLabelStyle,
                 )}
               >
-                <Icon icon={icon} />
+                <Icon className={iconStyle} icon={icon} />
                 {isPaused ? (
                   <fbt desc="Replay is paused">paused</fbt>
                 ) : isLive ? (
@@ -101,7 +104,16 @@ export default function ReplayBar({
             ) : (
               <span />
             )}
-            {!replayState.isWaiting ? (
+            {isWaiting ? (
+              currentViewer !== currentPlayer.id && !isBot ? (
+                <InlineLink className={labelStyle} onClick={reload}>
+                  <Icon icon={Reload} />
+                  <fbt desc="Button to reload">reload</fbt>
+                </InlineLink>
+              ) : (
+                <span />
+              )
+            ) : (
               <InlineLink
                 className={labelStyle}
                 onClick={() =>
@@ -117,8 +129,6 @@ export default function ReplayBar({
                   <fbt desc="Button to pause">pause</fbt>
                 )}
               </InlineLink>
-            ) : (
-              <span />
             )}
           </Stack>
         )}
@@ -133,8 +143,13 @@ const labelStyle = css`
   gap: 4px;
 
   & > svg {
+    flex-shrink: 0;
     margin-top: 4px;
   }
+`;
+
+const iconStyle = css`
+  flex-shrink: 0;
 `;
 
 const replayLabelStyle = css`
