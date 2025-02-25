@@ -337,7 +337,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'design'}
     >
       <KeyboardShortcut shortcut="d" />
-      <fbt desc="Button to switch to design mode">Design</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to switch to design mode">Design</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -346,7 +348,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'entity'}
     >
       <KeyboardShortcut shortcut="e" />
-      <fbt desc="Button to switch to entity mode">Entities</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to switch to entity mode">Entities</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -355,7 +359,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'effects'}
     >
       <KeyboardShortcut shortcut="f" />
-      <fbt desc="Button to change map effects">Effects</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map effects">Effects</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -364,7 +370,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'settings'}
     >
       <KeyboardShortcut shortcut="s" />
-      <fbt desc="Button to change map settings">Settings</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map settings">Settings</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -373,7 +381,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'setup'}
     >
       <KeyboardShortcut shortcut="t" />
-      <fbt desc="Button to change map setup">Setup</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map setup">Setup</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -382,7 +392,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'decorators'}
     >
       <KeyboardShortcut shortcut="c" />
-      <fbt desc="Button to change map decorators">Decorations</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map decorators">Decorations</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -391,7 +403,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'objectives'}
     >
       <KeyboardShortcut shortcut="o" />
-      <fbt desc="Button to change map objectives">Objectives</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map objectives">Objectives</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -400,7 +414,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'restrictions'}
     >
       <KeyboardShortcut shortcut="r" />
-      <fbt desc="Button to change map restrictions">Restrictions</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to change map restrictions">Restrictions</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -409,7 +425,9 @@ const Sidebar = ({
       selectedText={editor.mode === 'evaluation'}
     >
       <KeyboardShortcut shortcut="v" />
-      <fbt desc="Button to evaluate a map">Evaluate</fbt>
+      <span className={textStyle}>
+        <fbt desc="Button to evaluate a map">Evaluate</fbt>
+      </span>
     </InlineLink>,
     <InlineLink
       className={linkStyle}
@@ -433,11 +451,13 @@ const Sidebar = ({
         })
       }
     >
-      {mapObject ? (
-        <fbt desc="Button to reset the map">Reset Map</fbt>
-      ) : (
-        <fbt desc="Button to create a new map">New Map</fbt>
-      )}
+      <span className={textStyle}>
+        {mapObject ? (
+          <fbt desc="Button to reset the map">Reset Map</fbt>
+        ) : (
+          <fbt desc="Button to create a new map">New Map</fbt>
+        )}
+      </span>
     </InlineLink>,
     previousState && previousState.map != state.map ? (
       <InlineLink
@@ -445,7 +465,9 @@ const Sidebar = ({
         key="restore"
         onClick={() => restorePreviousState()}
       >
-        <fbt desc="Button to restore the map">Restore</fbt>
+        <span className={textStyle}>
+          <fbt desc="Button to restore the map">Restore</fbt>
+        </span>
       </InlineLink>
     ) : null,
   ].filter(isPresent);
@@ -530,6 +552,23 @@ const linkStyle = css`
   }
 `;
 
+const textStyle = css`
+  min-height: 24px;
+  overflow-x: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  max-width: 20vw;
+  ${Breakpoints.xs} {
+    max-width: 30vw;
+  }
+
+  ${Breakpoints.sm} {
+    max-width: auto;
+  }
+`;
+
 const buttonStyle = css`
   min-width: fit-content;
   position: relative;
@@ -551,9 +590,8 @@ const moreStyle = css`
 
 const moreInnerStyle = css`
   ${pixelBorder(applyVar('background-color'))}
-  background: ${applyVar('background-color')};
 
-  max-height: 300px;
+  background: ${applyVar('background-color')};
   overflow-y: auto;
   white-space: nowrap;
 `;
