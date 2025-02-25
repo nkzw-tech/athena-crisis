@@ -80,7 +80,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "vite": "^6.1.1",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.7"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -103,7 +103,6 @@
       "rollup@^2.0.0": "^4.16.4"
     },
     "patchedDependencies": {
-      "@prettier/cli": "patches/@prettier__cli.patch",
       "@remix-run/router": "patches/@remix-run__router.patch",
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "eslint-plugin-import": "patches/eslint-plugin-import.patch",

@@ -1,5 +1,5 @@
 diff --git a/index.js b/index.js
-index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7a6e68b5b 100644
+index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7a6e68b5b 100644
 --- a/index.js
 +++ b/index.js
 @@ -3,7 +3,6 @@
@@ -10,7 +10,7 @@ index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7
  
  // Using the default export is discouraged, but kept for backward compatibility.
  // Use this instead:
-@@ -34,49 +33,9 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
+@@ -34,56 +33,9 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
  
      return builtinModules.has(moduleName)
    }
@@ -40,28 +40,35 @@ index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7
 -  }
  }
  
--// Feature detection: This property was added in Node.js 8.9.0, the same time
--// as the `paths` options argument was added to the `require.resolve` function,
--// which is the one we want
--let resolve
--// require.resolve might be undefined when using Node SEA mode:
--// https://nodejs.org/api/single-executable-applications.html
--// Also see https://github.com/nodejs/require-in-the-middle/issues/105
--if (require.resolve && require.resolve.paths) {
--  resolve = function (moduleName, basedir) {
--    return require.resolve(moduleName, { paths: [basedir] })
+-let _resolve
+-
+-function resolve (moduleName, basedir) {
+-  // Feature detection: This property was added in Node.js 8.9.0, the same time
+-  // as the `paths` options argument was added to the `require.resolve` function,
+-  // which is the one we want
+-  if (!_resolve) {
+-    // require.resolve might be undefined when using Node SEA mode:
+-    // https://nodejs.org/api/single-executable-applications.html
+-    // Also see https://github.com/nodejs/require-in-the-middle/issues/105
+-    if (require.resolve && require.resolve.paths) {
+-      _resolve = function (moduleName, basedir) {
+-        return require.resolve(moduleName, { paths: [basedir] })
+-      }
+-    } else {
+-      const resolve = require('resolve')
+-      _resolve = function (moduleName, basedir) {
+-        return resolve.sync(moduleName, { basedir })
+-      }
+-    }
 -  }
--} else {
--  const _resolve = require('resolve')
--  resolve = function (moduleName, basedir) {
--    return _resolve.sync(moduleName, { basedir })
--  }
+-
+-  return _resolve(moduleName, basedir)
 -}
 +const resolve = function (moduleName, basedir) {}
  
  // 'foo/bar.js' or 'foo/bar/index.js' => 'foo/bar'
  const normalize = /([/\\]index)?(\.js)?$/
-@@ -135,6 +94,9 @@ class ExportsCache {
+@@ -142,6 +94,9 @@ class ExportsCache {
  
  function Hook (modules, options, onrequire) {
    if ((this instanceof Hook) === false) return new Hook(modules, options, onrequire)
@@ -71,7 +78,7 @@ index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7
    if (typeof modules === 'function') {
      onrequire = modules
      modules = null
-@@ -270,7 +232,7 @@ function Hook (modules, options, onrequire) {
+@@ -277,7 +232,7 @@ function Hook (modules, options, onrequire) {
        moduleName = parsedPath.name
        basedir = parsedPath.dir
      } else {
@@ -80,7 +87,7 @@ index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7
        if (stat === undefined) {
          debug('could not parse filename: %s', filename)
          return exports // abort if filename could not be parsed
-@@ -349,22 +311,6 @@ function Hook (modules, options, onrequire) {
+@@ -356,22 +311,6 @@ function Hook (modules, options, onrequire) {
  
  Hook.prototype.unhook = function () {
    this._unhooked = true
@@ -104,7 +111,7 @@ index a925265e4cc503df3d56b52815f1bc803ada90df..cfb2e44d5f6efb260eb179daa970d3e7
  
  function resolveModuleName (stat) {
 diff --git a/package.json b/package.json
-index 0da29054a19cbc53424a56221f947ebfe48d361c..3c6cea6a005ec3217dc0a48987cd5ca2c5541279 100644
+index 2088ad71ed8dffa26ad5f02e434153d7a7bec8d0..66d2e8782c8be8f5055281b0a0083a0b731b90db 100644
 --- a/package.json
 +++ b/package.json
 @@ -5,9 +5,7 @@
