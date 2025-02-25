@@ -13,8 +13,10 @@ export default function useVisibilityState(
         setIsVisible(newState);
       }
     };
+
     const setVisible = () => {
       if (!isVisible) {
+        onVisibilityChange?.(true);
         setIsVisible(true);
       }
     };
