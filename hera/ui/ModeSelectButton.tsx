@@ -165,8 +165,28 @@ const style = css`
   }
 
   &:not(.disabled):not(.scale-disabled) {
-    &.hover,
-    &:hover,
+    @media (hover: hover) {
+      &.hover,
+      &:hover {
+        color: ${applyVar('text-color-bright')};
+        transform: scaleX(1.05) scaleY(1.02);
+      }
+
+      &.hover:after,
+      &:hover:after {
+        opacity: 1;
+
+        height: 340%;
+        ${Breakpoints.xs} {
+          height: 280%;
+        }
+
+        ${Breakpoints.sm} {
+          height: 300%;
+        }
+      }
+    }
+
     &:active {
       color: ${applyVar('text-color-bright')};
       transform: scaleX(1.05) scaleY(1.02);
@@ -175,20 +195,6 @@ const style = css`
     &.active,
     &:active {
       transform: scaleX(0.95) scaleY(0.98);
-    }
-
-    &.hover:after,
-    &:hover:after {
-      opacity: 1;
-
-      height: 340%;
-      ${Breakpoints.xs} {
-        height: 280%;
-      }
-
-      ${Breakpoints.sm} {
-        height: 300%;
-      }
     }
 
     &.active:after,
@@ -276,9 +282,11 @@ const wideStyle = css`
   text-wrap: balance;
 
   &:not(.disabled):not(.scale-disabled) {
-    &.hover:after,
-    &:hover:after {
-      height: 14em;
+    @media (hover: hover) {
+      &.hover:after,
+      &:hover:after {
+        height: 14em;
+      }
     }
 
     &.active:after,
