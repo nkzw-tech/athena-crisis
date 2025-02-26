@@ -32,6 +32,7 @@ import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
+import Ungroup from '@iconify-icons/pixelarticons/ungroup.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbtee';
 
@@ -382,6 +383,22 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'pink',
         icon: Seatbelt,
         name: fbt('Seatbelts On', 'Skill name'),
+      };
+    case Skill.ShipIncreaseAttackAndRange:
+      return {
+        alpha: 0.3,
+        borderStyle: 'up2x',
+        colors: 'red',
+        icon: Ship,
+        name: fbt('Seafarer', 'Skill name'),
+      };
+    case Skill.XFighterAttackIncrase:
+      return {
+        alpha: 0.5,
+        borderStyle: 'plus',
+        colors: 'pink',
+        icon: Ungroup,
+        name: fbt("Amira's Ace", 'Skill name'),
       };
     default: {
       skill satisfies never;

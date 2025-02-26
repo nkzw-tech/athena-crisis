@@ -9,6 +9,7 @@ export default {
   Flamethrower: 15,
   Saboteur: 16,
   AcidBomber: 22,
+  XFighter: 25,
   Medic: 26,
   Dinosaur: 36,
   SuperTank: 38,

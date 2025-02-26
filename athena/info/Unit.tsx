@@ -2688,7 +2688,7 @@ export const ReconDrone = new UnitInfo(
 );
 
 export const XFighter = new UnitInfo(
-  25,
+  UnitID.XFighter,
   'X-Fighter',
   'Amira',
   'female',

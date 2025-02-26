@@ -11,6 +11,7 @@ import {
   Commander,
   Dinosaur,
   Dragon,
+  Frigate,
   InfernoJetpack,
   Jeep,
   Medic,
@@ -22,6 +23,7 @@ import {
   SuperAPU,
   SuperTank,
   UnitInfo,
+  XFighter,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
@@ -75,6 +77,10 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
       return Medic;
     case Skill.Jeep:
       return Jeep;
+    case Skill.ShipIncreaseAttackAndRange:
+      return Frigate;
+    case Skill.XFighterAttackIncrase:
+      return XFighter;
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:

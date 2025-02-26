@@ -56,6 +56,8 @@ export enum Skill {
   DragonSaboteur = 40,
   HighTide = 41,
   Jeep = 42,
+  ShipIncreaseAttackAndRange = 43,
+  XFighterAttackIncrase = 44,
 }
 
 export const Skills = new Set<Skill>([
@@ -90,6 +92,8 @@ export const Skills = new Set<Skill>([
   Skill.UnitAbilitySniperImmediateAction,
   Skill.UnitInfantryForestAttackAndDefenseIncrease,
   Skill.UnitRailDefenseIncreasePowerAttackIncrease,
+  Skill.ShipIncreaseAttackAndRange,
+  Skill.XFighterAttackIncrase,
   Skill.DragonSaboteur,
   Skill.Jeep,
   Skill.RecoverAirUnits,
@@ -303,6 +307,16 @@ const skillConfig: Record<
     requiresCrystal,
   },
   [Skill.Jeep]: { charges: 2, cost: 800, group: SkillGroup.Special },
+  [Skill.ShipIncreaseAttackAndRange]: {
+    charges: 3,
+    cost: 1000,
+    group: SkillGroup.Attack,
+  },
+  [Skill.XFighterAttackIncrase]: {
+    charges: 4,
+    cost: 1200,
+    group: SkillGroup.Special,
+  },
 };
 
 export const CampaignOnlySkills = new Set(
@@ -368,6 +382,7 @@ const attackUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   [Skill.VampireHeal, new Map([[UnitID.Medic, 0.5]])],
   [Skill.DragonSaboteur, new Map([[UnitID.Dragon, 0.1]])],
   [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 0.5]])],
+  [Skill.XFighterAttackIncrase, new Map([[UnitID.XFighter, 0.2]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -388,10 +403,29 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
     ]),
   ],
   [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 2]])],
+  [Skill.XFighterAttackIncrase, new Map([[UnitID.XFighter, 0.5]])],
 ]);
 
 const attackMovementTypeStatusEffects: MovementSkillMap = new Map([
   [Skill.HighTide, new Map([[MovementTypes.Ship, 0.2]])],
+  [
+    Skill.ShipIncreaseAttackAndRange,
+    new Map([
+      [MovementTypes.Ship, 0.15],
+      [MovementTypes.Amphibious, 0.15],
+      [MovementTypes.Air, -0.15],
+      [MovementTypes.LowAltitude, -0.15],
+    ]),
+  ],
+  [
+    Skill.XFighterAttackIncrase,
+    new Map([
+      [MovementTypes.Air, 0.1],
+      [MovementTypes.LowAltitude, 0.1],
+      [MovementTypes.Amphibious, -0.15],
+      [MovementTypes.Ship, -0.15],
+    ]),
+  ],
 ]);
 
 const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
@@ -549,6 +583,7 @@ const skillRangePowerEffects = new Map<number, RangeSkillMap>([
   [UnitID.Cannon, new Map([[Skill.ArtilleryRangeIncrease, [2, 8]]])],
   [UnitID.HeavyArtillery, new Map([[Skill.ArtilleryRangeIncrease, [3, 7]]])],
   [UnitID.Artillery, new Map([[Skill.ArtilleryRangeIncrease, [2, 6]]])],
+  [UnitID.XFighter, new Map([[Skill.XFighterAttackIncrase, [1, 3]]])],
 ]);
 
 const skillMovementTypeRadiusEffects = new Map<
@@ -565,6 +600,7 @@ const skillMovementTypeRadiusEffects = new Map<
   ],
   [MovementTypes.HeavySoldier, new Map([[Skill.BuyUnitSuperAPU, 1]])],
   [MovementTypes.AirInfantry, new Map([[Skill.DragonSaboteur, 1]])],
+  [MovementTypes.Amphibious, new Map([[Skill.ShipIncreaseAttackAndRange, 1]])],
 ]);
 
 const skillMovementTypeRadiusPowerEffects = new Map<
@@ -594,6 +630,8 @@ const skillMovementTypeRadiusPowerEffects = new Map<
     ]),
   ],
   [MovementTypes.AirInfantry, new Map([[Skill.VampireHeal, 2]])],
+  [MovementTypes.Ship, new Map([[Skill.ShipIncreaseAttackAndRange, 2]])],
+  [MovementTypes.Amphibious, new Map([[Skill.ShipIncreaseAttackAndRange, 2]])],
 ]);
 
 const unitCosts = new Map<ID, Map<Skill, number>>([
@@ -1411,12 +1449,14 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
     case Skill.NoUnitRestrictions:
     case Skill.Sabotage:
+    case Skill.ShipIncreaseAttackAndRange:
     case Skill.UnitAbilitySniperImmediateAction:
     case Skill.UnitBattleShipMoveAndAct:
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
     case Skill.VampireHeal:
+    case Skill.XFighterAttackIncrase:
       return false;
     default: {
       skill satisfies never;

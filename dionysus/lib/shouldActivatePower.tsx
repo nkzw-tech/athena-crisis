@@ -62,6 +62,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.NoUnitRestrictions:
     case Skill.RecoverAirUnits:
     case Skill.Sabotage:
+    case Skill.ShipIncreaseAttackAndRange:
     case Skill.SpawnUnitInfernoJetpack:
     case Skill.UnitAbilitySniperImmediateAction:
     case Skill.UnitBattleShipMoveAndAct:
@@ -70,6 +71,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.UnlockPowerStation:
     case Skill.UnlockZombie:
     case Skill.VampireHeal:
+    case Skill.XFighterAttackIncrase:
       return true;
     default: {
       skill satisfies never;

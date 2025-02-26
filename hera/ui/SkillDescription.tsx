@@ -1080,7 +1080,6 @@ export default memo(function SkillDescription({
     tileDefense?.size ? (
       <TileTypeStatusEffect effects={tileDefense} type="defense" />
     ) : null,
-    unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,
     cost ? <CostEffect effect={cost} /> : null,
   ].filter(isPresent);
@@ -1113,6 +1112,7 @@ export default memo(function SkillDescription({
         <List items={effects} />.
       </>
     ) : null,
+    unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
     isPower && activateOnInvasion ? (
       <div className="paragraph">
         <span className={typeStyle} style={{ color: getColor(color) }}>
