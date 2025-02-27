@@ -1224,7 +1224,7 @@ const lightColorStyle = css`
 `;
 
 const togglePlaytestButtonStyle = css`
-  bottom: calc(env(safe-area-inset-bottom, 0) + ${applyVar('inset')});
+  bottom: calc(${applyVar('safe-area-bottom')} + ${applyVar('inset')});
   color: transparent;
   left: ${applyVar('inset')};
   overflow: hidden;

@@ -33,10 +33,11 @@ type GlobalCSSVariableName =
   | 'color-red-orange'
   | 'color-silver'
   | 'error-color'
+  | 'safe-area-bottom'
+  | 'safe-area-top'
   | 'transform-origin'
   | 'ui-is-scaled'
   | 'ui-scale'
-  | 'safe-area-top'
   // Map Editor insets
   | 'inset'
   | 'inset-z'

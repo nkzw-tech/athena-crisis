@@ -758,12 +758,12 @@ const actionButtonStyle = css`
   z-index: calc(${applyVar('inset-z')} + 2);
 
   bottom: calc(
-    env(safe-area-inset-bottom, 0) +
+    ${applyVar('safe-area-bottom')} +
       (${vars.apply('bottom-offset')} * ${size - 6}px) + ${applyVar('inset')}
   );
   ${Breakpoints.height.xs} {
     bottom: calc(
-      env(safe-area-inset-bottom, 0) +
+      ${applyVar('safe-area-bottom')} +
         (${vars.apply('bottom-offset')} * ${size - 4}px) + ${applyVar('inset')}
     );
   }

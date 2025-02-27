@@ -322,12 +322,14 @@ body .all-fonts {
 }
 
 :root {
-  ${cssVar('safe-area-top', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-top)')}
+  ${cssVar('safe-area-top', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-top, 0)')}
+  ${cssVar('safe-area-bottom', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-bottom, 0)')}
 }
-
+  
 @media (orientation: portrait) {
   :root {
-    ${cssVar('safe-area-top', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-top)')}
+    ${cssVar('safe-area-top', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-top, 0)')}
+    ${cssVar('safe-area-bottom', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-bottom, 0)')}
   }
 
   body {

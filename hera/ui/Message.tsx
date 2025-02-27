@@ -197,15 +197,14 @@ export default function Message(props: Props) {
 const vars = new CSSVariables<'multiplier'>('ui-m');
 
 const containerStyle = css`
+  bottom: ${applyVar('safe-area-bottom')};
   display: flex;
   image-rendering: pixelated;
+  inset: 0;
   pointer-events: none;
   position: fixed;
-  z-index: 3001;
-
-  inset: 0;
   top: ${applyVar('safe-area-top')};
-  bottom: env(safe-area-inset-bottom);
+  z-index: 3001;
 `;
 
 const topStyle = css`

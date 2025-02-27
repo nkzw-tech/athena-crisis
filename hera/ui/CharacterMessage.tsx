@@ -311,18 +311,17 @@ export default function CharacterMessage(props: Props) {
 
 const vars = new CSSVariables<'multiplier' | 'color' | 'color-light'>('ui-m');
 
-// Keep zIndex in sync with SkipMessages and Menu.
+// Keep zIndex in sync with `SkipMessages` and `Menu`.
 const containerStyle = css`
   align-items: start;
+  bottom: ${applyVar('safe-area-bottom')};
   display: flex;
   image-rendering: pixelated;
+  inset: 0;
   pointer-events: none;
   position: fixed;
-  z-index: 3001;
-  inset: 0;
-
   top: ${applyVar('safe-area-top')};
-  bottom: env(safe-area-inset-bottom);
+  z-index: 3001;
 `;
 
 const bottomStyle = css`
