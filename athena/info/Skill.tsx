@@ -988,6 +988,18 @@ export function hasUnlockedBuilding(
   return false;
 }
 
+export function getUnlockedUnitIDs(skills: ReadonlySet<Skill>) {
+  const unlockedUnits = new Set<ID>();
+  for (const skill of skills) {
+    for (const [unit, skills] of unitCosts) {
+      if (new Set(skills.keys()).has(skill)) {
+        unlockedUnits.add(unit);
+      }
+    }
+  }
+  return unlockedUnits;
+}
+
 export function hasUnlockedUnit(unit: UnitInfo, skills: ReadonlySet<Skill>) {
   if (skills.size === 0) {
     return false;
