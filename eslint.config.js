@@ -146,4 +146,10 @@ export default [
       'workspaces/no-relative-imports': 0,
     },
   },
+  {
+    files: ['hera/behavior/**/*.tsx', 'hera/editor/behavior/**/*.tsx'],
+    rules: {
+      'react-hooks/rules-of-hooks': 0,
+    },
+  },
 ];

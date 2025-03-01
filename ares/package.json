@@ -33,7 +33,7 @@
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
-    "@sentry/browser": "^9.2.0",
+    "@sentry/browser": "^9.3.0",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.7.0",
     "cordova-plugin-purchase": "^13.12.1",
