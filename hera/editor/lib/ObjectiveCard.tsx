@@ -102,8 +102,9 @@ export default function ObjectiveCard({
           />
           <fbt:plural count={campaigns.length} many="campaigns">
             campaign
-          </fbt:plural>. If you want to delete the objective, you must first
-          change the campaign objectives to no longer require this objective.
+          </fbt:plural>.
+          If you want to delete the objective, you must first change the
+          campaign objectives to no longer require this objective.
         </fbt>
       ),
       title: (

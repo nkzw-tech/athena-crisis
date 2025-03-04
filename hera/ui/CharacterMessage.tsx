@@ -379,7 +379,8 @@ const messageStyle = css`
 
 const backgroundStyle = css`
   inset: 0;
-  mask-image: url('${Sprites.Noise}'),
+  mask-image:
+    url('${Sprites.Noise}'),
     linear-gradient(
       to bottom right,
       rgba(0, 0, 0, 0.9) 0%,

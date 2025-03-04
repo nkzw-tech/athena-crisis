@@ -38,7 +38,7 @@
     "@stripe/stripe-js": "^5.8.0",
     "cordova-plugin-purchase": "^13.12.1",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.4.7",
+    "framer-motion": "^12.4.10",
     "p-limit": "^6.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

@@ -597,9 +597,11 @@ export default function CampaignEditor({
             >
               {hasSaved ? (
                 <fbt desc="Text after saving a campaign">
-                  Campaign &quot;<fbt:param name="campaignName">
+                  Campaign
+                  &quot;<fbt:param name="campaignName">
                     {campaignName}
-                  </fbt:param>&quot; was saved.
+                  </fbt:param>&quot;
+                  was saved.
                 </fbt>
               ) : (
                 <ErrorText>

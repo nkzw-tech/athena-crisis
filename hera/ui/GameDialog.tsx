@@ -828,8 +828,8 @@ const GamePlayerEffectDialog = ({
                     name="number of charges"
                   >
                     charge
-                  </fbt:plural>. Your charge bar fills up through attacks during
-                  battle.
+                  </fbt:plural>.
+                  Your charge bar fills up through attacks during battle.
                 </fbt>
               </p>
             </InfoBox>

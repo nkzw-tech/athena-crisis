@@ -17,11 +17,11 @@
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.4.7",
+    "framer-motion": "^12.4.10",
     "howler": "^2.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router-dom": "^7.2.0",
+    "react-router-dom": "^7.3.0",
     "use-long-press": "^3.2.0"
   },
   "devDependencies": {

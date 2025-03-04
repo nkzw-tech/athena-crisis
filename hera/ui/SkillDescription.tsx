@@ -636,10 +636,9 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           Counter attacks are{' '}
           <fbt:param name="raisedCounterAttack">
             {RaisedCounterAttack * 100}
-          </fbt:param>% as effective as initial attacks instead of
-          <fbt:param name="counterAttack">
-            {CounterAttack * 100}
-          </fbt:param>%.
+          </fbt:param>%
+          as effective as initial attacks instead of
+          <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
         </fbt>
       );
     case Skill.UnlockZombie:
@@ -660,7 +659,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           building provides an extra{' '}
           <fbt:param name="value">
             {PowerStationSkillMultiplier * 100}
-          </fbt:param>% funds increase.
+          </fbt:param>%
+          funds increase.
         </fbt>
       );
     case Skill.VampireHeal:
@@ -672,9 +672,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
             />
           </fbt:param>{' '}
           units heal
-          <fbt:param name="value">
-            {VampireSkillHeal}
-          </fbt:param> health points at the beginning of their turn.
+          <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
+          at the beginning of their turn.
         </fbt>
       );
     case Skill.Shield:
@@ -837,7 +836,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           into{' '}
           <fbt:param name="toUnitName">
             <UnitName color={color} unit={InfernoJetpack} />
-          </fbt:param>. Spawns 3{' '}
+          </fbt:param>.
+          Spawns 3{' '}
           <fbt:param name="unitNameB">
             <UnitName color={color} unit={InfernoJetpack} />
           </fbt:param>.
@@ -919,7 +919,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Attacks are increased by{' '}
           <fbt:param name="percentage">
             {ChargeSkillChargeMultiplier * 100}
-          </fbt:param>% for each available charge.
+          </fbt:param>%
+          for each available charge.
         </fbt>
       );
     case Skill.DragonSaboteur:

@@ -162,7 +162,8 @@ const hoverStyle = css`
 const backgroundStyle = css`
   image-rendering: pixelated;
   inset: 0;
-  mask-image: url('${Sprites.Noise}'),
+  mask-image:
+    url('${Sprites.Noise}'),
     linear-gradient(
       to bottom right,
       rgba(0, 0, 0, 0.7) 0%,
@@ -692,8 +693,8 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
                 with the{' '}
                 <fbt:param name="crystalName">
                   {getTranslatedCrystalName(Crystal.Power)}
-                </fbt:param>. They currently have fewer unlocked skill slots
-                than you.
+                </fbt:param>.
+                They currently have fewer unlocked skill slots than you.
               </fbt>
             </p>
           </InfoBox>

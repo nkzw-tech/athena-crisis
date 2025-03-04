@@ -142,7 +142,8 @@ const style = css`
     content: '';
     height: 0;
     left: 50%;
-    mask-image: url('${Sprites.Noise}'),
+    mask-image:
+      url('${Sprites.Noise}'),
       linear-gradient(
         to bottom right,
         rgba(0, 0, 0, 0.7) 0%,

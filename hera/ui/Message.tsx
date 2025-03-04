@@ -245,7 +245,8 @@ const innerStyle = css`
 const backgroundStyle = css`
   bottom: 0;
   left: 0;
-  mask-image: url('${Sprites.Noise}'),
+  mask-image:
+    url('${Sprites.Noise}'),
     linear-gradient(
       to bottom right,
       rgba(0, 0, 0, 0.9) 0%,

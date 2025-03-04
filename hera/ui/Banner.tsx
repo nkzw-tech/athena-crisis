@@ -272,7 +272,8 @@ noise.src = Sprites.Noise;
 
 const backgroundStyle = css`
   inset: -720px;
-  mask-image: url('${Sprites.Noise}'),
+  mask-image:
+    url('${Sprites.Noise}'),
     linear-gradient(
       to bottom right,
       rgba(0, 0, 0, 0.7) 0%,
