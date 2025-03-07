@@ -152,6 +152,13 @@ export const AttackStatusEffect = ({ effect }: { effect: number }) => (
   </fbt>
 );
 
+const AttackStatusEffectAllUnits = ({ effect }: { effect: number }) => (
+  <fbt desc="Attack status effect description">
+    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for all
+    units
+  </fbt>
+);
+
 export const UnitAttackLeaderStatusEffect = ({
   effect,
 }: {
@@ -166,6 +173,13 @@ export const UnitAttackLeaderStatusEffect = ({
 export const DefenseStatusEffect = ({ effect }: { effect: number }) => (
   <fbt desc="Defense status effect description">
     <fbt:param name="defense">{formatEffect(effect)}</fbt:param>% defense
+  </fbt>
+);
+
+const DefenseStatusEffectAllUnits = ({ effect }: { effect: number }) => (
+  <fbt desc="Defense status effect description">
+    <fbt:param name="defense">{formatEffect(effect)}</fbt:param>% defense for
+    all units
   </fbt>
 );
 
@@ -1049,9 +1063,7 @@ export default memo(function SkillDescription({
   const unitMovement = getSkillUnitMovement(skill, type);
   const unitRange = getUnitRangeForSkill(skill, type);
   const healTypes = isPower ? getHealUnitTypes(skill) : null;
-  const effects = [
-    attack ? <AttackStatusEffect effect={attack} /> : null,
-    defense ? <DefenseStatusEffect effect={defense} /> : null,
+  const additionalEffects = [
     unitAttackLeader ? (
       <UnitAttackLeaderStatusEffect effect={unitAttackLeader} />
     ) : null,
@@ -1093,6 +1105,19 @@ export default memo(function SkillDescription({
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,
     cost ? <CostEffect effect={cost} /> : null,
   ].filter(isPresent);
+
+  const effects = (
+    additionalEffects.length
+      ? [
+          attack ? <AttackStatusEffectAllUnits effect={attack} /> : null,
+          defense ? <DefenseStatusEffectAllUnits effect={defense} /> : null,
+          ...additionalEffects,
+        ]
+      : [
+          attack ? <AttackStatusEffect effect={attack} /> : null,
+          defense ? <DefenseStatusEffect effect={defense} /> : null,
+        ]
+  ).filter(isPresent);
 
   const list = [
     !isPower && campaignOnly ? (
