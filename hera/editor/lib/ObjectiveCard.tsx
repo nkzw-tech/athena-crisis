@@ -175,15 +175,17 @@ export default function ObjectiveCard({
               <Stack flex1>
                 <fbt desc="Label selector for objective">Labels</fbt>
               </Stack>
-              <ManyLabelSelector
-                active={objective.label}
-                onChange={(label) =>
-                  onChange({
-                    ...objective,
-                    label,
-                  })
-                }
-              />
+              <Stack start>
+                <ManyLabelSelector
+                  active={objective.label}
+                  onChange={(label) =>
+                    onChange({
+                      ...objective,
+                      label,
+                    })
+                  }
+                />
+              </Stack>
             </Stack>
           )}
           {objectiveHasAmounts(objective) && (
