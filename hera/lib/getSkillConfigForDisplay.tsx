@@ -400,6 +400,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Ungroup,
         name: fbt("Amira's Ace", 'Skill name'),
       };
+    case Skill.CostRecovery:
+      return {
+        alpha: 0.5,
+        borderStyle: 'up',
+        colors: 'orange',
+        icon: Coin,
+        name: fbt('Insurance Claims', 'Skill name'),
+      };
     default: {
       skill satisfies never;
       throw new UnknownTypeError('getSkillConfig', skill);

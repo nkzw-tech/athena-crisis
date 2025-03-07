@@ -11,6 +11,7 @@ import {
   ActiveUnitTypes,
   ChargeSkillChargeMultiplier,
   ChargeSkillCharges,
+  CostRecoverySkillModifier,
   getBlockedUnits,
   getHealUnitTypes,
   getSkillAttackLeaderUnitStatusEffect,
@@ -954,6 +955,14 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="convertedUnitName">
             <UnitName color={color} unit={Jeep} />
           </fbt:param>.
+        </fbt>
+      );
+    case Skill.CostRecovery:
+      return (
+        <fbt desc="Additional skill description.">
+          Recovers
+          <fbt:param name="value">{CostRecoverySkillModifier * 100}</fbt:param>%
+          of the unit cost each time a unit is defeated.
         </fbt>
       );
   }

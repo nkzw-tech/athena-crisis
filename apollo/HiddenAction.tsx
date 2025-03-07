@@ -1,5 +1,6 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Jeep } from '@deities/athena/info/Unit.tsx';
+import maybeRecoverUnitCost from '@deities/athena/lib/maybeRecoverUnitCost.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -144,7 +145,7 @@ function applyHiddenSourceAttackUnitAction(
       )
     : map.units.delete(to);
 
-  const actualPlayerB = map.getPlayer(originalUnitB);
+  let actualPlayerB = map.getPlayer(originalUnitB);
   let lostUnits = unitB && newPlayerB == null ? 0 : originalUnitB.count();
 
   if (
@@ -156,6 +157,8 @@ function applyHiddenSourceAttackUnitAction(
     units = units.set(to, originalUnitB.transports[0].deploy());
     lostUnits = Math.max(0, lostUnits - 1);
   }
+
+  actualPlayerB = maybeRecoverUnitCost(!unitB, actualPlayerB, originalUnitB);
 
   return map.copy({
     teams:
@@ -211,12 +214,16 @@ function applyHiddenSourceAttackBuildingAction(
         existingUnit && existingUnit.player > 0
           ? updatePlayer(
               map.teams,
-              map
-                .getPlayer(existingUnit)
-                .modifyStatistics({
-                  lostUnits: existingUnit.count(),
-                })
-                .maybeSetCharge(chargeC),
+              maybeRecoverUnitCost(
+                !unitC,
+                map
+                  .getPlayer(existingUnit)
+                  .modifyStatistics({
+                    lostUnits: existingUnit.count(),
+                  })
+                  .maybeSetCharge(chargeC),
+                existingUnit,
+              ),
             )
           : map.teams,
       units: map.units.delete(to),
@@ -252,12 +259,16 @@ function applyHiddenTargetAttackUnitAction(
             ? map.teams
             : updatePlayer(
                 map.teams,
-                map
-                  .getPlayer(unit)
-                  .modifyStatistics({
-                    lostUnits: unit.count(),
-                  })
-                  .maybeSetCharge(chargeA),
+                maybeRecoverUnitCost(
+                  !unitA,
+                  map
+                    .getPlayer(unit)
+                    .modifyStatistics({
+                      lostUnits: unit.count(),
+                    })
+                    .maybeSetCharge(chargeA),
+                  unit,
+                ),
               ),
         units: unitA
           ? map.units.set(
@@ -313,12 +324,16 @@ function applyHiddenTargetAttackBuildingAction(
         ? map.teams
         : updatePlayer(
             map.teams,
-            map
-              .getPlayer(unit)
-              .modifyStatistics({
-                lostUnits: unit.count(),
-              })
-              .maybeSetCharge(chargeA),
+            maybeRecoverUnitCost(
+              !unitA,
+              map
+                .getPlayer(unit)
+                .modifyStatistics({
+                  lostUnits: unit.count(),
+                })
+                .maybeSetCharge(chargeA),
+              unit,
+            ),
           ),
     units,
   });

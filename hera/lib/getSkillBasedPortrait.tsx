@@ -87,6 +87,7 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
     case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
     case Skill.AttackIncreaseMinor:
     case Skill.Charge:
+    case Skill.CostRecovery:
     case Skill.CounterAttackPower:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.DefenseIncreaseMinor:

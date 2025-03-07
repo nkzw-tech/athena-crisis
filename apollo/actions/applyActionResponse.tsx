@@ -5,6 +5,7 @@ import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import maybeConvertPlayer from '@deities/athena/lib/maybeConvertPlayer.tsx';
+import maybeRecoverUnitCost from '@deities/athena/lib/maybeRecoverUnitCost.tsx';
 import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
 import spawnBuildings from '@deities/athena/lib/spawnBuildings.tsx';
@@ -124,8 +125,8 @@ export default function applyActionResponse(
             )
           : units.delete(to);
 
-      const actualPlayerA = map.getPlayer(playerA);
-      const actualPlayerB = map.getPlayer(playerB);
+      let actualPlayerA = map.getPlayer(playerA);
+      let actualPlayerB = map.getPlayer(playerB);
 
       const lostUnits =
         unitA &&
@@ -154,6 +155,17 @@ export default function applyActionResponse(
         units = units.set(to, originalUnitB.transports[0].deploy());
         destroyedUnits = Math.max(0, destroyedUnits - 1);
       }
+
+      actualPlayerA = maybeRecoverUnitCost(
+        !unitA,
+        actualPlayerA,
+        originalUnitA,
+      );
+      actualPlayerB = maybeRecoverUnitCost(
+        !unitB,
+        actualPlayerB,
+        originalUnitB,
+      );
 
       return map.copy({
         teams: updatePlayers(map.teams, [
@@ -244,10 +256,17 @@ export default function applyActionResponse(
       const oneShotA =
         originalUnitA && originalUnitA?.health >= MaxHealth && !unitA ? 1 : 0;
       // Update `playerA` and `playerB` first, then update `playerC` which might equal `playerB`.
+      let actualPlayerA = map.getPlayer(playerA);
+
+      actualPlayerA = maybeRecoverUnitCost(
+        !unitA,
+        actualPlayerA,
+        originalUnitA,
+      );
+
       const teams = originalBuilding
         ? updatePlayers(map.teams, [
-            map
-              .getPlayer(playerA)
+            actualPlayerA
               .modifyStatistics({
                 damage: Math.max(
                   0,
@@ -267,31 +286,39 @@ export default function applyActionResponse(
           ])
         : map.teams;
 
+      let actualPlayerC =
+        originalUnitC && originalUnitC.player > 0 && playerC
+          ? map.copy({ teams }).getPlayer(playerC)
+          : null;
+
+      if (actualPlayerC) {
+        actualPlayerC = maybeRecoverUnitCost(
+          !unitC,
+          actualPlayerC,
+          originalUnitC,
+        );
+      }
+
       return map.copy({
         buildings: building
           ? map.buildings.set(to, building)
           : map.buildings.delete(to),
-        teams:
-          originalUnitC && originalUnitC.player > 0 && playerC
-            ? updatePlayer(
-                teams,
-                map
-                  .getPlayer(playerC)
-                  .modifyStatistics({
-                    damage:
-                      hasCounterAttack && originalUnitA
-                        ? Math.max(
-                            0,
-                            originalUnitA.health - (unitA?.health || 0),
-                          )
-                        : 0,
-                    destroyedUnits: lostUnits,
-                    lostUnits: unitC ? 0 : originalUnitC?.count() || 1,
-                    oneShots: oneShotA,
-                  })
-                  .maybeSetCharge(chargeC),
-              )
-            : teams,
+        teams: actualPlayerC
+          ? updatePlayer(
+              teams,
+              actualPlayerC
+                .modifyStatistics({
+                  damage:
+                    hasCounterAttack && originalUnitA
+                      ? Math.max(0, originalUnitA.health - (unitA?.health || 0))
+                      : 0,
+                  destroyedUnits: lostUnits,
+                  lostUnits: unitC ? 0 : originalUnitC?.count() || 1,
+                  oneShots: oneShotA,
+                })
+                .maybeSetCharge(chargeC),
+            )
+          : teams,
         units,
       });
     }
@@ -530,9 +557,13 @@ export default function applyActionResponse(
             oneShots: unit && unit.health >= MaxHealth ? 1 : 0,
           }),
           unit
-            ? map
-                .getPlayer(unit.player)
-                .modifyStatistic('lostUnits', unit.count())
+            ? maybeRecoverUnitCost(
+                !!unit,
+                map
+                  .getPlayer(unit.player)
+                  .modifyStatistic('lostUnits', unit.count()),
+                unit,
+              )
             : null,
         ]),
         units: unit ? map.units.delete(to) : map.units,

@@ -1,4 +1,4 @@
-import { Bar, ResearchLab } from '@deities/athena/info/Building.tsx';
+import { Bar, House, ResearchLab } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Forest, Forest2, RailTrack } from '@deities/athena/info/Tile.tsx';
 import {
@@ -25,6 +25,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
 import {
   ActivatePowerAction,
+  AttackBuildingAction,
   AttackUnitAction,
   CaptureAction,
   HealAction,
@@ -716,4 +717,39 @@ test(`some skills require a target to be provided`, () => {
     throw new Error(`Expected 'actionResponse' type to be 'ActivatePower'.`);
   }
   expect(actionResponse.from).toBe(from);
+});
+
+test('some skills can recover unit costs', async () => {
+  const skills = new Set([Skill.CostRecovery]);
+  const mapA = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
+    units: map.units
+      .set(fromA, SmallTank.create(1).setHealth(5))
+      .set(toA, SmallTank.create(2)),
+  });
+  const [, state1] = execute(mapA, vision, AttackUnitAction(fromA, toA))!;
+
+  expect(state1.getPlayer(1).funds).toEqual(mapA.getPlayer(1).funds);
+
+  const mapB = mapA.copy({
+    teams: updatePlayer(
+      map.teams,
+      map.getPlayer(1).copy({ activeSkills: skills }),
+    ),
+  });
+
+  const [, state2] = execute(mapB, vision, AttackUnitAction(fromA, toA))!;
+  expect(state2.getPlayer(1).funds).toBeGreaterThan(mapA.getPlayer(1).funds);
+
+  const mapC = mapB.copy({
+    currentPlayer: 2,
+  });
+  const [, state3] = execute(mapC, vision, AttackUnitAction(toA, fromA))!;
+  expect(state3.getPlayer(1).funds).toBeGreaterThan(mapA.getPlayer(1).funds);
+
+  const mapD = mapC.copy({
+    buildings: mapB.buildings.set(fromA, House.create(1).setHealth(5)),
+  });
+  const [, state4] = execute(mapD, vision, AttackBuildingAction(toA, fromA))!;
+  expect(state4.getPlayer(1).funds).toBeGreaterThan(mapA.getPlayer(1).funds);
 });

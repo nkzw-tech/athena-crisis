@@ -58,6 +58,7 @@ export enum Skill {
   Jeep = 42,
   ShipIncreaseAttackAndRange = 43,
   XFighterAttackIncrase = 44,
+  CostRecovery = 45,
 }
 
 export const Skills = new Set<Skill>([
@@ -95,6 +96,7 @@ export const Skills = new Set<Skill>([
   Skill.ShipIncreaseAttackAndRange,
   Skill.XFighterAttackIncrase,
   Skill.DragonSaboteur,
+  Skill.CostRecovery,
   Skill.Jeep,
   Skill.RecoverAirUnits,
   Skill.Shield,
@@ -315,6 +317,11 @@ const skillConfig: Record<
   [Skill.XFighterAttackIncrase]: {
     charges: 4,
     cost: 1200,
+    group: SkillGroup.Special,
+  },
+  [Skill.CostRecovery]: {
+    charges: 3,
+    cost: 800,
     group: SkillGroup.Special,
   },
 };
@@ -539,6 +546,7 @@ const unitCostEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor, 0.15],
   [Skill.HealVehiclesAttackDecrease, -0.2],
   [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor, -0.1],
+  [Skill.CostRecovery, 0.1],
 ]);
 
 const unitCostPowerEffects: SkillMap = new Map([
@@ -1395,6 +1403,8 @@ export const VampireSoldierMovementTypes = new Set([
   MovementTypes.AirInfantry,
 ]);
 
+export const CostRecoverySkillModifier = 0.5;
+
 const octopusPowerDamage = 20;
 const dragonPowerDamage = 80;
 const vampirePowerDamage = 25;
@@ -1452,6 +1462,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.BuyUnitSuperTank:
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
     case Skill.Charge:
+    case Skill.CostRecovery:
     case Skill.CounterAttackPower:
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.DefenseIncreaseMinor:
