@@ -157,7 +157,7 @@ const style = css`
     transition:
       height 300ms ease,
       opacity 300ms ease;
-    width: 100%;
+    width: 104%;
     z-index: -1;
   }
 
