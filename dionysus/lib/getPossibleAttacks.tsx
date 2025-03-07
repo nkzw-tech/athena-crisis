@@ -150,7 +150,9 @@ export default function getPossibleAttacks(
       ) {
         if (
           !entityB.isBeingRescued() ||
-          entityB.isBeingRescuedBy(unitA.player)
+          map
+            .getTeam(unitA.player)
+            .players.some((player) => entityB.isBeingRescuedBy(player.id))
         ) {
           return;
         }
