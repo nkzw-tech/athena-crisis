@@ -122,9 +122,11 @@ export default function Dialog({
 
 export const DialogScrollContainer = ({
   children,
+  horizontalScroll,
   navigate,
 }: {
   children: ReactNode;
+  horizontalScroll?: boolean;
   key: string;
   navigate: boolean;
 }) => {
@@ -196,7 +198,10 @@ export const DialogScrollContainer = ({
 
   return (
     <div className={scrollContainerStyle}>
-      <ScrollContainer className={scrollStyle} ref={setRef}>
+      <ScrollContainer
+        className={cx(scrollStyle, horizontalScroll && overflowXStyle)}
+        ref={setRef}
+      >
         {children}
       </ScrollContainer>
       <div className={cx(scrollDownStyle, showArrow && arrowVisibleStyle)}>
@@ -207,32 +212,6 @@ export const DialogScrollContainer = ({
     </div>
   );
 };
-
-const scrollDownStyle = css`
-  background-image: linear-gradient(
-    0deg,
-    ${applyVar('background-color')} 10px,
-    rgba(255, 255, 255, 0) 30px
-  );
-  bottom: -1px;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
-  transition: opacity 300ms ease;
-`;
-
-const scrollDownIconStyle = css`
-  bottom: 4px;
-  color: ${applyVar('border-color')};
-  position: absolute;
-  right: 4px;
-  transform: rotate(-90deg);
-`;
-
-const arrowVisibleStyle = css`
-  opacity: 1;
-`;
 
 export const DialogTabBar = ({ children }: { children: ReactNode }) => (
   <div className={tabBarStyle}>{children}</div>
@@ -350,6 +329,10 @@ const scrollStyle = css`
   position: absolute;
 `;
 
+const overflowXStyle = css`
+  overflow-x: auto;
+`;
+
 // `translateZ` is required for Safari, otherwise it doesn't place the containing `position: fixed` element correctly.
 const scrollContainerStyle = css`
   inset: 0;
@@ -452,4 +435,31 @@ const closeButtonStyle = css`
   right: 0;
   top: -${DoubleSize}px;
   width: ${DoubleSize}px;
+`;
+
+const scrollDownStyle = css`
+  background-image: linear-gradient(
+    0deg,
+    ${applyVar('background-color')} 10px,
+    rgba(255, 255, 255, 0) 30px
+  );
+  bottom: -1px;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 300ms ease;
+  z-index: 1000;
+`;
+
+const scrollDownIconStyle = css`
+  bottom: 4px;
+  color: ${applyVar('border-color')};
+  position: absolute;
+  right: 4px;
+  transform: rotate(-90deg);
+`;
+
+const arrowVisibleStyle = css`
+  opacity: 1;
 `;
