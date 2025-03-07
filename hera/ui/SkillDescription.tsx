@@ -283,7 +283,7 @@ const UnitRange = ({
           />
         ))}
         name="list"
-      />
+      />.
     </fbt>
   ) : null;
 
