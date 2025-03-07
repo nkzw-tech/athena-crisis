@@ -952,7 +952,9 @@ export function getInitialObjective(
   const hidden = false;
   const optional = false;
   const currentPlayer = map.getCurrentPlayer().id;
-  const players = [currentPlayer > 0 ? currentPlayer : map.active[0]];
+  const players = [
+    (currentPlayer > 0 ? currentPlayer : map.active[0]) || PlayerIDs[1],
+  ];
   const label = new Set(players);
   switch (criteria) {
     case Criteria.Default:
