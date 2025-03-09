@@ -320,6 +320,7 @@ const skillConfig: Record<
     group: SkillGroup.Special,
   },
   [Skill.CostRecovery]: {
+    activateOnInvasion,
     charges: 3,
     cost: 800,
     group: SkillGroup.Special,
