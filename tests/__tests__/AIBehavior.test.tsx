@@ -25,6 +25,7 @@ import {
   ShipyardConstructionSite,
 } from '@deities/athena/info/Tile.tsx';
 import {
+  APU,
   Artillery,
   Battleship,
   Corvette,
@@ -1183,5 +1184,55 @@ test('activates skills where the unit ratio does not matter', async () => {
     CreateUnit (1,2 → 2,2) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Jess', completed: true }, free: false, skipBehaviorRotation: false }
     CreateUnit (2,3 → 1,3) { unit: Bazooka Bear { id: 53, health: 100, player: 2, fuel: 100, ammo: [ [ 1, 5 ] ], moved: true, name: 'Blair', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});
+
+test('creates production buildings in the space biome despite not having access to funds buildings', async () => {
+  const initialMap = MapData.createMap({
+    config: {
+      biome: 4,
+    },
+    map: [
+      1, 1, 1, 29, 29, 1, 1, 1, 29, 29, 1, 1, 1, 29, 1, 1, 1, 1, 29, 29, 1, 1,
+      1, 1, 8,
+    ],
+    size: {
+      height: 5,
+      width: 5,
+    },
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [{ funds: 0, id: 1, userId: 'User-1' }],
+      },
+      {
+        id: 2,
+        name: '',
+        players: [{ funds: 1000, id: 2, name: 'AI' }],
+      },
+    ],
+  });
+
+  const map = initialMap.copy({
+    units: initialMap.units
+      .set(vec(1, 1), APU.create(1))
+      .set(vec(3, 5), Pioneer.create(2))
+      .set(vec(5, 3), Infantry.create(2)),
+  });
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Move (3,5 → 5,5) { fuel: 38, completed: null, path: [4,5 → 5,5] }
+    CreateBuilding (5,5) { building: Spawn Platform { id: 19, health: 100, player: 2, completed: true }, free: null }
+    CompleteUnit (5,3)
+    EndTurn { current: { funds: 850, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
