@@ -101,6 +101,16 @@
     "overrides": {
       "react@^18.0.0": "19.0.0-rc.1",
       "rollup@^2.0.0": "^4.16.4"
+    },
+    "patchedDependencies": {
+      "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
+      "eslint-plugin-import": "patches/eslint-plugin-import.patch",
+      "graphql-helix@1.13.0": "patches/graphql-helix@1.13.0.patch",
+      "howler@2.2.4": "patches/howler@2.2.4.patch",
+      "jest-image-snapshot": "patches/jest-image-snapshot.patch",
+      "require-in-the-middle": "patches/require-in-the-middle.patch",
+      "resend": "patches/resend.patch",
+      "typescript": "patches/typescript.patch"
     }
   }
 }
