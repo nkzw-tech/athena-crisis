@@ -507,7 +507,6 @@ export default class DionysusAlpha extends BaseAI {
       };
 
       this._canBuildFundsBuildings =
-        !map.config.blocklistedBuildings.size ||
         check(exampleVector) ||
         map.reduceEachField((canBuildFundsBuilding, vector) => {
           if (canBuildFundsBuilding) {
@@ -542,7 +541,7 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     let _funds: number | null = null;
-    const getFunds = () =>
+    const getFundsPerTurn = () =>
       _funds == null ? (_funds = calculateFunds(map, currentPlayer)) : _funds;
 
     let _allowAnyBuilding: boolean | null = null;
@@ -557,7 +556,7 @@ export default class DionysusAlpha extends BaseAI {
     const shouldBuild = (info: BuildingInfo) =>
       getAllowAnyBuilding()
         ? info.configuration.funds > 0 ||
-          getFunds() > 0 ||
+          getFundsPerTurn() > 0 ||
           !this.getCanBuildFundsBuildings(map, currentPlayer, from)
         : info.canBuildUnits();
 
