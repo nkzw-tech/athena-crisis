@@ -64,7 +64,7 @@
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.11.8",
-    "@types/node": "^22.13.9",
+    "@types/node": "^22.13.10",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
     "chalk": "^5.4.1",
