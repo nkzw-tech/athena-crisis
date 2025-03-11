@@ -1,6 +1,12 @@
 import FastPriorityQueue from 'fastpriorityqueue';
 import { Skill } from './info/Skill.tsx';
-import { Bridge, TileInfo, TileTypes, TransitionCost } from './info/Tile.tsx';
+import {
+  Bridge,
+  Space,
+  TileInfo,
+  TileTypes,
+  TransitionCost,
+} from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
 import canAccessBridge from './lib/canAccessBridge.tsx';
 import canLoad from './lib/canLoad.tsx';
@@ -86,8 +92,9 @@ export const MoveConfiguration = {
     if (maybeCancelTransitionCost) {
       return (parentCost === TransitionCost.Cancel &&
         currentCost === TransitionCost.Cancel) ||
-        parent.group === Bridge.group ||
-        current.group === Bridge.group
+        (parent.group === Bridge.group && current.group === Bridge.group) ||
+        (parent.group === Bridge.group && current !== Space) ||
+        (current.group === Bridge.group && parent !== Space)
         ? 0
         : Number.POSITIVE_INFINITY;
     }

@@ -2,10 +2,12 @@ import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { expect, test } from 'vitest';
 import startMap from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
 import { Skill } from '../info/Skill.tsx';
+import { Path, Space } from '../info/Tile.tsx';
 import {
   Battleship,
   Flamethrower,
   Humvee,
+  Jetpack,
   PatrolShip,
   XFighter,
 } from '../info/Unit.tsx';
@@ -1850,6 +1852,38 @@ test('correctly cancels transition costs in the Space biome', () => {
       ],
     ]
   `);
+});
+
+test('cannot enter or exit a Spaceship without a bridge', () => {
+  const vecA = vec(1, 2);
+  const vecB = vec(1, 1);
+  const unitA = Jetpack.create(1);
+  const map = MapData.createMap({
+    config: {
+      biome: 4,
+    },
+    map: [
+      Space.id,
+      Space.id,
+      Space.id,
+      Path.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+    ],
+    size: {
+      height: 3,
+      width: 3,
+    },
+  });
+
+  expect(
+    Array.from(moveable(map, unitA, vecA).keys()).sort(),
+  ).toMatchInlineSnapshot(`[]`);
+
+  expect(moveable(map, unitA, vecB).has(vecA)).toBeFalsy();
 });
 
 test('Naval units cannot access bridges unless they are below a Sea tile', () => {
