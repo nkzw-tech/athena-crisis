@@ -878,11 +878,11 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.UnlockPowerStation:
       return (
         <fbt desc="Additional skill description">
-          Build{' '}
+          You can build{' '}
           <fbt:param name="buildingName">
             <BuildingName building={PowerStation} color={color} />
           </fbt:param>{' '}
-          buildings at construction sites.
+          buildings at construction sites while this power is active.
         </fbt>
       );
     case Skill.BuyUnitDragon:

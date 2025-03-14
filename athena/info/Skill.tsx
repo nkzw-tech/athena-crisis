@@ -254,7 +254,12 @@ const skillConfig: Record<
     group: SkillGroup.Unlock,
     requiresTarget,
   },
-  [Skill.Sabotage]: { charges: 5, cost: 1500, group: SkillGroup.Attack },
+  [Skill.Sabotage]: {
+    activateOnInvasion: 'all',
+    charges: 5,
+    cost: 1500,
+    group: SkillGroup.Attack,
+  },
   [Skill.SpawnUnitInfernoJetpack]: {
     activateOnInvasion,
     charges: 5,
