@@ -113,7 +113,7 @@ export default function MapEditorExample() {
   }, [mapObject]);
 
   return (
-    <div style={{ width: '150%' }}>
+    <div style={{ WebkitUserSelect: 'none', width: '150%' }}>
       <MapEditor
         animationSpeed={null}
         confirmActionStyle="touch"
