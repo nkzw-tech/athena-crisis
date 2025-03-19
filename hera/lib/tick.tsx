@@ -4,7 +4,7 @@ import {
   WaterfallModifiers,
 } from '@deities/athena/info/Tile.tsx';
 import { AnimationSpeed } from '@deities/athena/map/Configuration.tsx';
-import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
+import useVisibilityState from '@nkzw/use-visibility-state';
 import { useEffect } from 'react';
 
 type TickFunction = (tick: number) => void;

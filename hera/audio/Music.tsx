@@ -6,7 +6,7 @@ import { App } from '@deities/ui/App.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
-import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
+import useVisibilityState from '@nkzw/use-visibility-state';
 import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 type MusicContext = {

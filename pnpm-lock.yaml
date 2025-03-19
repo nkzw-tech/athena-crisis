@@ -182,6 +182,9 @@ importers:
       '@nkzw/use-relative-time':
         specifier: ^1.1.0
         version: 1.1.0(react@19.0.0)
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       '@sentry/browser':
         specifier: ^9.6.0
         version: 9.6.0
@@ -581,6 +584,9 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       array-shuffle:
         specifier: ^3.0.0
         version: 3.0.0
@@ -657,6 +663,9 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       '@types/react':
         specifier: ^19.0.11
         version: 19.0.11
@@ -731,14 +740,17 @@ importers:
         specifier: ^1.2.5
         version: 1.2.5
       '@nkzw/create-context-hook':
-        specifier: ^1.0.1
-        version: 1.0.1(react@19.0.0)
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
       '@nkzw/use-relative-time':
         specifier: ^1.1.0
         version: 1.1.0(react@19.0.0)
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       array-shuffle:
         specifier: ^3.0.0
         version: 3.0.0
@@ -822,6 +834,10 @@ importers:
         version: 11.0.1
 
   tests:
+    dependencies:
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
     devDependencies:
       '@deities/apollo':
         specifier: workspace:*
@@ -922,6 +938,9 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       fbtee:
         specifier: ^0.2.0
         version: 0.2.0(@nkzw/babel-plugin-fbtee-runtime@0.2.0(@nkzw/babel-plugin-fbtee@0.2.0))(@nkzw/babel-plugin-fbtee@0.2.0)(react@19.0.0)
@@ -966,8 +985,8 @@ importers:
         specifier: ^1.2.5
         version: 1.2.5
       '@nkzw/create-context-hook':
-        specifier: ^1.0.1
-        version: 1.0.1(react@19.0.0)
+        specifier: ^1.0.2
+        version: 1.0.2(react@19.0.0)
       '@nkzw/joymap':
         specifier: ^4.0.2
         version: 4.0.2
@@ -2278,8 +2297,8 @@ packages:
     resolution: {integrity: sha512-ref96cHAP83Lo3li7XGr+YfWj5Kkhe7VW8isnQDxz6C+eK+noij4Bk4RQLbnPCpkzK7qT9OH+eu2FuF+5wyb3g==}
     hasBin: true
 
-  '@nkzw/create-context-hook@1.0.1':
-    resolution: {integrity: sha512-gw186wNLpv7yfPQkZMtAQZ1qCdp0lP+DZDZe25VzhgfkXH76Tfa6URB+mVR1melTJOxkMYqbVgxEvLLmkENP3A==}
+  '@nkzw/create-context-hook@1.0.2':
+    resolution: {integrity: sha512-AMjyPpNCO1ODAhphHQFozazUDLFFtQBh75lWzDNZDeclBgCgCdv4Ipyo+Y6FyXbNu28HM8rBjX/rssKx1HU5lA==}
     peerDependencies:
       react: ^19.0.0
 
@@ -2324,6 +2343,11 @@ packages:
     resolution: {integrity: sha512-ogCL62FvScpRpsZUuaN6Jt0xPGRv62atQUNGyMcX+nZs4H5Fs5K1iA3MbSmkJ1y0n/N0RIRLc3VAp8o46lq2CA==}
     peerDependencies:
       react: 19.0.0-rc.1
+
+  '@nkzw/use-visibility-state@1.0.2':
+    resolution: {integrity: sha512-cCDR44TachXKGJRbHJxW0qA7Bqqbm7oCCjEde9/kQ+nku8Y3145HeFYOWwD5kONs+K0pfhtMFBrvfSMFZfvVyA==}
+    peerDependencies:
+      react: ^19.0.0
 
   '@noble/hashes@1.7.1':
     resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}
@@ -10807,7 +10831,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@nkzw/create-context-hook@1.0.1(react@19.0.0)':
+  '@nkzw/create-context-hook@1.0.2(react@19.0.0)':
     dependencies:
       react: 19.0.0
 
@@ -10866,6 +10890,11 @@ snapshots:
 
   '@nkzw/use-relative-time@1.1.0(react@19.0.0)':
     dependencies:
+      react: 19.0.0
+
+  '@nkzw/use-visibility-state@1.0.2(react@19.0.0)':
+    dependencies:
+      '@nkzw/create-context-hook': 1.0.2(react@19.0.0)
       react: 19.0.0
 
   '@noble/hashes@1.7.1': {}

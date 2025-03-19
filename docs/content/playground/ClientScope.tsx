@@ -9,6 +9,7 @@ import { AlertContext } from '@deities/ui/hooks/useAlert.tsx';
 import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
+import { VisibilityStateContext } from '@nkzw/use-visibility-state';
 import { IntlVariations, setupFbtee } from 'fbtee';
 import { ReactElement } from 'react';
 
@@ -72,11 +73,13 @@ if (import.meta.env.DEV) {
 export default function ClientScope({ children }: { children: ReactElement }) {
   return (
     <ScaleContext>
-      <HideContext>
-        <AlertContext>
-          <div className={clientScopeStyle}>{children}</div>
-        </AlertContext>
-      </HideContext>
+      <VisibilityStateContext>
+        <HideContext>
+          <AlertContext>
+            <div className={clientScopeStyle}>{children}</div>
+          </AlertContext>
+        </HideContext>
+      </VisibilityStateContext>
     </ScaleContext>
   );
 }

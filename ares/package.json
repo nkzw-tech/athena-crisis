@@ -33,6 +33,7 @@
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/use-relative-time": "^1.1.0",
+    "@nkzw/use-visibility-state": "^1.0.2",
     "@sentry/browser": "^9.6.0",
     "@stripe/react-stripe-js": "^3.5.0",
     "@stripe/stripe-js": "^6.1.0",

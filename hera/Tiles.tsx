@@ -15,7 +15,7 @@ import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
-import useVisibilityState from '@deities/ui/hooks/useVisibilityState.tsx';
+import useVisibilityState from '@nkzw/use-visibility-state';
 import {
   Tiles0,
   Tiles1,

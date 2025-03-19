@@ -18,6 +18,7 @@
     "@deities/hermes": "workspace:*",
     "@deities/ui": "workspace:*",
     "@emotion/css": "^11.13.5",
+    "@nkzw/use-visibility-state": "^1.0.2",
     "array-shuffle": "^3.0.0",
     "fbtee": "^0.2.0",
     "framer-motion": "^12.5.0",

@@ -9,6 +9,9 @@
   },
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
+  "dependencies": {
+    "@nkzw/use-visibility-state": "^1.0.2"
+  },
   "devDependencies": {
     "@deities/apollo": "workspace:*",
     "@deities/ares": "workspace:*",
