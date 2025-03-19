@@ -730,6 +730,9 @@ importers:
       '@iconify-icons/pixelarticons':
         specifier: ^1.2.5
         version: 1.2.5
+      '@nkzw/create-context-hook':
+        specifier: ^1.0.1
+        version: 1.0.1(react@19.0.0)
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
@@ -962,6 +965,9 @@ importers:
       '@iconify-icons/pixelarticons':
         specifier: ^1.2.5
         version: 1.2.5
+      '@nkzw/create-context-hook':
+        specifier: ^1.0.1
+        version: 1.0.1(react@19.0.0)
       '@nkzw/joymap':
         specifier: ^4.0.2
         version: 4.0.2
@@ -2271,6 +2277,11 @@ packages:
   '@nkzw/babel-preset-fbtee@0.2.0':
     resolution: {integrity: sha512-ref96cHAP83Lo3li7XGr+YfWj5Kkhe7VW8isnQDxz6C+eK+noij4Bk4RQLbnPCpkzK7qT9OH+eu2FuF+5wyb3g==}
     hasBin: true
+
+  '@nkzw/create-context-hook@1.0.1':
+    resolution: {integrity: sha512-gw186wNLpv7yfPQkZMtAQZ1qCdp0lP+DZDZe25VzhgfkXH76Tfa6URB+mVR1melTJOxkMYqbVgxEvLLmkENP3A==}
+    peerDependencies:
+      react: ^19.0.0
 
   '@nkzw/define-env@1.1.0':
     resolution: {integrity: sha512-5R0K2HsCtfCWCSzcg8Zwe/+hb8C84aVj0yrtTMrkierV7jODMvhu3DeBCcaWF4apDWgRLWu1E7KdYO7cYkM0Zg==}
@@ -10795,6 +10806,10 @@ snapshots:
       '@nkzw/babel-plugin-fbtee-runtime': 0.2.0(@nkzw/babel-plugin-fbtee@0.2.0)
     transitivePeerDependencies:
       - supports-color
+
+  '@nkzw/create-context-hook@1.0.1(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
 
   '@nkzw/define-env@1.1.0': {}
 

@@ -1,4 +1,4 @@
-import createContextHook from '@deities/ui/hooks/createContextHook.tsx';
+import createContextHook from '@nkzw/create-context-hook';
 import { useEffect, useState } from 'react';
 
 const [HideContext, useHide] = createContextHook(() => {

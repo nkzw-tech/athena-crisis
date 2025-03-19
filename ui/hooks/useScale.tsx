@@ -1,8 +1,8 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import createContextHook from '@nkzw/create-context-hook';
 import { useEffect, useState } from 'react';
 import { isIOS } from '../Browser.tsx';
 import cssVar, { applyVar } from '../cssVar.tsx';
-import createContextHook from './createContextHook.tsx';
 
 let div: HTMLDivElement | null = null;
 const CACHE = new Map<string, number>();
