@@ -32,7 +32,7 @@
     "react-fps": "^1.0.6"
   },
   "devDependencies": {
-    "@types/react": "^19.0.11",
+    "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4"
   }
 }

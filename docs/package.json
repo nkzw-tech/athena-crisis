@@ -25,13 +25,13 @@
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/css": "^11.13.5",
     "@nkzw/use-visibility-state": "^1.0.2",
-    "@types/react": "^19.0.11",
+    "@types/react": "^19.0.12",
     "dunkel-theme": "^1.7.1",
     "fbtee": "^0.2.0",
     "framer-motion": "^12.5.0",
     "licht-theme": "^1.7.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "vocs": "^1.0.5"
+    "vocs": "^1.0.11"
   }
 }
