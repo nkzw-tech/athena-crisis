@@ -18,7 +18,7 @@
     "@nkzw/create-context-hook": "^1.0.2",
     "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.5.0",
+    "framer-motion": "^12.6.1",
     "howler": "^2.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",

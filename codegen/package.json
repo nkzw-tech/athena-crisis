@@ -13,13 +13,13 @@
     "@nkzw/core": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/parser": "^7.26.10",
-    "@babel/traverse": "^7.26.10",
-    "@babel/types": "^7.26.10",
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@babel/types": "^7.27.0",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hermes": "workspace:*",
-    "@types/babel__traverse": "^7.20.6",
+    "@types/babel__traverse": "^7.20.7",
     "chalk": "^5.4.1",
     "glob": "11.0.1",
     "prettier": "4.0.0-alpha.12"

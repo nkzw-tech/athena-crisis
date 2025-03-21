@@ -34,12 +34,12 @@
     "@nkzw/core": "^1.2.0",
     "@nkzw/use-relative-time": "^1.1.0",
     "@nkzw/use-visibility-state": "^1.0.2",
-    "@sentry/browser": "^9.6.1",
+    "@sentry/browser": "^9.9.0",
     "@stripe/react-stripe-js": "^3.5.1",
     "@stripe/stripe-js": "^6.1.0",
     "cordova-plugin-purchase": "^13.12.1",
     "fbtee": "^0.2.0",
-    "framer-motion": "^12.5.0",
+    "framer-motion": "^12.6.1",
     "p-limit": "^6.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -68,7 +68,7 @@
     "glob": "11.0.1",
     "relay-compiler": "^18.2.0",
     "vite-plugin-minify": "^2.1.0",
-    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-pwa": "^0.21.2",
     "vite-plugin-restart": "^0.4.2"
   }
 }
