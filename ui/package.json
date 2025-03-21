@@ -12,9 +12,9 @@
   "dependencies": {
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
-    "@deities/hephaestus": "workspace:*",
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
+    "@nkzw/core": "^1.2.0",
     "@nkzw/create-context-hook": "^1.0.2",
     "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.2.0",

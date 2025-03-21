@@ -1,5 +1,5 @@
 import { encodeEffects } from '@deities/apollo/Effects.tsx';
-import toSlug from '@deities/hephaestus/toSlug.tsx';
+import toSlug from '@deities/apollo/lib/toSlug.tsx';
 import MapEditor from '@deities/hera/editor/MapEditor.tsx';
 import {
   MapCreateVariables,

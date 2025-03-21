@@ -11,8 +11,6 @@ import {
   ObjectiveID,
   validateObjective,
 } from '@deities/athena/Objectives.tsx';
-import groupBy from '@deities/hephaestus/groupBy.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import levelUsesObjective from '@deities/hermes/levelUsesObjective.tsx';
 import toLevelMap from '@deities/hermes/toLevelMap.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
@@ -21,6 +19,8 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import groupBy from '@nkzw/core/groupBy.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { useCallback, useMemo } from 'react';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';

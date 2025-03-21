@@ -2,7 +2,7 @@
 import { writeFileSync } from 'node:fs';
 import { join, posix, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import toSlug from '@deities/hephaestus/toSlug.tsx';
+import toSlug from '@deities/apollo/lib/toSlug.tsx';
 import chalk from 'chalk';
 import { globSync } from 'glob';
 import { format } from 'prettier';

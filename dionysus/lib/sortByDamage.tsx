@@ -6,7 +6,7 @@ import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 
 export default function sortByDamage(
   map: MapData,

@@ -1,7 +1,7 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import useScale, { MAX_SCALE } from '@deities/ui/hooks/useScale.tsx';
 import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import { getCurrentScrollContainer } from '@deities/ui/ScrollContainer.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const getKey = (key: string) => `::AC::zoom::${key}`;

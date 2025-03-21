@@ -1,8 +1,8 @@
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import { css } from '@emotion/css';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { State } from '../../Types.tsx';
 import { EntityUndoKey } from '../Types.tsx';
 

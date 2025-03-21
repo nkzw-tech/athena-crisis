@@ -1,5 +1,5 @@
+import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
-import dateNow from '@deities/hephaestus/dateNow.tsx';
 import { css } from '@emotion/css';
 import { AnimatePresence } from 'framer-motion';
 // eslint-disable-next-line @deities/no-lazy-import

@@ -1,7 +1,7 @@
 import Player, { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import Stack from '@deities/ui/Stack.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { useEffect } from 'react';
 import { Actions } from '../../Types.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';

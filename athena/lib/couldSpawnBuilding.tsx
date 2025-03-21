@@ -1,4 +1,4 @@
-import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
+import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import { BuildingInfo } from '../info/Building.tsx';
 import { Plain, ShipyardConstructionSite, TileTypes } from '../info/Tile.tsx';
 import { PlayerID } from '../map/Player.tsx';

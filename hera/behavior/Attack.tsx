@@ -1,7 +1,7 @@
 import Entity from '@deities/athena/map/Entity.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import getFirst from '@deities/hephaestus/getFirst.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
+import getFirst from '@nkzw/core/getFirst.js';
 import { useCallback } from 'react';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';

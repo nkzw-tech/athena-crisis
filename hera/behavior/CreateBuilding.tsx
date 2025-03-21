@@ -2,12 +2,12 @@ import { filterBuildings } from '@deities/athena/info/Building.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
+import sortBy from '@nkzw/core/sortBy.js';
 import BuildingTile from '../Building.tsx';
 import toTransformOrigin, {
   ClientCoordinates,

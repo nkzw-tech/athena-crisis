@@ -1,5 +1,5 @@
 import { PerformanceStyleType } from '@deities/athena/map/PlayerPerformance.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 export default function getTranslatedPerformanceStyleTypeName(
   performanceType: PerformanceStyleType,

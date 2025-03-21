@@ -18,7 +18,6 @@ import {
   Objective,
   objectiveHasAmounts,
 } from '@deities/athena/Objectives.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -42,6 +41,7 @@ import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { memo, useCallback, useMemo } from 'react';
 import activateAction from '../behavior/activate/activateAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';

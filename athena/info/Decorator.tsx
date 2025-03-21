@@ -1,4 +1,4 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import { Biome } from '../map/Biome.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import { ID } from '../MapData.tsx';

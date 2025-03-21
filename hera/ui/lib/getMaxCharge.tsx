@@ -1,6 +1,6 @@
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import Player from '@deities/athena/map/Player.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 
 export default function getMaxCharge(
   player: Player,

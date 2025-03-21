@@ -1,4 +1,4 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import vec from './vec.tsx';
 
 export type VectorLike = Readonly<{

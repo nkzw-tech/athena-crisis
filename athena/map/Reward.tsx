@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { Skill, Skills } from '../info/Skill.tsx';
 import { getUnitInfo, getUnitInfoOrThrow, UnitInfo } from '../info/Unit.tsx';
 import { Crystal, Crystals } from '../invasions/Crystal.tsx';

@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
 import { Charge } from '../map/Configuration.tsx';
 import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';

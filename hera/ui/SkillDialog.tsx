@@ -5,7 +5,6 @@ import {
 } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import groupBy from '@deities/hephaestus/groupBy.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
@@ -37,6 +36,7 @@ import { RainbowStyle, SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
+import groupBy from '@nkzw/core/groupBy.js';
 import { Sprites } from 'athena-crisis:images';
 import {
   ReactElement,

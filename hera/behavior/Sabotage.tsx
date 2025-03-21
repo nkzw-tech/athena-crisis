@@ -2,7 +2,7 @@ import { SabotageAction } from '@deities/apollo/action-mutators/ActionMutators.t
 import getSabotageableVectors from '@deities/athena/lib/getSabotageableVectors.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
-import getFirst from '@deities/hephaestus/getFirst.tsx';
+import getFirst from '@nkzw/core/getFirst.js';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';

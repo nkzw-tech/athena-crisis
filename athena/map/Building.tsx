@@ -1,4 +1,4 @@
-import getFirst from '@deities/hephaestus/getFirst.tsx';
+import getFirst from '@nkzw/core/getFirst.js';
 import {
   Barracks,
   BuildingInfo,

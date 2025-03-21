@@ -10,7 +10,6 @@ import {
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -25,6 +24,7 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import usePerformanceResult from '../hooks/usePerformanceResult.tsx';

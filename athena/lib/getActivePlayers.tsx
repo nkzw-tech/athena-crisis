@@ -1,4 +1,4 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import { PlayerID, PlayerIDs } from '../map/Player.tsx';
 import MapData from '../MapData.tsx';
 import reorderActive from './reorderActive.tsx';

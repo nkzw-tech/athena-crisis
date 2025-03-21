@@ -5,7 +5,7 @@ import {
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import { Action, Actions, executeEffect } from './Action.tsx';
 import { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';

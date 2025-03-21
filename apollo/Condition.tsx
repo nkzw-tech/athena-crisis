@@ -2,7 +2,7 @@ import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 

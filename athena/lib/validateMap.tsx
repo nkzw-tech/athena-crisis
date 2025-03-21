@@ -1,4 +1,4 @@
-import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
+import isPositiveInteger from '@nkzw/core/isPositiveInteger.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import {
   Behavior,

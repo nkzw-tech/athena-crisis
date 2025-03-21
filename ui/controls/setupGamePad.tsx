@@ -1,4 +1,4 @@
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import {
   ButtonResult,
   createJoymap,

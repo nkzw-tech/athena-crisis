@@ -1,5 +1,5 @@
+import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import dateNow from '@deities/hephaestus/dateNow.tsx';
 
 let id = 0;
 

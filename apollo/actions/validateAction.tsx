@@ -8,7 +8,6 @@ import {
 } from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import sanitizeText from '@deities/hephaestus/sanitizeText.tsx';
 import {
   Action,
   ActivateCrystalAction,
@@ -17,6 +16,7 @@ import {
   IncreaseFundsEffectAction,
   SpawnEffectAction,
 } from '../Action.tsx';
+import sanitizeText from '../lib/sanitizeText.tsx';
 
 const validateCharacterMessage = (action: CharacterMessageEffectAction) => {
   const { message: initialMessage, player, unitId, variant } = action;

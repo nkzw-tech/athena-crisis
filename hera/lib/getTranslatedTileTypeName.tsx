@@ -1,5 +1,5 @@
 import { TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 
 export default function getTranslatedTileTypeName(tileType: TileType) {

@@ -17,8 +17,6 @@ import {
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -33,6 +31,8 @@ import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';

@@ -1,6 +1,7 @@
 import { Action, execute } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
+import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import {
@@ -29,8 +30,6 @@ import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
-import dateNow from '@deities/hephaestus/dateNow.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import Input, { NavigationDirection } from '@deities/ui/controls/Input.tsx';
@@ -43,6 +42,7 @@ import scrollToCenter from '@deities/ui/lib/scrollToCenter.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { ScrollContainerClassName } from '@deities/ui/ScrollContainer.tsx';
 import { css, cx, keyframes } from '@emotion/css';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
 import {

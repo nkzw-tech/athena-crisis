@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { AIBehavior } from '../map/AIBehavior.tsx';
 import { Biome } from '../map/Biome.tsx';
 import type Building from '../map/Building.tsx';

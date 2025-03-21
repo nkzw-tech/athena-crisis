@@ -1,5 +1,5 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { LowHealthZombieSkillConversion, Skill } from '../info/Skill.tsx';
 import {
   Ability,

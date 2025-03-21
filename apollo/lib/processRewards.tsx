@@ -1,6 +1,6 @@
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
 import {
   GameEndActionResponse,

@@ -1,7 +1,7 @@
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Player, { isHumanPlayer } from '@deities/athena/map/Player.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 export default function shouldActivateCrystalPower(
   player: Player,

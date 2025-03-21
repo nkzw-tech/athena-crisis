@@ -3,9 +3,9 @@ import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import {
   memo,
   RefObject,

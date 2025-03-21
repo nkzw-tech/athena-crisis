@@ -1,5 +1,5 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import cssVar from '@deities/ui/cssVar.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { ClientCoordinates } from '../../lib/toTransformOrigin.tsx';
 
 export default function getClientCoordinates(

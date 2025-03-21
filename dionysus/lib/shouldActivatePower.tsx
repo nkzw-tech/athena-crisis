@@ -8,7 +8,7 @@ import {
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 const getUnitRatio = (
   map: MapData,

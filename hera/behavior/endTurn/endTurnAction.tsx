@@ -1,9 +1,9 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
-import dateNow from '@deities/hephaestus/dateNow.tsx';
 import addEndTurnAnimations from '../../lib/addEndTurnAnimations.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';

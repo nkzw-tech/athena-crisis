@@ -10,7 +10,6 @@ packages:
   - 'docs'
   - 'eslint-plugin'
   - 'fixtures'
-  - 'hephaestus'
   - 'hera'
   - 'hermes'
   - 'i18n'

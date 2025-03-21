@@ -3,7 +3,7 @@ import Entity from '@deities/athena/map/Entity.tsx';
 import { resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { ActionResponse } from '../ActionResponse.tsx';
 
 export default function getActionResponseVectors(

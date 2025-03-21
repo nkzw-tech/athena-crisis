@@ -1,5 +1,5 @@
 import { DynamicPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { applyVar } from './cssVar.tsx';
 
 const varBlack = applyVar('color-black');

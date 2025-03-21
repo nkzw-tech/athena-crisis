@@ -32,8 +32,6 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
-import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
-import random from '@deities/hephaestus/random.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import undo, { UndoType } from '@deities/hermes/game/undo.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
@@ -56,6 +54,8 @@ import Storage from '@deities/ui/Storage.tsx';
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
+import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
+import random from '@nkzw/core/random.js';
 import { fbt } from 'fbtee';
 import { AnimatePresence } from 'framer-motion';
 import {

@@ -1,12 +1,12 @@
 import { BuySkillAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import { fbt } from 'fbtee';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';

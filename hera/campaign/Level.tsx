@@ -19,9 +19,6 @@ import {
   ObjectiveID,
   Objectives,
 } from '@deities/athena/Objectives.tsx';
-import getFirst from '@deities/hephaestus/getFirst.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
 import {
   ClientLevelID,
@@ -49,6 +46,9 @@ import EmptyDialogueIcon from '@iconify-icons/pixelarticons/message.js';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
+import getFirst from '@nkzw/core/getFirst.js';
+import isPresent from '@nkzw/core/isPresent.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';
 import { memo, MouseEvent, useCallback, useRef, useState } from 'react';

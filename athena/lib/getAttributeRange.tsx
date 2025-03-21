@@ -1,4 +1,4 @@
-import maxBy from '@deities/hephaestus/maxBy.tsx';
+import maxBy from '@nkzw/core/maxBy.js';
 
 export type AttributeRange = 1 | 2 | 3 | 4 | 5;
 export type AttributeRangeWithZero = 0 | 1 | 2 | 3 | 4 | 5;

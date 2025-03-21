@@ -1,7 +1,7 @@
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { UnitCustomizationById } from '@deities/athena/info/UnitCustomizations.tsx';
 import { ID } from '@deities/athena/MapData.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 
 export default function getPlayerEquippedUnitCustomizations(
   equippedUnitCustomizations: ReadonlyArray<number>,

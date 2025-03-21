@@ -1,9 +1,9 @@
 /// <reference types="fbtee/ReactTypes.d.ts" />
 
-import isPresent from '@deities/hephaestus/isPresent.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import { TranslationDictionary, TranslationTable } from 'fbtee';
 
 type LocaleLoaderFn = (

@@ -1,4 +1,4 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import { Objectives } from '../Objectives.tsx';
 
 export default function getNextObjectiveId(objectives: Objectives) {

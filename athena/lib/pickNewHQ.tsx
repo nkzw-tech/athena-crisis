@@ -1,4 +1,4 @@
-import maxBy from '@deities/hephaestus/maxBy.tsx';
+import maxBy from '@nkzw/core/maxBy.js';
 import { Barracks, SpawnPlatform } from '../info/Building.tsx';
 import Player, { PlayerID, PlayerIDSet } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';

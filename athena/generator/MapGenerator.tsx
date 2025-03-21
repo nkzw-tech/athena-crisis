@@ -1,7 +1,7 @@
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import minBy from '@deities/hephaestus/minBy.tsx';
-import random from '@deities/hephaestus/random.tsx';
-import randomEntry from '@deities/hephaestus/randomEntry.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
+import minBy from '@nkzw/core/minBy.js';
+import random from '@nkzw/core/random.js';
+import randomEntry from '@nkzw/core/randomEntry.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import arrayShuffle from 'array-shuffle';
 import {

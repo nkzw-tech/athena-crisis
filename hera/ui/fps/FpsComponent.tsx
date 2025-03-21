@@ -1,6 +1,6 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
 import { css, cx } from '@emotion/css';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { useFps } from 'react-fps';
 import useHide from '../../hooks/useHide.tsx';
 import maybeFade from '../../ui/lib/maybeFade.tsx';

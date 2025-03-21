@@ -14,9 +14,6 @@ import {
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import groupBy from '@deities/hephaestus/groupBy.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useActive from '@deities/ui/controls/useActive.tsx';
@@ -43,6 +40,9 @@ import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
+import groupBy from '@nkzw/core/groupBy.js';
+import isPresent from '@nkzw/core/isPresent.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import {
   memo,
   ReactElement,

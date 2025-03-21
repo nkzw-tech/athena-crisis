@@ -4,7 +4,7 @@ import powerSpawnUnits from '@deities/athena/lib/powerSpawnUnits.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import maxBy from '@deities/hephaestus/maxBy.tsx';
+import maxBy from '@nkzw/core/maxBy.js';
 import { ActivatePowerActionResponse } from '../ActionResponse.tsx';
 
 export function getActivatePowerTargetCluster(

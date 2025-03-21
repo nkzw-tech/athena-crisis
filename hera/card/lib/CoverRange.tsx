@@ -1,6 +1,6 @@
 import { getAllTiles } from '@deities/athena/info/Tile.tsx';
 import getAttributeRange from '@deities/athena/lib/getAttributeRange.tsx';
-import minBy from '@deities/hephaestus/minBy.tsx';
+import minBy from '@nkzw/core/minBy.js';
 
 const tiles = getAllTiles().filter(
   ({ configuration: { cover } }) => cover < Number.POSITIVE_INFINITY,

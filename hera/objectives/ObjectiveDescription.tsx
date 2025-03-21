@@ -4,13 +4,13 @@ import {
   Objective,
   objectiveHasLabel,
 } from '@deities/athena/Objectives.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { list } from 'fbtee';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { PlayerDetails } from '../Types.tsx';

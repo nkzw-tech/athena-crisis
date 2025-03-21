@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { UnitInfo } from '../info/Unit.tsx';
 import { ID } from '../MapData.tsx';
 import Building from './Building.tsx';

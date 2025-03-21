@@ -1,5 +1,5 @@
+import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
-import dateNow from '@deities/hephaestus/dateNow.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';

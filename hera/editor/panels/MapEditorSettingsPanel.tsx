@@ -16,7 +16,6 @@ import {
   PerformanceStyleTypes,
 } from '@deities/athena/map/PlayerPerformance.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -33,6 +32,7 @@ import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { fbt } from 'fbtee';
 import { useCallback, useState } from 'react';
 import useTagDataSource, {

@@ -59,7 +59,6 @@ These are secondary packages focused on specific domains:
 - `art` → Handling of assets (_client/build_).
 - `codegen` → Run `pnpm codegen` when changing game `Action`s or `ActionResponse`s to generate encoded actions and formatters (_build_).
 - `dionysus` → AI code (_client/server_).
-- `hephaestus` → Iterator and Immutable data structures (_client/server_).
 - `hermes` → Campaign related data structures and algorithms (_client/server_).
 - `i18n` → Internationalization (_client/build_).
 - `offline` → Offline splash screen for app (_client_).

@@ -8,7 +8,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
-import random from '@deities/hephaestus/random.tsx';
+import random from '@nkzw/core/random.js';
 import { expect, test } from 'vitest';
 import { printGameState } from '../printGameState.tsx';
 import { captureOne } from '../screenshot.tsx';

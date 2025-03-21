@@ -17,12 +17,12 @@ import {
   mapUnits,
   mapWeapons,
 } from '@deities/athena/info/Unit.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import ActivatePowerMessages from '@deities/hermes/messages/ActivatePowerMessages.tsx';
 import { CampaignModule, MapModule } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
 import { globSync } from 'glob';
 import { format } from 'prettier';

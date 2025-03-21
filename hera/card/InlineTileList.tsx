@@ -18,12 +18,12 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import random from '@deities/hephaestus/random.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import random from '@nkzw/core/random.js';
 import { useInView } from 'framer-motion';
 import {
   ComponentProps,

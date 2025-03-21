@@ -1,4 +1,3 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import { ClientLevelID, Level as LevelT } from '@deities/hermes/Types.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -8,6 +7,7 @@ import getTagColor from '@deities/ui/lib/getTagColor.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import { memo, useMemo } from 'react';
 import ActionCard from '../editor/lib/ActionCard.tsx';
 import EffectTitle from '../editor/lib/EffectTitle.tsx';

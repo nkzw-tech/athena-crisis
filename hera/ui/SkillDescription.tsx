@@ -70,8 +70,6 @@ import {
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector, { isVector } from '@deities/athena/map/Vector.tsx';
 import { ID } from '@deities/athena/MapData.tsx';
-import groupBy from '@deities/hephaestus/groupBy.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
@@ -82,6 +80,8 @@ import { css, cx } from '@emotion/css';
 import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
+import groupBy from '@nkzw/core/groupBy.js';
+import isPresent from '@nkzw/core/isPresent.js';
 import { List, list } from 'fbtee';
 import { Fragment, memo } from 'react';
 import BuildingTile from '../Building.tsx';

@@ -26,7 +26,7 @@ import {
   XFighter,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
   switch (skill) {

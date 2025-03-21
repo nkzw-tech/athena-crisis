@@ -1,5 +1,5 @@
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 
 export default function getCriteriaName(criteria: Criteria) {

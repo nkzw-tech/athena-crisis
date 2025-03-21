@@ -1,4 +1,4 @@
-import randomEntry from '@deities/hephaestus/randomEntry.tsx';
+import randomEntry from '@nkzw/core/randomEntry.js';
 
 const FactionNames = [
   'Apollo',

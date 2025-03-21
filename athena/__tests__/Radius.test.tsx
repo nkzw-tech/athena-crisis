@@ -1,4 +1,4 @@
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import { expect, test } from 'vitest';
 import startMap from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
 import { Skill } from '../info/Skill.tsx';

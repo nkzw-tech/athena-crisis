@@ -1,4 +1,4 @@
-import getOrThrow from '@deities/hephaestus/getOrThrow.tsx';
+import getOrThrow from '@nkzw/core/getOrThrow.js';
 import { Campaign, Level, LevelID, PlainCampaign } from './Types.tsx';
 
 type MutableLevel<T = LevelID> = Omit<Level<T>, 'next'> & {

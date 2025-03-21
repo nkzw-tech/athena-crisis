@@ -3,7 +3,7 @@ import {
   CrystalAttackEffect,
   MaxChaosStars,
 } from '@deities/athena/invasions/Crystal.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 
 export default function getCrystalDescription(crystal: Crystal) {

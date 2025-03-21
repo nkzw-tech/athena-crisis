@@ -5,8 +5,8 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { isHumanPlayer } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
-import pickItem from '@deities/hephaestus/pickItem.tsx';
 import ActivatePowerMessages from './ActivatePowerMessages.tsx';
+import pickItem from './pickItem.tsx';
 
 export default function getActivatePowerMessage(
   previousMap: MapData,

@@ -1,4 +1,4 @@
-import toTag from '@deities/hephaestus/toTag.tsx';
+import toTag from '@deities/apollo/lib/toTag.tsx';
 import { useCallback } from 'react';
 
 export default function useSetTags(

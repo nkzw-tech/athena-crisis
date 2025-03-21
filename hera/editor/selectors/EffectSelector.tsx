@@ -1,8 +1,8 @@
 import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
 import { Objectives } from '@deities/athena/Objectives.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import EffectTitle from '../lib/EffectTitle.tsx';
 
 export default function EffectSelector({

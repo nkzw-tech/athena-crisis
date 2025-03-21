@@ -1,4 +1,4 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 
 declare global {
   // eslint-disable-next-line no-var

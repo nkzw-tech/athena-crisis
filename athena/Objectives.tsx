@@ -1,6 +1,6 @@
-import isPositiveInteger from '@deities/hephaestus/isPositiveInteger.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import isPositiveInteger from '@nkzw/core/isPositiveInteger.js';
+import sortBy from '@nkzw/core/sortBy.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import {
   PlayerID,

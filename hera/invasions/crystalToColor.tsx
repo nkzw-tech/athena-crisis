@@ -1,7 +1,7 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 export default function crystalToColor(crystal: Crystal, alpha = 1): string {
   switch (crystal) {

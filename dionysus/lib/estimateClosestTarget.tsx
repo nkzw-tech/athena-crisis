@@ -11,10 +11,10 @@ import {
   MoveConfiguration,
   RadiusItem,
 } from '@deities/athena/Radius.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import maxBy from '@deities/hephaestus/maxBy.tsx';
-import minBy from '@deities/hephaestus/minBy.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
+import maxBy from '@nkzw/core/maxBy.js';
+import minBy from '@nkzw/core/minBy.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import getBuildingWeight from './getBuildingWeight.tsx';
 import shouldCaptureBuilding from './shouldCaptureBuilding.tsx';
 

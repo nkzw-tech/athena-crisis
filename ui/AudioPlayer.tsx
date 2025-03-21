@@ -1,5 +1,5 @@
 import { SongName, SoundName } from '@deities/athena/info/Music.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { Music, Sounds } from 'athena-crisis:audio';
 import { Howl, Howler } from 'howler';
 

@@ -1,4 +1,4 @@
-import random from '@deities/hephaestus/random.tsx';
+import random from '@nkzw/core/random.js';
 import _hasLeader from '../lib/hasLeader.tsx';
 import { PlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';

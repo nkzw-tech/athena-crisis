@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import hasBonusObjective, {
   achievedOneBonusObjective,
 } from '../lib/hasBonusObjective.tsx';

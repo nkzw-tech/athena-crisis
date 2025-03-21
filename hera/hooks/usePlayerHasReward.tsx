@@ -3,7 +3,7 @@ import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { useCallback } from 'react';
 
 export default function usePlayerHasReward({

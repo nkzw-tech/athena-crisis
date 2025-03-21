@@ -11,7 +11,7 @@ import {
   ObjectiveID,
 } from '@deities/athena/Objectives.tsx';
 import Vision from '@deities/athena/Vision.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
 import {

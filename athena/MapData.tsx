@@ -1,4 +1,4 @@
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { Decorator, DecoratorInfo, getDecorator } from './info/Decorator.tsx';
 import { ActiveUnitTypes, getActiveUnitTypes, Skill } from './info/Skill.tsx';

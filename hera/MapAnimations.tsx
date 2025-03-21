@@ -11,8 +11,8 @@ import {
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
 import {

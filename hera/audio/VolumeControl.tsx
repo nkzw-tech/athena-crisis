@@ -1,4 +1,3 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import AudioPlayer, { AudioVolumeType } from '@deities/ui/AudioPlayer.tsx';
 import { InputLayer } from '@deities/ui/controls/Input.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
@@ -11,6 +10,7 @@ import VolumeXIcon from '@deities/ui/icons/VolumeX.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
 import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 export default function VolumeControl({

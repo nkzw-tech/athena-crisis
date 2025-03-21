@@ -4,9 +4,9 @@ import {
 } from '@deities/athena/info/Decorator.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Stack from '@deities/ui/Stack.tsx';
+import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';

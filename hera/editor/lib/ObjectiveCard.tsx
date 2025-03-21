@@ -15,8 +15,6 @@ import {
   objectiveHasRounds,
   objectiveHasVectors,
 } from '@deities/athena/Objectives.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
 import Box from '@deities/ui/Box.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
@@ -32,6 +30,8 @@ import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import { useCallback, useState } from 'react';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';

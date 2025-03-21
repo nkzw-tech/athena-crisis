@@ -4,7 +4,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import randomEntry from '@deities/hephaestus/randomEntry.tsx';
+import randomEntry from '@nkzw/core/randomEntry.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { Action, SpawnEffectAction } from '../Action.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';

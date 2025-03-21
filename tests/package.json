@@ -10,6 +10,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
+    "@nkzw/core": "^1.2.0",
     "@nkzw/use-visibility-state": "^1.0.2"
   },
   "devDependencies": {
@@ -18,7 +19,6 @@
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/dionysus": "workspace:*",
-    "@deities/hephaestus": "workspace:*",
     "@deities/hera": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@deities/ui": "workspace:*",

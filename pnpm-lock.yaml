@@ -119,9 +119,9 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
@@ -155,9 +155,6 @@ importers:
       '@deities/fixtures':
         specifier: workspace:*
         version: link:../fixtures
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hera':
         specifier: workspace:*
         version: link:../hera
@@ -179,6 +176,9 @@ importers:
       '@iconify-icons/pixelarticons':
         specifier: ^1.2.5
         version: 1.2.5
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/use-relative-time':
         specifier: ^1.1.0
         version: 1.1.0(react@19.0.0)
@@ -294,9 +294,6 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
@@ -321,9 +318,6 @@ importers:
       '@deities/dionysus':
         specifier: workspace:*
         version: link:../dionysus
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
@@ -336,6 +330,9 @@ importers:
       '@graphql-tools/utils':
         specifier: ^10.8.6
         version: 10.8.6(graphql@16.10.0)
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/define-env':
         specifier: ^1.1.0
         version: 1.1.0
@@ -502,9 +499,9 @@ importers:
 
   athena:
     dependencies:
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
@@ -523,6 +520,10 @@ importers:
         version: 0.11.8
 
   codegen:
+    dependencies:
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
     devDependencies:
       '@babel/parser':
         specifier: ^7.26.10
@@ -539,9 +540,6 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
@@ -569,9 +567,6 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hera':
         specifier: workspace:*
         version: link:../hera
@@ -584,6 +579,9 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/use-visibility-state':
         specifier: ^1.0.2
         version: 1.0.2(react@19.0.0)
@@ -624,12 +622,12 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
@@ -645,9 +643,6 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hera':
         specifier: workspace:*
         version: link:../hera
@@ -663,6 +658,9 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/use-visibility-state':
         specifier: ^1.0.2
         version: 1.0.2(react@19.0.0)
@@ -705,8 +703,6 @@ importers:
         specifier: workspace:*
         version: link:../hermes
 
-  hephaestus: {}
-
   hera:
     dependencies:
       '@deities/apollo':
@@ -721,9 +717,6 @@ importers:
       '@deities/dionysus':
         specifier: workspace:*
         version: link:../dionysus
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
@@ -739,6 +732,9 @@ importers:
       '@iconify-icons/pixelarticons':
         specifier: ^1.2.5
         version: 1.2.5
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/create-context-hook':
         specifier: ^1.0.2
         version: 1.0.2(react@19.0.0)
@@ -785,9 +781,9 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
 
   i18n: {}
 
@@ -814,9 +810,6 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
@@ -835,6 +828,9 @@ importers:
 
   tests:
     dependencies:
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/use-visibility-state':
         specifier: ^1.0.2
         version: 1.0.2(react@19.0.0)
@@ -854,9 +850,6 @@ importers:
       '@deities/dionysus':
         specifier: workspace:*
         version: link:../dionysus
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hera':
         specifier: workspace:*
         version: link:../hera
@@ -975,15 +968,15 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
       '@iconify-icons/pixelarticons':
         specifier: ^1.2.5
         version: 1.2.5
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/create-context-hook':
         specifier: ^1.0.2
         version: 1.0.2(react@19.0.0)
@@ -1030,12 +1023,12 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
-      '@deities/hephaestus':
-        specifier: workspace:*
-        version: link:../hephaestus
       '@deities/hermes':
         specifier: workspace:*
         version: link:../hermes
+      '@nkzw/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@nkzw/profane':
         specifier: ^2.0.1
         version: 2.0.1
@@ -2296,6 +2289,9 @@ packages:
   '@nkzw/babel-preset-fbtee@0.2.0':
     resolution: {integrity: sha512-ref96cHAP83Lo3li7XGr+YfWj5Kkhe7VW8isnQDxz6C+eK+noij4Bk4RQLbnPCpkzK7qT9OH+eu2FuF+5wyb3g==}
     hasBin: true
+
+  '@nkzw/core@1.2.0':
+    resolution: {integrity: sha512-tyVhA+pm8WMFbpDYYN0U/VXQHfp1pfS+Tw9LL6RJrsmW5FK36+NVwnG2i/cnJyMGmTPumt2svADotq496DpZlQ==}
 
   '@nkzw/create-context-hook@1.0.2':
     resolution: {integrity: sha512-AMjyPpNCO1ODAhphHQFozazUDLFFtQBh75lWzDNZDeclBgCgCdv4Ipyo+Y6FyXbNu28HM8rBjX/rssKx1HU5lA==}
@@ -11145,6 +11141,8 @@ snapshots:
       '@nkzw/babel-plugin-fbtee-runtime': 0.2.0(@nkzw/babel-plugin-fbtee@0.2.0)
     transitivePeerDependencies:
       - supports-color
+
+  '@nkzw/core@1.2.0': {}
 
   '@nkzw/create-context-hook@1.0.2(react@19.0.0)':
     dependencies:

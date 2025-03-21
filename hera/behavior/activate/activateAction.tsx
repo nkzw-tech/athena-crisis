@@ -4,7 +4,7 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { Actions, PlayerEffectItem, State } from '../../Types.tsx';
 import activateCrystalAction from '../activateCrystal/activateCrystalAction.tsx';
 import clientActivatePowerAction from '../activatePower/clientActivatePowerAction.tsx';

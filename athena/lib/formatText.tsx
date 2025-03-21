@@ -1,4 +1,4 @@
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { getUnitInfo, UnitInfo } from '../info/Unit.tsx';
 
 export default function formatText(

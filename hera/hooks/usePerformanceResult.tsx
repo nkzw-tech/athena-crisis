@@ -1,5 +1,5 @@
 import { PlayerPerformance } from '@deities/athena/map/PlayerPerformance.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import { useMemo } from 'react';
 
 export default function usePerformanceResult(

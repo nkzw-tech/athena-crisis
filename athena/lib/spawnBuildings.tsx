@@ -1,4 +1,4 @@
-import getFirstOrThrow from '@deities/hephaestus/getFirstOrThrow.tsx';
+import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import Building from '../map/Building.tsx';
 import Vector from '../map/Vector.tsx';

@@ -1,5 +1,5 @@
 import { GameTimerValue } from '@deities/apollo/lib/GameTimerValue.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
 export default function getTranslatedTimerName(timer: GameTimerValue) {
   switch (timer) {

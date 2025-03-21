@@ -1,4 +1,4 @@
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import formatText from '../lib/formatText.tsx';
 import { AIBehavior } from '../map/AIBehavior.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';

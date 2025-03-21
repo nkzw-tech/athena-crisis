@@ -1,8 +1,6 @@
 import { Effect, Scenario } from '@deities/apollo/Effects.tsx';
 import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg, sm, xl } from '@deities/ui/Breakpoints.tsx';
 import Button from '@deities/ui/Button.tsx';
@@ -19,6 +17,8 @@ import { css, cx } from '@emotion/css';
 import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
 import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
+import isPresent from '@nkzw/core/isPresent.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 import { RefObject, useCallback, useRef } from 'react';
 import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';

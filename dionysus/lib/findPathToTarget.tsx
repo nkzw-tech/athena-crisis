@@ -5,7 +5,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { MoveConfiguration, RadiusItem } from '@deities/athena/Radius.tsx';
-import minBy from '@deities/hephaestus/minBy.tsx';
+import minBy from '@nkzw/core/minBy.js';
 import getAttackableArea from './getAttackableArea.tsx';
 import getObjectiveVectors from './getObjectiveVectors.tsx';
 
@@ -59,7 +59,7 @@ export default function findPathToTarget(
     target: Vector,
     filter: (vector: Vector) => boolean | undefined,
   ) =>
-    minBy([...moveableRadius.keys()].filter(filter), (vector) =>
+    minBy(moveableRadius.keys().filter(filter), (vector) =>
       vector.distance(target),
     );
 

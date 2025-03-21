@@ -22,7 +22,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import toggleLightningTile from '@deities/athena/mutation/toggleLightningTile.tsx';
 import writeTile from '@deities/athena/mutation/writeTile.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { ActionResponse } from '../ActionResponse.tsx';
 import { applyHiddenActionResponse } from '../HiddenAction.tsx';
 import { applyObjectiveActionResponse } from '../Objective.tsx';

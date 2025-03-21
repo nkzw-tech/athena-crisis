@@ -10,8 +10,8 @@ import {
   TSTypeElement,
   TSTypeReference,
 } from '@babel/types';
-import groupBy from '@deities/hephaestus/groupBy.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import groupBy from '@nkzw/core/groupBy.js';
+import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
 import { format } from 'prettier';
 import sign from './lib/sign.tsx';

@@ -1,11 +1,11 @@
 import { SongName, SoundName } from '@deities/athena/info/Music.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { App } from '@deities/ui/App.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import useVisibilityState from '@nkzw/use-visibility-state';
 import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 

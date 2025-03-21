@@ -1,5 +1,5 @@
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
-import sortBy from '@deities/hephaestus/sortBy.tsx';
+import sortBy from '@nkzw/core/sortBy.js';
 
 export default function getUnitInfosWithMaxVision(
   unitInfosWithWeight: ReadonlyArray<UnitInfo>,

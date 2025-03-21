@@ -2,9 +2,9 @@ import {
   AttributeRange,
   AttributeRangeWithZero,
 } from '@deities/athena/lib/getAttributeRange.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import Drawer from '../../drawer/Drawer.tsx';
 import { CampaignEditorState } from '../Types.tsx';
 import CampaignEditorSettingsPanel, {

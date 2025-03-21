@@ -14,7 +14,7 @@ import {
   ObjectiveID,
   onlyHasDefaultObjective,
 } from '@deities/athena/Objectives.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import { ActionResponse } from '../ActionResponse.tsx';
 
 const destructiveActions = new Set([

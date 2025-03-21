@@ -9,13 +9,15 @@
   },
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
+  "dependencies": {
+    "@nkzw/core": "^1.2.0"
+  },
   "devDependencies": {
     "@babel/parser": "^7.26.10",
     "@babel/traverse": "^7.26.10",
     "@babel/types": "^7.26.10",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
-    "@deities/hephaestus": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@types/babel__traverse": "^7.20.6",
     "chalk": "^5.4.1",

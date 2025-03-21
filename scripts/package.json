@@ -13,7 +13,6 @@
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
-    "@deities/hephaestus": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@types/glob": "^8.1.0",
     "canvas": "^3.1.0",

@@ -1,6 +1,6 @@
-import jenkinsHash from '@deities/hephaestus/jenkinsHash.tsx';
 import { CharacterMessageEffectAction } from '../Action.tsx';
 import { CharacterMessageActionResponse } from '../ActionResponse.tsx';
+import jenkinsHash from './jenkinsHash.tsx';
 
 export default function getMessageKey(
   action: CharacterMessageEffectAction | CharacterMessageActionResponse,

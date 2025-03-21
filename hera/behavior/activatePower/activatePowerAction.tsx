@@ -26,7 +26,7 @@ import Vector, {
   sortVectors,
 } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
+import isPresent from '@nkzw/core/isPresent.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import animateHeal from '../../lib/animateHeal.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';

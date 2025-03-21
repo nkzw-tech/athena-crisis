@@ -6,9 +6,9 @@ import {
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import { formatInputNames } from '@deities/ui/controls/formatInputNames.tsx';
 import { getGamepadType } from '@deities/ui/controls/setupGamePad.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { fbt, list } from 'fbtee';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
 import getUserDisplayName from '../../lib/getUserDisplayName.tsx';

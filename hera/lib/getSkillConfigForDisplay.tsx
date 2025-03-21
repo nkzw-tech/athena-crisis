@@ -1,5 +1,4 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
-import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import { SVGIcon } from '@deities/ui/Icon.tsx';
 import Alien from '@deities/ui/icons/Alien.tsx';
@@ -34,6 +33,7 @@ import Ship from '@iconify-icons/pixelarticons/ship.js';
 import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
 import Ungroup from '@iconify-icons/pixelarticons/ungroup.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
+import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 
 type SkillConfig = Readonly<{

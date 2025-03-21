@@ -2,7 +2,7 @@ import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
+import parseInteger from '@nkzw/core/parseInteger.js';
 
 const spectatorCodeToPlayerID = (spectatorCode: string) => {
   const maybePlayerID = parseInteger(spectatorCode.split('-')[0]);

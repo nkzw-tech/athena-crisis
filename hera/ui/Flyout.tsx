@@ -1,11 +1,11 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
 import { isIPhone } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
+import isPresent from '@nkzw/core/isPresent.js';
 import { Fragment, ReactNode, useState } from 'react';
 import { Actions } from '../Types.tsx';
 

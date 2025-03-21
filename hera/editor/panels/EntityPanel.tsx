@@ -13,8 +13,6 @@ import {
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
-import isPresent from '@deities/hephaestus/isPresent.tsx';
-import parseInteger from '@deities/hephaestus/parseInteger.tsx';
 import Box from '@deities/ui/Box.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
@@ -28,6 +26,8 @@ import Slider from '@deities/ui/Slider.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
+import isPresent from '@nkzw/core/isPresent.js';
+import parseInteger from '@nkzw/core/parseInteger.js';
 import { fbt } from 'fbtee';
 import {
   ChangeEvent,
