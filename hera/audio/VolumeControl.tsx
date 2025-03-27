@@ -41,6 +41,13 @@ export default function VolumeControl({
 
   const setVolume = useCallback(
     (volume: number) => {
+      volume = Math.round((volume + Number.EPSILON) * 100) / 100;
+      if (volume < 0) {
+        volume = 0;
+      } else if (volume > 1) {
+        volume = 1;
+      }
+
       _setVolume(volume);
       AudioPlayer.setVolume(type, volume);
 
