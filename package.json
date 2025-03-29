@@ -63,23 +63,22 @@
     "@nkzw/eslint-plugin-fbtee": "^0.2.1",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.11.13",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.13.14",
     "@vitejs/plugin-react": "^4.3.4",
-    "babel-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
+    "babel-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
     "eslint": "^9.23.0",
-    "eslint-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
+    "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.9",
     "npm-run-all2": "^7.0.2",
     "prettier": "4.0.0-alpha.12",
     "prettier-plugin-packagejson": "^2.5.10",
-    "react-refresh": "^0.16.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "vite": "^6.2.3",
-    "vitest": "^3.0.9"
+    "vite": "^6.2.4",
+    "vitest": "^3.1.1"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -110,6 +109,7 @@
       "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
       "typescript": "patches/typescript.patch"
-    }
+    },
+    "ignorePatchFailures": false
   }
 }
