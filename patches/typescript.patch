@@ -1,8 +1,8 @@
 diff --git a/lib/lib.dom.d.ts b/lib/lib.dom.d.ts
-index a0d19a52c40a44bb9c94615481544074a628dbbf..02e1d894a97ff9e16c44ba97ae310db2d6550728 100644
+index edf900a5de22fd63305f87e32d5974716eda7ddd..20915d0afa1dbd993802e7f3bf4f246fe55609fc 100644
 --- a/lib/lib.dom.d.ts
 +++ b/lib/lib.dom.d.ts
-@@ -26339,8 +26339,6 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
+@@ -26972,8 +26972,6 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
       * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/menubar)
       */
      readonly menubar: BarProp;
@@ -12,19 +12,19 @@ index a0d19a52c40a44bb9c94615481544074a628dbbf..02e1d894a97ff9e16c44ba97ae310db2
      readonly navigator: Navigator;
      /**
 diff --git a/lib/lib.webworker.d.ts b/lib/lib.webworker.d.ts
-index 28b6f4d1e802e712cdd86cec288d2e41a60aff30..dcca8d6ff1a11fd61eff69edbd9d18bce73af30e 100644
+index dd6a69e7643aabf716ee383c967bd2ecc9f8cd11..9eb59a16b8ecb03cd722183e0f0abcdb4061b0bd 100644
 --- a/lib/lib.webworker.d.ts
 +++ b/lib/lib.webworker.d.ts
-@@ -2470,12 +2470,6 @@ interface DedicatedWorkerGlobalScopeEventMap extends WorkerGlobalScopeEventMap {
+@@ -2518,12 +2518,6 @@ interface DedicatedWorkerGlobalScopeEventMap extends WorkerGlobalScopeEventMap,
   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope)
   */
- interface DedicatedWorkerGlobalScope extends WorkerGlobalScope, AnimationFrameProvider {
+ interface DedicatedWorkerGlobalScope extends WorkerGlobalScope, AnimationFrameProvider, MessageEventTarget<DedicatedWorkerGlobalScope> {
 -    /**
 -     * Returns dedicatedWorkerGlobal's name, i.e. the value given to the Worker constructor. Primarily useful for debugging.
 -     *
 -     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/name)
 -     */
 -    readonly name: string;
-     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/message_event) */
-     onmessage: ((this: DedicatedWorkerGlobalScope, ev: MessageEvent) => any) | null;
-     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/messageerror_event) */
+     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/rtctransform_event) */
+     onrtctransform: ((this: DedicatedWorkerGlobalScope, ev: RTCTransformEvent) => any) | null;
+     /**
