@@ -17,15 +17,15 @@
     "@deities/ui": "workspace:*",
     "@emotion/css": "^11.13.5",
     "@nkzw/use-visibility-state": "^1.0.2",
-    "fbtee": "^0.2.0",
+    "fbtee": "^0.2.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^5.0.0"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
     "@types/twitch-ext": "^1.24.9"
   }
 }

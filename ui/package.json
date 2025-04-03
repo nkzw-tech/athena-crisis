@@ -17,7 +17,7 @@
     "@nkzw/core": "^1.2.0",
     "@nkzw/create-context-hook": "^1.0.2",
     "@nkzw/joymap": "^4.0.2",
-    "fbtee": "^0.2.0",
+    "fbtee": "^0.2.2",
     "framer-motion": "^12.6.3",
     "howler": "^2.2.4",
     "react": "^19.1.0",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4"
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1"
   }
 }
