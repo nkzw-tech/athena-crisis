@@ -37,7 +37,7 @@ export default [
           paths: [
             {
               allowTypeImports: true,
-              message: `Use 'react-relay/hooks' instead.`,
+              message: `Use 'react-relay/hooks.js' instead.`,
               name: 'react-relay',
             },
             {
