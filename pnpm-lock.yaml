@@ -173,6 +173,9 @@ importers:
       '@nkzw/core':
         specifier: ^1.2.0
         version: 1.2.0
+      '@nkzw/relay-utils':
+        specifier: ^1.0.0
+        version: 1.0.0(react-relay@18.2.0(react@19.1.0))(react@19.1.0)
       '@nkzw/use-relative-time':
         specifier: ^1.1.0
         version: 1.1.0(react@19.1.0)
@@ -2371,6 +2374,12 @@ packages:
   '@nkzw/profane@2.0.1':
     resolution: {integrity: sha512-Qt8wFSQaYREOgM1CSaF8i/GqmrTw6kCe1/bxWt4CcxiwsR4o7OPN1SSPfXuPI8QQVhV/6tJWWVHjcZpE2bqXnQ==}
     engines: {node: '>=18.0.0'}
+
+  '@nkzw/relay-utils@1.0.0':
+    resolution: {integrity: sha512-1JpHfjXBUFhri5fQnffpF/6/gpDSQsh89TcEJ9GcFbG0xBOxTwdrLALdPxP4v+2zQ+yiZI3tXDKHa8o/36Fk1Q==}
+    peerDependencies:
+      react: 19.0.0-rc.1
+      react-relay: ^18
 
   '@nkzw/safe-word-list@2.1.0':
     resolution: {integrity: sha512-P1sP0XzX51piUkiJTkDtpPBnRvuRr1NQ5lyH+Yarr6kZvgyjj2nOgTSf+8xGgVx3g4qeyGYDXWeHJcmd9PGUaA==}
@@ -11308,6 +11317,11 @@ snapshots:
       canvas: 3.1.0
 
   '@nkzw/profane@2.0.1': {}
+
+  '@nkzw/relay-utils@1.0.0(react-relay@18.2.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      react-relay: 18.2.0(react@19.1.0)
 
   '@nkzw/safe-word-list@2.1.0': {}
 
