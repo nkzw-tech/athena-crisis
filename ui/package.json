@@ -15,19 +15,19 @@
     "@emotion/css": "^11.13.5",
     "@iconify-icons/pixelarticons": "^1.2.5",
     "@nkzw/core": "^1.2.0",
-    "@nkzw/create-context-hook": "^1.0.2",
+    "@nkzw/create-context-hook": "^1.1.0",
     "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.2.2",
     "framer-motion": "^12.6.3",
     "howler": "^2.2.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.4.1",
+    "react-router-dom": "^7.5.0",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
     "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.1"
+    "@types/react-dom": "^19.1.2"
   }
 }
