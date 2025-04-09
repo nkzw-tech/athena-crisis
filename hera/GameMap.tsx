@@ -1838,7 +1838,7 @@ export default class GameMap extends Component<Props, State> {
                       : 0
                   }px`
               : isFloating
-                ? `${tileSize * 10}px`
+                ? `${tileSize * 10}px ${tileSize * 20}px`
                 : `${tileSize}px auto 0`,
           }}
         >
