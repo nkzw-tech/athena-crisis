@@ -10,6 +10,8 @@ export type AttackSprite =
   | 'Empty'
   | 'ExplosionImpact'
   | 'Flamethrower'
+  | 'Flask'
+  | 'FlaskExplosion'
   | 'HeavyArtillery'
   | 'LightGun'
   | 'MG'

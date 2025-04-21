@@ -19,6 +19,7 @@ import {
   Ogre,
   Pioneer,
   Saboteur,
+  Scientist,
   Sniper,
   SuperAPU,
   SuperTank,
@@ -69,6 +70,8 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
       return Dragon;
     case Skill.BuyUnitOgre:
       return Ogre;
+    case Skill.UnlockScientist:
+      return Scientist;
     case Skill.UnlockPowerStation:
     case Skill.UnlockZombie:
       return Pioneer;

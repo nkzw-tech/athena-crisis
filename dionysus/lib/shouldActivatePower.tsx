@@ -70,6 +70,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
+    case Skill.UnlockScientist:
     case Skill.UnlockZombie:
     case Skill.VampireHeal:
     case Skill.XFighterAttackIncrase:

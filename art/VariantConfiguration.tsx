@@ -534,6 +534,12 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Units-Scientist',
+    {
+      variantNames,
+    },
+  ],
+  [
     'BuildingsShadow',
     {
       asImage: true,

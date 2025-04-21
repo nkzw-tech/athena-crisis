@@ -85,6 +85,7 @@ export default new Map<SpriteVariant, SpriteVariantDetail | null>([
   ['Units-CustomRocketLauncher-6', null],
   ['Units-CustomRocketLauncher-7', null],
   ['Units-Saboteur', null],
+  ['Units-Scientist', null],
   ['Units-SeaPatrol', null],
   ['Units-SmallHovercraft', null],
   ['Units-SmallTank', null],

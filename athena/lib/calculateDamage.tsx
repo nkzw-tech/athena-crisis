@@ -13,6 +13,10 @@ export default function calculateDamage(
   defenseStatusEffect: number,
   luckA: number,
 ): number {
+  if (weapon.flatDamage) {
+    return Math.max(MinDamage, weapon.getDamage(entityB) || 0);
+  }
+
   const health = 0.666 * (unitA.health / MaxHealth) + 0.334;
   const offenseA =
     isUnit(entityB) && entityB.shield

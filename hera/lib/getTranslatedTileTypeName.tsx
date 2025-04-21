@@ -43,6 +43,8 @@ export default function getTranslatedTileTypeName(tileType: TileType) {
       return fbt('Teleporter', 'Tile type name');
     case TileTypes.Inaccessible:
       return fbt('Inaccessible', 'Tile type name');
+    case TileTypes.Ruins:
+      return fbt('Ruins', 'Tile type name');
     case TileTypes.AreaDecorator:
     case TileTypes.AreaMatchesAll:
     case TileTypes.Joinable:

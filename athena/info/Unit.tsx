@@ -397,6 +397,7 @@ export class Weapon {
           down: WeaponAnimation,
         ],
     public readonly supply?: Supply | null,
+    public readonly flatDamage: boolean = false,
     public readonly id: WeaponID = 1,
   ) {}
 
@@ -412,6 +413,7 @@ export class Weapon {
       this.animation,
       this.hitAnimation,
       this.supply,
+      this.flatDamage,
       id,
     );
   }
@@ -423,6 +425,7 @@ export class Weapon {
       this.animation,
       this.hitAnimation,
       this.supply,
+      this.flatDamage,
       this.id,
     );
   }
@@ -434,6 +437,7 @@ export class Weapon {
       this.animation,
       this.hitAnimation,
       this.supply,
+      this.flatDamage,
       this.id,
     );
   }
@@ -445,6 +449,7 @@ export class Weapon {
       this.animation,
       this.hitAnimation,
       supply,
+      this.flatDamage,
       this.id,
     );
   }
@@ -456,6 +461,7 @@ export class Weapon {
       animation,
       this.hitAnimation,
       this.supply,
+      this.flatDamage,
       this.id,
     );
   }
@@ -470,8 +476,23 @@ export class Weapon {
       }),
       this.hitAnimation,
       this.supply,
+      this.flatDamage,
       this.id,
     );
+  }
+
+  withFlatDamage(): Weapon {
+    return this.flatDamage
+      ? this
+      : new Weapon(
+          this.internalName,
+          this.damage,
+          this.animation,
+          this.hitAnimation,
+          this.supply,
+          true,
+          this.id,
+        );
   }
 
   getDamage(entity: Entity) {
@@ -1384,6 +1405,36 @@ export const Weapons = {
     ]),
   ),
   Flamethrower: FlamethrowerWeapon,
+  Flask: new Weapon(
+    'Flask',
+    new Map([
+      [EntityType.AirSoldier, 25],
+      [EntityType.Amphibious, 25],
+      [EntityType.Artillery, 25],
+      [EntityType.Ground, 25],
+      [EntityType.Rail, 25],
+      [EntityType.Ship, 25],
+      [EntityType.Soldier, 25],
+    ]),
+    new WeaponAnimation('Flask', 'Attack/SAM', {
+      frames: 20,
+      positions: {
+        down: sprite(0, 1.3),
+        horizontal: sprite(-1, 0),
+        up: sprite(0, -1),
+      },
+      recoil: false,
+      size: 48,
+    }),
+    new WeaponAnimation('FlaskExplosion', null, {
+      frames: 8,
+      leadingFrames: 10,
+      recoil: false,
+      size: 32,
+    }),
+    0,
+    true,
+  ),
   HeavyArtillery: new Weapon(
     'Heavy Artillery',
     new Map([
@@ -3888,6 +3939,49 @@ export const InfernoJetpack = new UnitInfo(
   },
 );
 
+export const Scientist = new UnitInfo(
+  UnitID.Scientist,
+  'Scientist',
+  'Fritz',
+  'male',
+  `Much like their work, Scientist units are highly specialized. Their goal is to wear down the enemy frontlines from a safe distance. Then another unit can finish the job, and the Scientist can get back to their research.`,
+  `Originally an innovation specialist in a military research lab, {name} enjoyed quiet days pouring over data and mixing chemicals. Everything changed when his superiors brought in a crystal. {name} began experimenting, and since then every clue only led to more questions. Now {name} has a lot on his mind. He's a problem-solver discovering a multiverse of problems, and he believes destiny is calling. Most people don’t know about it, but outside the lab he enjoys glassblowing and shot-put. How else would he lob those chemicals?`,
+  10,
+  EntityType.Soldier,
+  MovementTypes.Soldier,
+  {
+    cost: Number.POSITIVE_INFINITY,
+    fuel: 30,
+    radius: 3,
+    vision: 2,
+  },
+  new UnitAbilities({
+    accessBuildings: true,
+    moveAndAct: true,
+  }),
+  {
+    range: [2, 2],
+    type: AttackType.LongRange,
+    weapons: [Weapons.Flask.withSupply(5)],
+  },
+  null,
+  {
+    attackStance: 'short',
+    directionOffset: 2,
+    explosionSprite: {
+      frames: 8,
+      offset: { y: 3 },
+      position: sprite(7, 1),
+    },
+    name: 'Units-Scientist',
+    portrait: {
+      position: sprite(55, 0),
+      variants: 6,
+    },
+    slow: true,
+  },
+);
+
 // The order of units must not be changed.
 const Units = [
   Pioneer,
@@ -3945,6 +4039,7 @@ const Units = [
   BazookaBear,
   AIU,
   InfernoJetpack,
+  Scientist,
 ];
 
 export const InitialPortraits = new Set([Pioneer, Sniper, Flamethrower]);

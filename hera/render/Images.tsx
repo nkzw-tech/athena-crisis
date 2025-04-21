@@ -33,6 +33,12 @@ const AttackExplosionImpactSprite =
 const AttackFlamethrowerSprite =
   'https://art.athenacrisis.com/v17/assets/AttackFlamethrower.png';
 
+const AttackFlaskSprite =
+  'https://art.athenacrisis.com/v17/assets/AttackFlask.png';
+
+const AttackFlaskExplosionSprite =
+  'https://art.athenacrisis.com/v17/assets/AttackFlaskExplosion.png';
+
 const AttackHeavyArtillerySprite =
   'https://art.athenacrisis.com/v17/assets/AttackHeavyArtillery.png';
 
@@ -261,6 +267,9 @@ const UnitsRocketLauncherSprite =
 const UnitsSaboteurSprite =
   'https://art.athenacrisis.com/v17/assets/shadow/Units-Saboteur.png';
 
+const UnitsScientistSprite =
+  'https://art.athenacrisis.com/v17/assets/shadow/Units-Scientist.png';
+
 const UnitsSeaPatrolSprite =
   'https://art.athenacrisis.com/v17/assets/shadow/Units-SeaPatrol.png';
 
@@ -351,6 +360,8 @@ export const AttackSprites: Record<AttackSprite, string> = {
   Empty: AttackEmptySprite,
   ExplosionImpact: AttackExplosionImpactSprite,
   Flamethrower: AttackFlamethrowerSprite,
+  Flask: AttackFlaskSprite,
+  FlaskExplosion: AttackFlaskExplosionSprite,
   HeavyArtillery: AttackHeavyArtillerySprite,
   LightGun: AttackLightGunSprite,
   MG: AttackMGSprite,
@@ -430,6 +441,7 @@ export const ShadowImages = new Map([
   ['Units-ReconDrone', UnitsReconDroneSprite],
   ['Units-RocketLauncher', UnitsRocketLauncherSprite],
   ['Units-Saboteur', UnitsSaboteurSprite],
+  ['Units-Scientist', UnitsScientistSprite],
   ['Units-SeaPatrol', UnitsSeaPatrolSprite],
   ['Units-SmallHovercraft', UnitsSmallHovercraftSprite],
   ['Units-Sniper', UnitsSniperSprite],
@@ -454,6 +466,8 @@ export default [
   AttackEmptySprite,
   AttackExplosionImpactSprite,
   AttackFlamethrowerSprite,
+  AttackFlaskSprite,
+  AttackFlaskExplosionSprite,
   AttackHeavyArtillerySprite,
   AttackLightGunSprite,
   AttackMGSprite,
@@ -535,6 +549,7 @@ export default [
   UnitsReconDroneSprite,
   UnitsRocketLauncherSprite,
   UnitsSaboteurSprite,
+  UnitsScientistSprite,
   UnitsSeaPatrolSprite,
   UnitsSmallHovercraftSprite,
   UnitsSniperSprite,

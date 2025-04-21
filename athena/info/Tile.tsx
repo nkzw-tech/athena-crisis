@@ -257,6 +257,7 @@ export const TileTypes = {
   Joinable: 16_777_216,
   Area: 33_554_432,
   Inaccessible: 67_108_864,
+  Ruins: 134_217_728,
 } as const;
 /* eslint-enable sort-keys-fix/sort-keys-fix */
 

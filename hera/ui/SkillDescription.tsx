@@ -4,6 +4,7 @@ import {
   BuildingInfo,
   HQ,
   PowerStation,
+  ResearchLab,
   Shelter,
 } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
@@ -977,6 +978,16 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Recovers
           <fbt:param name="value">{CostRecoverySkillModifier * 100}</fbt:param>%
           of the unit cost each time a unit is defeated.
+        </fbt>
+      );
+    case Skill.UnlockScientist:
+      return (
+        <fbt desc="Additional skill description">
+          You can build{' '}
+          <fbt:param name="buildingName">
+            <BuildingName building={ResearchLab} color={color} />
+          </fbt:param>{' '}
+          buildings at construction sites while this power is active.
         </fbt>
       );
   }

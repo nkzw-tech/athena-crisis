@@ -59,6 +59,7 @@ export enum Skill {
   ShipIncreaseAttackAndRange = 43,
   XFighterAttackIncrase = 44,
   CostRecovery = 45,
+  UnlockScientist = 46,
 }
 
 export const Skills = new Set<Skill>([
@@ -80,6 +81,7 @@ export const Skills = new Set<Skill>([
   Skill.BuyUnitAIU,
   Skill.UnlockZombie,
   Skill.UnlockPowerStation,
+  Skill.UnlockScientist,
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
   Skill.MovementIncreaseGroundUnitDefenseDecrease,
   Skill.AttackIncreaseMajorDefenseDecreaseMajor,
@@ -330,6 +332,11 @@ const skillConfig: Record<
     cost: 800,
     group: SkillGroup.Special,
   },
+  [Skill.UnlockScientist]: {
+    charges: 3,
+    cost: 1500,
+    group: SkillGroup.Unlock,
+  },
 };
 
 export const CampaignOnlySkills = new Set(
@@ -488,6 +495,7 @@ const attackTileStatusEffects = new Map<Skill, TileMovementMap>([
       [TileTypes.Mountain, soldierTileAttack],
     ]),
   ],
+  [Skill.UnlockScientist, new Map([[TileTypes.Ruins, soldierTileAttack]])],
 ]);
 
 const attackTilePowerStatusEffects = new Map<Skill, TileMovementMap>([
@@ -598,6 +606,7 @@ const skillRangePowerEffects = new Map<number, RangeSkillMap>([
   [UnitID.HeavyArtillery, new Map([[Skill.ArtilleryRangeIncrease, [3, 7]]])],
   [UnitID.Artillery, new Map([[Skill.ArtilleryRangeIncrease, [2, 6]]])],
   [UnitID.XFighter, new Map([[Skill.XFighterAttackIncrase, [1, 3]]])],
+  [UnitID.Scientist, new Map([[Skill.UnlockScientist, [2, 3]]])],
 ]);
 
 const skillMovementTypeRadiusEffects = new Map<
@@ -664,6 +673,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Dragon, new Map([[Skill.BuyUnitDragon, 500]])],
   [UnitID.Ogre, new Map([[Skill.BuyUnitOgre, 350]])],
   [UnitID.Bear, new Map([[Skill.BuyUnitBear, 300]])],
+  [UnitID.Scientist, new Map([[Skill.UnlockScientist, 375]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
@@ -921,6 +931,13 @@ export function getBuildingCost(
     activeSkills.has(Skill.UnlockPowerStation)
   ) {
     return 500;
+  }
+
+  if (
+    building.id === BuildingID.ResearchLab &&
+    activeSkills.has(Skill.UnlockScientist)
+  ) {
+    return 600;
   }
 
   if (skills.size === 0) {
@@ -1484,6 +1501,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
     case Skill.UnitRailDefenseIncreasePowerAttackIncrease:
     case Skill.UnlockPowerStation:
+    case Skill.UnlockScientist:
     case Skill.VampireHeal:
     case Skill.XFighterAttackIncrase:
       return false;

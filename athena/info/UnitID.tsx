@@ -26,5 +26,6 @@ export default {
   BazookaBear: 53,
   AIU: 54,
   InfernoJetpack: 55,
+  Scientist: 56,
 } as const;
 /* eslint-enable sort-keys-fix/sort-keys-fix */

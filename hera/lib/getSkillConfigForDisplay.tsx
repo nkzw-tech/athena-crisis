@@ -5,6 +5,7 @@ import Alien from '@deities/ui/icons/Alien.tsx';
 import Bubble from '@deities/ui/icons/Bubble.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Fire from '@deities/ui/icons/Fire.tsx';
+import Flask from '@deities/ui/icons/Flask.tsx';
 import Glasses from '@deities/ui/icons/Glasses.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
@@ -407,6 +408,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'orange',
         icon: Coin,
         name: fbt('Insurance Claims', 'Skill name'),
+      };
+    case Skill.UnlockScientist:
+      return {
+        alpha: 0.1,
+        borderStyle: 'up',
+        colors: 'green',
+        icon: Flask,
+        name: fbt('Field Research', 'Skill name'),
       };
     default: {
       skill satisfies never;

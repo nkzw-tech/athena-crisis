@@ -422,14 +422,13 @@ export const DestroyedHouse = new BuildingInfo(
 );
 
 export const ResearchLab = new BuildingInfo(
-  9,
+  BuildingID.ResearchLab,
   'Research Lab',
   `This building increases the attack strength of the owner's units by 10%. At some locations you may be able to acquire skills for the duration of a game.`,
   {
     attackStatusEffect: 0.1,
     behaviors: new BuildingBehaviors({ sellSkills: true }),
-    canBeCreated: false,
-    cost: 300,
+    cost: Number.POSITIVE_INFINITY,
     defense: 60,
     placeOn: new Set([ConstructionSite]),
     sort: 4,

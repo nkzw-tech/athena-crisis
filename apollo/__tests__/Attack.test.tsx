@@ -3,8 +3,13 @@ import {
   Alien,
   Brute,
   Commander,
+  Flamethrower,
   Infantry,
   Medic,
+  Pioneer,
+  Scientist,
+  SuperTank,
+  Weapons,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { MaxHealth, MinDamage } from '@deities/athena/map/Configuration.tsx';
@@ -118,4 +123,26 @@ test('shields absorb damage for one attack', async () => {
 
   expect(unitA1.shield).toBe(null);
   expect(unitA2.shield).toBe(null);
+});
+
+test('Scientist units do flat damage to any unit', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(3, 1);
+  const vecC = vec(1, 3);
+  const mapA = map.copy({
+    units: map.units
+      .set(vecA, Scientist.create(1))
+      .set(vecB, SuperTank.create(2))
+      .set(vecC, Pioneer.create(2)),
+  });
+  const [, state1] = execute(mapA, vision, AttackUnitAction(vecA, vecB))!;
+  const [, state2] = execute(mapA, vision, AttackUnitAction(vecA, vecC))!;
+
+  const damage = Weapons.Flask.getDamage(Flamethrower.create(1));
+
+  const unitA1 = state1.units.get(vecB)!;
+  const unitB1 = state2.units.get(vecC)!;
+
+  expect(unitA1.health).toBe(MaxHealth - damage);
+  expect(unitB1.health).toBe(MaxHealth - damage);
 });

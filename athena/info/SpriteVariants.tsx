@@ -73,6 +73,7 @@ export type SpriteVariant =
   | 'Units-ReconDrone'
   | 'Units-RocketLauncher'
   | 'Units-Saboteur'
+  | 'Units-Scientist'
   | 'Units-SeaPatrol'
   | 'Units-SmallHovercraft'
   | 'Units-SmallTank'
