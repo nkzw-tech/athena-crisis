@@ -999,6 +999,10 @@ export function hasUnlockedBuilding(
   building: BuildingInfo,
   skills: ReadonlySet<Skill>,
 ) {
+  if (building.id === BuildingID.ResearchLab) {
+    return true;
+  }
+
   if (skills.size === 0) {
     return false;
   }
