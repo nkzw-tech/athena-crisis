@@ -65,11 +65,11 @@
     "@swc/core": "^1.11.21",
     "@types/node": "^22.14.1",
     "@vitejs/plugin-react": "^4.4.1",
-    "babel-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
+    "babel-plugin-react-compiler": "19.1.0-rc.1",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
-    "eslint": "^9.25.0",
-    "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react-compiler": "19.1.0-rc.1",
     "eslint-plugin-workspaces": "^0.10.1",
     "nodemon": "^3.1.9",
     "npm-run-all2": "^7.0.2",
@@ -78,10 +78,10 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.2",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.2"
   },
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=23.0.0",
     "pnpm": ">=9.0.1"
   },
   "pnpm": {
