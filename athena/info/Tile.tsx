@@ -1305,6 +1305,7 @@ export const Space = new TileInfo(
     transitionCost: new Map([
       [MovementTypes.Air, TransitionCost.Cancel],
       [MovementTypes.AirInfantry, TransitionCost.Cancel],
+      [MovementTypes.LowAltitude, TransitionCost.Cancel],
     ]),
   },
   {
@@ -1387,6 +1388,7 @@ export const SpaceBridge = new TileInfo(
     transitionCost: new Map([
       [MovementTypes.Air, TransitionCost.Cancel],
       [MovementTypes.AirInfantry, TransitionCost.Cancel],
+      [MovementTypes.LowAltitude, TransitionCost.Cancel],
     ]),
   },
   Bridge.sprite,
