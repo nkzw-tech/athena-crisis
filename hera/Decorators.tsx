@@ -120,7 +120,7 @@ export default memo(function Decorators({
         }
       });
     }
-    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [biome, hasSprites, isVisible, map.size, map.decorators, paused, size]);
 

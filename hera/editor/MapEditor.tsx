@@ -864,7 +864,7 @@ export default function MapEditor({
   // Disabling the context menu is handled globally in production,
   // so this is only needed for the Map Editor in development.
   if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/react-compiler
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       const listener = (event: Event) => event.preventDefault();

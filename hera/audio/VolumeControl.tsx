@@ -30,7 +30,7 @@ export default function VolumeControl({
   const [isPaused, setPaused] = useState(AudioPlayer.isPaused());
   const timerRef = useRef<NativeTimeout>(null);
 
-  // eslint-disable-next-line react-compiler/react-compiler
+  // eslint-disable-next-line react-hooks/react-compiler
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const audioPlayerIsPaused = AudioPlayer.isPaused();

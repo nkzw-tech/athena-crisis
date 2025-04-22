@@ -3,7 +3,6 @@ import { join } from 'node:path';
 import deities from '@deities/eslint-plugin';
 import nkzw from '@nkzw/eslint-config';
 import fbtee from '@nkzw/eslint-plugin-fbtee';
-import reactCompiler from 'eslint-plugin-react-compiler';
 import workspaces from 'eslint-plugin-workspaces';
 
 export default [
@@ -26,7 +25,6 @@ export default [
     plugins: {
       '@deities': deities,
       '@nkzw/fbtee': fbtee,
-      'react-compiler': reactCompiler,
       workspaces,
     },
     rules: {
@@ -101,7 +99,6 @@ export default [
       ],
       'no-extra-parens': 0,
       'no-restricted-globals': [2, 'alert', 'confirm'],
-      'react-compiler/react-compiler': 2,
       'workspaces/no-absolute-imports': 2,
       'workspaces/no-relative-imports': 2,
     },

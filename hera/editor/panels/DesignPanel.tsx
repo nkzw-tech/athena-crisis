@@ -96,6 +96,7 @@ export default memo(function DesignPanel({
       ? tiles.filter((tile) => tile !== Teleporter)
       : tiles;
   }, [biome, biomeStyle.tileRestrictions, hasContentRestrictions]);
+
   const skills = useMemo(() => new Set(user.skills), [user.skills]);
   const buildings = useMemo(
     () =>
