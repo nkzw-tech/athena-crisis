@@ -3966,7 +3966,7 @@ export const Scientist = new UnitInfo(
   },
   null,
   {
-    attackStance: 'short',
+    attackStance: 'once',
     directionOffset: 2,
     explosionSprite: {
       frames: 8,
