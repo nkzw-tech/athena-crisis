@@ -12,9 +12,6 @@ patchedDependencies:
   cordova-plugin-purchase:
     hash: 3a8f452679518c7b4cea4ea5836ffb74fcf4d9157b4b4b0da1ddf078e8cfaeba
     path: patches/cordova-plugin-purchase.patch
-  eslint-plugin-import:
-    hash: 22f511ec0e502b5ec63568e740d85e6df3c7b7381c7c2061a3ff07f11d3199ed
-    path: patches/eslint-plugin-import.patch
   howler@2.2.4:
     hash: 1ff69a94d8cbdcf70941e3460b2eff5fe59593ec94a2c98d1fadf9fff959eeaa
     path: patches/howler@2.2.4.patch
@@ -11315,7 +11312,7 @@ snapshots:
       '@typescript-eslint/parser': 8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
       eslint: 9.25.1(jiti@2.4.2)
       eslint-import-resolver-typescript: 4.3.4(eslint-plugin-import@2.31.0)(eslint@9.25.1(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(patch_hash=22f511ec0e502b5ec63568e740d85e6df3c7b7381c7c2061a3ff07f11d3199ed)(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
       eslint-plugin-no-only-tests: 3.3.0
       eslint-plugin-react: 7.37.5(eslint@9.25.1(jiti@2.4.2))
       eslint-plugin-react-hooks: 6.1.0-canary-914319ae-20250423(eslint@9.25.1(jiti@2.4.2))
@@ -15095,7 +15092,7 @@ snapshots:
       tinyglobby: 0.2.13
       unrs-resolver: 1.6.6
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(patch_hash=22f511ec0e502b5ec63568e740d85e6df3c7b7381c7c2061a3ff07f11d3199ed)(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -15110,7 +15107,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(patch_hash=22f511ec0e502b5ec63568e740d85e6df3c7b7381c7c2061a3ff07f11d3199ed)(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8

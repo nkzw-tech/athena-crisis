@@ -4,6 +4,7 @@ ares/**/__generated__
 ares/src/generated/
 ares/translations/
 artemis/graphql/schema.graphql
+artemis/prisma/athena-prisma-client/
 artemis/prisma/migrations/
 artemis/prisma/pothos-types.ts
 coverage

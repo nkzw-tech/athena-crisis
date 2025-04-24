@@ -102,7 +102,6 @@
     },
     "patchedDependencies": {
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
-      "eslint-plugin-import": "patches/eslint-plugin-import.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
       "jest-image-snapshot": "patches/jest-image-snapshot.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",

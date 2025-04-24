@@ -78,6 +78,6 @@
     "terminal-link": "^4.0.0"
   },
   "prisma": {
-    "seed": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm prisma/seed.tsx"
+    "seed": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --env-file .env prisma/seed.tsx"
   }
 }

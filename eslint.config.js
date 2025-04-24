@@ -12,6 +12,7 @@ export default [
   {
     ignores: [
       'ares/vite.config.ts.timestamp-*',
+      'artemis/prisma/athena-prisma-client/*',
       'artemis/prisma/pothos-types.ts',
       'dist/',
       'docs/vocs.config.tsx.timestamp-*',
@@ -37,10 +38,6 @@ export default [
               allowTypeImports: true,
               message: `Use 'react-relay/hooks.js' instead.`,
               name: 'react-relay',
-            },
-            {
-              message: `Use 'athena-prisma-client' instead.`,
-              name: '@prisma/client',
             },
           ],
         },

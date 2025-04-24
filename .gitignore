@@ -9,6 +9,7 @@ ares/.src_manifest.json
 ares/**/__generated__
 ares/src/generated/*
 ares/vite.config.ts.timestamp-*
+artemis/prisma/athena-prisma-client
 artemis/prisma/pothos-types.ts
 coverage
 docs/vocs.config.tsx.timestamp-*
