@@ -4,9 +4,16 @@ import {
   DropUnitActionResponse,
   MoveActionResponse,
   SpawnActionResponse,
+  SwapActionResponse,
 } from '../ActionResponse.tsx';
 
-const moveActions = new Set(['CreateUnit', 'DropUnit', 'Move', 'Spawn']);
+const moveActions = new Set([
+  'CreateUnit',
+  'DropUnit',
+  'Move',
+  'Spawn',
+  'Swap',
+]);
 
 export default function isMoveActionResponse(
   actionResponse: ActionResponse,
@@ -14,6 +21,7 @@ export default function isMoveActionResponse(
   | CreateUnitActionResponse
   | DropUnitActionResponse
   | MoveActionResponse
-  | SpawnActionResponse {
+  | SpawnActionResponse
+  | SwapActionResponse {
   return moveActions.has(actionResponse.type);
 }

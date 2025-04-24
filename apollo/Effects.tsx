@@ -124,7 +124,11 @@ const handleDefaultEffects = (
     }
   }
 
-  if (isMoveActionResponse(actionResponse) && actionResponse.type !== 'Spawn') {
+  if (
+    isMoveActionResponse(actionResponse) &&
+    actionResponse.type !== 'Spawn' &&
+    actionResponse.type !== 'Swap'
+  ) {
     const { to } = actionResponse;
     const unitA = activeMap.units.get(to);
     if (unitA && !previousMap.units.get(to)) {
