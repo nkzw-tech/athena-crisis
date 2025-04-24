@@ -24,5 +24,7 @@
   "search.exclude": {
     "mobile/android/app/build/**": true,
     "mobile/ios/DerivedData/**": true
-  }
+  },
+  "relay.rootDirectory": "./ares",
+  "relay.pathToLocateCommand": "../scripts/pothos-locate"
 }
