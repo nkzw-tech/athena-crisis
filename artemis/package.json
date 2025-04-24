@@ -31,7 +31,7 @@
     "@pothos/plugin-relay": "^4.4.1",
     "@prisma/client": "^6.6.0",
     "@quixo3/prisma-session-store": "^3.1.13",
-    "@sentry/node": "^9.13.0",
+    "@sentry/node": "^9.14.0",
     "@types/express-session": "^1.18.1",
     "@types/node-pushnotifications": "^1.0.8",
     "array-shuffle": "^3.0.0",
@@ -71,10 +71,10 @@
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
     "@types/web-push": "^3.6.4",
-    "glob": "11.0.1",
+    "glob": "11.0.2",
     "p-limit": "^6.2.0",
     "prisma": "^6.6.0",
-    "prisma-json-types-generator": "^3.2.3",
+    "prisma-json-types-generator": "^3.3.0",
     "terminal-link": "^4.0.0"
   },
   "prisma": {

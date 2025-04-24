@@ -21,7 +21,7 @@
     "@deities/hermes": "workspace:*",
     "@types/babel__traverse": "^7.20.7",
     "chalk": "^5.4.1",
-    "glob": "11.0.1",
+    "glob": "11.0.2",
     "prettier": "4.0.0-alpha.12"
   }
 }
