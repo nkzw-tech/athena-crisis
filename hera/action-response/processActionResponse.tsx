@@ -11,6 +11,7 @@ import {
 } from '@deities/apollo/Types.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
+import canLoad from '@deities/athena/lib/canLoad.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import getWinningInvaders from '@deities/athena/lib/getWinningInvaders.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
@@ -230,7 +231,7 @@ async function processActionResponse(
       break;
     }
     case 'CreateUnit':
-      return createUnitAction(actions, actionResponse);
+      return createUnitAction(actions, ...remoteActionResponse);
     case 'DropUnit':
       await update((state) =>
         dropUnitAction(newMap, actionResponse, state, resolveWithNull),
@@ -406,6 +407,7 @@ async function processActionResponse(
           units.toArray(),
           teams,
           units.size >= 5 ? 'fast' : 'slow',
+          'spawn',
           (state) => {
             requestFrame(async () => {
               state = await update(state);
@@ -439,6 +441,57 @@ async function processActionResponse(
           },
         ),
       );
+      break;
+    }
+    case 'Swap': {
+      const { source, sourceUnit, target, targetUnit } = actionResponse;
+
+      const isBeingLoaded =
+        targetUnit && canLoad(map, targetUnit, sourceUnit, target);
+      const despawns = [[source, sourceUnit] as const];
+      const spawns = !isBeingLoaded ? [[target, sourceUnit] as const] : null;
+
+      if (targetUnit && !isBeingLoaded) {
+        despawns.push([target, targetUnit]);
+        spawns?.push([source, targetUnit]);
+      }
+
+      await update((state) =>
+        spawn(actions, state, despawns, null, 'fast', 'despawn', (state) => {
+          requestFrame(() => {
+            if (spawns) {
+              update(
+                spawn(
+                  actions,
+                  state,
+                  spawns,
+                  null,
+                  'fast',
+                  'spawn',
+                  (state) => {
+                    requestFrame(() =>
+                      resolve({
+                        ...state,
+                        map: newMap,
+                      }),
+                    );
+
+                    return null;
+                  },
+                ),
+              );
+            } else {
+              resolve({
+                ...state,
+                map: newMap,
+              });
+            }
+          });
+
+          return null;
+        }),
+      );
+
       break;
     }
     case 'Heal':

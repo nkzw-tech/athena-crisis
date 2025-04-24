@@ -455,7 +455,7 @@ export default class MapData {
     );
   }
 
-  private reduceEachTile<T>(
+  reduceEachTile<T>(
     fn: (
       value: T,
       vector: Vector,

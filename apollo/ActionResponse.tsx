@@ -227,6 +227,14 @@ export type IncreaseFundsActionResponse = Readonly<{
   type: 'IncreaseFunds';
 }>;
 
+export type SwapActionResponse = Readonly<{
+  source: Vector;
+  sourceUnit: Unit;
+  target: Vector;
+  targetUnit?: Unit;
+  type: 'Swap';
+}>;
+
 export type ActionResponse =
   | ActivateCrystalActionResponse
   | ActivatePowerActionResponse
@@ -259,6 +267,7 @@ export type ActionResponse =
   | SpawnActionResponse
   | StartActionResponse
   | SupplyActionResponse
+  | SwapActionResponse
   | ToggleLightningActionResponse
   | UnfoldActionResponse
   // List of further Action Responses.

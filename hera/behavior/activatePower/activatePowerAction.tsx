@@ -144,7 +144,15 @@ export default async function activatePowerAction(
 
           const spawnUnits = unitsToSpawn?.size
             ? (state: State) =>
-                spawn(actions, state, [...unitsToSpawn], null, 'slow', next)
+                spawn(
+                  actions,
+                  state,
+                  [...unitsToSpawn],
+                  null,
+                  'slow',
+                  'spawn',
+                  next,
+                )
             : null;
 
           const upgrade = unitsToUpgrade.size

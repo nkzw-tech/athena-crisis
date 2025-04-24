@@ -1,6 +1,7 @@
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { RailBridge, RailTrack, River } from '@deities/athena/info/Tile.tsx';
 import { Jeep } from '@deities/athena/info/Unit.tsx';
+import canLoad from '@deities/athena/lib/canLoad.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
@@ -694,6 +695,23 @@ export default function applyActionResponse(
           map.teams,
           player.modifyFunds(actionResponse.funds),
         ),
+      });
+    }
+    case 'Swap': {
+      const { source, sourceUnit, target, targetUnit } = actionResponse;
+      if (targetUnit && canLoad(map, targetUnit, sourceUnit, target)) {
+        return map.copy({
+          units: map.units
+            .delete(source)
+            .set(target, targetUnit.load(sourceUnit.transport())),
+        });
+      }
+
+      return map.copy({
+        units: (targetUnit
+          ? map.units.set(source, targetUnit)
+          : map.units.delete(source)
+        ).set(target, sourceUnit),
       });
     }
     case 'BeginGame':

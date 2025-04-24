@@ -1425,7 +1425,7 @@ export const Pipe = new TileInfo(
   },
 );
 
-export const Teleporter = new TileInfo(
+export const Teleporter1 = new TileInfo(
   35,
   'Teleporter',
   `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
@@ -1514,6 +1514,86 @@ export const Weeds = new TileInfo(
     position: sprite(5, 22),
   },
   { fallback: Sea, hidden: true, isolated: true, layer: 1 },
+);
+
+export const Teleporter2 = new TileInfo(
+  39,
+  'Teleporter',
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
+  TileTypes.Teleporter,
+  Forest.configuration,
+  {
+    animation: {
+      frames: 2,
+      offset: 1,
+      ticks: 12,
+    },
+    position: sprite(1, 25),
+  },
+);
+
+export const Teleporter3 = new TileInfo(
+  40,
+  'Teleporter',
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
+  TileTypes.Teleporter,
+  Forest.configuration,
+  {
+    animation: {
+      frames: 2,
+      offset: 1,
+      ticks: 12,
+    },
+    position: sprite(2, 25),
+  },
+);
+
+export const Teleporter4 = new TileInfo(
+  41,
+  'Teleporter',
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
+  TileTypes.Teleporter,
+  Forest.configuration,
+  {
+    animation: {
+      frames: 2,
+      offset: 1,
+      ticks: 12,
+    },
+    position: sprite(3, 25),
+  },
+);
+
+export const Teleporter5 = new TileInfo(
+  42,
+  'Teleporter',
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
+  TileTypes.Teleporter,
+  Forest.configuration,
+  {
+    animation: {
+      frames: 2,
+      offset: 1,
+      ticks: 12,
+    },
+    position: sprite(4, 25),
+  },
+);
+
+export const Teleporter6 = new TileInfo(
+  43,
+  'Teleporter',
+  `Teleporter fields enable fast-travel between compartments and spaceships. They are a marvel of technology, but we are still unsure how they work. Here is a question: When you step into a Teleporter, are you the same person who steps out on the other side?`,
+  TileTypes.Teleporter,
+  Forest.configuration,
+  {
+    animation: {
+      frames: 2,
+      offset: 1,
+      ticks: 12,
+    },
+    position: sprite(5, 25),
+  },
 );
 
 export const FloatingEdge = new TileInfo(
@@ -1656,10 +1736,15 @@ const Tiles = [
   Window,
   SpaceBridge,
   Pipe,
-  Teleporter,
+  Teleporter1,
   Island,
   Iceberg,
   Weeds,
+  Teleporter2,
+  Teleporter3,
+  Teleporter4,
+  Teleporter5,
+  Teleporter6,
 ];
 
 const tiles = sortBy(Tiles.slice(), ({ group }) => group);
@@ -1683,7 +1768,12 @@ export const SpaceShipBiome = new Set([
   Window,
   SpaceBridge,
   Pipe,
-  Teleporter,
+  Teleporter1,
+  Teleporter2,
+  Teleporter3,
+  Teleporter4,
+  Teleporter5,
+  Teleporter6,
 ]);
 
 export const CrossOverTiles = new Map([

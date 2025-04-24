@@ -7,24 +7,27 @@ import generateFrames from './generateFrames.tsx';
 
 const spriteSize = 48;
 const frames = generateFrames(spriteSize, 18, 'vertical');
+const reverseFrames = frames.toReversed();
 
 export default function Spawn({
   onSpawn,
   position: { x, y },
   size,
+  type,
   unitDirection,
   update,
   ...props
 }: Omit<AnimationProps, 'sound'> & {
   onSpawn?: StateToStateLike;
   position: Vector;
+  type: 'spawn' | 'despawn';
   unitDirection: 'left' | 'right';
   update: UpdateFunction;
 }) {
   return (
     <Animation
       direction={unitDirection}
-      frames={frames}
+      frames={type === 'despawn' ? reverseFrames : frames}
       onStep={useCallback(
         (step: number) => {
           if (onSpawn && step === 8) {

@@ -78,7 +78,7 @@ export type SpawnAnimation = Readonly<{
   onComplete: StateToStateLike;
   onSpawn?: StateToStateLike;
   speed: 'fast' | 'slow';
-  type: 'spawn';
+  type: 'spawn' | 'despawn';
   unitDirection: UnitDirection;
   variant: PlayerID;
 }>;
@@ -327,6 +327,7 @@ const unitAnimations = new Set([
   'attackUnitFlash',
   'capture',
   'damage',
+  'despawn',
   'fold',
   'heal',
   'move',
@@ -458,6 +459,7 @@ const MapAnimation = ({
             zIndex={getLayer((animation.position || position).y, 'animation')}
           />
         );
+      case 'despawn':
       case 'spawn':
         return (
           <Spawn
@@ -469,6 +471,7 @@ const MapAnimation = ({
             position={position}
             requestFrame={requestFrame}
             size={tileSize}
+            type={animation.type}
             unitDirection={animation.unitDirection}
             update={update}
             variant={animation.variant}

@@ -182,5 +182,6 @@
   ["IncreaseChargeEffect", [47, ["type", "charges", "player"]]],
   ["IncreaseFundsEffect", [48, ["type", "funds", "player"]]],
   ["IncreaseCharge", [49, ["type", "charges", "player"]]],
-  ["IncreaseFunds", [50, ["type", "funds", "player"]]]
+  ["IncreaseFunds", [50, ["type", "funds", "player"]]],
+  ["Swap", [51, ["type", "source", "sourceUnit", "target", "targetUnit"]]]
 ]

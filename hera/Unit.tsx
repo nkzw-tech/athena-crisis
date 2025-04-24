@@ -343,6 +343,12 @@ const getDirectionOffset = (info: UnitInfo, direction?: AnimationDirection) =>
       info.sprite.directionOffset
     : 0;
 
+const isSpawnAnimation = (
+  animation: UnitAnimation | undefined,
+): animation is UnitAnimation => {
+  return animation?.type === 'spawn' || animation?.type === 'despawn';
+};
+
 export default function UnitTile({
   absolute,
   animation,
@@ -396,7 +402,11 @@ export default function UnitTile({
   const isMoving = animation?.type === 'move';
   const isAttacking = animation?.type === 'attack';
   const hasAttackStance = isAttacking && info.sprite.attackStance;
-  const isSpawning = animation?.type === 'spawn' && !animationConfig.Instant;
+
+  const spawnAnimation =
+    !animationConfig.Instant && isSpawnAnimation(animation)
+      ? animation.type
+      : null;
   const isAnimating =
     animation &&
     (hasAttackStance ||
@@ -488,7 +498,7 @@ export default function UnitTile({
         ? {
             opacity: animation.pathVisibility[0] ? '1' : '0',
           }
-        : isSpawning
+        : spawnAnimation === 'spawn'
           ? { opacity: '0' }
           : null),
     };
@@ -502,11 +512,11 @@ export default function UnitTile({
     info.sprite.direction,
     isAttacking,
     isMoving,
-    isSpawning,
     position,
     positionOffset.x,
     positionOffset.y,
     size,
+    spawnAnimation,
     unit.health,
     unitDirection,
   ]);
@@ -668,7 +678,7 @@ export default function UnitTile({
       animate(animation);
     }
 
-    if (isMoving || (isSpawning && player > 0)) {
+    if (animation && (isMoving || (spawnAnimation && player > 0))) {
       if (!animationKey || !scheduleTimer || !requestFrame) {
         throw new Error(
           `Unit: 'animationKey', 'scheduleTimer' or 'requestFrame' props are missing for animation at position '${position}'.`,
@@ -706,7 +716,7 @@ export default function UnitTile({
         let toY: number;
 
         const setDirection = () => {
-          const direction = isSpawning ? 0 : toY > 0 ? 1 : toY < 0 ? 2 : 0;
+          const direction = spawnAnimation ? 0 : toY > 0 ? 1 : toY < 0 ? 2 : 0;
           const backgroundPositionY =
             -(
               currentSpritePosition.y +
@@ -817,7 +827,7 @@ export default function UnitTile({
 
             playSound();
 
-            if (!isSpawning) {
+            if (!spawnAnimation) {
               style.zIndex = String(getLayer(to.y, 'unit'));
               style.setProperty(
                 vars.set('direction'),
@@ -856,26 +866,35 @@ export default function UnitTile({
         requestFrame(next);
       };
 
+      const isDespawn = animation.type === 'despawn';
       move(
-        animation.type === 'spawn'
+        isSpawnAnimation(animation)
           ? {
-              from: new SpriteVector(position.x, position.y + 1 / 12),
+              from: isDespawn
+                ? position
+                : new SpriteVector(position.x, position.y + 1 / 12),
               // This will be handled through the <Spawn /> animation component.
               onComplete: () => null,
               partial: false,
-              path: [position],
-              pathVisibility: null,
+              path: [
+                isDespawn
+                  ? new SpriteVector(position.x, position.y + 1 / 12)
+                  : position,
+              ],
+              pathVisibility: isDespawn ? [true, false] : null,
               tiles: [tile],
               type: 'move',
             }
           : animation,
-        () =>
-          !isSpawning &&
-          requestFrame(() => onAnimationComplete(animationKey, animation)),
+        () => {
+          if (!spawnAnimation) {
+            requestFrame(() => onAnimationComplete(animationKey, animation));
+          }
+        },
       );
     }
 
-    if (isSpawning && scheduleTimer) {
+    if (spawnAnimation && scheduleTimer) {
       scheduleTimer(() => {
         if (elementRef.current) {
           elementRef.current.style.opacity = '1';
@@ -896,7 +915,6 @@ export default function UnitTile({
     info,
     isAnimating,
     isMoving,
-    isSpawning,
     onAnimationComplete,
     player,
     position,
@@ -905,6 +923,7 @@ export default function UnitTile({
     requestFrame,
     scheduleTimer,
     size,
+    spawnAnimation,
     spritePosition,
     tile,
     unit,

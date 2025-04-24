@@ -73,6 +73,11 @@ export default function getActionResponseVectors(
         ? [map.contains(position.up()) ? position.up() : position]
         : [];
     }
+    case 'Swap': {
+      const { source } = actionResponse;
+      // We are only interested in the source since we are panning to the target later.
+      return [source];
+    }
     // These actions have vectors attached to them, but they are not animated
     // and not interesting to scroll them into view.
     case 'CompleteBuilding':

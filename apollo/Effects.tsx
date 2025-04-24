@@ -28,6 +28,8 @@ import {
 } from './EncodedActions.tsx';
 import shouldActivateCrystalPower from './invasions/shouldActivateCrystalPower.tsx';
 import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
+import getTeleportTarget from './lib/getTeleportTarget.tsx';
+import isMoveActionResponse from './lib/isMoveActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 import { GameStateWithEffects } from './Types.tsx';
 
@@ -86,6 +88,7 @@ const applyActions = (
 };
 
 const handleDefaultEffects = (
+  previousMap: MapData,
   activeMap: MapData,
   effects: Effects,
   actionResponse: ActionResponse,
@@ -107,6 +110,7 @@ const handleDefaultEffects = (
           null,
           true,
         );
+        previousMap = activeMap;
         activeMap = applyActionResponse(
           activeMap,
           new Vision(currentPlayer.id),
@@ -119,6 +123,31 @@ const handleDefaultEffects = (
       }
     }
   }
+
+  if (isMoveActionResponse(actionResponse) && actionResponse.type !== 'Spawn') {
+    const { to } = actionResponse;
+    const unitA = activeMap.units.get(to);
+    if (unitA && !previousMap.units.get(to)) {
+      const teleportTarget = getTeleportTarget(activeMap, unitA, to);
+      if (teleportTarget) {
+        const swapActionResponse = {
+          source: to,
+          sourceUnit: unitA,
+          target: teleportTarget,
+          targetUnit: activeMap.units.get(teleportTarget),
+          type: 'Swap',
+        } as const;
+        previousMap = activeMap;
+        activeMap = applyActionResponse(
+          activeMap,
+          new Vision(activeMap.currentPlayer),
+          swapActionResponse,
+        );
+        gameState = [...gameState, [swapActionResponse, activeMap, effects]];
+      }
+    }
+  }
+
   return gameState?.length ? gameState : null;
 };
 
@@ -172,7 +201,8 @@ export function applyEffects(
 
   gameState = [
     ...gameState,
-    ...(handleDefaultEffects(activeMap, effects, actionResponse) || []),
+    ...(handleDefaultEffects(previousMap, activeMap, effects, actionResponse) ||
+      []),
   ];
 
   return gameState?.length ? gameState : null;

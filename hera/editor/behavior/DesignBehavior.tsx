@@ -584,6 +584,7 @@ export default class DesignBehavior {
             newUnits.toArray(),
             maybeCreatePlayers(map, undefined, newUnits),
             'slow',
+            'spawn',
             ({ map }) => {
               updateEditorHistory(editor.historyRef, [
                 `design-unit-${encodeEntities(map.units)}`,

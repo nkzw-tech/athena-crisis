@@ -16,6 +16,7 @@ import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import Flyout, { FlyoutItemWithHighlight } from '../ui/Flyout.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import dropUnitAction from './drop/dropUnitAction.tsx';
+import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
 const getRadius = (
   transportedUnit: TransportedUnit,
@@ -207,6 +208,9 @@ export default class DropUnit {
         </Tick>
       );
     }
-    return null;
+
+    return (
+      <TeleportIndicator state={state} unit={selectedUnit} vector={position} />
+    );
   };
 }

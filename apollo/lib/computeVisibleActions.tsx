@@ -454,6 +454,7 @@ const VisibleActionModifiers: Record<
     Hidden: supplyActionWithDefault(() => null),
     Source: supplyActionWithDefault(completeUnit),
   },
+  Swap: true,
   ToggleLightning: (
     { from, to, type, unit }: ToggleLightningActionResponse,
     map: MapData,

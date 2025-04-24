@@ -1,4 +1,5 @@
 import { Behavior } from '@deities/athena/info/Building.tsx';
+import { Pioneer } from '@deities/athena/info/Unit.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
@@ -8,7 +9,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { attackable, moveable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike } from '../Types.tsx';
+import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import AbstractSelectBehavior from './AbstractSelectBehavior.tsx';
 import { resetBehavior } from './Behavior.tsx';
 import BuySkills from './BuySkills.tsx';
@@ -16,6 +17,7 @@ import CreateUnit from './CreateUnit.tsx';
 import Menu from './Menu.tsx';
 import Move from './Move.tsx';
 import Radar from './Radar.tsx';
+import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
 export default class Base extends AbstractSelectBehavior {
   public readonly type = 'base' as const;
@@ -240,4 +242,14 @@ export default class Base extends AbstractSelectBehavior {
     }
     return newState;
   }
+
+  override component = ({ state }: StateWithActions) => {
+    return (
+      <TeleportIndicator
+        state={state}
+        unit={Pioneer.create(state.map.currentPlayer)}
+        vector={state.position}
+      />
+    );
+  };
 }

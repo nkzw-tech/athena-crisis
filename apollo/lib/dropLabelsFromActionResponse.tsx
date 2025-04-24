@@ -23,6 +23,23 @@ export default function dropLabelsFromActionResponse(
         ...actionResponse,
         units: actionResponse.units.map((unit) => unit.dropLabel(labels)),
       };
+    case 'Swap': {
+      const { sourceUnit, targetUnit } = actionResponse;
+      if (targetUnit?.label != null && labels.has(targetUnit.label)) {
+        actionResponse = {
+          ...actionResponse,
+          targetUnit: targetUnit.dropLabel(labels),
+        };
+      }
+      if (sourceUnit.label != null && labels.has(sourceUnit.label)) {
+        actionResponse = {
+          ...actionResponse,
+          sourceUnit: sourceUnit.dropLabel(labels),
+        };
+      }
+
+      return actionResponse;
+    }
     case 'AttackBuilding':
     case 'Capture':
     case 'CreateBuilding': {

@@ -22,6 +22,7 @@ import ConfirmAction from './confirm/ConfirmAction.tsx';
 import MenuBehavior from './Menu.tsx';
 import moveAction from './move/moveAction.tsx';
 import syncMoveAction from './move/syncMoveAction.tsx';
+import TeleportIndicator from './swap/TeleportIndicator.tsx';
 import TransportBehavior from './Transport.tsx';
 
 const getCurrentMovementPath = (
@@ -84,7 +85,11 @@ const moveAndAttack = (
           state,
           (state, actionResponse) => {
             // If the action was blocked by another unit, do not attempt an attack.
-            if (actionResponse.completed || !actionResponse.to.equals(target)) {
+            if (
+              actionResponse.completed ||
+              !actionResponse.to.equals(target) ||
+              state.lastActionResponse?.type !== 'Move'
+            ) {
               return {
                 ...state,
                 ...resetBehavior(),
@@ -398,8 +403,18 @@ export default class Move {
               vector,
               radius.fields,
               state,
-              (state) => {
-                const newUnit = state.map.units.get(vector);
+              (state, actionResponse) => {
+                const [target, newUnit] =
+                  state.lastActionResponse?.type === 'Swap'
+                    ? [
+                        state.lastActionResponse.target,
+                        state.lastActionResponse.sourceUnit,
+                      ]
+                    : [
+                        actionResponse.to,
+                        state.map.units.get(actionResponse.to),
+                      ];
+
                 return newUnit &&
                   !newUnit.isCompleted() &&
                   // Only select the unit if it is owned by the player.
@@ -410,7 +425,7 @@ export default class Move {
                       ...state,
                       ...resetBehavior(),
                       behavior: new MenuBehavior(),
-                      selectedPosition: vector,
+                      selectedPosition: target,
                       selectedUnit: newUnit,
                     }
                   : {
@@ -548,7 +563,6 @@ export default class Move {
       <>
         <AttackSelector
           actions={actions}
-          key="a"
           onSelect={onSelect}
           origin={field || selectedPosition}
           state={state}
@@ -556,6 +570,11 @@ export default class Move {
         {confirmAction && (
           <ConfirmAction actions={actions} state={state} {...confirmAction} />
         )}
+        <TeleportIndicator
+          state={state}
+          unit={selectedUnit}
+          vector={position && radius?.fields.has(position) ? position : null}
+        />
       </>
     );
   };

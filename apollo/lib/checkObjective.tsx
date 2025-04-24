@@ -16,27 +16,15 @@ import {
 } from '@deities/athena/Objectives.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
 import { ActionResponse } from '../ActionResponse.tsx';
-
-const destructiveActions = new Set([
-  'ActivatePower',
-  'AttackBuilding',
-  'AttackUnit',
-  'EndTurn',
-  'ToggleLightning',
-]);
-
-const moveActions = new Set(['CreateUnit', 'DropUnit', 'Move', 'Spawn']);
-
-export function isDestructiveAction(actionResponse: ActionResponse) {
-  return destructiveActions.has(actionResponse.type);
-}
+import isDestructiveActionResponse from './isDestructiveActionResponse.tsx';
+import isMoveActionResponse from './isMoveActionResponse.tsx';
 
 export function shouldCheckDefaultObjectives(
   map: MapData,
   actionResponse: ActionResponse,
 ) {
   const { objectives } = map.config;
-  if (isDestructiveAction(actionResponse)) {
+  if (isDestructiveActionResponse(actionResponse)) {
     return (
       onlyHasDefaultObjective(objectives) ||
       objectives.some(
@@ -98,7 +86,7 @@ export function pickWinningPlayer(
     (objective.type === Criteria.RescueLabel ||
       objective.type === Criteria.RescueAmount ||
       objective.type === Criteria.CaptureLabel) &&
-    isDestructiveAction(actionResponse) &&
+    isDestructiveActionResponse(actionResponse) &&
     matchesPlayerList(objective.players, activeMap.currentPlayer)
   ) {
     return resolveDynamicPlayerID(activeMap, 'opponent');
@@ -422,12 +410,12 @@ export default function checkObjectives(
     return null;
   }
 
-  const isDestructive = isDestructiveAction(actionResponse);
+  const isDestructive = isDestructiveActionResponse(actionResponse);
   const isCapture =
     !!(actionResponse.type === 'Capture' && actionResponse.building) ||
     actionResponse.type === 'CreateBuilding';
 
-  const isMove = moveActions.has(actionResponse.type);
+  const isMove = isMoveActionResponse(actionResponse);
   const isRescue =
     actionResponse.type === 'Rescue' &&
     map.units.get(actionResponse.to)?.player === actionResponse.player;

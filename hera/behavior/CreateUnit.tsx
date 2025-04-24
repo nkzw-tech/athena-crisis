@@ -39,6 +39,7 @@ import ActionWheel, {
 import UnitTile from '../Unit.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import createUnitAction from './createUnit/createUnitAction.tsx';
+import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
 const MAX_UNITS = 8;
 
@@ -86,6 +87,7 @@ export default class CreateUnit {
   }
 
   select(vector: Vector, state: State, actions: Actions): StateLike | null {
+    const { action, requestFrame, update } = actions;
     const { unitToBuild } = this;
     const { radius, selectedPosition } = state;
     if (
@@ -94,14 +96,16 @@ export default class CreateUnit {
       radius &&
       radius.fields.get(vector)
     ) {
-      actions.requestFrame(async () => {
-        const actionResponse = actions.optimisticAction(
-          state,
-          CreateUnitAction(selectedPosition, unitToBuild.id, vector),
+      requestFrame(async () => {
+        update(
+          await createUnitAction(
+            actions,
+            ...action(
+              state,
+              CreateUnitAction(selectedPosition, unitToBuild.id, vector),
+            ),
+          ),
         );
-        if (actionResponse.type === 'CreateUnit') {
-          actions.update(await createUnitAction(actions, actionResponse));
-        }
       });
       return null;
     }
@@ -340,7 +344,14 @@ export default class CreateUnit {
         </ActionWheel>
       );
     }
-    return null;
+
+    return this.unitToBuild ? (
+      <TeleportIndicator
+        state={state}
+        unit={this.unitToBuild.create(state.map.currentPlayer)}
+        vector={position}
+      />
+    ) : null;
   };
 }
 

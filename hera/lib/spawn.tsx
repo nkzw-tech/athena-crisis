@@ -13,9 +13,10 @@ import getUserDisplayName from './getUserDisplayName.tsx';
 export default function spawn(
   actions: Actions,
   state: State,
-  unitsToSpawn: ReadonlyArray<[Vector, Unit]>,
+  unitsToSpawn: ReadonlyArray<readonly [Vector, Unit]>,
   teams: Teams | null | undefined,
   speed: 'fast' | 'slow',
+  type: 'spawn' | 'despawn' = 'spawn',
   onComplete: StateToStateLike,
   isSubsequent = false,
 ): StateLike | null {
@@ -58,6 +59,7 @@ export default function spawn(
                 remainingUnits,
                 teams,
                 speed,
+                type,
                 onComplete,
                 true,
               ),
@@ -66,26 +68,29 @@ export default function spawn(
         );
         return state;
       },
-      onSpawn: ({ map }: State) => {
-        map = map.copy({
-          units: map.units.set(position, unit),
-        });
+      onSpawn:
+        type === 'spawn'
+          ? ({ map }: State) => {
+              map = map.copy({
+                units: map.units.set(position, unit),
+              });
 
-        if (!map.maybeGetPlayer(unit.player)) {
-          map = mergeTeams(
-            map,
-            newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
-          );
-        }
+              if (!map.maybeGetPlayer(unit.player)) {
+                map = mergeTeams(
+                  map,
+                  newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
+                );
+              }
 
-        return {
-          map: map.copy({
-            active: getActivePlayers(map, map.active),
-          }),
-        };
-      },
+              return {
+                map: map.copy({
+                  active: getActivePlayers(map, map.active),
+                }),
+              };
+            }
+          : undefined,
       speed,
-      type: 'spawn',
+      type,
       unitDirection: getUnitDirection(state.map.getFirstPlayerID(), unit),
       variant: unit.player,
     }),
