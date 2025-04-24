@@ -28,6 +28,7 @@ test('creates valid maps', async () => {
         `Invalid Map`,
         await captureOne(map, HumanPlayer.from(map.getPlayer(1), '1').userId),
       );
+      // eslint-disable-next-line no-console
       console.log(JSON.stringify(map.toJSON(), null, 2));
     }
     expect(validateMap(map, AIRegistry)).not.toBeFalsy();

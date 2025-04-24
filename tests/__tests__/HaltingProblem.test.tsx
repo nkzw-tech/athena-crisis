@@ -71,6 +71,7 @@ const play = async (map: MapData) => {
     );
 
     if (actionResponse.type !== 'GameEnd') {
+      // eslint-disable-next-line no-console
       console.log(JSON.stringify(map.toJSON(), null, 2));
     }
 
@@ -86,6 +87,7 @@ const play = async (map: MapData) => {
         ));
 
     if (!hasOffensiveAction) {
+      // eslint-disable-next-line no-console
       console.log(gameState.map(([actionResponse]) => actionResponse));
     }
     expect(hasOffensiveAction).toBe(true);
@@ -185,6 +187,7 @@ const play = async (map: MapData) => {
       );*/
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(
       chalk.bold.red(
         `HaltingProblem test failed. Printing game state to 'halting-problem-failure.json'.`,

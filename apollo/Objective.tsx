@@ -367,11 +367,20 @@ export function checkAttackUnit(
 
 export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
   const currentPlayer = activeMap.getCurrentPlayer();
+  const playerHasLost =
+    hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer);
+
+  if (playerHasLost) {
+    return [
+      { fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' } as const,
+    ];
+  }
+
   const opponents = activeMap
     .getPlayers()
     .filter((player) => activeMap.isOpponent(player, currentPlayer));
 
-  const actionResponses = [];
+  const actionResponses: Array<ObjectiveActionResponse> = [];
   for (const opponent of opponents) {
     const opponentHasLost =
       hasUnits(previousMap, opponent) &&
@@ -379,6 +388,25 @@ export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
 
     if (opponentHasLost) {
       actionResponses.push(opponentHasLost);
+    }
+  }
+
+  if (actionResponses.length < opponents.length) {
+    const team = activeMap
+      .getPlayers()
+      .filter(
+        (player) =>
+          player.id !== currentPlayer.id &&
+          activeMap.matchesTeam(player, currentPlayer),
+      );
+    for (const player of team) {
+      const playerHasLost =
+        hasUnits(previousMap, player) &&
+        checkHasUnits(activeMap, player, opponents[0] || currentPlayer)?.[0];
+
+      if (playerHasLost) {
+        actionResponses.push(playerHasLost);
+      }
     }
   }
 

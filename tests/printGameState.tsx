@@ -8,6 +8,7 @@ export function printGameState(
   actionResponse: ActionResponse | string,
   screenshot: Image,
 ) {
+  // eslint-disable-next-line no-console
   console.log(
     typeof actionResponse === 'string'
       ? chalk.bold(actionResponse)

@@ -7,14 +7,16 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Effect, Effects } from '@deities/apollo/Effects.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
-import { SmallTank } from '@deities/athena/info/Unit.tsx';
+import { Plain } from '@deities/athena/info/Tile.tsx';
+import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
+import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import MapData from '@deities/athena/MapData.tsx';
+import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
@@ -137,4 +139,124 @@ test('crystals activate powers', async () => {
   `);
 
   expect(gameStateB.at(-1)?.[1].units.get(vecA)?.shield).toBe(null);
+});
+
+test('players can defeat themselves with powers or defeat their team', async () => {
+  const skills = new Set([Skill.HighTide]);
+
+  const vecA = vec(1, 1);
+  const vecB = vec(1, 7);
+  const vecC = vec(3, 3);
+  const vecD = vec(7, 1);
+  const vecE = vec(7, 7);
+  const vecF = vec(2, 2);
+  const vecG = vec(4, 4);
+
+  const player = initialMap.getPlayer(1);
+  const mapA = initialMap.copy({
+    map: Array(7 * 7).fill(Plain.id),
+    size: new SizeVector(7, 7),
+    teams: player.isHumanPlayer()
+      ? updatePlayer(
+          initialMap.teams,
+          player.copy({
+            charge: Charge * MaxCharges,
+            crystal: Crystal.Power,
+            skills,
+          }),
+        )
+      : initialMap.teams,
+    units: initialMap.units
+      .set(vecA, SmallTank.create(2))
+      .set(vecB, SmallTank.create(2))
+      .set(vecC, SmallTank.create(1))
+      .set(vecD, SmallTank.create(2))
+      .set(vecE, SmallTank.create(2)),
+  });
+
+  const actions = [ActivatePowerAction(Skill.HighTide, null)];
+  const [, gameActionResponseA] = await executeGameActions(mapA, actions);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(
+    `
+    "ActivatePower () { skill: 41, units: null, free: false }
+    AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+  `,
+  );
+
+  const mapB = mapA.copy({
+    units: mapA.units.delete(vecC).set(vecA, Pioneer.create(1)),
+  });
+  const [, gameActionResponseB] = await executeGameActions(mapB, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+      "ActivatePower () { skill: 41, units: null, free: false }
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
+    `);
+
+  const teamA = mapA.teams.get(1)!;
+  const mapC = mapA.copy({
+    active: [...mapA.active, 3],
+    teams: mapA.teams.set(
+      1,
+      teamA.copy({
+        players: teamA.players.set(
+          3,
+          new HumanPlayer(
+            3,
+            'User-3',
+            1,
+            300,
+            undefined,
+            new Set(),
+            new Set(),
+            0,
+            null,
+            0,
+            null,
+          ),
+        ),
+      }),
+    ),
+    units: mapA.units.set(vecA, SmallTank.create(3)),
+  });
+  const [, gameActionResponseC] = await executeGameActions(mapC, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseC))
+    .toMatchInlineSnapshot(`
+    "ActivatePower () { skill: 41, units: null, free: false }
+    AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+  `);
+
+  const mapD = mapC.copy({
+    units: mapC.units.set(vecF, SmallTank.create(2)),
+  });
+  const [, gameActionResponseD] = await executeGameActions(mapD, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseD))
+    .toMatchInlineSnapshot(`
+    "ActivatePower () { skill: 41, units: null, free: false }
+    AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }"
+  `);
+
+  const mapF = mapD.copy({
+    units: mapD.units
+      .delete(vecC)
+      .set(vecA, Pioneer.create(1))
+      .set(vecG, Pioneer.create(3)),
+  });
+  const [, gameActionResponseF] = await executeGameActions(mapF, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseF))
+    .toMatchInlineSnapshot(`
+      "ActivatePower () { skill: 41, units: null, free: false }
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
+      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
+    `);
 });

@@ -120,7 +120,7 @@ export default [
   },
   {
     files: [
-      '{codegen,infra,scripts,tests}/**/*.tsx',
+      '{codegen,infra,scripts}/**/*.tsx',
       'artemis/{prisma,scripts}/**/*.tsx',
       'artemis/artemis.tsx',
     ],
