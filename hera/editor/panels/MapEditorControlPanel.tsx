@@ -506,7 +506,7 @@ const Sidebar = ({
   return (
     <Stack alignCenter className={topPaddingStyle} flex1 gap={16} nowrap>
       <Stack className={boxShadowStyle} flex1 nowrap>
-        <Box alignCenter flex1 gap={16} nowrap>
+        <Box alignCenter className={toolbarStyle} flex1 gap={16} nowrap>
           {primary}
           {secondary.length && (
             <Dropdown
@@ -543,6 +543,10 @@ const Sidebar = ({
 const boxShadowStyle = css`
   backdrop-filter: blur(4px);
   box-shadow: ${applyVar('border-color-light')} 0 8px 10px;
+`;
+
+const toolbarStyle = css`
+  height: 44px;
 `;
 
 const topPaddingStyle = css`
