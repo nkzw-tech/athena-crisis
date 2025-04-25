@@ -10,7 +10,9 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { attackable, moveable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
-import AbstractSelectBehavior from './AbstractSelectBehavior.tsx';
+import AbstractSelectBehavior, {
+  BaseSelectComponent,
+} from './AbstractSelectBehavior.tsx';
 import { resetBehavior } from './Behavior.tsx';
 import BuySkills from './BuySkills.tsx';
 import CreateUnit from './CreateUnit.tsx';
@@ -223,12 +225,12 @@ export default class Base extends AbstractSelectBehavior {
     return { building: building || null, unit: unit || null };
   }
 
-  protected override getState(
+  protected override getState = (
     vector: Vector,
     state: State,
     unit: Unit | null,
     building: Building | null,
-  ): StateLike | null {
+  ): StateLike | null => {
     let newState = super.getState(vector, state, unit, building);
     if (
       newState?.selectedBuilding &&
@@ -241,15 +243,22 @@ export default class Base extends AbstractSelectBehavior {
       }
     }
     return newState;
-  }
+  };
 
-  override component = ({ state }: StateWithActions) => {
+  override component = ({ actions, state }: StateWithActions) => {
     return (
-      <TeleportIndicator
-        state={state}
-        unit={Pioneer.create(state.map.currentPlayer)}
-        vector={state.position}
-      />
+      <>
+        <BaseSelectComponent
+          actions={actions}
+          getState={this.getState}
+          state={state}
+        />
+        <TeleportIndicator
+          state={state}
+          unit={Pioneer.create(state.map.currentPlayer)}
+          vector={state.position}
+        />
+      </>
     );
   };
 }

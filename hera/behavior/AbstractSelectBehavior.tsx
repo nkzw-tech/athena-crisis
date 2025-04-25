@@ -78,20 +78,42 @@ export default abstract class AbstractSelectBehavior {
 
   component = ({ actions, state }: StateWithActions): ReactElement | null => {
     return (
-      <SelectEntity
+      <BaseSelectComponent
         actions={actions}
-        onSelectBuilding={useCallback(
-          (position, building) =>
-            actions.update(this.getState(position, state, null, building)),
-          [actions, state],
-        )}
-        onSelectUnit={useCallback(
-          (position, unit) =>
-            actions.update(this.getState(position, state, unit, null)),
-          [actions, state],
-        )}
+        getState={this.getState}
         state={state}
       />
     );
   };
+}
+
+export function BaseSelectComponent({
+  actions,
+  getState,
+  state,
+}: StateWithActions &
+  Readonly<{
+    getState: (
+      vector: Vector,
+      state: State,
+      unit: Unit | null,
+      building: Building | null,
+    ) => StateLike | null;
+  }>): ReactElement | null {
+  return (
+    <SelectEntity
+      actions={actions}
+      onSelectBuilding={useCallback(
+        (position, building) =>
+          actions.update(getState(position, state, null, building)),
+        [actions, getState, state],
+      )}
+      onSelectUnit={useCallback(
+        (position, unit) =>
+          actions.update(getState(position, state, unit, null)),
+        [actions, getState, state],
+      )}
+      state={state}
+    />
+  );
 }
