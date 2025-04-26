@@ -10,7 +10,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
-    "@nkzw/core": "^1.2.0",
+    "@nkzw/core": "^1.2.1",
     "@nkzw/use-visibility-state": "^1.0.2"
   },
   "devDependencies": {

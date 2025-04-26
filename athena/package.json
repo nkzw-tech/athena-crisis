@@ -10,7 +10,7 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
-    "@nkzw/core": "^1.2.0",
+    "@nkzw/core": "^1.2.1",
     "@nkzw/immutable-map": "^1.2.2",
     "array-shuffle": "^3.0.0",
     "fastpriorityqueue": "^0.7.5",
