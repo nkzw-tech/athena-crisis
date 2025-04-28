@@ -11,15 +11,18 @@ import {
   ObjectiveID,
 } from '@deities/athena/Objectives.tsx';
 import Vision from '@deities/athena/Vision.tsx';
+import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
 import {
   ActionResponse,
+  ActionResponses,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
   ToggleLightningActionResponse,
 } from './ActionResponse.tsx';
+import applyActionResponse from './actions/applyActionResponse.tsx';
 import { ChaosStars } from './invasions/ChaosStars.tsx';
 import checkObjectives, {
   pickWinningPlayer,
@@ -366,46 +369,57 @@ export function checkAttackUnit(
 }
 
 export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
+  const actionResponses: Array<ObjectiveActionResponse> = [];
   const currentPlayer = activeMap.getCurrentPlayer();
   const playerHasLost =
     hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer);
+  const team = activeMap
+    .getPlayers()
+    .filter(
+      (player) =>
+        player.id !== currentPlayer.id &&
+        activeMap.matchesTeam(player, currentPlayer),
+    );
 
   if (playerHasLost) {
-    return [
-      { fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' } as const,
-    ];
+    const playerGameOverActionResponse = {
+      fromPlayer: currentPlayer.id,
+      type: 'BeginTurnGameOver',
+    } as const;
+    actionResponses.push(playerGameOverActionResponse);
+
+    if (
+      checkGameEnd(
+        applyActionResponses(activeMap, [playerGameOverActionResponse]),
+      )
+    ) {
+      return actionResponses;
+    }
   }
 
+  const activePlayer = (playerHasLost && team[0]) || currentPlayer;
   const opponents = activeMap
     .getPlayers()
     .filter((player) => activeMap.isOpponent(player, currentPlayer));
 
-  const actionResponses: Array<ObjectiveActionResponse> = [];
   for (const opponent of opponents) {
     const opponentHasLost =
       hasUnits(previousMap, opponent) &&
-      checkHasUnits(activeMap, opponent, currentPlayer)?.[0];
+      checkHasUnits(activeMap, opponent, activePlayer)?.[0];
 
     if (opponentHasLost) {
       actionResponses.push(opponentHasLost);
     }
   }
 
-  if (actionResponses.length < opponents.length) {
-    const team = activeMap
-      .getPlayers()
-      .filter(
-        (player) =>
-          player.id !== currentPlayer.id &&
-          activeMap.matchesTeam(player, currentPlayer),
-      );
+  if (!checkGameEnd(applyActionResponses(activeMap, actionResponses))) {
     for (const player of team) {
-      const playerHasLost =
+      const teammateHasLost =
         hasUnits(previousMap, player) &&
-        checkHasUnits(activeMap, player, opponents[0] || currentPlayer)?.[0];
+        checkHasUnits(activeMap, player, opponents[0] || activePlayer)?.[0];
 
-      if (playerHasLost) {
-        actionResponses.push(playerHasLost);
+      if (teammateHasLost) {
+        actionResponses.push(teammateHasLost);
       }
     }
   }
@@ -523,9 +537,12 @@ const checkHasUnits = (map: MapData, fromPlayer: Player, toPlayer: Player) => {
 
 const checkGameEnd = (map: MapData) => {
   const teams = new Set(map.active.map((playerId) => map.getTeam(playerId)));
+  const firstTeam = getFirstOrThrow(teams);
   return teams.size === 1
     ? ({
-        toPlayer: [...teams][0].players.first()!.id,
+        toPlayer:
+          firstTeam.players.find(({ id }) => map.active.includes(id))?.id ||
+          getFirstOrThrow(firstTeam.players)[1].id,
         type: 'GameEnd',
       } as const)
     : null;
@@ -565,3 +582,17 @@ const removePlayer = (map: MapData, player: Player) =>
   map.copy({
     active: map.active.filter((playerId) => playerId !== player.id),
   });
+
+const applyActionResponses = (
+  map: MapData,
+  actionResponses: ActionResponses,
+): MapData => {
+  for (const actionResponse of actionResponses) {
+    map = applyActionResponse(
+      map,
+      new Vision(map.currentPlayer),
+      actionResponse,
+    );
+  }
+  return map;
+};

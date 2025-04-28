@@ -152,6 +152,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
   const vecF = vec(2, 2);
   const vecG = vec(4, 4);
 
+  // Player defeats opponent, game ends.
   const player = initialMap.getPlayer(1);
   const mapA = initialMap.copy({
     map: Array(7 * 7).fill(Plain.id),
@@ -187,6 +188,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
   `,
   );
 
+  // Player defeats themselves, game ends.
   const mapB = mapA.copy({
     units: mapA.units.delete(vecC).set(vecA, Pioneer.create(1)),
   });
@@ -199,6 +201,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 
+  // Player defeats every opponent and teammate, game ends.
   const teamA = mapA.teams.get(1)!;
   const mapC = mapA.copy({
     active: [...mapA.active, 3],
@@ -234,6 +237,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
     GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
   `);
 
+  // Player defeats teammate, game continues.
   const mapD = mapC.copy({
     units: mapC.units.set(vecF, SmallTank.create(2)),
   });
@@ -245,6 +249,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
     AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }"
   `);
 
+  // Player defeats themselves, game continues.
   const mapF = mapD.copy({
     units: mapD.units
       .delete(vecC)
@@ -258,5 +263,37 @@ test('players can defeat themselves with powers or defeat their team', async () 
       "ActivatePower () { skill: 41, units: null, free: false }
       BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
+    `);
+
+  // Player defeats themselves and opponent, game ends.
+  const mapG = mapC.copy({
+    units: mapC.units
+      .set(vecC, SmallTank.create(3))
+      .set(vecA, Pioneer.create(1)),
+  });
+  const [, gameActionResponseG] = await executeGameActions(mapG, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseG))
+    .toMatchInlineSnapshot(`
+      "ActivatePower () { skill: 41, units: null, free: false }
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
+      AttackUnitGameOver { fromPlayer: 2, toPlayer: 3 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 3, chaosStars: null }"
+    `);
+
+  // Player defeats themselves and teammate, game ends.
+  const mapH = mapC.copy({
+    units: mapC.units
+      .set(vecC, SmallTank.create(2))
+      .set(vecE, Pioneer.create(1)),
+  });
+  const [, gameActionResponseH] = await executeGameActions(mapH, actions);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseH))
+    .toMatchInlineSnapshot(`
+      "ActivatePower () { skill: 41, units: null, free: false }
+      BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
+      AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
