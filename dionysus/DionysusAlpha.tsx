@@ -105,12 +105,6 @@ export default class DionysusAlpha extends BaseAI {
     );
   }
 
-  private attacksDone = false;
-  private tryAttacking() {
-    // Unset the `attacksDone` state to attempt an attack in the next loop.
-    this.attacksDone = false;
-  }
-
   private activatePower(map: MapData): MapData | null {
     const player = map.getCurrentPlayer();
     const { activeSkills, charge, skills } = player;
@@ -159,7 +153,7 @@ export default class DionysusAlpha extends BaseAI {
   }
 
   private attack(map: MapData): MapData | null {
-    if (this.attacksDone) {
+    if (!this.shouldAttack()) {
       return null;
     }
 
@@ -185,7 +179,7 @@ export default class DionysusAlpha extends BaseAI {
     ).sort(sortPossibleAttacks);
 
     if (!possibleAttacks.length) {
-      this.attacksDone = true;
+      this.finishAttacking();
       return null;
     }
 
@@ -1211,6 +1205,8 @@ export default class DionysusAlpha extends BaseAI {
           if (!currentMap) {
             throw new Error('Error executing unit drop.');
           }
+
+          this.tryAttacking();
         }
       }
     }

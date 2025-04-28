@@ -1,16 +1,19 @@
 import {
   AttackUnitAction,
   CreateUnitAction,
+  EndTurnAction,
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { SpawnPlatform } from '@deities/athena/info/Building.tsx';
 import {
+  Space,
   Teleporter1,
   Teleporter2,
   Teleporter3,
 } from '@deities/athena/info/Tile.tsx';
 import {
   Flamethrower,
+  Infantry,
   Jeep,
   Medic,
   Pioneer,
@@ -18,8 +21,10 @@ import {
   Saboteur,
   Sniper,
 } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
+import { Bot } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
@@ -75,7 +80,6 @@ test('swaps units in a clockwise rotation when entering a teleporter', async () 
   const v6 = vec(1, 5);
   const v7 = vec(3, 5);
   const v8 = vec(5, 5);
-
   const v9 = vec(3, 3);
 
   const mapA = initialMap.copy({
@@ -181,4 +185,63 @@ test('swaps units in a clockwise rotation when entering a teleporter', async () 
   const screenshot = await captureOne(gameState.at(-1)![1], '1');
   printGameState('Swap', screenshot);
   expect(screenshot).toMatchImageSnapshot();
+});
+
+test('does not crash the AI when accidentally teleporting away', async () => {
+  const v1 = vec(1, 2);
+  const v2 = vec(3, 2);
+  const v3 = vec(3, 4);
+  const v4 = vec(5, 3);
+
+  const mapA = initialMap.copy({
+    map: [
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      1,
+      Space.id,
+      1,
+      Space.id,
+      Space.id,
+      Teleporter1.id,
+      Space.id,
+      Teleporter1.id,
+      1,
+      1,
+      Space.id,
+      Space.id,
+      1,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+      Space.id,
+    ],
+    teams: updatePlayer(
+      initialMap.teams,
+      Bot.from(initialMap.getPlayer(2), 'AI'),
+    ),
+    units: initialMap.units
+      .set(v1, Infantry.create(1))
+      .set(v2, Infantry.create(1))
+      .set(v3, Infantry.create(1))
+      .set(v4, Infantry.create(2)),
+  });
+
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    EndTurnAction(),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+      Move (5,3 → 3,3) { fuel: 48, completed: false, path: [4,3 → 3,3] }
+      Swap { source: 3,3, sourceUnit: Infantry { id: 2, health: 100, player: 2, fuel: 48, moved: true }, target: 1,3, targetUnit: null }
+      AttackUnit (1,3 → 1,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 42 }, chargeA: 86, chargeB: 115 }
+      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+    `);
 });

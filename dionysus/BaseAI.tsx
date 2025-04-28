@@ -13,16 +13,32 @@ class AIInterruptException {
   public readonly name = 'AIInterruptException';
 }
 
-function isAIInterruptException(
+const isAIInterruptException = (
   exception: unknown,
-): exception is AIInterruptException {
+): exception is AIInterruptException => {
   const error = exception as { name?: string };
   return 'name' in error && error.name === 'AIInterruptException';
-}
+};
+
+const hasSwap = (gameState: GameState, startIndex: number) => {
+  if (startIndex >= 0 && startIndex < gameState.length) {
+    for (let i = startIndex; i < gameState.length; i++) {
+      const [actionResponse] = gameState[i];
+      if (actionResponse.type === 'Swap') {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
 
 export default abstract class BaseAI {
-  protected vision: VisionT | null = null;
+  // Cache flag to avoid expensive attack calculations after most attacks are exhausted.
+  private attacksDone = false;
   private gameState: GameState = [];
+
+  protected vision: VisionT | null = null;
 
   public constructor(private effects: Effects) {}
 
@@ -45,7 +61,7 @@ export default abstract class BaseAI {
     return null;
   }
 
-  protected appendActionResponse(
+  private appendActionResponse(
     actionResponse: ActionResponse,
     previousMap: MapData,
     currentMap: MapData,
@@ -72,6 +88,12 @@ export default abstract class BaseAI {
     );
     this.effects = effects;
     if (gameState?.length) {
+      if (
+        gameState.some(([actionResponse]) => actionResponse.type === 'Swap')
+      ) {
+        this.tryAttacking();
+      }
+
       this.gameState = this.gameState.concat(gameState);
       if (
         gameHasEnded(gameState) ||
@@ -86,6 +108,7 @@ export default abstract class BaseAI {
     map: MapData,
     action: MoveAction,
   ): [map: MapData | null, blocked: boolean] {
+    const gameStateStartIndex = this.gameState.length + 1;
     const currentMap = this.execute(map, action);
     const state = this.gameState.at(-1);
 
@@ -93,8 +116,9 @@ export default abstract class BaseAI {
       const [actionResponse, activeMap] = state;
       if (
         action.type === 'Move' &&
-        actionResponse.type === 'Move' &&
-        !action.to.equals(actionResponse.to)
+        ((actionResponse.type === 'Move' &&
+          !action.to.equals(actionResponse.to)) ||
+          hasSwap(this.gameState, gameStateStartIndex))
       ) {
         return [activeMap, true];
       }
@@ -131,6 +155,19 @@ export default abstract class BaseAI {
     }
     // Return `null` to indicate that the turn ended.
     return null;
+  }
+
+  protected shouldAttack() {
+    return !this.attacksDone;
+  }
+
+  protected tryAttacking() {
+    // Unset the `attacksDone` state to attempt an attack in the next loop.
+    this.attacksDone = false;
+  }
+
+  protected finishAttacking() {
+    this.attacksDone = true;
   }
 
   protected abstract action(map: MapData): MapData | null;
