@@ -6,13 +6,11 @@ import { memo, useState } from 'react';
 
 export default memo(function Cursor({
   color,
-  paused,
   position,
   size,
   zIndex,
 }: {
   color?: 'red' | null;
-  paused?: boolean;
   position: Vector | null;
   size: number;
   zIndex: number;
