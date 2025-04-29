@@ -900,8 +900,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.BuyUnitDinosaur:
       return (
         <fbt desc="Additional skill description">
-          Triggers a meteor shower, causing all opponent units in the target
-          area to take
+          Triggers a meteor shower, causing all units in the target area to take
           <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
           health points of damage.
         </fbt>

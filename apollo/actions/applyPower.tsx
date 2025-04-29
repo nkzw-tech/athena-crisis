@@ -83,9 +83,7 @@ export function getUnitsToDamage(
     );
   } else if (skill === Skill.BuyUnitDinosaur && from) {
     const vectors = new Set(from.expandStar());
-    return map.units.filter(
-      (unit, vector) => vectors.has(vector) && map.isOpponent(player, unit),
-    );
+    return map.units.filter((_, vector) => vectors.has(vector));
   }
 
   return null;

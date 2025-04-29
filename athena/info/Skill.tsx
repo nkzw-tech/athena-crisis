@@ -1340,7 +1340,11 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.BuyUnitCommander) {
     for (const [vector, unit] of map.units) {
-      if (unit.isLeader() && map.matchesPlayer(unit, player)) {
+      if (
+        unit.isLeader() &&
+        unit.info.hasAttack() &&
+        map.matchesPlayer(unit, player)
+      ) {
         list.push(vector);
       }
     }
