@@ -1352,6 +1352,16 @@ export default class GameMap extends Component<Props, State> {
 
   private _animationComplete = (position: Vector, animation: Animation) => {
     const currentAnimation = this.state.animations.get(position);
+    // When activating a power we explode a unit while the damage animation is still ongoing.
+    // Because animations cannot be canceled, we short-circuit here and ignore the `onComplete` callback of the `damage` animation.
+    if (
+      currentAnimation &&
+      animation.type === 'damage' &&
+      currentAnimation.type === 'unitExplosion'
+    ) {
+      return;
+    }
+
     if (currentAnimation && currentAnimation !== animation) {
       throw new Error(
         `Animation '${animation.type}' at position '${position}' changed unexpectedly:\nExpected: ${JSON.stringify(
