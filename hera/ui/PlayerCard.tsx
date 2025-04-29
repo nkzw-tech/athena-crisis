@@ -157,6 +157,7 @@ export default memo(function PlayerCard({
                 await update({
                   behavior: new SelectTargetBehavior(item.skill),
                 });
+                return;
               }
 
               await activateAction(actions, state, item, null);
