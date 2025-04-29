@@ -23,6 +23,7 @@ import Dialog, { DialogScrollContainer } from '@deities/ui/Dialog.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
+import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import useMedia from '@deities/ui/hooks/useMedia.tsx';
 import useNavigate from '@deities/ui/hooks/useNavigate.tsx';
 import { usePrompt } from '@deities/ui/hooks/usePrompt.tsx';
@@ -109,6 +110,8 @@ export default function CampaignEditor({
   viewer: { id: string };
 }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const [, startTransition] = useTransition();
   const { slug } = data;
   const [hasChanges, setHasChanges] = useState(!data.id);
@@ -283,7 +286,7 @@ export default function CampaignEditor({
       const node = maps.get(mapId);
       if (node) {
         if (isIOS || isAndroid) {
-          navigate(getMapRoute(node.slug, 'edit'));
+          navigate(`${getMapRoute(node.slug, 'edit')}?back=${pathname}`);
           return;
         }
         setOrigin(transformRef.current);
@@ -295,7 +298,7 @@ export default function CampaignEditor({
         });
       }
     },
-    [maps, navigate, setCampaignEditorState],
+    [maps, navigate, pathname, setCampaignEditorState],
   );
 
   useMusic('hestias-serenade');
