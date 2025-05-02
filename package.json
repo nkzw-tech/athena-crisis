@@ -34,7 +34,7 @@
     "i18n:upload": "(cd ares && pnpm fbt:manifest && pnpm fbt:collect) && crowdin upload sources",
     "lint:format": "prettier --cache --check .",
     "lint": "eslint --cache .",
-    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || true",
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || exit 0",
     "prisma": "cd artemis && pnpm prisma",
     "relay": "cd ares && if [ -d src ]; then pnpm relay-compiler; else exit 0; fi",
     "test:ci": "pnpm npm-run-all --parallel tsc:check lint lint:format vitest:run-ci",
