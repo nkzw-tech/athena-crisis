@@ -1,7 +1,6 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
 import { NodePath } from '@babel/traverse';
 import {
@@ -19,7 +18,7 @@ import traverse from './lib/traverse.tsx';
 
 console.log(chalk.bold('› Generating actions...'));
 
-const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '../');
+const root = resolve(import.meta.dirname, '../');
 const encodedActionsFileName = join(root, './apollo/EncodedActions.tsx');
 const formatActionsFileName = join(root, './apollo/FormatActions.tsx');
 const stableActionMapFileName = join(root, './apollo/ActionMap.json');

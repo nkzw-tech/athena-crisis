@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'vitest/config';
 import createResolver from './infra/createResolver.tsx';
 

@@ -42,7 +42,7 @@ export default [
           ],
         },
       ],
-      'import/no-extraneous-dependencies': [
+      'import-x/no-extraneous-dependencies': [
         2,
         {
           devDependencies: [
@@ -83,7 +83,7 @@ export default [
           ),
         },
       ],
-      'import/no-unresolved': [
+      'import-x/no-unresolved': [
         2,
         {
           ignore: [

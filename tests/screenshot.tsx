@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import {
   EncodedGameActionResponse,
@@ -47,10 +46,7 @@ export async function capture(
 ): Promise<ReadonlyArray<Image>> {
   if (!instance) {
     instance = await playwright.chromium.connect(
-      readFileSync(
-        join(dirname(fileURLToPath(import.meta.url)), 'testSetup'),
-        'utf8',
-      ),
+      readFileSync(join(import.meta.dirname, 'testSetup'), 'utf8'),
     );
   }
 

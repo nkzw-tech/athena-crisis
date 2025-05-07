@@ -49,8 +49,7 @@ const clientScopeStyle = css`
 
 if (!document.querySelector('body > div.portal')) {
   const portal = document.createElement('div');
-  portal.classList.add('portal');
-  portal.classList.add(clientScopeStyle);
+  portal.classList.add('portal', clientScopeStyle);
   document.body.append(portal, document.body.childNodes[0]);
   setDefaultPortalContainer(portal);
 }

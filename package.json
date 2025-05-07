@@ -59,7 +59,7 @@
     "@deities/eslint-plugin": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@nkzw/babel-preset-fbtee": "^0.2.2",
-    "@nkzw/eslint-config": "^2.3.1",
+    "@nkzw/eslint-config": "^2.4.0",
     "@nkzw/eslint-plugin-fbtee": "^0.2.2",
     "@nkzw/pothos-locate": "^1.0.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
