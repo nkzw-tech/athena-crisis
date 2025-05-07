@@ -16,6 +16,7 @@ import { css, cx, injectGlobal } from '@emotion/css';
 import { VisibilityStateContext } from '@nkzw/use-visibility-state';
 import { useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
+// eslint-disable-next-line import/no-unresolved
 import { ErrorBoundary } from 'react-error-boundary';
 
 declare global {
