@@ -2,7 +2,12 @@ import { Route } from '@deities/apollo/Routes.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
-import { getAllTiles, getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
+import {
+  getAllTiles,
+  getTileInfo,
+  Plain,
+  TileTypes,
+} from '@deities/athena/info/Tile.tsx';
 import {
   Abilities,
   Ability,
@@ -163,6 +168,13 @@ export default memo(function UnitCard({
   const name = unit.getName(viewer) || fbt('Unknown', 'Unknown unit name');
   const rescuer = unit.getRescuer();
 
+  const extraVision =
+    (unit.isUnfolded() ? 2 : 0) +
+    (unit.info.type === EntityType.Soldier &&
+    map.getTileInfo(vector).type & TileTypes.Mountain
+      ? 1
+      : 0);
+
   return (
     <>
       <Stack gap nowrap start>
@@ -251,7 +263,12 @@ export default memo(function UnitCard({
             <Icon icon={Visible} />
             <fbt desc="Label for vision radius">Vision</fbt>
           </Stack>
-          <div>{vision}</div>
+          <div>
+            {vision}
+            {extraVision > 0 ? (
+              <span style={{ color }}> + {extraVision}</span>
+            ) : null}
+          </div>
           <Range end value={getAttributeRangeValue(visionRange, vision)} />
           {range && (
             <>
