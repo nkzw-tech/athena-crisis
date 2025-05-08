@@ -64,7 +64,7 @@
     "@nkzw/pothos-locate": "^1.0.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.11.24",
-    "@types/node": "^22.15.14",
+    "@types/node": "^22.15.15",
     "@vitejs/plugin-react": "^4.4.1",
     "babel-plugin-react-compiler": "19.1.0-rc.1",
     "chalk": "^5.4.1",
@@ -104,6 +104,7 @@
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "howler@2.2.4": "patches/howler@2.2.4.patch",
       "jest-image-snapshot": "patches/jest-image-snapshot.patch",
+      "prisma-json-types-generator": "patches/prisma-json-types-generator.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
       "typescript": "patches/typescript.patch"

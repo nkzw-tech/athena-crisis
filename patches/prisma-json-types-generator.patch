@@ -1,0 +1,13 @@
+diff --git a/dist/util/declaration-writer.js b/dist/util/declaration-writer.js
+index 369feb92ae3dc3f777703a7c11047d8086675851..cd6c2139f3610bea4375b832b2c4fc5e5bf25081 100644
+--- a/dist/util/declaration-writer.js
++++ b/dist/util/declaration-writer.js
+@@ -21,7 +21,7 @@ class DeclarationWriter {
+     }
+     async template() {
+         if (this.multifile) {
+-            return `${constants_1.MODIFIED_HEADER}\nimport type * as PJTG from '../pjtg';\n${this.content}`;
++            return `${constants_1.MODIFIED_HEADER}\n// @ts-nocheck\nimport type * as PJTG from '../pjtg.ts';\n${this.content}`;
+         }
+         return `${constants_1.MODIFIED_HEADER}\n${await getNamespacePrelude(this.options.namespace)}\n${this.content}`;
+     }
