@@ -44,6 +44,7 @@
     "vitest:run-ci": "vitest run"
   },
   "nodemonConfig": {
+    "ext": "tsx",
     "watch": [
       "apollo/",
       "artemis/",
