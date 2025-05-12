@@ -1234,7 +1234,8 @@ export default class GameMap extends Component<Props, State> {
 
           this.setState(
             {
-              ...(lastActionResponse.type === 'EndTurn'
+              ...(lastActionResponse.type === 'EndTurn' &&
+              lastActionResponse.next.player === currentViewer
                 ? this._resetGameInfoState()
                 : null),
               ...(resetBehavior(this.props.behavior) as State),
