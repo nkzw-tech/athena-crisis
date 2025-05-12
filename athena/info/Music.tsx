@@ -12,6 +12,7 @@ export type SoundName =
   | 'Attack/HeavyGun'
   | 'Attack/LightGun'
   | 'Attack/MG'
+  | 'Attack/MGFast'
   | 'Attack/MiniGun'
   | 'Attack/Pistol'
   | 'Attack/Pow'

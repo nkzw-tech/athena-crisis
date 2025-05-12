@@ -76,6 +76,11 @@ class AudioPlayer {
   }
 
   playSound(sound: SoundName, rate = 1) {
+    if (rate > 1 && sound === 'Attack/MG') {
+      sound = 'Attack/MGFast';
+      rate = 1;
+    }
+
     const instance = this.getInstance(sound);
     const reduceVolume = sound === 'Fireworks' || sound.startsWith('Talking/');
     const volume = getVolume('sound') * (reduceVolume ? 0.66 : 1);
