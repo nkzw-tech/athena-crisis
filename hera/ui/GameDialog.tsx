@@ -2,6 +2,7 @@ import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
+import isPvP from '@deities/athena/lib/isPvP.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
@@ -439,13 +440,13 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const player =
     currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
-  const isCurrentPlayer = player?.id === map.getCurrentPlayer().id;
+  const canEndGameNow = player?.id === map.getCurrentPlayer().id || !isPvP(map);
   const canAbandon =
     player?.isHumanPlayer() &&
     player.crystal != null &&
     player.crystal !== Crystal.Power;
   const hasEnded = lastActionResponse?.type === 'GameEnd';
-  const canEndGame = isCurrentPlayer && !hasEnded && endGame;
+  const canEndGame = canEndGameNow && !hasEnded && endGame;
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
 
   const states = useMemo(
@@ -629,7 +630,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
           )}
         {!hasEnded && endGame && (
           <DialogTab
-            disabled={!isCurrentPlayer}
+            disabled={!canEndGameNow}
             end
             highlight={panel === endGamePanel}
             onClick={onGiveUp}
