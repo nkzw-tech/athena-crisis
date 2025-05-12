@@ -1,4 +1,5 @@
 import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import applyBeginTurnStatusEffects, {
   isPoisoned,
 } from '@deities/athena/lib/applyBeginTurnStatusEffects.tsx';
@@ -9,7 +10,11 @@ import getUnitsToHeal, {
 } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
-import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
+import {
+  Charge,
+  HealAmount,
+  MaxHealth,
+} from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector, {
   sortByVectorKey,
@@ -65,6 +70,7 @@ export default function addEndTurnAnimations(
     round,
   } = actionResponse;
   const isFake = isFakeEndTurn(actionResponse);
+  const isViewer = !isFake && state.currentViewer === nextPlayer;
   return {
     animations: state.animations.set(new AnimationKey(), {
       color: nextPlayer,
@@ -78,6 +84,42 @@ export default function addEndTurnAnimations(
                 subtractFuel(map, nextPlayer),
                 nextPlayer,
               );
+
+          const complete = (state: State) => {
+            const { map } = state;
+            if (isViewer) {
+              const player = map.maybeGetPlayer(nextPlayer);
+              const availablePowerCount =
+                (player
+                  ? [...player.skills]
+                      .map((skill) => {
+                        const { charges } = getSkillConfig(skill);
+                        return (
+                          charges != null && charges * Charge <= player.charge
+                        );
+                      })
+                      .filter(Boolean).length
+                  : null) || 0;
+              if (availablePowerCount > 0) {
+                state = {
+                  ...state,
+                  animations: state.animations.set(new AnimationKey(), {
+                    color: nextPlayer,
+                    text: String(
+                      fbt(
+                        `A power is ready to be activated.`,
+                        `A player's power is ready to be activated.`,
+                      ),
+                    ),
+                    type: 'notice',
+                  }),
+                };
+              }
+            }
+
+            return onComplete(state);
+          };
+
           const [unitsToHeal, unitsToRefill] = isFake
             ? [emptyUnitHealMap, emptyUnitMap]
             : partitionUnitsToHeal(
@@ -126,7 +168,7 @@ export default function addEndTurnAnimations(
                       )
                       .keys(),
                   ]),
-              onComplete,
+              complete,
             );
 
           const animatePoisonedUnits = (state: State) =>
