@@ -55,6 +55,7 @@ export type PlayerDetails = ReadonlyMap<PlayerID, PlayerDetail>;
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
   animationSpeed: AnimationSpeed;
+  autoPanning: boolean;
   behavior?: MapBehaviorConstructor | null;
   buildingSize: number;
   children?: (state: State, actions: Actions) => ReactNode;
@@ -253,7 +254,10 @@ export type Actions = Readonly<{
   resetPosition: () => void;
   resumeReplay: () => Promise<void>;
   scheduleTimer: TimerFunction;
-  scrollIntoView: (vectors: ReadonlyArray<Vector>) => Promise<void>;
+  scrollIntoView: (
+    vectors: ReadonlyArray<Vector>,
+    force?: true,
+  ) => Promise<void>;
   setEditorState: SetEditorStateFunction;
   showGameInfo: (gameInfoState: GameInfoState) => void;
   throwError: (error: Error) => void;

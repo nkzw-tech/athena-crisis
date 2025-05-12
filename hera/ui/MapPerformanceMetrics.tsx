@@ -262,7 +262,7 @@ export default function MapPerformanceMetrics({
   mapName: string | undefined;
   player: PlayerID;
   playerAchievement: PlayerAchievement | null;
-  scrollIntoView: (vectors: ReadonlyArray<Vector>) => void;
+  scrollIntoView: (vectors: ReadonlyArray<Vector>, force?: boolean) => void;
 }) {
   const performance = evaluatePlayerPerformance(map, player);
   const [visibleCard, setVisibleCard] = useState<number>(0);
@@ -301,7 +301,7 @@ export default function MapPerformanceMetrics({
   );
   useEffect(() => {
     if (cards.length) {
-      scrollIntoView([center]);
+      scrollIntoView([center], true);
     }
   }, [cards.length, center, scrollIntoView]);
 

@@ -113,6 +113,7 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
               <div className={inlineStyle} data-testid={`map-${index}`}>
                 <GameMap
                   animationSpeed={animationSpeed}
+                  autoPanning={false}
                   behavior={NullBehavior}
                   confirmActionStyle="never"
                   currentUserId={viewers[index]}

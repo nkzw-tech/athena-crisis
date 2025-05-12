@@ -262,7 +262,7 @@ const NextButton = ({
             ...new Base().select(vector, newState, actions),
           });
         }
-        scrollIntoView([vector]);
+        scrollIntoView([vector], true);
       }
     },
     [
@@ -383,7 +383,7 @@ const EndTurnButton = ({
               availableUnits.map((vector) => [vector, RadiusItem(vector)]),
             );
 
-            scrollIntoView(availableUnits);
+            scrollIntoView(availableUnits, true);
             update({
               attackable: null,
               radius: {

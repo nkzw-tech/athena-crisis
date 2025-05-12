@@ -695,7 +695,7 @@ export default class GameMap extends Component<Props, State> {
         vec(Math.floor(map.size.width / 2), Math.floor(map.size.height / 2));
       const vector = vec(origin.x + direction.x, origin.y + direction.y);
       this._enter(vector);
-      this._scrollIntoView([vector], direction);
+      this._scrollIntoView([vector], true, direction);
     }
   };
 
@@ -1742,8 +1742,13 @@ export default class GameMap extends Component<Props, State> {
 
   private _scrollIntoView = async (
     vectors: ReadonlyArray<Vector>,
+    force?: boolean,
     direction?: VectorLike,
   ) => {
+    if (!force && !this.props.autoPanning) {
+      return;
+    }
+
     const mask = this._maskRef.current;
     if (!vectors.length || !mask) {
       return;

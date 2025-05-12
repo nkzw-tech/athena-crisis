@@ -236,6 +236,7 @@ export type BaseMapEditorProps = Readonly<{
 
 export default function MapEditor({
   animationSpeed,
+  autoPanning,
   campaignLock,
   children,
   confirmActionStyle,
@@ -254,6 +255,7 @@ export default function MapEditor({
   user,
 }: BaseMapEditorProps & {
   animationSpeed: AnimationSpeed | null;
+  autoPanning: boolean;
   confirmActionStyle: 'always' | 'touch' | 'never';
   createMap: MapCreateFunction;
   estimateMapPerformance?: MapPerformanceMetricsEstimationFunction;
@@ -895,6 +897,7 @@ export default function MapEditor({
     return (
       <GameMap
         animationSpeed={mapAnimationSpeed}
+        autoPanning={autoPanning}
         confirmActionStyle={confirmActionStyle}
         currentUserId={user.id}
         dangerouslyApplyExternalState={
@@ -1094,6 +1097,7 @@ export default function MapEditor({
               zIndex={zIndex}
             />
           )}
+          autoPanning={autoPanning}
           behavior={
             editor.mode === 'design' || editor.mode === 'decorators'
               ? DesignBehavior

@@ -51,6 +51,7 @@ export default function PlaygroundGame({
   return (
     <div ref={ref}>
       <GameMap
+        autoPanning
         currentUserId={DemoViewer.id}
         fogStyle="soft"
         key={`play-demo-map-${renderKey}`}

@@ -116,6 +116,7 @@ export default function MapEditorExample() {
     <div style={{ WebkitUserSelect: 'none', width: '150%' }}>
       <MapEditor
         animationSpeed={null}
+        autoPanning
         confirmActionStyle="touch"
         createMap={handleMapUpdate}
         fogStyle="soft"

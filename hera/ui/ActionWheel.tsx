@@ -73,7 +73,7 @@ export default function ActionWheel({
 
   useEffect(() => {
     if (hasEntities) {
-      scrollIntoView([position]);
+      scrollIntoView([position], true);
     }
   }, [hasEntities, position, scrollIntoView]);
 

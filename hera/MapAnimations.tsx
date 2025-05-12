@@ -367,7 +367,7 @@ export function hasCharacterMessage(animations: Animations) {
   return animations.some((animation) => animation.type === 'characterMessage');
 }
 
-const ScrollIntoView = ({
+const ScrollIntoViewEffect = ({
   onComplete,
   positions,
   scrollIntoView,
@@ -705,7 +705,7 @@ const MapAnimation = ({
       }
       case 'scrollIntoView': {
         return (
-          <ScrollIntoView
+          <ScrollIntoViewEffect
             scrollIntoView={scrollIntoView}
             update={update}
             {...animation}
