@@ -109,7 +109,7 @@ const layerOffsets = {
   decorator: 2,
   unit: 3,
   animation: 4,
-  top: 5,
+  top: 10,
   /* eslint-enable sort-keys-fix/sort-keys-fix */
 } as const;
 
