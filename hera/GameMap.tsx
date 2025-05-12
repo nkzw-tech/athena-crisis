@@ -1182,7 +1182,6 @@ export default class GameMap extends Component<Props, State> {
       const isLive = currentViewer !== currentPlayer.id;
       this.setState(
         {
-          ...this._maybeResetGameInfoState(),
           animationConfig: getCurrentAnimationConfig(
             currentPlayer,
             this.props.animationSpeed,
@@ -1235,6 +1234,9 @@ export default class GameMap extends Component<Props, State> {
 
           this.setState(
             {
+              ...(lastActionResponse.type === 'EndTurn'
+                ? this._resetGameInfoState()
+                : null),
               ...(resetBehavior(this.props.behavior) as State),
               animationConfig: getCurrentAnimationConfig(
                 currentPlayer,
@@ -1588,21 +1590,9 @@ export default class GameMap extends Component<Props, State> {
 
   private _resetGameInfoState = () => ({
     gameInfoState: null,
-    paused: this.props.paused === true || false,
+    paused: this.props.paused || false,
     position: !this._pointerEnabled ? this.state.previousPosition : null,
   });
-
-  private _maybeResetGameInfoState = () => {
-    const { gameInfoState } = this.state;
-    return {
-      ...this._resetGameInfoState(),
-      gameInfoState:
-        gameInfoState?.type === 'game-info' ||
-        gameInfoState?.type === 'player-effect'
-          ? gameInfoState
-          : null,
-    };
-  };
 
   private _hideGameInfo = () =>
     new Promise<void>((resolve) => {
