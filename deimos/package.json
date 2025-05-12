@@ -18,10 +18,10 @@
     "@deities/ui": "workspace:*",
     "@emotion/css": "^11.13.5",
     "@nkzw/core": "^1.2.1",
-    "@nkzw/use-visibility-state": "^1.0.2",
+    "@nkzw/use-visibility-state": "^1.0.3",
     "array-shuffle": "^3.0.0",
     "fbtee": "^0.2.2",
-    "framer-motion": "^12.10.4",
+    "framer-motion": "^12.10.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0"

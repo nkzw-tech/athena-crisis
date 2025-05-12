@@ -75,7 +75,7 @@
     "nodemon": "^3.1.10",
     "npm-run-all2": "^8.0.1",
     "prettier": "4.0.0-alpha.12",
-    "prettier-plugin-packagejson": "^2.5.11",
+    "prettier-plugin-packagejson": "^2.5.12",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",

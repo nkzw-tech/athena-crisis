@@ -11,7 +11,7 @@
   "type": "module",
   "dependencies": {
     "@nkzw/core": "^1.2.1",
-    "@nkzw/use-visibility-state": "^1.0.2"
+    "@nkzw/use-visibility-state": "^1.0.3"
   },
   "devDependencies": {
     "@deities/apollo": "workspace:*",
