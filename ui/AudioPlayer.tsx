@@ -220,13 +220,12 @@ class AudioPlayer {
         html5: false,
         loop: isMusicType || isMessageSound,
         onplayerror: isMusicType
-          ? () => {
+          ? () =>
               instance.once('unlock', () => {
                 if (this.currentInstance === instance && !instance.playing()) {
                   instance.play();
                 }
-              });
-            }
+              })
           : undefined,
         src: [source],
       });

@@ -1,7 +1,11 @@
+import { isIOS, isSafari } from './Browser.tsx';
 import EmptyAAC from './Empty.aac';
 import EmptyOGG from './Empty.ogg';
 
-const useOGG = document.createElement('audio').canPlayType('audio/ogg');
+const useOGG =
+  !isIOS &&
+  !isSafari &&
+  document.createElement('audio').canPlayType('audio/ogg') === 'probably';
 
 export const Sounds = useOGG
   ? new Map([
