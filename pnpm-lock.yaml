@@ -15,9 +15,6 @@ patchedDependencies:
   howler:
     hash: 1ff69a94d8cbdcf70941e3460b2eff5fe59593ec94a2c98d1fadf9fff959eeaa
     path: patches/howler.patch
-  jest-image-snapshot:
-    hash: 44658aa89fb910d93749a14f06c51874b3fe172a72b1dc450ace097bc4b902c0
-    path: patches/jest-image-snapshot.patch
   prisma-json-types-generator:
     hash: eabb8fabd70ea4caa95a6c0c36d4a53f88ec91758c135de6c49ed081d4b0c80f
     path: patches/prisma-json-types-generator.patch
@@ -891,7 +888,7 @@ importers:
         version: 0.2.2(@nkzw/babel-plugin-fbtee-runtime@0.2.2(@nkzw/babel-plugin-fbtee@0.2.2))(@nkzw/babel-plugin-fbtee@0.2.2)(react@19.1.0)
       jest-image-snapshot:
         specifier: ^6.5.0
-        version: 6.5.0(patch_hash=44658aa89fb910d93749a14f06c51874b3fe172a72b1dc450ace097bc4b902c0)
+        version: 6.5.0
       playwright:
         specifier: ^1.52.0
         version: 1.52.0
@@ -16335,7 +16332,7 @@ snapshots:
 
   jest-get-type@29.6.3: {}
 
-  jest-image-snapshot@6.5.0(patch_hash=44658aa89fb910d93749a14f06c51874b3fe172a72b1dc450ace097bc4b902c0):
+  jest-image-snapshot@6.5.0:
     dependencies:
       chalk: 4.1.2
       get-stdin: 5.0.1

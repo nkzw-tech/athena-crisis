@@ -104,7 +104,6 @@
     "patchedDependencies": {
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "howler": "patches/howler.patch",
-      "jest-image-snapshot": "patches/jest-image-snapshot.patch",
       "prisma-json-types-generator": "patches/prisma-json-types-generator.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
