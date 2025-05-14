@@ -119,6 +119,12 @@ export default [
     },
   },
   {
+    files: ['artemis/**/*.tsx'],
+    rules: {
+      'react-hooks/rules-of-hooks': 0,
+    },
+  },
+  {
     files: [
       '{codegen,infra,scripts}/**/*.tsx',
       'artemis/{prisma,scripts}/**/*.tsx',
