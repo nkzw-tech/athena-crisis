@@ -357,6 +357,9 @@ importers:
       '@pothos/plugin-relay':
         specifier: ^4.4.2
         version: 4.4.2(@pothos/core@4.6.2(graphql@16.11.0))(graphql@16.11.0)
+      '@pothos/plugin-scope-auth':
+        specifier: ^4.1.3
+        version: 4.1.3(@pothos/core@4.6.2(graphql@16.11.0))(graphql@16.11.0)
       '@prisma/client':
         specifier: ^6.7.0
         version: 6.7.0(prisma@6.7.0(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
@@ -2073,8 +2076,8 @@ packages:
   '@fastify/busboy@3.1.1':
     resolution: {integrity: sha512-5DGmA8FTdB2XbDeEwc/5ZXBl6UbBAyBOOLlPuBnZ/N1SwdH9Ii+cOX3tBROlDgcTXxjOYnLMVoKk9+FXAw0CJw==}
 
-  '@fastify/otel@https://codeload.github.com/getsentry/fastify-otel/tar.gz/d6bb1756c3db3d00d4d82c39c93ee3316e06d305':
-    resolution: {tarball: https://codeload.github.com/getsentry/fastify-otel/tar.gz/d6bb1756c3db3d00d4d82c39c93ee3316e06d305}
+  '@fastify/otel@https://codeload.github.com/getsentry/fastify-otel/tar.gz/ae3088d65e286bdc94ac5d722573537d6a6671bb':
+    resolution: {tarball: https://codeload.github.com/getsentry/fastify-otel/tar.gz/ae3088d65e286bdc94ac5d722573537d6a6671bb}
     version: 0.8.0
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
@@ -2646,6 +2649,12 @@ packages:
 
   '@pothos/plugin-relay@4.4.2':
     resolution: {integrity: sha512-tfFJiEwIqU2g46E8PTIX9vw4uxkj5FlQLDrQo3Gik1F5/Zo7EpAs/iK5wpAgUd2bRveQnLbsb1IhtZxKp0BqcA==}
+    peerDependencies:
+      '@pothos/core': '*'
+      graphql: ^16.10.0
+
+  '@pothos/plugin-scope-auth@4.1.3':
+    resolution: {integrity: sha512-lFxrvplt2MQ2OHAcIF1Rikz/VlVkluIhvXT2JNW0X5JGDjCf2kKgHU5cSWjQMDq8s3k9He1HZFYYdli1z77YDA==}
     peerDependencies:
       '@pothos/core': '*'
       graphql: ^16.10.0
@@ -10843,7 +10852,7 @@ snapshots:
 
   '@fastify/busboy@3.1.1': {}
 
-  '@fastify/otel@https://codeload.github.com/getsentry/fastify-otel/tar.gz/d6bb1756c3db3d00d4d82c39c93ee3316e06d305(@opentelemetry/api@1.9.0)':
+  '@fastify/otel@https://codeload.github.com/getsentry/fastify-otel/tar.gz/ae3088d65e286bdc94ac5d722573537d6a6671bb(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
@@ -11628,6 +11637,11 @@ snapshots:
       typescript: 5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)
 
   '@pothos/plugin-relay@4.4.2(@pothos/core@4.6.2(graphql@16.11.0))(graphql@16.11.0)':
+    dependencies:
+      '@pothos/core': 4.6.2(graphql@16.11.0)
+      graphql: 16.11.0
+
+  '@pothos/plugin-scope-auth@4.1.3(@pothos/core@4.6.2(graphql@16.11.0))(graphql@16.11.0)':
     dependencies:
       '@pothos/core': 4.6.2(graphql@16.11.0)
       graphql: 16.11.0
@@ -12731,7 +12745,7 @@ snapshots:
 
   '@sentry/node@9.18.0':
     dependencies:
-      '@fastify/otel': https://codeload.github.com/getsentry/fastify-otel/tar.gz/d6bb1756c3db3d00d4d82c39c93ee3316e06d305(@opentelemetry/api@1.9.0)
+      '@fastify/otel': https://codeload.github.com/getsentry/fastify-otel/tar.gz/ae3088d65e286bdc94ac5d722573537d6a6671bb(@opentelemetry/api@1.9.0)
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/context-async-hooks': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
