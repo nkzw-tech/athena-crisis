@@ -1,12 +1,7 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 
-export type MapSize =
-  | 'Large'
-  | 'Medium'
-  | 'Micro'
-  | 'Small'
-  | '%future added value';
+export type MapSize = 'Large' | 'Medium' | 'Micro' | 'Small';
 
 export default function getMapSizeName(size: MapSize) {
   switch (size) {
@@ -18,8 +13,6 @@ export default function getMapSizeName(size: MapSize) {
       return fbt('Micro', 'Label for micro maps');
     case 'Small':
       return fbt('Small', 'Label for small maps');
-    case '%future added value':
-      throw new Error('Invalid map size');
     default: {
       size satisfies never;
       throw new UnknownTypeError('getMapSizeName', size);

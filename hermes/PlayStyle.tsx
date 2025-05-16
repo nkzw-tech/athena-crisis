@@ -1,13 +1,7 @@
-export type PlayStyle =
-  | 'Beginner'
-  | 'Hard'
-  | 'Intermediate'
-  | '%future added value';
-
-type ActualPlayStyle = Exclude<PlayStyle, '%future added value'>;
+export type PlayStyle = 'Beginner' | 'Hard' | 'Intermediate';
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-export const PlayStyle: Record<ActualPlayStyle, ActualPlayStyle> = {
+export const PlayStyle: Record<PlayStyle, PlayStyle> = {
   Beginner: 'Beginner',
   Intermediate: 'Intermediate',
   Hard: 'Hard',

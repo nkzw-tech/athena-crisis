@@ -5,11 +5,7 @@ import {
 import { useMemo } from 'react';
 import { AnimationSpeed } from '../lib/AnimationSpeed.tsx';
 
-export type AnimationSpeed =
-  | 'FastAI'
-  | 'FastAll'
-  | 'Normal'
-  | '%future added value';
+export type AnimationSpeed = 'FastAI' | 'FastAll' | 'Normal';
 
 export default function useAnimationSpeed(
   animationSpeed: AnimationSpeed | null | undefined,
