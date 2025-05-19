@@ -1,4 +1,5 @@
 import { Skill } from '../info/Skill.tsx';
+import { Zombie } from '../info/Unit.tsx';
 import Player from '../map/Player.tsx';
 import Unit from '../map/Unit.tsx';
 
@@ -8,7 +9,7 @@ export default function getUnitValue(unit: Unit, player: Player) {
       skills: new Set([...player.skills, Skill.BuyUnitDragon]),
     });
   }
-  if (player.skills.has(Skill.UnlockZombie)) {
+  if (unit.info === Zombie && player.skills.has(Skill.UnlockZombie)) {
     player = player.copy({
       skills: new Set([
         ...player.skills,

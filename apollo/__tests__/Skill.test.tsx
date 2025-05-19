@@ -16,6 +16,7 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import { generateUnitName } from '@deities/athena/info/UnitNames.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
+import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
@@ -752,4 +753,14 @@ test('some skills can recover unit costs', async () => {
   });
   const [, state4] = execute(mapD, vision, AttackBuildingAction(toA, fromA))!;
   expect(state4.getPlayer(1).funds).toBeGreaterThan(mapA.getPlayer(1).funds);
+});
+
+test('healing cost can be affected by skills', async () => {
+  const skillsA = new Set([Skill.UnlockZombie]);
+  const skillsB = new Set([Skill.BuyUnitZombieDefenseDecreaseMajor]);
+  const playerA = map.getPlayer(1).copy({ skills: skillsA });
+  const playerB = map.getPlayer(1).copy({ skills: skillsB });
+
+  expect(getHealCost(Pioneer.create(1).setHealth(50), playerA)).toBe(40);
+  expect(getHealCost(Pioneer.create(1).setHealth(50), playerB)).toBe(320);
 });
