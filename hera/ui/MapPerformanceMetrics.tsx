@@ -466,7 +466,7 @@ const mapPerformanceStyle = css`
 `;
 
 const headlineStyle = css`
-  margin: 0 ${TileSize / 2}px 0 ${TileSize * 1.5}px;
+  margin: 0 ${TileSize * 1.5}px;
   max-width: 86%;
 
   ${Breakpoints.sm} {
