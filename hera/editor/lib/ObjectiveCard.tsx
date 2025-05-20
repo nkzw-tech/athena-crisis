@@ -496,10 +496,9 @@ export default function ObjectiveCard({
                             <Stack
                               className={cx(
                                 borderStyle,
-                                crystalBorderStyle,
+                                crystalBoxStyle,
                                 highlightStyle,
                               )}
-                              gap={4}
                               nowrap
                             >
                               <div className={crystalScaleStyle}>
@@ -534,9 +533,9 @@ export default function ObjectiveCard({
                                 reward.crystal === crystal
                               }
                             >
-                              <Stack gap={4} nowrap>
+                              <Stack gap nowrap>
                                 <CrystalIcon animate crystal={crystal} />
-                                {getTranslatedCrystalName(crystal)}
+                                <div>{getTranslatedCrystalName(crystal)}</div>
                               </Stack>
                             </InlineLink>
                           ))}
@@ -657,7 +656,8 @@ const borderStyle = css`
   padding: 1px 4px 3px;
 `;
 
-const crystalBorderStyle = css`
+const crystalBoxStyle = css`
+  gap: 6px;
   padding: 0 4px 0;
 `;
 

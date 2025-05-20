@@ -157,7 +157,7 @@ export default memo(function CurrentGameCard({
     hide?: boolean;
     inlineUI: boolean;
     inset?: number;
-    users: Map<string, UserLikeWithID>;
+    users: ReadonlyMap<string, UserLikeWithID>;
     zIndex: number;
   }) {
   const teams = useCurrentGameTeams(map, users);

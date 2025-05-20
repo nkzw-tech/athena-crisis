@@ -22,6 +22,7 @@ import { RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
 import Attack from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import Download from '@iconify-icons/pixelarticons/download.js';
 import Forward from '@iconify-icons/pixelarticons/forward.js';
 import EndTurn from '@iconify-icons/pixelarticons/reply-all.js';
 import Next from '@iconify-icons/pixelarticons/reply.js';
@@ -312,6 +313,24 @@ const NextButton = ({
   );
 };
 
+const ReplayDownloadButton = ({
+  fade,
+  onClick,
+}: {
+  fade?: boolean;
+  onClick: () => void;
+}) => (
+  <MenuButton className={cx(actionButtonStyle, nextButtonStyle)} fade={fade}>
+    <Icon
+      button
+      className={cx(iconStyle)}
+      horizontalFlip
+      icon={Download}
+      onClick={onClick}
+    />
+  </MenuButton>
+);
+
 const EndTurnButton = ({
   actions,
   canEndTurn,
@@ -578,6 +597,7 @@ export default function GameActions({
   fade,
   hide,
   inset = 0,
+  onDownloadReplay,
   setZoom,
   state,
   subscribe,
@@ -589,6 +609,7 @@ export default function GameActions({
   fade?: boolean;
   hide?: boolean;
   inset?: number;
+  onDownloadReplay?: () => void;
   setZoom?: SetZoomFn;
   subscribe?: (map: MapData) => Promise<void>;
   undo?: (type: UndoType, options?: UndoOptions) => void | Promise<void>;
@@ -701,6 +722,9 @@ export default function GameActions({
           className={containerStyle}
           style={!inlineUI ? insetStyle(inset) : undefined}
         >
+          {onDownloadReplay && (
+            <ReplayDownloadButton fade={fade} onClick={onDownloadReplay} />
+          )}
           <InfoButton actions={actions} bottom fade={fade} state={state} />
         </div>
       )}

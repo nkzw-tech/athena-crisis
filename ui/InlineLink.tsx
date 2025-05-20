@@ -25,6 +25,7 @@ type InlineLinkProps = Readonly<{
   active?: boolean;
   alignCenter?: true;
   className?: string;
+  disabled?: boolean;
   gap?: Gap;
   hover?: boolean;
   inline?: true;
@@ -41,6 +42,7 @@ export const useInlineLink = ({
   active, // Do not pass `active` to the link element.
   alignCenter,
   className: initialClassName,
+  disabled,
   gap: _gap,
   hover,
   inline,
@@ -60,12 +62,15 @@ export const useInlineLink = ({
         selected && 'selected',
         selectedText && 'selected-text',
         active && 'active',
+        disabled && disabledStyle,
+        disabled && 'disabled',
         alignCenter && alignCenterStyle,
         inline && inlineStyle,
       ),
     [
       active,
       alignCenter,
+      disabled,
       hover,
       initialClassName,
       inline,
@@ -78,6 +83,7 @@ export const useInlineLink = ({
   return {
     ...props,
     className,
+    disabled,
     style:
       pixelBorderSize != null
         ? {
@@ -91,7 +97,7 @@ export const useInlineLink = ({
   };
 };
 
-export default (function InlineLink({
+export default function InlineLink({
   onClick,
   ref,
   to,
@@ -100,10 +106,12 @@ export default (function InlineLink({
   const element = useRef<HTMLAnchorElement | null>(null);
   const click = useCallback(
     (event?: MouseEvent) => {
-      AudioPlayer.playSound('UI/Accept');
-      onClick?.(event);
+      if (!initialProps.disabled) {
+        AudioPlayer.playSound('UI/Accept');
+        onClick?.(event);
+      }
     },
-    [onClick],
+    [initialProps.disabled, onClick],
   );
 
   const setRefs = useCallback(
@@ -120,14 +128,13 @@ export default (function InlineLink({
 
   useScrollIntoView(element, initialProps.hover);
   useActive(initialProps.active, click, to);
-
   const props = useInlineLink(initialProps);
   return to ? (
     <Link {...props} onClick={click} ref={setRefs} to={to} />
   ) : (
     <a {...props} onClick={click} ref={setRefs} />
   );
-});
+}
 
 const defaultGap = 8;
 
@@ -156,12 +163,12 @@ const linkStyle = css`
     color: ${applyVar('text-color-active')};
   }
 
-  &:active,
-  &.active {
+  &:not(.disabled):active,
+  &:not(.disabled).active {
     transform: scaleX(0.95) scaleY(0.98);
   }
 
-  &:not(.active):not(.selected-text).hover {
+  &:not(.disabled):not(.active):not(.selected-text).hover {
     ${pixelBorder(
       applyVar('background-color-active'),
       vars.apply('pixel-border-size'),
@@ -181,7 +188,7 @@ const linkStyle = css`
     }
   }
 
-  &:not(.active).selected.hover {
+  &:not(.disabled):not(.active).selected.hover {
     ${pixelBorder(
       applyVar('text-color-active'),
       vars.apply('pixel-border-size'),
@@ -189,7 +196,7 @@ const linkStyle = css`
   }
 
   @media (hover: hover) {
-    &.selected:hover {
+    &:not(.disabled).selected:hover {
       ${pixelBorder(
         applyVar('text-color-active'),
         vars.apply('pixel-border-size'),
@@ -198,11 +205,11 @@ const linkStyle = css`
       color: ${applyVar('text-color-active')};
     }
 
-    &.selected-text:hover {
+    &:not(.disabled).selected-text:hover {
       color: ${applyVar('text-color-active')};
     }
 
-    &:not(.active):not(.selected-text):hover {
+    &:not(.disabled):not(.active):not(.selected-text):hover {
       ${pixelBorder(
         applyVar('background-color-active'),
         vars.apply('pixel-border-size'),
@@ -288,4 +295,9 @@ const buttonKeyboardShortcutStyle = css`
       opacity: 0.5;
     }
   }
+`;
+
+const disabledStyle = css`
+  opacity: 0.7;
+  color: ${applyVar('text-color-light')};
 `;

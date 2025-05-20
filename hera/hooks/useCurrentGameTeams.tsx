@@ -6,7 +6,7 @@ import { UserLikeWithID } from './useUserMap.tsx';
 
 export default function useCurrentGameTeams(
   map: MapData,
-  users: Map<string, UserLikeWithID>,
+  users: ReadonlyMap<string, UserLikeWithID>,
 ) {
   return useMemo(
     () =>

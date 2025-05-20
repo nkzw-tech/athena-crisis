@@ -20,7 +20,7 @@ export default function ZoomButton({
   fade?: boolean;
   hide: boolean;
   max: number;
-  position: 'top' | 'auto';
+  position: 'bottom' | 'top' | 'auto';
   setZoom: SetZoomFn;
   zoom: number;
 }) {
@@ -33,7 +33,14 @@ export default function ZoomButton({
 
   return (
     <MenuButton
-      className={cx(position === 'top' && topStyle, className)}
+      className={cx(
+        position === 'top'
+          ? topStyle
+          : position === 'bottom'
+            ? bottomStyle
+            : null,
+        className,
+      )}
       fade={fade}
       hide={hide}
       onClick={updateZoom}
@@ -48,6 +55,11 @@ export default function ZoomButton({
 const topStyle = css`
   right: env(safe-area-inset-right);
   top: ${applyVar('safe-area-top')};
+`;
+
+const bottomStyle = css`
+  right: env(safe-area-inset-right);
+  bottom: ${applyVar('safe-area-bottom')};
 `;
 
 const zoomContainerStyle = css`

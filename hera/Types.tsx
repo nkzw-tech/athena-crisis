@@ -315,6 +315,7 @@ export type MapBehavior = Readonly<{
     | 'dropUnit'
     | 'entity'
     | 'heal'
+    | 'info'
     | 'menu'
     | 'move'
     | 'null'
