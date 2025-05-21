@@ -2,6 +2,8 @@ import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx
 import { decodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import { ReplayState } from '@deities/apollo/replay/Types.tsx';
 import { GameState, MutableGameState } from '@deities/apollo/Types.tsx';
+import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
+import isPvP from '@deities/athena/lib/isPvP.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import parseInteger from '@nkzw/core/parseInteger.js';
@@ -59,13 +61,16 @@ export default function useReplayGameState(
             });
           }
           break;
-        case 'map':
+        case 'map': {
           map = MapData.fromObject(entry.state);
-          vision = map.createVisionObject(
-            map.getPlayerByUserId(replayState.viewer) || map.getFirstPlayerID(),
-          );
+          const player =
+            map.getPlayerByUserId(replayState.viewer) ||
+            (isPvP(map) ? 0 : getFirstHumanPlayer(map)) ||
+            0;
+          vision = map.createVisionObject(player);
           gameState.push([{ type: 'Start' }, map]);
           break;
+        }
         case 'actions': {
           if (map && vision) {
             for (const encodedActionResponse of entry.actions) {
