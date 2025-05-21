@@ -119,7 +119,7 @@ const dropZoneStyle = css`
 const highlightStyle = css`
   background: ${getColor('blue', 0.1)};
   border-color: ${getColor('blue')};
-  color: ${applyVar('text-color')};
+  color: ${getColor('blue')};
 `;
 
 const textStyle = css`

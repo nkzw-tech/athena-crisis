@@ -36,7 +36,7 @@
     "@nkzw/relay-utils": "^1.0.1",
     "@nkzw/use-relative-time": "^1.2.0",
     "@nkzw/use-visibility-state": "^1.0.3",
-    "@sentry/browser": "^9.20.0",
+    "@sentry/browser": "^9.22.0",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
     "cordova-plugin-purchase": "^13.12.1",
