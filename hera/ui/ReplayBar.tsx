@@ -1,4 +1,8 @@
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
+import {
+  GameTimerValue,
+  isTimeBankTimer,
+} from '@deities/apollo/lib/GameTimerValue.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -16,29 +20,26 @@ import { getShortLocale } from '../i18n/getLocale.tsx';
 import { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
 import MiniPlayerIcon from './MiniPlayerIcon.tsx';
+import TimeBankTimer from './TimeBankTimer.tsx';
 
 const reload = () => location.reload();
 
-const TurnTimer = ({
-  player,
-  timeout,
-}: {
-  player: PlayerID;
-  timeout: number;
-}) => {
+const TimeBankRemainingTime = ({ timeout }: { timeout: number }) => (
+  <fbt desc="Turn timer with relative time, example: '4:23 remaining'">
+    <fbt:param name="relativeTime">
+      <TimeBankTimer key={timeout} time={timeout} />
+    </fbt:param>{' '}
+    remaining
+  </fbt>
+);
+
+const TurnTimer = ({ timeout }: { timeout: number }) => {
   const relativeTime = useRelativeTime(timeout, getShortLocale(), dateNow);
 
-  return timeout < dateNow() ? null : (
-    <Stack alignCenter center flex1 gap nowrap>
-      <span className={textStyle}>
-        <div className={miniIconStyle}>
-          <MiniPlayerIcon gap id={player} />
-        </div>
-        <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
-          Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
-        </fbt>
-      </span>
-    </Stack>
+  return (
+    <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
+      Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
+    </fbt>
   );
 };
 
@@ -49,6 +50,7 @@ export default function ReplayBar({
   inlineUI,
   replayState,
   timeout,
+  timer,
 }: {
   actions: Actions;
   currentPlayer: Player;
@@ -56,6 +58,7 @@ export default function ReplayBar({
   inlineUI: boolean;
   replayState: ReplayState;
   timeout: number | null;
+  timer: GameTimerValue;
 }) {
   const { isLive, isPaused, isReplaying, isWaiting } = replayState;
   const isBot = currentPlayer.isBot();
@@ -70,8 +73,17 @@ export default function ReplayBar({
       visible={replayIsVisible || (hasTimeout && !isBot)}
     >
       <Stack flex1 gap vertical>
-        {hasTimeout && !isBot ? (
-          <TurnTimer player={currentPlayer.id} timeout={timeout} />
+        {hasTimeout && !isBot && timeout >= dateNow() ? (
+          <Stack alignCenter center className={textStyle} flex1 gap nowrap>
+            <div className={miniIconStyle}>
+              <MiniPlayerIcon gap id={currentPlayer.id} />
+            </div>
+            {isTimeBankTimer(timer) ? (
+              <TimeBankRemainingTime timeout={timeout} />
+            ) : (
+              <TurnTimer key={timeout} timeout={timeout} />
+            )}
+          </Stack>
         ) : null}
         {replayIsVisible && (
           <Stack alignCenter nowrap stretch>

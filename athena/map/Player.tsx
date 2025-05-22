@@ -39,6 +39,7 @@ type BasePlainPlayerType = Readonly<{
 export type PlainPlayerType = BasePlainPlayerType &
   Readonly<{
     crystal: Crystal | undefined;
+    time: number | undefined;
     userId: string;
   }>;
 
@@ -84,6 +85,10 @@ export default abstract class Player {
 
   setFunds(funds: number): this {
     return this.copy({ funds });
+  }
+
+  setTime(time: number | undefined): this {
+    return this;
   }
 
   setCharge(charge: number): this {
@@ -336,6 +341,7 @@ export class HumanPlayer extends Player {
     stats: PlayerStatistics | null,
     misses: number,
     public readonly crystal: Crystal | null,
+    public readonly time: number | null,
   ) {
     super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
   }
@@ -351,6 +357,7 @@ export class HumanPlayer extends Player {
     skills,
     stats,
     teamId,
+    time,
     userId,
   }: {
     activeSkills?: ReadonlySet<Skill>;
@@ -363,6 +370,7 @@ export class HumanPlayer extends Player {
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
     teamId?: PlayerID;
+    time?: number | null;
     userId?: string;
   }): this {
     return new HumanPlayer(
@@ -377,6 +385,7 @@ export class HumanPlayer extends Player {
       stats ?? this.stats,
       misses ?? this.misses,
       crystal ?? this.crystal,
+      time ?? this.time,
     ) as this;
   }
 
@@ -385,6 +394,12 @@ export class HumanPlayer extends Player {
       ? this.copy({
           crystal,
         })
+      : this;
+  }
+
+  override setTime(time: number | undefined): this {
+    return time !== this.time
+      ? this.copy({ time: time != null ? Math.max(0, time) : time })
       : this;
   }
 
@@ -399,6 +414,7 @@ export class HumanPlayer extends Player {
       misses,
       skills,
       stats,
+      time,
       userId,
     } = this;
     return {
@@ -411,6 +427,7 @@ export class HumanPlayer extends Player {
       misses,
       skills: [...skills],
       stats: encodePlayerStatistics(stats),
+      time: time != null ? time : undefined,
       userId,
     };
   }
@@ -431,6 +448,7 @@ export class HumanPlayer extends Player {
           player.stats,
           player.misses,
           isHumanPlayer ? player.crystal : null,
+          isHumanPlayer ? player.time : null,
         );
   }
 }

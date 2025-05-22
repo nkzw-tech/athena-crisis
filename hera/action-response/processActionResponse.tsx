@@ -676,6 +676,7 @@ async function processActionResponse(
         : state;
     }
     case 'SetPlayer':
+    case 'SetPlayerTime':
     case 'SetViewer':
       return { ...state, map: newMap };
     case 'BuySkill':

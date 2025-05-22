@@ -31,6 +31,7 @@ export default async function endTurnAction(actions: Actions, state: State) {
     // Update the current player immediately so that the funds will be animated.
     await update({
       map: nextMap,
+      timeout: null,
     });
     await update({
       ...addEndTurnAnimations(

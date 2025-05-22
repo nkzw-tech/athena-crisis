@@ -31,6 +31,7 @@ export default function changePlayer(
     null,
     0,
     null,
+    null,
   );
 
   if (id === 0 || !existingPlayer || !teams.get(player.teamId)) {

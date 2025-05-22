@@ -222,6 +222,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
             null,
             0,
             null,
+            null,
           ),
         ),
       }),

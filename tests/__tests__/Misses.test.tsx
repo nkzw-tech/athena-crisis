@@ -128,6 +128,7 @@ test('lose the game, but continue when missing two turns in a row with multiple 
               null,
               0,
               null,
+              null,
             ),
           ],
         ]),

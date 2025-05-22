@@ -145,7 +145,7 @@ export default function MapDetails({
         )}
         {showGameState && (
           <>
-            {timer !== undefined && isValidTimer(timer) ? (
+            {isValidTimer(timer) ? (
               <Stack alignCenter gap start>
                 <Icon icon={Watch} /> {getTranslatedTimerName(timer)}
               </Stack>

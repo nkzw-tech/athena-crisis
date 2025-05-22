@@ -101,6 +101,7 @@ export default function getActionResponseVectors(
     case 'ReceiveReward':
     case 'SecretDiscovered':
     case 'SetPlayer':
+    case 'SetPlayerTime':
     case 'SetViewer':
     case 'Start':
       break;

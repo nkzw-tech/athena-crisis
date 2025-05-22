@@ -939,6 +939,7 @@ export default function MapEditor({
                 inlineUI={props.inlineUI}
                 inset={inset}
                 map={props.map}
+                timeout={null}
                 users={users}
                 vision={props.vision}
                 zIndex={props.zIndex}

@@ -42,6 +42,8 @@ export default function applyActionResponse(
   if (
     currentPlayer.misses > 0 &&
     type !== 'PreviousTurnGameOver' &&
+    type !== 'SetPlayerTime' &&
+    type !== 'GameEnd' &&
     (type !== 'EndTurn' ||
       (actionResponse.current.player === currentPlayer.id &&
         !actionResponse.miss))
@@ -712,6 +714,12 @@ export default function applyActionResponse(
           ? map.units.set(source, targetUnit)
           : map.units.delete(source)
         ).set(target, sourceUnit),
+      });
+    }
+    case 'SetPlayerTime': {
+      const { player, time } = actionResponse;
+      return map.copy({
+        teams: updatePlayer(map.teams, map.getPlayer(player).setTime(time)),
       });
     }
     case 'BeginGame':

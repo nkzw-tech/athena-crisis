@@ -235,6 +235,12 @@ export type SwapActionResponse = Readonly<{
   type: 'Swap';
 }>;
 
+export type SetPlayerTimeActionResponse = Readonly<{
+  player: PlayerID;
+  time: number;
+  type: 'SetPlayerTime';
+}>;
+
 export type ActionResponse =
   | ActivateCrystalActionResponse
   | ActivatePowerActionResponse
@@ -263,6 +269,7 @@ export type ActionResponse =
   | SabotageActionResponse
   | SecretDiscoveredActionResponse
   | SetPlayerActionResponse
+  | SetPlayerTimeActionResponse
   | SetViewerActionResponse
   | SpawnActionResponse
   | StartActionResponse

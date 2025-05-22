@@ -53,7 +53,8 @@ export default function Funds({
 }
 
 const style = css`
-  display: inline-block;
+  align-items: center;
+  display: inline-flex;
   transition:
     transform 150ms ease,
     color 150ms ease-in-out;

@@ -4,6 +4,7 @@ import {
   ReceiveRewardActionResponse,
 } from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
+import { GameTimerValue } from '@deities/apollo/lib/GameTimerValue.tsx';
 import {
   GameActionResponse,
   GameActionResponses,
@@ -95,6 +96,7 @@ export type Props = Readonly<{
   tileSize: number;
   tilted: boolean;
   timeout?: number | null;
+  timer?: GameTimerValue;
   unitSize: number;
 }>;
 
@@ -152,6 +154,7 @@ export type State = Readonly<{
   skipDialogue: boolean;
   tileSize: number;
   timeout: number | null;
+  timer: GameTimerValue;
   vision: VisionT;
   zIndex: number;
 }>;

@@ -40,6 +40,7 @@ export type GameCardProps = Readonly<{
   invasions: boolean;
   map: MapData;
   spectatorLink: ReactElement | null;
+  timeout: number | null;
   useFactionNamesForBots: boolean;
   vision: VisionT;
 }>;
@@ -54,6 +55,7 @@ const TeamItem = ({
   animate,
   focusPlayer,
   team,
+  timeout,
   users,
   wide,
   ...props
@@ -77,6 +79,7 @@ const TeamItem = ({
             animate={!!(focusPlayer && animate)}
             key={player.id}
             player={player}
+            timeout={timeout}
             user={user}
             wide={wide && !focusPlayer}
             {...props}
@@ -145,6 +148,7 @@ export default memo(function CurrentGameCard({
   invasions = false,
   map,
   spectatorLink,
+  timeout,
   useFactionNamesForBots,
   users,
   vision,
@@ -223,6 +227,7 @@ export default memo(function CurrentGameCard({
           map={map}
           spectatorLink={spectatorLink || null}
           teams={teams}
+          timeout={timeout}
           useFactionNamesForBots={!!useFactionNamesForBots}
           vision={vision}
         />

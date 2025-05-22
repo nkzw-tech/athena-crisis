@@ -436,6 +436,7 @@ const VisibleActionModifiers: Record<
   },
   SecretDiscovered: true,
   SetPlayer: true,
+  SetPlayerTime: true,
   SetViewer: true,
   Spawn: (
     actionResponse: SpawnActionResponse,

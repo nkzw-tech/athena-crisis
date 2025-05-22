@@ -18,7 +18,6 @@ import {
   Objective,
   objectiveHasAmounts,
 } from '@deities/athena/Objectives.tsx';
-import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -36,6 +35,7 @@ import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Chart from '@iconify-icons/pixelarticons/chart.js';
+import Watch from '@iconify-icons/pixelarticons/device-watch.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Hourglass from '@iconify-icons/pixelarticons/hourglass.js';
 import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
@@ -50,6 +50,7 @@ import MiniPortrait from '../character/MiniPortrait.tsx';
 import { PortraitHeight, PortraitWidth } from '../character/Portrait.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import useCrystals from '../invasions/useCrystals.tsx';
+import formatDuration from '../lib/formatDuration.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import { PlayerEffectItem } from '../Types.tsx';
@@ -58,6 +59,7 @@ import { GameCardProps } from './CurrentGameCard.tsx';
 import Funds from './Funds.tsx';
 import getMaxCharge from './lib/getMaxCharge.tsx';
 import { SkillIcon } from './SkillDialog.tsx';
+import TimeBankTimer from './TimeBankTimer.tsx';
 
 const emptyMap = new Map();
 
@@ -70,6 +72,7 @@ export default memo(function PlayerCard({
   map,
   player,
   spectatorLink,
+  timeout,
   useFactionNamesForBots,
   user,
   vision,
@@ -77,6 +80,7 @@ export default memo(function PlayerCard({
 }: GameCardProps & {
   animate: boolean;
   player: Player;
+  timeout: number | null;
   user: UserLike & { crystals?: string };
   wide?: boolean;
 }) {
@@ -85,8 +89,8 @@ export default memo(function PlayerCard({
   const color = getColor(player.id);
   const crystalMap = useCrystals(user.crystals);
   const powerCrystals = crystalMap.get(Crystal.Power) || 0;
-  const isCurrentPlayer = currentViewer === player.id;
-  const canActivateCrystal = invasions && isCurrentPlayer;
+  const isViewer = currentViewer === player.id;
+  const canActivateCrystal = invasions && isViewer;
   const activeCrystal =
     player.isHumanPlayer() && player.crystal != null ? player.crystal : null;
   const crystal =
@@ -146,7 +150,7 @@ export default memo(function PlayerCard({
       }
 
       showGameInfo({
-        action: isCurrentPlayer
+        action: isViewer
           ? async (item: PlayerEffectItem) => {
               const state = await update(resetBehavior());
 
@@ -167,7 +171,7 @@ export default memo(function PlayerCard({
         activeCrystal,
         canAction,
         charges: availableCharges,
-        crystalMap: isCurrentPlayer ? crystalMap : undefined,
+        crystalMap: isViewer ? crystalMap : undefined,
         crystals: crystal != null ? [crystal] : undefined,
         currentItem,
         origin: origin || 'center center',
@@ -176,14 +180,14 @@ export default memo(function PlayerCard({
             ? !!getSkillConfig(item.skill).charges
             : activeCrystal === null,
         skills: [...player.skills],
-        spectatorLink: isCurrentPlayer ? spectatorLink : undefined,
+        spectatorLink: isViewer ? spectatorLink : undefined,
         type: 'player-effect',
       });
     },
     [
       update,
       showGameInfo,
-      isCurrentPlayer,
+      isViewer,
       activeCrystal,
       canAction,
       availableCharges,
@@ -196,7 +200,7 @@ export default memo(function PlayerCard({
   );
 
   useInput('info', () => {
-    if (wide && isCurrentPlayer) {
+    if (wide && isViewer) {
       const item =
         player.skills.size > 0
           ? ({
@@ -300,10 +304,10 @@ export default memo(function PlayerCard({
                 textStyle,
                 wide && wideStyle,
                 marginLeftStyle,
-                isCurrentPlayer && maxCharge > 0 && SlowRainbowStyle,
+                isViewer && maxCharge > 0 && SlowRainbowStyle,
               )}
               onClick={
-                isCurrentPlayer && maxCharge > 0 && player.skills.size
+                isViewer && maxCharge > 0 && player.skills.size
                   ? (event) => {
                       event.stopPropagation();
 
@@ -324,20 +328,34 @@ export default memo(function PlayerCard({
                 : user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
-            <Stack className={infoStyle} nowrap start>
+            <Stack alignCenter className={infoStyle} gap nowrap start>
               <Funds
                 className={cx(
                   ellipsis,
                   textStyle,
-                  fundStyle,
+                  shrinkStyle,
                   wide && wideStyle,
                 )}
                 value={shouldShow ? player.funds : '???'}
               />
+              {timeout && player.isHumanPlayer() && player.time != null && (
+                <Stack
+                  alignCenter
+                  className={cx(shrinkStyle, nowrapStyle)}
+                  gap={4}
+                >
+                  <Icon icon={Watch} />
+                  {map.isCurrentPlayer(player.id) ? (
+                    <TimeBankTimer key={timeout} time={timeout} />
+                  ) : (
+                    formatDuration(player.time)
+                  )}
+                </Stack>
+              )}
               {objectiveList}
             </Stack>
             {wide && (
-              <Stack className={infoStyle} nowrap start>
+              <Stack alignCenter className={infoStyle} gap nowrap start>
                 <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
@@ -601,12 +619,6 @@ const widePlayerInfoStyle = css`
 
 const infoStyle = css`
   margin-top: -2px;
-
-  gap: 8px;
-
-  ${Breakpoints.sm} {
-    gap: 16px;
-  }
 `;
 
 const textStyle = css`
@@ -644,8 +656,7 @@ const skillBoxWithChargeStyle = css`
   padding-top: 13px;
 `;
 
-const fundStyle = css`
-  margin-top: -1px;
+const shrinkStyle = css`
   flex-shrink: 0;
 `;
 

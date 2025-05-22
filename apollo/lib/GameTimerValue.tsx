@@ -1,4 +1,4 @@
-const GameTimerValue = [null, -1, 86_400, 345_600, 604_800] as const;
+const GameTimerValue = [null, -2, -1, 86_400, 345_600, 604_800] as const;
 
 export default GameTimerValue;
 
@@ -20,4 +20,10 @@ export function isValidTimer(
   return !!timerSet.has(timer as GameTimerValue);
 }
 
-export const isRealTime = (timer: number | null | undefined) => timer === -1;
+export function isTimeBankTimer(timer: number | null | undefined): timer is -2 {
+  return timer === -2;
+}
+
+export function isRealTime(timer: number | null | undefined): timer is -2 | -1 {
+  return timer === -1 || isTimeBankTimer(timer);
+}

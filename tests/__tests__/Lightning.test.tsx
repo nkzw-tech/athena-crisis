@@ -154,6 +154,7 @@ test('cannot turn lightning barriers on when self or team units are on the field
             null,
             0,
             null,
+            null,
           ),
         ),
       }),

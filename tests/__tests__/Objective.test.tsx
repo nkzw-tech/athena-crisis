@@ -534,6 +534,7 @@ test('game over through activating a power can beat more than one player', async
                 null,
                 0,
                 null,
+                null,
               ),
             ],
           ]),

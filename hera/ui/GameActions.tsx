@@ -623,6 +623,9 @@ export default function GameActions({
     map,
     paused,
     preventRemoteActions,
+    replayState,
+    timeout,
+    timer,
     zIndex,
   } = state;
 
@@ -660,10 +663,11 @@ export default function GameActions({
     <ReplayBar
       actions={actions}
       currentPlayer={map.getCurrentPlayer()}
-      currentViewer={state.currentViewer}
+      currentViewer={currentViewer}
       inlineUI={inlineUI}
-      replayState={state.replayState}
-      timeout={state.timeout}
+      replayState={replayState}
+      timeout={timeout}
+      timer={timer}
     />
   );
 

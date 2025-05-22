@@ -110,6 +110,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
               null,
               0,
               null,
+              null,
             ),
           ],
         ]),

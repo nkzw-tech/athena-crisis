@@ -224,6 +224,7 @@ const getInitialState = (props: Props) => {
     spectatorCodes,
     tileSize,
     timeout,
+    timer,
     unitSize,
   } = props;
   const isEditor = !!editor;
@@ -284,6 +285,7 @@ const getInitialState = (props: Props) => {
     skipDialogue: false,
     tileSize,
     timeout: timeout || null,
+    timer: timer || null,
     unitSize,
     vision,
     zIndex: getLayer(map.size.height + 1, 'top') + 10,
@@ -1047,11 +1049,18 @@ export default class GameMap extends Component<Props, State> {
   ): Promise<State> => {
     let { state } = this;
     const { others, self, timeout: newTimeout } = gameActionResponse;
+    const timeout = newTimeout !== undefined ? newTimeout : state.timeout;
+
     if (!self && !others?.length && newTimeout === undefined) {
       return state;
     }
 
-    const timeout = newTimeout !== undefined ? newTimeout : state.timeout;
+    if (newTimeout != null) {
+      this.setState({
+        timeout: null,
+      });
+    }
+
     if (self) {
       const { actionResponse } = self;
       if (actionResponse.type === 'Start') {
@@ -1117,12 +1126,13 @@ export default class GameMap extends Component<Props, State> {
 
       // No need to keep processing if there are no other action responses.
       if (!others) {
+        state = await this._updateTimeout(timeout);
+
         return new Promise((resolve) => {
           this.setState(
             () => ({
               lastActionResponse: actionResponse,
               lastActionTime: dateNow(),
-              timeout,
             }),
             () => resolve(this.state),
           );
@@ -1158,14 +1168,19 @@ export default class GameMap extends Component<Props, State> {
       state = await this._processActionResponses(others);
     }
 
-    if (timeout) {
-      state = await this._update({ timeout });
+    state = await this._updateTimeout(timeout);
+
+    return state;
+  };
+
+  private _updateTimeout = async (timeout: number | null | undefined) => {
+    if (timeout === undefined) {
+      return this.state;
     }
 
-    return {
-      ...state,
-      timeout,
-    };
+    return await this._update(
+      timeout === null ? { timeout: null, timer: null } : { timeout },
+    );
   };
 
   private _processActionResponses = async (

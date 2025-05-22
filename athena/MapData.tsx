@@ -80,6 +80,7 @@ const nullPlayer = new HumanPlayer(
   null,
   0,
   null,
+  null,
 );
 const nullTeam = new Team(0, 'null', ImmutableMap([[0, nullPlayer]]));
 

@@ -231,6 +231,7 @@ test('collects statistics when attacking buildings', async () => {
               null,
               0,
               null,
+              null,
             ),
           ],
         ]),

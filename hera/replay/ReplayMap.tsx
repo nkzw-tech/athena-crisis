@@ -81,6 +81,7 @@ export default function ReplayMap({
               gameInfoState={props.gameInfoState}
               inlineUI={props.inlineUI}
               map={props.map}
+              timeout={null}
               users={users}
               vision={props.vision}
               zIndex={props.zIndex}

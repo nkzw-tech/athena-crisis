@@ -60,6 +60,7 @@ export function decodePlayers(
               decodePlayerStatistics(player.stats),
               player.misses || 0,
               player.crystal ?? null,
+              player.time ?? null,
             )
           : 'name' in player
             ? new Bot(
