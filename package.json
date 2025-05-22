@@ -64,7 +64,7 @@
     "@nkzw/eslint-plugin-fbtee": "^0.2.2",
     "@nkzw/pothos-locate": "^1.0.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.11.24",
+    "@swc/core": "^1.11.29",
     "@types/node": "^22.15.21",
     "@vitejs/plugin-react": "^4.4.1",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
@@ -104,7 +104,6 @@
     "patchedDependencies": {
       "cordova-plugin-purchase": "patches/cordova-plugin-purchase.patch",
       "howler": "patches/howler.patch",
-      "prisma-json-types-generator": "patches/prisma-json-types-generator.patch",
       "require-in-the-middle": "patches/require-in-the-middle.patch",
       "resend": "patches/resend.patch",
       "typescript": "patches/typescript.patch"
