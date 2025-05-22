@@ -17,12 +17,11 @@ import { EndTurnAction } from './action-mutators/ActionMutators.tsx';
 import { execute } from './Action.tsx';
 import {
   ActionResponse,
-  ActionResponses,
   AttackBuildingActionResponse,
   AttackUnitActionResponse,
   ToggleLightningActionResponse,
 } from './ActionResponse.tsx';
-import applyActionResponse from './actions/applyActionResponse.tsx';
+import applyActionResponses from './actions/applyActionResponses.tsx';
 import { ChaosStars } from './invasions/ChaosStars.tsx';
 import checkObjectives, {
   pickWinningPlayer,
@@ -390,7 +389,9 @@ export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
 
     if (
       checkGameEnd(
-        applyActionResponses(activeMap, [playerGameOverActionResponse]),
+        applyActionResponses(activeMap, [playerGameOverActionResponse]).at(
+          -1,
+        )?.[1],
       )
     ) {
       return actionResponses;
@@ -412,7 +413,9 @@ export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
     }
   }
 
-  if (!checkGameEnd(applyActionResponses(activeMap, actionResponses))) {
+  if (
+    !checkGameEnd(applyActionResponses(activeMap, actionResponses).at(-1)?.[1])
+  ) {
     for (const player of team) {
       const teammateHasLost =
         hasUnits(previousMap, player) &&
@@ -535,7 +538,11 @@ const checkHasUnits = (map: MapData, fromPlayer: Player, toPlayer: Player) => {
     : null;
 };
 
-const checkGameEnd = (map: MapData) => {
+const checkGameEnd = (map: MapData | undefined) => {
+  if (!map) {
+    return null;
+  }
+
   const teams = new Set(map.active.map((playerId) => map.getTeam(playerId)));
   const firstTeam = getFirstOrThrow(teams);
   return teams.size === 1
@@ -582,17 +589,3 @@ const removePlayer = (map: MapData, player: Player) =>
   map.copy({
     active: map.active.filter((playerId) => playerId !== player.id),
   });
-
-const applyActionResponses = (
-  map: MapData,
-  actionResponses: ActionResponses,
-): MapData => {
-  for (const actionResponse of actionResponses) {
-    map = applyActionResponse(
-      map,
-      new Vision(map.currentPlayer),
-      actionResponse,
-    );
-  }
-  return map;
-};
