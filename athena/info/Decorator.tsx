@@ -644,6 +644,8 @@ const Decorators = [
   ...Array(19)
     .fill(0)
     .map((_, index) => DestroyedUnit.right(index)),
+  StreetSign.right(17).down(6),
+  StreetSign.right(17).down(7),
 ].map((decorator, index) => decorator.copy({ id: index + 1 }));
 
 export const Bush = Decorators[0];
