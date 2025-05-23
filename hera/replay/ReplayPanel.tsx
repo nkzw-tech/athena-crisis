@@ -1,3 +1,4 @@
+import isVisibleActionResponse from '@deities/apollo/lib/isVisibleActionResponse.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
@@ -36,6 +37,29 @@ export default function ReplayPanel({
   setCurrentIndex: (index: number) => void;
   setPlayState: (state: PlayState) => void;
 }) {
+  const [previous, next] = useMemo(() => {
+    let previous = currentIndex - 1;
+    let next = currentIndex + 1;
+
+    for (let index = previous; index >= 0; index--) {
+      const actionResponse = gameState.at(index)?.[0];
+      if (actionResponse && isVisibleActionResponse(actionResponse)) {
+        previous = index;
+        break;
+      }
+    }
+
+    for (let index = next; index < gameState.length; index++) {
+      const actionResponse = gameState.at(index)?.[0];
+      if (actionResponse && isVisibleActionResponse(actionResponse)) {
+        next = index;
+        break;
+      }
+    }
+
+    return [previous, next];
+  }, [currentIndex, gameState]);
+
   const [previousTurn, nextTurn] = useMemo(() => {
     let previousTurn = 0;
     let nextTurn = gameState.length - 1;
@@ -62,13 +86,13 @@ export default function ReplayPanel({
     useCallback(
       (event) => {
         event.preventDefault();
-        if (event.detail.x > 0 && hasState(currentIndex + 1)) {
-          setCurrentIndex(currentIndex + 1);
-        } else if (event.detail.x < 0 && hasState(currentIndex - 1)) {
-          setCurrentIndex(currentIndex - 1);
+        if (event.detail.x > 0 && hasState(next)) {
+          setCurrentIndex(next);
+        } else if (event.detail.x < 0 && hasState(previous)) {
+          setCurrentIndex(previous);
         }
       },
-      [currentIndex, hasState, setCurrentIndex],
+      [hasState, next, previous, setCurrentIndex],
     ),
     'menu',
   );
@@ -98,8 +122,8 @@ export default function ReplayPanel({
               <Icon horizontalFlip icon={FastForward} />
             </InlineLink>
             <InlineLink
-              disabled={!hasState(currentIndex - 1)}
-              onClick={() => setCurrentIndex(currentIndex - 1)}
+              disabled={!hasState(previous)}
+              onClick={() => setCurrentIndex(previous)}
             >
               <Icon icon={Back} />
             </InlineLink>
@@ -120,8 +144,8 @@ export default function ReplayPanel({
               <Icon icon={playState === 'paused' ? Play : Pause} />
             </InlineLink>
             <InlineLink
-              disabled={!hasState(currentIndex + 1)}
-              onClick={() => setCurrentIndex(currentIndex + 1)}
+              disabled={!hasState(next)}
+              onClick={() => setCurrentIndex(next)}
             >
               <Icon icon={Next} />
             </InlineLink>
