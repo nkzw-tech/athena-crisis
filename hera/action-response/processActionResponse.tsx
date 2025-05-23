@@ -783,6 +783,7 @@ export default async function processActionResponses(
   gameActionResponses: GameActionResponses,
   animationSpeed: AnimationSpeed,
   playerHasReward: PlayerHasRewardFunction,
+  events: EventTarget | undefined,
 ): Promise<State> {
   let lastActionResponse: ActionResponse | null = null;
   const messageState = { count: 0, lastPlayerId: null, lastUnitId: null };
@@ -851,6 +852,8 @@ export default async function processActionResponses(
             }
           : null),
       });
+
+      events?.dispatchEvent(new CustomEvent('actionProcessed'));
     }
   }
   return state;

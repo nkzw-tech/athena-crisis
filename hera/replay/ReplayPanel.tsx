@@ -13,21 +13,28 @@ import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Back from '@iconify-icons/pixelarticons/chevron-left.js';
 import Next from '@iconify-icons/pixelarticons/chevron-right.js';
+import Pause from '@iconify-icons/pixelarticons/pause.js';
+import Play from '@iconify-icons/pixelarticons/play.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import { useCallback, useMemo } from 'react';
+import { PlayState } from './ReplayMap.tsx';
 
 export default function ReplayPanel({
   currentIndex,
   gameState,
   hasState,
   max,
+  playState,
   setCurrentIndex,
+  setPlayState,
 }: {
   currentIndex: number;
   gameState: GameState;
   hasState: (index: number) => boolean;
   max: number;
+  playState: PlayState;
   setCurrentIndex: (index: number) => void;
+  setPlayState: (state: PlayState) => void;
 }) {
   const [previousTurn, nextTurn] = useMemo(() => {
     let previousTurn = 0;
@@ -105,6 +112,13 @@ export default function ReplayPanel({
               type="range"
               value={currentIndex}
             />
+            <InlineLink
+              onClick={() =>
+                setPlayState(playState === 'paused' ? 'playing' : 'paused')
+              }
+            >
+              <Icon icon={playState === 'paused' ? Play : Pause} />
+            </InlineLink>
             <InlineLink
               disabled={!hasState(currentIndex + 1)}
               onClick={() => setCurrentIndex(currentIndex + 1)}

@@ -83,6 +83,8 @@ export default function useReplayGameState(
           }
           break;
         }
+        case 'effects':
+          break;
         default: {
           entryType satisfies never;
           throw new UnknownTypeError('useReplayGameState', entryType);

@@ -413,6 +413,10 @@ export default class GameMap extends Component<Props, State> {
     if (props.dangerouslyApplyExternalState) {
       newState = {
         ...(newState || state),
+        ...('lastActionResponse' in props &&
+        props.lastActionResponse !== undefined
+          ? { lastActionResponse: props.lastActionResponse }
+          : null),
         map: props.editor ? props.map : dropLabels(props.map),
         vision: getVision(
           props.map,
@@ -1225,6 +1229,7 @@ export default class GameMap extends Component<Props, State> {
               gameActionResponses,
               animationSpeed,
               playerHasReward || (() => false),
+              this.props.events,
             );
           } catch (error) {
             if (onError) {
