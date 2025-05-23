@@ -16,6 +16,7 @@ import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import useRelativeTime from '@nkzw/use-relative-time';
+import { ReactNode } from 'react';
 import { getShortLocale } from '../i18n/getLocale.tsx';
 import { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
@@ -24,23 +25,54 @@ import TimeBankTimer from './TimeBankTimer.tsx';
 
 const reload = () => location.reload();
 
-const TimeBankRemainingTime = ({ timeout }: { timeout: number }) => (
-  <fbt desc="Turn timer with relative time, example: '4:23 remaining'">
-    <fbt:param name="relativeTime">
-      <TimeBankTimer key={timeout} time={timeout} />
-    </fbt:param>{' '}
-    remaining
-  </fbt>
+const TimeCard = ({
+  children,
+  player,
+}: {
+  children: ReactNode;
+  player: Player;
+}) => (
+  <Stack alignCenter center className={textStyle} flex1 gap nowrap>
+    <div className={miniIconStyle}>
+      <MiniPlayerIcon gap id={player.id} />
+    </div>
+    {children}
+  </Stack>
 );
 
-const TurnTimer = ({ timeout }: { timeout: number }) => {
+const TimeBankRemainingTime = ({
+  player,
+  timeout,
+}: {
+  player: Player;
+  timeout: number;
+}) => (
+  <TimeCard player={player}>
+    <fbt desc="Turn timer with relative time, example: '4:23 remaining'">
+      <fbt:param name="relativeTime">
+        <TimeBankTimer key={timeout} time={timeout} />
+      </fbt:param>{' '}
+      remaining
+    </fbt>
+  </TimeCard>
+);
+
+const TurnTimer = ({
+  player,
+  timeout,
+}: {
+  player: Player;
+  timeout: number;
+}) => {
   const relativeTime = useRelativeTime(timeout, getShortLocale(), dateNow);
 
-  return (
-    <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
-      Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
-    </fbt>
-  );
+  return timeout >= dateNow() ? (
+    <TimeCard player={player}>
+      <fbt desc="Turn timer with relative time, example: 'Turn ends in 15 seconds'">
+        Turn ends <fbt:param name="relativeTime">{relativeTime}</fbt:param>
+      </fbt>
+    </TimeCard>
+  ) : null;
 };
 
 export default function ReplayBar({
@@ -73,17 +105,12 @@ export default function ReplayBar({
       visible={replayIsVisible || (hasTimeout && !isBot)}
     >
       <Stack flex1 gap vertical>
-        {hasTimeout && !isBot && timeout >= dateNow() ? (
-          <Stack alignCenter center className={textStyle} flex1 gap nowrap>
-            <div className={miniIconStyle}>
-              <MiniPlayerIcon gap id={currentPlayer.id} />
-            </div>
-            {isTimeBankTimer(timer) ? (
-              <TimeBankRemainingTime timeout={timeout} />
-            ) : (
-              <TurnTimer key={timeout} timeout={timeout} />
-            )}
-          </Stack>
+        {hasTimeout && !isBot ? (
+          isTimeBankTimer(timer) ? (
+            <TimeBankRemainingTime player={currentPlayer} timeout={timeout} />
+          ) : (
+            <TurnTimer key={timeout} player={currentPlayer} timeout={timeout} />
+          )
         ) : null}
         {replayIsVisible && (
           <Stack alignCenter nowrap stretch>
