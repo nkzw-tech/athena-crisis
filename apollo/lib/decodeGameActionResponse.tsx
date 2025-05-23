@@ -15,7 +15,7 @@ export default function decodeGameActionResponse(
   if (!Array.isArray(response)) {
     const type = response?.n;
     if (type === 'p' || type === 'r' || type === 'q') {
-      return { others: [], self: null, timeout: null };
+      return { others: [], self: null, timeout: undefined };
     }
 
     throw new Error(
