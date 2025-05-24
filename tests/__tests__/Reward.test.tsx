@@ -119,7 +119,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }
-    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: null }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
@@ -139,7 +139,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
     "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     SetPlayer { player: 1 }
-    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
   `);
 
@@ -162,7 +162,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }
-    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: null }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
@@ -255,7 +255,7 @@ test(`each skill is only received once`, async () => {
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }
-    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+    CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: null }
     Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
     ReceiveReward { player: 1, reward: 'Reward { skill: 4 }', permanent: null }
     GameEnd { objective: { amount: 1, hidden: false, optional: false, reward: { skill: 4, type: 'Skill' }, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"

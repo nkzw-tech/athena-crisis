@@ -74,7 +74,7 @@ const biomes = Biomes.filter((biome) => biome !== Biome.Spaceship);
 
 const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
   onChange && index != null ? (
-    <Stack nowrap>
+    <Stack alignCenter gap={4} nowrap>
       {!first && (
         <Icon
           button
@@ -228,6 +228,7 @@ export default memo(function ActionCard({
               animate={isVisible && animate}
               player={player}
               scale="adaptive"
+              silhouette={action.silhouette}
               unit={unit}
               variant={action.variant}
             />
@@ -251,6 +252,7 @@ export default memo(function ActionCard({
                   <Portrait
                     animate={isVisible}
                     player={player}
+                    silhouette={action.silhouette}
                     unit={unit}
                     variant={variant}
                   />
@@ -265,53 +267,78 @@ export default memo(function ActionCard({
           start
           vertical
         >
-          <Stack className={headlineStyle} nowrap>
-            <Stack gap nowrap start stretch>
-              {!hasCurrentPlayer && (
-                <Dropdown
-                  dropdownClassName={playerSelectorStyle}
-                  shouldRenderControls={!!(canChange && shouldRenderControls)}
-                  title={<PlayerIcon id={player} inline />}
-                >
-                  <Stack className={playerSelectorListStyle} nowrap vertical>
-                    {playerIDs.map((id) => (
-                      <PlayerIcon
-                        id={id}
-                        key={id}
-                        onClick={
-                          canChange
-                            ? () =>
-                                onChange(index, 'update', {
-                                  ...action,
-                                  player: id,
-                                })
-                            : undefined
-                        }
-                        selected={player === id}
-                      />
-                    ))}
+          <Stack alignCenter className={headlineStyle} gap nowrap>
+            <Stack alignCenter gap nowrap stretch>
+              <Stack alignCenter gap nowrap start>
+                {!hasCurrentPlayer && (
+                  <Dropdown
+                    dropdownClassName={playerSelectorStyle}
+                    shouldRenderControls={!!(canChange && shouldRenderControls)}
+                    title={<PlayerIcon id={player} inline />}
+                  >
+                    <Stack className={playerSelectorListStyle} nowrap vertical>
+                      {playerIDs.map((id) => (
+                        <PlayerIcon
+                          id={id}
+                          key={id}
+                          onClick={
+                            canChange
+                              ? () =>
+                                  onChange(index, 'update', {
+                                    ...action,
+                                    player: id,
+                                  })
+                              : undefined
+                          }
+                          selected={player === id}
+                        />
+                      ))}
+                    </Stack>
+                  </Dropdown>
+                )}
+                <UnitSelector
+                  currentPlayer={currentPlayer}
+                  hasContentRestrictions={hasContentRestrictions}
+                  isVisible={isVisible}
+                  map={map}
+                  onSelect={
+                    canChange
+                      ? ({ id }) =>
+                          onChange(index, 'update', {
+                            ...action,
+                            unitId: id,
+                            variant: undefined,
+                          })
+                      : undefined
+                  }
+                  selectedPlayer={action.player}
+                  selectedUnit={unit}
+                  silhouette={action.silhouette}
+                  user={user}
+                />
+              </Stack>
+              {canChange && (
+                <label>
+                  <Stack alignCenter gap nowrap start>
+                    <input
+                      checked={!!action.silhouette}
+                      onChange={
+                        canChange
+                          ? ({ target }) =>
+                              onChange(index, 'update', {
+                                ...action,
+                                silhouette: target.checked,
+                              })
+                          : undefined
+                      }
+                      type="checkbox"
+                    />
+                    <span>
+                      <fbt desc="Label for silhouette checkbox">Silhouette</fbt>
+                    </span>
                   </Stack>
-                </Dropdown>
+                </label>
               )}
-              <UnitSelector
-                currentPlayer={currentPlayer}
-                hasContentRestrictions={hasContentRestrictions}
-                isVisible={isVisible}
-                map={map}
-                onSelect={
-                  canChange
-                    ? ({ id }) =>
-                        onChange(index, 'update', {
-                          ...action,
-                          unitId: id,
-                          variant: undefined,
-                        })
-                    : undefined
-                }
-                selectedPlayer={action.player}
-                selectedUnit={unit}
-                user={user}
-              />
             </Stack>
             <TopBarIcons
               first={first}
@@ -756,7 +783,6 @@ const selectableTextStyle = css`
 `;
 
 const iconStyle = css`
-  margin: 0 4px 4px;
   cursor: pointer;
 `;
 

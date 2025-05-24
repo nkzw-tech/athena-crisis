@@ -298,7 +298,12 @@ async function processActionResponse(
       }));
       break;
     case 'CharacterMessage': {
-      const { player: dynamicPlayer, unitId, variant } = actionResponse;
+      const {
+        player: dynamicPlayer,
+        silhouette,
+        unitId,
+        variant,
+      } = actionResponse;
       const player = resolveDynamicPlayerID(map, dynamicPlayer);
       if (
         player !== messageState.lastPlayerId ||
@@ -309,12 +314,14 @@ async function processActionResponse(
       messageState.lastPlayerId = player;
       messageState.lastUnitId = unitId;
 
-      const position = map.units.findKey(
-        (unit) =>
-          unit.id === unitId &&
-          (player === 0 || unit.isLeader()) &&
-          map.matchesPlayer(unit, player),
-      );
+      const position =
+        !silhouette &&
+        map.units.findKey(
+          (unit) =>
+            unit.id === unitId &&
+            (player === 0 || unit.isLeader()) &&
+            map.matchesPlayer(unit, player),
+        );
 
       await update((state) => ({
         animations: state.animations.set(new AnimationKey(), {
@@ -325,6 +332,7 @@ async function processActionResponse(
           },
           player,
           position: messageState.count % 2 ? 'top' : 'bottom',
+          silhouette: silhouette ?? false,
           text: translateMessage(actionResponse),
           type: 'characterMessage',
           unitId,

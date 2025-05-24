@@ -41,6 +41,7 @@ const MessageComponent = ({
   player,
   playerDetails,
   position,
+  silhouette,
   text,
   unitId,
   variant,
@@ -211,6 +212,7 @@ const MessageComponent = ({
               paused={currentComplete || animationComplete}
               player={player}
               scale={portraitScale}
+              silhouette={silhouette}
               unit={unit}
               variant={variant}
             />

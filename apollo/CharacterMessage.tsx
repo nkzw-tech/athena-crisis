@@ -6,10 +6,12 @@ export default function CharacterMessage(
   message: string,
   player: DynamicPlayerID,
   variant?: number,
+  silhouette = false,
 ) {
   return {
     message,
     player,
+    silhouette,
     type: 'CharacterMessageEffect',
     unitId: (typeof unit === 'number' ? getUnitInfoOrThrow(unit) : unit).id,
     variant,

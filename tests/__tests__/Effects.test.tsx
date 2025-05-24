@@ -94,7 +94,7 @@ test('applies an effect after a unit moves and drops it', async () => {
     .toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,3 → 3,2) { fuel: 25, completed: false, path: [2,2 → 3,2] }
-      CharacterMessage { message: 'Rollin' Rollin' Rollin'', player: 'self', unitId: 5, variant: 1 }"
+      CharacterMessage { message: 'Rollin' Rollin' Rollin'', player: 'self', unitId: 5, variant: 1, silhouette: false }"
     `);
 
   expect(newEffects).toMatchInlineSnapshot(`
@@ -415,13 +415,13 @@ test('effects work for game start and end', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "Start
-      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0 }
+      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
       BeginGame
       Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
       SetPlayer { player: 1 }
-      CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1 }
+      CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1, silhouette: false }
       GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
     `);
 
@@ -524,14 +524,14 @@ test('effects work when a player loses', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
       "Start
-      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0 }
+      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
       BeginGame
       EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
       AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       SetPlayer { player: 1 }
-      CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2 }
+      CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2, silhouette: false }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
@@ -618,7 +618,7 @@ test('only one game end win effect is fired', async () => {
     .toMatchInlineSnapshot(`
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetPlayer { player: 1 }
-      CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1 }
+      CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: false }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
     `);
 });

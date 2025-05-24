@@ -17,6 +17,10 @@ export default function AddActionButton({
   onSelect: (action: Action) => void;
   trigger: EffectTrigger;
 }) {
+  if (trigger === 'GameEnd' && !isAdmin) {
+    return null;
+  }
+
   return (
     <Select
       selectedItem={

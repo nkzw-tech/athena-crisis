@@ -245,6 +245,7 @@ export type CharacterMessageAnimation = Readonly<{
   onComplete?: StateToStateLike;
   player: PlayerID;
   position?: 'top' | 'bottom';
+  silhouette: boolean;
   text: string;
   type: 'characterMessage';
   unitId: number;

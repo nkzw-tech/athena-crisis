@@ -172,6 +172,7 @@ export type ActivateCrystalAction = Readonly<{
 export type CharacterMessageEffectAction = Readonly<{
   message: string;
   player: DynamicPlayerID;
+  silhouette?: boolean;
   type: 'CharacterMessageEffect';
   unitId: number;
   variant?: number;
@@ -885,15 +886,9 @@ function spawnEffect(
 
 function characterMessageEffect(
   map: MapData,
-  { message, player, unitId, variant }: CharacterMessageEffectAction,
+  action: CharacterMessageEffectAction,
 ) {
-  return {
-    message,
-    player,
-    type: 'CharacterMessage',
-    unitId,
-    variant,
-  } as const;
+  return { ...action, type: 'CharacterMessage' } as const;
 }
 
 function buySkill(map: MapData, { from, skill }: BuySkillAction) {

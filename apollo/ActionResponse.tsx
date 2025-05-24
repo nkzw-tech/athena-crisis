@@ -123,6 +123,7 @@ export type MessageActionResponse = Readonly<{
 export type CharacterMessageActionResponse = Readonly<{
   message: string;
   player: DynamicPlayerID;
+  silhouette?: boolean;
   type: 'CharacterMessage';
   unitId: number;
   variant?: number;

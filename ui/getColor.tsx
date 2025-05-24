@@ -62,6 +62,7 @@ const getColorWithAlpha = (color: BaseColor, alpha: number) => {
   switch (color) {
     case 0:
     case 'neutral':
+    case 'self':
       return `rgba(${varNeutral}, ${alpha})`;
     case 1:
     case 'pink':
@@ -84,8 +85,6 @@ const getColorWithAlpha = (color: BaseColor, alpha: number) => {
     case 7:
     case 'cyan':
       return `rgba(${varCyan}, ${alpha})`;
-    case 'self':
-      return `rgba(${varNeutral}, ${alpha})`;
     case 'team':
       return `rgba(${varGray}, ${alpha})`;
     case 'opponent':

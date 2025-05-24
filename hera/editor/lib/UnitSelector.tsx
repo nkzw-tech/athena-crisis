@@ -31,6 +31,7 @@ export default memo(function UnitSelector({
   onSelect,
   selectedPlayer,
   selectedUnit,
+  silhouette,
   user,
   width,
 }: {
@@ -43,6 +44,7 @@ export default memo(function UnitSelector({
   onSelect?: (unit: UnitInfo) => void;
   selectedPlayer: DynamicPlayerID;
   selectedUnit: UnitInfo | null;
+  silhouette?: boolean;
   user: UserWithUnlocks | null;
   width?: 'auto';
 }) {
@@ -95,6 +97,7 @@ export default memo(function UnitSelector({
                 clip
                 player={player}
                 scale={0.5}
+                silhouette={silhouette}
                 unit={unit}
                 variant={0}
               />

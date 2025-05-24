@@ -158,13 +158,13 @@
   ["Sabotage", [29, ["type", "from", "to"]]],
   [
     "CharacterMessage",
-    [30, ["type", "message", "player", "unitId", "variant"]]
+    [30, ["type", "message", "player", "unitId", "variant", "silhouette"]]
   ],
   ["CreateTracks", [31, ["type", "from"]]],
   ["SpawnEffect", [32, ["type", "units", "player", "teams", "buildings"]]],
   [
     "CharacterMessageEffect",
-    [33, ["type", "message", "player", "unitId", "variant"]]
+    [33, ["type", "message", "player", "unitId", "variant", "silhouette"]]
   ],
   ["Start", [34, ["type"]]],
   ["SetViewer", [35, ["type"]]],
