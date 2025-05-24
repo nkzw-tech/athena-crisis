@@ -62,6 +62,12 @@ export default function applyActionResponse(
       const canAct = !completed && unitA?.info.canAct(map.getPlayer(unitA));
       if (unitA) {
         unitA = unitA.setFuel(fuel).move();
+
+        if (unitB && !unitB.info.canTransportUnitType(unitA.info)) {
+          throw new Error(
+            `Tried to move a ${unitA.info.name} into a ${unitB.info.name} at ${to}.`,
+          );
+        }
       }
       return map.copy({
         units: unitA
