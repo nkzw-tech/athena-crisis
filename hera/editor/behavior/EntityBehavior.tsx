@@ -140,11 +140,7 @@ export default class EntityBehavior extends AbstractSelectBehavior {
     return null;
   }
 
-  canSelectCandidates(
-    state: State,
-    unit: Unit,
-    building: Building,
-  ): { building: Building | null; unit: Unit | null } {
+  canSelectCandidates(state: State, unit: Unit, building: Building) {
     return { building, unit };
   }
 

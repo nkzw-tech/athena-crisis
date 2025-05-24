@@ -37,12 +37,12 @@ export default function NamedPosition({
   const unit = map.units.get(vector);
   const hasName = unit && unit.hasName() && unit.player !== 0;
   const showHealth = unit && unit.health < MaxHealth;
-  return (
-    (hasName || showHealth) && (
-      <FlashFlyout
-        align="top-lower"
-        animationConfig={animationConfig}
-        items={[
+  return hasName || showHealth || unit?.transports?.length ? (
+    <FlashFlyout
+      align="top-lower"
+      animationConfig={animationConfig}
+      items={[
+        hasName || showHealth ? (
           <FlyoutItem center color={unit.player} key="unit-name">
             <Stack center gap={4} nowrap>
               {hasName && (
@@ -65,31 +65,31 @@ export default function NamedPosition({
                 </Stack>
               ) : null}
             </Stack>
-          </FlyoutItem>,
-          unit.transports?.length ? (
-            <FlyoutItem color={unit.player} key="unit-transports" size="large">
-              <Tick animationConfig={animationConfig}>
-                <Stack gap nowrap style={{ zoom: 0.75 }}>
-                  {unit.transports.map((transportedUnit, index) => (
-                    <TransportedUnitTile
-                      animationConfig={animationConfig}
-                      key={index}
-                      map={map}
-                      playerDetails={playerDetails}
-                      tileSize={tileSize}
-                      unit={transportedUnit}
-                    />
-                  ))}
-                </Stack>
-              </Tick>
-            </FlyoutItem>
-          ) : null,
-        ]}
-        position={vector}
-        tileSize={tileSize}
-        width={map.size.width}
-        zIndex={zIndex}
-      />
-    )
-  );
+          </FlyoutItem>
+        ) : null,
+        unit.transports?.length ? (
+          <FlyoutItem color={unit.player} key="unit-transports" size="large">
+            <Tick animationConfig={animationConfig}>
+              <Stack gap nowrap style={{ zoom: 0.75 }}>
+                {unit.transports.map((transportedUnit, index) => (
+                  <TransportedUnitTile
+                    animationConfig={animationConfig}
+                    key={index}
+                    map={map}
+                    playerDetails={playerDetails}
+                    tileSize={tileSize}
+                    unit={transportedUnit}
+                  />
+                ))}
+              </Stack>
+            </Tick>
+          </FlyoutItem>
+        ) : null,
+      ]}
+      position={vector}
+      tileSize={tileSize}
+      width={map.size.width}
+      zIndex={zIndex}
+    />
+  ) : null;
 }
