@@ -3976,7 +3976,7 @@ export const Scientist = new UnitInfo(
     name: 'Units-Scientist',
     portrait: {
       position: sprite(55, 0),
-      variants: 6,
+      variants: 3,
     },
     slow: true,
   },

@@ -141,6 +141,9 @@ const UpgradeSprite = 'https://art.athenacrisis.com/v19/assets/Upgrade.png';
 const CrystalsSprite =
   'https://art.athenacrisis.com/v19/assets/render/Crystals.png';
 
+const PortraitSilhouettesSprite =
+  'https://art.athenacrisis.com/v19/assets/render/PortraitSilhouettes.png';
+
 const Tiles0Sprite =
   'https://art.athenacrisis.com/v19/assets/render/Tiles0.png';
 
@@ -303,6 +306,12 @@ const UnitsZombieSprite =
 export const Crystals = (() => {
   const image = new Image();
   image.src = CrystalsSprite;
+  return image;
+})();
+
+export const PortraitSilhouettes = (() => {
+  const image = new Image();
+  image.src = PortraitSilhouettesSprite;
   return image;
 })();
 
@@ -507,6 +516,7 @@ export default [
   UnitIconsSprite,
   UpgradeSprite,
   CrystalsSprite,
+  PortraitSilhouettesSprite,
   Tiles0Sprite,
   Tiles1Sprite,
   Tiles2Sprite,
