@@ -317,7 +317,7 @@ export default memo(function ActionCard({
                   user={user}
                 />
               </Stack>
-              {canChange && (
+              {canChange && !hasContentRestrictions && (
                 <label>
                   <Stack alignCenter gap nowrap start>
                     <input
