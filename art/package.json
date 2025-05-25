@@ -12,6 +12,6 @@
   "dependencies": {
     "@deities/athena": "workspace:*",
     "@emotion/css": "^11.13.5",
-    "@nkzw/palette-swap": "^3.0.0"
+    "@nkzw/palette-swap": "^3.1.0"
   }
 }
