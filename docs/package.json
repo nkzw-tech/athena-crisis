@@ -28,10 +28,10 @@
     "@types/react": "^19.1.5",
     "dunkel-theme": "^1.7.1",
     "fbtee": "^0.2.2",
-    "framer-motion": "^12.12.2",
+    "framer-motion": "^12.14.0",
     "licht-theme": "^1.7.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "vocs": "^1.0.11"
+    "vocs": "^1.0.12"
   }
 }
