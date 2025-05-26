@@ -11,7 +11,7 @@ export default {
             fix(fixer) {
               return fixer.replaceText(node, 'dateNow()');
             },
-            message: `Use 'dateNow()' from the 'ServerTime' module instead of 'Date.now()'.`,
+            message: `Use 'dateNow()' instead of 'Date.now()'.`,
             node,
           });
         }
