@@ -196,7 +196,7 @@ export default memo(function ActionCard({
             ? 'characterName'
             : 'name',
           map,
-          currentPlayer || 0,
+          (typeof player === 'number' ? player : currentPlayer) || 0,
           playerDetails,
         )
       : action.message;
