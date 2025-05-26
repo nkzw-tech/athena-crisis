@@ -245,8 +245,8 @@ export default memo(function PlayerCard({
     <div
       className={cx(playerStyle, wide && playerWideStyle)}
       style={{
-        [vars.set('items')]: player.skills.size + (crystal != null ? 1 : 0),
         opacity: map.active.includes(player.id) ? 1 : 0.3,
+        [vars.set('items')]: player.skills.size + (crystal != null ? 1 : 0),
       }}
     >
       <Stack className={chargeStyle} nowrap start>

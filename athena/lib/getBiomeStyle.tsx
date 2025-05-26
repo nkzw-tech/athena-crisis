@@ -76,11 +76,6 @@ const tileConversions = new Map([
 const tileRestrictions = new Set([...SwampBiome, ...SpaceShipBiome, Iceberg]);
 
 const style = {
-  [Biome.Grassland]: {
-    palette: null,
-    tileConversions,
-    tileRestrictions,
-  },
   [Biome.Desert]: {
     palette: new Map<HEX, HEX>([
       ['#27810d', '#e09455'],
@@ -97,6 +92,30 @@ const style = {
       ['#85e2f5', '#89f4f7'],
       ['#8ce5f5', '#89f4f7'],
       ['#d8fffd', '#d8fff8'],
+    ]),
+  },
+  [Biome.Grassland]: {
+    palette: null,
+    tileConversions,
+    tileRestrictions,
+  },
+  [Biome.Luna]: {
+    palette: new Map<HEX, HEX>([
+      ['#27810d', '#2c4c52'],
+      ['#4f9e1b', '#385e5d'],
+      ['#854c30', '#28454c'],
+      ['#743d26', '#2a434d'],
+      ['#4c1610', '#0d191c'],
+    ]),
+    tileConversions: new Map([...tileConversions, [Forest2, Forest3]]),
+    tileRestrictions: LunaTileRestrictions,
+    waterSwap: new Map<HEX, HEX>([
+      ['#13a6e2', '#a90b50'],
+      ['#1ab7eb', '#bc1261'],
+      ['#62d4f1', '#e8499b'],
+      ['#85e2f5', '#f593c6'],
+      ['#8ce5f5', '#f593c6'],
+      ['#d8fffd', '#ffbeff'],
     ]),
   },
   [Biome.Snow]: {
@@ -123,6 +142,24 @@ const style = {
       ['#d8fffd', '#d8fcff'],
     ]),
   },
+
+  [Biome.Spaceship]: {
+    palette: new Map<HEX, HEX>([
+      ['#27810d', '#4f5677'],
+      ['#4f9e1b', '#6d7488'],
+    ]),
+    tileConversions: new Map([
+      [Forest, Box],
+      [Forest2, Barrel],
+      [Bridge, SpaceBridge],
+      [Mountain, Platform],
+      [Sea, Space],
+      [River, Space],
+      [Beach, Space],
+      [Street, Path],
+    ]),
+    tileRestrictions: SpaceShipTileRestrictions,
+  },
   [Biome.Swamp]: {
     palette: new Map<HEX, HEX>([
       ['#27810d', '#27810e'],
@@ -142,24 +179,6 @@ const style = {
       ['#8ce5f5', '#ecf471'],
       ['#d8fffd', '#fffdca'],
     ]),
-  },
-
-  [Biome.Spaceship]: {
-    palette: new Map<HEX, HEX>([
-      ['#27810d', '#4f5677'],
-      ['#4f9e1b', '#6d7488'],
-    ]),
-    tileConversions: new Map([
-      [Forest, Box],
-      [Forest2, Barrel],
-      [Bridge, SpaceBridge],
-      [Mountain, Platform],
-      [Sea, Space],
-      [River, Space],
-      [Beach, Space],
-      [Street, Path],
-    ]),
-    tileRestrictions: SpaceShipTileRestrictions,
   },
   [Biome.Volcano]: {
     palette: new Map<HEX, HEX>([
@@ -181,25 +200,6 @@ const style = {
       ['#85e2f5', '#fbc58c'],
       ['#8ce5f5', '#fbc58c'],
       ['#d8fffd', '#ffd5be'],
-    ]),
-  },
-  [Biome.Luna]: {
-    palette: new Map<HEX, HEX>([
-      ['#27810d', '#2c4c52'],
-      ['#4f9e1b', '#385e5d'],
-      ['#854c30', '#28454c'],
-      ['#743d26', '#2a434d'],
-      ['#4c1610', '#0d191c'],
-    ]),
-    tileConversions: new Map([...tileConversions, [Forest2, Forest3]]),
-    tileRestrictions: LunaTileRestrictions,
-    waterSwap: new Map<HEX, HEX>([
-      ['#13a6e2', '#a90b50'],
-      ['#1ab7eb', '#bc1261'],
-      ['#62d4f1', '#e8499b'],
-      ['#85e2f5', '#f593c6'],
-      ['#8ce5f5', '#f593c6'],
-      ['#d8fffd', '#ffbeff'],
     ]),
   },
 };

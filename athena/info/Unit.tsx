@@ -1249,8 +1249,8 @@ const LightAirToAirMissile = AirToAirMissile.withName(
   });
 
 export const Weapons = {
-  AIUMiniGun,
   AirToAirMissile,
+  AIUMiniGun,
   AmphibiousLightGun: new Weapon(
     'Light Gun',
     new Map([

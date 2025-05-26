@@ -103,14 +103,14 @@ const waitingInterval = 60_000;
 
 const layerOffset = 6;
 const layerOffsets = {
-  /* eslint-disable sort-keys-fix/sort-keys-fix */
+  /* eslint-disable perfectionist/sort-objects */
   building: 0,
   radius: 1,
   decorator: 2,
   unit: 3,
   animation: 4,
   top: 10,
-  /* eslint-enable sort-keys-fix/sort-keys-fix */
+  /* eslint-enable perfectionist/sort-objects */
 } as const;
 
 const getLayer: GetLayerFunction = (y, type) =>
@@ -1884,12 +1884,12 @@ export default class GameMap extends Component<Props, State> {
             onPointerDown={this._pointerDown}
             onPointerUp={this._pointerUp}
             style={{
+              [cssVar('animation-duration')]:
+                `${animationConfig.AnimationDuration}ms`,
               [cssVar('perspective-height')]: Math.max(
                 0,
                 map.size.height - MaxSize / 2,
               ),
-              [cssVar('animation-duration')]:
-                `${animationConfig.AnimationDuration}ms`,
 
               height: tileSize * height,
               width: tileSize * width,

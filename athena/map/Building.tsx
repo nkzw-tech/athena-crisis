@@ -210,7 +210,7 @@ export default class Building extends Entity {
   override format(): Record<string, unknown> {
     const { behaviors, completed, health, id, label, player, skills } = this;
     return filterNullables({
-      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      /* eslint-disable perfectionist/sort-objects */
       id,
       health,
       player,
@@ -218,7 +218,7 @@ export default class Building extends Entity {
       label,
       behaviors,
       skills,
-      /* eslint-enable sort-keys-fix/sort-keys-fix */
+      /* eslint-enable perfectionist/sort-objects */
     });
   }
 }

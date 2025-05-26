@@ -120,9 +120,9 @@ const Item = memo(function Item({
       )}
       initial={{ opacity: isEffect || isEscort ? 1 : 0 }}
       style={{
+        height: size,
         [vars.set('x')]: (position.x - 1) * size + 'px',
         [vars.set('y')]: (position.y - 1) * size + 'px',
-        height: size,
         width: size,
         zIndex: getLayer(position.y, 'radius'),
       }}
@@ -391,7 +391,6 @@ const colors: Record<RadiusType, string> = {
   `,
   [RadiusType.Attackable]: ``,
   [RadiusType.Defense]: ``,
-  [RadiusType.Rescue]: ``,
   [RadiusType.Effect1]: css`
     ${vars.set('opacity', 0.35)}
     ${vars.set('color', '210, 18, 24')}
@@ -443,6 +442,7 @@ const colors: Record<RadiusType, string> = {
   [RadiusType.Move]: css`
     ${vars.set('color', '19, 19, 209')}
   `,
+  [RadiusType.Rescue]: ``,
   [RadiusType.Sabotage]: ``,
 };
 

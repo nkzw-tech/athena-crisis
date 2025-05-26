@@ -9,10 +9,10 @@ import Typeahead, {
 
 export default function TagInput<T>({
   dataSource,
+  emptySuggestions,
   freeform,
   setTags,
   stringify = String,
-  emptySuggestions,
   tags,
   toValue = stringify,
 }: {

@@ -94,10 +94,10 @@ export const applyVar = variables.apply.bind(variables);
 
 export function insetStyle(inset: number | string) {
   return {
+    [variables.set('inset-z')]: inset ? 1 : 0,
     [variables.set('inset')]: `${
       typeof inset === 'string' ? inset : `${inset}px`
     }`,
-    [variables.set('inset-z')]: inset ? 1 : 0,
   };
 }
 

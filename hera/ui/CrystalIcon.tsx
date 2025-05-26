@@ -76,12 +76,12 @@ const innerCrystalStyle = css`
 `;
 
 const additionalStyles = {
+  [Crystal.Help]: css`
+    top: -1px;
+  `,
   [Crystal.Power]: css`
     top: -3px;
     left: -2px;
-  `,
-  [Crystal.Help]: css`
-    top: -1px;
   `,
   [Crystal.Super]: css`
     top: -3px;

@@ -26,6 +26,11 @@ type SpawnConfiguration = Readonly<{
 }>;
 
 const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
+  [Skill.BuyUnitAlien]: {
+    matchBuilding: (building) =>
+      building.id === Barracks.id || building.id === HQ.id,
+    unitType: Alien,
+  },
   [Skill.BuyUnitBazookaBear]: {
     matchBuilding: (building) => building.id === Bar.id,
     unitType: BazookaBear,
@@ -35,22 +40,17 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
       building.id === Shelter.id || building.id === HQ.id,
     unitType: Bear,
   },
-  [Skill.BuyUnitAlien]: {
-    matchBuilding: (building) =>
-      building.id === Barracks.id || building.id === HQ.id,
-    unitType: Alien,
+  [Skill.DragonSaboteur]: {
+    matchBuilding: (building) => building.id === HQ.id,
+    matchUnit: () => true,
+    max: 1,
+    unitType: Saboteur,
   },
   [Skill.SpawnUnitInfernoJetpack]: {
     matchBuilding: () => true,
     matchUnit: () => true,
     max: 3,
     unitType: InfernoJetpack,
-  },
-  [Skill.DragonSaboteur]: {
-    matchBuilding: (building) => building.id === HQ.id,
-    matchUnit: () => true,
-    max: 1,
-    unitType: Saboteur,
   },
   [Skill.UnlockZombie]: {
     matchBuilding: (building) => building.id === HQ.id,

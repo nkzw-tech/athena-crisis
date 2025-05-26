@@ -24,8 +24,8 @@ export const PerformanceStyleTypes = [
 ] as const;
 
 export const PerformanceStyleComparators = {
-  [PerformanceStyleType.LostUnits]: Comparators['≤'],
   [PerformanceStyleType.CapturedBuildings]: Comparators['≥'],
+  [PerformanceStyleType.LostUnits]: Comparators['≤'],
   [PerformanceStyleType.OneShots]: Comparators['≥'],
 } as const;
 
@@ -33,14 +33,14 @@ export const PerformanceStyleTypeShortName: Record<
   PerformanceStyleType,
   string
 > = {
-  [PerformanceStyleType.LostUnits]: 'LU',
   [PerformanceStyleType.CapturedBuildings]: 'C',
+  [PerformanceStyleType.LostUnits]: 'LU',
   [PerformanceStyleType.OneShots]: 'OS',
 } as const;
 
 const StatsValues: Record<PerformanceStyleType, keyof PlayerStatistics> = {
-  [PerformanceStyleType.LostUnits]: 'lostUnits',
   [PerformanceStyleType.CapturedBuildings]: 'captured',
+  [PerformanceStyleType.LostUnits]: 'lostUnits',
   [PerformanceStyleType.OneShots]: 'oneShots',
 } as const;
 

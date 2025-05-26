@@ -229,7 +229,7 @@ const HorizontalSeaAnimation = {
   offset: 1,
 } as const;
 
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable perfectionist/sort-objects */
 export const TileTypes = {
   Plain: 2,
   Forest: 4,
@@ -259,7 +259,7 @@ export const TileTypes = {
   Inaccessible: 67_108_864,
   Ruins: 134_217_728,
 } as const;
-/* eslint-enable sort-keys-fix/sort-keys-fix */
+/* eslint-enable perfectionist/sort-objects */
 
 type TileTypeT = typeof TileTypes;
 export type TileType = TileTypeT[keyof TileTypeT];

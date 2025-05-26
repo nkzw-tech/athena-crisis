@@ -167,12 +167,12 @@ const BuildingTile = memo(function BuildingTile({
         ...(info.sprite.name === 'Structures'
           ? { backgroundImage: `url(${Sprites.Structures})` }
           : null),
-        [vars.set('x')]: `${positionX}px`,
-        [vars.set('y')]: `${positionY}px`,
         backgroundPositionX: -spritePositionX * size + 'px',
         backgroundPositionY: -spritePositionY * size + 'px',
         height,
         opacity: isBeingCreated ? 0 : 1,
+        [vars.set('x')]: `${positionX}px`,
+        [vars.set('y')]: `${positionY}px`,
         width: `${size}px`,
         zIndex: zIndex ?? 0,
         ...(animationConfig && getFlashDelay(animation, animationConfig)),
@@ -202,9 +202,9 @@ const BuildingTile = memo(function BuildingTile({
         <div
           className={cx(baseStyle, absoluteStyle)}
           style={{
+            height,
             [vars.set('x')]: `${positionX}px`,
             [vars.set('y')]: `${positionY}px`,
-            height,
             width: `${size}px`,
             zIndex: zIndex ?? 0,
           }}

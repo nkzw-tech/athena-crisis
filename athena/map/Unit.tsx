@@ -959,7 +959,7 @@ export default class Unit extends Entity {
       unfolded,
     } = this;
     return filterNullables({
-      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      /* eslint-disable perfectionist/sort-objects */
       id,
       health,
       player,
@@ -976,7 +976,7 @@ export default class Unit extends Entity {
       label,
       behavior,
       shield,
-      /* eslint-enable sort-keys-fix/sort-keys-fix */
+      /* eslint-enable perfectionist/sort-objects */
     });
   }
 

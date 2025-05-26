@@ -21,21 +21,21 @@ export default function Tick({
     <div
       className={cx(animationStyle, className)}
       style={{
+        animationPlayState: paused ? 'paused' : 'running',
+        [cssVar('animation-duration-30')]: `calc(${applyVar(
+          'animation-duration',
+        )} * 0.3)`,
+        [cssVar('animation-duration-70')]: `calc(${applyVar(
+          'animation-duration',
+        )} * 0.7)`,
+        [cssVar('animation-duration')]: `${AnimationDuration}ms`,
+        [cssVar('unit-animation-step')]: `${UnitAnimationStep}ms`,
+        [cssVar('unit-move-duration')]: `${UnitMoveDuration}ms`,
+        imageRendering: 'pixelated',
         [vars.set('building')]: 0,
         [vars.set('tile-decorator')]: 0,
         [vars.set('unit-attack-stance')]: 0,
         [vars.set('unit')]: 0,
-        [cssVar('animation-duration')]: `${AnimationDuration}ms`,
-        [cssVar('unit-animation-step')]: `${UnitAnimationStep}ms`,
-        [cssVar('unit-move-duration')]: `${UnitMoveDuration}ms`,
-        [cssVar('animation-duration-70')]: `calc(${applyVar(
-          'animation-duration',
-        )} * 0.7)`,
-        [cssVar('animation-duration-30')]: `calc(${applyVar(
-          'animation-duration',
-        )} * 0.3)`,
-        animationPlayState: paused ? 'paused' : 'running',
-        imageRendering: 'pixelated',
       }}
     >
       {children}

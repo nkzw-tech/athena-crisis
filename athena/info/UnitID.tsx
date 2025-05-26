@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable perfectionist/sort-objects */
 export default {
   Pioneer: 1,
   Infantry: 2,
@@ -28,4 +28,4 @@ export default {
   InfernoJetpack: 55,
   Scientist: 56,
 } as const;
-/* eslint-enable sort-keys-fix/sort-keys-fix */
+/* eslint-enable perfectionist/sort-objects */

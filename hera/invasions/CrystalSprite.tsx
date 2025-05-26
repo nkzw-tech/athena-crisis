@@ -5,12 +5,12 @@ import { memo, useLayoutEffect, useRef, useState } from 'react';
 
 const size = 26;
 const offsets: Record<Crystal, number> = {
-  [Crystal.Help]: 3,
-  [Crystal.Super]: 1,
-  [Crystal.Power]: 5,
-  [Crystal.Memory]: 2,
   [Crystal.Command]: 4,
+  [Crystal.Help]: 3,
+  [Crystal.Memory]: 2,
   [Crystal.Phantom]: 0,
+  [Crystal.Power]: 5,
+  [Crystal.Super]: 1,
 };
 
 export default memo(function CrystalSprite({

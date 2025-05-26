@@ -92,8 +92,8 @@ type BuildingConfiguration = {
   requiresUnlock: boolean;
   restrictedUnits?: ReadonlySet<UnitInfo>;
   sort: number;
-  unitTypes?: ReadonlySet<EntityType>;
   units?: ReadonlySet<UnitInfo>;
+  unitTypes?: ReadonlySet<EntityType>;
 };
 
 export class BuildingInfo {
@@ -129,8 +129,8 @@ export class BuildingInfo {
       restrictedUnits?: ReadonlySet<UnitInfo>;
       sort: number;
       type?: number;
-      unitTypes?: ReadonlySet<EntityType>;
       units?: ReadonlySet<UnitInfo>;
+      unitTypes?: ReadonlySet<EntityType>;
     },
     sprite: {
       biomeStyle?: Map<Biome, SpriteVector>;
@@ -158,7 +158,7 @@ export class BuildingInfo {
       size: 'tall',
       ...sprite,
     };
-    const { unitTypes, units } = this.configuration;
+    const { units, unitTypes } = this.configuration;
     this.buildableUnits = new Set(
       [
         ...(unitTypes ? filterUnits(({ type }) => unitTypes.has(type)) : []),

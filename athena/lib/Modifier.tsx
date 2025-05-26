@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-enums */
 export enum Modifier {
   None = 0,
   Vertical = 1,

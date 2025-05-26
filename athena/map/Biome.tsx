@@ -29,13 +29,13 @@ export const Biomes = [
 ] as const;
 
 const BiomeEnum = {
-  [Biome.Grassland]: 'Grassland',
   [Biome.Desert]: 'Desert',
-  [Biome.Snow]: 'Snow',
-  [Biome.Swamp]: 'Swamp',
-  [Biome.Spaceship]: 'Spaceship',
-  [Biome.Volcano]: 'Volcano',
+  [Biome.Grassland]: 'Grassland',
   [Biome.Luna]: 'Luna',
+  [Biome.Snow]: 'Snow',
+  [Biome.Spaceship]: 'Spaceship',
+  [Biome.Swamp]: 'Swamp',
+  [Biome.Volcano]: 'Volcano',
 } as const;
 
 const biomeNameToEnum = {

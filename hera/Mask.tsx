@@ -20,10 +20,11 @@ import { RadiusInfo, RadiusType } from './Radius.tsx';
 import { MapEnterType } from './Types.tsx';
 
 enum Priority {
-  High = 2,
-  Low = 1,
   None = 0,
+  Low = 1,
+  High = 2,
 }
+
 type Offsets = [
   top: number,
   right: number,

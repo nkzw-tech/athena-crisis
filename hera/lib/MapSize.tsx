@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable perfectionist/sort-objects */
 export default {
   Micro: 'Micro',
   Small: 'Small',

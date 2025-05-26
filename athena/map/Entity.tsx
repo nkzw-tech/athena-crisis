@@ -67,13 +67,13 @@ export default abstract class Entity {
   format(): Record<string, unknown> {
     const { completed, health, id, label, player } = this;
     return {
-      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      /* eslint-disable perfectionist/sort-objects */
       id,
       health,
       player,
       ...(completed ? { completed } : null),
       ...(label ? { label } : null),
-      /* eslint-enable sort-keys-fix/sort-keys-fix */
+      /* eslint-enable perfectionist/sort-objects */
     };
   }
 

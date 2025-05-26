@@ -50,8 +50,8 @@ enum ActionStyle {
 }
 
 enum FuelStyle {
-  Low = '0px',
   None = '-7px',
+  Low = '0px',
 }
 
 enum AmmoStyle {
@@ -147,9 +147,9 @@ const Action = memo(function Action({
             }
           : actionStyle === ActionStyle.Moved
             ? {
-                [vars.set('status-1')]: '-35px',
                 bottom: 0,
                 opacity: 0.75,
+                [vars.set('status-1')]: '-35px',
               }
             : undefined
       }
@@ -229,15 +229,15 @@ const Health = ({
     <div
       className={healthStyle}
       style={{
-        [vars.set('health')]: health + '%',
+        opacity: hide ? 0 : 1,
+        right: hasStatus ? 9 : 2,
         [vars.set('health-color')]:
           health < MaxHealth / 3
             ? '#e00'
             : health < (MaxHealth / 3) * 2
               ? '#ee0'
               : '#0e0',
-        opacity: hide ? 0 : 1,
-        right: hasStatus ? 9 : 2,
+        [vars.set('health')]: health + '%',
       }}
     />
   ) : null;
@@ -472,10 +472,8 @@ export default function UnitTile({
       'unit',
     );
     const style = {
+      height: size + 'px',
       [vars.set('direction')]: '' + actualUnitDirection,
-      [vars.set('x')]: `${
-        (x - 1) * size + (positionOffset.x || 0) * actualUnitDirection
-      }px`,
       [vars.set('recoil-delay')]: `${
         animationConfig.ExplosionStep *
         (hasAttackStance &&
@@ -486,9 +484,11 @@ export default function UnitTile({
             ? animation.weapon.animation.recoilDelay
             : 4)
       }ms`,
+      [vars.set('x')]: `${
+        (x - 1) * size + (positionOffset.x || 0) * actualUnitDirection
+      }px`,
       [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
       [vars.set('z-index')]: zIndex,
-      height: size + 'px',
       width: size + 'px',
       // Do not cut unit off during recoil animation.
       // Also use the "reset" hack because zIndex is set imperatively.

@@ -138,115 +138,51 @@ const skillConfig: Record<
     requiresTarget?: true;
   }>
 > = {
-  [Skill.AttackIncreaseMinor]: {
-    charges: 3,
-    cost: 300,
-    group: SkillGroup.Attack,
-  },
-  [Skill.DefenseIncreaseMinor]: {
-    activateOnInvasion,
-    charges: 2,
-    cost: 300,
-    group: SkillGroup.Defense,
-  },
-  [Skill.AttackIncreaseMajorDefenseDecreaseMajor]: {
-    charges: 6,
-    cost: 800,
-    group: SkillGroup.Attack,
-  },
-  [Skill.BuyUnitCannon]: { charges: 4, cost: 1000, group: SkillGroup.Unlock },
-  [Skill.BuyUnitBrute]: { charges: 5, cost: 1000, group: SkillGroup.Unlock },
-  [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
-    charges: 3,
-    cost: 600,
-    group: SkillGroup.Special,
-  },
-  [Skill.UnitAbilitySniperImmediateAction]: {
-    campaignOnly: true,
-    charges: 3,
-    cost: 2000,
-    group: SkillGroup.Special,
-  },
-  [Skill.MovementIncreaseGroundUnitDefenseDecrease]: {
-    charges: 2,
-    cost: 2500,
-    group: SkillGroup.Defense,
-  },
-  [Skill.UnitBattleShipMoveAndAct]: {
-    charges: 5,
-    cost: 2000,
-    group: SkillGroup.Special,
-  },
-  [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000, group: SkillGroup.Unlock },
-  [Skill.BuyUnitZombieDefenseDecreaseMajor]: {
-    cost: 1500,
-    group: SkillGroup.AI,
-  },
-  [Skill.BuyUnitBazookaBear]: {
-    charges: 6,
-    cost: 2000,
-    group: SkillGroup.Unlock,
-  },
-  [Skill.AttackAndDefenseIncreaseHard]: { cost: null, group: SkillGroup.AI },
-  [Skill.HealVehiclesAttackDecrease]: {
-    charges: 3,
-    cost: 1000,
-    group: SkillGroup.Special,
-  },
   [Skill.ArtilleryRangeIncrease]: {
     charges: 3,
     cost: 1500,
     group: SkillGroup.Defense,
   },
-  [Skill.HealInfantryMedicPower]: {
-    charges: 4,
-    cost: 1000,
-    group: SkillGroup.Attack,
-  },
-  [Skill.NoUnitRestrictions]: { cost: null, group: SkillGroup.AI },
-  [Skill.CounterAttackPower]: {
-    activateOnInvasion,
-    charges: 3,
-    cost: 1500,
-    group: SkillGroup.Special,
-  },
   [Skill.AttackAndDefenseDecreaseEasy]: { cost: null, group: SkillGroup.AI },
-  [Skill.UnitInfantryForestAttackAndDefenseIncrease]: {
-    charges: 3,
-    cost: 2000,
+  [Skill.AttackAndDefenseIncreaseHard]: { cost: null, group: SkillGroup.AI },
+  [Skill.AttackIncreaseMajorDefenseDecreaseMajor]: {
+    charges: 6,
+    cost: 800,
     group: SkillGroup.Attack,
   },
-  [Skill.UnitRailDefenseIncreasePowerAttackIncrease]: {
-    charges: 4,
-    cost: 1500,
-    group: SkillGroup.Defense,
+  [Skill.AttackIncreaseMinor]: {
+    charges: 3,
+    cost: 300,
+    group: SkillGroup.Attack,
   },
-  [Skill.BuyUnitAIU]: { cost: 1500, group: SkillGroup.Unlock },
-  [Skill.BuyUnitCommander]: {
-    activateOnInvasion,
-    charges: 4,
+  [Skill.BuyUnitAcidBomber]: {
+    charges: 3,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
-  [Skill.RecoverAirUnits]: {
-    charges: 5,
-    cost: 3000,
-    group: SkillGroup.Special,
-  },
+  [Skill.BuyUnitAIU]: { cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitAlien]: {
     activateOnInvasion,
     charges: 4,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
-  [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
-  [Skill.BuyUnitSuperTank]: {
-    charges: 4,
+  [Skill.BuyUnitBazookaBear]: {
+    charges: 6,
+    cost: 2000,
+    group: SkillGroup.Unlock,
+  },
+  [Skill.BuyUnitBear]: {
+    activateOnInvasion,
+    charges: 3,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
-  [Skill.BuyUnitAcidBomber]: {
-    charges: 3,
+  [Skill.BuyUnitBrute]: { charges: 5, cost: 1000, group: SkillGroup.Unlock },
+  [Skill.BuyUnitCannon]: { charges: 4, cost: 1000, group: SkillGroup.Unlock },
+  [Skill.BuyUnitCommander]: {
+    activateOnInvasion,
+    charges: 4,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
@@ -256,45 +192,18 @@ const skillConfig: Record<
     group: SkillGroup.Unlock,
     requiresTarget,
   },
-  [Skill.Sabotage]: {
-    activateOnInvasion: 'all',
-    charges: 5,
-    cost: 1500,
-    group: SkillGroup.Attack,
-  },
-  [Skill.SpawnUnitInfernoJetpack]: {
-    activateOnInvasion,
-    charges: 5,
-    cost: null,
-    group: SkillGroup.Invasion,
-    requiresCrystal,
-  },
-  [Skill.UnlockZombie]: {
-    activateOnInvasion: 'phantom-only',
-    charges: 10,
-    cost: 1500,
-    group: SkillGroup.Special,
-  },
-  [Skill.UnlockPowerStation]: {
-    activateOnInvasion,
-    charges: 4,
-    cost: 600,
-    group: SkillGroup.Unlock,
-  },
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitOgre]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
-  [Skill.BuyUnitBear]: {
-    activateOnInvasion,
-    charges: 3,
+  [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000, group: SkillGroup.Unlock },
+  [Skill.BuyUnitSuperTank]: {
+    charges: 4,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
-  [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
-  [Skill.Shield]: {
-    activateOnInvasion: 'no-command',
-    charges: 8,
+  [Skill.BuyUnitZombieDefenseDecreaseMajor]: {
     cost: 1500,
-    group: SkillGroup.Invasion,
+    group: SkillGroup.AI,
   },
   [Skill.Charge]: {
     activateOnInvasion,
@@ -303,8 +212,41 @@ const skillConfig: Record<
     group: SkillGroup.Invasion,
     requiresCrystal,
   },
+  [Skill.CostRecovery]: {
+    activateOnInvasion,
+    charges: 3,
+    cost: 800,
+    group: SkillGroup.Special,
+  },
+  [Skill.CounterAttackPower]: {
+    activateOnInvasion,
+    charges: 3,
+    cost: 1500,
+    group: SkillGroup.Special,
+  },
+  [Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]: {
+    charges: 3,
+    cost: 600,
+    group: SkillGroup.Special,
+  },
+  [Skill.DefenseIncreaseMinor]: {
+    activateOnInvasion,
+    charges: 2,
+    cost: 300,
+    group: SkillGroup.Defense,
+  },
   [Skill.DragonSaboteur]: {
     activateOnInvasion,
+    charges: 3,
+    cost: 1000,
+    group: SkillGroup.Special,
+  },
+  [Skill.HealInfantryMedicPower]: {
+    charges: 4,
+    cost: 1000,
+    group: SkillGroup.Attack,
+  },
+  [Skill.HealVehiclesAttackDecrease]: {
     charges: 3,
     cost: 1000,
     group: SkillGroup.Special,
@@ -316,26 +258,84 @@ const skillConfig: Record<
     requiresCrystal,
   },
   [Skill.Jeep]: { charges: 2, cost: 800, group: SkillGroup.Special },
+  [Skill.MovementIncreaseGroundUnitDefenseDecrease]: {
+    charges: 2,
+    cost: 2500,
+    group: SkillGroup.Defense,
+  },
+  [Skill.NoUnitRestrictions]: { cost: null, group: SkillGroup.AI },
+  [Skill.RecoverAirUnits]: {
+    charges: 5,
+    cost: 3000,
+    group: SkillGroup.Special,
+  },
+  [Skill.Sabotage]: {
+    activateOnInvasion: 'all',
+    charges: 5,
+    cost: 1500,
+    group: SkillGroup.Attack,
+  },
+  [Skill.Shield]: {
+    activateOnInvasion: 'no-command',
+    charges: 8,
+    cost: 1500,
+    group: SkillGroup.Invasion,
+  },
   [Skill.ShipIncreaseAttackAndRange]: {
     charges: 3,
     cost: 1000,
     group: SkillGroup.Attack,
   },
-  [Skill.XFighterAttackIncrase]: {
-    charges: 4,
-    cost: 1200,
+  [Skill.SpawnUnitInfernoJetpack]: {
+    activateOnInvasion,
+    charges: 5,
+    cost: null,
+    group: SkillGroup.Invasion,
+    requiresCrystal,
+  },
+  [Skill.UnitAbilitySniperImmediateAction]: {
+    campaignOnly: true,
+    charges: 3,
+    cost: 2000,
     group: SkillGroup.Special,
   },
-  [Skill.CostRecovery]: {
-    activateOnInvasion,
-    charges: 3,
-    cost: 800,
+  [Skill.UnitBattleShipMoveAndAct]: {
+    charges: 5,
+    cost: 2000,
     group: SkillGroup.Special,
+  },
+  [Skill.UnitInfantryForestAttackAndDefenseIncrease]: {
+    charges: 3,
+    cost: 2000,
+    group: SkillGroup.Attack,
+  },
+  [Skill.UnitRailDefenseIncreasePowerAttackIncrease]: {
+    charges: 4,
+    cost: 1500,
+    group: SkillGroup.Defense,
+  },
+  [Skill.UnlockPowerStation]: {
+    activateOnInvasion,
+    charges: 4,
+    cost: 600,
+    group: SkillGroup.Unlock,
   },
   [Skill.UnlockScientist]: {
     charges: 3,
     cost: 1500,
     group: SkillGroup.Unlock,
+  },
+  [Skill.UnlockZombie]: {
+    activateOnInvasion: 'phantom-only',
+    charges: 10,
+    cost: 1500,
+    group: SkillGroup.Special,
+  },
+  [Skill.VampireHeal]: { charges: 5, cost: 1000, group: SkillGroup.Special },
+  [Skill.XFighterAttackIncrase]: {
+    charges: 4,
+    cost: 1200,
+    group: SkillGroup.Special,
   },
 };
 

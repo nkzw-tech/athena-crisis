@@ -102,21 +102,21 @@ export default function setupGamePad() {
     const stickLeft = controller.getStick('L');
     const buttons = controller.getAllButtons();
     const {
+      dpadDown,
+      dpadLeft,
+      dpadRight,
+      dpadUp,
+      home,
       L1,
       L2,
       L3,
       R1,
       R2,
       R3,
-      X,
-      Y,
-      dpadDown,
-      dpadLeft,
-      dpadRight,
-      dpadUp,
-      home,
       select,
       start,
+      X,
+      Y,
     } = buttons;
 
     const { A, B } = isSwitch(controller.getPadId())

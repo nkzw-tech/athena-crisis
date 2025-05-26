@@ -57,13 +57,13 @@ const clip = (
 };
 
 const sprites = {
-  [Biome.Grassland]: Tiles0,
   [Biome.Desert]: Tiles1,
-  [Biome.Snow]: Tiles2,
-  [Biome.Swamp]: Tiles3,
-  [Biome.Spaceship]: Tiles4,
-  [Biome.Volcano]: Tiles5,
+  [Biome.Grassland]: Tiles0,
   [Biome.Luna]: Tiles6,
+  [Biome.Snow]: Tiles2,
+  [Biome.Spaceship]: Tiles4,
+  [Biome.Swamp]: Tiles3,
+  [Biome.Volcano]: Tiles5,
 } as const;
 
 export default memo(function Tiles({

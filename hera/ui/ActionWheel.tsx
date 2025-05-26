@@ -98,13 +98,13 @@ export default function ActionWheel({
       style={
         {
           [cssVar('highlight-color')]: getColor(color),
+          left: (position.x - 2) * tileSize,
+          top: (position.y - 2) * tileSize,
           [vars.set('count')]: count,
           [vars.set('offset')]: count > 4 ? 2 : 1,
           [vars.set('tan')]: hasEntities
             ? Math.tan(Math.PI / Math.max(5, count)).toFixed(2)
             : undefined,
-          left: (position.x - 2) * tileSize,
-          top: (position.y - 2) * tileSize,
           zIndex,
           ...(hasEntities
             ? {
@@ -153,13 +153,13 @@ const icons = {
 export type ActionButtonType = keyof typeof icons;
 
 export function ActionButton({
+  hasShift,
   type,
   icon = type,
+  label,
   navigationDirection,
   onClick,
-  hasShift,
   shift,
-  label,
 }: {
   hasShift?: boolean;
   icon?: ActionButtonType;
