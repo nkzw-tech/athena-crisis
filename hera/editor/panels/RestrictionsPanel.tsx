@@ -46,8 +46,9 @@ export default function RestrictionsPanel({
   setEditorState: (setEditorState: Partial<EditorState>) => void;
   user: UserWithUnlocks;
 }) {
-  const currentPlayer = 1;
-  const { config } = state.map;
+  const { map } = state;
+  const { config } = map;
+  const currentPlayer = map.getFirstPlayerID();
   const { biome, blocklistedBuildings, blocklistedSkills, blocklistedUnits } =
     config;
 
@@ -71,6 +72,7 @@ export default function RestrictionsPanel({
     [
       biomeBuildingRestrictions,
       blocklistedBuildings,
+      currentPlayer,
       hasContentRestrictions,
       skills,
     ],
@@ -85,7 +87,13 @@ export default function RestrictionsPanel({
         },
         skills,
       ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
-    [biomeUnitRestrictions, blocklistedUnits, hasContentRestrictions, skills],
+    [
+      biomeUnitRestrictions,
+      blocklistedUnits,
+      currentPlayer,
+      hasContentRestrictions,
+      skills,
+    ],
   );
 
   const selectBuilding = useCallback(

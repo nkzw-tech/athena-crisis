@@ -667,6 +667,16 @@ export function getBuildingInfo(id: number): BuildingInfo | null {
   return Buildings[id - 1] || null;
 }
 
+export function getBuildingInfoOrThrow(id: number): BuildingInfo {
+  const building = getBuildingInfo(id);
+  if (!building) {
+    throw new Error(
+      `getBuildingInfoOrThrow: Could not find building with id '${id}'.`,
+    );
+  }
+  return building;
+}
+
 const buildings = Buildings.slice().sort((infoA, infoB) => {
   const sortA = infoA.configuration.sort;
   const sortB = infoB.configuration.sort;
