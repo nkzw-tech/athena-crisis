@@ -1,10 +1,12 @@
 import isVisibleActionResponse from '@deities/apollo/lib/isVisibleActionResponse.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
+import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import FastForward from '@deities/ui/icons/FastForward.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -18,7 +20,17 @@ import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import { useCallback, useMemo } from 'react';
+import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { PlayState } from './ReplayMap.tsx';
+
+const isNewPlayer = (
+  previousMap: MapData | undefined,
+  activeMap: MapData | undefined,
+) =>
+  previousMap &&
+  activeMap &&
+  (previousMap.currentPlayer !== activeMap.currentPlayer ||
+    previousMap.round !== activeMap.round);
 
 export default function ReplayPanel({
   currentIndex,
@@ -65,14 +77,14 @@ export default function ReplayPanel({
     let nextTurn = gameState.length - 1;
 
     for (let index = currentIndex - 1; index >= 0; index--) {
-      if (gameState.at(index)?.[0].type === 'EndTurn') {
+      if (isNewPlayer(gameState.at(index + 1)?.[1], gameState.at(index)?.[1])) {
         previousTurn = index;
         break;
       }
     }
 
     for (let index = currentIndex + 1; index < gameState.length; index++) {
-      if (gameState.at(index)?.[0].type === 'EndTurn') {
+      if (isNewPlayer(gameState.at(index - 1)?.[1], gameState.at(index)?.[1])) {
         nextTurn = index;
         break;
       }
@@ -80,6 +92,21 @@ export default function ReplayPanel({
 
     return [previousTurn, nextTurn];
   }, [currentIndex, gameState]);
+
+  const setRound = useCallback(
+    (round: number) => {
+      for (let index = 0; index <= gameState.length; index++) {
+        const map = gameState.at(index)?.[1];
+        if (map && map.round === round) {
+          setCurrentIndex(index);
+          break;
+        }
+      }
+    },
+    [gameState, setCurrentIndex],
+  );
+  const currentMap = gameState.at(currentIndex)?.[1];
+  const maxRound = useMemo(() => gameState.at(-1)?.[1].round || 1, [gameState]);
 
   useInput(
     'navigate',
@@ -114,7 +141,7 @@ export default function ReplayPanel({
     <Portal>
       <div className={containerStyle}>
         <Stack className={cx(BoxStyle, panelStyle)}>
-          <Stack flex1 gap>
+          <Stack alignCenter flex1 gap>
             <InlineLink
               disabled={currentIndex === previousTurn}
               onClick={() => setCurrentIndex(previousTurn)}
@@ -130,12 +157,22 @@ export default function ReplayPanel({
             <Slider
               max={max}
               min="0"
-              onChange={(event) => {
-                setCurrentIndex(parseInteger(event.target.value) || 0);
+              onChange={({ target: { value } }) => {
+                setCurrentIndex(parseInteger(value) || 0);
               }}
               type="range"
               value={currentIndex}
             />
+            <NumberInput
+              className={inputStyle}
+              max={maxRound}
+              min={1}
+              onChange={({ target: { value } }) => {
+                setRound(parseInteger(value) || 1);
+              }}
+              value={String(currentMap?.round || 1)}
+            />
+            {currentMap && <MiniPlayerIcon id={currentMap.currentPlayer} />}
             <InlineLink
               onClick={() =>
                 setPlayState(playState === 'paused' ? 'playing' : 'paused')
@@ -187,6 +224,12 @@ const panelStyle = css`
   z-index: max(calc(${applyVar('inset-z')} + 3), 20);
 
   ${Breakpoints.xs} {
-    width: 360px;
+    width: 384px;
   }
+`;
+
+const inputStyle = css`
+  margin: 0;
+  padding: 0 4px;
+  width: 48px;
 `;
