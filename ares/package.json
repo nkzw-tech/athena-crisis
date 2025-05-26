@@ -47,7 +47,7 @@
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",
     "react-relay": "^19.0.0",
-    "react-router-dom": "^7.6.0",
+    "react-router-dom": "^7.6.1",
     "relay-runtime": "^19.0.0",
     "socket.io-client": "^4.8.1",
     "tinybase": "^6.1.2",
