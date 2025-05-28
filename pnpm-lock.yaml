@@ -435,9 +435,6 @@ importers:
       socket.io:
         specifier: ^4.8.1
         version: 4.8.1(bufferutil@4.0.9)(utf-8-validate@6.0.5)
-      strip-ansi:
-        specifier: ^7.1.0
-        version: 7.1.0
       stripe:
         specifier: ^18.1.1
         version: 18.1.1(@types/node@22.15.21)
@@ -904,9 +901,6 @@ importers:
       react-error-boundary:
         specifier: ^6.0.0
         version: 6.0.0(react@19.1.0)
-      strip-ansi:
-        specifier: ^7.1.0
-        version: 7.1.0
       term-img:
         specifier: ^7.0.0
         version: 7.0.0

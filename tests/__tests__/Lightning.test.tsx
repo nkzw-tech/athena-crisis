@@ -1,3 +1,4 @@
+import { stripVTControlCharacters } from 'node:util';
 import { ToggleLightningAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { RadarStation } from '@deities/athena/info/Building.tsx';
 import { Lightning, StormCloud } from '@deities/athena/info/Tile.tsx';
@@ -7,14 +8,14 @@ import { Charge } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import stripAnsi from 'strip-ansi';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
 import { captureGameState, captureOne } from '../screenshot.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
 
-const toError = (error: Error) => new Error(stripAnsi(error.message));
+const toError = (error: Error) =>
+  new Error(stripVTControlCharacters(error.message));
 
 const map = withModifiers(
   MapData.createMap({

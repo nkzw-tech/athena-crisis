@@ -55,7 +55,6 @@
     "prettier": "4.0.0-alpha.12",
     "resend": "4.5.1",
     "socket.io": "^4.8.1",
-    "strip-ansi": "^7.1.0",
     "stripe": "^18.1.1",
     "ua-parser-js": "^2.0.3",
     "utf-8-validate": "^6.0.5"
