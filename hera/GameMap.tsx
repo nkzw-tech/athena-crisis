@@ -1053,13 +1053,16 @@ export default class GameMap extends Component<Props, State> {
   ): Promise<State> => {
     let { state } = this;
     const { others, self, timeout: newTimeout } = gameActionResponse;
-    const timeout = newTimeout !== undefined ? newTimeout : state.timeout;
-
+    const timeout = newTimeout !== undefined ? newTimeout : undefined;
     if (!self && !others?.length && newTimeout === undefined) {
       return state;
     }
 
-    if (newTimeout != null) {
+    if (
+      newTimeout != null &&
+      (self?.actionResponse?.type === 'EndTurn' ||
+        others?.some(({ actionResponse }) => actionResponse.type === 'EndTurn'))
+    ) {
       this.setState({
         timeout: null,
       });
@@ -1182,8 +1185,20 @@ export default class GameMap extends Component<Props, State> {
       return this.state;
     }
 
+    const { map } = this.state;
     return await this._update(
-      timeout === null ? { timeout: null, timer: null } : { timeout },
+      timeout === null
+        ? {
+            map: map.copy({
+              teams: updatePlayers(
+                map.teams,
+                map.getPlayers().map((player) => player.setTime(undefined)),
+              ),
+            }),
+            timeout: null,
+            timer: null,
+          }
+        : { timeout },
     );
   };
 

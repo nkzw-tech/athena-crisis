@@ -1,6 +1,7 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Effects, EncodedEffects } from '@deities/apollo/Effects.tsx';
 import { EncodedActionResponse } from '@deities/apollo/EncodedActions.tsx';
+import hasPlayerChange from '@deities/athena/lib/hasPlayerChange.tsx';
 import { PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 
@@ -35,11 +36,7 @@ export default function getTurnState<
     return null;
   }
 
-  if (
-    isStart ||
-    previousMap.currentPlayer !== activeMap.currentPlayer ||
-    previousMap.round !== activeMap.round
-  ) {
+  if (isStart || hasPlayerChange(previousMap, activeMap)) {
     return [activeMap, lastAction, effects, []];
   }
 
