@@ -65,7 +65,7 @@
     "@nkzw/pothos-locate": "^1.0.0",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.11.29",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.23",
     "@vitejs/plugin-react": "^4.5.0",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "chalk": "^5.4.1",
