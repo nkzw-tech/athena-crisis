@@ -3,6 +3,7 @@ import {
   MaxHealth,
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
+import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -23,6 +24,7 @@ export default function NamedPosition({
   map,
   playerDetails,
   tileSize,
+  unit,
   vector,
   zIndex,
 }: {
@@ -31,11 +33,11 @@ export default function NamedPosition({
   map: MapData;
   playerDetails: PlayerDetails;
   tileSize: number;
+  unit: Unit;
   vector: Vector;
   zIndex: number;
 }) {
-  const unit = map.units.get(vector);
-  const hasName = unit && unit.hasName() && unit.player !== 0;
+  const hasName = unit.hasName() && unit.player !== 0;
   const showHealth = unit && unit.health < MaxHealth;
   return hasName || showHealth || unit?.transports?.length ? (
     <FlashFlyout

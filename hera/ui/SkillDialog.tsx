@@ -857,6 +857,7 @@ export function SkillIcon({
         alignCenter
         className={cx(!hideDialog && pointerStyle)}
         gap
+        nowrap
         onClick={!hideDialog ? () => setShowDialog(true) : undefined}
         start
       >

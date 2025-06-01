@@ -17,7 +17,7 @@ import {
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import toTransformOrigin from './lib/toTransformOrigin.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
-import { MapEnterType } from './Types.tsx';
+import { MapEnterType, MessageMap } from './Types.tsx';
 
 enum Priority {
   None = 0,
@@ -54,6 +54,7 @@ const getOffsets = (
   vector: Vector,
   radius: RadiusInfo | null,
   attackable: ReadonlyMap<Vector, RadiusItem> | null,
+  messages: MessageMap,
   selectedPosition: Vector | null,
 ): Offsets | null => {
   if (!currentViewer) {
@@ -65,6 +66,10 @@ const getOffsets = (
 
   if (hasRadius) {
     return [4, 4, 4, 4, Priority.Low];
+  }
+
+  if (messages.has(vector)) {
+    return [1, 1, 1, 1, Priority.High];
   }
 
   if (attackable?.has(vector)) {
@@ -125,6 +130,7 @@ export default memo(function Mask({
   enter,
   expand,
   map,
+  messages,
   pointerLock,
   radius,
   ref,
@@ -137,6 +143,7 @@ export default memo(function Mask({
   attackable: ReadonlyMap<Vector, RadiusItem> | null;
   currentViewer: PlayerID | null;
   expand: boolean;
+  messages: MessageMap;
   pointerLock: RefObject<boolean>;
   radius: RadiusInfo | null;
   selectedPosition: Vector | null;
@@ -208,6 +215,7 @@ export default memo(function Mask({
           vector,
           radius,
           attackable,
+          messages,
           selectedPosition,
         )) ||
         defaultOffsets,

@@ -18,6 +18,15 @@ export default function decodeGameActionResponse(
       return { others: [], self: null, timeout: undefined };
     }
 
+    if (type === 'm') {
+      return {
+        message: response.message,
+        others: undefined,
+        self: null,
+        timeout: undefined,
+      };
+    }
+
     throw new Error(
       `Map: Error executing remote action.\n${detail ? `Detail: '${JSON.stringify(detail, null, 2)}'\n` : ``}Response: '${JSON.stringify(response, null, 2)}'`,
     );

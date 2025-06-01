@@ -20,6 +20,7 @@ declare module 'athena-crisis:images' {
     GamepadSwitch: string;
     GamepadXbox: string;
     Heal: string;
+    MessageShadow: string;
     Noise: string;
     Poison: string;
     Sabotage: string;

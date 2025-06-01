@@ -40,6 +40,8 @@ import {
   isBuildingAnimation,
   isUnitAnimation,
 } from './MapAnimations.tsx';
+import { getMessagePlayer } from './message/MapMessageContainer.tsx';
+import MessageTile from './MessageTile.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
 import Tick from './Tick.tsx';
 import TileDecorators from './TileDecorators.tsx';
@@ -47,6 +49,7 @@ import Tiles, { TileStyle } from './Tiles.tsx';
 import {
   GetLayerFunction,
   MapBehavior,
+  MessageMap,
   PlayerDetails,
   RequestFrameFunction,
   TimerFunction,
@@ -87,9 +90,11 @@ const MapComponent = ({
   fogStyle,
   getLayer,
   map,
+  messages,
   onAnimationComplete = () => void 0,
   paused,
   playerDetails,
+  position,
   radius,
   renderEntities = true,
   requestFrame = requestAnimationFrame,
@@ -110,9 +115,11 @@ const MapComponent = ({
   fogStyle?: 'soft' | 'hard';
   getLayer: GetLayerFunction;
   map: MapData;
+  messages?: MessageMap;
   onAnimationComplete?: (position: Vector, animation: Animation) => void;
   paused?: boolean;
   playerDetails: PlayerDetails | null;
+  position: Vector | null;
   radius?: RadiusInfo | null;
   renderEntities?: boolean;
   requestFrame?: RequestFrameFunction;
@@ -147,6 +154,7 @@ const MapComponent = ({
           {map.reduceEachField<Array<ReactElement>>((list, vector) => {
             const animation = animations?.get(vector);
             const building = map.buildings.get(vector);
+            const message = messages?.get(vector);
             const unit = map.units.get(vector);
             const extraUnit = extraUnits?.get(vector);
             const vectorKey = String(vector);
@@ -221,6 +229,34 @@ const MapComponent = ({
                 vision={vision}
               />,
             );
+
+            if (message) {
+              list.push(
+                <MessageTile
+                  absolute
+                  animation={
+                    animation?.type === 'new-message' ? animation : undefined
+                  }
+                  distance={position ? vector.distance(position) : null}
+                  isValuable={message.isValuable}
+                  key={`m-${vectorKey}`}
+                  onAnimationComplete={onAnimationComplete}
+                  player={
+                    playerDetails
+                      ? getMessagePlayer(
+                          message.user,
+                          message.player,
+                          playerDetails,
+                        )
+                      : message.player
+                  }
+                  position={vector}
+                  scheduleTimer={scheduleTimer}
+                  size={tileSize}
+                  zIndex={getLayer(vector.y, 'message')}
+                />,
+              );
+            }
 
             if (extraUnit && isVisible) {
               list.push(

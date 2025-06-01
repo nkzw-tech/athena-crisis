@@ -22,7 +22,7 @@ export function TagListInternal<T>({
       <Tag
         className={className}
         key={tagString}
-        removeTag={
+        onRemove={
           editable && setTags
             ? () => setTags(tags.filter((currentTag) => currentTag !== tag))
             : undefined

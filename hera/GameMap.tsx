@@ -55,6 +55,7 @@ import processActionResponses from './action-response/processActionResponse.tsx'
 import BaseBehavior from './behavior/Base.tsx';
 import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
 import MenuBehavior from './behavior/Menu.tsx';
+import { canPlaceMessage } from './behavior/Message.tsx';
 import NullBehavior from './behavior/NullBehavior.tsx';
 import Cursor from './Cursor.tsx';
 import MapEditorExtraCursors from './editor/MapEditorMirrorCursors.tsx';
@@ -75,6 +76,8 @@ import {
 } from './MapAnimations.tsx';
 import Mask, { parseVector } from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
+import CreateMapMessage from './message/CreateMapMessage.tsx';
+import MapMessage from './message/MapMessage.tsx';
 import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import {
   Actions,
@@ -107,8 +110,9 @@ const layerOffsets = {
   building: 0,
   radius: 1,
   decorator: 2,
-  unit: 3,
-  animation: 4,
+  message: 3,
+  unit: 4,
+  animation: 5,
   top: 10,
   /* eslint-enable perfectionist/sort-objects */
 } as const;
@@ -126,7 +130,7 @@ const getVision = (
 ) =>
   map.createVisionObject(getClientViewer(map, currentViewer, spectatorCodes));
 
-const showNamedPositionsForBehavior = new Set([
+const behaviorWithHighlightedFields = new Set([
   'base',
   'design',
   'entity',
@@ -211,6 +215,7 @@ const getInitialState = (props: Props) => {
   const {
     behavior: baseBehavior,
     buildingSize,
+    currentUser,
     currentUserId,
     editor,
     effects,
@@ -218,6 +223,7 @@ const getInitialState = (props: Props) => {
     lastActionTime,
     map,
     mapName,
+    messages,
     paused,
     playerDetails,
     scale,
@@ -250,17 +256,19 @@ const getInitialState = (props: Props) => {
     behavior,
     buildingSize,
     confirmAction: null,
+    currentUser: currentUser || null,
     currentUserId,
     currentViewer,
     effectState: getEffectState(map, effects),
     gameInfoState: null,
+    highlightedPositions: null,
     initialBehaviorClass: baseBehavior,
     inlineUI: getInlineUIState(map, tileSize, scale),
     lastActionResponse: lastActionResponse || null,
     lastActionTime: lastActionTime || undefined,
     map: isEditor ? map : vision.apply(dropLabels(map)),
     mapName,
-    namedPositions: null,
+    messages: messages || new Map(),
     navigationDirection: null,
     objectiveRadius: getObjectiveRadius(map, currentViewer, isEditor),
     paused: paused || false,
@@ -278,6 +286,7 @@ const getInitialState = (props: Props) => {
     },
     selectedAttackable: null,
     selectedBuilding: null,
+    selectedMessagePosition: null,
     selectedPosition: null,
     selectedUnit: null,
     showCursor: props.showCursor,
@@ -371,7 +380,7 @@ export default class GameMap extends Component<Props, State> {
         ...(newState || state),
         behavior,
         initialBehaviorClass: BehaviorClass,
-        ...state.behavior?.deactivate?.(),
+        ...state.behavior?.deactivate?.(null),
       };
       newState = {
         ...newState,
@@ -407,6 +416,13 @@ export default class GameMap extends Component<Props, State> {
       newState = {
         ...(newState || state),
         effectState: getEffectState((newState || state).map, props.effects),
+      };
+    }
+
+    if ('currentUser' in props && props.currentUser !== state.currentUser) {
+      newState = {
+        ...(newState || state),
+        currentUser: props.currentUser || null,
       };
     }
 
@@ -572,7 +588,7 @@ export default class GameMap extends Component<Props, State> {
     window.removeEventListener('resize', this._resize);
     events?.removeEventListener('action', this._processRemoteActionResponse);
 
-    behavior?.deactivate?.();
+    behavior?.deactivate?.(this._actions);
   }
 
   private maybeSkipDialogue = () => {
@@ -840,7 +856,7 @@ export default class GameMap extends Component<Props, State> {
 
     const state = this.state;
     let newState = {
-      ...state.behavior?.deactivate?.(),
+      ...state.behavior?.deactivate?.(this._actions),
       ...resetBehavior(
         state.lastActionResponse?.type === 'GameEnd'
           ? NullBehavior
@@ -900,7 +916,7 @@ export default class GameMap extends Component<Props, State> {
           if (newBehavior && newBehavior !== oldBehavior) {
             newState = {
               ...this.state,
-              ...oldBehavior?.deactivate?.(),
+              ...oldBehavior?.deactivate?.(this._actions),
               ...newState,
             };
             if (newBehavior.activate) {
@@ -1052,8 +1068,35 @@ export default class GameMap extends Component<Props, State> {
     gameActionResponse: GameActionResponse,
   ): Promise<State> => {
     let { state } = this;
-    const { others, self, timeout: newTimeout } = gameActionResponse;
+    const { message, others, self, timeout: newTimeout } = gameActionResponse;
     const timeout = newTimeout !== undefined ? newTimeout : undefined;
+
+    if (message) {
+      const position = vec(message.position[0], message.position[1]);
+      if (state.messages.has(position)) {
+        const messages = new Map(state.messages);
+        messages.delete(position);
+        state = await this._update({
+          messages,
+        });
+      }
+
+      if (!message.deleted) {
+        state = await this._update({
+          animations: state.animations.has(position)
+            ? state.animations
+            : state.animations.set(position, {
+                position,
+                type: 'new-message',
+              }),
+          messages: new Map(state.messages).set(position, {
+            ...message,
+            position,
+          }),
+        });
+      }
+    }
+
     if (!self && !others?.length && newTimeout === undefined) {
       return state;
     }
@@ -1584,7 +1627,7 @@ export default class GameMap extends Component<Props, State> {
           ? { panels: this.props.gameInfoPanels }
           : null),
       },
-      namedPositions: null,
+      highlightedPositions: null,
       paused: true,
       position: null,
       previousPosition: state.position,
@@ -1819,6 +1862,9 @@ export default class GameMap extends Component<Props, State> {
         animatedChildren,
         children,
         className,
+        createMessage,
+        currentUser,
+        deleteMessage,
         disablePerformanceMetrics,
         editor,
         fogStyle,
@@ -1830,6 +1876,7 @@ export default class GameMap extends Component<Props, State> {
         showCursor: propsShowCursor,
         skipBanners,
         tilted,
+        toggleLikeMessage,
       },
       state: {
         additionalRadius,
@@ -1842,7 +1889,7 @@ export default class GameMap extends Component<Props, State> {
         gameInfoState,
         lastActionResponse,
         map,
-        namedPositions,
+        messages,
         objectiveRadius,
         paused,
         playerDetails,
@@ -1850,6 +1897,7 @@ export default class GameMap extends Component<Props, State> {
         radius,
         replayState,
         selectedBuilding,
+        selectedMessagePosition,
         selectedPosition,
         selectedUnit,
         showCursor,
@@ -1861,6 +1909,10 @@ export default class GameMap extends Component<Props, State> {
     } = this;
     const { height, width } = map.size;
 
+    const highlightedPositions =
+      !behavior || behaviorWithHighlightedFields.has(behavior.type)
+        ? this.state.highlightedPositions
+        : null;
     const isFloating = this.props.style === 'floating';
     const StateComponent = behavior?.component;
     return (
@@ -1920,9 +1972,11 @@ export default class GameMap extends Component<Props, State> {
               fogStyle={fogStyle}
               getLayer={getLayer}
               map={map}
+              messages={messages}
               onAnimationComplete={this._animationComplete}
               paused={paused}
               playerDetails={playerDetails}
+              position={position}
               radius={radius}
               requestFrame={this._requestFrame}
               scheduleTimer={this._scheduleTimer}
@@ -1972,6 +2026,7 @@ export default class GameMap extends Component<Props, State> {
               <Radius
                 currentViewer={currentViewer}
                 getLayer={getLayer}
+                key={behavior?.type}
                 map={map}
                 radius={radius}
                 selectedPosition={selectedPosition}
@@ -1988,6 +2043,12 @@ export default class GameMap extends Component<Props, State> {
               !replayState.isReplaying && (
                 <>
                   <Cursor
+                    color={
+                      behavior?.type === 'message' &&
+                      canPlaceMessage(this.state, position)
+                        ? 'red'
+                        : undefined
+                    }
                     position={position}
                     size={tileSize}
                     zIndex={zIndex - 4}
@@ -2030,6 +2091,7 @@ export default class GameMap extends Component<Props, State> {
                 enter={this._enter}
                 expand={!editor}
                 map={map}
+                messages={messages}
                 pointerLock={this._pointerLock}
                 radius={radius}
                 ref={this._maskRef}
@@ -2042,8 +2104,10 @@ export default class GameMap extends Component<Props, State> {
             )}
             <div ref={this._wrapperRef}>
               <AnimatePresence>
-                {!behavior || showNamedPositionsForBehavior.has(behavior.type)
-                  ? namedPositions?.map((vector) => (
+                {highlightedPositions?.map((vector) => {
+                  const unit = map.units.get(vector);
+                  return (
+                    unit && (
                       <NamedPosition
                         animationConfig={animationConfig}
                         currentViewer={currentViewer}
@@ -2051,11 +2115,13 @@ export default class GameMap extends Component<Props, State> {
                         map={map}
                         playerDetails={playerDetails}
                         tileSize={tileSize}
+                        unit={unit}
                         vector={vector}
                         zIndex={zIndex}
                       />
-                    ))
-                  : null}
+                    )
+                  );
+                })}
                 {editor && position && (
                   <PositionHint
                     animationConfig={animationConfig}
@@ -2111,6 +2177,48 @@ export default class GameMap extends Component<Props, State> {
                 key={`messages-${String(this._skipDialogueTimer)}`}
               />
             )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {highlightedPositions?.map((vector) => {
+              const message = messages.get(vector);
+              return (
+                message && (
+                  <MapMessage
+                    animationConfig={animationConfig}
+                    biome={map.config.biome}
+                    currentUser={currentUser}
+                    deleteMessage={deleteMessage}
+                    key={`message-${vector}`}
+                    maskRef={this._maskRef}
+                    message={message}
+                    playerDetails={playerDetails}
+                    scale={scale}
+                    toggleLikeMessage={toggleLikeMessage}
+                    update={this._update}
+                    vector={vector}
+                    zIndex={zIndex}
+                  />
+                )
+              );
+            })}
+            {behavior?.type === 'message' &&
+              selectedMessagePosition &&
+              currentUser &&
+              createMessage && (
+                <CreateMapMessage
+                  animationConfig={animationConfig}
+                  biome={map.config.biome}
+                  maskRef={this._maskRef}
+                  onCreate={createMessage}
+                  player={currentViewer}
+                  playerDetails={playerDetails}
+                  scale={scale}
+                  update={this._update}
+                  user={currentUser}
+                  vector={selectedMessagePosition}
+                  zIndex={zIndex}
+                />
+              )}
           </AnimatePresence>
         </Portal>
       </div>

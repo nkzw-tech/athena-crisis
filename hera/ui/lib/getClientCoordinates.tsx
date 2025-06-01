@@ -1,5 +1,3 @@
-import cssVar from '@deities/ui/cssVar.tsx';
-import parseInteger from '@nkzw/core/parseInteger.js';
 import { ClientCoordinates } from '../../lib/toTransformOrigin.tsx';
 
 export default function getClientCoordinates(
@@ -9,12 +7,9 @@ export default function getClientCoordinates(
     return { clientX: 'center', clientY: 'center' };
   }
 
-  const zoom =
-    parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale'))) ||
-    2;
   const rect = element.getBoundingClientRect();
   return {
-    clientX: (rect.left + rect.width / 2) * zoom,
-    clientY: (rect.top + rect.height / 2) * zoom,
+    clientX: rect.left + rect.width / 2,
+    clientY: rect.top + rect.height / 2,
   };
 }

@@ -275,6 +275,11 @@ export type CrystalAnimation = Readonly<{
   type: 'crystal';
 }>;
 
+export type NewMapMessageAnimation = Readonly<{
+  position: Vector;
+  type: 'new-message';
+}>;
+
 export type UnitAnimation =
   | AttackAnimation
   | AttackUnitFlashAnimation
@@ -305,6 +310,7 @@ export type Animation = { completed?: boolean } & (
   | FlashAnimation
   | HealthAnimation
   | MessageAnimation
+  | NewMapMessageAnimation
   | NoticeAnimation
   | ScrollIntoView
   | ShakeAnimation
@@ -716,6 +722,7 @@ const MapAnimation = ({
       // Handled directly within Buildings/Units.
       case 'fold':
       case 'move':
+      case 'new-message':
       case 'unfold':
       case 'unitExplosion':
       case 'unitHeal':

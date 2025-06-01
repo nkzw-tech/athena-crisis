@@ -4054,6 +4054,16 @@ export const SpecialUnits = new Set([
   InfernoJetpack,
 ]);
 
+export const SecretUnits = new Set([
+  Truck,
+  HumveeAvenger,
+  ArtilleryHumvee,
+  ReconDrone,
+  Drone,
+  AIU,
+  InfernoJetpack,
+]);
+
 export const DefaultSupplyUnits = {
   air: TransportHelicopter,
   land: Jeep,

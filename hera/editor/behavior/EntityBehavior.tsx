@@ -111,7 +111,7 @@ export default class EntityBehavior extends AbstractSelectBehavior {
 
   deactivate() {
     return {
-      namedPositions: null,
+      highlightedPositions: null,
       selectedBuilding: null,
       selectedPosition: null,
       selectedUnit: null,
@@ -122,7 +122,7 @@ export default class EntityBehavior extends AbstractSelectBehavior {
   onSelect(vector: Vector, state: State, entity: Entity): StateLike | null {
     if (isUnit(entity)) {
       return {
-        namedPositions: [vector],
+        highlightedPositions: [vector],
         selectedBuilding: null,
         selectedPosition: vector,
         selectedUnit: entity,

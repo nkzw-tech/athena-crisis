@@ -97,6 +97,7 @@ const Tile = ({
               getLayer={() => 1}
               map={map}
               playerDetails={playerDetails}
+              position={null}
               style="clip"
               tileSize={tileSize}
               vision={vision}

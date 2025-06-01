@@ -75,6 +75,7 @@ export default function InlineTileList({
   lazyDecorators,
   onLongPress,
   onSelect,
+  scale = 2,
   scrollIntoView = true,
   selected,
   size,
@@ -93,6 +94,7 @@ export default function InlineTileList({
   lazyDecorators?: boolean;
   onLongPress?: SelectTileFn;
   onSelect?: SelectTileFn;
+  scale?: number;
   scrollIntoView?: boolean;
   selected?: number;
   size?: 'medium' | 'tall';
@@ -120,6 +122,7 @@ export default function InlineTileList({
           lazyDecorators={lazyDecorators}
           onLongPress={onLongPress}
           onSelect={onSelect}
+          scale={scale}
           scrollIntoView={scrollIntoView}
           selected={selected}
           setShowCursor={setShowCursor}
@@ -151,6 +154,7 @@ const InlineTile = ({
   lazyDecorators,
   onLongPress,
   onSelect,
+  scale,
   scrollIntoView,
   selected,
   setShowCursor,
@@ -173,6 +177,7 @@ const InlineTile = ({
   lazyDecorators?: boolean;
   onLongPress?: SelectTileFn;
   onSelect?: SelectTileFn;
+  scale: number;
   scrollIntoView: boolean;
   selected?: number;
   setShowCursor: (index: number) => void;
@@ -261,6 +266,7 @@ const InlineTile = ({
         onMouseLeave={onSelect && isHighlighted ? hideCursor : undefined}
         {...props()}
         ref={ref}
+        style={{ zoom: scale }}
       >
         <Tiles
           map={map}
@@ -412,7 +418,6 @@ const tileInfoStyle = css`
   image-rendering: pixelated;
   position: relative;
   width: ${TileSize}px;
-  zoom: 2;
 `;
 
 const cursorStyle = css`

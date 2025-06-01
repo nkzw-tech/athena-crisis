@@ -7,9 +7,6 @@ import {
 import { HEX } from '@nkzw/palette-swap';
 import BiomeVariants from './BiomeVariants.tsx';
 
-const variantNames = new Set(PlayerIDs);
-const biomeVariantNames = new Set(BiomeVariants.keys());
-
 export type Palette = number | Map<HEX, HEX>;
 
 export type SpriteVariantConfiguration = Readonly<{
@@ -18,6 +15,16 @@ export type SpriteVariantConfiguration = Readonly<{
   variantNames: ReadonlySet<PlainDynamicPlayerID | Biome>;
   waterSwap?: true;
 }>;
+
+const variantNames = new Set(PlayerIDs);
+const biomeVariantNames = new Set(BiomeVariants.keys());
+
+const dynamicPlayerVariantNames = new Set<PlainDynamicPlayerID>([
+  ...variantNames,
+  -1,
+  -2,
+  -3,
+]);
 
 export default new Map<SpriteVariant, SpriteVariantConfiguration>([
   [
@@ -81,15 +88,17 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
     },
   ],
   [
+    'Message',
+    {
+      asImage: true,
+      variantNames: dynamicPlayerVariantNames,
+    },
+  ],
+  [
     'Portraits',
     {
       asImage: true,
-      variantNames: new Set<PlainDynamicPlayerID>([
-        ...variantNames,
-        -1,
-        -2,
-        -3,
-      ]),
+      variantNames: dynamicPlayerVariantNames,
     },
   ],
   [

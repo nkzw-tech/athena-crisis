@@ -9,18 +9,20 @@ import getColor from '@deities/ui/getColor.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import Portrait from './Portrait.tsx';
 
 export default function MiniPortrait({
   animate,
+  clip,
   human,
   paused,
   player,
   user,
 }: {
   animate?: boolean;
+  clip?: true;
   human?: true;
   paused?: boolean;
   player: Player | PlayerID;
@@ -39,7 +41,7 @@ export default function MiniPortrait({
   const Component = username ? Link : 'div';
   return (
     <Component
-      className={portraitStyle}
+      className={cx(portraitStyle, !clip && borderStyle)}
       style={{
         [cssVar('border-color')]: getColor(id),
       }}
@@ -47,7 +49,7 @@ export default function MiniPortrait({
     >
       <Portrait
         animate={animate}
-        clip={false}
+        clip={clip}
         paused={paused}
         player={id}
         scale={0.5}
@@ -58,8 +60,11 @@ export default function MiniPortrait({
   );
 }
 
-const portraitStyle = css`
+const borderStyle = css`
   ${pixelBorder(applyVar('border-color'), 2)}
+`;
+
+const portraitStyle = css`
   display: block;
   width: fit-content;
 `;

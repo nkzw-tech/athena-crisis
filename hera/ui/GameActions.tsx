@@ -12,13 +12,15 @@ import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
+import getColor from '@deities/ui/getColor.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import CreateMessage from '@deities/ui/icons/CreateMessage.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import Undo from '@deities/ui/icons/Undo.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import { RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
+import { PulseStyle, RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
 import Attack from '@iconify-icons/pixelarticons/bullseye-arrow.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
@@ -44,9 +46,11 @@ import endTurnAction from '../behavior/endTurn/endTurnAction.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { SetZoomFn } from '../editor/hooks/useZoom.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
+import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
+import { getMessagePlayer } from '../message/MapMessageContainer.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { StateWithActions } from '../Types.tsx';
+import { PlayerDetails, StateWithActions } from '../Types.tsx';
 import maybeFade from './lib/maybeFade.tsx';
 import ReplayBar from './ReplayBar.tsx';
 
@@ -67,7 +71,7 @@ const InfoButton = ({
 
   return (
     <MenuButton
-      className={cx(actionButtonStyle, !bottom && infoButtonStyle)}
+      className={cx(buttonStyle, !bottom && infoButtonStyle)}
       fade={fade}
     >
       <Icon
@@ -128,7 +132,7 @@ const AttackRadiusButton = ({
 
   return (
     <MenuButton
-      className={cx(actionButtonStyle, attackRadiusButtonStyle)}
+      className={cx(buttonStyle, attackRadiusButtonStyle)}
       fade={fade}
     >
       <Icon
@@ -297,7 +301,7 @@ const NextButton = ({
   );
 
   return (
-    <MenuButton className={cx(actionButtonStyle, nextButtonStyle)} fade={fade}>
+    <MenuButton className={cx(buttonStyle, nextButtonStyle)} fade={fade}>
       <Icon
         button
         className={cx(
@@ -320,7 +324,7 @@ const ReplayDownloadButton = ({
   fade?: boolean;
   onClick: () => void;
 }) => (
-  <MenuButton className={cx(actionButtonStyle, nextButtonStyle)} fade={fade}>
+  <MenuButton className={cx(buttonStyle, nextButtonStyle)} fade={fade}>
     <Icon
       button
       className={cx(iconStyle)}
@@ -451,11 +455,7 @@ const EndTurnButton = ({
 
   return (
     <MenuButton
-      className={cx(
-        actionButtonStyle,
-        endTurnButtonStyle,
-        isExpanded && expandStyle,
-      )}
+      className={cx(buttonStyle, endTurnButtonStyle, isExpanded && expandStyle)}
       fade={fade}
       ref={ref}
     >
@@ -558,7 +558,7 @@ const UndoButton = ({
   return (
     <MenuButton
       className={cx(
-        actionButtonStyle,
+        buttonStyle,
         endTurnButtonStyle,
         undoButtonStyle,
         isExpanded && undoExpandStyle,
@@ -583,6 +583,44 @@ const UndoButton = ({
         horizontalFlip
         icon={canUndoAction ? Forward : Undo}
         onClick={toggle}
+      />
+    </MenuButton>
+  );
+};
+
+export const MessageButton = ({
+  currentUser,
+  currentViewer,
+  hasUndo,
+  highlight,
+  onClick,
+  playerDetails,
+}: {
+  currentUser: UserLikeWithID;
+  currentViewer: PlayerID | null;
+  hasUndo: boolean;
+  highlight: boolean;
+  onClick: () => void;
+  playerDetails: PlayerDetails;
+}) => {
+  return (
+    <MenuButton
+      className={cx(buttonStyle, hasUndo ? extraButtonStyle : zoomButtonStyle)}
+      onClick={onClick}
+    >
+      <Icon
+        button
+        className={cx(iconStyle, messageIconStyle, highlight && PulseStyle)}
+        icon={CreateMessage}
+        style={
+          highlight
+            ? {
+                color: getColor(
+                  getMessagePlayer(currentUser, currentViewer, playerDetails),
+                ),
+              }
+            : undefined
+        }
       />
     </MenuButton>
   );
@@ -680,7 +718,7 @@ export default function GameActions({
         {setZoom && (
           <ZoomButton
             className={cx(
-              actionButtonStyle,
+              buttonStyle,
               undo ? zoomButtonStyle : undoButtonStyle,
             )}
             fade={fade}
@@ -778,7 +816,7 @@ const containerStyle = css`
   }
 `;
 
-const actionButtonStyle = css`
+const buttonStyle = css`
   ${vars.set('bottom-offset', 0)}
 
   pointer-events: auto;
@@ -826,6 +864,16 @@ const zoomButtonStyle = css`
   ${vars.set('bottom-offset', 7.5)}
 `;
 
+const extraButtonStyle = css`
+  ${vars.set('bottom-offset', 7.5)}
+  right: ${(size - 6) * 1.5}px;
+
+  ${Breakpoints.height.xxs} {
+    right: 0;
+    ${vars.set('bottom-offset', 9)}
+  }
+`;
+
 const expandStyle = css`
   color: ${applyVar('text-color')};
   transition:
@@ -853,6 +901,11 @@ const iconStyle = css`
   position: absolute;
   right: 0;
   top: 0;
+`;
+
+const messageIconStyle = css`
+  height: ${size - 8}px;
+  top: 4px;
 `;
 
 const closeIconStyle = css`

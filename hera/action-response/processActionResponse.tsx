@@ -327,7 +327,7 @@ async function processActionResponse(
         animations: state.animations.set(new AnimationKey(), {
           map,
           onComplete: (state) => {
-            resolve({ ...state, namedPositions: null, radius: null });
+            resolve({ ...state, highlightedPositions: null, radius: null });
             return null;
           },
           player,
@@ -339,7 +339,7 @@ async function processActionResponse(
           variant,
           viewer: state.currentViewer || undefined,
         }),
-        namedPositions: position ? [position] : null,
+        highlightedPositions: position ? [position] : null,
         radius: position
           ? {
               fields: new Map([[position, RadiusItem(position)]]),

@@ -48,7 +48,7 @@ const vars = (Tick.vars = new CSSVariables<
 >('i'));
 
 const unitAnimation = keyframes`
-  0% {
+  0%, 100% {
     ${vars.set('unit', 0)}
   }
   12.5% {
@@ -69,13 +69,13 @@ const unitAnimation = keyframes`
   75% {
     ${vars.set('unit', 6)}
   }
-  87.5%, 100% {
+  87.5% {
     ${vars.set('unit', 7)}
   }
 `;
 
 const attackStanceAnimation = keyframes`
-  0% {
+  0%, 100% {
     ${vars.set('unit-attack-stance', 4)}
   }
   25% {
@@ -84,13 +84,13 @@ const attackStanceAnimation = keyframes`
   50% {
     ${vars.set('unit-attack-stance', 6)}
   }
-  75%, 100% {
+  75% {
     ${vars.set('unit-attack-stance', 7)}
   }
 `;
 
 const buildingAnimation = keyframes`
-  0% {
+  0%, 100% {
     ${vars.set('building', 0)}
   }
   25% {
@@ -99,13 +99,13 @@ const buildingAnimation = keyframes`
   50% {
     ${vars.set('building', 2)}
   }
-  75%, 100% {
+  75% {
     ${vars.set('building', 3)}
   }
 `;
 
 const tileDecoratorAnimation = keyframes`
-  0% {
+  0%, 100% {
     ${vars.set('tile-decorator', 0)}
   }
   25% {
@@ -114,7 +114,7 @@ const tileDecoratorAnimation = keyframes`
   50% {
     ${vars.set('tile-decorator', 4)}
   }
-  75%, 100% {
+  75% {
     ${vars.set('tile-decorator', 6)}
   }
 `;

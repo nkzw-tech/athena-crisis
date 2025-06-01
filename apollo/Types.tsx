@@ -3,6 +3,7 @@ import { PlainEntitiesList, PlainMap } from '@deities/athena/map/PlainMap.tsx';
 import Unit, { PlainUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { EncodedMapMessage } from '@deities/athena/message/Message.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import { Effects } from './Effects.tsx';
@@ -17,6 +18,24 @@ export type GameStateWithEffects = ReadonlyArray<
   readonly [...GameStateEntry, Effects]
 >;
 
+type EncodedClientMapMessage = EncodedMapMessage &
+  Readonly<{
+    deleted?: boolean;
+    id: string;
+    isValuable: boolean;
+    user: {
+      character: Readonly<{
+        color: number;
+        unitId: number;
+        variant: number;
+      }>;
+      displayName: string;
+      id: string;
+      username: string;
+    };
+    viewerLiked: boolean;
+  }>;
+
 export type EncodedGameActionResponseWithError =
   | EncodedGameActionResponse
   // Error
@@ -25,7 +44,9 @@ export type EncodedGameActionResponseWithError =
   | { n: 'p' }
   // Refresh
   | { n: 'r' }
-  | { n: 'q' };
+  | { n: 'q' }
+  // Message
+  | { message: EncodedClientMapMessage; n: 'm' };
 
 export type EncodedGameActionResponseItem = [
   EncodedActionResponse,
@@ -52,6 +73,7 @@ export type GameActionResponses = ReadonlyArray<{
 }>;
 
 export type GameActionResponse = {
+  message?: EncodedClientMapMessage | null;
   others?: GameActionResponses | undefined;
   self: {
     actionResponse: ActionResponse;

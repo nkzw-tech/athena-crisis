@@ -25,6 +25,7 @@ export default function PlayerIcon({
   id,
   inline,
   onClick,
+  scale = 1,
   selected,
 }: {
   button?: true;
@@ -33,6 +34,7 @@ export default function PlayerIcon({
   id: DynamicPlayerID;
   inline?: true;
   onClick?: () => void;
+  scale?: number;
   selected?: boolean;
 }) {
   return (
@@ -49,6 +51,7 @@ export default function PlayerIcon({
       style={{
         [cssVar('background-color')]: getColor(id),
         cursor: cursorStyle,
+        zoom: scale,
       }}
     >
       {playerIconText(id)}

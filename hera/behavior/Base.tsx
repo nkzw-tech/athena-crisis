@@ -23,37 +23,37 @@ import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
 export default class Base extends AbstractSelectBehavior {
   public readonly type = 'base' as const;
-  private infoTimer: number | null = null;
+  private timer: number | null = null;
 
   deactivate(): StateLike | null {
     this.clearTimers();
     return {
-      namedPositions: null,
+      highlightedPositions: null,
     };
   }
 
   enter(vector: Vector, state: State, actions: Actions): StateLike | null {
     this.clearTimers();
 
-    const { map, namedPositions, radius } = state;
-    if (map.units.get(vector)) {
+    const { highlightedPositions, map, messages, radius } = state;
+    if (map.units.has(vector) || messages.has(vector)) {
       this.showInfo(vector, state, actions);
     }
 
     let newState: StateLike | null =
       radius?.type === RadiusType.Attack ? { radius: null } : null;
 
-    if (namedPositions) {
-      newState = { ...newState, namedPositions: null };
+    if (highlightedPositions) {
+      newState = { ...newState, highlightedPositions: null };
     }
 
     return newState;
   }
 
   clearTimers() {
-    if (this.infoTimer) {
-      clearTimeout(this.infoTimer);
-      this.infoTimer = null;
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
     }
   }
 
@@ -62,20 +62,20 @@ export default class Base extends AbstractSelectBehavior {
     state: State,
     { scheduleTimer, update }: Actions,
   ) {
-    const { map, selectedPosition, vision } = state;
+    const { map, messages, selectedPosition, vision } = state;
     const unit = map.units.get(vector);
+    const message = messages.get(vector);
     const info = unit?.info;
     if (
-      unit &&
-      unit.player !== 0 &&
+      (message || (unit && unit.player !== 0)) &&
       !selectedPosition &&
       vision.isVisible(map, vector)
     ) {
-      const showAttackRadius = info?.hasAttack();
-      this.infoTimer = await scheduleTimer(
+      const showAttackRadius = unit && info?.hasAttack();
+      this.timer = await scheduleTimer(
         () =>
           update((state) => ({
-            namedPositions: [vector],
+            highlightedPositions: [vector],
             ...(showAttackRadius && !state.radius
               ? {
                   radius: {
@@ -88,7 +88,7 @@ export default class Base extends AbstractSelectBehavior {
                 }
               : null),
           })),
-        AnimationConfig.AnimationDuration * 2.5,
+        AnimationConfig.AnimationDuration * 2,
       );
     }
   }

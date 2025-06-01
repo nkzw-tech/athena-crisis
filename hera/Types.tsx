@@ -20,6 +20,7 @@ import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ID, ModifierField } from '@deities/athena/MapData.tsx';
+import { MapMessage } from '@deities/athena/message/Message.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
@@ -27,6 +28,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
 import { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
+import { GameUser, UserLikeWithID } from './hooks/useUserMap.tsx';
 import { Animations } from './MapAnimations.tsx';
 import { RadiusInfo } from './Radius.tsx';
 import { TileStyle } from './Tiles.tsx';
@@ -50,8 +52,24 @@ export type PlayerDetail = Readonly<{
   displayName: string;
   equippedUnitCustomizations: ReadonlyMap<ID, SpriteVariant>;
   factionName: string;
+  id: string;
 }>;
 export type PlayerDetails = ReadonlyMap<PlayerID, PlayerDetail>;
+
+export type ClientMapMessage = MapMessage<Vector> &
+  Readonly<{
+    id: string;
+    isValuable: boolean;
+    user: UserLikeWithID;
+    viewerLiked: boolean;
+  }>;
+
+export type PartialClientMapMessage = Pick<
+  ClientMapMessage,
+  'id' | 'isValuable' | 'viewerLiked'
+>;
+
+export type MessageMap = ReadonlyMap<Vector, ClientMapMessage>;
 
 export type Props = Readonly<{
   animatedChildren?: (state: State) => ReactNode;
@@ -62,8 +80,11 @@ export type Props = Readonly<{
   children?: (state: State, actions: Actions) => ReactNode;
   className?: string;
   confirmActionStyle: 'always' | 'touch' | 'never';
+  createMessage?: (message: MapMessage<Vector>) => Promise<string>;
+  currentUser?: GameUser;
   currentUserId: string;
   dangerouslyApplyExternalState?: boolean;
+  deleteMessage?: (id: string) => Promise<void>;
   disablePerformanceMetrics?: true;
   editor?: EditorState;
   effects?: Effects;
@@ -72,12 +93,14 @@ export type Props = Readonly<{
   fogStyle: 'soft' | 'hard';
   gameId?: string;
   gameInfoPanels?: GameInfoPanels;
+  hasMessages?: boolean;
   inset?: number;
   lastActionResponse?: ActionResponse | null;
   lastActionTime?: number;
   map: MapData;
   mapName?: string;
   margin?: 'minimal';
+  messages?: MessageMap;
   mutateAction?: MutateActionResponseFn;
   onAction?: (action: Action) => Promise<GameActionResponse>;
   onError?: (error: Error) => void;
@@ -97,6 +120,7 @@ export type Props = Readonly<{
   tilted: boolean;
   timeout?: number | null;
   timer?: GameTimerValue;
+  toggleLikeMessage?: (id: string) => Promise<PartialClientMapMessage>;
   unitSize: number;
 }>;
 
@@ -122,6 +146,7 @@ export type State = Readonly<{
   attackable: ReadonlyMap<Vector, RadiusItem> | null;
   behavior: MapBehavior | null;
   confirmAction?: ConfirmProps | null;
+  currentUser: GameUser | null;
   currentUserId: string;
   currentViewer: PlayerID | null;
   effectState: {
@@ -129,13 +154,14 @@ export type State = Readonly<{
     radius: ReadonlyArray<RadiusInfo>;
   } | null;
   gameInfoState: GameInfoState | null;
+  highlightedPositions: ReadonlyArray<Vector> | null;
   initialBehaviorClass: MapBehaviorConstructor | undefined | null;
   inlineUI: boolean;
   lastActionResponse: ActionResponse | null;
   lastActionTime?: number;
   map: MapData;
   mapName?: string;
-  namedPositions: ReadonlyArray<Vector> | null;
+  messages: MessageMap;
   navigationDirection: NavigationDirection | null;
   objectiveRadius: ReadonlyArray<RadiusInfo> | null;
   paused: boolean;
@@ -147,6 +173,7 @@ export type State = Readonly<{
   replayState: ReplayState;
   selectedAttackable: Vector | null;
   selectedBuilding: Building | null;
+  selectedMessagePosition: Vector | null;
   selectedPosition: Vector | null;
   selectedUnit: Unit | null;
   showCursor: boolean;
@@ -173,6 +200,7 @@ export type LayerTypes =
   | 'building'
   | 'radius'
   | 'decorator'
+  | 'message'
   | 'unit'
   | 'animation'
   | 'top';
@@ -283,7 +311,7 @@ export type MapBehavior = Readonly<{
   ) => StateLike | null;
   readonly clearTimers?: () => void;
   readonly component?: ComponentType<StateWithActions>;
-  readonly deactivate?: () => StateLike | null;
+  readonly deactivate?: (actions: Actions | null) => StateLike | null;
   readonly enter?: (
     vector: Vector,
     state: State,
@@ -320,6 +348,7 @@ export type MapBehavior = Readonly<{
     | 'heal'
     | 'info'
     | 'menu'
+    | 'message'
     | 'move'
     | 'null'
     | 'radar'

@@ -1,10 +1,10 @@
+import safeParse from '@deities/apollo/lib/safeParse.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { DragEvent, ReactNode, useCallback, useRef, useState } from 'react';
-import safeParse from '../lib/safeParse.tsx';
 
 const prevent = (event: DragEvent<HTMLDivElement>) => {
   event.preventDefault();

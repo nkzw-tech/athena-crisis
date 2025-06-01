@@ -200,6 +200,10 @@ export class TileInfo {
     return this.internalDescription;
   }
 
+  getOriginalName(): string {
+    return this.internalName;
+  }
+
   getMovementCost({ movementType }: { movementType: MovementType }): number {
     return this.configuration.movement.get(movementType) || -1;
   }

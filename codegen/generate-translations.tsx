@@ -17,6 +17,12 @@ import {
   mapUnits,
   mapWeapons,
 } from '@deities/athena/info/Unit.tsx';
+import {
+  isEntityMessageTag,
+  MessageConjunctions,
+  MessageTemplate,
+  MessageVocabulary,
+} from '@deities/athena/message/Message.tsx';
 import ActivatePowerMessages from '@deities/hermes/messages/ActivatePowerMessages.tsx';
 import { CampaignModule, MapModule } from '@deities/hermes/Types.tsx';
 import unrollCampaign from '@deities/hermes/unrollCampaign.tsx';
@@ -46,8 +52,9 @@ const publishedCampaigns = new Map([
 ]);
 
 const COMMON_OUTPUT_FILE = join(root, 'i18n/Entities.ts');
-const FBT_ENTITY_MAP_OUTPUT_FILE = join(root, 'hera/i18n/EntityMap.tsx');
-const FBT_CAMPAIGN_MAP_OUTPUT_FILE = join(root, 'hera/i18n/CampaignMap.tsx');
+const ENTITY_MAP_OUTPUT_FILE = join(root, 'hera/i18n/EntityMap.tsx');
+const CAMPAIGN_MAP_OUTPUT_FILE = join(root, 'hera/i18n/CampaignMap.tsx');
+const MESSAGE_MAP_OUTPUT_FILE = join(root, 'hera/i18n/MessageMap.tsx');
 
 console.log(chalk.bold('› Generating translations...'));
 
@@ -352,12 +359,12 @@ for (const [typeName, descriptions] of descriptionMap) {
 }
 
 const campaign = [];
-const messages = new Set();
+const seenMessages = new Set();
 for (const { description, key, message, unitId } of characterMessages) {
-  if (messages.has(key)) {
+  if (seenMessages.has(key)) {
     continue;
   }
-  messages.add(key);
+  seenMessages.add(key);
   campaign.push(
     `"${key}": () => String(fbt(\`${replaceSubstitutions(
       message,
@@ -366,7 +373,37 @@ for (const { description, key, message, unitId } of characterMessages) {
   );
 }
 
+const entityTags = [];
+for (const [tag, vocabulary] of MessageVocabulary) {
+  if (!isEntityMessageTag(tag)) {
+    entityTags.push(
+      `[${tag}, new Map([
+        ${[...vocabulary].map(([id, name]) => `[${id}, () => String(fbt(\`${name}\`, \`Message system vocabulary.\`))]`)}
+      ])],`,
+    );
+  }
+}
+
+const conjunctions = [];
+for (const [id, conjunction] of MessageConjunctions) {
+  conjunctions.push(
+    `[${id}, () => String(fbt(\`${conjunction}\`, \`Message system conjunction.\`))]`,
+  );
+}
+
+const templates = [];
+const punctuations = [];
+for (const [id, [message, , punctuation]] of MessageTemplate) {
+  templates.push(
+    `[${id}, () => String(fbt(\`${message}\`, \`Message system template.\`))]`,
+  );
+  punctuations.push(
+    `[${id}, () => String(fbt(\`${punctuation}\`, ${JSON.stringify(`Message system punctuation for '${message}'.`)}))]`,
+  );
+}
+
 const plugins = ['@ianvs/prettier-plugin-sort-imports'];
+
 writeFileSync(
   COMMON_OUTPUT_FILE,
   await format(sign(`export default {${common.join(',\n')}};`), {
@@ -377,7 +414,7 @@ writeFileSync(
 );
 
 writeFileSync(
-  FBT_ENTITY_MAP_OUTPUT_FILE,
+  ENTITY_MAP_OUTPUT_FILE,
   await format(
     sign(
       [
@@ -387,7 +424,7 @@ writeFileSync(
       ].join('\n'),
     ),
     {
-      filepath: FBT_ENTITY_MAP_OUTPUT_FILE,
+      filepath: ENTITY_MAP_OUTPUT_FILE,
       plugins,
       singleQuote: true,
     },
@@ -395,7 +432,7 @@ writeFileSync(
 );
 
 writeFileSync(
-  FBT_CAMPAIGN_MAP_OUTPUT_FILE,
+  CAMPAIGN_MAP_OUTPUT_FILE,
   await format(
     sign(
       [
@@ -408,7 +445,35 @@ writeFileSync(
       ].join('\n'),
     ),
     {
-      filepath: FBT_CAMPAIGN_MAP_OUTPUT_FILE,
+      filepath: CAMPAIGN_MAP_OUTPUT_FILE,
+      plugins,
+      singleQuote: true,
+    },
+  ),
+);
+
+writeFileSync(
+  MESSAGE_MAP_OUTPUT_FILE,
+  await format(
+    sign(
+      [
+        `import { fbt } from 'fbtee';`,
+        `export const TranslatedMessageVocabulary = new Map([`,
+        entityTags.join('\n'),
+        `]);`,
+        `export const TranslatedMessageConjunctions = new Map([`,
+        conjunctions.join(',\n'),
+        `]);`,
+        `export const TranslatedMessageTemplate = new Map([`,
+        templates.join(',\n'),
+        `]);`,
+        `export const TranslatedMessagePunctuation = new Map([`,
+        punctuations.join(',\n'),
+        `]);`,
+      ].join('\n'),
+    ),
+    {
+      filepath: MESSAGE_MAP_OUTPUT_FILE,
       plugins,
       singleQuote: true,
     },

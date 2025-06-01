@@ -191,14 +191,14 @@ const baseStyle = css`
 
   &:after {
     border: solid transparent;
-    content: ' ';
+    border-width: 6px;
+    content: '';
     height: 0;
+    margin-top: -6px;
     pointer-events: none;
     position: absolute;
-    width: 0;
-    border-width: 6px;
-    margin-top: -6px;
     top: 50%;
+    width: 0;
   }
 `;
 

@@ -52,13 +52,14 @@ export default abstract class AbstractSelectBehavior {
     unit: Unit | null,
     building: Building | null,
   ): StateLike | null {
+    const { highlightedPositions, messages } = state;
     const unitState = unit && this.onSelect(vector, state, unit);
     const buildingState = building && this.onSelect(vector, state, building);
 
     if (unitState && buildingState) {
       // Force a Flyout.
       return {
-        namedPositions: null,
+        highlightedPositions: null,
         position: vector,
         selectedBuilding: building,
         selectedPosition: vector,
@@ -69,7 +70,11 @@ export default abstract class AbstractSelectBehavior {
     return (
       unitState ||
       buildingState || {
-        namedPositions: null,
+        highlightedPositions:
+          (messages.has(vector) &&
+            highlightedPositions?.includes(vector) &&
+            highlightedPositions) ||
+          null,
         selectedBuilding: null,
         selectedUnit: null,
       }

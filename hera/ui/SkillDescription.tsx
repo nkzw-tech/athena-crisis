@@ -1,7 +1,6 @@
 import {
   Bar,
   Barracks,
-  BuildingInfo,
   HQ,
   PowerStation,
   ResearchLab,
@@ -37,7 +36,7 @@ import {
   VampireSkillHeal,
   VampireSoldierMovementTypes,
 } from '@deities/athena/info/Skill.tsx';
-import { Plain, TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
+import { TileType, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
   AcidBomber,
   Alien,
@@ -60,15 +59,11 @@ import {
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
-import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
-  AnimationConfig,
   CounterAttack,
   HealAmount,
   RaisedCounterAttack,
-  TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector, { isVector } from '@deities/athena/map/Vector.tsx';
 import { ID } from '@deities/athena/MapData.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
@@ -85,37 +80,20 @@ import groupBy from '@nkzw/core/groupBy.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import { List, list } from 'fbtee';
 import { Fragment, memo } from 'react';
-import BuildingTile from '../Building.tsx';
 import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
-import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
-import UnitTile from '../Unit.tsx';
+import {
+  BuildingName,
+  MovementTypeName,
+  MovementTypeNames,
+  UnitName as RawUnitName,
+  TileTypeName,
+} from './InlineEntity.tsx';
 
 const canBuildBar = (unitCosts: ReadonlyMap<ID, number>) =>
   [...unitCosts.keys()].some((unit) =>
     SpecialUnits.has(getUnitInfoOrThrow(unit)),
   );
-
-const RawUnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
-  <>
-    <span className={inlineStyle}>
-      <UnitTile
-        animationConfig={AnimationConfig}
-        biome={Biome.Grassland}
-        firstPlayerID={1}
-        size={TileSize}
-        tile={Plain}
-        unit={unit.create(1)}
-      />
-    </span>
-    <span
-      className={tagStyle}
-      style={{ backgroundColor: getColor(color, 0.2), color: getColor(color) }}
-    >
-      {unit.name}
-    </span>
-  </>
-);
 
 const UnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
   <fbt desc="Unit names in a list of units">
@@ -396,32 +374,6 @@ const TileTypeStatusEffect = ({
   ) : null;
 };
 
-const BuildingName = ({
-  building,
-  color,
-}: {
-  building: BuildingInfo;
-  color: BaseColor;
-}) => (
-  <>
-    <span className={cx(inlineStyle, buildingStyle)}>
-      <BuildingTile
-        animationConfig={AnimationConfig}
-        biome={Biome.Grassland}
-        building={building.create(1)}
-        position={new SpriteVector(1, 1.25)}
-        size={TileSize}
-      />
-    </span>
-    <span
-      className={tagStyle}
-      style={{ backgroundColor: getColor(color, 0.2), color: getColor(color) }}
-    >
-      {building.name}
-    </span>
-  </>
-);
-
 const UnitCost = ({
   color,
   cost,
@@ -514,36 +466,6 @@ const UnitBlocks = ({
       name="list"
     />.
   </fbt>
-);
-
-const MovementTypeName = ({ movementType }: { movementType: MovementType }) => (
-  <span
-    className={tagStyle}
-    style={{ backgroundColor: getColor('team', 0.2), color: getColor('team') }}
-  >
-    {movementType.name}
-  </span>
-);
-
-const MovementTypeNames = ({
-  movementTypes,
-}: {
-  movementTypes: ReadonlyArray<MovementType>;
-}) => (
-  <List
-    items={movementTypes.map((movementType, index) => (
-      <MovementTypeName key={index} movementType={movementType} />
-    ))}
-  />
-);
-
-const TileTypeName = ({ tileType }: { tileType: TileType }) => (
-  <span
-    className={tagStyle}
-    style={{ backgroundColor: getColor('team', 0.2), color: getColor('team') }}
-  >
-    {getTranslatedTileTypeName(tileType)}
-  </span>
 );
 
 const UnitMovement = ({
@@ -1299,27 +1221,6 @@ export const SkillUnlockDescription = ({
     </div>
   ) : null;
 };
-
-const inlineStyle = css`
-  display: inline-block;
-  image-rendering: pixelated;
-  padding-right: 8px;
-  vertical-align: top;
-`;
-
-const buildingStyle = css`
-  height: ${TileSize}px;
-`;
-
-const tagStyle = css`
-  ${clipBorder(2)}
-
-  background-color: ${applyVar('background-color-active')};
-  color: ${applyVar('text-color')};
-  display: inline-block;
-  padding: 0 4px 1px;
-  margin: 1px 0;
-`;
 
 const typeStyle = css`
   text-transform: uppercase;
