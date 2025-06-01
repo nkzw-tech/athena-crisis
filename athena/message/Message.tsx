@@ -178,6 +178,7 @@ export const MessageVocabulary = new Map<
       [10, 'trap'],
       [11, 'flank'],
       [12, 'airstrike'],
+      [13, 'poison'],
     ]),
   ],
   [
@@ -220,6 +221,7 @@ export const MessageVocabulary = new Map<
       [11, 'regret'],
       [12, 'gg'],
       [13, 'boom'],
+      [14, 'secret'],
     ]),
   ],
   [
@@ -255,14 +257,14 @@ export const MessageVocabulary = new Map<
     MessageTag.Teamplay,
     new Map([
       [1, 'support'],
-      [2, 'assist'],
+      [2, 'save'],
       [3, 'backup'],
       [4, 'betrayal'],
       [5, 'cover'],
       [6, 'distraction'],
       [7, 'miscommunication'],
       [8, 'rally'],
-      [9, 'save'],
+      [9, 'revenge'],
     ]),
   ],
 ]);
