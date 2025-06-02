@@ -80,7 +80,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.0"
   },
   "engines": {
     "node": ">=23.0.0",
