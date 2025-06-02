@@ -4,6 +4,7 @@ import {
 } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
+import { isSafari } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -62,8 +63,17 @@ export default function MapMessageContainer({
         ?.getBoundingClientRect();
 
       if (position) {
-        ref.current.style.left = `${window.scrollX + position.width + position.x - 2}px`;
-        ref.current.style.top = `${window.scrollY + position.y + position.height - (scale / 4) * TileSize}px`;
+        const currentScale = isSafari ? scale : 1;
+        const inverseScale = isSafari ? 1 : scale;
+        const left = window.scrollX + position.width + position.x - 2;
+        const top =
+          window.scrollY +
+          position.y +
+          position.height -
+          (inverseScale / 4) * TileSize;
+
+        ref.current.style.left = `${left * currentScale}px`;
+        ref.current.style.top = `${top * currentScale}px`;
         ref.current.style.opacity = '1';
       }
     }

@@ -37,12 +37,14 @@ import MapMessageContainer, {
 import MapMessageTemplate from './MapMessageTemplate.tsx';
 import MessageTagValue from './MessageTagValue.tsx';
 
-const getMessageContent = <T extends PlainMapMessage | MapMessage<Vector>>(
+export function getMessageContent<
+  T extends PlainMapMessage | MapMessage<Vector | [x: number, y: number]>,
+>(
   message: T,
-  playerDetails: PlayerDetails,
+  playerDetails: PlayerDetails | null,
   biome: Biome,
   isNext: boolean = false,
-): ReactNode | null => {
+): ReactNode | null {
   const template = TranslatedMessageTemplate.get(message.template)?.();
   const punctuation =
     TranslatedMessagePunctuation.get(message.template)?.() || '.';
@@ -95,7 +97,7 @@ const getMessageContent = <T extends PlainMapMessage | MapMessage<Vector>>(
     </>
   );
   return isNext ? content : <div className={messageStyle}>{content}</div>;
-};
+}
 
 export default function MapMessageComponent({
   animationConfig,
@@ -223,6 +225,7 @@ export default function MapMessageComponent({
 
 const messageStyle = css`
   line-height: 30px;
+  user-select: text;
 `;
 
 const rightPaddingStyle = css`

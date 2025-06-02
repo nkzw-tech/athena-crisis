@@ -27,6 +27,7 @@ export default class Base extends AbstractSelectBehavior {
 
   deactivate(): StateLike | null {
     this.clearTimers();
+
     return {
       highlightedPositions: null,
     };

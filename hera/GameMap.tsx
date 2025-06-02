@@ -765,6 +765,12 @@ export default class GameMap extends Component<Props, State> {
         if (newState) {
           return newState;
         }
+      } else if (actualState.messages.has(vector)) {
+        return {
+          highlightedPositions: [vector],
+        };
+      } else if (actualState.highlightedPositions?.length) {
+        return { highlightedPositions: null };
       }
       return null;
     });
@@ -1925,7 +1931,7 @@ export default class GameMap extends Component<Props, State> {
             margin: tilted
               ? margin === 'minimal'
                 ? `${tileSize * 2}px auto ${tileSize * 4}px`
-                : `${tileSize * 8}px ${tileSize * 7 * Math.floor(map.size.height / 4)}px ${
+                : `${tileSize * 12}px ${tileSize * 7 * Math.floor(map.size.height / 4)}px ${
                     isFloating
                       ? tileSize * 5 * Math.floor(map.size.height / 4)
                       : 0

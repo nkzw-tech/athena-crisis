@@ -16,7 +16,6 @@ export function resetBehavior(
     additionalRadius: null,
     attackable: null,
     confirmAction: null,
-    highlightedPositions: null,
     navigationDirection: null,
     radius: null,
     selectedAttackable: null,
