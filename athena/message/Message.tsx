@@ -203,6 +203,7 @@ export const MessageVocabulary = new Map<
       [17, 'rush'],
       [18, 'escort'],
       [19, 'fortify'],
+      [20, 'lightning'],
     ]),
   ],
   [
