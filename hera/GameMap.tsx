@@ -796,7 +796,7 @@ export default class GameMap extends Component<Props, State> {
 
     this._update((actualState) => {
       const { behavior, replayState } = actualState;
-      if (!replayState.isReplaying) {
+      if (!replayState.isReplaying || behavior?.type === 'message') {
         const newState = behavior?.select
           ? behavior.select(
               vector,
