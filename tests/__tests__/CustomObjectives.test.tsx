@@ -1791,6 +1791,46 @@ test('escort units (transport)', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test('escort units by amount (transport)', async () => {
+  const v1 = vec(1, 1);
+  const v2 = vec(1, 2);
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          amount: 3,
+          hidden: false,
+          optional: false,
+          players: [1],
+          type: Criteria.EscortAmount,
+          vectors: new Set([v2]),
+        },
+      ]),
+    }),
+    units: map.units.set(
+      v1,
+      Jeep.create(player1)
+        .load(Pioneer.create(player1).transport())
+        .load(Flamethrower.create(player1).transport()),
+    ),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [, gameActionResponseA] = await executeGameActions(mapA, [
+    MoveAction(v1, v2),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseA),
+  ).toMatchInlineSnapshot(
+    `
+    "Move (1,1 → 1,2) { fuel: 59, completed: false, path: [1,2] }
+    GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '1,2' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `,
+  );
+});
+
 test('escort units by drop (transport)', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

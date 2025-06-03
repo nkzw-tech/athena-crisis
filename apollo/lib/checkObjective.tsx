@@ -15,6 +15,7 @@ import {
   onlyHasDefaultObjective,
 } from '@deities/athena/Objectives.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
+import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from '../ActionResponse.tsx';
 import isDestructiveActionResponse from './isDestructiveActionResponse.tsx';
 import isMoveActionResponse from './isMoveActionResponse.tsx';
@@ -95,6 +96,9 @@ export function pickWinningPlayer(
   return activeMap.currentPlayer;
 }
 
+const count = (units: ImmutableMap<Vector, Unit>) =>
+  units.reduce((sum, unit) => sum + unit.count(), 0);
+
 const filterByLabels = (label: PlayerIDSet) => (entity: Entity) =>
   entity.label != null && label.has(entity.label);
 
@@ -146,7 +150,8 @@ export function escortedByPlayer(
       return unit && map.matchesPlayer(unit, player) ? unit : null;
     })
     .filter(isPresent)
-    .filter(filterUnitsByLabels(label)).length;
+    .filter(filterUnitsByLabels(label))
+    .reduce((sum, unit) => sum + unit.count(), 0);
 }
 
 function checkObjective(
@@ -202,30 +207,42 @@ function checkObjective(
         (objective.type === Criteria.DefeatLabel &&
           !ignoreIfOptional &&
           !matchesTargetPlayerList &&
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterSelf(map, targetPlayer)).size === 0 &&
-          previousMap.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterSelf(previousMap, targetPlayer)).size > 0) ||
+          count(
+            map.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterSelf(map, targetPlayer)),
+          ) === 0 &&
+          count(
+            previousMap.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterSelf(previousMap, targetPlayer)),
+          ) > 0) ||
         (objective.type === Criteria.DefeatOneLabel &&
           !ignoreIfOptional &&
           !matchesTargetPlayerList &&
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterSelf(map, targetPlayer)).size <
-            previousMap.units
+          count(
+            map.units
               .filter(filterUnitsByLabels(objective.label))
-              .filter(filterSelf(map, targetPlayer)).size) ||
+              .filter(filterSelf(map, targetPlayer)),
+          ) <
+            count(
+              previousMap.units
+                .filter(filterUnitsByLabels(objective.label))
+                .filter(filterSelf(map, targetPlayer)),
+            )) ||
         (objective.type === Criteria.EscortLabel &&
           !ignoreIfOptional &&
           matchesTargetPlayerList &&
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterSelf(map, targetPlayer)).size <
-            previousMap.units
+          count(
+            map.units
               .filter(filterUnitsByLabels(objective.label))
-              .filter(filterSelf(map, targetPlayer)).size)
+              .filter(filterSelf(map, targetPlayer)),
+          ) <
+            count(
+              previousMap.units
+                .filter(filterUnitsByLabels(objective.label))
+                .filter(filterSelf(map, targetPlayer)),
+            ))
       ) {
         return true;
       }
@@ -234,20 +251,28 @@ function checkObjective(
     return (
       (objective.type === Criteria.DefeatLabel &&
         matchesPlayer &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size === 0 &&
-        previousMap.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(previousMap, player)).size > 0) ||
-      (objective.type === Criteria.DefeatOneLabel &&
-        matchesPlayer &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size <
+        count(
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterEnemies(map, player)),
+        ) === 0 &&
+        count(
           previousMap.units
             .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(previousMap, player)).size) ||
+            .filter(filterEnemies(previousMap, player)),
+        ) > 0) ||
+      (objective.type === Criteria.DefeatOneLabel &&
+        matchesPlayer &&
+        count(
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterEnemies(map, player)),
+        ) <
+          count(
+            previousMap.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterEnemies(previousMap, player)),
+          )) ||
       (objective.type === Criteria.DefeatAmount &&
         matchesPlayer &&
         (objective.players?.length ? objective.players : map.active).some(
@@ -273,15 +298,20 @@ function checkObjective(
           .filter(filterEnemies(previousMap, player)).size > 0) ||
       (objective.type === Criteria.RescueLabel &&
         !ignoreIfOptional &&
-        map.units.filter(filterNeutral).filter(filterByLabels(objective.label))
-          .size <
-          previousMap.units
+        count(
+          map.units
             .filter(filterNeutral)
-            .filter(filterByLabels(objective.label)).size) ||
+            .filter(filterByLabels(objective.label)),
+        ) <
+          count(
+            previousMap.units
+              .filter(filterNeutral)
+              .filter(filterByLabels(objective.label)),
+          )) ||
       (actionResponse.type === 'AttackUnit' &&
         objective.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
-        map.units.filter(filterNeutral).size +
+        count(map.units.filter(filterNeutral)) +
           rescuedUnitsByPlayer(map, player) <
           objective.amount) ||
       (actionResponse.type === 'AttackBuilding' &&
@@ -293,23 +323,31 @@ function checkObjective(
         objective.type === Criteria.EscortLabel &&
         !matchesPlayer &&
         !ignoreIfOptional &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, targetPlayer)).size <
-          previousMap.units
+        count(
+          map.units
             .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, targetPlayer)).size) ||
+            .filter(filterEnemies(map, targetPlayer)),
+        ) <
+          count(
+            previousMap.units
+              .filter(filterUnitsByLabels(objective.label))
+              .filter(filterEnemies(map, targetPlayer)),
+          )) ||
       (!isEndTurn &&
         objective.type === Criteria.EscortAmount &&
         !!objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
-        previousMap.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size > 0 &&
-        map.units
-          .filter(filterUnitsByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size < objective.amount) ||
+        count(
+          previousMap.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterEnemies(map, player)),
+        ) > 0 &&
+        count(
+          map.units
+            .filter(filterUnitsByLabels(objective.label))
+            .filter(filterEnemies(map, player)),
+        ) < objective.amount) ||
       (isSurvivalAndEndTurn &&
         objective.rounds <= actionResponse.round &&
         matchesPlayerList(objective.players, targetPlayer))
@@ -342,8 +380,8 @@ function checkObjective(
     if (
       (objective.type === Criteria.RescueLabel &&
         matchesPlayer &&
-        !neutralUnits.filter(filterByLabels(objective.label)).size &&
-        previousNeutralUnits.filter(filterByLabels(objective.label)).size >
+        count(neutralUnits.filter(filterByLabels(objective.label))) === 0 &&
+        count(previousNeutralUnits.filter(filterByLabels(objective.label))) >
           0) ||
       (objective.type === Criteria.RescueAmount &&
         matchesPlayer &&
@@ -356,11 +394,11 @@ function checkObjective(
       !ignoreIfOptional &&
       ((objective.type === Criteria.RescueLabel &&
         !matchesPlayer &&
-        previousNeutralUnits.filter(filterByLabels(objective.label)).size >
-          neutralUnits.filter(filterByLabels(objective.label)).size) ||
+        count(previousNeutralUnits.filter(filterByLabels(objective.label))) >
+          count(neutralUnits.filter(filterByLabels(objective.label)))) ||
         (objective.type === Criteria.RescueAmount &&
           !matchesPlayer &&
-          previousNeutralUnits.size > neutralUnits.size))
+          count(previousNeutralUnits) > count(neutralUnits)))
     ) {
       const opponentHasOtherWinnableObjectives = map.config.objectives.some(
         (currentObjective) =>
@@ -384,8 +422,8 @@ function checkObjective(
         .filter(filterUnitsByLabels(objective.label))
         .filter((unit) => map.matchesPlayer(unit, player));
       return (
-        units.size > 0 &&
-        units.filter((_, vector) => !objective.vectors.has(vector)).size === 0
+        count(units) > 0 &&
+        count(units.filter((_, vector) => !objective.vectors.has(vector))) === 0
       );
     }
 
