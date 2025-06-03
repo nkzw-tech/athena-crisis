@@ -193,5 +193,6 @@ const bottomStyle = css`
 `;
 
 const nameStyle = css`
+  line-height: 24px;
   max-width: 180px;
 `;
