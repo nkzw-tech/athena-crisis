@@ -280,6 +280,7 @@ test('capture amount win criteria also works when creating buildings', async () 
   const v1 = vec(1, 1);
   const v2 = vec(2, 2);
   const v3 = vec(3, 1);
+  const v4 = vec(3, 3);
   const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2))
@@ -298,7 +299,8 @@ test('capture amount win criteria also works when creating buildings', async () 
     units: map.units
       .set(v1, Pioneer.create(player1).capture())
       .set(v2, Pioneer.create(player1).capture())
-      .set(v3, Pioneer.create(player1)),
+      .set(v3, Pioneer.create(player1))
+      .set(v4, Pioneer.create(player2)),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
@@ -457,7 +459,7 @@ test('capture label win criteria fails because building is destroyed', async () 
     snapshotEncodedActionResponse(gameActionResponseA),
   ).toMatchInlineSnapshot(
     `
-    "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
+    "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
   `,
   );
@@ -474,7 +476,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   expect(
     snapshotEncodedActionResponse(gameActionResponseA_2),
   ).toMatchInlineSnapshot(
-    `"AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }"`,
+    `"AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }"`,
   );
 
   expect(gameHasEnded(gameStateA_2)).toBe(false);
@@ -489,7 +491,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   ).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
+    AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
   `,
   );
@@ -504,7 +506,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   expect(snapshotEncodedActionResponse(gameActionResponseB_2))
     .toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }"
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }"
     `);
 
   expect(gameHasEnded(gameStateB_2)).toBe(false);
@@ -513,6 +515,7 @@ test('capture label win criteria fails because building is destroyed', async () 
 test('capture label win criteria (fail with missing label)', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
+  const v3 = vec(3, 3);
   const mapA = map.copy({
     buildings: map.buildings
       .set(v1, House.create(player2))
@@ -529,7 +532,8 @@ test('capture label win criteria (fail with missing label)', async () => {
     }),
     units: map.units
       .set(v1, Pioneer.create(player1).capture())
-      .set(v2, Pioneer.create(player1).capture()),
+      .set(v2, Pioneer.create(player1).capture())
+      .set(v3, Pioneer.create(player2)),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
@@ -584,8 +588,8 @@ test('destroy amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }"
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
 
   const mapWithConditions = mapA.copy({
@@ -611,8 +615,8 @@ test('destroy amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 12 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
 
@@ -657,12 +661,12 @@ test('destroy amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB_2))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,4 → 1,4) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
+      "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,4 → 1,4) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, objectiveId: 0, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
+      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 1 }
+      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 1 }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
@@ -694,10 +698,10 @@ test('destroy amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseC))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
+      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 1 }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 12 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 
@@ -719,10 +723,10 @@ test('destroy amount win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseC_2))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
+      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 1 }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, type: 12 }, objectiveId: 0, toPlayer: 2 }"
     `);
 
@@ -773,10 +777,10 @@ test('destroy label win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null }
-      AttackBuilding (4,1 → 3,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 4800, chargeC: null }
+      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null, playerB: 2 }
+      AttackBuilding (4,1 → 3,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 4800, chargeC: null, playerB: 2 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 4, 3 ], optional: false, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
 
@@ -796,10 +800,10 @@ test('destroy label win criteria', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null }
-      AttackBuilding (4,1 → 3,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 4800, chargeC: null }
+      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null, playerB: 2 }
+      AttackBuilding (4,1 → 3,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 4800, chargeC: null, playerB: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4, 3 ], optional: true, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
@@ -842,8 +846,8 @@ test('destroy label does not fire without label', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }"
+      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
 
   const mapWithOptionalObjectives = optional(mapA);
@@ -860,8 +864,8 @@ test('destroy label does not fire without label', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null }"
+      "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
 });
 
@@ -896,8 +900,8 @@ test('destroy label win criteria (neutral structure)', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 3 ], optional: false, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
 
@@ -915,8 +919,8 @@ test('destroy label win criteria (neutral structure)', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseB))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null }
-      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null }
+      "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
+      AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 3 ], optional: true, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1 }"
     `);
 
@@ -2780,7 +2784,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1 }
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1, playerB: 1 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 
@@ -2799,7 +2803,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     .toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1 }"
+      AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1, playerB: 1 }"
     `);
 
   expect(gameHasEnded(gameStateD_2)).toBe(false);
@@ -3601,7 +3605,7 @@ test('counter attack triggers objectives correctly', async () => {
     snapshotEncodedActionResponse(gameActionResponseB),
   ).toMatchInlineSnapshot(
     `
-    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 83, player: 2 }, playerC: 2, unitA: null, unitC: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, chargeA: 9, chargeB: 0, chargeC: 0 }
+    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 83, player: 2 }, playerC: 2, unitA: null, unitC: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, chargeA: 9, chargeB: 0, chargeC: 0, playerB: 2 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
   `,
   );

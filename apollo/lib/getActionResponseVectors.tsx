@@ -87,6 +87,7 @@ export default function getActionResponseVectors(
     // These actions have no vectors attached to them.
     case 'AbandonInvasion':
     case 'ActivateCrystal':
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'BeginGame':
     case 'BeginTurnGameOver':

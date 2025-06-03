@@ -5,7 +5,7 @@ import {
   CaptureAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { House, HQ, Shelter } from '@deities/athena/info/Building.tsx';
+import { Factory, House, HQ, Shelter } from '@deities/athena/info/Building.tsx';
 import {
   getSkillConfig,
   getSkillPowerDamage,
@@ -51,6 +51,30 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const player2 = HumanPlayer.from(map.getPlayer(2), '4');
+
+const team3 = new Team(
+  3,
+  '',
+  ImmutableMap([
+    [
+      3,
+      new HumanPlayer(
+        3,
+        '3',
+        3,
+        300,
+        undefined,
+        new Set(),
+        new Set(),
+        0,
+        null,
+        0,
+        null,
+        null,
+      ),
+    ],
+  ]),
+);
 
 test('game over conditions with HQ', async () => {
   const initialMap = map.copy({
@@ -207,6 +231,79 @@ test('game over conditions with only one HQ', async () => {
     `);
 });
 
+test('game over conditions with no HQ and no units or production facilities', async () => {
+  const capturePosition = vec(2, 2);
+  const v2 = vec(1, 1);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(capturePosition, Factory.create(player2)),
+    units: map.units.set(capturePosition, Pioneer.create(player1).capture()),
+  });
+
+  const [, gameActionResponseA] = await executeGameActions(initialMap, [
+    CaptureAction(capturePosition),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+      "Capture (2,2) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }
+      CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
+      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+    `);
+
+  const [, gameActionResponseB] = await executeGameActions(
+    initialMap.copy({
+      buildings: initialMap.buildings.set(v2, House.create(2)),
+    }),
+    [CaptureAction(capturePosition)],
+  );
+
+  expect(snapshotEncodedActionResponse(gameActionResponseB))
+    .toMatchInlineSnapshot(`
+        "Capture (2,2) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }
+        CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
+        GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+      `);
+
+  const [, gameActionResponseC] = await executeGameActions(
+    initialMap.copy({
+      buildings: initialMap.buildings.set(v2, HQ.create(2)),
+    }),
+    [CaptureAction(capturePosition)],
+  );
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseC),
+  ).toMatchInlineSnapshot(
+    `"Capture (2,2) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }"`,
+  );
+
+  const [, gameActionResponseD] = await executeGameActions(
+    initialMap.copy({
+      buildings: initialMap.buildings.set(v2, Factory.create(2)),
+    }),
+    [CaptureAction(capturePosition)],
+  );
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseD),
+  ).toMatchInlineSnapshot(
+    `"Capture (2,2) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }"`,
+  );
+
+  const [, gameActionResponseE] = await executeGameActions(
+    initialMap.copy({
+      units: initialMap.units.set(v2, Flamethrower.create(2)),
+    }),
+    [CaptureAction(capturePosition)],
+  );
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponseE),
+  ).toMatchInlineSnapshot(
+    `"Capture (2,2) { building: Factory { id: 3, health: 100, player: 1 }, player: 2 }"`,
+  );
+});
+
 test('if the player self-destructs, an end-turn action is issued', async () => {
   const map = withModifiers(
     MapData.createMap({
@@ -241,7 +338,7 @@ test('if the player self-destructs, an end-turn action is issued', async () => {
     `);
 });
 
-test('destroying a neutral unit does not end or crash the game', async () => {
+test('defeating a neutral unit does not end or crash the game', async () => {
   const map = withModifiers(
     MapData.createMap({
       map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -267,7 +364,7 @@ test('destroying a neutral unit does not end or crash the game', async () => {
   );
 });
 
-test('destroying a building with a neutral unit does not end or crash the game', async () => {
+test('destroying a building with a neutral unit does not end the game', async () => {
   const map = withModifiers(
     MapData.createMap({
       map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -276,11 +373,13 @@ test('destroying a building with a neutral unit does not end or crash the game',
   );
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
+  const vecC = vec(3, 1);
   const initialMap = map.copy({
     buildings: map.buildings.set(vecB, House.create(2).setHealth(1)),
     units: map.units
       .set(vecA, SmallTank.create(player1))
-      .set(vecB, Pioneer.create(0)),
+      .set(vecB, Pioneer.create(0))
+      .set(vecC, Pioneer.create(2)),
   });
 
   const [, gameActionResponse] = await executeGameActions(initialMap, [
@@ -290,8 +389,68 @@ test('destroying a building with a neutral unit does not end or crash the game',
   expect(
     snapshotEncodedActionResponse(gameActionResponse),
   ).toMatchInlineSnapshot(
-    `"AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 100 }"`,
+    `"AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 100, playerB: 2 }"`,
   );
+});
+
+test('destroying a building with no production facility ends the game', async () => {
+  const map = withModifiers(
+    MapData.createMap({
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      size: { height: 3, width: 3 },
+    }),
+  );
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(vecB, Factory.create(2).setHealth(1)),
+    units: map.units.set(vecA, SmallTank.create(player1)),
+  });
+
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
+    AttackBuildingAction(vecA, vecB),
+  ]);
+
+  expect(
+    snapshotEncodedActionResponse(gameActionResponse),
+  ).toMatchInlineSnapshot(
+    `
+    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1500, chargeC: null, playerB: 2 }
+    AttackBuildingGameOver { fromPlayer: 2, toPlayer: 1 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+  `,
+  );
+});
+
+test('destroying a building with no production facility can beat two players at once', async () => {
+  const map = withModifiers(
+    MapData.createMap({
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      size: { height: 3, width: 3 },
+    }),
+  );
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 1);
+  const initialMap = map.copy({
+    active: [1, 2, 3],
+    buildings: map.buildings.set(vecB, Factory.create(2).setHealth(1)),
+    teams: map.teams.set(3, team3),
+    units: map.units
+      .set(vecA, SmallTank.create(player1))
+      .set(vecB, Flamethrower.create(3)),
+  });
+
+  const [, gameActionResponse] = await executeGameActions(initialMap, [
+    AttackBuildingAction(vecA, vecB),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponse))
+    .toMatchInlineSnapshot(`
+    "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 3, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1500, chargeC: 400, playerB: 2 }
+    AttackUnitGameOver { fromPlayer: 3, toPlayer: 1 }
+    AttackBuildingGameOver { fromPlayer: 2, toPlayer: 1 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+  `);
 });
 
 test('win the game when converting a unit as a Zombie', async () => {
@@ -343,13 +502,13 @@ test('lose the game when the only unit attacks a building with a Zombie on it', 
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 39, player: 2 }, playerC: 2, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitC: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, chargeA: 15, chargeB: 0, chargeC: 0 }
+      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 39, player: 2 }, playerC: 2, unitA: DryUnit { health: 92, ammo: [ [ 1, 6 ] ] }, unitC: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, chargeA: 15, chargeB: 0, chargeC: 0, playerB: 2 }
       AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
 
-test('lose game if you destroy the last unit of the opponent but miss your own win condition', async () => {
+test('lose the game if you destroy the last unit of the opponent but miss your own win condition', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
       map: [1, 8, 1, 1, 1, 1, 1, 1, 1],
@@ -392,7 +551,7 @@ test('lose game if you destroy the last unit of the opponent but miss your own w
 
   expect(snapshotEncodedActionResponse(gameActionResponse))
     .toMatchInlineSnapshot(`
-      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 2000 }
+      "AttackBuilding (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 5 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 2000, playerB: 2 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
     `);
 });
@@ -514,32 +673,7 @@ test('game over through activating a power can beat more than one player', async
   const mapA = map.copy({
     active: [1, 2, 3],
     teams: updatePlayer(
-      map.teams.set(
-        3,
-        new Team(
-          3,
-          '',
-          ImmutableMap([
-            [
-              3,
-              new HumanPlayer(
-                3,
-                '3',
-                3,
-                300,
-                undefined,
-                new Set(),
-                new Set(),
-                0,
-                null,
-                0,
-                null,
-                null,
-              ),
-            ],
-          ]),
-        ),
-      ),
+      map.teams.set(3, team3),
       map.getPlayer(2).copy({ charge: (charges || 0) * Charge, skills }),
     ),
     units: map.units

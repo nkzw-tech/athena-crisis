@@ -42,6 +42,7 @@ export type AttackBuildingActionResponse = Readonly<{
   from: Vector;
   hasCounterAttack: boolean;
   playerA: PlayerID;
+  playerB?: PlayerID;
   playerC?: PlayerID;
   to: Vector;
   type: 'AttackBuilding';

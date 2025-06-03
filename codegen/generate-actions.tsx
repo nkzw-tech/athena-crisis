@@ -589,7 +589,7 @@ const formatValue = (
   }
 
   if (type === 'reference' && typeof value === 'string') {
-    return `\${${optional ? `action.${prefix}${name} ? ` : ''}${formatCall(
+    return `\${${optional ? `action.${prefix}${name} != null ? ` : ''}${formatCall(
       value,
       `action.${prefix}${name}`,
     )}${optional ? ` : c.dim('null')` : ''}}`;
@@ -601,7 +601,7 @@ const formatValue = (
   } else if (value === 'boolean') {
     formattedValue = `c.blue(!!action.${prefix}${name})`;
   } else if (value === 'string') {
-    formattedValue = `c.green("'" + action.${prefix}${name} + "'")`;
+    formattedValue = `c.green(\`'$\{action.${prefix}${name}}'\`)`;
   }
 
   return optional

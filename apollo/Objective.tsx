@@ -1,5 +1,6 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
+import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -30,6 +31,12 @@ import checkObjectives, {
 import getLosingPlayer from './lib/getLosingPlayer.tsx';
 import { processRewards } from './lib/processRewards.tsx';
 import { GameState, MutableGameState } from './Types.tsx';
+
+export type AttackBuildingGameOverActionResponse = Readonly<{
+  fromPlayer: PlayerID;
+  toPlayer: PlayerID;
+  type: 'AttackBuildingGameOver';
+}>;
 
 export type AttackUnitGameOverActionResponse = Readonly<{
   fromPlayer: PlayerID;
@@ -78,6 +85,7 @@ export type AbandonInvasionActionResponse = Readonly<{
 
 export type ObjectiveActionResponse =
   | AbandonInvasionActionResponse
+  | AttackBuildingGameOverActionResponse
   | AttackUnitGameOverActionResponse
   | BeginTurnGameOverActionResponse
   | CaptureGameOverActionResponse
@@ -251,6 +259,7 @@ export function applyObjectiveActionResponse(
           })
         : map;
     }
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
     case 'BeginTurnGameOver': {
@@ -328,8 +337,10 @@ export function checkCapture(
     const toPlayer = building ? map.getPlayer(building).id : null;
     if (
       toPlayer &&
-      previousBuilding?.info.isHQ() &&
-      toPlayer !== previousBuilding.player
+      previousBuilding &&
+      toPlayer !== previousBuilding.player &&
+      (previousBuilding.info.isHQ() ||
+        !hasUnitsOrProductionBuildings(map, fromPlayer, 'any'))
     ) {
       return [
         {
@@ -457,22 +468,42 @@ export function checkAttackBuilding(
     from,
     hasCounterAttack,
     playerA,
+    playerB,
     playerC,
     unitA,
     unitC,
   }: AttackBuildingActionResponse,
 ) {
-  if (playerC == null || playerC === 0) {
-    return null;
+  const actionResponses: Array<
+    AttackBuildingGameOverActionResponse | AttackUnitGameOverActionResponse
+  > = [];
+  if (playerC != null && playerC !== 0) {
+    const toPlayer = map.getPlayer(playerC);
+    const fromPlayer = map.getPlayer(playerA);
+    const responses =
+      (hasCounterAttack && (!unitA || playerA !== map.units.get(from)?.player)
+        ? checkHasUnits(map, fromPlayer, toPlayer)
+        : null) ||
+      (!building && !unitC ? checkHasUnits(map, toPlayer, fromPlayer) : null);
+
+    if (responses?.length) {
+      actionResponses.push(...responses);
+    }
   }
-  const toPlayer = map.getPlayer(playerC);
-  const fromPlayer = map.getPlayer(playerA);
-  return (
-    (hasCounterAttack && (!unitA || playerA !== map.units.get(from)?.player)
-      ? checkHasUnits(map, fromPlayer, toPlayer)
-      : null) ||
-    (!building && !unitC ? checkHasUnits(map, toPlayer, fromPlayer) : null)
-  );
+
+  if (!building) {
+    const toPlayer =
+      playerB != null && playerB !== 0 ? map.getPlayer(playerB) : null;
+    if (toPlayer && !hasUnitsOrProductionBuildings(map, toPlayer, 'any')) {
+      actionResponses.push({
+        fromPlayer: toPlayer.id,
+        toPlayer: playerA,
+        type: 'AttackBuildingGameOver',
+      } as const);
+    }
+  }
+
+  return actionResponses.length ? actionResponses : null;
 }
 
 const checkDefaultObjectives = (

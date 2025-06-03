@@ -37,7 +37,8 @@
         "unitC",
         "chargeA",
         "chargeB",
-        "chargeC"
+        "chargeC",
+        "playerB"
       ]
     ]
   ],
@@ -184,5 +185,6 @@
   ["IncreaseCharge", [49, ["type", "charges", "player"]]],
   ["IncreaseFunds", [50, ["type", "funds", "player"]]],
   ["Swap", [51, ["type", "source", "sourceUnit", "target", "targetUnit"]]],
-  ["SetPlayerTime", [52, ["type", "player", "time"]]]
+  ["SetPlayerTime", [52, ["type", "player", "time"]]],
+  ["AttackBuildingGameOver", [53, ["type", "fromPlayer", "toPlayer"]]]
 ]

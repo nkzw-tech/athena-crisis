@@ -41,7 +41,11 @@ export default class CreateBuilding {
     } = state;
     if (selectedPosition && selectedUnit) {
       const player = map.getCurrentPlayer();
-      const allowAnyBuilding = hasUnitsOrProductionBuildings(map, player);
+      const allowAnyBuilding = hasUnitsOrProductionBuildings(
+        map,
+        player,
+        'with-attack',
+      );
       const funds = player.funds;
       const buildings = sortBy(
         filterBuildings(

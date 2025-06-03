@@ -7,6 +7,7 @@ export default function getLosingPlayer(
   actionResponse: ActionResponse,
 ): PlayerID | null {
   switch (actionResponse.type) {
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
     case 'CaptureGameOver':

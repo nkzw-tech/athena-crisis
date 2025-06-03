@@ -523,6 +523,7 @@ function attackBuilding(
       from,
       hasCounterAttack: !!c,
       playerA: a.player,
+      playerB: b.player,
       // `playerC` should be provided when `unitC` exists, not when it attacks.
       // That way it can be used to check whether the player lost.
       playerC: unitC ? unitC.player : undefined,
@@ -657,7 +658,8 @@ function createBuilding(map: MapData, { from, id }: CreateBuildingAction) {
     unit.info.hasAbility(Ability.CreateBuildings) &&
     player.funds >= infoB.getCostFor(player) &&
     canBuild(map, infoB, unit.player, from) &&
-    (infoB.canBuildUnits() || hasUnitsOrProductionBuildings(map, player))
+    (infoB.canBuildUnits() ||
+      hasUnitsOrProductionBuildings(map, player, 'with-attack'))
   ) {
     return {
       building: infoB.create(unit.player, { label: unit.label }).complete(),

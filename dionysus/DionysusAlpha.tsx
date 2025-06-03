@@ -544,6 +544,7 @@ export default class DionysusAlpha extends BaseAI {
         ? (_allowAnyBuilding = hasUnitsOrProductionBuildings(
             map,
             currentPlayer,
+            'with-attack',
           ))
         : _allowAnyBuilding;
 

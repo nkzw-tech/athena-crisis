@@ -41,6 +41,7 @@ export default function isVisibleActionResponse(
     case 'BeginTurnGameOver':
     case 'CaptureGameOver':
     case 'GameEnd':
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'IncreaseCharge':
     case 'IncreaseFunds':

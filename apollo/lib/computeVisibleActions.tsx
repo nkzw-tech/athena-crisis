@@ -192,6 +192,7 @@ const VisibleActionModifiers: Record<
         : undefined,
     }),
   },
+  AttackBuildingGameOver: true,
   AttackUnit: {
     Both: true,
     Source: (

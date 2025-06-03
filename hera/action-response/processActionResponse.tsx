@@ -538,6 +538,7 @@ async function processActionResponse(
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
       return hiddenTargetAttackAction(actions, state, actionResponse);
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'PreviousTurnGameOver':
     case 'BeginTurnGameOver':

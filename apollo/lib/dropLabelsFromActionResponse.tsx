@@ -52,6 +52,7 @@ export default function dropLabelsFromActionResponse(
     case 'ActivateCrystal':
     case 'ActivatePower':
     case 'AttackUnit':
+    case 'AttackBuildingGameOver':
     case 'AttackUnitGameOver':
     case 'BeginGame':
     case 'BeginTurnGameOver':
