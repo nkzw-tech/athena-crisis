@@ -15,17 +15,17 @@ import Portrait from './Portrait.tsx';
 
 export default function MiniPortrait({
   animate,
-  clip,
   human,
   paused,
   player,
+  portraitClip,
   user,
 }: {
   animate?: boolean;
-  clip?: true;
   human?: true;
   paused?: boolean;
   player: Player | PlayerID;
+  portraitClip?: true;
   user: Omit<UserLike, 'username'> & { username: string | null };
 }) {
   const { pathname } = useLocation();
@@ -41,7 +41,7 @@ export default function MiniPortrait({
   const Component = username ? Link : 'div';
   return (
     <Component
-      className={cx(portraitStyle, !clip && borderStyle)}
+      className={cx(portraitStyle, !portraitClip && borderStyle)}
       style={{
         [cssVar('border-color')]: getColor(id),
       }}
@@ -49,7 +49,7 @@ export default function MiniPortrait({
     >
       <Portrait
         animate={animate}
-        clip={clip}
+        clip={!!portraitClip}
         paused={paused}
         player={id}
         scale={0.5}

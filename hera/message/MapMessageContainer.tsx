@@ -111,7 +111,13 @@ export default function MapMessageContainer({
           </Tick>
           <Stack alignCenter className={bottomStyle} gap nowrap>
             <Stack alignCenter gap nowrap start>
-              <MiniPortrait animate clip human player={playerID} user={user} />
+              <MiniPortrait
+                animate
+                human
+                player={playerID}
+                portraitClip
+                user={user}
+              />
               <div className={cx(nameStyle, ellipsis)}>{user.displayName}</div>
             </Stack>
             {button}
