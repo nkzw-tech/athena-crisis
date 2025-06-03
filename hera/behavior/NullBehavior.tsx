@@ -11,8 +11,8 @@ export default class NullBehavior {
   }
 
   enter(vector: Vector, state: State) {
-    const { highlightedPositions, messages } = state;
-    if (messages.has(vector)) {
+    const { highlightedPositions, map, messages, vision } = state;
+    if (messages.has(vector) && vision.isVisible(map, vector)) {
       return {
         highlightedPositions: [vector],
       };

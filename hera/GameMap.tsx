@@ -765,7 +765,10 @@ export default class GameMap extends Component<Props, State> {
         if (newState) {
           return newState;
         }
-      } else if (actualState.messages.has(vector)) {
+      } else if (
+        actualState.messages.has(vector) &&
+        actualState.vision.isVisible(actualState.map, vector)
+      ) {
         return {
           highlightedPositions: [vector],
         };
