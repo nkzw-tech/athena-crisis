@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index 0f2c242716322fbe305fb33c84a9e3ee764766d2..5c05e729541d5dd3b2dc28063af5f845e8819de7 100644
+index 4f5d4edce3d0d84b98c8d7a962ebb03d706d9528..fd4864f1f50ada6352e9d6617ef7822a1ced16c2 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -176,20 +176,6 @@ var Batch = class {
@@ -45,7 +45,7 @@ index 0f2c242716322fbe305fb33c84a9e3ee764766d2..5c05e729541d5dd3b2dc28063af5f845
        const data = yield this.resend.post(
          "/broadcasts",
          {
-@@ -441,21 +412,6 @@ var Emails = class {
+@@ -459,21 +430,6 @@ var Emails = class {
    }
    create(_0) {
      return __async(this, arguments, function* (payload, options = {}) {
@@ -68,7 +68,7 @@ index 0f2c242716322fbe305fb33c84a9e3ee764766d2..5c05e729541d5dd3b2dc28063af5f845
          "/emails",
          parseEmailToApiOptions(payload),
 diff --git a/package.json b/package.json
-index 357d508eaa9108f554235ddb3808c30fb5a61dc8..aeff08ee52358659e5be70eb34d63b6c31123837 100644
+index f98892471801e0bad018cbf9d19333e6953a45bd..59a61011a7fb3ef267022e2bc6a7042566894854 100644
 --- a/package.json
 +++ b/package.json
 @@ -41,9 +41,6 @@
@@ -76,7 +76,7 @@ index 357d508eaa9108f554235ddb3808c30fb5a61dc8..aeff08ee52358659e5be70eb34d63b6c
    },
    "homepage": "https://github.com/resendlabs/resend-node#readme",
 -  "dependencies": {
--    "@react-email/render": "1.0.6"
+-    "@react-email/render": "1.1.2"
 -  },
    "devDependencies": {
      "@biomejs/biome": "1.9.4",

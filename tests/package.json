@@ -29,7 +29,7 @@
     "@types/jest-image-snapshot": "^6.4.0",
     "@types/object-inspect": "^1.13.0",
     "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
+    "@types/react-dom": "^19.1.6",
     "chalk": "^5.4.1",
     "fbtee": "^0.2.2",
     "jest-image-snapshot": "^6.5.1",

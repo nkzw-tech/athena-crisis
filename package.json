@@ -66,12 +66,11 @@
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@swc/core": "^1.11.29",
     "@types/node": "^22.15.29",
-    "@vitejs/plugin-react": "^4.5.0",
+    "@vitejs/plugin-react": "^4.5.1",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
     "eslint": "^9.28.0",
-    "eslint-plugin-perfectionist": "^4.13.0",
     "eslint-plugin-workspaces": "^0.11.0",
     "nodemon": "^3.1.10",
     "npm-run-all2": "^8.0.4",
@@ -80,7 +79,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.1"
   },
   "engines": {
     "node": ">=23.0.0",
