@@ -1147,7 +1147,7 @@ export default class DionysusAlpha extends BaseAI {
   }
 
   private maybeDropUnit(
-    currentMap: MapData | null,
+    currentMap: MapData,
     position: Vector,
     target?: Vector | null,
   ) {
@@ -1155,9 +1155,12 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
+    const player = currentMap.getCurrentPlayer();
     const unit = currentMap.units.get(position);
     if (
       unit &&
+      !unit.isCompleted() &&
+      currentMap.matchesPlayer(player, unit) &&
       target &&
       unit.isTransportingUnits() &&
       unit.transports.some(
@@ -1169,7 +1172,6 @@ export default class DionysusAlpha extends BaseAI {
           ),
       )
     ) {
-      const player = currentMap.getCurrentPlayer();
       const isNaval = isNavalUnit(unit);
       for (let index = unit.transports.length - 1; index >= 0; index--) {
         const transportedUnit = unit.transports[index];
@@ -1187,27 +1189,29 @@ export default class DionysusAlpha extends BaseAI {
         const dropTo = minBy(
           position
             .adjacent()
-            .filter((vector) =>
-              canDeploy(
-                currentMap!,
-                transportedUnit.info,
-                vector,
-                player.skills.has(Skill.NoUnitRestrictions),
-              ),
+            .filter(
+              (vector) =>
+                canDeploy(currentMap!, transportedUnit.info, vector, true) &&
+                unit.info.canDropFrom(
+                  transportedUnit.info,
+                  currentMap.getTileInfo(position),
+                ),
             ),
           (vector) => vector.distance(target),
         );
 
         if (dropTo) {
-          currentMap = this.execute(
+          const map = this.execute(
             currentMap,
             DropUnitAction(position, index, dropTo),
           );
-          if (!currentMap) {
+          if (!map) {
             throw new Error('Error executing unit drop.');
           }
 
           this.tryAttacking();
+
+          return map;
         }
       }
     }
