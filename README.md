@@ -6,7 +6,7 @@
   </a>
 </p>
 
-[Athena Crisis](https://athenacrisis.com) is an Open Core video game developed by [Nakazawa Tech](https://nkzw.tech) and published by [Null](https://null.com). The source code in this repository is licensed under the [MIT License](./LICENSE.md) and can be used to improve Athena Crisis, build additional tools, study game development with JavaScript or create entirely new turn-based strategy games.
+[Athena Crisis](https://athenacrisis.com) is an Open Core video game developed by [Nakazawa Tech](https://nkzw.tech). The source code in this repository is licensed under the [MIT License](./LICENSE.md) and can be used to improve Athena Crisis, build additional tools, study game development with JavaScript or create entirely new turn-based strategy games.
 
 The single-player campaign, multiplayer, art, music, and content are not open source. You can try a demo at [athenacrisis.com](https://athenacrisis.com) and you can [wishlist or purchase Athena Crisis on Steam](https://store.steampowered.com/app/2456430/Athena_Crisis/) or [buy Athena Crisis directly](https://app.athenacrisis.com/checkout) to experience the full game.
 
@@ -127,12 +127,6 @@ Check out these links to learn more about the tech behind Athena Crisis:
 - [Follow Athena Crisis on Twitter](https://twitter.com/TheAthenaCrisis)
 - [Building the AI for Athena Crisis](https://www.youtube.com/watch?v=0V9XaIK0xlQ)
 - [Athena Crisis Open Source Docs & Playground](https://athenacrisis.com/open-source)
-
-# Supporters
-
-| <a href="https://www.hetzner.com/?mtm_campaign=athenacrisis_sponsoring&mtm_source=athenacrisis_community&mtm_medium=referral&mtm_content=sponsoring_link"><img src="./infra/assets/hetzner.svg" alt="Hetzner" style="width: 320px;"></a> | <a href="https://crowdin.com/project/athena-crisis" style="display: block;"><img src="./infra/assets/crowdin.svg" alt="Crowdin" style="width: 320px;"></a> |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a href="https://polar.sh" style="display: block;"><img src="./infra/assets/polar.svg" alt="Polar" style="width: 320px;"></a>                                                                                                            | <a href="https://null.com" style="display: block;"><img src="./infra/assets/null.svg" alt="Null" style="width: 320px;"></a>                                |
 
 <a href="https://athenacrisis.com">
   <img alt="Athena Crisis Keyart" src="./offline/keyart.jpg" />

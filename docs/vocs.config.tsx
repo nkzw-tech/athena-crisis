@@ -133,10 +133,6 @@ export default defineConfig({
           link: 'https://nkzw.tech',
           text: 'Nakazawa Tech',
         },
-        {
-          link: 'https://null.com',
-          text: 'Null',
-        },
       ],
       text: 'More',
     },
