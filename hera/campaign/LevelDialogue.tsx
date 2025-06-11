@@ -69,7 +69,10 @@ export default memo(function LevelDialogue({
                     className={cx(iconActiveStyle, SquareButtonStyle)}
                     icon={Edit}
                     onClick={() =>
-                      setMap(node.id, 'effects', { effect, trigger })
+                      setMap(node.id, 'effects', {
+                        effects,
+                        scenario: { effect, trigger },
+                      })
                     }
                   />
                 </Stack>

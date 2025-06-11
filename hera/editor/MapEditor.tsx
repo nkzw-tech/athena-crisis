@@ -127,12 +127,15 @@ const getEditorBaseState = (
   mapObject: Pick<MapObject, 'effects'> | null = null,
   mode: EditorMode = 'design',
   editorHistory: RefObject<EditorHistory>,
+  initialEffects?: Effects,
   scenario?: Scenario,
 ): EditorState => {
   const startScenario = new Set([{ actions: [] }]);
-  let effects: Effects = mapObject?.effects
-    ? decodeEffects(JSON.parse(mapObject.effects))
-    : new Map([['Start', startScenario]]);
+  let effects: Effects =
+    initialEffects ||
+    (mapObject?.effects
+      ? decodeEffects(JSON.parse(mapObject.effects))
+      : new Map([['Start', startScenario]]));
   if (!effects.has('Start')) {
     effects = new Map([...effects, ['Start', startScenario]]);
   }
@@ -227,6 +230,7 @@ export type BaseMapEditorProps = Readonly<{
     isPlayTesting: boolean;
     state: State;
   }) => ReactNode;
+  effects?: Effects;
   inset?: number;
   isValidName?: (name: string, extraCharacters: string) => boolean;
   mode?: EditorMode;
@@ -241,6 +245,7 @@ export default function MapEditor({
   children,
   confirmActionStyle,
   createMap,
+  effects: initialEffects,
   estimateMapPerformance,
   fogStyle,
   inset = 0,
@@ -248,7 +253,7 @@ export default function MapEditor({
   isValidName = () => true,
   mapObject,
   mode,
-  scenario,
+  scenario: initialScenario,
   setHasChanges,
   tiltStyle,
   updateMap,
@@ -318,7 +323,14 @@ export default function MapEditor({
   });
 
   const [editor, _setEditorState] = useState<EditorState>(() =>
-    getEditorBaseState(map, mapObject, mode, editorHistory, scenario),
+    getEditorBaseState(
+      map,
+      mapObject,
+      mode,
+      editorHistory,
+      initialEffects,
+      initialScenario,
+    ),
   );
 
   const [previousEffects, setPreviousEffects] = useState(editor.effects);
@@ -778,10 +790,25 @@ export default function MapEditor({
     const newMap = getInitialMap();
     setMap('reset', newMap);
     _setEditorState(
-      getEditorBaseState(newMap, mapObject, mode, editorHistory, scenario),
+      getEditorBaseState(
+        newMap,
+        mapObject,
+        mode,
+        editorHistory,
+        initialEffects,
+        initialScenario,
+      ),
     );
     updatePreviousMap();
-  }, [getInitialMap, mapObject, mode, scenario, setMap, updatePreviousMap]);
+  }, [
+    getInitialMap,
+    initialEffects,
+    mapObject,
+    mode,
+    initialScenario,
+    setMap,
+    updatePreviousMap,
+  ]);
 
   const fillMap = useCallback(() => {
     const fillTile = editor?.selected?.tile
@@ -819,11 +846,12 @@ export default function MapEditor({
           },
           editor.mode,
           editorHistory,
+          editor.effects,
           editor.scenario,
         ),
       );
     }
-  }, [editor.mode, editor.scenario, previousState, setMap]);
+  }, [editor.effects, editor.mode, editor.scenario, previousState, setMap]);
 
   const resize = useCallback(
     (size: SizeVector, origin: Set<ResizeOrigin>) => {

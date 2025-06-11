@@ -1,4 +1,4 @@
-import { Scenario } from '@deities/apollo/Effects.tsx';
+import { Effects, Scenario } from '@deities/apollo/Effects.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import { BaseMapEditorProps } from '../editor/MapEditor.tsx';
@@ -24,6 +24,7 @@ export type MapEditorContainerProps = BaseMapEditorProps &
 export type CampaignEditorState = Readonly<{
   createMap?: boolean;
   map?: MapNode;
+  mapEditorEffects?: Effects;
   mapEditorMode?: EditorMode;
   mapEditorScenario?: Scenario;
   mode: CampaignEditorMode;
@@ -55,7 +56,7 @@ export type UpdateCampaignFunction = (
 export type CampaignEditorSetMapFunction = (
   mapId: ClientLevelID,
   mode?: EditorMode,
-  scenario?: Scenario,
+  options?: { effects: Effects; scenario: Scenario },
 ) => void;
 
 type CampaignEditorSaveMessageId =

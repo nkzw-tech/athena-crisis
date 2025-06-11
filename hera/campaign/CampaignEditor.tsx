@@ -1,4 +1,3 @@
-import { Scenario } from '@deities/apollo/Effects.tsx';
 import getCampaignRoute from '@deities/apollo/routes/getCampaignRoute.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import {
@@ -59,7 +58,6 @@ import {
 import useMusic, { usePlayMusic } from '../audio/Music.tsx';
 import useSetTags from '../editor/hooks/useSetTags.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
-import { EditorMode } from '../editor/Types.tsx';
 import useHide from '../hooks/useHide.tsx';
 import toTransformOrigin from '../lib/toTransformOrigin.tsx';
 import Notification from '../ui/Notification.tsx';
@@ -69,6 +67,7 @@ import CampaignEditorPanel from './panels/CampaignEditorControlPanel.tsx';
 import { UserNode } from './panels/CampaignEditorSettingsPanel.tsx';
 import {
   CampaignEditorSaveState,
+  CampaignEditorSetMapFunction,
   CampaignEditorState,
   CampaignObject,
   MapEditorContainerProps,
@@ -114,6 +113,7 @@ export default function CampaignEditor({
 
   const [, startTransition] = useTransition();
   const { slug } = data;
+  const [renderKey, setRenderKey] = useState(0);
   const [hasChanges, setHasChanges] = useState(!data.id);
   const [mapHasChanges, setMapHasChanges] = useState(false);
   const [origin, setOrigin] = useState('');
@@ -281,8 +281,8 @@ export default function CampaignEditor({
     [],
   );
 
-  const setMap = useCallback(
-    (mapId: string, mode?: EditorMode, scenario?: Scenario) => {
+  const setMap: CampaignEditorSetMapFunction = useCallback(
+    (mapId, mode, options) => {
       const node = maps.get(mapId);
       if (node) {
         if (isIOS || isAndroid) {
@@ -293,8 +293,9 @@ export default function CampaignEditor({
         setShowAllDialogue(false);
         setCampaignEditorState({
           map: node,
+          mapEditorEffects: options?.effects,
           mapEditorMode: mode,
-          mapEditorScenario: scenario,
+          mapEditorScenario: options?.scenario,
         });
       }
     },
@@ -309,6 +310,7 @@ export default function CampaignEditor({
       setCampaignEditorState({
         map,
       });
+      setRenderKey((renderKey) => renderKey + 1);
       addMap(map);
       mapDataSource.updateEntry(
         new TypeaheadDataSourceEntry(map.name, map.id, map),
@@ -438,7 +440,7 @@ export default function CampaignEditor({
         <Level
           dataSource={mapDataSource}
           depthMap={depthMap}
-          key={campaign.next.mapId}
+          key={`${renderKey}-${campaign.next.mapId}`}
           level={campaign.next}
           maps={maps}
           renderEntities={!showMapEditor}
@@ -563,6 +565,7 @@ export default function CampaignEditor({
               <ScrollContainer className={scrollStyle}>
                 <MapEditor
                   campaignLock={data}
+                  effects={campaignEditorState.mapEditorEffects}
                   inset={inset}
                   isValidName={isValidName}
                   mode={campaignEditorState.mapEditorMode}

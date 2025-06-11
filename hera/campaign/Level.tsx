@@ -411,7 +411,9 @@ export default memo(function Level({
                         setScenario={(scenario) => setScenario(scenario)}
                       />
                       <Button
-                        onClick={() => setMap(node.id, 'effects', scenario)}
+                        onClick={() =>
+                          setMap(node.id, 'effects', { effects, scenario })
+                        }
                       >
                         <Icon className={iconActiveStyle} icon={Edit} />
                       </Button>
