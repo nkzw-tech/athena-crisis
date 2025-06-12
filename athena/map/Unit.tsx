@@ -456,7 +456,7 @@ export default class Unit extends Entity {
       t ? t.map(TransportedUnit.fromJSON) : null,
       m === 1 ? true : null,
       c === 1 ? true : null,
-      r != null ? r : null,
+      r != null && p === 0 ? r : null,
       u === 1 ? true : null,
       f === 1 ? true : null,
       l != null ? toPlayerID(l) : null,
@@ -826,6 +826,10 @@ export default class Unit extends Entity {
       });
     }
 
+    if (player !== 0 && unit.rescuing) {
+      unit = unit.copy({ rescuing: null });
+    }
+
     return unit.player !== player ? unit.copy({ player }) : unit;
   }
 
@@ -933,7 +937,7 @@ export default class Unit extends Entity {
       m: moved ? 1 : null,
       n,
       p,
-      r: r != null ? r : null,
+      r: r != null && p === 0 ? r : null,
       s,
       t: transports ? transports.map((unit) => unit.toJSON()) : null,
       u: unfolded ? 1 : null,
