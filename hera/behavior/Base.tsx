@@ -187,7 +187,9 @@ export default class Base extends AbstractSelectBehavior {
             : hasSellSkillsBehavior
               ? new BuySkills()
               : new CreateUnit(),
+          highlightedPositions: null,
           position: vector,
+          radius: null,
           selectedBuilding: entity,
           selectedPosition: vector,
           selectedUnit: null,
