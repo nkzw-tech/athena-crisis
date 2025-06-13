@@ -439,7 +439,7 @@ const UnitCosts = ({
       <>
         {' '}
         <fbt desc="List item explaining that the Bar can be built.">
-          Enables constructing
+          Allows construction of
           <fbt:param name="buildingName">
             <BuildingName building={Bar} color={color} />
           </fbt:param>{' '}
