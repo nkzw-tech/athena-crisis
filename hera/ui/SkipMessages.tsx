@@ -17,7 +17,7 @@ const circleProps = {
     duration: (MessageSkipDuration / 1000) * 0.75,
     ease: [0.34, 1.56, 0.64, 1],
   },
-};
+} as const;
 
 const skipProps = {
   ...circleProps,

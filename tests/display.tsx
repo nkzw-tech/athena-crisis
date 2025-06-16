@@ -19,9 +19,7 @@ import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 
 declare global {
-  // eslint-disable-next-line no-var
   var MapHasRendered: Record<string, boolean>;
-  // eslint-disable-next-line no-var
   var renderMap: (url: string) => void;
 }
 

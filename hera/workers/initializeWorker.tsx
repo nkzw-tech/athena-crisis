@@ -1,7 +1,5 @@
 declare global {
-  // eslint-disable-next-line no-var
   var $RefreshReg$: () => void;
-  // eslint-disable-next-line no-var
   var $RefreshSig$: (type: string) => (type: string) => string;
 }
 

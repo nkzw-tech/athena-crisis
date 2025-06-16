@@ -70,9 +70,7 @@ type RemoteCallInterface = Readonly<{
 }>;
 
 declare global {
-  // eslint-disable-next-line no-var
   var $__AC__: Partial<NativeApp>;
-  // eslint-disable-next-line no-var
   var $__AC__R: RemoteCallInterface;
 }
 

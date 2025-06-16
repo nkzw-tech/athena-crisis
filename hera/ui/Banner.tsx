@@ -22,7 +22,7 @@ const transition = {
   damping: 14 * multiplier,
   stiffness: 250 * multiplier,
   type: 'spring',
-};
+} as const;
 
 const sizes = {
   fontSize: 12,

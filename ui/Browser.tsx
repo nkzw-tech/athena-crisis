@@ -1,7 +1,6 @@
 import parseInteger from '@nkzw/core/parseInteger.js';
 
 declare global {
-  // eslint-disable-next-line no-var
   var safari: Record<string, { toString: () => string }>;
 }
 
