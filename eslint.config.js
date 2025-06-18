@@ -46,7 +46,7 @@ export default [
         2,
         {
           devDependencies: [
-            './{ares,artemis,deimos,twitch,offline}/vite.config.ts',
+            './{ares,artemis,deimos,offline}/vite.config.ts',
             './{ares,artemis}/scripts/**/*.{js,cjs,tsx}',
             './ares/ares.tsx',
             './artemis/prisma/seed.tsx',

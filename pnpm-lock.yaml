@@ -902,55 +902,6 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
 
-  twitch:
-    dependencies:
-      '@deities/apollo':
-        specifier: workspace:*
-        version: link:../apollo
-      '@deities/art':
-        specifier: workspace:*
-        version: link:../art
-      '@deities/athena':
-        specifier: workspace:*
-        version: link:../athena
-      '@deities/hera':
-        specifier: workspace:*
-        version: link:../hera
-      '@deities/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@emotion/css':
-        specifier: ^11.13.5
-        version: 11.13.5
-      '@nkzw/use-visibility-state':
-        specifier: ^1.0.3
-        version: 1.0.3(react@19.1.0)
-      fbtee:
-        specifier: ^0.2.2
-        version: 0.2.2(@nkzw/babel-plugin-fbtee-runtime@0.2.2(@nkzw/babel-plugin-fbtee@0.2.2))(@nkzw/babel-plugin-fbtee@0.2.2)(react@19.1.0)
-      react:
-        specifier: ^19.1.0
-        version: 19.1.0
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.1.0(react@19.1.0)
-      react-error-boundary:
-        specifier: ^6.0.0
-        version: 6.0.0(react@19.1.0)
-    devDependencies:
-      '@emotion/babel-plugin':
-        specifier: ^11.13.5
-        version: 11.13.5
-      '@types/react':
-        specifier: ^19.1.8
-        version: 19.1.8
-      '@types/react-dom':
-        specifier: ^19.1.6
-        version: 19.1.6(@types/react@19.1.8)
-      '@types/twitch-ext':
-        specifier: ^1.24.9
-        version: 1.24.9
-
   ui:
     dependencies:
       '@deities/apollo':
@@ -4531,9 +4482,6 @@ packages:
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
-
-  '@types/twitch-ext@1.24.9':
-    resolution: {integrity: sha512-YUArlcgu3Hfln0odpkhZXtQIhKquR9usEjWmkpgz+uiUsAFmBDtA27uxLTaOWZHSfWcz8va2mQaNm1g+JRoh0w==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -14280,8 +14228,6 @@ snapshots:
     optional: true
 
   '@types/trusted-types@2.0.7': {}
-
-  '@types/twitch-ext@1.24.9': {}
 
   '@types/unist@2.0.11': {}
 

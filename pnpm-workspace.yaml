@@ -16,6 +16,5 @@ packages:
   - 'offline'
   - 'scripts'
   - 'tests'
-  - 'twitch'
   - 'ui'
   - 'zeus'
