@@ -60,6 +60,7 @@ export enum Skill {
   XFighterAttackIncrase = 44,
   CostRecovery = 45,
   UnlockScientist = 46,
+  BuyUnitHumveeAvenger = 47,
 }
 
 export const Skills = new Set<Skill>([
@@ -82,6 +83,7 @@ export const Skills = new Set<Skill>([
   Skill.UnlockZombie,
   Skill.UnlockPowerStation,
   Skill.UnlockScientist,
+  Skill.BuyUnitHumveeAvenger,
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
   Skill.MovementIncreaseGroundUnitDefenseDecrease,
   Skill.AttackIncreaseMajorDefenseDecreaseMajor,
@@ -193,6 +195,11 @@ const skillConfig: Record<
     requiresTarget,
   },
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitHumveeAvenger]: {
+    charges: 4,
+    cost: 1500,
+    group: SkillGroup.Unlock,
+  },
   [Skill.BuyUnitOctopus]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitOgre]: { charges: 3, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitSuperAPU]: { charges: 3, cost: 3000, group: SkillGroup.Unlock },
@@ -424,6 +431,14 @@ const attackUnitPowerStatusEffects: UnitSkillMap = new Map([
   ],
   [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 2]])],
   [Skill.XFighterAttackIncrase, new Map([[UnitID.XFighter, 0.5]])],
+  [
+    Skill.BuyUnitHumveeAvenger,
+    new Map([
+      [UnitID.HumveeAvenger, 0.5],
+      [UnitID.XFighter, 0.3],
+      [UnitID.FighterJet, 0.3],
+    ]),
+  ],
 ]);
 
 const attackMovementTypeStatusEffects: MovementSkillMap = new Map([
@@ -444,6 +459,14 @@ const attackMovementTypeStatusEffects: MovementSkillMap = new Map([
       [MovementTypes.LowAltitude, 0.1],
       [MovementTypes.Amphibious, -0.15],
       [MovementTypes.Ship, -0.15],
+    ]),
+  ],
+  [
+    Skill.BuyUnitHumveeAvenger,
+    new Map([
+      [MovementTypes.Air, 0.1],
+      [MovementTypes.LowAltitude, 0.1],
+      [MovementTypes.AirInfantry, 0.1],
     ]),
   ],
 ]);
@@ -607,6 +630,7 @@ const skillRangePowerEffects = new Map<number, RangeSkillMap>([
   [UnitID.Artillery, new Map([[Skill.ArtilleryRangeIncrease, [2, 6]]])],
   [UnitID.XFighter, new Map([[Skill.XFighterAttackIncrase, [1, 3]]])],
   [UnitID.Scientist, new Map([[Skill.UnlockScientist, [2, 3]]])],
+  [UnitID.HumveeAvenger, new Map([[Skill.BuyUnitHumveeAvenger, [1, 4]]])],
 ]);
 
 const skillMovementTypeRadiusEffects = new Map<
@@ -674,6 +698,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Ogre, new Map([[Skill.BuyUnitOgre, 350]])],
   [UnitID.Bear, new Map([[Skill.BuyUnitBear, 300]])],
   [UnitID.Scientist, new Map([[Skill.UnlockScientist, 375]])],
+  [UnitID.HumveeAvenger, new Map([[Skill.BuyUnitHumveeAvenger, 275]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
@@ -1512,6 +1537,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.UnlockScientist:
     case Skill.VampireHeal:
     case Skill.XFighterAttackIncrase:
+    case Skill.BuyUnitHumveeAvenger:
       return false;
     default: {
       skill satisfies never;

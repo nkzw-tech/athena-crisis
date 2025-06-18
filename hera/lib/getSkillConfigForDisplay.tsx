@@ -417,6 +417,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         icon: Flask,
         name: fbt('Field Research', 'Skill name'),
       };
+    case Skill.BuyUnitHumveeAvenger:
+      return {
+        alpha: 0.3,
+        borderStyle: 'up2x',
+        colors: 'blue',
+        icon: Ungroup,
+        name: fbt('Locked On', 'Skill name'),
+      };
     default: {
       skill satisfies never;
       throw new UnknownTypeError('getSkillConfig', skill);

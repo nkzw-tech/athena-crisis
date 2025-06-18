@@ -1573,15 +1573,9 @@ export const Weapons = {
   Rockets: new Weapon(
     'Rockets',
     new Map([
-      [EntityType.Airplane, 60],
-      [EntityType.AirSoldier, 60],
-      [EntityType.Amphibious, 90],
-      [EntityType.Artillery, 70],
-      [EntityType.Ground, 80],
-      [EntityType.LowAltitude, 60],
-      [EntityType.Rail, 60],
-      [EntityType.Ship, 60],
-      [EntityType.Soldier, 80],
+      [EntityType.Airplane, 90],
+      [EntityType.AirSoldier, 70],
+      [EntityType.LowAltitude, 90],
     ]),
     new WeaponAnimation('Rockets', 'Attack/Rockets', {
       frames: 9,
@@ -2479,7 +2473,7 @@ export const TransportHelicopter = new UnitInfo(
 );
 
 export const FighterJet = new UnitInfo(
-  18,
+  UnitID.FighterJet,
   'Fighter Jet',
   'Titan',
   'unknown',
@@ -3265,25 +3259,26 @@ export const SuperTank = new UnitInfo(
 );
 
 export const HumveeAvenger = new UnitInfo(
-  39,
+  UnitID.HumveeAvenger,
   'Humvee Avenger',
   'Stella',
   'female',
-  `Unknown`,
-  `Unknown`,
-  30,
+  `The Humvee Avenger is a fast-moving but rare anti-air unit. Its high speed lets it quickly reposition to defend against opposing air units. While it can't target ground units, it can provide valuable support to other units on the battlefield.`,
+  `{name}'s strategic mind elevated her from leading the Humvee Avenger squad to becoming the leader of her entire faction. Known for her loyalty and sharp thinking, {name} rarely enters battle directly—but when her presence is required, she always gets there as fast as she can.`,
+  20,
   EntityType.Ground,
   MovementTypes.Tires,
   {
     cost: Number.POSITIVE_INFINITY,
-    fuel: 40,
+    fuel: 30,
     radius: 6,
-    vision: 3,
+    vision: 5,
   },
   DefaultUnitAbilities,
   {
-    type: AttackType.ShortRange,
-    weapons: [Weapons.Rockets],
+    range: [1, 2],
+    type: AttackType.LongRange,
+    weapons: [Weapons.Rockets.withSupply(4)],
   },
   null,
   {
@@ -4056,7 +4051,6 @@ export const SpecialUnits = new Set([
 
 export const SecretUnits = new Set([
   Truck,
-  HumveeAvenger,
   ArtilleryHumvee,
   ReconDrone,
   Drone,

@@ -12,6 +12,7 @@ import {
   Dinosaur,
   Dragon,
   Frigate,
+  HumveeAvenger,
   InfernoJetpack,
   Jeep,
   Medic,
@@ -84,6 +85,8 @@ export default function getSkillBasedPortrait(skill: Skill): UnitInfo | null {
       return Frigate;
     case Skill.XFighterAttackIncrase:
       return XFighter;
+    case Skill.BuyUnitHumveeAvenger:
+      return HumveeAvenger;
     case Skill.ArtilleryRangeIncrease:
     case Skill.AttackAndDefenseDecreaseEasy:
     case Skill.AttackAndDefenseIncreaseHard:
