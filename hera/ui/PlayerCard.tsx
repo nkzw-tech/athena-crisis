@@ -343,6 +343,7 @@ export default memo(function PlayerCard({
                   alignCenter
                   className={cx(shrinkStyle, nowrapStyle)}
                   gap={4}
+                  nowrap
                 >
                   <Icon icon={Watch} />
                   {map.isCurrentPlayer(player.id) ? (
