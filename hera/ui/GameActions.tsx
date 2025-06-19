@@ -866,11 +866,14 @@ const zoomButtonStyle = css`
 
 const extraButtonStyle = css`
   ${vars.set('bottom-offset', 7.5)}
-  right: ${(size - 6) * 1.5}px;
+  right: calc(${(size - 6) * 1.5}px + ${applyVar(
+    'inset',
+  )} + env(safe-area-inset-right));
 
   ${Breakpoints.height.xxs} {
-    right: 0;
     ${vars.set('bottom-offset', 9)}
+
+    right: calc(${applyVar('inset')} + env(safe-area-inset-right));
   }
 `;
 
