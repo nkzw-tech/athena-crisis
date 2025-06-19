@@ -24,7 +24,7 @@
     "@nkzw/histogram": "^1.1.0",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/safe-word-list": "^2.1.0",
-    "@pothos/core": "^4.6.3",
+    "@pothos/core": "^4.7.0",
     "@pothos/plugin-complexity": "^4.1.2",
     "@pothos/plugin-directives": "^4.2.2",
     "@pothos/plugin-prisma": "^4.9.1",
