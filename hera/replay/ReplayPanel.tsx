@@ -1,5 +1,4 @@
 import isVisibleActionResponse from '@deities/apollo/lib/isVisibleActionResponse.tsx';
-import { GameState } from '@deities/apollo/Types.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
@@ -21,6 +20,7 @@ import Play from '@iconify-icons/pixelarticons/play.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import { useCallback, useMemo } from 'react';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
+import { GameStateWithGameActionResponseEntry } from './hooks/useReplayGameState.tsx';
 import { PlayState } from './ReplayMap.tsx';
 
 const isNewPlayer = (
@@ -42,7 +42,7 @@ export default function ReplayPanel({
   setPlayState,
 }: {
   currentIndex: number;
-  gameState: GameState;
+  gameState: GameStateWithGameActionResponseEntry;
   hasState: (index: number) => boolean;
   max: number;
   playState: PlayState;

@@ -66,11 +66,13 @@ export type EncodedGameActionResponse = [
   timeout?: number | null,
 ];
 
-export type GameActionResponses = ReadonlyArray<{
+export type GameActionResponseEntry = Readonly<{
   actionResponse: ActionResponse;
   buildings?: ImmutableMap<Vector, Building>;
   units?: ImmutableMap<Vector, Unit>;
 }>;
+
+export type GameActionResponses = ReadonlyArray<GameActionResponseEntry>;
 
 export type GameActionResponse = {
   message?: EncodedClientMapMessage | null;

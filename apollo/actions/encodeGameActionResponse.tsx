@@ -48,24 +48,25 @@ const addVisibleEntities = (
       PlainEntitiesList<PlainUnit> | undefined,
     ]
   | null => {
-  if (previousMap.config.fog) {
-    const [buildings, units] = getVisibleEntities(
-      previousMap,
-      currentMap,
-      vision,
-      labels,
-    );
-    const actualBuildings =
-      actionResponse.type === 'Move'
-        ? buildings
-        : removeActionedEntities(buildings, actionResponse);
-    const actualUnits = removeActionedEntities(units, actionResponse);
-    return [
-      actualBuildings.size ? encodeEntities(actualBuildings) : undefined,
-      actualUnits.size ? encodeEntities(actualUnits) : undefined,
-    ];
+  if (!previousMap.config.fog) {
+    return null;
   }
-  return null;
+
+  const [buildings, units] = getVisibleEntities(
+    previousMap,
+    currentMap,
+    vision,
+    labels,
+  );
+  const actualBuildings =
+    actionResponse.type === 'Move'
+      ? buildings
+      : removeActionedEntities(buildings, actionResponse);
+  const actualUnits = removeActionedEntities(units, actionResponse);
+  return [
+    actualBuildings.size ? encodeEntities(actualBuildings) : undefined,
+    actualUnits.size ? encodeEntities(actualUnits) : undefined,
+  ];
 };
 
 const encodeItem = (
@@ -75,6 +76,7 @@ const encodeItem = (
   currentMap: MapData | undefined,
   labels: PlayerIDSet | null,
 ): EncodedGameActionResponseItem => {
+  const encodedActionResponse = encodeActionResponse(actionResponse);
   const visible =
     previousMap && currentMap
       ? addVisibleEntities(
@@ -85,7 +87,10 @@ const encodeItem = (
           labels,
         )
       : null;
-  return [encodeActionResponse(actionResponse), ...(visible || [])];
+
+  return visible
+    ? [encodedActionResponse, ...visible]
+    : [encodedActionResponse];
 };
 
 export default function encodeGameActionResponse(

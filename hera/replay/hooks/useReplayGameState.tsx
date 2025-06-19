@@ -1,7 +1,12 @@
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import { decodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
+import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
+import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { ReplayState } from '@deities/apollo/replay/Types.tsx';
-import { GameState, MutableGameState } from '@deities/apollo/Types.tsx';
+import {
+  GameActionResponseEntry,
+  GameStateEntry,
+} from '@deities/apollo/Types.tsx';
 import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -18,11 +23,18 @@ export type ReplayStateWithViewer = Readonly<{
   viewer: string;
 }>;
 
+type MutableGameStateWithGameActionResponseEntry = Array<
+  readonly [...GameStateEntry, entry?: GameActionResponseEntry]
+>;
+
+export type GameStateWithGameActionResponseEntry =
+  Readonly<MutableGameStateWithGameActionResponseEntry>;
+
 export default function useReplayGameState(
   replayState: ReplayStateWithViewer | null,
 ) {
   return useMemo((): [
-    gameState: GameState,
+    gameState: GameStateWithGameActionResponseEntry,
     info: Readonly<{ mapName: string }> | null,
     users: ReadonlyMap<string, PlayerDetail & UserLikeWithID>,
   ] => {
@@ -31,7 +43,7 @@ export default function useReplayGameState(
       return [[], null, users];
     }
 
-    const gameState: MutableGameState = [];
+    const gameState: MutableGameStateWithGameActionResponseEntry = [];
     let info: { mapName: string } | null = null;
     let map: MapData | null = null;
     let vision: VisionT | null = null;
@@ -79,6 +91,25 @@ export default function useReplayGameState(
               );
               map = applyActionResponse(map, vision, actionResponse);
               gameState.push([actionResponse, map]);
+            }
+          }
+          break;
+        }
+        case 'gameActions': {
+          if (map && vision) {
+            const gameActionResponse = decodeGameActionResponse(
+              entry.gameAction,
+            );
+            if (gameActionResponse?.others) {
+              for (const entry of gameActionResponse.others) {
+                const { actionResponse } = entry;
+                map = updateVisibleEntities(
+                  applyActionResponse(map, vision, actionResponse),
+                  vision,
+                  entry,
+                );
+                gameState.push([actionResponse, map, entry] as const);
+              }
             }
           }
           break;
