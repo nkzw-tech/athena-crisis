@@ -1,22 +1,15 @@
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
+import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import Player from '@deities/athena/map/Player.tsx';
-import sortBy from '@nkzw/core/sortBy.js';
 
-export default function getMaxCharge(
-  player: Player,
-  availableCharges: number,
-): number {
-  return (
-    sortBy(
-      [...player.skills].flatMap((skill) => {
-        if (player.activeSkills.has(skill)) {
-          return [];
-        }
+export default function getMaxCharge(player: Player): number {
+  const list: Array<number> = [];
+  for (const skill of player.skills) {
+    const { charges } = getSkillConfig(skill);
+    if (charges && canActivatePower(player, skill)) {
+      list.push(charges);
+    }
+  }
 
-        const { charges } = getSkillConfig(skill);
-        return charges && charges <= availableCharges ? [charges] : [];
-      }),
-      (charges) => charges,
-    ).at(-1) || 0
-  );
+  return Math.max(...list) ?? 0;
 }

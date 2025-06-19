@@ -30,6 +30,7 @@ import { Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, UnitInfo } from '@deities/athena/info/Unit.tsx';
 import calculateClusters from '@deities/athena/lib/calculateClusters.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
+import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import canPlaceLightning from '@deities/athena/lib/canPlaceLightning.tsx';
@@ -121,12 +122,10 @@ export default class DionysusAlpha extends BaseAI {
         continue;
       }
 
-      const { charges, requiresCrystal, requiresTarget } =
-        getSkillConfig(skill);
+      const { charges, requiresTarget } = getSkillConfig(skill);
       if (
-        charges &&
-        charges * Charge <= charge &&
-        !requiresCrystal &&
+        charges != null &&
+        canActivatePower(player, skill) &&
         shouldActivatePower(map, skill)
       ) {
         potentialSkills.push({

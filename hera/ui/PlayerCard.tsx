@@ -8,6 +8,7 @@ import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import calculateUnitValue from '@deities/athena/lib/calculateUnitValue.tsx';
+import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -91,8 +92,7 @@ export default memo(function PlayerCard({
   const powerCrystals = crystalMap.get(Crystal.Power) || 0;
   const isViewer = currentViewer === player.id;
   const canActivateCrystal = invasions && isViewer;
-  const activeCrystal =
-    player.isHumanPlayer() && player.crystal != null ? player.crystal : null;
+  const activeCrystal = player.isHumanPlayer() ? player.crystal : null;
   const crystal =
     activeCrystal != null
       ? activeCrystal
@@ -107,23 +107,18 @@ export default memo(function PlayerCard({
   const charge = shouldShow ? player.charge : 0;
   const availableCharges = Math.floor(charge / Charge);
   const remainingCharge = charge % Charge;
-  const maxCharge = (shouldShow && getMaxCharge(player, availableCharges)) || 0;
+  const maxCharge = (shouldShow && getMaxCharge(player)) || 0;
 
   const canAction = useCallback(
     (item: PlayerEffectItem) => {
       const itemType = item.type;
       switch (itemType) {
         case 'Skill': {
-          const { charges, requiresCrystal } = getSkillConfig(item.skill);
           const currentPlayer = map.getCurrentPlayer();
           return !!(
-            charges &&
             currentPlayer.id === currentViewer &&
             player.id === currentPlayer.id &&
-            charges * Charge <= player.charge &&
-            !player.activeSkills.has(item.skill) &&
-            (!requiresCrystal ||
-              (player.isHumanPlayer() && player.crystal != null))
+            canActivatePower(player, item.skill)
           );
         }
         case 'Crystal':
@@ -418,7 +413,6 @@ export default memo(function PlayerCard({
             >
               {[...new Set([...player.activeSkills, ...player.skills])].map(
                 (skill) => {
-                  const { charges, requiresCrystal } = getSkillConfig(skill);
                   const isActive = player.activeSkills.has(skill);
                   return (
                     <div
@@ -437,11 +431,8 @@ export default memo(function PlayerCard({
                         active={isActive}
                         canActivate={
                           !isActive &&
-                          !!charges &&
-                          availableCharges >= charges &&
-                          map.getCurrentPlayer().id === player.id &&
-                          (!requiresCrystal ||
-                            (player.isHumanPlayer() && player.crystal != null))
+                          canActivatePower(player, skill) &&
+                          map.getCurrentPlayer().id === player.id
                         }
                         hideDialog
                         skill={skill}

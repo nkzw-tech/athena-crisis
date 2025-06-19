@@ -1,4 +1,3 @@
-import { Charge } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import type Team from '@deities/athena/map/Team.tsx';
@@ -174,9 +173,7 @@ export default memo(function CurrentGameCard({
   const hasSkills = players.some(({ skills }) => skills.size > 0);
   const currentPlayer = map.getCurrentPlayer();
   const isCurrentPlayer = currentViewer === currentPlayer.id;
-  const canActivatePower =
-    isCurrentPlayer &&
-    getMaxCharge(currentPlayer, Math.floor(currentPlayer.charge / Charge)) > 0;
+  const canActivatePower = isCurrentPlayer && getMaxCharge(currentPlayer) > 0;
 
   const animatePlayer = hasNotableAnimation(animations);
   const hasMessages = hasCharacterMessage(animations);

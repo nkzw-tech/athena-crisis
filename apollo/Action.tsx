@@ -13,6 +13,7 @@ import { Crystal, Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import calculateDamage from '@deities/athena/lib/calculateDamage.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
+import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import canLoad from '@deities/athena/lib/canLoad.tsx';
@@ -918,17 +919,9 @@ function buySkill(map: MapData, { from, skill }: BuySkillAction) {
 
 function activatePower(map: MapData, { from, skill }: ActivatePowerAction) {
   const player = map.getCurrentPlayer();
-  const { charges, requiresCrystal, requiresTarget } = getSkillConfig(skill);
+  const { requiresTarget } = getSkillConfig(skill);
 
-  if (
-    player &&
-    player.skills?.has(skill) &&
-    !player.activeSkills?.has(skill) &&
-    charges &&
-    charges > 0 &&
-    player.charge >= charges * Charge &&
-    (!requiresCrystal || (player.isHumanPlayer() && player.crystal != null))
-  ) {
+  if (player && canActivatePower(player, skill)) {
     const target = requiresTarget && from ? from : null;
     if (requiresTarget && (!target || !map.contains(target))) {
       return null;
