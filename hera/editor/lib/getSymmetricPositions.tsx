@@ -1,7 +1,7 @@
 import Vector from '@deities/athena/map/Vector.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import { DrawingMode } from '../Types.tsx';
-import { mirrorVector } from './mirrorVector.ts';
+import { mirrorVector } from './mirrorVector.tsx';
 
 export default function getSymmetricPositions(
   origin: Vector,

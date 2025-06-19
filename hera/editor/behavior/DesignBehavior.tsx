@@ -52,7 +52,7 @@ import {
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
-import getSymmetricPositions from '../lib/getSymmetricPositions.ts';
+import getSymmetricPositions from '../lib/getSymmetricPositions.tsx';
 import updateEditorHistory from '../lib/updateEditorHistory.tsx';
 import { EditorState } from '../Types.tsx';
 

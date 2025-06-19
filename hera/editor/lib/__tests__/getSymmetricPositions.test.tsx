@@ -1,7 +1,7 @@
 import vec from '@deities/athena/map/vec.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
-import getSymmetricPositions from '../getSymmetricPositions.ts';
+import getSymmetricPositions from '../getSymmetricPositions.tsx';
 
 test('`getSymmetricPositions` regular', () => {
   expect(
