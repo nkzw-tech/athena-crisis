@@ -31,10 +31,10 @@ export const CrystalCosts: Record<Crystal, number> = {
 };
 
 export const MaxChaosStars: Record<Crystal, number> = {
-  [Crystal.Command]: 20,
-  [Crystal.Help]: 20,
+  [Crystal.Command]: 35,
+  [Crystal.Help]: 35,
   [Crystal.Memory]: 0,
-  [Crystal.Phantom]: 25,
-  [Crystal.Power]: 20,
+  [Crystal.Phantom]: 40,
+  [Crystal.Power]: 35,
   [Crystal.Super]: 0,
 };
