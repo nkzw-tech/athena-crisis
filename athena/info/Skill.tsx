@@ -196,7 +196,7 @@ const skillConfig: Record<
   },
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
   [Skill.BuyUnitHumveeAvenger]: {
-    charges: 4,
+    charges: 3,
     cost: 1500,
     group: SkillGroup.Unlock,
   },
