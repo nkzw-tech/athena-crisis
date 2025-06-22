@@ -9,6 +9,7 @@ import captureException from './lib/captureException.tsx';
 export type NativeApp = Readonly<{
   canToggleFullScreen: () => boolean;
   copyToClipboard: (text: string) => void;
+  downloadURL: (url: string) => void;
   getInitialURL: () => string | null;
   getSteamAuthenticationTicket: () => Promise<string | null>;
   getSteamUserId: () => string;
@@ -108,6 +109,7 @@ window.$__AC__R = {
 export const App: App = {
   canQuit: !!app,
   canToggleFullScreen: app?.canToggleFullScreen || (() => false),
+  downloadURL: app?.downloadURL || ((url: string) => window.open(url)),
   getCurrentAppVersion: () =>
     navigator.userAgent.match(/AthenaCrisis\/([\w.-]+)/)?.[1] || null,
   getInitialURL: app?.getInitialURL || (() => null),
