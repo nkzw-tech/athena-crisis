@@ -1,5 +1,5 @@
 import { isSafari } from '@deities/ui/Browser.tsx';
-import { getCurrentFonts } from '../../i18n/getLocale.tsx';
+import { getCurrentFonts } from '../../i18n/LocaleContext.tsx';
 
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d')!;

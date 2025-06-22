@@ -17,7 +17,7 @@ import Play from '@iconify-icons/pixelarticons/play.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import useRelativeTime from '@nkzw/use-relative-time';
 import { ReactNode } from 'react';
-import { getShortLocale } from '../i18n/getLocale.tsx';
+import { useLocaleContext } from '../i18n/LocaleContext.tsx';
 import { Actions, ReplayState } from '../Types.tsx';
 import ActionBar from './ActionBar.tsx';
 import MiniPlayerIcon from './MiniPlayerIcon.tsx';
@@ -64,7 +64,8 @@ const TurnTimer = ({
   player: Player;
   timeout: number;
 }) => {
-  const relativeTime = useRelativeTime(timeout, getShortLocale(), dateNow);
+  const { shortLocale } = useLocaleContext();
+  const relativeTime = useRelativeTime(timeout, shortLocale, dateNow);
 
   return timeout >= dateNow() ? (
     <TimeCard player={player}>

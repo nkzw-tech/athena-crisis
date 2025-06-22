@@ -8,6 +8,7 @@ import {
 import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
+import LocaleContext from '@deities/hera/i18n/LocaleContext.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -91,47 +92,49 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
   }, [eventEmitters, gameActionResponses, initialURL]);
 
   return (
-    <VisibilityStateContext>
-      <ErrorBoundary FallbackComponent={ErrorComponent} key={initialURL}>
-        {maps.map((mapData, index) => {
-          const map = MapData.fromJSON(mapData);
-          if (!map) {
+    <LocaleContext>
+      <VisibilityStateContext>
+        <ErrorBoundary FallbackComponent={ErrorComponent} key={initialURL}>
+          {maps.map((mapData, index) => {
+            const map = MapData.fromJSON(mapData);
+            if (!map) {
+              return (
+                <div
+                  className={cx(wrapperStyle, redStyle)}
+                  data-testid={`map-${index}`}
+                  key={index}
+                >
+                  Could not render Map {index}
+                </div>
+              );
+            }
             return (
-              <div
-                className={cx(wrapperStyle, redStyle)}
-                data-testid={`map-${index}`}
-                key={index}
-              >
-                Could not render Map {index}
+              <div key={index}>
+                <div className={inlineStyle} data-testid={`map-${index}`}>
+                  <GameMap
+                    animationSpeed={animationSpeed}
+                    autoPanning={false}
+                    behavior={NullBehavior}
+                    confirmActionStyle="never"
+                    currentUserId={viewers[index]}
+                    events={eventEmitters?.[index]}
+                    fogStyle="soft"
+                    map={map}
+                    paused
+                    playerDetails={new Map()}
+                    scale={1}
+                    scroll={false}
+                    showCursor={false}
+                    style="none"
+                    tilted={false}
+                  />
+                </div>
               </div>
             );
-          }
-          return (
-            <div key={index}>
-              <div className={inlineStyle} data-testid={`map-${index}`}>
-                <GameMap
-                  animationSpeed={animationSpeed}
-                  autoPanning={false}
-                  behavior={NullBehavior}
-                  confirmActionStyle="never"
-                  currentUserId={viewers[index]}
-                  events={eventEmitters?.[index]}
-                  fogStyle="soft"
-                  map={map}
-                  paused
-                  playerDetails={new Map()}
-                  scale={1}
-                  scroll={false}
-                  showCursor={false}
-                  style="none"
-                  tilted={false}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </ErrorBoundary>
-    </VisibilityStateContext>
+          })}
+        </ErrorBoundary>
+      </VisibilityStateContext>
+    </LocaleContext>
   );
 };
 

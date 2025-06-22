@@ -20,7 +20,7 @@
     "@nkzw/core": "^1.2.1",
     "@nkzw/use-visibility-state": "^1.0.3",
     "array-shuffle": "^3.0.0",
-    "fbtee": "^0.3.0",
+    "fbtee": "^0.3.1",
     "framer-motion": "^12.18.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

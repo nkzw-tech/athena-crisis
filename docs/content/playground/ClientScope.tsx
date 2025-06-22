@@ -1,4 +1,5 @@
 import { HideContext } from '@deities/hera/hooks/useHide.tsx';
+import LocaleContext from '@deities/hera/i18n/LocaleContext.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import setupGamePad from '@deities/ui/controls/setupGamePad.tsx';
 import setupHidePointer from '@deities/ui/controls/setupHidePointer.tsx';
@@ -10,20 +11,9 @@ import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
 import { css } from '@emotion/css';
 import { VisibilityStateContext } from '@nkzw/use-visibility-state';
-import { IntlVariations, setupFbtee } from 'fbtee';
 import { ReactElement } from 'react';
 
 initializeCSSVariables();
-
-setupFbtee({
-  hooks: {
-    getViewerContext: () => ({
-      GENDER: IntlVariations.GENDER_UNKNOWN,
-      locale: 'en_US',
-    }),
-  },
-  translations: {},
-});
 
 const clientScopeStyle = css`
   all: initial;
@@ -71,14 +61,16 @@ if (import.meta.env.DEV) {
 
 export default function ClientScope({ children }: { children: ReactElement }) {
   return (
-    <ScaleContext>
-      <VisibilityStateContext>
-        <HideContext>
-          <AlertContext>
-            <div className={clientScopeStyle}>{children}</div>
-          </AlertContext>
-        </HideContext>
-      </VisibilityStateContext>
-    </ScaleContext>
+    <LocaleContext>
+      <ScaleContext>
+        <VisibilityStateContext>
+          <HideContext>
+            <AlertContext>
+              <div className={clientScopeStyle}>{children}</div>
+            </AlertContext>
+          </HideContext>
+        </VisibilityStateContext>
+      </ScaleContext>
+    </LocaleContext>
   );
 }
