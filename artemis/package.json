@@ -28,7 +28,7 @@
     "@pothos/plugin-complexity": "^4.1.2",
     "@pothos/plugin-directives": "^4.2.2",
     "@pothos/plugin-prisma": "^4.9.1",
-    "@pothos/plugin-relay": "^4.4.3",
+    "@pothos/plugin-relay": "^4.5.0",
     "@pothos/plugin-scope-auth": "^4.1.5",
     "@prisma/client": "^6.10.1",
     "@quixo3/prisma-session-store": "^3.1.13",

@@ -27,7 +27,7 @@
     "@nkzw/use-visibility-state": "^1.0.3",
     "@types/react": "^19.1.8",
     "dunkel-theme": "^1.7.1",
-    "fbtee": "^0.2.2",
+    "fbtee": "^0.3.0",
     "framer-motion": "^12.18.1",
     "licht-theme": "^1.7.1",
     "react": "^19.1.0",
