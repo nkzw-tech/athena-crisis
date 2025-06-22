@@ -5,6 +5,7 @@ import Entity from '@deities/athena/map/Entity.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -40,6 +41,7 @@ import {
   HiddenTargetAttackUnitActionResponse,
 } from '../HiddenAction.tsx';
 import { GameState } from '../Types.tsx';
+import dropLabelsFromActionResponse from './dropLabelsFromActionResponse.tsx';
 
 const completeUnit = ({ from }: { from: Vector }) =>
   ({
@@ -532,7 +534,11 @@ export default function computeVisibleActions(
   vision: VisionT,
   gameState: GameState,
 ): ReadonlyArray<ActionResponseWithMapData> {
+  const hiddenLabels = getHiddenLabels(
+    (gameState?.at(-1)?.[1] || previousMap).config.objectives,
+  );
   const responses: Array<ActionResponseWithMapData> = [];
+
   for (const [actionResponse, activeMap] of gameState) {
     const hasFog = activeMap.config.fog;
     if (
@@ -569,14 +575,20 @@ export default function computeVisibleActions(
     }
     previousMap = activeMap;
   }
-  return responses.filter(([actionResponse], index) => {
-    const nextActionResponse = responses[index + 1]?.[0];
-    return !(
-      actionResponse.type === 'HiddenFundAdjustment' &&
-      (nextActionResponse?.type === 'HiddenFundAdjustment' ||
-        nextActionResponse?.type === 'EndTurn')
-    );
-  });
+
+  return responses
+    .filter(([actionResponse], index) => {
+      const nextActionResponse = responses[index + 1]?.[0];
+      return !(
+        actionResponse.type === 'HiddenFundAdjustment' &&
+        (nextActionResponse?.type === 'HiddenFundAdjustment' ||
+          nextActionResponse?.type === 'EndTurn')
+      );
+    })
+    .map(([actionResponse, ...response]) => [
+      dropLabelsFromActionResponse(actionResponse, hiddenLabels),
+      ...response,
+    ]);
 }
 
 export function computeVisibleEndTurnActionResponse(

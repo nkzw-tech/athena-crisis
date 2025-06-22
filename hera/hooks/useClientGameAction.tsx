@@ -15,7 +15,6 @@ import { decodeGameState } from '@deities/apollo/GameState.tsx';
 import { computeVisibleEndTurnActionResponse } from '@deities/apollo/lib/computeVisibleActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import dropLabelsFromActionResponse from '@deities/apollo/lib/dropLabelsFromActionResponse.tsx';
-import dropLabelsFromGameState from '@deities/apollo/lib/dropLabelsFromGameState.tsx';
 import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
@@ -157,7 +156,6 @@ export default function useClientGameAction(
               actionResponse,
               hiddenLabels,
             );
-            gameState = dropLabelsFromGameState(gameState, hiddenLabels);
 
             return decodeGameActionResponse(
               encodeGameActionResponse(

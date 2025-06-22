@@ -21,6 +21,11 @@ export default function dropLabelsFromActionResponse(
     case 'Spawn':
       return {
         ...actionResponse,
+        buildings: actionResponse.buildings?.map((building) =>
+          building.label != null && labels.has(building.label)
+            ? building.dropLabel(labels)
+            : building,
+        ),
         units: actionResponse.units.map((unit) => unit.dropLabel(labels)),
       };
     case 'Swap': {
@@ -42,17 +47,24 @@ export default function dropLabelsFromActionResponse(
     }
     case 'AttackBuilding':
     case 'Capture':
-    case 'CreateBuilding': {
+    case 'CreateBuilding':
+    case 'HiddenSourceAttackBuilding': {
       const { building } = actionResponse;
       return building?.label != null && labels.has(building.label)
         ? { ...actionResponse, building: building.dropLabel(labels) }
         : actionResponse;
     }
+    case 'HiddenMove': {
+      const { unit } = actionResponse;
+      return unit?.label != null && labels.has(unit.label)
+        ? { ...actionResponse, unit: unit.dropLabel(labels) }
+        : actionResponse;
+    }
     case 'AbandonInvasion':
     case 'ActivateCrystal':
     case 'ActivatePower':
-    case 'AttackUnit':
     case 'AttackBuildingGameOver':
+    case 'AttackUnit':
     case 'AttackUnitGameOver':
     case 'BeginGame':
     case 'BeginTurnGameOver':
@@ -69,8 +81,6 @@ export default function dropLabelsFromActionResponse(
     case 'Heal':
     case 'HiddenDestroyedBuilding':
     case 'HiddenFundAdjustment':
-    case 'HiddenMove':
-    case 'HiddenSourceAttackBuilding':
     case 'HiddenSourceAttackUnit':
     case 'HiddenTargetAttackBuilding':
     case 'HiddenTargetAttackUnit':
