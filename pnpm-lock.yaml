@@ -192,8 +192,8 @@ importers:
         specifier: ^13.12.1
         version: 13.12.1(patch_hash=3a8f452679518c7b4cea4ea5836ffb74fcf4d9157b4b4b0da1ddf078e8cfaeba)
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.18.1
         version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -583,8 +583,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.18.1
         version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -665,8 +665,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.18.1
         version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -745,8 +745,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.18.1
         version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -881,8 +881,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       jest-image-snapshot:
         specifier: ^6.5.1
         version: 6.5.1
@@ -926,8 +926,8 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       fbtee:
-        specifier: ^0.3.1
-        version: 0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^0.3.2
+        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.18.1
         version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3755,8 +3755,8 @@ packages:
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
-  '@sinclair/typebox@0.34.35':
-    resolution: {integrity: sha512-C6ypdODf2VZkgRT6sFM8E1F8vR+HcffniX0Kp8MsU8PIfrlXbNCBz0jzj17GjdmjTx1OtZzdH8+iALL21UjF5A==}
+  '@sinclair/typebox@0.34.36':
+    resolution: {integrity: sha512-JFHFhF6MqqRE49JDAGX/EPlHwxIukrKMhNwlMoB/wIJBkvu3+ciO335yDYPP3soI01FkhVXWnyNPKEl+EsC4Zw==}
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
@@ -6107,8 +6107,8 @@ packages:
   fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
 
-  fbtee@0.3.1:
-    resolution: {integrity: sha512-ewP5c8c6Bqddv5FIPEhR1zIMr5Xc4KAMWSbxBEyFT+1m2b2IygWhSBk9AQUIVCxYkmb73AE602VK1Kknt4DUeQ==}
+  fbtee@0.3.2:
+    resolution: {integrity: sha512-NKIA86W1oKCVlZSzjzwrNbAtPhirAkBVGK7T0nATRQm/HxQrGcdYACnChyJbTTWh+2Y0c4UOaW4UIVXuXJxZsA==}
     peerDependencies:
       '@nkzw/babel-plugin-fbtee': ^0.3.0
       '@nkzw/babel-plugin-fbtee-runtime': ^0.3.0
@@ -11621,7 +11621,7 @@ snapshots:
 
   '@jest/schemas@30.0.1':
     dependencies:
-      '@sinclair/typebox': 0.34.35
+      '@sinclair/typebox': 0.34.36
 
   '@jest/types@30.0.1':
     dependencies:
@@ -13364,7 +13364,7 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@sinclair/typebox@0.34.35': {}
+  '@sinclair/typebox@0.34.36': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
@@ -16239,7 +16239,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  fbtee@0.3.1(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0):
+  fbtee@0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0):
     dependencies:
       '@nkzw/babel-plugin-fbtee': 0.3.0
       '@nkzw/babel-plugin-fbtee-runtime': 0.3.0(@nkzw/babel-plugin-fbtee@0.3.0)

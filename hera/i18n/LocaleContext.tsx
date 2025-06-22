@@ -4,9 +4,8 @@ import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
-import { LocaleContext as FbteeLocaleContext, setupLocaleContext } from 'fbtee';
+import { LocaleContextProps, setupLocaleContext } from 'fbtee';
 import {
-  ComponentProps,
   createContext,
   ReactNode,
   use,
@@ -36,21 +35,20 @@ export function getCurrentFonts() {
   return currentFonts;
 }
 
-type Props = ComponentProps<typeof FbteeLocaleContext>;
-
 export default function LocaleContext({
   children,
   fallbackLocale,
+  gender,
   hooks,
   loadLocale,
   translations,
 }: Omit<
-  ComponentProps<typeof FbteeLocaleContext>,
+  LocaleContextProps,
   'availableLanguages' | 'clientLocales' | 'loadLocale'
 > &
   Readonly<{
     children: ReactNode;
-    loadLocale?: Props['loadLocale'];
+    loadLocale?: LocaleContextProps['loadLocale'];
   }>) {
   const { getLocale, setLocale } = useMemo(
     () =>
@@ -62,11 +60,12 @@ export default function LocaleContext({
           ...navigator.languages,
         ],
         fallbackLocale,
+        gender,
         hooks,
         loadLocale: loadLocale || (() => Promise.resolve({})),
         translations,
       }),
-    [fallbackLocale, hooks, loadLocale, translations],
+    [fallbackLocale, gender, hooks, loadLocale, translations],
   );
 
   const [locale, _setLocale] = useState(getLocale);
