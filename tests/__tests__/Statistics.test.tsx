@@ -262,10 +262,10 @@ test('collects statistics when attacking buildings', async () => {
       "createdUnits": 0,
       "damage": 100,
       "destroyedBuildings": 1,
-      "destroyedUnits": 0,
+      "destroyedUnits": 1,
       "lostBuildings": 0,
       "lostUnits": 0,
-      "oneShots": 1,
+      "oneShots": 0,
       "rescuedUnits": 0,
     }
   `);

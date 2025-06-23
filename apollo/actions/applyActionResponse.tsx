@@ -251,22 +251,20 @@ export default function applyActionResponse(
             ? units.delete(to)
             : units;
 
-      const lostUnits =
+      const lostUnitsA =
         unitA &&
         originalUnitA &&
         units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
+      const lostUnitsC = originalUnitC && !unitC ? originalUnitC.count() : 0;
       const oneShotC =
-        originalUnitC &&
-        ((originalUnitC?.health >= MaxHealth && !unitC) || !building)
-          ? 1
-          : 0;
+        originalUnitC && originalUnitC.health >= MaxHealth && !unitC ? 1 : 0;
       const oneShotA =
-        originalUnitA && originalUnitA?.health >= MaxHealth && !unitA ? 1 : 0;
+        originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
+
       // Update `playerA` and `playerB` first, then update `playerC` which might equal `playerB`.
       let actualPlayerA = map.getPlayer(playerA);
-
       actualPlayerA = maybeRecoverUnitCost(
         !unitA,
         actualPlayerA,
@@ -282,7 +280,8 @@ export default function applyActionResponse(
                   originalBuilding.health - (building?.health || 0),
                 ),
                 destroyedBuildings: building ? 0 : 1,
-                lostUnits,
+                destroyedUnits: lostUnitsC,
+                lostUnits: lostUnitsA,
                 oneShots: oneShotC,
               })
               .maybeSetCharge(chargeA),
@@ -321,7 +320,7 @@ export default function applyActionResponse(
                     hasCounterAttack && originalUnitA
                       ? Math.max(0, originalUnitA.health - (unitA?.health || 0))
                       : 0,
-                  destroyedUnits: lostUnits,
+                  destroyedUnits: lostUnitsA,
                   lostUnits: unitC ? 0 : originalUnitC?.count() || 1,
                   oneShots: oneShotA,
                 })
