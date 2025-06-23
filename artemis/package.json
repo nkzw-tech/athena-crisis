@@ -74,7 +74,7 @@
     "glob": "11.0.3",
     "p-limit": "^6.2.0",
     "prisma": "^6.10.1",
-    "prisma-json-types-generator": "^3.4.2",
+    "prisma-json-types-generator": "^3.5.0",
     "terminal-link": "^4.0.0"
   },
   "prisma": {
