@@ -18,3 +18,26 @@ packages:
   - 'tests'
   - 'ui'
   - 'zeus'
+
+peerDependencyRules:
+  allowAny:
+    - '@aws-sdk/client-sso-oidc'
+    - react
+    - react-dom
+    - utf-8-validate
+
+neverBuiltDependencies:
+  - canvas
+
+overrides:
+  react@^18.0.0: 19.0.0-rc.1
+  rollup@^2.0.0: ^4.16.4
+
+patchedDependencies:
+  cordova-plugin-purchase: patches/cordova-plugin-purchase.patch
+  howler: patches/howler.patch
+  require-in-the-middle: patches/require-in-the-middle.patch
+  resend: patches/resend.patch
+  typescript: patches/typescript.patch
+
+ignorePatchFailures: false

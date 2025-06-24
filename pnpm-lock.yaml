@@ -1,7 +1,7 @@
 lockfileVersion: '9.0'
 
 settings:
-  autoInstallPeers: false
+  autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 overrides:
@@ -281,7 +281,7 @@ importers:
         version: 2.1.0(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))
       vite-plugin-pwa:
         specifier: ^1.0.0
-        version: 1.0.0(@types/babel__core@7.20.5)(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(workbox-window@7.3.0)
+        version: 1.0.0(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(workbox-build@7.3.0(@types/babel__core@7.20.5))(workbox-window@7.3.0)
       vite-plugin-restart:
         specifier: ^0.4.2
         version: 0.4.2(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))
@@ -9430,6 +9430,7 @@ packages:
     peerDependencies:
       '@vite-pwa/assets-generator': ^1.0.0
       vite: ^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      workbox-build: ^7.3.0
       workbox-window: ^7.3.0
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
@@ -20411,7 +20412,7 @@ snapshots:
       html-minifier-terser: 7.2.0
       vite: 6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0)
 
-  vite-plugin-pwa@1.0.0(@types/babel__core@7.20.5)(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(workbox-window@7.3.0):
+  vite-plugin-pwa@1.0.0(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(workbox-build@7.3.0(@types/babel__core@7.20.5))(workbox-window@7.3.0):
     dependencies:
       debug: 4.4.1(supports-color@5.5.0)
       pretty-bytes: 6.1.1
@@ -20420,7 +20421,6 @@ snapshots:
       workbox-build: 7.3.0(@types/babel__core@7.20.5)
       workbox-window: 7.3.0
     transitivePeerDependencies:
-      - '@types/babel__core'
       - supports-color
 
   vite-plugin-restart@0.4.2(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0)):
