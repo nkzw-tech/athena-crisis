@@ -62,10 +62,10 @@
     "@nkzw/eslint-config": "^3.0.1",
     "@nkzw/eslint-plugin-fbtee": "^0.3.0",
     "@nkzw/pothos-locate": "^1.0.0",
-    "@prettier/plugin-oxc": "^0.0.3",
+    "@prettier/plugin-oxc": "^0.0.4",
     "@styled/typescript-styled-plugin": "^1.0.1",
-    "@swc/core": "^1.12.5",
-    "@types/node": "^24.0.3",
+    "@swc/core": "^1.12.6",
+    "@types/node": "^24.0.4",
     "@vitejs/plugin-react": "^4.6.0",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "chalk": "^5.4.1",
@@ -78,7 +78,7 @@
     "prettier-plugin-packagejson": "^2.5.15",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.0",
     "vitest": "^3.2.4"
   },
   "engines": {

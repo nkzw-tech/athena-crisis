@@ -56,7 +56,7 @@
     "resend": "4.6.0",
     "socket.io": "^4.8.1",
     "stripe": "^18.2.1",
-    "ua-parser-js": "^2.0.3",
+    "ua-parser-js": "^2.0.4",
     "utf-8-validate": "^6.0.5"
   },
   "devDependencies": {
