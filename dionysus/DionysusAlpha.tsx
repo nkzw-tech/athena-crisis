@@ -1303,6 +1303,7 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
+    const mapWithvision = this.applyVision(map);
     const fields = map.reduceEachField<{
       off: Array<Vector>;
       on: Array<Vector>;
@@ -1310,7 +1311,7 @@ export default class DionysusAlpha extends BaseAI {
       (fields, vector) =>
         map.getTileInfo(vector) === Lightning
           ? { ...fields, off: [...fields.off, vector] }
-          : map.units.has(vector) && canPlaceLightning(map, vector)
+          : mapWithvision.units.has(vector) && canPlaceLightning(map, vector)
             ? { ...fields, on: [...fields.on, vector] }
             : fields,
       { off: [], on: [] },
