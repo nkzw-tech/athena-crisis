@@ -18,11 +18,11 @@
     "@nkzw/create-context-hook": "^1.1.0",
     "@nkzw/joymap": "^4.0.2",
     "fbtee": "^0.3.2",
-    "framer-motion": "^12.19.1",
+    "framer-motion": "^12.20.1",
     "howler": "^2.2.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2",
+    "react-router-dom": "^7.6.3",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
