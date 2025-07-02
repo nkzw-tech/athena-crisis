@@ -437,7 +437,7 @@ const Weapon = memo(function WeaponAttack({
   const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
   const availableUnits = getAllAvailableUnits(map, biome, opponent, allSkills);
   const isLeader = unit.isLeader();
-  const attackStatusEffect = getAttackStatusEffect(map, unit, vector, tile);
+  const [attackStatusEffect] = getAttackStatusEffect(map, unit, vector, tile);
   const damageGroups = sortBy(
     [
       ...groupBy(
@@ -453,21 +453,33 @@ const Weapon = memo(function WeaponAttack({
     ([damage]) => -damage,
   );
 
-  const getLikelyDamage = (entityB: Entity, index: number) => (
-    <div key={index} style={isLeader ? { color: getColor(player) } : undefined}>
-      {calculateLikelyDamage(
-        unit,
-        entityB,
-        map,
-        vector,
-        vector,
-        getAttackStatusEffect(map, unit, vector, tile),
-        getDefenseStatusEffect(map, entityB, null),
-        1,
-        weapon,
-      )}
-    </div>
-  );
+  const getLikelyDamage = (entityB: Entity, index: number) => {
+    const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+      map,
+      unit,
+      vector,
+      tile,
+    );
+    return (
+      <div
+        key={index}
+        style={isLeader ? { color: getColor(player) } : undefined}
+      >
+        {calculateLikelyDamage(
+          unit,
+          entityB,
+          map,
+          vector,
+          vector,
+          attackStatusEffect,
+          getDefenseStatusEffect(map, entityB, null),
+          flatDamageStatusEffect,
+          1,
+          weapon,
+        )}
+      </div>
+    );
+  };
 
   return (
     <Tick animationConfig={AnimationConfig}>
@@ -631,14 +643,17 @@ const UnitVulnerability = ({
       ...groupBy(
         availableUnits
           .map((unitB) => {
+            const [attackStatusEffect, flatDamageStatusEffect] =
+              getAttackStatusEffect(map, unitB, vector, tile);
             const damage = calculateLikelyDamage(
               unitB,
               unit,
               map,
               vector,
               vector,
-              getAttackStatusEffect(map, unitB, vector, tile),
+              attackStatusEffect,
               getDefenseStatusEffect(map, unit, null),
+              flatDamageStatusEffect,
               1,
             );
             return [

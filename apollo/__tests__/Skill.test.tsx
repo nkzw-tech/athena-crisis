@@ -9,6 +9,7 @@ import {
   Medic,
   Pioneer,
   Saboteur,
+  Scientist,
   SmallTank,
   Sniper,
   SuperTank,
@@ -763,4 +764,61 @@ test('healing cost can be affected by skills', async () => {
 
   expect(getHealCost(Pioneer.create(1).setHealth(50), playerA)).toBe(40);
   expect(getHealCost(Pioneer.create(1).setHealth(50), playerB)).toBe(320);
+});
+
+test('the `Field Research` skill increases the flat damage through labs', () => {
+  const skills = new Set([Skill.UnlockScientist]);
+  const mapA = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
+    units: map.units
+      .set(fromA, Scientist.create(1).setHealth(5))
+      .set(toA.down(), SmallTank.create(2)),
+  });
+
+  const [actionResponseA] = execute(
+    mapA,
+    vision,
+    AttackUnitAction(fromA, toA.down()),
+  )!;
+
+  if (actionResponseA.type !== 'AttackUnit') {
+    throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);
+  }
+
+  expect(actionResponseA.unitB?.health).toBe(75);
+
+  const mapB = mapA.copy({
+    buildings: mapA.buildings.set(fromA, ResearchLab.create(1)),
+  });
+
+  const [actionResponseB] = execute(
+    mapB,
+    vision,
+    AttackUnitAction(fromA, toA.down()),
+  )!;
+
+  if (actionResponseB.type !== 'AttackUnit') {
+    throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);
+  }
+
+  expect(actionResponseB.unitB?.health).toBe(70);
+
+  const mapC = mapB.copy({
+    buildings: mapB.buildings
+      .set(fromB, ResearchLab.create(1))
+      .set(toA, ResearchLab.create(1))
+      .set(toB, ResearchLab.create(1)),
+  });
+
+  const [actionResponseC] = execute(
+    mapC,
+    vision,
+    AttackUnitAction(fromA, toA.down()),
+  )!;
+
+  if (actionResponseC.type !== 'AttackUnit') {
+    throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);
+  }
+
+  expect(actionResponseC.unitB?.health).toBe(55);
 });

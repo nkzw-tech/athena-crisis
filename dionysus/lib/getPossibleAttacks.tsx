@@ -42,7 +42,7 @@ export default function getPossibleAttacks(
   units.forEach(([position, unitA]) => {
     let attackCount = 0;
     const originTile = map.getTileInfo(position);
-    const attackStatusEffect = getAttackStatusEffect(
+    const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
       map,
       unitA,
       position,
@@ -101,6 +101,7 @@ export default function getPossibleAttacks(
         vector,
         attackStatusEffect,
         getDefenseStatusEffect(map, entityB, targetTile),
+        flatDamageStatusEffect,
         1,
       );
 
@@ -174,18 +175,21 @@ export default function getPossibleAttacks(
           entityB.info.getRangeFor(map.getPlayer(entityB)),
         )
       ) {
+        const [attackStatusEffect, flatDamageStatusEffect] =
+          getAttackStatusEffect(map, entityB, vector, targetTile);
         const counterDamage = calculateLikelyDamage(
           entityB.modifyHealth(-damage),
           unitA,
           map,
           vector,
           parent || position,
-          getAttackStatusEffect(map, entityB, vector, targetTile),
+          attackStatusEffect,
           getDefenseStatusEffect(
             map,
             unitA,
             parent ? map.getTileInfo(position) : originTile,
           ),
+          flatDamageStatusEffect,
           CounterAttack,
         );
         // If the counter attack is worse than the attack, skip it.

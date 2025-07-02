@@ -14,6 +14,7 @@ export default function calculateLikelyDamage(
   to: Vector,
   attackStatusEffect: number,
   defenseStatusEffect: number,
+  flatDamageStatusEffect: number,
   modifier: number,
   weapon = unitA.getAttackWeapon(entityB),
 ): number | null {
@@ -33,6 +34,7 @@ export default function calculateLikelyDamage(
             (map.buildings.has(to) ? BuildingCover : 0),
           attackStatusEffect,
           defenseStatusEffect,
+          flatDamageStatusEffect,
           1,
         ) * modifier,
       ),

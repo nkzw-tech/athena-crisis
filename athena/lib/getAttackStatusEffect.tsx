@@ -1,4 +1,4 @@
-import { getSkillAttackStatusEffects } from '../info/Skill.tsx';
+import { getSkillAttackStatusEffects, Skill } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { Ability } from '../info/Unit.tsx';
 import { Crystal, CrystalAttackEffect } from '../invasions/Crystal.tsx';
@@ -15,15 +15,19 @@ export default function getAttackStatusEffect(
   unit: Unit,
   vector: Vector | null,
   tile: TileInfo | null,
-) {
+): [attackStatusEffect: number, flatDamageStatusEffect: number] {
   let buildingEffect = 0;
+  let flatDamageEffect = 0;
+  const player = map.getPlayer(unit);
   for (const [, building] of map.buildings) {
-    if (map.matchesPlayer(building, unit.player)) {
+    if (map.matchesPlayer(building, player)) {
       buildingEffect += building.info.configuration.attackStatusEffect;
+      if (player.skills.has(Skill.UnlockScientist)) {
+        flatDamageEffect += building.info.configuration.flatDamageStatusEffect;
+      }
     }
   }
 
-  const player = map.getPlayer(unit);
   let unitEffect = 0;
   if (vector) {
     for (const adjacent of vector.adjacent()) {
@@ -42,13 +46,16 @@ export default function getAttackStatusEffect(
       ? CrystalAttackEffect
       : 0;
 
-  return Math.max(
-    0,
-    1 +
-      crystalEffect +
-      buildingEffect +
-      unitEffect +
-      (unit.isLeader() ? LeaderStatusEffect : 0) +
-      getSkillAttackStatusEffects(unit, tile, player),
-  );
+  return [
+    Math.max(
+      0,
+      1 +
+        crystalEffect +
+        buildingEffect +
+        unitEffect +
+        (unit.isLeader() ? LeaderStatusEffect : 0) +
+        getSkillAttackStatusEffects(unit, tile, player),
+    ),
+    flatDamageEffect,
+  ];
 }

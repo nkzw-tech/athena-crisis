@@ -282,14 +282,21 @@ const getDamageInformation = (
   damage: number | null;
   text: TranslatedString | null;
 } => {
+  const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+    map,
+    unitA,
+    from,
+    map.getTileInfo(from),
+  );
   const damage = calculateLikelyDamage(
     unitA,
     entityB,
     map,
     from,
     to,
-    getAttackStatusEffect(map, unitA, from, map.getTileInfo(from)),
+    attackStatusEffect,
     getDefenseStatusEffect(map, entityB, map.getTileInfo(to)),
+    flatDamageStatusEffect,
     modifier,
   );
   return {

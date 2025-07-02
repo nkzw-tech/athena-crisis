@@ -84,6 +84,7 @@ type BuildingConfiguration = {
   behaviors: BuildingBehaviors;
   canBeCreated: boolean;
   editorPlaceOn: ReadonlySet<TileInfo>;
+  flatDamageStatusEffect: number;
   funds: number;
   healTypes?: ReadonlySet<EntityType>;
   isAccessible: boolean;
@@ -120,6 +121,7 @@ export class BuildingInfo {
       cost?: number;
       defense: number;
       editorPlaceOn?: ReadonlySet<TileInfo>;
+      flatDamageStatusEffect?: number;
       funds?: number;
       healTypes?: ReadonlySet<EntityType>;
       isAccessible?: boolean;
@@ -148,6 +150,7 @@ export class BuildingInfo {
       behaviors: defaultBehavior,
       canBeCreated: true,
       editorPlaceOn: new Set(),
+      flatDamageStatusEffect: 0,
       funds: 0,
       isAccessible: true,
       limit: 0,
@@ -430,6 +433,7 @@ export const ResearchLab = new BuildingInfo(
     behaviors: new BuildingBehaviors({ sellSkills: true }),
     cost: Number.POSITIVE_INFINITY,
     defense: 60,
+    flatDamageStatusEffect: 5,
     placeOn: new Set([ConstructionSite]),
     sort: 4,
   },

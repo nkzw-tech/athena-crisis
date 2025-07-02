@@ -305,6 +305,12 @@ function _attackUnit(
   const luck = 1;
   const tileInfoA = map.getTileInfo(vectorA);
   const tileInfoB = map.getTileInfo(vectorB);
+  const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+    map,
+    unitA,
+    vectorA,
+    tileInfoA,
+  );
   let damage = Math.max(
     MinDamage,
     Math.ceil(
@@ -316,8 +322,9 @@ function _attackUnit(
           (map.buildings.has(vectorA) ? BuildingCover : 0),
         tileInfoB.configuration.cover +
           (map.buildings.has(vectorB) ? BuildingCover : 0),
-        getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
+        attackStatusEffect,
         getDefenseStatusEffect(map, unitB, tileInfoB),
+        flatDamageStatusEffect,
         luck,
       ) * modifier,
     ),
@@ -346,6 +353,12 @@ function _attackBuilding(
   const luck = 1;
   const tileInfoA = map.getTileInfo(vectorA);
   const tileInfoB = map.getTileInfo(vectorB);
+  const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+    map,
+    unitA,
+    vectorA,
+    tileInfoA,
+  );
   const damage = Math.ceil(
     calculateDamage(
       unitA,
@@ -354,8 +367,9 @@ function _attackBuilding(
       tileInfoA.configuration.cover +
         (map.buildings.has(vectorA) ? BuildingCover : 0),
       tileInfoB.configuration.cover + BuildingCover,
-      getAttackStatusEffect(map, unitA, vectorA, tileInfoA),
+      attackStatusEffect,
       getDefenseStatusEffect(map, buildingB, tileInfoB),
+      flatDamageStatusEffect,
       luck,
     ),
   );

@@ -51,6 +51,7 @@ import {
   Medic,
   Pioneer,
   Saboteur,
+  Scientist,
   Sniper,
   SpecialUnits,
   SuperTank,
@@ -650,6 +651,20 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
             <RawUnitName color={color} unit={Jeep} />
           </fbt:param>{' '}
           unit is defeated, it deploys one of the units it carries.
+        </fbt>
+      );
+    case Skill.UnlockScientist:
+      return (
+        <fbt desc="Additional skill description">
+          Each
+          <fbt:param name="buildingName">
+            <BuildingName building={ResearchLab} color={color} />
+          </fbt:param>{' '}
+          increases the attack of{' '}
+          <fbt:param name="pluralUnitName">
+            <UnitName color={color} unit={Scientist} />
+          </fbt:param>{' '}
+          by 5 attack points.
         </fbt>
       );
   }
