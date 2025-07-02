@@ -16,6 +16,7 @@ import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import maskClassName from '../lib/maskClassName.tsx';
 import Tick from '../Tick.tsx';
 import { ClientMapMessage, PlayerDetails } from '../Types.tsx';
+import { ScrollContainerWithNavigation } from '@deities/ui/ScrollContainer.tsx';
 
 export const getMessagePlayer = (
   user: UserLikeWithID,
@@ -99,16 +100,19 @@ export default function MapMessageContainer({
         }}
       >
         <Stack gap={scroll ? undefined : true} vertical>
-          <Tick
-            animationConfig={animationConfig}
-            className={cx(
+          <ScrollContainerWithNavigation
+            className={relativeStyle}
+            key="message"
+            navigate={!!scroll}
+            scrollContainerClassName={cx(
               paddingStyle,
               isValuable && offsetStyle,
               scroll && scrollContainerStyle,
             )}
+            scrollDownClassName={scrollDownClassName}
           >
-            {children}
-          </Tick>
+            <Tick animationConfig={animationConfig}>{children}</Tick>
+          </ScrollContainerWithNavigation>
           <Stack alignCenter className={bottomStyle} gap nowrap>
             <Stack alignCenter gap nowrap start>
               <MiniPortrait
@@ -136,6 +140,10 @@ const containerStyle = css`
   position: absolute;
   transform: translate3d(0, -55%, 0);
   transition: opacity 150ms ease-in-out;
+`;
+
+const relativeStyle = css`
+  position: relative;
 `;
 
 const maskStyle = css`
@@ -201,4 +209,8 @@ const bottomStyle = css`
 const nameStyle = css`
   line-height: 24px;
   max-width: 180px;
+`;
+
+const scrollDownClassName = css`
+  bottom: 42px;
 `;

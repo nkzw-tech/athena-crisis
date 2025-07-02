@@ -1,9 +1,8 @@
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
-import Reply from '@iconify-icons/pixelarticons/reply.js';
 import { motion } from 'framer-motion';
-import { ReactNode, useCallback, useRef, useState } from 'react';
+import { ComponentProps, ReactNode, useCallback } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import Breakpoints from './Breakpoints.tsx';
 import { isSafari } from './Browser.tsx';
@@ -11,8 +10,7 @@ import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
-import { FadePulseStyle } from './PulseStyle.tsx';
-import ScrollContainer from './ScrollContainer.tsx';
+import { ScrollContainerWithNavigation } from './ScrollContainer.tsx';
 import Stack from './Stack.tsx';
 
 export function useDialogNavigation<T>(
@@ -123,93 +121,25 @@ export default function Dialog({
 export const DialogScrollContainer = ({
   children,
   horizontalScroll,
-  navigate,
-}: {
+  ...props
+}: Omit<
+  ComponentProps<typeof ScrollContainerWithNavigation>,
+  'className' | 'scrollContainerClassName'
+> & {
   children: ReactNode;
   horizontalScroll?: boolean;
-  key: string;
-  navigate: boolean;
 }) => {
-  const [showArrow, setShowArrow] = useState(false);
-  const ref = useRef<{
-    cleanup: () => void;
-    down: () => void;
-    up: () => void;
-  } | null>(null);
-
-  const setRef = useCallback(
-    (element: HTMLDivElement) => {
-      if (ref.current) {
-        ref.current.cleanup();
-        ref.current = null;
-      }
-
-      if (!element) {
-        return;
-      }
-
-      const onScroll = () => {
-        const shouldShow =
-          element.scrollTop + element.clientHeight <
-          element.scrollHeight - DoubleSize;
-        if (shouldShow !== showArrow) {
-          setShowArrow(shouldShow);
-        }
-      };
-
-      element.addEventListener('scroll', onScroll);
-      onScroll();
-      ref.current = {
-        cleanup: () => element.removeEventListener('scroll', onScroll),
-        down: () =>
-          element.scrollTo({
-            behavior: 'smooth',
-            top: element.scrollTop + TileSize * 10,
-          }),
-        up: () =>
-          element.scrollTo({
-            behavior: 'smooth',
-            top: element.scrollTop - TileSize * 10,
-          }),
-      };
-    },
-    [showArrow],
-  );
-
-  useInput(
-    'navigate',
-    useCallback(
-      (event) => {
-        if (!navigate || !ref.current) {
-          return;
-        }
-
-        const { y } = event.detail;
-        if (y < 0) {
-          ref.current.up();
-        } else if (y > 0) {
-          ref.current.down();
-        }
-      },
-      [navigate],
-    ),
-    'dialog',
-  );
-
   return (
-    <div className={scrollContainerStyle}>
-      <ScrollContainer
-        className={cx(scrollStyle, horizontalScroll && overflowXStyle)}
-        ref={setRef}
-      >
-        {children}
-      </ScrollContainer>
-      <div className={cx(scrollDownStyle, showArrow && arrowVisibleStyle)}>
-        <div className={scrollDownIconStyle}>
-          <Icon className={FadePulseStyle} icon={Reply} />
-        </div>
-      </div>
-    </div>
+    <ScrollContainerWithNavigation
+      className={scrollContainerStyle}
+      scrollContainerClassName={cx(
+        scrollStyle,
+        horizontalScroll && overflowXStyle,
+      )}
+      {...props}
+    >
+      {children}
+    </ScrollContainerWithNavigation>
   );
 };
 
@@ -435,31 +365,4 @@ const closeButtonStyle = css`
   right: 0;
   top: -${DoubleSize}px;
   width: ${DoubleSize}px;
-`;
-
-const scrollDownStyle = css`
-  background-image: linear-gradient(
-    0deg,
-    ${applyVar('background-color')} 10px,
-    rgba(255, 255, 255, 0) 30px
-  );
-  bottom: -1px;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
-  transition: opacity 300ms ease;
-  z-index: 1000;
-`;
-
-const scrollDownIconStyle = css`
-  bottom: 4px;
-  color: ${applyVar('border-color')};
-  position: absolute;
-  right: 4px;
-  transform: rotate(-90deg);
-`;
-
-const arrowVisibleStyle = css`
-  opacity: 1;
 `;
