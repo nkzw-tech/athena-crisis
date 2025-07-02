@@ -26,7 +26,7 @@
     "@nkzw/use-visibility-state": "^1.0.3",
     "array-shuffle": "^3.0.0",
     "fbtee": "^0.3.2",
-    "framer-motion": "^12.20.1",
+    "framer-motion": "^12.22.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-fps": "^1.0.6"
