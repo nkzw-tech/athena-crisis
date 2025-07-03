@@ -7,12 +7,11 @@ import Storage from '@deities/ui/Storage.tsx';
 import { LocaleContextProps, setupLocaleContext } from 'fbtee';
 import {
   createContext,
+  Fragment,
   ReactNode,
   use,
-  useCallback,
+  useActionState,
   useEffect,
-  useMemo,
-  useState,
 } from 'react';
 import { CharacterMap } from './EntityMap.tsx';
 import { injectCharacterNameTranslation } from './injectTranslation.tsx';
@@ -21,7 +20,8 @@ const storageKey = 'locale';
 
 export type LocaleContext = {
   locale: string;
-  setLocale: (locale: string) => Promise<void>;
+  localeChangeIsPending: boolean;
+  setLocale: (locale: string) => void;
   shortLocale: string;
 };
 
@@ -35,76 +35,63 @@ export function getCurrentFonts() {
   return currentFonts;
 }
 
-export default function LocaleContext({
-  children,
-  fallbackLocale,
-  gender,
-  hooks,
-  loadLocale,
-  translations,
-}: Omit<
-  LocaleContextProps,
-  'availableLanguages' | 'clientLocales' | 'loadLocale'
-> &
-  Readonly<{
-    children: ReactNode;
-    loadLocale?: LocaleContextProps['loadLocale'];
-  }>) {
-  const { getLocale, setLocale } = useMemo(
-    () =>
-      setupLocaleContext({
-        availableLanguages: AvailableLanguages,
-        clientLocales: [
-          Storage.get(storageKey) || '',
-          navigator.language,
-          ...navigator.languages,
-        ],
-        fallbackLocale,
-        gender,
-        hooks,
-        loadLocale: loadLocale || (() => Promise.resolve({})),
-        translations,
-      }),
-    [fallbackLocale, gender, hooks, loadLocale, translations],
-  );
+export function createLocaleContext(props?: Partial<LocaleContextProps>) {
+  const { getLocale, setLocale } = setupLocaleContext({
+    availableLanguages: AvailableLanguages,
+    clientLocales: [
+      Storage.get(storageKey) || '',
+      navigator.language,
+      ...navigator.languages,
+    ],
+    loadLocale: () => Promise.resolve({}),
+    ...props,
+  });
 
-  const [locale, _setLocale] = useState(getLocale);
+  return function LocaleContext({ children }: { children: ReactNode }) {
+    const [locale, _setLocale, localeChangeIsPending] = useActionState(
+      async (previousLocale: string, locale: string) => {
+        if (locale !== previousLocale) {
+          Storage.set(storageKey, locale);
+          locale = await setLocale(locale);
+          injectCharacterNameTranslation(UnitInfo, CharacterMap);
+          return locale;
+        }
+        return locale;
+      },
+      getLocale(),
+    );
 
-  useEffect(() => {
-    document.documentElement.lang = locale;
+    useEffect(() => {
+      document.documentElement.lang = locale;
 
-    currentFonts = Fonts[locale as unknown as keyof typeof Fonts] || ['Athena'];
+      currentFonts = Fonts[locale as unknown as keyof typeof Fonts] || [
+        'Athena',
+      ];
 
-    const listener = () => {
-      setLocale(navigator.language);
-    };
-    window.addEventListener('languagechange', listener);
+      const listener = () => _setLocale(navigator.language);
+      window.addEventListener('languagechange', listener);
 
-    return () => {
-      window.removeEventListener('languagechange', listener);
-    };
-  }, [locale, setLocale]);
+      return () => {
+        window.removeEventListener('languagechange', listener);
+      };
+    }, [locale, _setLocale]);
 
-  return (
-    <Context
-      value={{
-        locale,
-        setLocale: useCallback(
-          async (locale: string) => {
-            Storage.set(storageKey, locale);
-            await setLocale(locale);
-            injectCharacterNameTranslation(UnitInfo, CharacterMap);
-            _setLocale(locale);
-          },
-          [setLocale],
-        ),
-        shortLocale: locale.split('_')[0],
-      }}
-    >
-      {children}
-    </Context>
-  );
+    return (
+      <Context
+        value={{
+          locale,
+          localeChangeIsPending,
+          setLocale: _setLocale,
+          shortLocale: locale.split('_')[0],
+        }}
+      >
+        <Fragment key={locale}>{children}</Fragment>
+      </Context>
+    );
+  };
 }
+
+export default createLocaleContext();
 
 export function useLocaleContext(): LocaleContext {
   return use(Context);

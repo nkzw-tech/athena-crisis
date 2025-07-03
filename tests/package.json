@@ -31,7 +31,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "chalk": "^5.4.1",
-    "fbtee": "^0.3.2",
+    "fbtee": "^1.0.0",
     "jest-image-snapshot": "^6.5.1",
     "playwright": "^1.53.2",
     "react": "^19.1.0",

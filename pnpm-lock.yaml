@@ -39,14 +39,14 @@ importers:
         specifier: ^4.4.2
         version: 4.4.2(prettier@3.6.2)
       '@nkzw/babel-preset-fbtee':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@nkzw/eslint-config':
         specifier: ^3.0.1
         version: 3.0.1(@typescript-eslint/eslint-plugin@8.35.1(@typescript-eslint/parser@8.35.1(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(@typescript-eslint/utils@8.35.1(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5)))(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
       '@nkzw/eslint-plugin-fbtee':
-        specifier: ^0.3.0
-        version: 0.3.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
+        specifier: ^1.0.0
+        version: 1.0.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
       '@nkzw/pothos-locate':
         specifier: ^1.0.0
         version: 1.0.0
@@ -195,8 +195,8 @@ importers:
         specifier: ^13.12.1
         version: 13.12.1(patch_hash=3a8f452679518c7b4cea4ea5836ffb74fcf4d9157b4b4b0da1ddf078e8cfaeba)
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.23.0
         version: 12.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -583,8 +583,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.23.0
         version: 12.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -665,8 +665,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.23.0
         version: 12.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -745,8 +745,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.23.0
         version: 12.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -878,8 +878,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       jest-image-snapshot:
         specifier: ^6.5.1
         version: 6.5.1
@@ -923,8 +923,8 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       fbtee:
-        specifier: ^0.3.2
-        version: 0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0)
       framer-motion:
         specifier: ^12.23.0
         version: 12.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2260,8 +2260,8 @@ packages:
     resolution: {integrity: sha512-n5H8QLDJ47QqbCNn5SuFjCRDrOLEZ0h8vAHCK5RL9Ls7Xa8AQLa/YxAc9UjFqoEDM48muwtBGjtMY5cr0PLDCw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
-  '@jest/expect-utils@30.0.3':
-    resolution: {integrity: sha512-SMtBvf2sfX2agcT0dA9pXwcUrKvOSDqBY4e4iRfT+Hya33XzV35YVg+98YQFErVGA/VR1Gto5Y2+A6G9LSQ3Yg==}
+  '@jest/expect-utils@30.0.4':
+    resolution: {integrity: sha512-EgXecHDNfANeqOkcak0DxsoVI4qkDUsR7n/Lr2vtmTBjwLPBnnPOF71S11Q8IObWzxm2QgQoY6f9hzrRD3gHRA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   '@jest/get-type@30.0.1':
@@ -2322,20 +2322,20 @@ packages:
   '@napi-rs/wasm-runtime@0.2.11':
     resolution: {integrity: sha512-9DPkXtvHydrcOsopiYpUgPHpmj0HWZKMUnL2dZqpvC42lsratuBG06V5ipyno0fUek5VlFsNQ+AcFATSrJXgMA==}
 
-  '@nkzw/babel-plugin-fbtee-auto-import@0.3.0':
-    resolution: {integrity: sha512-JRrKZjdn8o2znaOx6oIEK9+zoN3ILmsrHKph8On0tShxnHe9sTCPBy4YGR9AXDztkecjtLK+rFSMzc310P5ocg==}
+  '@nkzw/babel-plugin-fbtee-auto-import@1.0.0':
+    resolution: {integrity: sha512-m0UXkYJtE2PXM5WtU/8yhL/zR4CQ32DnYjA81YzYJz6Nw8fNHNF1oueTPmC82ZuKZpbZIjlftBUekREHdJCv/Q==}
 
-  '@nkzw/babel-plugin-fbtee-runtime@0.3.0':
-    resolution: {integrity: sha512-tPQGYxy3Zs7LJVhDQ2+q+0bJWZD3o3NcLQ+uxrQBYHGup48epnEiNs1P+gXSET5WZbIHzoTje/OFlUjsecUcsQ==}
+  '@nkzw/babel-plugin-fbtee-runtime@1.0.0':
+    resolution: {integrity: sha512-ePQp5yOqGFW9eMRxYjAYkMTFLvJOz2Twa08QeL9W/oM3eTobLIrSMiSCV6nA2RtPBRNJ2tyAiFXxXIG3bx6xrw==}
     peerDependencies:
-      '@nkzw/babel-plugin-fbtee': ^0.3.0
+      '@nkzw/babel-plugin-fbtee': ^1.0.0
 
-  '@nkzw/babel-plugin-fbtee@0.3.0':
-    resolution: {integrity: sha512-Ylm93jI2ouRDblhpW6YPu6ohRCGNmj9/jxh2a3FOVdkmHUNz3HsRj+510Ec3QOjkT0GYSM2TEFAfMm3wHH7qfA==}
+  '@nkzw/babel-plugin-fbtee@1.0.0':
+    resolution: {integrity: sha512-Cr9RzW+1F5aH/Ouj/DqOigay0GMKAvFYaB0zQsg6fiXy2yDf0sNNdTQripgQEEWvGeLH1njCRsYDh1+GyS6nbg==}
     hasBin: true
 
-  '@nkzw/babel-preset-fbtee@0.3.0':
-    resolution: {integrity: sha512-hxBTf7trwf6IIzdHNynYMRlanSCqTmXOPshPZimQkZ7sKKPMSC1toxmSGSHAT6eCNcGItlyIBonmFguz4iT+/w==}
+  '@nkzw/babel-preset-fbtee@1.0.0':
+    resolution: {integrity: sha512-fAujV6yVBTVgR8o9FU3Cv8xqhdgMDuUKT/EzZrB1o/XTnrqgyNg7vaOhlUBw5UqwKEVJMYW2EGPd9tHBlKWiqQ==}
     hasBin: true
 
   '@nkzw/core@1.2.1':
@@ -2354,8 +2354,8 @@ packages:
     peerDependencies:
       eslint: '>= 9'
 
-  '@nkzw/eslint-plugin-fbtee@0.3.0':
-    resolution: {integrity: sha512-xqcyvX6/zZpt8tq24CctJ4jGMXD/ixtuG1j+/iU7XL2XJ/cU5F3LmdZGh9uu6gZMXUXiwx2t1cTsL+H5Fo/Xbg==}
+  '@nkzw/eslint-plugin-fbtee@1.0.0':
+    resolution: {integrity: sha512-pZ3YJH7rmg7nRVG9gdXRtk0zFXoDrju2vOijeb88b22KxXQaUTISMwc5oHsxxQPIDbfzO7C5XBEUO/4EnlCUDQ==}
 
   '@nkzw/eslint-plugin@2.0.0':
     resolution: {integrity: sha512-IoU8kOqHfnf7se2dGxMD/7RPm6WVjzjOjWSo7FulRx3lJzuZvXioSkT5Nd82l66DH3Pl2whw74lPT1di3KMwFA==}
@@ -6123,8 +6123,8 @@ packages:
     resolution: {integrity: sha512-/kP8CAwxzLVEeFrMm4kMmy4CCDlpipyA7MYLVrdJIkV0fYF0UaigQHRsxHiuY/GEea+bh4KSv3TIlgr+2UL6bw==}
     engines: {node: '>=12.0.0'}
 
-  expect@30.0.3:
-    resolution: {integrity: sha512-HXg6NvK35/cSYZCUKAtmlgCFyqKM4frEPbzrav5hRqb0GMz0E0lS5hfzYjSaiaE5ysnp/qI2aeZkeyeIAOeXzQ==}
+  expect@30.0.4:
+    resolution: {integrity: sha512-dDLGjnP2cKbEppxVICxI/Uf4YemmGMPNy0QytCbfafbpYk9AFQsxb8Uyrxii0RPK7FWgLGlSem+07WirwS3cFQ==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   express-session@1.18.1:
@@ -6204,11 +6204,11 @@ packages:
   fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
 
-  fbtee@0.3.2:
-    resolution: {integrity: sha512-NKIA86W1oKCVlZSzjzwrNbAtPhirAkBVGK7T0nATRQm/HxQrGcdYACnChyJbTTWh+2Y0c4UOaW4UIVXuXJxZsA==}
+  fbtee@1.0.0:
+    resolution: {integrity: sha512-1nPDRXSOH+jWl22vhnwndiIULFqUiOuvRC0SkYCvcKamhEYBwOa/m3HyGDBFsq1Q/UCMHmM4et4ZB8KlY523aA==}
     peerDependencies:
-      '@nkzw/babel-plugin-fbtee': ^0.3.0
-      '@nkzw/babel-plugin-fbtee-runtime': ^0.3.0
+      '@nkzw/babel-plugin-fbtee': ^1.0.0
+      '@nkzw/babel-plugin-fbtee-runtime': ^1.0.0
       react: ^19.0.0
 
   fdir@6.4.6:
@@ -6986,8 +6986,8 @@ packages:
   javascript-stringify@2.1.0:
     resolution: {integrity: sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==}
 
-  jest-diff@30.0.3:
-    resolution: {integrity: sha512-Q1TAV0cUcBTic57SVnk/mug0/ASyAqtSIOkr7RAlxx97llRYsM74+E8N5WdGJUlwCKwgxPAkVjKh653h1+HA9A==}
+  jest-diff@30.0.4:
+    resolution: {integrity: sha512-TSjceIf6797jyd+R64NXqicttROD+Qf98fex7CowmlSn7f8+En0da1Dglwr1AXxDtVizoxXYZBlUQwNhoOXkNw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   jest-docblock@30.0.1:
@@ -7003,8 +7003,8 @@ packages:
       jest:
         optional: true
 
-  jest-matcher-utils@30.0.3:
-    resolution: {integrity: sha512-hMpVFGFOhYmIIRGJ0HgM9htC5qUiJ00famcc9sRFchJJiLZbbVKrAztcgE6VnXLRxA3XZ0bvNA7hQWh3oHXo/A==}
+  jest-matcher-utils@30.0.4:
+    resolution: {integrity: sha512-ubCewJ54YzeAZ2JeHHGVoU+eDIpQFsfPQs0xURPWoNiO42LGJ+QGgfSf+hFIRplkZDkhH5MOvuxHKXRTUU3dUQ==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   jest-message-util@30.0.2:
@@ -9841,8 +9841,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0
 
-  zod@3.25.69:
-    resolution: {integrity: sha512-cjUx+boz8dfYGssYKLGNTF5VUF6NETpcZCDTN3knhUUXQTAAvErzRhV3pgeCZm2YsL4HOwtEHPonlsshPu2I0A==}
+  zod@3.25.71:
+    resolution: {integrity: sha512-BsBc/NPk7h8WsUWYWYL+BajcJPY8YhjelaWu2NMLuzgraKAz4Lb4/6K11g9jpuDetjMiqhZ6YaexFLOC0Ogi3Q==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -11765,7 +11765,7 @@ snapshots:
 
   '@jest/diff-sequences@30.0.1': {}
 
-  '@jest/expect-utils@30.0.3':
+  '@jest/expect-utils@30.0.4':
     dependencies:
       '@jest/get-type': 30.0.1
 
@@ -11875,26 +11875,26 @@ snapshots:
       '@tybys/wasm-util': 0.9.0
     optional: true
 
-  '@nkzw/babel-plugin-fbtee-auto-import@0.3.0':
+  '@nkzw/babel-plugin-fbtee-auto-import@1.0.0':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/types': 7.28.0
-      '@nkzw/babel-plugin-fbtee': 0.3.0
+      '@nkzw/babel-plugin-fbtee': 1.0.0
     transitivePeerDependencies:
       - supports-color
 
-  '@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0)':
+  '@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0)':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/preset-react': 7.27.1(@babel/core@7.28.0)
       '@babel/traverse': 7.28.0
       '@babel/types': 7.28.0
-      '@nkzw/babel-plugin-fbtee': 0.3.0
+      '@nkzw/babel-plugin-fbtee': 1.0.0
       invariant: 2.2.4
     transitivePeerDependencies:
       - supports-color
 
-  '@nkzw/babel-plugin-fbtee@0.3.0':
+  '@nkzw/babel-plugin-fbtee@1.0.0':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/generator': 7.28.0
@@ -11902,7 +11902,7 @@ snapshots:
       '@babel/preset-typescript': 7.27.1(@babel/core@7.28.0)
       '@babel/traverse': 7.28.0
       '@babel/types': 7.28.0
-      '@nkzw/babel-plugin-fbtee-auto-import': 0.3.0
+      '@nkzw/babel-plugin-fbtee-auto-import': 1.0.0
       glob: 11.0.3
       invariant: 2.2.4
       jest-docblock: 30.0.1
@@ -11911,11 +11911,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@nkzw/babel-preset-fbtee@0.3.0':
+  '@nkzw/babel-preset-fbtee@1.0.0':
     dependencies:
-      '@nkzw/babel-plugin-fbtee': 0.3.0
-      '@nkzw/babel-plugin-fbtee-auto-import': 0.3.0
-      '@nkzw/babel-plugin-fbtee-runtime': 0.3.0(@nkzw/babel-plugin-fbtee@0.3.0)
+      '@nkzw/babel-plugin-fbtee': 1.0.0
+      '@nkzw/babel-plugin-fbtee-auto-import': 1.0.0
+      '@nkzw/babel-plugin-fbtee-runtime': 1.0.0(@nkzw/babel-plugin-fbtee@1.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11951,7 +11951,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@nkzw/eslint-plugin-fbtee@0.3.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))':
+  '@nkzw/eslint-plugin-fbtee@1.0.0(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))':
     dependencies:
       '@typescript-eslint/utils': 8.35.1(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3(patch_hash=c2fff02fdb451a9a32ba8728e3ab59d5e078ce70be05823c1f2521869c85dcc5))
     transitivePeerDependencies:
@@ -14301,7 +14301,7 @@ snapshots:
 
   '@types/jest@30.0.0':
     dependencies:
-      expect: 30.0.3
+      expect: 30.0.4
       pretty-format: 30.0.2
 
   '@types/json-schema@7.0.15': {}
@@ -16127,8 +16127,8 @@ snapshots:
       '@babel/plugin-transform-private-methods': 7.27.1(@babel/core@7.28.0)
       eslint: 9.30.1(jiti@2.4.2)
       hermes-parser: 0.25.1
-      zod: 3.25.69
-      zod-validation-error: 3.5.2(zod@3.25.69)
+      zod: 3.25.71
+      zod-validation-error: 3.5.2(zod@3.25.71)
     transitivePeerDependencies:
       - supports-color
 
@@ -16323,11 +16323,11 @@ snapshots:
 
   expect-type@1.2.1: {}
 
-  expect@30.0.3:
+  expect@30.0.4:
     dependencies:
-      '@jest/expect-utils': 30.0.3
+      '@jest/expect-utils': 30.0.4
       '@jest/get-type': 30.0.1
-      jest-matcher-utils: 30.0.3
+      jest-matcher-utils: 30.0.4
       jest-message-util: 30.0.2
       jest-mock: 30.0.2
       jest-util: 30.0.2
@@ -16454,10 +16454,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  fbtee@0.3.2(@nkzw/babel-plugin-fbtee-runtime@0.3.0(@nkzw/babel-plugin-fbtee@0.3.0))(@nkzw/babel-plugin-fbtee@0.3.0)(react@19.1.0):
+  fbtee@1.0.0(@nkzw/babel-plugin-fbtee-runtime@1.0.0(@nkzw/babel-plugin-fbtee@1.0.0))(@nkzw/babel-plugin-fbtee@1.0.0)(react@19.1.0):
     dependencies:
-      '@nkzw/babel-plugin-fbtee': 0.3.0
-      '@nkzw/babel-plugin-fbtee-runtime': 0.3.0(@nkzw/babel-plugin-fbtee@0.3.0)
+      '@nkzw/babel-plugin-fbtee': 1.0.0
+      '@nkzw/babel-plugin-fbtee-runtime': 1.0.0(@nkzw/babel-plugin-fbtee@1.0.0)
       invariant: 2.2.4
       react: 19.1.0
 
@@ -17428,7 +17428,7 @@ snapshots:
 
   javascript-stringify@2.1.0: {}
 
-  jest-diff@30.0.3:
+  jest-diff@30.0.4:
     dependencies:
       '@jest/diff-sequences': 30.0.1
       '@jest/get-type': 30.0.1
@@ -17449,11 +17449,11 @@ snapshots:
       pngjs: 3.4.0
       ssim.js: 3.5.0
 
-  jest-matcher-utils@30.0.3:
+  jest-matcher-utils@30.0.4:
     dependencies:
       '@jest/get-type': 30.0.1
       chalk: 4.1.2
-      jest-diff: 30.0.3
+      jest-diff: 30.0.4
       pretty-format: 30.0.2
 
   jest-message-util@30.0.2:
@@ -20993,10 +20993,10 @@ snapshots:
     dependencies:
       grammex: 3.1.10
 
-  zod-validation-error@3.5.2(zod@3.25.69):
+  zod-validation-error@3.5.2(zod@3.25.71):
     dependencies:
-      zod: 3.25.69
+      zod: 3.25.71
 
-  zod@3.25.69: {}
+  zod@3.25.71: {}
 
   zwitch@2.0.4: {}
