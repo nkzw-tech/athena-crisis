@@ -10,10 +10,9 @@
   "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "scripts": {
-    "fbt": "pnpm run fbt:manifest && pnpm run fbt:collect && pnpm run fbt:translate",
-    "fbt:collect": "../node_modules/.bin/fbtee collect --fbt-common-path ../i18n/Common.ts --pretty --manifest < .src_manifest.json > ../source_strings.json",
-    "fbt:manifest": "../node_modules/.bin/fbtee manifest --src src ../hera ../ui",
-    "fbt:translate": "mkdir -p src/generated/ && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/translations.js"
+    "fbt": "pnpm fbtee:collect && pnpm fbtee:translate",
+    "fbtee:collect": "../node_modules/.bin/fbtee collect --common ../i18n/Common.ts --src src ../hera ../ui --out ../source_strings.json",
+    "fbtee:translate": "fbtee translate --source-strings ../source_strings.json --output-dir src/generated"
   },
   "dependencies": {
     "@capacitor/app": "^7.0.1",
@@ -40,7 +39,7 @@
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.4.0",
     "cordova-plugin-purchase": "^13.12.1",
-    "fbtee": "^1.0.0",
+    "fbtee": "^1.2.0",
     "framer-motion": "^12.23.0",
     "p-limit": "^6.2.0",
     "react": "^19.1.0",
