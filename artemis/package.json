@@ -32,7 +32,7 @@
     "@pothos/plugin-scope-auth": "^4.1.5",
     "@prisma/client": "^6.11.1",
     "@quixo3/prisma-session-store": "^3.1.13",
-    "@sentry/node": "^9.34.0",
+    "@sentry/node": "^9.35.0",
     "@types/express-session": "^1.18.2",
     "@types/node-pushnotifications": "^1.0.8",
     "array-shuffle": "^3.0.0",
@@ -73,7 +73,7 @@
     "glob": "11.0.3",
     "p-limit": "^6.2.0",
     "prisma": "^6.11.1",
-    "prisma-json-types-generator": "^3.5.0",
+    "prisma-json-types-generator": "^3.5.1",
     "terminal-link": "^4.0.0"
   },
   "prisma": {
