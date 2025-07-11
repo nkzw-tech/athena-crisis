@@ -17,11 +17,11 @@
     "@deities/hermes": "workspace:*",
     "@deities/ui": "workspace:*",
     "@emotion/css": "^11.13.5",
-    "@nkzw/core": "^1.2.1",
+    "@nkzw/core": "^1.3.0",
     "@nkzw/use-visibility-state": "^1.0.3",
     "array-shuffle": "^3.0.0",
     "fbtee": "^1.2.6",
-    "framer-motion": "^12.23.1",
+    "framer-motion": "^12.23.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0"

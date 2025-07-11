@@ -13,7 +13,7 @@
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hermes": "workspace:*",
-    "@nkzw/core": "^1.2.1",
+    "@nkzw/core": "^1.3.0",
     "@nkzw/profane": "^2.0.1"
   }
 }

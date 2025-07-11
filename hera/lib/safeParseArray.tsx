@@ -1,4 +1,4 @@
-import safeParse from '@deities/apollo/lib/safeParse.tsx';
+import safeParse from '@nkzw/core/safeParse.js';
 
 export default function safeParseArray<T>(
   data: string | null | undefined,

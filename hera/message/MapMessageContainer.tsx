@@ -8,6 +8,7 @@ import { isSafari } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
+import { ScrollContainerWithNavigation } from '@deities/ui/ScrollContainer.tsx';
 import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import { ReactNode, RefObject, useLayoutEffect, useRef } from 'react';
@@ -16,7 +17,6 @@ import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import maskClassName from '../lib/maskClassName.tsx';
 import Tick from '../Tick.tsx';
 import { ClientMapMessage, PlayerDetails } from '../Types.tsx';
-import { ScrollContainerWithNavigation } from '@deities/ui/ScrollContainer.tsx';
 
 export const getMessagePlayer = (
   user: UserLikeWithID,
