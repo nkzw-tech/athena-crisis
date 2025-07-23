@@ -15,6 +15,7 @@ import {
   Octopus,
   Pioneer,
   Saboteur,
+  Scientist,
   SmallTank,
   Sniper,
   XFighter,
@@ -353,6 +354,38 @@ export default new Map<
         ),
         0.1,
         new Set(['User-2']),
+      ],
+    ],
+  ],
+  [
+    Skill.UnlockScientist,
+    [
+      [CharacterMessage(Scientist, 'Fascinating…', 'self', 3), 0.3],
+      [
+        CharacterMessage(
+          Scientist,
+          'Time for a research breakthrough!',
+          'self',
+          2,
+        ),
+        0.3,
+      ],
+      [
+        CharacterMessage(
+          Scientist,
+          'There’s a good spot for a Lab…',
+          'self',
+          1,
+        ),
+        0.3,
+      ],
+      [
+        CharacterMessage(Scientist, 'Watch out for SPLASH damage!', 'self', 2),
+        0.3,
+      ],
+      [
+        CharacterMessage(Scientist, 'It’s not magic, it’s science!', 'self', 1),
+        0.3,
       ],
     ],
   ],
