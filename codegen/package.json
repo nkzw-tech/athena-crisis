@@ -15,7 +15,7 @@
   "devDependencies": {
     "@babel/parser": "^7.28.0",
     "@babel/traverse": "^7.28.0",
-    "@babel/types": "^7.28.1",
+    "@babel/types": "^7.28.2",
     "@deities/apollo": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hermes": "workspace:*",
