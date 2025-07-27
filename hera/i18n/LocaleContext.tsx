@@ -54,7 +54,7 @@ export async function createLocaleContext(props?: Partial<LocaleContextProps>) {
   });
 
   const locale = getLocale();
-  if (locale && props?.loadLocale) {
+  if (locale && locale !== 'en_US' && props?.loadLocale) {
     translations[locale] = await props?.loadLocale(locale);
     injectCharacterNameTranslation(UnitInfo, CharacterMap);
   }

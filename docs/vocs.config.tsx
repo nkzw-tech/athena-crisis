@@ -138,6 +138,9 @@ export default defineConfig({
     },
   ],
   vite: {
+    build: {
+      target: 'esnext',
+    },
     define: {
       'process.env.IS_LANDING_PAGE': `1`,
     },
