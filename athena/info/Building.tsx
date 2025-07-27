@@ -171,14 +171,10 @@ export class BuildingInfo {
   }
 
   get name() {
-    Object.defineProperty(this, 'name', { value: this.internalName });
     return this.internalName;
   }
 
   get description() {
-    Object.defineProperty(this, 'description', {
-      value: this.internalDescription,
-    });
     return this.internalDescription;
   }
 

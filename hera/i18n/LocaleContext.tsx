@@ -4,7 +4,11 @@ import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
-import { LocaleContextProps, setupLocaleContext } from 'fbtee';
+import {
+  LocaleContextProps,
+  setupLocaleContext,
+  TranslationDictionary,
+} from 'fbtee';
 import {
   createContext,
   Fragment,
@@ -35,7 +39,8 @@ export function getCurrentFonts() {
   return currentFonts;
 }
 
-export function createLocaleContext(props?: Partial<LocaleContextProps>) {
+export async function createLocaleContext(props?: Partial<LocaleContextProps>) {
+  const translations: TranslationDictionary = {};
   const { getLocale, setLocale } = setupLocaleContext({
     availableLanguages: AvailableLanguages,
     clientLocales: [
@@ -44,8 +49,15 @@ export function createLocaleContext(props?: Partial<LocaleContextProps>) {
       ...navigator.languages,
     ],
     loadLocale: () => Promise.resolve({}),
+    translations,
     ...props,
   });
+
+  const locale = getLocale();
+  if (locale && props?.loadLocale) {
+    translations[locale] = await props?.loadLocale(locale);
+    injectCharacterNameTranslation(UnitInfo, CharacterMap);
+  }
 
   return function LocaleContext({ children }: { children: ReactNode }) {
     const [locale, _setLocale, localeChangeIsPending] = useActionState(
@@ -91,7 +103,7 @@ export function createLocaleContext(props?: Partial<LocaleContextProps>) {
   };
 }
 
-export default createLocaleContext();
+export default await createLocaleContext();
 
 export function useLocaleContext(): LocaleContext {
   return use(Context);

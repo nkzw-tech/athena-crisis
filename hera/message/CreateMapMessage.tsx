@@ -174,7 +174,7 @@ const ComposeMessage = ({
           hasNext={conjunction != null}
           id={id}
           isNext={isNext}
-          message={message}
+          message={translatedTemplate || message}
           replacement={replacement}
           tags={tags}
         />

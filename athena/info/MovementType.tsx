@@ -12,7 +12,6 @@ export class MovementType {
   ) {}
 
   get name() {
-    Object.defineProperty(this, 'name', { value: this.internalName });
     return this.internalName;
   }
 }

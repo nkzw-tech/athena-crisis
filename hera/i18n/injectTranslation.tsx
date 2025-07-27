@@ -25,6 +25,7 @@ export default function injectTranslation<
   ];
   const isDescription =
     fieldName === 'description' || fieldName === 'characterDescription';
+
   Object.defineProperty(object.prototype, fieldName, {
     configurable: true,
     get(

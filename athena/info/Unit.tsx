@@ -402,7 +402,6 @@ export class Weapon {
   ) {}
 
   get name() {
-    Object.defineProperty(this, 'name', { value: this.internalName });
     return this.internalName;
   }
 
@@ -591,16 +590,10 @@ export class UnitInfo {
   }
 
   get name() {
-    Object.defineProperty(this, 'name', { value: this.internalName });
     return this.internalName;
   }
 
   get characterName(): string {
-    Object.defineProperty(this, 'characterName', {
-      configurable: true,
-      value: this.internalCharacterName,
-      writable: true,
-    });
     return this.internalCharacterName;
   }
 
@@ -619,15 +612,10 @@ export class UnitInfo {
     Object.defineProperty(this, 'characterName', {
       configurable: true,
       value: name,
-      writable: true,
     });
   }
 
   get description(): string {
-    Object.defineProperty(this, 'description', {
-      value: this.internalDescription,
-      writable: true,
-    });
     return this.internalDescription;
   }
 
