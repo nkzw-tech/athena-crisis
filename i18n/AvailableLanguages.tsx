@@ -10,6 +10,7 @@ const AvailableLanguages = new Map([
   ['pt_BR', 'Português (Brazilian Portuguese)'],
   ['ru_RU', 'Русский (Russian)'],
   ['zh_CN', '简体中文 (Simplified Chinese)'],
+  ['uk_UA', 'Українська (Ukrainian)'],
 ] as const);
 
 export type AvailableLanguage =
