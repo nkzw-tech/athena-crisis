@@ -1,30 +1,25 @@
 packages:
-  - 'apollo'
-  - 'ares'
-  - 'art'
-  - 'artemis'
-  - 'athena'
-  - 'codegen'
-  - 'deimos'
-  - 'dionysus'
-  - 'docs'
-  - 'eslint-plugin'
-  - 'fixtures'
-  - 'hera'
-  - 'hermes'
-  - 'i18n'
-  - 'offline'
-  - 'scripts'
-  - 'tests'
-  - 'ui'
-  - 'zeus'
+  - apollo
+  - ares
+  - art
+  - artemis
+  - athena
+  - codegen
+  - deimos
+  - dionysus
+  - docs
+  - eslint-plugin
+  - fixtures
+  - hera
+  - hermes
+  - i18n
+  - offline
+  - scripts
+  - tests
+  - ui
+  - zeus
 
-peerDependencyRules:
-  allowAny:
-    - '@aws-sdk/client-sso-oidc'
-    - react
-    - react-dom
-    - utf-8-validate
+ignorePatchFailures: false
 
 neverBuiltDependencies:
   - canvas
@@ -40,4 +35,9 @@ patchedDependencies:
   resend: patches/resend.patch
   typescript: patches/typescript.patch
 
-ignorePatchFailures: false
+peerDependencyRules:
+  allowAny:
+    - '@aws-sdk/client-sso-oidc'
+    - react
+    - react-dom
+    - utf-8-validate

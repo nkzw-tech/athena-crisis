@@ -1,26 +1,30 @@
 diff --git a/lib/lib.dom.d.ts b/lib/lib.dom.d.ts
-index edf900a5de22fd63305f87e32d5974716eda7ddd..20915d0afa1dbd993802e7f3bf4f246fe55609fc 100644
+index 14508e8dc3effb02a4bd808e61770aacbc8b13b7..3ba9862acef202d352fbd227bed3573af4714a76 100644
 --- a/lib/lib.dom.d.ts
 +++ b/lib/lib.dom.d.ts
-@@ -26972,8 +26972,6 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
+@@ -36461,12 +36461,6 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
       * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/menubar)
       */
      readonly menubar: BarProp;
--    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/name) */
+-    /**
+-     * The `Window.name` property gets/sets the name of the window's browsing context.
+-     *
+-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/name)
+-     */
 -    name: string;
-     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/navigator) */
-     readonly navigator: Navigator;
      /**
+      * The **`Window.navigator`** read-only property returns a reference to the Navigator object, which has methods and properties about the application running the script.
+      *
 diff --git a/lib/lib.webworker.d.ts b/lib/lib.webworker.d.ts
-index dd6a69e7643aabf716ee383c967bd2ecc9f8cd11..9eb59a16b8ecb03cd722183e0f0abcdb4061b0bd 100644
+index 12f4460b8d7f5f4930779e24b1dae10138de3796..dc0075786859d6dc980e1867ad56bbf9f84c9dd6 100644
 --- a/lib/lib.webworker.d.ts
 +++ b/lib/lib.webworker.d.ts
-@@ -2518,12 +2518,6 @@ interface DedicatedWorkerGlobalScopeEventMap extends WorkerGlobalScopeEventMap,
+@@ -3520,12 +3520,6 @@ interface DedicatedWorkerGlobalScopeEventMap extends WorkerGlobalScopeEventMap,
   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope)
   */
  interface DedicatedWorkerGlobalScope extends WorkerGlobalScope, AnimationFrameProvider, MessageEventTarget<DedicatedWorkerGlobalScope> {
 -    /**
--     * Returns dedicatedWorkerGlobal's name, i.e. the value given to the Worker constructor. Primarily useful for debugging.
+-     * The **`name`** read-only property of the the Worker.Worker constructor can pass to get a reference to the DedicatedWorkerGlobalScope.
 -     *
 -     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/name)
 -     */
