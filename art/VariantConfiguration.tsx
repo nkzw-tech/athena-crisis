@@ -90,8 +90,7 @@ export default new Map<SpriteVariant, SpriteVariantConfiguration>([
   [
     'Message',
     {
-      asImage: true,
-      variantNames: dynamicPlayerVariantNames,
+      variantNames,
     },
   ],
   [
