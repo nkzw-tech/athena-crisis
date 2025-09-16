@@ -32,7 +32,6 @@ patchedDependencies:
   cordova-plugin-purchase: patches/cordova-plugin-purchase.patch
   howler: patches/howler.patch
   require-in-the-middle: patches/require-in-the-middle.patch
-  resend: patches/resend.patch
   typescript: patches/typescript.patch
 
 peerDependencyRules:
