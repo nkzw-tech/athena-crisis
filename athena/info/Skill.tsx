@@ -61,6 +61,7 @@ export enum Skill {
   CostRecovery = 45,
   UnlockScientist = 46,
   BuyUnitHumveeAvenger = 47,
+  BuyUnitDroneBomber = 48,
 }
 
 export const Skills = new Set<Skill>([
@@ -84,6 +85,7 @@ export const Skills = new Set<Skill>([
   Skill.UnlockPowerStation,
   Skill.UnlockScientist,
   Skill.BuyUnitHumveeAvenger,
+  Skill.BuyUnitDroneBomber,
   Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
   Skill.MovementIncreaseGroundUnitDefenseDecrease,
   Skill.AttackIncreaseMajorDefenseDecreaseMajor,
@@ -195,6 +197,11 @@ const skillConfig: Record<
     requiresTarget,
   },
   [Skill.BuyUnitDragon]: { charges: 5, cost: 1500, group: SkillGroup.Unlock },
+  [Skill.BuyUnitDroneBomber]: {
+    charges: 8,
+    cost: 1200,
+    group: SkillGroup.Unlock,
+  },
   [Skill.BuyUnitHumveeAvenger]: {
     charges: 3,
     cost: 1500,
@@ -410,6 +417,7 @@ const attackUnitStatusEffects = new Map<Skill, SkillUnitModifierMap>([
   [Skill.DragonSaboteur, new Map([[UnitID.Dragon, 0.1]])],
   [Skill.HealInfantryMedicPower, new Map([[UnitID.Medic, 0.5]])],
   [Skill.XFighterAttackIncrase, new Map([[UnitID.XFighter, 0.2]])],
+  [Skill.BuyUnitDroneBomber, new Map([[UnitID.Bomber, 0.1]])],
 ]);
 
 const attackPowerStatusEffects: SkillMap = new Map([
@@ -489,6 +497,7 @@ const attackMovementTypePowerStatusEffects: MovementSkillMap = new Map([
       [MovementTypes.AirInfantry, 0.3],
     ]),
   ],
+  [Skill.BuyUnitDroneBomber, new Map([[MovementTypes.Air, 0.2]])],
 ]);
 
 // Referential equality might improve the skill description.
@@ -602,6 +611,7 @@ const defenseMovementTypeStatusEffects: MovementSkillMap = new Map([
     Skill.UnitRailDefenseIncreasePowerAttackIncrease,
     new Map([[MovementTypes.Rail, 0.2]]),
   ],
+  [Skill.BuyUnitDroneBomber, new Map([[MovementTypes.Air, 0.1]])],
 ]);
 
 const forestDefense = new Map([
@@ -631,6 +641,7 @@ const skillRangePowerEffects = new Map<number, RangeSkillMap>([
   [UnitID.XFighter, new Map([[Skill.XFighterAttackIncrase, [1, 3]]])],
   [UnitID.Scientist, new Map([[Skill.UnlockScientist, [2, 3]]])],
   [UnitID.HumveeAvenger, new Map([[Skill.BuyUnitHumveeAvenger, [1, 4]]])],
+  [UnitID.DroneBomber, new Map([[Skill.BuyUnitDroneBomber, [3, 7]]])],
 ]);
 
 const skillMovementTypeRadiusEffects = new Map<
@@ -679,6 +690,7 @@ const skillMovementTypeRadiusPowerEffects = new Map<
   [MovementTypes.AirInfantry, new Map([[Skill.VampireHeal, 2]])],
   [MovementTypes.Ship, new Map([[Skill.ShipIncreaseAttackAndRange, 2]])],
   [MovementTypes.Amphibious, new Map([[Skill.ShipIncreaseAttackAndRange, 2]])],
+  [MovementTypes.Air, new Map([[Skill.BuyUnitDroneBomber, 1]])],
 ]);
 
 const unitCosts = new Map<ID, Map<Skill, number>>([
@@ -699,6 +711,7 @@ const unitCosts = new Map<ID, Map<Skill, number>>([
   [UnitID.Bear, new Map([[Skill.BuyUnitBear, 300]])],
   [UnitID.Scientist, new Map([[Skill.UnlockScientist, 375]])],
   [UnitID.HumveeAvenger, new Map([[Skill.BuyUnitHumveeAvenger, 275]])],
+  [UnitID.DroneBomber, new Map([[Skill.BuyUnitDroneBomber, 1200]])],
 ]);
 
 const buildingCosts = new Map<ID, Map<Skill, number>>([
@@ -1512,6 +1525,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.BuyUnitCommander:
     case Skill.BuyUnitDinosaur:
     case Skill.BuyUnitDragon:
+    case Skill.BuyUnitDroneBomber:
     case Skill.BuyUnitOctopus:
     case Skill.BuyUnitOgre:
     case Skill.BuyUnitSuperAPU:

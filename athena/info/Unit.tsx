@@ -1380,18 +1380,7 @@ export const Weapons = {
     }),
   ),
   CruiseMissile,
-  DroneBomb: Bomb.withName('Drone Bomb').withDamage(
-    new Map([
-      [EntityType.AirSoldier, 100],
-      [EntityType.Amphibious, 50],
-      [EntityType.Artillery, 50],
-      [EntityType.Building, 70],
-      [EntityType.Ground, 50],
-      [EntityType.Rail, 50],
-      [EntityType.Soldier, 115],
-      [EntityType.Structure, 20],
-    ]),
-  ),
+  DroneBomb: Bomb.withName('Drone Bomb').withDamage(buff(Bomb.damage, -25)),
   Flamethrower: FlamethrowerWeapon,
   Flask: new Weapon(
     'Flask',
@@ -2503,7 +2492,7 @@ export const FighterJet = new UnitInfo(
 );
 
 export const Bomber = new UnitInfo(
-  19,
+  UnitID.Bomber,
   'Bomber',
   'Léon',
   'male',
@@ -2662,24 +2651,28 @@ export const AcidBomber = new UnitInfo(
   },
 );
 
-export const Drone = new UnitInfo(
-  23,
+export const DroneBomber = new UnitInfo(
+  UnitID.DroneBomber,
   'Drone Bomber',
   'N.U.L.L.',
   'unknown',
   `Unknown`,
   `Unknown`,
-  25,
+  60,
   EntityType.Airplane,
   MovementTypes.Air,
   {
     cost: Number.POSITIVE_INFINITY,
-    fuel: 40,
+    fuel: 50,
     radius: 5,
-    vision: 2,
+    vision: 3,
   },
-  DefaultUnitAbilities,
-  { type: AttackType.ShortRange, weapons: [Weapons.DroneBomb.withSupply(5)] },
+  new UnitAbilities({ accessBuildings: true }),
+  {
+    range: [3, 5],
+    type: AttackType.LongRange,
+    weapons: [Weapons.DroneBomb.withSupply(5)],
+  },
   null,
   {
     direction: 'right',
@@ -3989,7 +3982,7 @@ const Units = [
   Jetpack,
   SeaPatrol,
   AcidBomber,
-  Drone,
+  DroneBomber,
   ReconDrone,
   XFighter,
   Medic,
@@ -4041,7 +4034,6 @@ export const SecretUnits = new Set([
   Truck,
   ArtilleryHumvee,
   ReconDrone,
-  Drone,
   AIU,
   InfernoJetpack,
 ]);

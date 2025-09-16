@@ -28,6 +28,7 @@ import Dinosaur from '@iconify-icons/pixelarticons/downasaur.js';
 import DropHalf from '@iconify-icons/pixelarticons/drop-half.js';
 import SuperTank from '@iconify-icons/pixelarticons/label-alt-multiple.js';
 import Loader from '@iconify-icons/pixelarticons/loader.js';
+import RadioSignal from '@iconify-icons/pixelarticons/radio-signal.js';
 import Repeat from '@iconify-icons/pixelarticons/repeat.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Ship from '@iconify-icons/pixelarticons/ship.js';
@@ -424,6 +425,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'blue',
         icon: Ungroup,
         name: fbt('Locked On', 'Skill name'),
+      };
+    case Skill.BuyUnitDroneBomber:
+      return {
+        alpha: 0.6,
+        borderStyle: 'up2x',
+        colors: 'orange',
+        icon: RadioSignal,
+        name: fbt('Drone Swarm', 'Skill name'),
       };
     default: {
       skill satisfies never;
