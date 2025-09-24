@@ -24,9 +24,9 @@
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/use-relative-time": "^1.2.1",
     "@nkzw/use-visibility-state": "^1.0.3",
-    "array-shuffle": "^3.0.0",
-    "fbtee": "^1.5.0",
-    "framer-motion": "^12.23.13",
+    "array-shuffle": "^4.0.0",
+    "fbtee": "^1.5.1",
+    "framer-motion": "^12.23.19",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-fps": "^1.0.6"
