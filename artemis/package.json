@@ -75,8 +75,5 @@
     "prisma": "^6.16.2",
     "prisma-json-types-generator": "^3.6.1",
     "terminal-link": "^5.0.0"
-  },
-  "prisma": {
-    "seed": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --env-file .env prisma/seed.tsx"
   }
 }

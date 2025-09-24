@@ -16,8 +16,6 @@ If you like Athena Crisis, [please consider a sponsorship to support its develop
   <img alt="Athena Crisis Gameplay" src="https://github.com/nkzw-tech/athena-crisis/assets/13352/800717e7-fda9-4265-9e0f-25c6c99326ce">
 </a>
 
-[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/nkzw-tech/athena-crisis)
-
 ## Setup
 
 Athena Crisis requires [Node.js](https://nodejs.org/en/download/package-manager) and the latest major version of [`pnpm`](https://pnpm.io/installation).

@@ -50,6 +50,7 @@ export default [
             './{ares,artemis}/scripts/**/*.{js,cjs,tsx}',
             './ares/ares.tsx',
             './artemis/prisma/seed.tsx',
+            './artemis/prisma.config.ts',
             './codegen/**',
             './docs/vocs.config.tsx',
             './electron/**',
