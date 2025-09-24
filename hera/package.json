@@ -28,8 +28,7 @@
     "fbtee": "^1.5.1",
     "framer-motion": "^12.23.19",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-fps": "^1.0.6"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.13",
