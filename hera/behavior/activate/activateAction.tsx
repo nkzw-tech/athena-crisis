@@ -6,7 +6,7 @@ import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { Actions, PlayerEffectItem, State } from '../../Types.tsx';
-import activateCrystalAction from '../activateCrystal/activateCrystalAction.tsx';
+import clientActivateCrystalAction from '../activateCrystal/clientActivateCrystalAction.tsx';
 import clientActivatePowerAction from '../activatePower/clientActivatePowerAction.tsx';
 import handleRemoteAction from '../handleRemoteAction.tsx';
 
@@ -30,7 +30,8 @@ export default async function activateAction(
   item: PlayerEffectItem,
   target: Vector | null,
 ) {
-  const [remoteAction, , actionResponse] = actions.action(
+  const { action, update } = actions;
+  const [remoteAction, , actionResponse] = action(
     state,
     getActionMutator(item, target),
   );
@@ -38,10 +39,10 @@ export default async function activateAction(
     actionResponse.type === 'ActivatePower' ||
     actionResponse.type === 'ActivateCrystal'
   ) {
-    await actions.update({
+    await update({
       ...(await (actionResponse.type === 'ActivatePower'
         ? clientActivatePowerAction(actions, state, actionResponse)
-        : activateCrystalAction(actions, actionResponse))),
+        : clientActivateCrystalAction(actions, actionResponse))),
     });
     await handleRemoteAction(actions, remoteAction);
   }
