@@ -1,3 +1,4 @@
+import { Ability } from '@deities/athena/info/Unit.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getParentToMoveTo from '@deities/athena/lib/getParentToMoveTo.tsx';
@@ -513,13 +514,19 @@ export default class Move {
 
     const onSelect = useCallback(
       (entity: Entity) => {
-        const to =
+        let to =
           selectedAttackable && attackable?.get(selectedAttackable)?.parent;
+
+        if (!to && !selectedUnit?.info.hasAbility(Ability.MoveAndAct)) {
+          to = selectedPosition;
+        }
+
         if (
           to &&
           selectedUnit &&
           selectedPosition &&
-          attackable.has(selectedAttackable) &&
+          selectedAttackable &&
+          attackable?.has(selectedAttackable) &&
           selectedUnit.getAttackWeapon(entity) &&
           radius
         ) {
