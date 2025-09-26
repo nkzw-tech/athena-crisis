@@ -113,6 +113,9 @@ const toOptionalObjective = (
       } as const)
     : null;
 
+const isRelevantObjective = (objective: Objective | undefined) =>
+  !!objective && (objective.type === Criteria.Default || !objective.optional);
+
 export function applyObjectives(
   previousMap: MapData,
   activeMap: MapData,
@@ -120,10 +123,26 @@ export function applyObjectives(
 ): GameState | null {
   let [objectiveId, objective] =
     checkObjectives(previousMap, activeMap, lastActionResponse) || [];
-  const actionResponses =
-    !objective || (objective.type !== Criteria.Default && objective.optional)
-      ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
-      : null;
+
+  let actionResponses = !isRelevantObjective(objective)
+    ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
+    : null;
+
+  if (actionResponses) {
+    const maybeMap = applyActionResponses(activeMap, actionResponses).at(
+      -1,
+    )?.[1];
+
+    if (maybeMap) {
+      [objectiveId, objective] =
+        checkObjectives(previousMap, maybeMap, lastActionResponse) || [];
+
+      if (isRelevantObjective(objective)) {
+        actionResponses = null;
+      }
+    }
+  }
+
   if (!actionResponses && !objective) {
     return null;
   }

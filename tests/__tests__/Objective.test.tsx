@@ -712,3 +712,55 @@ test('game over through activating a power can beat more than one player', async
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
     `);
 });
+
+test('a game over action response might make an objective pass', async () => {
+  const vecA = vec(5, 2);
+  const vecB = vec(4, 3);
+
+  const initialMap = MapData.createMap({
+    config: {
+      objectives: [
+        [0, [0, 0, null]],
+        [Criteria.CaptureLabel, [1, 0, [1], [1], null, 0, [], null]],
+      ],
+    },
+    map: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 6, 6, 1, 1, 1, 6, 1,
+    ],
+    size: {
+      height: 5,
+      width: 5,
+    },
+    teams: [
+      { id: 1, name: '', players: [{ funds: 0, id: 1, skills: [] }] },
+      {
+        id: 2,
+        name: '',
+        players: [
+          { funds: 0, id: 2, skills: [] },
+          { funds: 0, id: 6, skills: [] },
+        ],
+      },
+    ],
+  });
+
+  const map = initialMap.copy({
+    buildings: initialMap.buildings
+      .set(vecA, HQ.create(2, { label: 1 }))
+      .set(vecB, House.create(2, { label: 1 }))
+      .set(vec(5, 5), HQ.create(6)),
+    units: initialMap.units
+      .set(vecA, Infantry.create(1).capture())
+      .set(vecB, Infantry.create(1).capture()),
+  });
+
+  const [, gameActionResponseA] = await executeGameActions(map, [
+    CaptureAction(vecA),
+  ]);
+
+  expect(snapshotEncodedActionResponse(gameActionResponseA))
+    .toMatchInlineSnapshot(`
+    "Capture (5,2) { building: HQ { id: 1, health: 100, player: 1, label: 1 }, player: 2 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
+  `);
+});
