@@ -1380,7 +1380,17 @@ export const Weapons = {
     }),
   ),
   CruiseMissile,
-  DroneBomb: Bomb.withName('Drone Bomb').withDamage(buff(Bomb.damage, -25)),
+  DroneBomb: Bomb.withName('Drone Bomb').withDamage(
+    buff(
+      (() => {
+        const damage = new Map(Bomb.damage);
+        damage.delete(EntityType.Building);
+        damage.delete(EntityType.Structure);
+        return damage;
+      })(),
+      -25,
+    ),
+  ),
   Flamethrower: FlamethrowerWeapon,
   Flask: new Weapon(
     'Flask',
