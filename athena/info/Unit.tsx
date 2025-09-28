@@ -2664,11 +2664,11 @@ export const AcidBomber = new UnitInfo(
 export const DroneBomber = new UnitInfo(
   UnitID.DroneBomber,
   'Drone Bomber',
-  'N.U.L.L.',
+  'Z.E.R.O.',
   'unknown',
-  `Unknown`,
-  `Unknown`,
-  60,
+  `A battleship of the skies? That's what the Drone Bomber is. Equipped with high powered cluster bombs and built with heavy armor, the Drone Bomber is the peregrine falcon of all military aircraft. Unlike the conventional bomber unit, the Drone Bomber can attack from a distance, making it ideal against anti-air units and other heavy armor. The Drone Bomber was commissioned as part of Project Pegasus, a technical marvel in engineering and aviation as it's the first automated military aircraft ever produced.`,
+  `{name} is a special AI program made solely for the Bomber Drone, giving it the ability to take orders through voice commands. Despite its limited linguistic ability, it's intellect is impeccable, allowing it to perform a variety of actions. The program was made as part of a project spearheaded by {10.name} for use within the Drone Bomber, making {name} the first military AI ever produced. That's not to say it comes without drawbacks, for {name} is highly susceptible to corruption and hacking, making it rebel against its creator or blindly rampaging among all in its eyes.`,
+  50,
   EntityType.Airplane,
   MovementTypes.Air,
   {
