@@ -28,7 +28,7 @@
     "@playwright/browser-chromium": "^1.55.1",
     "@types/jest-image-snapshot": "^6.4.0",
     "@types/object-inspect": "^1.13.0",
-    "@types/react": "^19.1.13",
+    "@types/react": "^19.1.14",
     "@types/react-dom": "^19.1.9",
     "chalk": "^5.6.2",
     "fbtee": "^1.5.1",
