@@ -227,7 +227,6 @@ export default memo(function Tiles({
       });
     }
 
-    // eslint-disable-next-line react-hooks/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     biome,

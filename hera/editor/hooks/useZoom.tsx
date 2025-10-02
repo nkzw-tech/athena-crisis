@@ -46,7 +46,7 @@ export default function useZoom(
   const mounted = useRef(false);
   useEffect(() => {
     if (mounted.current) {
-      setZoom(scale);
+      (() => setZoom(scale))();
     } else {
       mounted.current = true;
     }

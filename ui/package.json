@@ -20,14 +20,14 @@
     "fbtee": "^1.5.1",
     "framer-motion": "^12.23.22",
     "howler": "^2.2.4",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.3",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9"
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
   }
 }

@@ -51,7 +51,7 @@ const animationSpeed = {
 const ErrorComponent = ({ error }: { error: Error }) => (
   <>
     {Object.keys(window.MapHasRendered).map((key) => {
-      // eslint-disable-next-line react-hooks/react-compiler
+      // eslint-disable-next-line react-hooks/immutability
       window.MapHasRendered[key] = true;
       return (
         <div className={redStyle} data-testid={`map-${key}`} key={key}>

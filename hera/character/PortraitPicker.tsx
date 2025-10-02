@@ -39,7 +39,7 @@ const PortraitItem = ({
 }) => {
   const [rendered, setHasRendered] = useState(false);
   useEffect(() => {
-    setHasRendered(true);
+    (() => setHasRendered(true))();
   }, []);
 
   const ref = useRef<HTMLAnchorElement>(null);

@@ -223,13 +223,14 @@ const NextButton = ({
       : null;
 
   useEffect(() => {
-    setPositions(
-      sortVectors(
-        attackable
-          ? [...attackable.keys()]
-          : getAvailableUnits(map, currentViewer, vision),
-      ),
-    );
+    (() =>
+      setPositions(
+        sortVectors(
+          attackable
+            ? [...attackable.keys()]
+            : getAvailableUnits(map, currentViewer, vision),
+        ),
+      ))();
   }, [attackable, currentViewer, map, vision]);
 
   const hasAnimations = positions.some((vector) =>

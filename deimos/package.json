@@ -22,13 +22,13 @@
     "array-shuffle": "^4.0.0",
     "fbtee": "^1.5.1",
     "framer-motion": "^12.23.22",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-error-boundary": "^6.0.0"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9"
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
   }
 }

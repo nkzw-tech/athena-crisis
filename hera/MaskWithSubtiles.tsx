@@ -54,7 +54,6 @@ export default memo(function MaskWithSubtiles({
           .flat()}
       </div>
     ),
-    // eslint-disable-next-line react-hooks/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [decoratorSize, enter, map.size, select, zIndex],
   );
