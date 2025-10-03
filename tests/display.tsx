@@ -63,8 +63,11 @@ const ErrorComponent = ({ error }: { error: Error }) => (
 );
 
 const DisplayMap = ({ url: initialURL }: { url: string }) => {
-  const url = new URL(initialURL);
-  const maps = url.searchParams.getAll('map[]');
+  const url = useMemo(() => new URL(initialURL), [initialURL]);
+  const maps = useMemo(
+    () => url.searchParams.getAll('map[]'),
+    [url.searchParams],
+  );
   const viewers = url.searchParams.getAll('viewer[]');
   const gameActionResponses = url.searchParams.getAll('gameActionResponse[]');
   const eventEmitters = useMemo(

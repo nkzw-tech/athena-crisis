@@ -24,10 +24,10 @@
     "@nkzw/histogram": "^1.1.0",
     "@nkzw/immutable-map": "^1.2.2",
     "@nkzw/safe-word-list": "^2.1.0",
-    "@pothos/core": "^4.9.1",
+    "@pothos/core": "^4.10.0",
     "@pothos/plugin-complexity": "^4.1.2",
     "@pothos/plugin-directives": "^4.2.5",
-    "@pothos/plugin-prisma": "^4.11.0",
+    "@pothos/plugin-prisma": "^4.12.0",
     "@pothos/plugin-relay": "^4.6.2",
     "@pothos/plugin-scope-auth": "^4.1.6",
     "@prisma/client": "^6.16.3",
@@ -55,7 +55,7 @@
     "prettier": "4.0.0-alpha.12",
     "resend": "6.1.2",
     "socket.io": "^4.8.1",
-    "stripe": "^19.0.0",
+    "stripe": "^19.1.0",
     "ua-parser-js": "^2.0.5",
     "utf-8-validate": "^6.0.5"
   },
@@ -73,7 +73,7 @@
     "glob": "11.0.3",
     "p-limit": "^7.1.1",
     "prisma": "^6.16.3",
-    "prisma-json-types-generator": "^3.6.1",
+    "prisma-json-types-generator": "^3.6.2",
     "terminal-link": "^5.0.0"
   }
 }

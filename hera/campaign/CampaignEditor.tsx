@@ -128,6 +128,9 @@ export default function CampaignEditor({
   const [users, _setUsers] = useState<ReadonlyArray<UserNode>>(
     initialUsers || [],
   );
+  const [saveState, _setSaveState] = useState<CampaignEditorSaveState | null>(
+    null,
+  );
 
   const setSaveState = useCallback((state: CampaignEditorSaveState | null) => {
     if (state && 'id' in state && state?.id === 'saved') {
@@ -150,9 +153,6 @@ export default function CampaignEditor({
   const onClose = useCallback(() => setShowAllDialogue(false), []);
 
   const [zoom, setZoom] = useState(1);
-  const [saveState, _setSaveState] = useState<CampaignEditorSaveState | null>(
-    null,
-  );
 
   const [campaign, setCampaign] = useState<Campaign<ClientLevelID>>(() =>
     toCampaign<ClientLevelID>({
@@ -278,7 +278,7 @@ export default function CampaignEditor({
         })),
       );
     },
-    [],
+    [startTransition],
   );
 
   const setMap: CampaignEditorSetMapFunction = useCallback(
