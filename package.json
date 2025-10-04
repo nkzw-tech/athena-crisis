@@ -29,8 +29,6 @@
     "enable-canvas": "jq '.pnpm |= (if has(\"neverBuiltDependencies\") then .onlyBuiltDependencies = .neverBuiltDependencies | del(.neverBuiltDependencies) else . end)' package.json > package.tmp.json && mv package.tmp.json package.json && canvasKey=$(yq e '.packages | keys' pnpm-lock.yaml | grep 'canvas@3\\.' | head -n 1 | sed 's/- //') && yq e \".packages[\\\"$canvasKey\\\"].requiresBuild = true\" -i pnpm-lock.yaml && yq e 'del(.neverBuiltDependencies)' -i pnpm-lock.yaml",
     "fbtee": "cd ares && if [ -d src ]; then pnpm fbt; else exit 0; fi",
     "format": "prettier --experimental-cli --write .",
-    "i18n:download": "crowdin download && (cd ares && pnpm fbtee:translate)",
-    "i18n:upload": "(cd ares && pnpm fbtee:collect) && crowdin upload sources",
     "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || exit 0",
     "lint": "eslint --cache .",
     "lint:format": "prettier --experimental-cli --cache --check .",
