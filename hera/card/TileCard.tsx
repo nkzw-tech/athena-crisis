@@ -22,6 +22,7 @@ import { numberToPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
+import AdaptiveStack from '@deities/ui/AdaptiveStack.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -263,7 +264,7 @@ const TileDecorators = memo(function TileDecorators({
       <CardInfoHeading>
         <fbt desc="Decorations headline">Decorations</fbt>
       </CardInfoHeading>
-      <Stack adaptive gap start>
+      <AdaptiveStack gap start>
         {[...new Set(decorators)].map((decorator) => {
           const count = decoratorCount.get(decorator.id) || 1;
           const decoratorColor = numberToPlayerID(decorator.id);
@@ -294,7 +295,7 @@ const TileDecorators = memo(function TileDecorators({
             </Stack>
           );
         })}
-      </Stack>
+      </AdaptiveStack>
     </Stack>
   );
 });

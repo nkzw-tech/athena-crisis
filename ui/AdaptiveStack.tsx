@@ -1,9 +1,10 @@
 import { css, cx } from '@emotion/css';
 import { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import Breakpoints from './Breakpoints.tsx';
 
-export type Gap = 1 | 2 | 4 | 16 | 24 | 32 | true;
+type Gap = 1 | 2 | 4 | 16 | 24 | 32 | true;
 
-export type StackProps = {
+type StackProps = {
   alignCenter?: true;
   alignEnd?: true;
   alignNormal?: true;
@@ -27,7 +28,7 @@ export type StackProps = {
   verticalPadding?: true;
 };
 
-export default function Stack({
+export default function AdaptiveStack({
   alignCenter,
   alignEnd,
   alignNormal,
@@ -67,8 +68,10 @@ export default function Stack({
       className={cx(
         baseStyle,
         inline && inlineStyle,
+        adaptiveStyle,
         vertical && verticalStyle,
         reverse && (vertical ? verticalReverseStyle : reverseStyle),
+        reverse && vertical && adaptiveVerticalReverseStyle,
         center && centerStyle,
         start && startStyle,
         end && endStyle,
@@ -100,6 +103,14 @@ const inlineStyle = css`
   display: inline-flex;
 `;
 
+const adaptiveStyle = css`
+  flex-direction: column;
+
+  ${Breakpoints.sm} {
+    flex-direction: row;
+  }
+`;
+
 const verticalStyle = css`
   flex-direction: column;
 `;
@@ -110,6 +121,12 @@ const reverseStyle = css`
 
 const verticalReverseStyle = css`
   flex-direction: column-reverse;
+`;
+
+const adaptiveVerticalReverseStyle = css`
+  ${Breakpoints.sm} {
+    flex-direction: row;
+  }
 `;
 
 const flex1Style = css`

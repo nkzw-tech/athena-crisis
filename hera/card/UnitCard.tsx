@@ -46,6 +46,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import AdaptiveStack from '@deities/ui/AdaptiveStack.tsx';
 import { App } from '@deities/ui/App.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -496,7 +497,7 @@ const Weapon = memo(function WeaponAttack({
           </fbt>
           <Icon className={iconStyle} icon={Ammo} />
         </Stack>
-        <Stack adaptive className={marginTopStyle} gap={16} start>
+        <AdaptiveStack className={marginTopStyle} gap={16} start>
           {damageGroups.map(([strength, damageMapEntry]) => {
             const entities = new Set(damageMapEntry.map(([type]) => type));
 
@@ -562,7 +563,7 @@ const Weapon = memo(function WeaponAttack({
               </TileBox>
             ) : null;
           })}
-        </Stack>
+        </AdaptiveStack>
       </Stack>
     </Tick>
   );
@@ -687,7 +688,7 @@ const UnitVulnerability = ({
             Vulnerable Against
           </fbt>
         </CardInfoHeading>
-        <Stack adaptive className={marginTopStyle} gap={16} start>
+        <AdaptiveStack className={marginTopStyle} gap={16} start>
           {damageGroups.map(([strength, damageMapEntry]) => {
             const unitGroups = [
               ...groupBy(damageMapEntry, ([unit]) => unit.info.type).values(),
@@ -723,7 +724,7 @@ const UnitVulnerability = ({
               </TileBox>
             ) : null;
           })}
-        </Stack>
+        </AdaptiveStack>
       </Stack>
     </Tick>
   );
@@ -772,7 +773,7 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
       <CardInfoHeading style={{ color: getColor(player.id) }}>
         <fbt desc="Headline for unit special abilities">Special Abilities</fbt>
       </CardInfoHeading>
-      <Stack adaptive gap start>
+      <AdaptiveStack gap start>
         {abilities.map((ability) => {
           switch (ability) {
             case Ability.Capture:
@@ -860,7 +861,7 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
             }
           }
         })}
-      </Stack>
+      </AdaptiveStack>
       {unit.info.hasAbility(Ability.HeavyEquipment) && (
         <Stack alignCenter gap nowrap start>
           <Icon
