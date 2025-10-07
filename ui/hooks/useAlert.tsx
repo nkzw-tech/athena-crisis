@@ -1,4 +1,5 @@
 import { css, cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { motion } from 'framer-motion';
 import {
   ComponentProps,
@@ -20,7 +21,6 @@ import getColor from '../getColor.tsx';
 import pixelBorder from '../pixelBorder.tsx';
 import Portal from '../Portal.tsx';
 import { PulseStyle } from '../PulseStyle.tsx';
-import Stack from '../Stack.tsx';
 
 type Props = ComponentProps<typeof Alert>;
 
@@ -138,17 +138,19 @@ const Alert = ({
           ease: [0.34, 1.26, 0.64, 1],
         }}
       >
-        <Stack alignCenter center className={wrapperStyle}>
+        <Stack alignCenter center className={wrapperStyle} wrap>
           <div className={containerStyle}>
-            <Stack gap={32} stretch vertical>
-              <Stack gap vertical>
+            <VStack between gap={32} stretch wrap>
+              <VStack between gap wrap>
                 {title && <h2>{title}</h2>}
                 <div className="paragraph">{text}</div>
-              </Stack>
+              </VStack>
 
               <Stack
-                className={isWindows ? reverseStyle : undefined}
                 {...(showCancel ? null : { end: true })}
+                between
+                reverse={isWindows}
+                wrap
               >
                 {showCancel && (
                   <button
@@ -171,7 +173,7 @@ const Alert = ({
                   {acceptText}
                 </button>
               </Stack>
-            </Stack>
+            </VStack>
           </div>
         </Stack>
       </motion.div>
@@ -202,10 +204,6 @@ const containerStyle = css`
   position: fixed;
   width: min(480px, 90vw);
   z-index: 10002;
-`;
-
-const reverseStyle = css`
-  flex-direction: row-reverse;
 `;
 
 const acceptStyle = css`

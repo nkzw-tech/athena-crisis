@@ -35,7 +35,6 @@ import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowStyle } from '@deities/ui/PulseStyle.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Pace from '@iconify-icons/pixelarticons/speed-fast.js';
 import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
@@ -44,6 +43,7 @@ import Zap from '@iconify-icons/pixelarticons/zap.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import {
   memo,
   ReactElement,
@@ -171,7 +171,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
   return (
     <>
       <DialogScrollContainer key={panel.type} navigate>
-        <Stack gap={16} vertical>
+        <VStack between gap={16} wrap>
           {panel.type === 'unit' ? (
             <UnitCard
               gameId={gameId}
@@ -198,7 +198,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
               player={currentViewer || map.getCurrentPlayer().id}
             />
           ) : null}
-        </Stack>
+        </VStack>
       </DialogScrollContainer>
       <DialogTabBar>
         {unitState && (
@@ -283,7 +283,7 @@ const MapPerformance = ({
       : null;
 
   return (
-    <Stack gap={16} vertical>
+    <VStack between gap={16} wrap>
       <h2>
         <fbt desc="Headline for performance evaluation">Challenges</fbt>
       </h2>
@@ -293,7 +293,7 @@ const MapPerformance = ({
         </fbt>
       </p>
       <div className={gridStyle}>
-        <Stack alignCenter gap start>
+        <Stack alignCenter gap wrap>
           <Icon className={iconStyle} icon={Trophy} />
           <div className={maybeHideStyle}>
             <fbt desc="Label for map performance goal">Goal</fbt>
@@ -307,7 +307,7 @@ const MapPerformance = ({
         </div>
         {performance.pace != null && (
           <>
-            <Stack alignCenter gap start>
+            <Stack alignCenter gap wrap>
               <Icon icon={Pace} />
               <div className={maybeHideStyle}>
                 {getTranslatedPerformanceTypeName('pace')}
@@ -326,7 +326,7 @@ const MapPerformance = ({
         )}
         {hasPowerChallenge && (
           <>
-            <Stack alignCenter gap start>
+            <Stack alignCenter gap wrap>
               <Icon icon={Zap} />
               <div className={maybeHideStyle}>
                 {getTranslatedPerformanceTypeName('power')}
@@ -345,7 +345,7 @@ const MapPerformance = ({
         )}
         {performance.style != null && (
           <>
-            <Stack alignCenter gap start>
+            <Stack alignCenter gap wrap>
               <Icon icon={Subscriptions} />
               <div className={maybeHideStyle}>
                 {getTranslatedPerformanceTypeName('style')}
@@ -396,7 +396,7 @@ const MapPerformance = ({
       {playerAchievement && (
         <>
           <InfoBox gap={16} vertical>
-            <Stack alignCenter gap start>
+            <Stack alignCenter gap wrap>
               <div>
                 <fbt desc="Label for previous result">Previous Best:</fbt>
               </div>
@@ -410,7 +410,7 @@ const MapPerformance = ({
           </InfoBox>
         </>
       )}
-    </Stack>
+    </VStack>
   );
 };
 
@@ -536,18 +536,18 @@ const GameInfoPanel = memo(function GameInfoPanel({
         {Component ? (
           <Component lastActionResponse={lastActionResponse} map={map} />
         ) : panel === endGamePanel ? (
-          <Stack gap={24} vertical>
+          <VStack between gap={24} wrap>
             <h1>{endGameText}</h1>
-            <Stack gap={16} vertical>
+            <VStack between gap={16} wrap>
               <div>{endGameExplanation}</div>
               <div>
                 <InlineLink onClick={endGame}>{endGameText}</InlineLink>
               </div>
-            </Stack>
-          </Stack>
+            </VStack>
+          </VStack>
         ) : (
-          <Stack gap={24} vertical>
-            <Stack gap={16} vertical>
+          <VStack between gap={24} wrap>
+            <VStack between gap={16} wrap>
               <h1>
                 <fbt desc="Headline for describing how to win">How to win</fbt>
               </h1>
@@ -587,13 +587,13 @@ const GameInfoPanel = memo(function GameInfoPanel({
                   ))}
                 </>
               )}
-            </Stack>
+            </VStack>
             <MapPerformance
               currentViewer={currentViewer}
               map={map}
               playerAchievement={playerAchievement}
             />
-          </Stack>
+          </VStack>
         )}
       </DialogScrollContainer>
       <DialogTabBar>
@@ -718,9 +718,19 @@ const GamePlayerEffectDialog = ({
   const items = useMemo(
     () =>
       [
-        ...(skills?.map((skill) => ({ skill, type: 'Skill' }) as const) || []),
+        ...(skills?.map(
+          (skill) =>
+            ({
+              skill,
+              type: 'Skill',
+            }) as const,
+        ) || []),
         ...(crystals?.map(
-          (crystal) => ({ crystal, type: 'Crystal' }) as const,
+          (crystal) =>
+            ({
+              crystal,
+              type: 'Crystal',
+            }) as const,
         ) || []),
       ] as const,
     [skills, crystals],
@@ -930,7 +940,7 @@ const CrystalContainer = ({
 
   return (
     <DialogScrollContainer key={`crystal-${crystal}`} navigate>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         <h2 className={cx(isActive && RainbowStyle)}>
           {isActive ? (
             <fbt desc="Headline for crystal dialog">Active Crystal</fbt>
@@ -981,7 +991,7 @@ const CrystalContainer = ({
             </p>
           </InfoBox>
         )}
-      </Stack>
+      </VStack>
     </DialogScrollContainer>
   );
 };

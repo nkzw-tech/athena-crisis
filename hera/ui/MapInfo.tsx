@@ -33,8 +33,8 @@ import Ammo from '@deities/ui/icons/Ammo.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { memo, useDeferredValue, useEffect, useMemo, useRef } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
@@ -83,7 +83,7 @@ const Tile = ({
       configuration: { cover },
     } = info;
     return (
-      <Box blur className={boxStyle}>
+      <Box between blur className={boxStyle} wrap>
         <div
           style={{
             height: `${tileSize * 1.5}px`,
@@ -106,7 +106,7 @@ const Tile = ({
         </div>
         <div className={textStyle}>
           <div className={cx(ellipsis, overflowStyle)}>{info.name}</div>
-          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap start>
+          <Stack between className={cx(ellipsis, overflowStyle)} gap wrap>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
               <LargeRange
@@ -142,7 +142,7 @@ const renderUnit = (
       );
 
     return (
-      <Box blur className={boxStyle}>
+      <Box between blur className={boxStyle} wrap>
         <UnitTile
           animationConfig={animationConfig}
           biome={biome}
@@ -155,9 +155,15 @@ const renderUnit = (
           unit={unit}
         />
         <div className={textStyle}>
-          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap stretch>
+          <Stack
+            between
+            className={cx(ellipsis, overflowStyle)}
+            gap
+            stretch
+            wrap
+          >
             <div className={ellipsis}>{info.name}</div>
-            <Stack alignCenter gap={4} nowrap start>
+            <Stack alignCenter between gap={4} wrap>
               <Icon className={iconStyle} icon={Heart} />
               <div
                 style={{
@@ -168,13 +174,13 @@ const renderUnit = (
               </div>
             </Stack>
           </Stack>
-          <Stack className={cx(ellipsis, overflowStyle)} gap nowrap>
-            <Stack alignCenter gap={4} nowrap start>
+          <Stack between className={cx(ellipsis, overflowStyle)} gap wrap>
+            <Stack alignCenter between gap={4} wrap>
               <Icon className={iconStyle} icon={Supply} />
               {unit.fuel}/{info.configuration.fuel}
             </Stack>
             {ammo && (
-              <Stack alignCenter gap={4} nowrap start>
+              <Stack alignCenter between gap={4} wrap>
                 <Icon className={iconStyle} icon={Ammo} />
                 {ammo.join(', ')}
               </Stack>
@@ -195,6 +201,7 @@ const renderBuilding = (
   if (building) {
     return (
       <Box
+        between
         blur
         className={cx(
           boxStyle,
@@ -202,6 +209,7 @@ const renderBuilding = (
           building.label != null && buildingWithLabelStyle,
         )}
         gap
+        wrap
       >
         <BuildingTile
           biome={biome}
@@ -212,12 +220,13 @@ const renderBuilding = (
         />
         <Stack
           alignCenter
+          between
           className={cx(ellipsis, overflowStyle)}
           gap={4}
-          nowrap
+          wrap
         >
           <div className={ellipsis}>{building.info.name}</div>
-          <Stack alignCenter gap={4} start>
+          <Stack alignCenter between gap={4} wrap>
             <Icon className={iconStyle} icon={Heart} />
             <div
               style={{

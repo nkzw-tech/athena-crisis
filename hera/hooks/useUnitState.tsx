@@ -67,6 +67,7 @@ const heal = (unitState: UnitState, sprite: UnitAnimationSprite) =>
       ...sprite,
       type: 'unitHeal',
     },
+
     direction: unitState.direction || fallbackDirection,
     type: 'heal',
   }) as const;
@@ -82,6 +83,7 @@ const fold = (
       onComplete,
       type: 'unfold',
     },
+
     direction: unitState.direction || fallbackDirection,
     type,
   }) as const;

@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import Stack, { VStack } from '@nkzw/stack';
 import {
   ComponentProps,
   ReactNode,
@@ -11,7 +12,6 @@ import clipBorder from './clipBorder.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
-import Stack from './Stack.tsx';
 
 const duration = 150;
 
@@ -59,15 +59,14 @@ export default function ExpandableMenuButton({
       }}
       {...props}
     >
-      <Stack
+      <VStack
+        between
         className={cx(innerStyle, isExpanded && expandedInnerStyle)}
         gap={gap}
-        nowrap
         ref={ref}
-        vertical
       >
         {children}
-      </Stack>
+      </VStack>
       <div className={cx(iconContainerStyle, isExpanded && visibleStyle)}>
         <Icon
           button

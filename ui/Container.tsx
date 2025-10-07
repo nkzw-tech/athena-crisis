@@ -1,18 +1,19 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
+import { StackProps, VStack } from '@nkzw/stack';
 import { HTMLAttributes, memo } from 'react';
-import Stack, { StackProps } from './Stack.tsx';
 
 export default memo(function Container({
   className,
   offset,
   ...props
-}: HTMLAttributes<HTMLDivElement> & StackProps & { offset?: boolean }) {
+}: HTMLAttributes<HTMLDivElement> &
+  Omit<StackProps, 'vertical'> & { offset?: boolean }) {
   return (
-    <Stack
+    <VStack
       {...props}
       className={cx(containerStyle, offset && offsetStyle, className)}
-      vertical
+      wrap
     />
   );
 });

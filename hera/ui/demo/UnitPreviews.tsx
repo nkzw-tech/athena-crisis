@@ -11,9 +11,9 @@ import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import randomEntry from '@nkzw/core/randomEntry.js';
+import Stack from '@nkzw/stack';
 import arrayShuffle from 'array-shuffle';
 import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import { useSprites } from '../../hooks/useSprites.tsx';
@@ -104,7 +104,7 @@ export default function UnitPreviews() {
   return hasSprites ? (
     <>
       <Tick animationConfig={AnimationConfig}>
-        <Stack center gap={24} nowrap>
+        <Stack center gap={24} wrap>
           {unitPreviews}
         </Stack>
       </Tick>

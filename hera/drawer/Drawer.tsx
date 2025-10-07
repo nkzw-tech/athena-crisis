@@ -4,8 +4,8 @@ import { isSafari } from '@deities/ui/Browser.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { motion } from 'framer-motion';
 import { ReactNode, RefObject } from 'react';
 
@@ -54,24 +54,23 @@ export default function Drawer({
           ease: 'easeInOut',
         }}
       >
-        <Stack
+        <VStack
           alignCenter
+          between
           className={cx(
             'lightMode',
             !hasInset && panelWithoutInsetStyle[position],
           )}
-          nowrap
-          vertical
         >
           {sidebar && (
-            <Stack className={cx(panelStyle[position], sidebarStyle)} nowrap>
+            <Stack between className={cx(panelStyle[position], sidebarStyle)}>
               {sidebar}
             </Stack>
           )}
-          <Stack className={panelStyle[position]} key={mode} vertical>
+          <VStack between className={panelStyle[position]} key={mode} wrap>
             {children}
-          </Stack>
-        </Stack>
+          </VStack>
+        </VStack>
       </motion.div>
     </Portal>
   );

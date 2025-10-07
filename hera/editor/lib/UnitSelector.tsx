@@ -15,8 +15,8 @@ import Dropdown from '@deities/ui/Dropdown.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { memo } from 'react';
 import Portrait from '../../character/Portrait.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
@@ -92,7 +92,7 @@ export default memo(function UnitSelector({
             onClick={onSelect ? () => onSelect(unit) : undefined}
             selectedText={unit.id === selectedUnit?.id}
           >
-            <Stack alignCenter gap nowrap start>
+            <Stack alignCenter gap>
               <Portrait
                 clip
                 player={player}

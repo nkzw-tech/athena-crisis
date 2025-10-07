@@ -49,7 +49,6 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Storage from '@deities/ui/Storage.tsx';
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
@@ -57,6 +56,7 @@ import ChevronLeft from '@iconify-icons/pixelarticons/chevron-left.js';
 import filterNodes from '@nkzw/core/filterNodes.js';
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import random from '@nkzw/core/random.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { AnimatePresence } from 'framer-motion';
 import {
@@ -1021,8 +1021,8 @@ export default function MapEditor({
           size="wide"
           toggleExpanded={() => setMenuIsExpanded((isExpanded) => !isExpanded)}
         >
-          <Stack alignCenter gap nowrap>
-            <Stack alignCenter className={ellipsis} gap nowrap>
+          <Stack alignCenter between gap>
+            <Stack alignCenter between className={ellipsis} gap>
               <BiomeIcon biome={map.config.biome} />{' '}
               <div className={ellipsis}>
                 {mapName || (
@@ -1039,7 +1039,7 @@ export default function MapEditor({
             </InlineLink>
           </Stack>
           {menuIsExpanded && (
-            <Stack className={campaignListStyle} gap={16} nowrap vertical>
+            <VStack between className={campaignListStyle} gap={16}>
               <h2>
                 <fbt desc="Details label for maps">Map Details</fbt>
               </h2>
@@ -1104,7 +1104,7 @@ export default function MapEditor({
                   </ErrorText>
                 </div>
               )}
-            </Stack>
+            </VStack>
           )}
         </PrimaryExpandableMenuButton>
         <ZoomButton

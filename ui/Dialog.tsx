@@ -1,6 +1,7 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import Stack from '@nkzw/stack';
 import { motion } from 'framer-motion';
 import { ComponentProps, ReactNode, useCallback } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
@@ -11,7 +12,6 @@ import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
 import MenuButton from './MenuButton.tsx';
 import { ScrollContainerWithNavigation } from './ScrollContainer.tsx';
-import Stack from './Stack.tsx';
 
 export function useDialogNavigation<T>(
   states: ReadonlyArray<T> | undefined,
@@ -101,7 +101,7 @@ export default function Dialog({
           ease: [0.34, 1.26, 0.64, 1],
         }}
       >
-        <Stack alignCenter center className={wrapperStyle}>
+        <Stack alignCenter center className={wrapperStyle} wrap>
           <div className={cx(containerStyle, sizes[size])}>
             {children}
             <MenuButton

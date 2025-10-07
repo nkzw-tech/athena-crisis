@@ -7,8 +7,8 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { motion } from 'framer-motion';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -49,7 +49,7 @@ export default async function receiveBiomeAnimation(
       animations: state.animations.set(new AnimationKey(), {
         color: player,
         component: ({ duration, isVisible }) => (
-          <Stack center className={biomeContainerStyle} nowrap>
+          <Stack center className={biomeContainerStyle}>
             {[0, 1, 2].map((variant) => (
               <motion.div
                 animate={{

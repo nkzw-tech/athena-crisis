@@ -1,8 +1,8 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import captureException from '@deities/ui/lib/captureException.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useEffect } from 'react';
 
@@ -58,8 +58,8 @@ const getAlert = (error: Error) => {
       onAccept: reload,
       preventCancel: true,
       text: (
-        <Stack alignCenter gap={16}>
-          <Stack flex1>
+        <Stack alignCenter between gap={16} wrap>
+          <Stack between flex1 wrap>
             <fbt desc="Error message description">
               Athena Crisis is currently undergoing maintenance. Please try
               again later.

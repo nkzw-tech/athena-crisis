@@ -34,7 +34,6 @@ import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import Typeahead, { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
 import { css, cx } from '@emotion/css';
@@ -49,6 +48,7 @@ import Zap from '@iconify-icons/pixelarticons/zap.js';
 import getFirst from '@nkzw/core/getFirst.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';
 import { memo, MouseEvent, useCallback, useRef, useState } from 'react';
@@ -188,13 +188,13 @@ export default memo(function Level({
 
   const next = level.next;
   return (
-    <Stack alignCenter nowrap start>
-      <Stack gap={16} padding vertical>
+    <Stack alignCenter>
+      <VStack between gap={16} padding wrap>
         <Box
           alignCenter
+          between
           className={mapCardStyle}
           gap={depth > 0 ? 16 : undefined}
-          nowrap
           ref={ref}
         >
           <Dropdown
@@ -243,10 +243,10 @@ export default memo(function Level({
               </>
             )}
           </Dropdown>
-          <Stack gap vertical>
-            <Stack>
+          <VStack between gap wrap>
+            <Stack between wrap>
               <h2>{getMapName(node.name)}</h2>
-              <Stack gap>
+              <Stack between gap wrap>
                 <InlineLink
                   className={iconStyle}
                   onClick={() => setMap(node.id, 'effects')}
@@ -323,23 +323,23 @@ export default memo(function Level({
               slug={node.slug}
               zoom={zoom}
             />
-            <Stack className={mapDetailStyle} gap vertical>
+            <VStack between className={mapDetailStyle} gap wrap>
               {hasPerformanceExpectation(map) && (
-                <Stack alignCenter gap={16} nowrap start>
+                <Stack alignCenter gap={16}>
                   {performance.pace != null && (
-                    <Stack gap nowrap start>
+                    <Stack gap>
                       <Icon className={performanceIconStyle} icon={Pace} />
                       <div>{performance.pace}</div>
                     </Stack>
                   )}
                   {performance.power != null && (
-                    <Stack gap nowrap start>
+                    <Stack gap>
                       <Icon className={performanceIconStyle} icon={Zap} />
                       <div>{performance.power}</div>
                     </Stack>
                   )}
                   {performance.style != null && (
-                    <Stack gap nowrap start>
+                    <Stack gap>
                       <Icon
                         className={performanceIconStyle}
                         icon={Subscriptions}
@@ -352,7 +352,7 @@ export default memo(function Level({
                     </Stack>
                   )}
                   {hasBonusObjective(map, map.active[0]) && (
-                    <Stack alignCenter gap nowrap start>
+                    <Stack alignCenter gap>
                       <input
                         checked
                         className={cx('disabled', 'checkmark')}
@@ -365,13 +365,13 @@ export default memo(function Level({
                 </Stack>
               )}
               {rewardObjectives.length ? (
-                <Stack alignCenter gap start>
+                <Stack alignCenter gap wrap>
                   {rewardObjectives.length === 1 ? (
                     <fbt desc="Label for reward">Reward</fbt>
                   ) : (
                     <fbt desc="Label for rewards">Rewards</fbt>
                   )}
-                  <Stack gap={16} nowrap start>
+                  <Stack gap={16}>
                     {rewardObjectives.map((objective, index) => (
                       <RewardDetail
                         key={index}
@@ -388,7 +388,7 @@ export default memo(function Level({
                   dropdownClassName={effectPanelStyle}
                   shouldRenderControls={isInView && !!effects}
                   title={
-                    <Stack gap start>
+                    <Stack gap wrap>
                       {characters.map((action, index) => (
                         <Portrait
                           clip
@@ -402,8 +402,8 @@ export default memo(function Level({
                     </Stack>
                   }
                 >
-                  <Stack gap nowrap padding vertical>
-                    <Stack alignCenter gap={16} nowrap>
+                  <VStack between gap padding>
+                    <Stack alignCenter between gap={16}>
                       <EffectSelector
                         effects={effects}
                         objectives={map.config.objectives}
@@ -428,7 +428,7 @@ export default memo(function Level({
                         user={null}
                       />
                     ))}
-                  </Stack>
+                  </VStack>
                 </Dropdown>
               ) : null}
               <Typeahead
@@ -459,14 +459,14 @@ export default memo(function Level({
                   'Placeholder text for adding a map to a level.',
                 )}
               />
-            </Stack>
-          </Stack>
+            </VStack>
+          </VStack>
         </Box>
-      </Stack>
+      </VStack>
       {next?.length ? (
         <>
           <div className={arrowStyle}>→</div>
-          <Stack start vertical>
+          <VStack wrap>
             {sortByDepth(next, depthMap).map((entry) => (
               <Level
                 depth={depth + 1}
@@ -484,7 +484,7 @@ export default memo(function Level({
                   : { level: entry })}
               />
             ))}
-          </Stack>
+          </VStack>
         </>
       ) : null}
     </Stack>

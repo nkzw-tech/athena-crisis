@@ -3,6 +3,7 @@ import { css, cx } from '@emotion/css';
 import CloseIcon from '@iconify-icons/pixelarticons/close.js';
 import DragAndDrop from '@iconify-icons/pixelarticons/drag-and-drop.js';
 import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { motion } from 'framer-motion';
 import {
   createContext,
@@ -27,7 +28,6 @@ import ExitFullscreen from './icons/ExitFullscreen.tsx';
 import Fullscreen from './icons/Fullscreen.tsx';
 import MenuButton from './MenuButton.tsx';
 import Portal from './Portal.tsx';
-import Stack from './Stack.tsx';
 
 export const MenuClassName = 'menu-button';
 
@@ -190,32 +190,35 @@ export default function Menu({
             {children?.(close)}
           </motion.div>
         )}
-        <Stack
+        <VStack
+          between
           className={cx(linkContainerStyle, isOpen && openLinkContainerStyle)}
           stretch
-          vertical
+          wrap
         >
           {canToggleFullScreen && (
-            <Stack gap vertical>
+            <VStack between gap wrap>
               <a onClick={toggleFullscreen}>
                 <Icon
                   button
                   icon={isFullScreen ? ExitFullscreen : Fullscreen}
                 />
               </a>
-            </Stack>
+            </VStack>
           )}
-        </Stack>
+        </VStack>
         <Stack
+          between
           className={cx(
             controlsContainerStyle,
             isOpen && openControlsContainerStyle,
           )}
           stretch
+          wrap
         >
           {controls?.(isOpen)}
           {isOpen && App.canQuit && !isFullScreen && canToggleFullScreen && (
-            <Stack className={dragStyle} end>
+            <Stack className={dragStyle} end flex1 wrap>
               <Icon button icon={DragAndDrop} />
             </Stack>
           )}
@@ -404,6 +407,5 @@ const openControlsContainerStyle = css`
 
 const dragStyle = css`
   -webkit-app-region: drag;
-  flex: 1;
   padding: 8px 8px 0 0;
 `;

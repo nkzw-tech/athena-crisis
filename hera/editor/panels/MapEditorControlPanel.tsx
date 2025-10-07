@@ -12,13 +12,13 @@ import usePress, { UsePressProps } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink, { KeyboardShortcut } from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Bottom from '@iconify-icons/pixelarticons/layout-footer.js';
 import Left from '@iconify-icons/pixelarticons/layout-sidebar-left.js';
 import More from '@iconify-icons/pixelarticons/more-vertical.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { RefObject, useCallback, useRef } from 'react';
 import Drawer, { DrawerPosition } from '../../drawer/Drawer.tsx';
@@ -486,7 +486,7 @@ const Sidebar = ({
 
   if (isMedium) {
     secondary.unshift(
-      <Stack gap key="icons" reverse start>
+      <Stack gap key="icons" reverse wrap>
         <InlineLink
           onClick={() => setPosition('left')}
           selected={position === 'left'}
@@ -504,9 +504,9 @@ const Sidebar = ({
   }
 
   return (
-    <Stack alignCenter className={topPaddingStyle} flex1 gap={16} nowrap>
-      <Stack className={boxShadowStyle} flex1 nowrap>
-        <Box alignCenter className={toolbarStyle} flex1 gap={16} nowrap>
+    <Stack alignCenter between className={topPaddingStyle} flex1 gap={16}>
+      <Stack between className={boxShadowStyle} flex1>
+        <Box alignCenter between className={toolbarStyle} flex1 gap={16}>
           {primary}
           {secondary.length && (
             <Dropdown
@@ -515,9 +515,9 @@ const Sidebar = ({
               title={<Icon icon={More} />}
             >
               <Box
+                between
                 className={cx(moreInnerStyle, 'dropdown-content')}
                 gap
-                nowrap
                 vertical
               >
                 {secondary}
@@ -526,7 +526,7 @@ const Sidebar = ({
           )}
         </Box>
       </Stack>
-      <Stack className={boxShadowStyle}>
+      <Stack between className={boxShadowStyle} wrap>
         <Button className={buttonStyle} {...buttonProps}>
           <KeyboardShortcut button shortcut="p" />
           {partition <= 3 ? (

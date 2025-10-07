@@ -9,8 +9,8 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useColumns from '../editor/hooks/useColumns.tsx';
 import useGridNavigation from '../hooks/useGridNavigation.tsx';
@@ -156,7 +156,7 @@ export default memo(function PortraitPicker({
 
   return (
     <>
-      <Stack center gap={16}>
+      <Stack center gap={16} wrap>
         {PlayerIDs.map((id) => (
           <PlayerIcon
             id={id}
@@ -166,7 +166,7 @@ export default memo(function PortraitPicker({
           />
         ))}
       </Stack>
-      <Stack center={center} gap ref={setRef} start={center ? undefined : true}>
+      <Stack center={center} gap ref={setRef} wrap>
         {portraits.map(([unit, variant]) => (
           <PortraitItem
             color={color}

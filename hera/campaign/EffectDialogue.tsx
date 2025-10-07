@@ -1,7 +1,7 @@
 import { Effect } from '@deities/apollo/Effects.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import { VStack } from '@nkzw/stack';
 import { memo } from 'react';
 import ActionCard from '../editor/lib/ActionCard.tsx';
 import { PlayerDetails } from '../Types.tsx';
@@ -20,7 +20,7 @@ export default memo(function StartDialogue({
   userDisplayName: string;
 }) {
   return (
-    <Stack gap={16} vertical>
+    <VStack between gap={16} wrap>
       {effect.actions.map((action, index) => (
         <ActionCard
           action={action}
@@ -36,6 +36,6 @@ export default memo(function StartDialogue({
           userDisplayName={userDisplayName}
         />
       ))}
-    </Stack>
+    </VStack>
   );
 });

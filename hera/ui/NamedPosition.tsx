@@ -9,7 +9,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack from '@nkzw/stack';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import Medal from '../Medal.tsx';
 import Tick from '../Tick.tsx';
@@ -46,21 +46,22 @@ export default function NamedPosition({
       items={[
         hasName || showHealth ? (
           <FlyoutItem center color={unit.player} key="unit-name">
-            <Stack center gap={4} nowrap>
+            <Stack center gap={4} wrap>
               {hasName && (
-                <Stack gap={4} nowrap>
+                <Stack between gap={4} wrap>
                   {unit.getName(currentViewer)}
                   {unit.isLeader() && <Medal player={unit.player} zoom={1} />}
                 </Stack>
               )}
               {showHealth ? (
                 <Stack
+                  between
                   gap={1}
-                  nowrap
                   style={{
                     color:
                       getHealthColor(unit.health) || applyVar('text-color'),
                   }}
+                  wrap
                 >
                   {unit.health}
                   <Icon icon={Heart} />
@@ -72,7 +73,7 @@ export default function NamedPosition({
         unit.transports?.length ? (
           <FlyoutItem color={unit.player} key="unit-transports" size="large">
             <Tick animationConfig={animationConfig}>
-              <Stack gap nowrap style={{ zoom: 0.75 }}>
+              <Stack between gap style={{ zoom: 0.75 }} wrap>
                 {unit.transports.map((transportedUnit, index) => (
                   <TransportedUnitTile
                     animationConfig={animationConfig}

@@ -13,10 +13,10 @@ import { ButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
 import Trash from '@iconify-icons/pixelarticons/trash.js';
+import Stack from '@nkzw/stack';
 import { ReactNode, RefObject } from 'react';
 import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import {
@@ -137,14 +137,13 @@ export default function MapMessageComponent({
     <MapMessageContainer
       animationConfig={animationConfig}
       button={
-        <Stack className={rightPaddingStyle} gap nowrap>
+        <Stack between className={rightPaddingStyle} gap>
           {deleteMessage && currentUser?.id === message.user.id && (
             <Stack
               alignCenter
               center
               className={ButtonStyle}
               gap={4}
-              nowrap
               onClick={() => {
                 deleteMessage(message.id);
                 update((state) => {
@@ -174,7 +173,6 @@ export default function MapMessageComponent({
                   ButtonStyle,
                 )}
                 gap={4}
-                nowrap
                 onClick={async () => {
                   const [, result] = await Promise.all([
                     update((state) => ({

@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { useMemo, useRef } from 'react';
-import Stack from './Stack.tsx';
 import { TagListInternal } from './TagList.tsx';
 import Typeahead, {
   TypeaheadDataSource,
@@ -32,8 +32,8 @@ export default function TagInput<T>({
       className={cx('fake-input', fakeInputStyle)}
       gap
       onClick={() => inputRef.current?.focus()}
-      start
       stretch
+      wrap
     >
       <TagListInternal
         editable

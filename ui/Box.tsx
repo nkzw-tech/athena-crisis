@@ -1,8 +1,8 @@
 import { css, cx } from '@emotion/css';
+import Stack, { StackProps } from '@nkzw/stack';
 import { HTMLAttributes, memo } from 'react';
 import { applyVar } from './cssVar.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import Stack, { StackProps } from './Stack.tsx';
 
 export default memo(function Box({
   blur,

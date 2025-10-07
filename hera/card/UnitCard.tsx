@@ -63,7 +63,6 @@ import Sabotage from '@deities/ui/icons/Sabotage.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
@@ -79,6 +78,7 @@ import groupBy from '@nkzw/core/groupBy.js';
 import minBy from '@nkzw/core/minBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { memo, ReactNode, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
@@ -178,7 +178,7 @@ export default memo(function UnitCard({
 
   return (
     <>
-      <Stack gap nowrap start>
+      <Stack gap>
         <TilePreview map={previewMap}>
           <UnitTile
             animationConfig={AnimationConfig}
@@ -201,7 +201,7 @@ export default memo(function UnitCard({
             {...props}
           />
         </TilePreview>
-        <Stack gap start vertical>
+        <VStack gap wrap>
           <CardTitle player={player}>{info.name}</CardTitle>
           {getTranslatedEntityName(info.type)},{' '}
           {getTranslatedEntityGroupName(getEntityGroup(entity))}
@@ -214,8 +214,8 @@ export default memo(function UnitCard({
                     center
                     gap
                     inline
-                    start
                     style={isLeader ? { color } : undefined}
+                    wrap
                   >
                     {name}
                     {isLeader && <Medal player={unit.player} />}
@@ -224,11 +224,11 @@ export default memo(function UnitCard({
               </fbt>
             </div>
           )}
-        </Stack>
+        </VStack>
       </Stack>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         <AttributeGridBox>
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Heart} />
             <fbt desc="Label for health">Health</fbt>
           </Stack>
@@ -240,19 +240,19 @@ export default memo(function UnitCard({
             {unit.health}%
           </div>
           <div />
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Shield} />
             <fbt desc="Label for defense">Defense</fbt>
           </Stack>
           <div>{defense}</div>
           <Range end value={getAttributeRangeValue(defenseRange, defense)} />
-          <Stack nowrap start>
+          <Stack>
             <Icon horizontalFlip icon={Reply} />
             <fbt desc="Label for movement radius">Movement</fbt>
           </Stack>
           <div>{radius}</div>
           <Range end value={getAttributeRangeValue(movementRange, radius)} />
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Supply} />
             <fbt desc="Label for supplies">Supplies</fbt>
           </Stack>
@@ -260,7 +260,7 @@ export default memo(function UnitCard({
             {unit.fuel} / {fuel}
           </div>
           <Range end value={getAttributeRangeValue(supplyRange, fuel)} />
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Visible} />
             <fbt desc="Label for vision radius">Vision</fbt>
           </Stack>
@@ -273,7 +273,7 @@ export default memo(function UnitCard({
           <Range end value={getAttributeRangeValue(visionRange, vision)} />
           {range && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={DropUnit} />
                 <fbt desc="Label for vision radius">Attack Range</fbt>{' '}
               </Stack>
@@ -285,7 +285,7 @@ export default memo(function UnitCard({
           )}
           {cost < Number.POSITIVE_INFINITY && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Coin} />
                 <fbt desc="Label for build cost">Build Cost</fbt>
               </Stack>
@@ -299,13 +299,13 @@ export default memo(function UnitCard({
           )}
           {unit.player === 0 && unit.isBeingRescued() && rescuer != null && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Rescue} />
                 <fbt desc="Label for  in progress rescue (text has to be short)">
                   Rescue…
                 </fbt>
               </Stack>
-              <Stack alignCenter className={wideColumnStyle} end gap>
+              <Stack alignCenter className={wideColumnStyle} end gap wrap>
                 <MiniPlayerIcon id={rescuer} />
                 {getTranslatedFactionName(playerDetails, rescuer)}
               </Stack>
@@ -313,7 +313,7 @@ export default memo(function UnitCard({
           )}
           {unit.label != null && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon className={iconStyle} icon={Label} />
                 <fbt desc="Label for label">Label</fbt>
               </Stack>
@@ -324,7 +324,7 @@ export default memo(function UnitCard({
           )}
         </AttributeGridBox>
         {!unit.info.canAct(currentPlayer) && (
-          <Stack alignCenter gap nowrap start>
+          <Stack alignCenter gap>
             <Icon className={errorStyle} icon={WarningBox} />
             <p className={errorStyle}>
               <fbt desc="Label for a unit that can only move or attack">
@@ -333,12 +333,12 @@ export default memo(function UnitCard({
             </p>
           </Stack>
         )}
-        <Stack gap vertical>
+        <VStack between gap wrap>
           <CardInfoHeading player={player}>
             <fbt desc="About unit headline">About</fbt>
           </CardInfoHeading>
           <p>{info.description}</p>
-        </Stack>
+        </VStack>
         <UnitAbilities player={currentPlayer} unit={unit} />
         <UnitTransports biome={biome} player={player} unit={unit} />
         <UnitAttack
@@ -381,7 +381,7 @@ export default memo(function UnitCard({
           movementType={info.movementType}
           player={player}
         />
-      </Stack>
+      </VStack>
     </>
   );
 });
@@ -484,11 +484,11 @@ const Weapon = memo(function WeaponAttack({
 
   return (
     <Tick animationConfig={AnimationConfig}>
-      <Stack gap vertical>
+      <VStack between gap wrap>
         <CardInfoHeading style={{ color: getColor(player) }}>
           {weapon.name}
         </CardInfoHeading>
-        <Stack start>
+        <Stack wrap>
           <fbt desc="Label for ammo supply">
             Supply:
             <fbt:param name="supply">
@@ -497,7 +497,7 @@ const Weapon = memo(function WeaponAttack({
           </fbt>
           <Icon className={iconStyle} icon={Ammo} />
         </Stack>
-        <AdaptiveStack className={marginTopStyle} gap={16} start>
+        <AdaptiveStack className={marginTopStyle} gap={16}>
           {damageGroups.map(([strength, damageMapEntry]) => {
             const entities = new Set(damageMapEntry.map(([type]) => type));
 
@@ -564,7 +564,7 @@ const Weapon = memo(function WeaponAttack({
             ) : null;
           })}
         </AdaptiveStack>
-      </Stack>
+      </VStack>
     </Tick>
   );
 });
@@ -596,7 +596,7 @@ const UnitAttack = ({
     case AttackType.LongRange:
     case AttackType.ShortRange:
       return (
-        <Stack gap vertical>
+        <VStack between gap wrap>
           {[...weapons].map(([id, weapon]) => (
             <Weapon
               biome={biome}
@@ -610,7 +610,7 @@ const UnitAttack = ({
               weapon={weapon}
             />
           ))}
-        </Stack>
+        </VStack>
       );
     default: {
       attackType satisfies never;
@@ -682,13 +682,13 @@ const UnitVulnerability = ({
 
   return (
     <Tick animationConfig={AnimationConfig}>
-      <Stack gap vertical>
+      <VStack between gap wrap>
         <CardInfoHeading style={{ color: getColor(player) }}>
           <fbt desc="Headline for who the unit is weak to">
             Vulnerable Against
           </fbt>
         </CardInfoHeading>
-        <AdaptiveStack className={marginTopStyle} gap={16} start>
+        <AdaptiveStack className={marginTopStyle} gap={16}>
           {damageGroups.map(([strength, damageMapEntry]) => {
             const unitGroups = [
               ...groupBy(damageMapEntry, ([unit]) => unit.info.type).values(),
@@ -725,7 +725,7 @@ const UnitVulnerability = ({
             ) : null;
           })}
         </AdaptiveStack>
-      </Stack>
+      </VStack>
     </Tick>
   );
 };
@@ -744,11 +744,11 @@ const UnitAbility = ({
     <Stack
       className={tagStyle}
       gap
-      start
       style={{
         backgroundColor: getColor(color, 0.2),
         color: getColor(color),
       }}
+      wrap
     >
       <Icon icon={icon} />
       {children}
@@ -769,11 +769,11 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
   );
   const moraleColor = getColor(numberToPlayerID(Ability.Morale - 1));
   return abilities?.length ? (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading style={{ color: getColor(player.id) }}>
         <fbt desc="Headline for unit special abilities">Special Abilities</fbt>
       </CardInfoHeading>
-      <AdaptiveStack gap start>
+      <AdaptiveStack gap>
         {abilities.map((ability) => {
           switch (ability) {
             case Ability.Capture:
@@ -863,7 +863,7 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
         })}
       </AdaptiveStack>
       {unit.info.hasAbility(Ability.HeavyEquipment) && (
-        <Stack alignCenter gap nowrap start>
+        <Stack alignCenter gap>
           <Icon
             className={extraIconStyle}
             icon={WarningBox}
@@ -878,7 +878,7 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
         </Stack>
       )}
       {unit.info.hasAbility(Ability.Morale) && (
-        <Stack alignCenter gap nowrap start>
+        <Stack alignCenter gap>
           <Icon
             className={extraIconStyle}
             icon={Volume}
@@ -892,7 +892,7 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
           </p>
         </Stack>
       )}
-    </Stack>
+    </VStack>
   ) : null;
 };
 
@@ -916,7 +916,7 @@ const UnitTransports = ({
   );
   return (
     <>
-      <Stack gap vertical>
+      <VStack between gap wrap>
         <CardInfoHeading style={{ color: getColor(player) }}>
           <fbt desc="Headline for transport information">Transport</fbt>
         </CardInfoHeading>
@@ -935,10 +935,10 @@ const UnitTransports = ({
             </fbt>
           )}
         </p>
-      </Stack>
+      </VStack>
       {units?.length ? (
         <Tick animationConfig={AnimationConfig}>
-          <Stack gap vertical>
+          <VStack between gap wrap>
             <CardInfoHeading style={{ color: getColor(player) }}>
               <fbt desc="Headline for transported units">Transported Units</fbt>
             </CardInfoHeading>
@@ -949,7 +949,7 @@ const UnitTransports = ({
                 units={units}
               />
             </TileBox>
-          </Stack>
+          </VStack>
         </Tick>
       ) : null}
     </>
@@ -978,15 +978,15 @@ const UnitMovement = memo(function UnitMovement({
     ([cost]) => (cost === -1 ? Number.POSITIVE_INFINITY : cost),
   );
   return (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading style={{ color: getColor(player) }}>
         <fbt desc="Headline for movement costs">Movement Costs</fbt>
       </CardInfoHeading>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         <fbt desc="Label for movement type">
           Type: <fbt:param name="movementType">{movementType.name}</fbt:param>
         </fbt>
-        <Stack gap start>
+        <Stack gap wrap>
           {tileList?.map(([cost, tiles]) => (
             <MovementBox
               biome={biome}
@@ -1005,8 +1005,8 @@ const UnitMovement = memo(function UnitMovement({
             </fbt>
           )}
         </Stack>
-      </Stack>
-    </Stack>
+      </VStack>
+    </VStack>
   );
 });
 

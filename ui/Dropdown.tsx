@@ -1,14 +1,15 @@
 import { css, cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode, useCallback, useState } from 'react';
 import { applyVar } from './cssVar.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import Stack from './Stack.tsx';
 
 export default function Dropdown({
   children,
   className,
   closeOnSelect,
   dropdownClassName,
+  flex1,
   forceOpen,
   shouldRenderControls = true,
   title,
@@ -17,6 +18,7 @@ export default function Dropdown({
   className?: string;
   closeOnSelect?: true;
   dropdownClassName?: string;
+  flex1?: boolean;
   forceOpen?: boolean;
   shouldRenderControls?: boolean;
   title: ReactNode;
@@ -30,23 +32,25 @@ export default function Dropdown({
 
   return (
     <Stack
+      between
       className={cx(selectorContainerStyle, !closed && openStyle, className)}
+      flex1={flex1}
+      wrap
     >
       {title}
       {shouldRenderControls && (
-        <Stack
+        <VStack
+          between
           className={cx(
             selectorStyle,
             dropdownClassName,
             forceOpen && forceOpenStyle,
             closed && hiddenStyle,
           )}
-          nowrap
           onClick={closeOnSelect ? close : undefined}
-          vertical
         >
           {children}
-        </Stack>
+        </VStack>
       )}
     </Stack>
   );

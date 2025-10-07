@@ -4,7 +4,7 @@ import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack from '@nkzw/stack';
 import { useMemo } from 'react';
 import InlineTileList from '../card/InlineTileList.tsx';
 import getAnyBuildingTileField from '../lib/getAnyBuildingTileField.tsx';
@@ -44,13 +44,13 @@ export default function MapBlockList({ map }: { map: MapData }) {
 
   return buildings.length || units.length ? (
     <Tick animationConfig={AnimationConfig}>
-      <Box vertical>
+      <Box between vertical wrap>
         <h2>
           <fbt desc="Headline for restricted entities on a map">
             Restricted Entities
           </fbt>
         </h2>
-        <Stack alignNormal>
+        <Stack alignStart between wrap>
           <InlineTileList
             biome={biome}
             buildings={[...Array(units.length).fill(undefined), ...buildings]}

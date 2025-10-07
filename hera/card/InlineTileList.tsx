@@ -21,9 +21,9 @@ import Vision from '@deities/athena/Vision.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import random from '@nkzw/core/random.js';
+import Stack from '@nkzw/stack';
 import { useInView } from 'framer-motion';
 import {
   ComponentProps,
@@ -107,7 +107,7 @@ export default function InlineTileList({
   const [showCursor, setShowCursor] = useState<number | undefined>();
   const hideCursor = useCallback(() => setShowCursor(undefined), []);
   return (
-    <Stack gap={gap} start>
+    <Stack gap={gap} wrap>
       {tilesToTileMap(tiles).map((tile, index) => (
         <InlineTile
           biome={biome}

@@ -9,10 +9,10 @@ import getColor, { playerToColor } from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink, { InlineLinkColor } from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode } from 'react';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { CharacterImage } from '../character/PortraitPicker.tsx';
@@ -153,12 +153,12 @@ export default function PlayerSelector({
           <fbt desc="headline for players">Players</fbt>
         )}
       </h2>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         {teams}
-      </Stack>
+      </VStack>
       {children}
       {activeIsRearranged && (
-        <Stack>
+        <Stack between wrap>
           <InfoBox>
             <p>
               <fbt desc="Explanation for which player goes first">
@@ -209,7 +209,7 @@ export const PlayerSkillSelectors = ({
   );
 
   return (
-    <Stack className={cx(nameStyle, skillStyle)} gap={16} nowrap>
+    <Stack between className={cx(nameStyle, skillStyle)} gap={16} wrap>
       {Array(skillSlots)
         .fill(0)
         .map((_, id) => {
@@ -299,7 +299,7 @@ const PlayerItem = ({
         }
       : null;
     return (
-      <Stack gap nowrap start>
+      <Stack between gap wrap>
         <Component
           className={itemStyle}
           onClick={!bot ? onClick : undefined}
@@ -344,7 +344,7 @@ const PlayerItem = ({
               toggleFavorite={toggleFavoriteSkill}
             />
           ) : (
-            <Stack className={cx(nameStyle, skillStyle)} gap={16} nowrap>
+            <Stack between className={cx(nameStyle, skillStyle)} gap={16} wrap>
               {[...player.skills].map((skill, index) =>
                 // Skills in pending games are hidden.
                 skill < 0 ? (
@@ -368,7 +368,7 @@ const PlayerItem = ({
   }
 
   return locked && viewerPlayerID !== player.id ? (
-    <Stack className={cx(itemStyle, lightStyle)}>
+    <Stack between className={cx(itemStyle, lightStyle)} wrap>
       <PlayerIcon id={player.id} />
       <div className={nameStyle}>
         <fbt desc="Text when waiting for a player to join">

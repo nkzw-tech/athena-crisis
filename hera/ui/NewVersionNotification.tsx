@@ -3,9 +3,9 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { useInlineLink } from '@deities/ui/InlineLink.tsx';
 import Reload from '@deities/ui/Reload.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
+import { VStack } from '@nkzw/stack';
 import { useCallback, useState } from 'react';
 import Notification from './Notification.tsx';
 
@@ -53,7 +53,7 @@ export default function NewVersionNotification({
   const linkProps = useInlineLink();
 
   return (
-    <Stack className={absoluteStyle} gap vertical>
+    <VStack between className={absoluteStyle} gap wrap>
       {hasNewAppVersion && !hideNotification && (
         <Notification offset={hasNewVersion ? 0.5 : 0}>
           <Icon
@@ -62,7 +62,7 @@ export default function NewVersionNotification({
             icon={Close}
             onClick={() => setHideNotification(true)}
           />
-          <Stack gap vertical>
+          <VStack between gap wrap>
             <h2>
               <fbt desc="Headline for new version">New Version available</fbt>
             </h2>
@@ -79,7 +79,7 @@ export default function NewVersionNotification({
                 </a>.
               </fbt>
             </p>
-          </Stack>
+          </VStack>
         </Notification>
       )}
       {hasNewVersion && (
@@ -92,7 +92,7 @@ export default function NewVersionNotification({
           </p>
         </Notification>
       )}
-    </Stack>
+    </VStack>
   );
 }
 

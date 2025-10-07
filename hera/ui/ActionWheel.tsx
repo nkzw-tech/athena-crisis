@@ -25,7 +25,6 @@ import StopCapture from '@deities/ui/icons/StopCapture.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ChargeIcon from '@iconify-icons/pixelarticons/ac.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
@@ -35,6 +34,7 @@ import Coin from '@iconify-icons/pixelarticons/coin.js';
 import Flag from '@iconify-icons/pixelarticons/flag.js';
 import Unfold from '@iconify-icons/pixelarticons/flatten.js';
 import Load from '@iconify-icons/pixelarticons/login.js';
+import { VStack } from '@nkzw/stack';
 import { motion, MotionStyle } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -427,19 +427,18 @@ export function LargeActionButton({
       }}
       ref={ref}
     >
-      <Stack
+      <VStack
         alignCenter
         className={cx(BoxStyle, iconStyle, entityStyle, bottomAlignedStyle)}
         end
         gap={4}
-        nowrap
-        vertical
+        wrap
       >
         <div>
           {icon?.(highlighted || highlight, { className: centerIconStyle })}
         </div>
         {detail}
-      </Stack>
+      </VStack>
       {label && (
         <div
           className={cx(
@@ -462,16 +461,15 @@ export function LargeActionButton({
 function CenterElement({ children }: { children: ReactNode }) {
   return (
     <div className={cx(itemStyle, radiusItemStyle, centerStyle)}>
-      <Stack
+      <VStack
         alignCenter
         center
         className={cx(BoxStyle, iconStyle, entityStyle, ellipsis)}
         gap={4}
-        nowrap
-        vertical
+        wrap
       >
         {children}
-      </Stack>
+      </VStack>
     </div>
   );
 }

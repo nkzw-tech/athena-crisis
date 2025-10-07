@@ -1,7 +1,7 @@
 import Player, { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import parseInteger from '@nkzw/core/parseInteger.js';
+import Stack from '@nkzw/stack';
 import { useEffect } from 'react';
 import { Actions } from '../../Types.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
@@ -39,7 +39,7 @@ export default function EditorPlayerSelector({
   }, [setEditorState, update]);
 
   return (
-    <Stack gap={16} start vertical={vertical}>
+    <Stack gap={16} vertical={vertical} wrap>
       {PlayerIDs.map((id) => (
         <PlayerIcon
           id={id}

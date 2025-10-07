@@ -10,12 +10,12 @@ import ErrorText from '@deities/ui/ErrorText.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Plus from '@iconify-icons/pixelarticons/plus.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
@@ -203,8 +203,8 @@ export default function EffectsPanel({
 
   if (showNewEffects) {
     return (
-      <Stack gap={24} vertical verticalPadding>
-        <Box gap={16} vertical>
+      <VStack between gap={24} verticalPadding wrap>
+        <Box between gap={16} vertical wrap>
           {possibleEffects.length ? (
             <>
               <h2 className={flexStyle}>
@@ -212,9 +212,9 @@ export default function EffectsPanel({
                   Choose a new Effect
                 </fbt>
               </h2>
-              <Stack gap vertical>
+              <VStack between gap wrap>
                 {possibleEffects}
-              </Stack>
+              </VStack>
             </>
           ) : (
             <ErrorText>
@@ -224,18 +224,18 @@ export default function EffectsPanel({
             </ErrorText>
           )}
         </Box>
-        <Stack start>
+        <Stack wrap>
           <Button onClick={() => setShowNewEffects(false)}>
             <fbt desc="Button to navigate back">Back</fbt>
           </Button>
         </Stack>
-      </Stack>
+      </VStack>
     );
   }
 
   if (currentAction) {
     return (
-      <Stack gap={24} vertical verticalPadding>
+      <VStack between gap={24} verticalPadding wrap>
         <ActionCard
           action={currentAction.action}
           biome={biome}
@@ -250,14 +250,14 @@ export default function EffectsPanel({
           trigger={trigger}
           user={user}
         />
-      </Stack>
+      </VStack>
     );
   }
 
   return (
-    <Stack className={verticalPaddingStyle} gap={24} vertical>
-      <Stack gap={16} vertical>
-        <Stack alignCenter gap={16} nowrap>
+    <VStack between className={verticalPaddingStyle} gap={24} wrap>
+      <VStack between gap={16} wrap>
+        <Stack alignCenter between gap={16}>
           <EffectSelector
             effects={effects}
             objectives={objectives}
@@ -311,7 +311,7 @@ export default function EffectsPanel({
             )}
           </div>
         ))}
-        <Stack alignCenter gap={16} start>
+        <Stack alignCenter gap={16} wrap>
           <Button
             onClick={() =>
               updateEffect({
@@ -343,8 +343,8 @@ export default function EffectsPanel({
             trigger={trigger}
           />
         </Stack>
-      </Stack>
-    </Stack>
+      </VStack>
+    </VStack>
   );
 }
 

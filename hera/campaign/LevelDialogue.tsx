@@ -4,10 +4,10 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import getTagColor from '@deities/ui/lib/getTagColor.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { memo, useMemo } from 'react';
 import ActionCard from '../editor/lib/ActionCard.tsx';
 import EffectTitle from '../editor/lib/EffectTitle.tsx';
@@ -51,14 +51,14 @@ export default memo(function LevelDialogue({
   return (
     <>
       {effects && (
-        <Stack className={selectStyle} gap={16} nowrap vertical>
+        <VStack between className={selectStyle} gap={16}>
           <h2 style={{ color: getColor(getTagColor(node.name)) }}>
             {getMapName(node.name)}
           </h2>
           {sortedEffects.map(([trigger, effectList]) =>
             [...effectList].map((effect, index) => (
-              <Stack gap={16} key={`${trigger}-${index}`} vertical>
-                <Stack alignCenter gap nowrap>
+              <VStack between gap={16} key={`${trigger}-${index}`} wrap>
+                <Stack alignCenter between gap>
                   <EffectTitle
                     effect={effect}
                     effects={effects}
@@ -88,13 +88,13 @@ export default memo(function LevelDialogue({
                     />
                   );
                 })}
-              </Stack>
+              </VStack>
             )),
           )}
-        </Stack>
+        </VStack>
       )}
       {next?.length ? (
-        <Stack gap={24} vertical>
+        <VStack between gap={24} wrap>
           {sortByDepth(next, depthMap).map((entry) => (
             <LevelDialogue
               depth={depth + 1}
@@ -105,7 +105,7 @@ export default memo(function LevelDialogue({
               setMap={setMap}
             />
           ))}
-        </Stack>
+        </VStack>
       ) : null}
     </>
   );

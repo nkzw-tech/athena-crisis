@@ -1,4 +1,3 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -43,7 +42,14 @@ export default function SkipMessages() {
 
   return (
     <motion.div {...skipProps} className={absoluteStyle}>
-      <Box alignCenter className={skipMessagesStyle} nowrap>
+      <Box
+        alignCenter
+        between
+        className={skipMessagesStyle}
+        gap={12}
+        horizontalPadding={16}
+        verticalPadding
+      >
         <motion.div
           className={cx(circleStyle, animationComplete && pulseStyle)}
           {...circleProps}
@@ -75,10 +81,6 @@ const skipMessagesStyle = css`
   ${pixelBorder(applyVar('background-color'))};
 
   background-color: ${applyVar('background-color')};
-  gap: 12px;
-  padding: 12px 16px;
-  height: ${DoubleSize}px;
-  line-height: ${DoubleSize}px;
   position: fixed;
   right: 0;
   top: 0;

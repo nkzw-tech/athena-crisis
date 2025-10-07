@@ -17,12 +17,12 @@ import { ClientLevelID } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import filterNodes from '@nkzw/core/filterNodes.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
+import { VStack } from '@nkzw/stack';
 import { useCallback, useMemo } from 'react';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getCriteriaName from '../../lib/getCriteriaName.tsx';
@@ -235,8 +235,8 @@ export default function ObjectivePanel({
 
   if (editor?.objective) {
     return (
-      <Stack gap={24} vertical verticalPadding>
-        <Box>
+      <VStack between gap={24} verticalPadding wrap>
+        <Box between wrap>
           <InlineLink
             onClick={() => {
               setEditorState({
@@ -249,12 +249,12 @@ export default function ObjectivePanel({
             </fbt>
           </InlineLink>
         </Box>
-      </Stack>
+      </VStack>
     );
   }
 
   return (
-    <Stack className={paddingStyle} gap={24} vertical>
+    <VStack between className={paddingStyle} gap={24} wrap>
       {sortBy([...objectives], ([id]) => id).map(([id, objective]) => (
         <ObjectiveCard
           campaigns={
@@ -291,7 +291,7 @@ export default function ObjectivePanel({
           <fbt desc="Headline for adding a new objective">New Objective</fbt>
         }
       >
-        <Stack gap={4} vertical>
+        <VStack between gap={4} wrap>
           {(objectives.some(({ type }) => type === Criteria.Default)
             ? CriteriaListWithoutDefault
             : CriteriaList
@@ -317,9 +317,9 @@ export default function ObjectivePanel({
               {getCriteriaName(type)}
             </InlineLink>
           ))}
-        </Stack>
+        </VStack>
       </Select>
-    </Stack>
+    </VStack>
   );
 }
 

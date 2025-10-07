@@ -24,7 +24,6 @@ import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Select from '@deities/ui/Select.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
 import { css, cx } from '@emotion/css';
@@ -33,6 +32,7 @@ import Subscriptions from '@iconify-icons/pixelarticons/subscriptions.js';
 import Trophy from '@iconify-icons/pixelarticons/trophy.js';
 import Zap from '@iconify-icons/pixelarticons/zap.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useCallback, useState } from 'react';
 import useTagDataSource, {
@@ -126,8 +126,8 @@ export default function MapEditorSettingsPanel({
 
   const hasBonus = hasBonusObjective(map, getActivePlayers(map)[0]);
   return (
-    <Stack className={marginStyle} gap={24} vertical verticalPadding>
-      <Box center>
+    <VStack between className={marginStyle} gap={24} verticalPadding wrap>
+      <Box center wrap>
         <BiomeSelector
           hasContentRestrictions={!isAdmin}
           map={state.map}
@@ -136,13 +136,13 @@ export default function MapEditorSettingsPanel({
           user={user}
         />
       </Box>
-      <Box gap={16} vertical>
+      <Box between gap={16} vertical wrap>
         <h2>
           <fbt desc="Map settings headline">Map Settings</fbt>
         </h2>
-        <Stack gap>
+        <Stack between gap wrap>
           <label>
-            <Stack alignCenter gap>
+            <Stack alignCenter between gap wrap>
               <input
                 checked={config.fog}
                 onChange={() =>
@@ -161,9 +161,9 @@ export default function MapEditorSettingsPanel({
               </span>
             </Stack>
           </label>
-          <Stack gap vertical>
+          <VStack between gap wrap>
             <label>
-              <Stack alignCenter gap>
+              <Stack alignCenter between gap wrap>
                 <span>
                   <fbt desc="Starting funds for a game">Starting Funds</fbt>
                 </span>
@@ -187,7 +187,7 @@ export default function MapEditorSettingsPanel({
               </Stack>
             </label>
             <label>
-              <Stack alignCenter gap>
+              <Stack alignCenter between gap wrap>
                 <span>
                   <fbt desc="Starting charges for a game">Starting Charges</fbt>
                 </span>
@@ -214,25 +214,26 @@ export default function MapEditorSettingsPanel({
                 />
               </Stack>
             </label>
-          </Stack>
+          </VStack>
         </Stack>
       </Box>
-      <Box className={performanceMetricsStyle} gap={16} vertical>
-        <Stack
+      <Box between className={performanceMetricsStyle} gap={16} vertical wrap>
+        <VStack
+          between
           className={cx(!canEditPerformance && disabledStyle)}
           gap={16}
-          vertical
+          wrap
         >
-          <Stack gap vertical>
+          <VStack between gap wrap>
             <h2>
               <fbt desc="Label for player performance">
                 Player Performance Metrics
               </fbt>
             </h2>
-          </Stack>
-          <Stack alignCenter gap={24} start>
+          </VStack>
+          <Stack alignCenter gap={24} wrap>
             <label>
-              <Stack alignCenter gap nowrap>
+              <Stack alignCenter between gap>
                 <span>{getTranslatedPerformanceTypeName('pace')}</span>
                 <NumberInput
                   disabled={!canEditPerformance}
@@ -247,7 +248,7 @@ export default function MapEditorSettingsPanel({
               </Stack>
             </label>
             <label>
-              <Stack alignCenter gap nowrap>
+              <Stack alignCenter between gap>
                 <span>{getTranslatedPerformanceTypeName('power')}</span>
                 <input
                   disabled={!canEditPerformance}
@@ -265,9 +266,9 @@ export default function MapEditorSettingsPanel({
               </Stack>
             </label>
             <label>
-              <Stack alignCenter className={styleGapStyle} nowrap>
+              <Stack alignCenter between className={styleGapStyle}>
                 <span>{getTranslatedPerformanceTypeName('style')}</span>
-                <Stack alignCenter gap={16}>
+                <Stack alignCenter between gap={16} wrap>
                   <Select
                     outline
                     selectedItem={
@@ -332,7 +333,7 @@ export default function MapEditorSettingsPanel({
                 </Stack>
               </Stack>
             </label>
-            <Stack alignCenter gap nowrap start>
+            <Stack alignCenter gap>
               <input
                 checked={hasBonus}
                 className={cx('disabled', hasBonus && 'checkmark')}
@@ -349,14 +350,14 @@ export default function MapEditorSettingsPanel({
             </Stack>
           </Stack>
           {metrics || metrics === null ? (
-            <Stack gap={16}>
+            <Stack between gap={16} wrap>
               <h2>
                 <fbt desc="Headline for estimate map performance metrics">
                   Estimated Performance Metrics
                 </fbt>
               </h2>
               {metrics === null ? (
-                <Stack start>
+                <Stack wrap>
                   <p>
                     <fbt desc="Description for missing estimated performance metrics">
                       We are still learning about this map. Please try again
@@ -365,7 +366,7 @@ export default function MapEditorSettingsPanel({
                   </p>
                 </Stack>
               ) : (
-                <Stack className={fullWidthStyle} gap={24} vertical>
+                <VStack between className={fullWidthStyle} gap={24} wrap>
                   <div className={gridStyle}>
                     <div />
                     <div>
@@ -376,13 +377,13 @@ export default function MapEditorSettingsPanel({
                     </div>
                     <div />
 
-                    <Stack alignCenter gap start>
+                    <Stack alignCenter gap wrap>
                       <Icon icon={Pace} />
                       <div>{getTranslatedPerformanceTypeName('pace')}</div>
                     </Stack>
                     <div>{metrics.pace}</div>
                     <div>{metrics.avgPace}</div>
-                    <Stack start>
+                    <Stack wrap>
                       <InlineLink
                         onClick={() => setMetric('pace', metrics.pace)}
                       >
@@ -392,22 +393,22 @@ export default function MapEditorSettingsPanel({
                       </InlineLink>
                     </Stack>
 
-                    <Stack alignCenter className={paddingStyle} gap start>
+                    <Stack alignCenter className={paddingStyle} gap wrap>
                       <fbt desc="Label for metrics distribution">
                         Distribution
                       </fbt>
                     </Stack>
-                    <Stack className={wideColumnStyle} nowrap>
+                    <Stack between className={wideColumnStyle}>
                       <Histogram histogram={metrics.histogram} />
                     </Stack>
 
-                    <Stack alignCenter gap start>
+                    <Stack alignCenter gap wrap>
                       <Icon icon={Zap} />
                       <div>{getTranslatedPerformanceTypeName('power')}</div>
                     </Stack>
                     <div>{metrics.power}</div>
                     <div>{metrics.avgPower}</div>
-                    <Stack start>
+                    <Stack wrap>
                       <InlineLink
                         onClick={() => setMetric('power', metrics.power)}
                       >
@@ -417,7 +418,7 @@ export default function MapEditorSettingsPanel({
                       </InlineLink>
                     </Stack>
 
-                    <Stack alignCenter gap start>
+                    <Stack alignCenter gap wrap>
                       <Icon icon={Subscriptions} />
                       <div>{getTranslatedPerformanceTypeName('style')}</div>
                     </Stack>
@@ -432,7 +433,7 @@ export default function MapEditorSettingsPanel({
                     </div>
                     <div>{metrics.lostUnits}</div>
                     <div>{metrics.avgLostUnits}</div>
-                    <Stack start>
+                    <Stack wrap>
                       <InlineLink
                         onClick={() =>
                           setStyle([
@@ -454,7 +455,7 @@ export default function MapEditorSettingsPanel({
                     </div>
                     <div>{metrics.capturedBuildings}</div>
                     <div>{metrics.avgCapturedBuildings}</div>
-                    <Stack start>
+                    <Stack wrap>
                       <InlineLink
                         onClick={() =>
                           setStyle([
@@ -476,7 +477,7 @@ export default function MapEditorSettingsPanel({
                     </div>
                     <div>{metrics.oneShots}</div>
                     <div>{metrics.avgOneShots}</div>
-                    <Stack start>
+                    <Stack wrap>
                       <InlineLink
                         onClick={() =>
                           setStyle([
@@ -491,7 +492,7 @@ export default function MapEditorSettingsPanel({
                       </InlineLink>
                     </Stack>
                   </div>
-                  <Stack alignCenter gap start>
+                  <Stack alignCenter gap wrap>
                     <Icon className={iconStyle} icon={Trophy} />
                     <div>
                       <fbt desc="Map metrics summary">
@@ -523,13 +524,13 @@ export default function MapEditorSettingsPanel({
                       </fbt>
                     </div>
                   </Stack>
-                </Stack>
+                </VStack>
               )}
             </Stack>
           ) : (
             mapObject?.id &&
             estimateMapPerformance && (
-              <Stack start>
+              <Stack wrap>
                 <InlineLink
                   onClick={async () =>
                     setMetrics(await estimateMapPerformance())
@@ -542,11 +543,16 @@ export default function MapEditorSettingsPanel({
               </Stack>
             )
           )}
-        </Stack>{' '}
+        </VStack>{' '}
         {!canEditPerformance && (
           <>
             <div className={performanceMetricsOverlayBackgroundStyle} />
-            <Box alignCenter center className={performanceMetricsOverlayStyle}>
+            <Box
+              alignCenter
+              center
+              className={performanceMetricsOverlayStyle}
+              wrap
+            >
               <p>
                 <fbt desc="Explanation for why map player performance metrics cannot be changed">
                   Player performance metrics are only available for campaign
@@ -557,13 +563,13 @@ export default function MapEditorSettingsPanel({
           </>
         )}
       </Box>
-      <Box gap vertical>
+      <Box between gap vertical wrap>
         <h2>
           <fbt desc="Map size headline">Map Size</fbt>
         </h2>
-        <Stack gap={24} start>
+        <Stack gap={24} wrap>
           <label>
-            <Stack alignCenter gap>
+            <Stack alignCenter between gap wrap>
               <span>
                 <fbt desc="Map size input field width">Width</fbt>
               </span>
@@ -580,7 +586,7 @@ export default function MapEditorSettingsPanel({
             </Stack>
           </label>
           <label>
-            <Stack alignCenter gap>
+            <Stack alignCenter between gap wrap>
               <span>
                 <fbt desc="Map size input field height">Height</fbt>
               </span>
@@ -611,9 +617,9 @@ export default function MapEditorSettingsPanel({
           </button>
         </Stack>
       </Box>
-      <Box gap vertical>
+      <Box between gap vertical wrap>
         <label>
-          <Stack gap start vertical>
+          <VStack gap wrap>
             <h2>
               <fbt desc="Map name label">Name</fbt>
             </h2>
@@ -626,11 +632,11 @@ export default function MapEditorSettingsPanel({
               type="text"
               value={mapName}
             />
-          </Stack>
+          </VStack>
         </label>
       </Box>
-      <Box gap vertical>
-        <Stack gap vertical>
+      <Box between gap vertical wrap>
+        <VStack between gap wrap>
           <h2>
             <fbt desc="Label for map tags">Tags</fbt>
           </h2>
@@ -659,9 +665,9 @@ export default function MapEditorSettingsPanel({
               profile.
             </fbt>
           </p>
-        </Stack>
+        </VStack>
       </Box>
-      <Box gap={16}>
+      <Box between gap={16} wrap>
         <InlineLink onClick={() => saveMap(map)}>
           <fbt desc="Button to save a map">Save Map</fbt>
         </InlineLink>
@@ -688,7 +694,7 @@ export default function MapEditorSettingsPanel({
           </>
         ) : null}
       </Box>
-    </Stack>
+    </VStack>
   );
 }
 

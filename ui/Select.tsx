@@ -1,12 +1,12 @@
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
+import Stack from '@nkzw/stack';
 import { ReactNode } from 'react';
 import { BoxStyle } from './Box.tsx';
 import { applyVar } from './cssVar.tsx';
 import Dropdown from './Dropdown.tsx';
 import Icon from './Icon.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import Stack from './Stack.tsx';
 
 export default function Select({
   children,
@@ -34,9 +34,10 @@ export default function Select({
       )}
       closeOnSelect
       dropdownClassName={cx(BoxStyle, selectorStyle, dropdownClassName)}
+      flex1
       forceOpen={forceOpen}
       title={
-        <Stack gap nowrap stretch>
+        <Stack between gap stretch>
           {selectedItem}
           <Icon icon={ChevronDown} />
         </Stack>
@@ -48,7 +49,6 @@ export default function Select({
 }
 
 const dropdownStyle = css`
-  flex: 1;
   height: 44px;
   min-height: 32px;
   padding: 12px;

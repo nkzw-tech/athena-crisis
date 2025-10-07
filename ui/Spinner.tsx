@@ -1,9 +1,9 @@
 import { css, keyframes } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { useEffect, useState } from 'react';
 import Box from './Box.tsx';
 import clipBorder from './clipBorder.tsx';
 import getColor from './getColor.tsx';
-import Stack from './Stack.tsx';
 
 export default function Spinner({
   component: Component = Stack,

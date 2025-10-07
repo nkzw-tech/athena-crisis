@@ -9,8 +9,8 @@ import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import { ScrollContainerWithNavigation } from '@deities/ui/ScrollContainer.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode, RefObject, useLayoutEffect, useRef } from 'react';
 import MiniPortrait from '../character/MiniPortrait.tsx';
 import { UserLikeWithID } from '../hooks/useUserMap.tsx';
@@ -99,7 +99,7 @@ export default function MapMessageContainer({
           [vars.set('color')]: getColor(playerID),
         }}
       >
-        <Stack gap={scroll ? undefined : true} vertical>
+        <VStack between gap={scroll ? undefined : true} wrap>
           <ScrollContainerWithNavigation
             className={relativeStyle}
             key="message"
@@ -113,8 +113,8 @@ export default function MapMessageContainer({
           >
             <Tick animationConfig={animationConfig}>{children}</Tick>
           </ScrollContainerWithNavigation>
-          <Stack alignCenter className={bottomStyle} gap nowrap>
-            <Stack alignCenter gap nowrap start>
+          <Stack alignCenter between className={bottomStyle} gap>
+            <Stack alignCenter gap>
               <MiniPortrait
                 animate
                 human
@@ -126,7 +126,7 @@ export default function MapMessageContainer({
             </Stack>
             {button}
           </Stack>
-        </Stack>
+        </VStack>
       </div>
     </div>
   );

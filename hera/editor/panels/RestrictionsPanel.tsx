@@ -17,7 +17,7 @@ import { ID } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack, { VStack } from '@nkzw/stack';
 import { useCallback, useMemo, useState } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
@@ -177,8 +177,8 @@ export default function RestrictionsPanel({
 
   return (
     <>
-      <Stack alignNormal gap={24} start vertical verticalPadding>
-        <Box>
+      <VStack alignStart gap={24} verticalPadding wrap>
+        <Box between wrap>
           <p>
             <fbt desc="Description for restricting buildings and units on maps">
               Select the entities that cannot be created by any player during
@@ -187,9 +187,9 @@ export default function RestrictionsPanel({
           </p>
         </Box>
         <Tick animationConfig={AnimationConfig}>
-          <Stack gap={24} vertical>
+          <VStack between gap={24} wrap>
             {buildings.length ? (
-              <Box alignNormal>
+              <Box alignStart between wrap>
                 <InlineTileList
                   biome={biome}
                   buildings={buildings}
@@ -202,7 +202,7 @@ export default function RestrictionsPanel({
               </Box>
             ) : null}
             {units.length ? (
-              <Box alignNormal>
+              <Box alignStart between wrap>
                 <InlineTileList
                   biome={biome}
                   onSelect={selectUnit}
@@ -213,14 +213,14 @@ export default function RestrictionsPanel({
                 />
               </Box>
             ) : null}
-          </Stack>
+          </VStack>
         </Tick>
-        <Box gap={24} vertical>
+        <Box between gap={24} vertical wrap>
           <h2>
             <fbt desc="Headline for skill restrictions">Skill Restrictions</fbt>
           </h2>
           {blocklistedSkills.size ? (
-            <Stack gap={16} start>
+            <Stack gap={16} wrap>
               {[...blocklistedSkills].map((skill) => (
                 <SkillIcon
                   dialogSize="small"
@@ -237,7 +237,7 @@ export default function RestrictionsPanel({
             </InlineLink>
           </div>
         </Box>
-      </Stack>
+      </VStack>
       {showSkillSelector && (
         <Portal>
           <SkillDialog

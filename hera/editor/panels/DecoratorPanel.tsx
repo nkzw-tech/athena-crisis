@@ -5,8 +5,8 @@ import {
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
+import Stack from '@nkzw/stack';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
 import useGridNavigation from '../../hooks/useGridNavigation.tsx';
@@ -86,8 +86,8 @@ export default function DecoratorPanel({
   );
 
   return (
-    <Stack gap={24} verticalPadding>
-      <Box gap={32} ref={setRef}>
+    <Stack between gap={24} verticalPadding wrap>
+      <Box between gap={32} ref={setRef} wrap>
         <InlineTileList
           biome={biome}
           decorators={decorators}

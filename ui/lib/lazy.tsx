@@ -1,6 +1,7 @@
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { AnimatePresence } from 'framer-motion';
 // eslint-disable-next-line @deities/no-lazy-import
 import { lazy as _lazy, ComponentType } from 'react';
@@ -8,7 +9,6 @@ import Box from '../Box.tsx';
 import PageTransition from '../PageTransition.tsx';
 import Portal from '../Portal.tsx';
 import Reload from '../Reload.tsx';
-import Stack from '../Stack.tsx';
 
 export default (function lazy(factory) {
   return _lazy(() => factory().catch(importErrorHandler));
@@ -34,8 +34,8 @@ export function importErrorHandler(): { default: ComponentType<unknown> } {
         <Portal>
           <AnimatePresence>
             <PageTransition delay={isReloading ? 1.5 : 0}>
-              <Stack alignCenter center className={containerStyle}>
-                <Box alignCenter center className={errorStyle}>
+              <Stack alignCenter center className={containerStyle} wrap>
+                <Box alignCenter center className={errorStyle} wrap>
                   <p>
                     <fbt desc="Generic error message">
                       Oops, something went wrong.

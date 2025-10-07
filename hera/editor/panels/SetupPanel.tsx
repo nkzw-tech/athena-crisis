@@ -7,9 +7,9 @@ import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import Box from '@deities/ui/Box.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
 import getTranslatedFactionName from '../../lib/getTranslatedFactionName.tsx';
@@ -95,7 +95,7 @@ export default function MapEditorSetupPanel({
   );
 
   return (
-    <Stack gap={24} vertical verticalPadding>
+    <VStack between gap={24} verticalPadding wrap>
       <TeamSelector
         key={sortBy([...map.teams.keySeq()], (id) => id).join('-')}
         map={map.copy({
@@ -104,11 +104,11 @@ export default function MapEditorSetupPanel({
         onTeamChange={(teams) => setMap('teams', map.copy({ teams }))}
         placeholders
       />
-      <Box gap={16} vertical>
+      <Box between gap={16} vertical wrap>
         <h2>
           <fbt desc="Pick the main campaign faction">Primary Faction</fbt>
         </h2>
-        <Stack center gap={24}>
+        <Stack center gap={24} wrap>
           <AnimatePresence mode="popLayout">
             {map.active.map((id) => (
               <motion.div key={id} layoutId={`${id}`}>
@@ -160,6 +160,6 @@ export default function MapEditorSetupPanel({
           </p>
         </InfoBox>
       </PlayerSelector>
-    </Stack>
+    </VStack>
   );
 }

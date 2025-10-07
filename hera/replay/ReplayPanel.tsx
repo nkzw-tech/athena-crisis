@@ -11,13 +11,13 @@ import FastForward from '@deities/ui/icons/FastForward.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import Slider from '@deities/ui/Slider.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Back from '@iconify-icons/pixelarticons/chevron-left.js';
 import Next from '@iconify-icons/pixelarticons/chevron-right.js';
 import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
+import Stack from '@nkzw/stack';
 import { useCallback, useMemo } from 'react';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { GameStateWithGameActionResponseEntry } from './hooks/useReplayGameState.tsx';
@@ -140,8 +140,8 @@ export default function ReplayPanel({
   return (
     <Portal>
       <div className={containerStyle}>
-        <Stack className={cx(BoxStyle, panelStyle)}>
-          <Stack alignCenter flex1 gap>
+        <Stack between className={cx(BoxStyle, panelStyle)} wrap>
+          <Stack alignCenter between flex1 gap wrap>
             <InlineLink
               disabled={currentIndex === previousTurn}
               onClick={() => setCurrentIndex(previousTurn)}

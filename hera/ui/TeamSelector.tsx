@@ -13,11 +13,11 @@ import gradient from '@deities/ui/gradient.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
+import Stack, { VStack } from '@nkzw/stack';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   RefObject,
@@ -125,7 +125,7 @@ export default function TeamSelector({
     : null;
 
   return map.active.length > 2 || placeholders ? (
-    <Box gap={16} ref={ref} selected={isFocused} vertical>
+    <Box between gap={16} ref={ref} selected={isFocused} vertical wrap>
       <h2>
         {onTeamChange ? (
           <fbt desc="Headline for defining the team setup">Team Setup</fbt>
@@ -152,7 +152,8 @@ export default function TeamSelector({
           );
 
           return (
-            <Stack
+            <VStack
+              between
               className={teamStyle}
               data-drop-target={team.id}
               gap={16}
@@ -172,14 +173,14 @@ export default function TeamSelector({
                 zIndex:
                   currentPlayer && team.players.has(currentPlayer) ? 2 : 1,
               }}
-              vertical
+              wrap
             >
               <div style={{ alignSelf: 'center' }}>
                 <fbt desc="Team label">
                   Team <fbt:param name="team id">{team.id}</fbt:param>
                 </fbt>
               </div>
-              <Stack center gap={16}>
+              <Stack center gap={16} wrap>
                 {teamPlayers.map((id) => {
                   const currentTeamIndex = currentTeam
                     ? sortedTeams.findIndex(({ id }) => id === currentTeam)
@@ -213,7 +214,7 @@ export default function TeamSelector({
                   );
                 })}
               </Stack>
-            </Stack>
+            </VStack>
           );
         })}
       </div>

@@ -15,7 +15,6 @@ import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import More from '@iconify-icons/pixelarticons/more-horizontal.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
@@ -23,6 +22,7 @@ import Shield from '@iconify-icons/pixelarticons/shield.js';
 import Visible from '@iconify-icons/pixelarticons/visible.js';
 import getFirst from '@nkzw/core/getFirst.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { MouseEvent, useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
@@ -276,12 +276,12 @@ export default class CreateUnit {
                 )}
                 key={unit.id}
                 label={
-                  <Stack className={descriptionStyle} gap={4} vertical>
-                    <Stack center flex1>
+                  <VStack between className={descriptionStyle} gap={4} wrap>
+                    <Stack center flex1 wrap>
                       {unit.name}
                     </Stack>
-                    <Stack center className={detailSyle} gap={4} nowrap start>
-                      <Stack alignCenter gap={2} nowrap start>
+                    <Stack center className={detailSyle} gap={4}>
+                      <Stack alignCenter gap={2}>
                         <Icon
                           className={iconStyle}
                           horizontalFlip
@@ -294,7 +294,7 @@ export default class CreateUnit {
                           )}
                         </div>
                       </Stack>
-                      <Stack alignCenter gap={2} nowrap start>
+                      <Stack alignCenter gap={2}>
                         <Icon
                           className={iconStyle}
                           horizontalFlip
@@ -302,18 +302,18 @@ export default class CreateUnit {
                         />
                         <div>{unit.getRadiusFor(currentPlayer)}</div>
                       </Stack>
-                      <Stack alignCenter gap={2} nowrap start>
+                      <Stack alignCenter gap={2}>
                         <Icon className={iconHalfStyle} icon={Supply} />
                         <div>{unit.configuration.fuel}</div>
                       </Stack>
                       {map.config.fog && (
-                        <Stack alignCenter gap={2} nowrap start>
+                        <Stack alignCenter gap={2}>
                           <Icon className={iconHalfStyle} icon={Visible} />
                           <div>{unit.configuration.vision}</div>
                         </Stack>
                       )}
                     </Stack>
-                  </Stack>
+                  </VStack>
                 }
                 navigationDirection={navigationDirection}
                 onClick={create}

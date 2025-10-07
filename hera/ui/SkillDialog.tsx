@@ -33,10 +33,10 @@ import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowStyle, SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import groupBy from '@nkzw/core/groupBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { Sprites } from 'athena-crisis:images';
 import {
   ReactElement,
@@ -399,7 +399,7 @@ export function SkillContainer({
   const key = currentSkill && focus ? `skill-${currentSkill}` : 'skill';
   return (
     <DialogScrollContainer key={key} navigate={false}>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         {focus ? (
           <h2>
             <fbt desc="Headline to view a skill">Skill</fbt>
@@ -416,7 +416,7 @@ export function SkillContainer({
           </h1>
         )}
         {initialAvailableSkills.size > 1 && (
-          <Stack gap={16}>
+          <Stack between gap={16} wrap>
             <InlineLink
               active={activeGroup === 0}
               className={buttonStyle}
@@ -463,7 +463,7 @@ export function SkillContainer({
             )}
           </Stack>
         )}
-        <Stack gap vertical>
+        <VStack between gap wrap>
           {enabledSkills?.map((skill, index) => (
             <SkillListItem
               allowTouch={allowTouch}
@@ -483,15 +483,15 @@ export function SkillContainer({
               toggleFavorite={toggleFavorite}
             />
           ))}
-        </Stack>
+        </VStack>
         {selectedSkills?.size ? (
-          <Stack gap={16} vertical>
+          <VStack between gap={16} wrap>
             <h2>
               <fbt desc="Headline to for already selected skills">
                 Skills selected in other slots
               </fbt>
             </h2>
-            <Stack gap vertical>
+            <VStack between gap wrap>
               {[...selectedSkills].map((skill) => (
                 <SkillListItem
                   allowTouch={false}
@@ -506,15 +506,15 @@ export function SkillContainer({
                   toggleFavorite={toggleFavorite}
                 />
               ))}
-            </Stack>
-          </Stack>
+            </VStack>
+          </VStack>
         ) : null}
         {disabledSkills?.length ? (
-          <Stack gap={16} vertical>
+          <VStack between gap={16} wrap>
             <h2>
               <fbt desc="Headline to for disabled skills">Disabled skills</fbt>
             </h2>
-            <Stack gap={16} vertical>
+            <VStack between gap={16} wrap>
               {disabledSkills.map((skill) => (
                 <SkillListItem
                   allowTouch={false}
@@ -529,11 +529,11 @@ export function SkillContainer({
                   toggleFavorite={toggleFavorite}
                 />
               ))}
-            </Stack>
-          </Stack>
+            </VStack>
+          </VStack>
         ) : null}
         {children}
-      </Stack>
+      </VStack>
     </DialogScrollContainer>
   );
 }
@@ -595,14 +595,16 @@ const SkillListItem = ({
   const color: BaseColor = Array.isArray(colors) ? colors[0] : colors;
 
   return (
-    <Stack
+    <VStack
+      between
       className={cx(boxStyle, selected && selectedBoxStyle)}
       gap
       key={skill}
       ref={element}
-      vertical
+      wrap
     >
-      <Stack
+      <VStack
+        between
         className={cx(
           itemStyle,
           isBlocked && blockedStyle,
@@ -615,10 +617,10 @@ const SkillListItem = ({
             isPointerRef.current = event.pointerType === 'touch';
           }
         }}
-        vertical
+        wrap
       >
-        <Stack alignCenter gap nowrap>
-          <Stack alignCenter gap nowrap start>
+        <Stack alignCenter between gap wrap>
+          <Stack alignCenter between gap wrap>
             {currentSkill === skill && <div>{'\u00bb'}</div>}
             <SkillIconInternal
               background={background}
@@ -652,13 +654,13 @@ const SkillListItem = ({
             </div>
           )}
         </Stack>
-        <Stack className={descriptionStyle} gap vertical>
+        <VStack between className={descriptionStyle} gap wrap>
           <SkillDescription color={color} skill={skill} type="regular" />
           <SkillDescription color={color} skill={skill} type="power" />
-        </Stack>
-      </Stack>
+        </VStack>
+      </VStack>
       {showCost && (
-        <Stack className={costStyle} gap nowrap start>
+        <Stack between className={costStyle} gap wrap>
           <Icon className={coinIconStyle} icon={Coin} />
           {getSkillConfig(skill).cost}
         </Stack>
@@ -670,7 +672,7 @@ const SkillListItem = ({
           </InlineLink>
         </div>
       )}
-    </Stack>
+    </VStack>
   );
 };
 
@@ -682,7 +684,7 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
   return (
     <Dialog onClose={onClose} size={'small'} transformOrigin={'center center'}>
       <DialogScrollContainer key="skill" navigate={false}>
-        <Stack gap={16} vertical>
+        <VStack between gap={16} wrap>
           <h1>
             <fbt desc="Headline to view a skill">Skill</fbt>
           </h1>
@@ -698,7 +700,7 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
               </fbt>
             </p>
           </InfoBox>
-        </Stack>
+        </VStack>
       </DialogScrollContainer>
     </Dialog>
   );
@@ -855,11 +857,11 @@ export function SkillIcon({
     <>
       <Stack
         alignCenter
+        between
         className={cx(!hideDialog && pointerStyle)}
         gap
-        nowrap
         onClick={!hideDialog ? () => setShowDialog(true) : undefined}
-        start
+        wrap
       >
         <SkillIconInternal
           active={active}
@@ -902,7 +904,7 @@ export function SkillIcon({
 
 export function HiddenSkillIcon() {
   return (
-    <Stack alignCenter className={pointerStyle} gap start>
+    <Stack alignCenter between className={pointerStyle} gap wrap>
       <SkillIconInternal icon={Question} />
     </Stack>
   );

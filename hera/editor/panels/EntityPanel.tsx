@@ -23,11 +23,11 @@ import Magic from '@deities/ui/icons/Magic.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Slider from '@deities/ui/Slider.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Heart from '@iconify-icons/pixelarticons/heart.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import {
   ChangeEvent,
@@ -253,8 +253,8 @@ export default function EntityPanel({
     (selectedBuilding && selectedUnit)
   ) {
     return (
-      <Stack gap={24} verticalPadding>
-        <Box>
+      <Stack between gap={24} verticalPadding wrap>
+        <Box between wrap>
           <p>
             <fbt desc="Message to request user to select an entity on the map">
               Select a building or unit on the map to edit their properties.
@@ -266,10 +266,10 @@ export default function EntityPanel({
   }
 
   return (
-    <Stack alignNormal key={String(selectedPosition)}>
-      <Stack gap={24} start verticalPadding>
-        <Box flex1 gap={16} vertical>
-          <Stack gap start>
+    <Stack alignStart between key={String(selectedPosition)} wrap>
+      <Stack gap={24} verticalPadding wrap>
+        <Box between flex1 gap={16} vertical wrap>
+          <Stack gap wrap>
             <div className={pixelatedStyle}>
               {hasSprites && isUnit(entity) && (
                 <UnitTile
@@ -285,7 +285,7 @@ export default function EntityPanel({
             <h2>{entity.info.name}</h2>
           </Stack>
           <AttributeGrid rowGap={4}>
-            <Stack alignCenter start>
+            <Stack alignCenter wrap>
               <Icon icon={Heart} />
               <fbt desc="Label for unit health">Health</fbt>
             </Stack>
@@ -296,7 +296,7 @@ export default function EntityPanel({
               type="range"
               value={entity.health}
             />
-            <Stack alignCenter className={textStyle} gap nowrap>
+            <Stack alignCenter between className={textStyle} gap>
               <NumberInput
                 max={MaxHealth}
                 min="1"
@@ -308,7 +308,7 @@ export default function EntityPanel({
             </Stack>
             {isUnit(entity) && (
               <>
-                <Stack alignCenter start>
+                <Stack alignCenter wrap>
                   <Icon icon={Supply} />
                   <fbt desc="Label for supplies">Supplies</fbt>
                 </Stack>
@@ -319,7 +319,7 @@ export default function EntityPanel({
                   type="range"
                   value={entity.fuel}
                 />
-                <Stack alignCenter className={textStyle} gap nowrap>
+                <Stack alignCenter between className={textStyle} gap>
                   <NumberInput
                     max={entity.info.configuration.fuel}
                     min="0"
@@ -354,7 +354,7 @@ export default function EntityPanel({
 
                         return (
                           <Fragment key={id}>
-                            <Stack alignCenter start>
+                            <Stack alignCenter wrap>
                               <Icon icon={Ammo} />
                               {weapon.name}
                             </Stack>
@@ -365,7 +365,12 @@ export default function EntityPanel({
                               type="range"
                               value={ammo}
                             />
-                            <Stack alignCenter className={textStyle} gap nowrap>
+                            <Stack
+                              alignCenter
+                              between
+                              className={textStyle}
+                              gap
+                            >
                               <NumberInput
                                 max={String(weapon.supply)}
                                 min="0"
@@ -383,10 +388,10 @@ export default function EntityPanel({
             )}
           </AttributeGrid>
           {isUnit(entity) && (
-            <Stack gap={16} start>
+            <Stack gap={16} wrap>
               {entity.player > 0 && (
                 <label>
-                  <Stack alignCenter gap start>
+                  <Stack alignCenter gap wrap>
                     <input
                       checked={entity.isLeader()}
                       onChange={toggleLeader}
@@ -401,7 +406,7 @@ export default function EntityPanel({
                 </label>
               )}
               <label>
-                <Stack alignCenter gap start>
+                <Stack alignCenter gap wrap>
                   <input
                     checked={!!entity.shield}
                     onChange={toggleShield}
@@ -419,8 +424,8 @@ export default function EntityPanel({
           (entityIsBuilding &&
             !entity.info.getAllBuildableUnits()[Symbol.iterator]().next()
               .done)) && (
-          <Box className={fitContentStyle} gap={16} start vertical>
-            <Stack alignCenter start>
+          <Box className={fitContentStyle} gap={16} vertical wrap>
+            <Stack alignCenter wrap>
               <Icon className={iconStyle} icon={Magic} />
               {isUnit(entity) ? (
                 <fbt desc="Label for AI behavior">AI Behavior</fbt>
@@ -428,7 +433,7 @@ export default function EntityPanel({
                 <fbt desc="Label for AI behaviors">AI Behaviors</fbt>
               )}
             </Stack>
-            <Stack gap>
+            <Stack between gap wrap>
               {[...AIBehaviors].map((behavior) => (
                 <AIBehaviorLink
                   behavior={behavior}
@@ -441,9 +446,9 @@ export default function EntityPanel({
           </Box>
         )}
         {entityIsBuilding && entity.info.hasBehavior(Behavior.SellSkills) ? (
-          <Box gap={16} start vertical>
+          <Box gap={16} vertical wrap>
             <fbt desc="Headline for skills">Skills</fbt>
-            <Stack gap={16} nowrap>
+            <Stack between gap={16}>
               {Array(MaxSkills)
                 .fill(null)
                 .map((_, index) => (
@@ -468,7 +473,7 @@ export default function EntityPanel({
           </Box>
         ) : null}
         {!isStructure && (
-          <Box gap={16} start>
+          <Box gap={16} wrap>
             {PlayerIDs.filter(
               (id) =>
                 (entityIsBuilding && !entity.info.isHQ()) ||
@@ -485,12 +490,12 @@ export default function EntityPanel({
           </Box>
         )}
         {isUnit(entity) && entity.player === 0 && (
-          <Box gap={16} vertical>
-            <Stack alignCenter start>
+          <Box between gap={16} vertical wrap>
+            <Stack alignCenter wrap>
               <Icon className={iconStyle} icon={Rescue} />
               <fbt desc="Label for rescued by <player>">Rescued By</fbt>
             </Stack>
-            <Stack gap={16} start>
+            <Stack gap={16} wrap>
               {PlayerIDs.slice(1).map((id) => (
                 <PlayerIcon
                   id={id}
@@ -502,7 +507,7 @@ export default function EntityPanel({
             </Stack>
           </Box>
         )}
-        <Box start>
+        <Box wrap>
           <LabelSelector
             active={entity.label}
             onChange={(label) =>

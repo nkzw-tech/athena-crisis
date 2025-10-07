@@ -33,13 +33,13 @@ import { ButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import getTagColor from '@deities/ui/lib/getTagColor.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Back from '@iconify-icons/pixelarticons/corner-up-left.js';
 import Forward from '@iconify-icons/pixelarticons/forward.js';
 import isPresent from '@nkzw/core/isPresent.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode, RefObject, useCallback, useMemo, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import { GameUser } from '../hooks/useUserMap.tsx';
@@ -74,7 +74,7 @@ const MessageTemplateListItem = ({
   setTemplate?: (template: number) => void;
   tags: ReadonlyArray<MessageTag>;
 }) => (
-  <Stack>
+  <Stack between wrap>
     <div
       className={cx(messageStyle, setTemplate && cx(ButtonStyle, linkStyle))}
       onClick={setTemplate ? () => setTemplate(id) : undefined}
@@ -165,11 +165,12 @@ const ComposeMessage = ({
     ) : null;
 
   return (
-    <Stack
+    <VStack
+      between
       gap={value == null && tag === MessageTag.Building ? 16 : true}
-      vertical
+      wrap
     >
-      <Stack gap nowrap stretch>
+      <Stack between gap stretch>
         <MessageTemplateListItem
           hasNext={conjunction != null}
           id={id}
@@ -185,12 +186,12 @@ const ComposeMessage = ({
           onClick={removeTemplate}
         />
       </Stack>
-      <Stack gap nowrap stretch>
-        <Stack gap stretch vertical>
+      <Stack between gap stretch>
+        <VStack between gap stretch wrap>
           {value ? (
             setConjunction && setNext ? (
               <>
-                <Stack gap start>
+                <Stack gap wrap>
                   {conjunction != null ? (
                     <Tag
                       color={numberToPlayerID(conjunction)}
@@ -239,8 +240,8 @@ const ComposeMessage = ({
             <>
               <Stack
                 gap={tag === MessageTag.Building ? 16 : true}
-                start
-                vertical={isEntityMessageTag(tag) || undefined}
+                vertical={isEntityMessageTag(tag)}
+                wrap
               >
                 {[...(MessageVocabulary.get(tag) || [])]
                   .map(([id]) => {
@@ -260,7 +261,7 @@ const ComposeMessage = ({
                     }
 
                     return (
-                      <Stack key={id} nowrap start>
+                      <Stack key={id}>
                         <div
                           className={ButtonStyle}
                           onClick={() => setValue([tag, id, player ?? 1])}
@@ -281,7 +282,7 @@ const ComposeMessage = ({
               </Stack>
             </>
           ) : (
-            <Stack gap start>
+            <Stack gap wrap>
               {tags.map((tag) => (
                 <Tag
                   color={numberToPlayerID(tag)}
@@ -292,9 +293,9 @@ const ComposeMessage = ({
               ))}
             </Stack>
           )}
-        </Stack>
+        </VStack>
         {conjunction == null && tag && messageTagHasPlayerID(tag) && (
-          <Stack gap start vertical>
+          <VStack gap wrap>
             {PlayerIDs.map((id) => (
               <PlayerIcon
                 id={id}
@@ -304,10 +305,10 @@ const ComposeMessage = ({
                 selected={player === id}
               />
             ))}
-          </Stack>
+          </VStack>
         )}
       </Stack>
-    </Stack>
+    </VStack>
   );
 };
 
@@ -318,7 +319,7 @@ const MessageTemplateList = ({
   isNext?: boolean;
   setTemplate: (template: number) => void;
 }) => (
-  <Stack gap vertical>
+  <VStack between gap wrap>
     {[...MessageTemplate]
       .map(([id, [, tags]]) => {
         const message = TranslatedMessageTemplate.get(id)?.();
@@ -334,7 +335,7 @@ const MessageTemplateList = ({
         ) : null;
       })
       .filter(isPresent)}
-  </Stack>
+  </VStack>
 );
 
 export default function CreateMapMessage({
@@ -461,7 +462,6 @@ export default function CreateMapMessage({
           center
           className={cx(buttonStyle, canSend && cx(ButtonStyle, submitStyle))}
           gap={4}
-          nowrap
           onClick={canSend ? create : undefined}
         >
           <Icon className={sendIconStyle} icon={Forward} />

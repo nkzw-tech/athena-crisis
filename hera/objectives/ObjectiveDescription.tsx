@@ -8,9 +8,9 @@ import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import { VStack } from '@nkzw/stack';
 import { list } from 'fbtee';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import { PlayerDetails } from '../Types.tsx';
@@ -327,7 +327,8 @@ export default function ObjectiveDescription({
   round: number;
 }) {
   return (
-    <Stack
+    <VStack
+      between
       className={boxStyle}
       gap
       style={{
@@ -336,7 +337,7 @@ export default function ObjectiveDescription({
             ? gradient(objective.players, 0.15)
             : applyVar('background-color'),
       }}
-      vertical
+      wrap
     >
       <h2>
         <ObjectiveTitle objective={objective} />
@@ -357,7 +358,7 @@ export default function ObjectiveDescription({
           players={[...objective.completed]}
         />
       ) : null}
-    </Stack>
+    </VStack>
   );
 }
 

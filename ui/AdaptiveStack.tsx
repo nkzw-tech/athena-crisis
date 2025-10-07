@@ -1,170 +1,35 @@
 import { css, cx } from '@emotion/css';
-import { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import Stack, { StackProps } from '@nkzw/stack';
+import { HTMLAttributes } from 'react';
 import Breakpoints from './Breakpoints.tsx';
 
-type Gap = 1 | 2 | 4 | 16 | 24 | 32 | true;
-
-type StackProps = {
-  alignCenter?: true;
-  alignEnd?: true;
-  alignNormal?: true;
-  center?: true;
-  children?: ReactNode;
-  className?: string;
-  end?: true;
-  flex1?: true;
-  gap?: Gap;
-  horizontalPadding?: true;
-  inline?: true;
-  nowrap?: true;
-  padding?: true;
-  ref?: Ref<HTMLDivElement>;
-  reverse?: true;
-  selfCenter?: true;
-  start?: true;
-  stretch?: true;
-  style?: CSSProperties;
-  vertical?: true;
-  verticalPadding?: true;
-};
-
 export default function AdaptiveStack({
-  alignCenter,
-  alignEnd,
-  alignNormal,
-  center,
-  className: initialClassName,
-  end,
-  flex1,
-  gap: _gap,
-  horizontalPadding,
-  inline,
-  nowrap,
-  padding,
-  ref,
   reverse,
-  selfCenter,
-  start,
-  stretch,
-  style,
   vertical,
-  verticalPadding,
   ...props
 }: HTMLAttributes<HTMLDivElement> & StackProps) {
-  const gap = _gap === true ? defaultGap : _gap;
-  if (gap) {
-    style = { ...style, gap };
-    if (padding || verticalPadding) {
-      style = { ...style, paddingBottom: gap, paddingTop: gap };
-    }
-    if (padding || horizontalPadding) {
-      style = { ...style, paddingLeft: gap, paddingRight: gap };
-    }
-  }
-
   return (
-    <div
+    <Stack
       {...props}
       className={cx(
-        baseStyle,
-        inline && inlineStyle,
         adaptiveStyle,
-        vertical && verticalStyle,
-        reverse && (vertical ? verticalReverseStyle : reverseStyle),
         reverse && vertical && adaptiveVerticalReverseStyle,
-        center && centerStyle,
-        start && startStyle,
-        end && endStyle,
-        flex1 && flex1Style,
-        alignNormal && flexStartStyle,
-        alignCenter && alignCenterStyle,
-        alignEnd && alignEndStyle,
-        selfCenter && selfCenterStyle,
-        nowrap && nowrapStyle,
-        stretch && stretchStyle,
-        initialClassName,
       )}
-      ref={ref}
-      style={style}
+      vertical={vertical}
     />
   );
 }
 
-const defaultGap = 8;
-
-const baseStyle = css`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
-const inlineStyle = css`
-  display: inline-flex;
-`;
-
 const adaptiveStyle = css`
-  flex-direction: column;
+  flex-direction: column !important;
 
   ${Breakpoints.sm} {
-    flex-direction: row;
+    flex-direction: row !important;
   }
-`;
-
-const verticalStyle = css`
-  flex-direction: column;
-`;
-
-const reverseStyle = css`
-  flex-direction: row-reverse;
-`;
-
-const verticalReverseStyle = css`
-  flex-direction: column-reverse;
 `;
 
 const adaptiveVerticalReverseStyle = css`
   ${Breakpoints.sm} {
-    flex-direction: row;
+    flex-direction: row !important;
   }
-`;
-
-const flex1Style = css`
-  flex: 1;
-`;
-
-const centerStyle = css`
-  justify-content: center;
-`;
-
-const startStyle = css`
-  justify-content: flex-start;
-`;
-
-const nowrapStyle = css`
-  flex-wrap: nowrap;
-`;
-
-const endStyle = css`
-  justify-content: flex-end;
-`;
-
-const flexStartStyle = css`
-  align-items: flex-start;
-`;
-
-const alignCenterStyle = css`
-  align-items: center;
-`;
-
-const alignEndStyle = css`
-  align-items: end;
-`;
-
-const stretchStyle = css`
-  flex-grow: 1;
-`;
-
-const selfCenterStyle = css`
-  align-self: center;
 `;

@@ -1,8 +1,8 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import lineClamp from '@deities/ui/lineClamp.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode, useState } from 'react';
 import CrystalSprite from './CrystalSprite.tsx';
 import crystalToColor from './crystalToColor.tsx';
@@ -28,15 +28,15 @@ export default function CrystalCard({
   );
 
   return (
-    <Stack alignCenter gap={16} nowrap>
+    <Stack alignCenter between gap={16}>
       <div>
         <CrystalSprite animate crystal={crystal} portal={active} />
       </div>
-      <Stack gap start vertical>
+      <VStack gap wrap>
         <div style={{ color: crystalToColor(crystal) }}>
           {getTranslatedCrystalName(crystal)}
         </div>
-        <Stack gap={4} vertical>
+        <VStack between gap={4} wrap>
           <p className={cx(!showMore && collapse && lineClamp)}>
             {getCrystalDescription(crystal)}
           </p>
@@ -51,9 +51,9 @@ export default function CrystalCard({
               </InlineLink>
             </div>
           )}
-        </Stack>
+        </VStack>
         {children}
-      </Stack>
+      </VStack>
     </Stack>
   );
 }

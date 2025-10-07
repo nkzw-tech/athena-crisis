@@ -1,5 +1,6 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
+import { Gap } from '@nkzw/stack';
 import {
   AnchorHTMLAttributes,
   CSSProperties,
@@ -17,7 +18,6 @@ import { applyVar, CSSVariables } from './cssVar.tsx';
 import useScrollIntoView from './hooks/useScrollIntoView.tsx';
 import Link from './Link.tsx';
 import pixelBorder from './pixelBorder.tsx';
-import { Gap } from './Stack.tsx';
 
 export const InlineLinkColor = 'InlineLink-color';
 

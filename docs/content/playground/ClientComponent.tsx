@@ -1,5 +1,5 @@
 import Spinner from '@deities/ui/Spinner.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack from '@nkzw/stack';
 import { ReactElement, Suspense, useEffect, useState } from 'react';
 
 export default function ClientComponent({
@@ -15,7 +15,7 @@ export default function ClientComponent({
         <ClientScope>
           <Suspense
             fallback={
-              <Stack center>
+              <Stack center wrap>
                 <Spinner />
               </Stack>
             }

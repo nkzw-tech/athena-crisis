@@ -1,8 +1,8 @@
 import { ChaosStars } from '@deities/apollo/invasions/ChaosStars.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { motion } from 'framer-motion';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -28,7 +28,7 @@ export default async function maybeReceiveChaosStarsAnimation(
       animations: state.animations.set(new AnimationKey(), {
         color: currentViewer,
         component: ({ duration, isVisible }) => (
-          <Stack center className={containerStyle} nowrap>
+          <Stack center className={containerStyle}>
             {Array(amount)
               .fill(0)
               .map((_, index) => (

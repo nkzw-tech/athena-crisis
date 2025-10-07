@@ -5,8 +5,8 @@ import UnlockableBiomes from '@deities/athena/lib/UnlockableBiomes.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useCallback, useMemo } from 'react';
 import InlineTileList from '../../card/InlineTileList.tsx';
@@ -93,7 +93,7 @@ export default function BiomeSelector({
   );
 
   return (
-    <Stack center gap>
+    <Stack center gap wrap>
       {biomes.map((biome) => {
         const isLocked = lockedBiomes.has(biome);
         return (
@@ -108,7 +108,7 @@ export default function BiomeSelector({
               />
             </div>
             {isLocked && (
-              <Stack alignCenter center className={unlockStyle}>
+              <Stack alignCenter center className={unlockStyle} wrap>
                 ?
               </Stack>
             )}

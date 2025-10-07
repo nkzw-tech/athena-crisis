@@ -6,13 +6,13 @@ import {
   Sniper,
 } from '@deities/athena/info/Unit.tsx';
 import Portrait from '@deities/hera/character/Portrait.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack from '@nkzw/stack';
 
 preparePortraits();
 
 // [!region portraits]
 const portraits = (
-  <Stack gap>
+  <Stack between gap wrap>
     <Portrait animate player={1} unit={Sniper} variant={0} />
     <Portrait animate player={2} unit={Flamethrower} variant={2} />
     <Portrait animate player={6} unit={BazookaBear} variant={0} />

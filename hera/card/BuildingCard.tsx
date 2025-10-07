@@ -24,7 +24,6 @@ import Icon from '@deities/ui/Icon.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
 import StopCapture from '@deities/ui/icons/StopCapture.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
 import CloseBox from '@iconify-icons/pixelarticons/close-box.js';
@@ -34,6 +33,7 @@ import Reload from '@iconify-icons/pixelarticons/reload.js';
 import Shield from '@iconify-icons/pixelarticons/shield.js';
 import minBy from '@nkzw/core/minBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
+import Stack, { VStack } from '@nkzw/stack';
 import { memo, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
@@ -114,7 +114,7 @@ export default memo(function BuildingCard({
 
   return (
     <>
-      <Stack alignCenter gap nowrap start>
+      <Stack alignCenter gap>
         <TilePreview map={previewMap} size={size}>
           <BuildingTile
             animationConfig={AnimationConfig}
@@ -128,16 +128,16 @@ export default memo(function BuildingCard({
             size={TileSize}
           />
         </TilePreview>
-        <Stack gap start vertical>
+        <VStack gap wrap>
           <CardTitle style={{ color: getColor(building.player) }}>
             {info.name}
           </CardTitle>
           {getTranslatedEntityName(info.type)}
-        </Stack>
+        </VStack>
       </Stack>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         <AttributeGridBox>
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Heart} />
             <fbt desc="Label for health">Health</fbt>
           </Stack>
@@ -151,7 +151,7 @@ export default memo(function BuildingCard({
           <div />
           {funds > 0 ? (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Reload} />
                 <fbt desc="Label for limit">Funds</fbt>
               </Stack>
@@ -159,7 +159,7 @@ export default memo(function BuildingCard({
               <div />
             </>
           ) : null}
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Shield} />
             <fbt desc="Label for defense">Defense</fbt>
           </Stack>
@@ -170,7 +170,7 @@ export default memo(function BuildingCard({
           />
           {limit > 0 ? (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Buildings} />
                 <fbt desc="Label for limit">Limit</fbt>
               </Stack>
@@ -180,7 +180,7 @@ export default memo(function BuildingCard({
           ) : null}
           {!isAccessible && (
             <>
-              <Stack start>
+              <Stack wrap>
                 <Icon icon={CloseBox} />
                 <fbt desc="Label for inaccessible buildings">Inaccessible</fbt>
               </Stack>
@@ -190,7 +190,7 @@ export default memo(function BuildingCard({
           )}
           {info.isStructure() && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={StopCapture} />
                 <fbt desc="Label for neutral only buildings">
                   Not capturable
@@ -202,7 +202,7 @@ export default memo(function BuildingCard({
           )}
           {canBeCreated && cost < Number.POSITIVE_INFINITY && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Coin} />
                 <div className={maxWidthStyle}>
                   <fbt desc="Label for build cost">Build Cost</fbt>
@@ -218,13 +218,13 @@ export default memo(function BuildingCard({
           )}
           {unit?.isCapturing() && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Flag} />
                 <fbt desc="Label for in progress capture (text has to be short)">
                   Capture…
                 </fbt>
               </Stack>
-              <Stack alignCenter className={wideColumnStyle} end gap>
+              <Stack alignCenter className={wideColumnStyle} end gap wrap>
                 <MiniPlayerIcon id={unit.player} />
                 {getTranslatedFactionName(playerDetails, unit.player)}
               </Stack>
@@ -232,7 +232,7 @@ export default memo(function BuildingCard({
           )}
           {building.label != null && (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon className={iconStyle} icon={Label} />
                 <fbt desc="Label for label">Label</fbt>
               </Stack>
@@ -242,12 +242,12 @@ export default memo(function BuildingCard({
             </>
           )}
         </AttributeGridBox>
-        <Stack gap vertical>
+        <VStack between gap wrap>
           <CardInfoHeading player={building.player}>
             <fbt desc="About building headline">About</fbt>
           </CardInfoHeading>
           <p>{info.description}</p>
-        </Stack>
+        </VStack>
         <BuildableUnits
           biome={biome}
           building={building}
@@ -258,7 +258,7 @@ export default memo(function BuildingCard({
           <ResearchSkills player={player} skills={building.skills} />
         ) : null}
         <PlaceOnTiles biome={biome} building={info} player={player} />
-      </Stack>
+      </VStack>
     </>
   );
 });
@@ -271,16 +271,16 @@ const ResearchSkills = memo(function ResearchSkills({
   skills: ReadonlySet<Skill>;
 }) {
   return (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading player={player}>
         <fbt desc="Headline for buyable skills">Buyable Skills</fbt>
       </CardInfoHeading>
-      <Stack gap={16} start>
+      <Stack gap={16} wrap>
         {Array.from(skills).map((skill) => (
           <SkillIcon hideDialog key={skill} showName skill={skill} />
         ))}
       </Stack>
-    </Stack>
+    </VStack>
   );
 });
 
@@ -297,7 +297,7 @@ const PlaceOnTiles = memo(function PlaceOnTiles({
     configuration: { placeOn },
   } = building;
   return placeOn ? (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading player={player}>
         <fbt desc="Headline for which tiles a building can be placed on">
           Tiles
@@ -306,7 +306,7 @@ const PlaceOnTiles = memo(function PlaceOnTiles({
       <TileBox>
         <InlineTileList biome={biome} size="tall" tiles={[...placeOn]} />
       </TileBox>
-    </Stack>
+    </VStack>
   ) : null;
 });
 
@@ -334,7 +334,7 @@ const BuildableUnits = memo(function BuildableUnits({
   }
 
   return (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading player={player}>
         <fbt desc="Headline for which units a building can create">Units</fbt>
       </CardInfoHeading>
@@ -347,7 +347,7 @@ const BuildableUnits = memo(function BuildableUnits({
           />
         </Tick>
       </TileBox>
-    </Stack>
+    </VStack>
   );
 });
 

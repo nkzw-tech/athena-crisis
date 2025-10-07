@@ -1,7 +1,7 @@
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import usePerformanceResult from '../hooks/usePerformanceResult.tsx';
 import usePlayerAchievement from '../hooks/usePlayerAchievement.tsx';
 import { PlayerAchievement as PlayerAchievementT } from '../Types.tsx';
@@ -15,8 +15,8 @@ export default function PlayerAchievement({
   const [playerPerformance, count] = usePlayerAchievement(result);
   const performance = usePerformanceResult(playerPerformance);
   return (
-    <Stack alignCenter center className={nowrapStyle} gap>
-      <Stack gap={4} nowrap>
+    <Stack alignCenter center className={nowrapStyle} gap wrap>
+      <Stack between gap={4} wrap>
         {performance.map(([type, achieved]) => (
           <StarIcon
             key={type}

@@ -1,7 +1,7 @@
 import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import Stack from '@deities/ui/Stack.tsx';
+import Stack from '@nkzw/stack';
 import FlashFlyout from './FlashFlyout.tsx';
 import { FlyoutItem } from './Flyout.tsx';
 
@@ -25,7 +25,7 @@ export default function PositionHint({
       delay={300}
       items={[
         <FlyoutItem key="position">
-          <Stack nowrap>
+          <Stack between wrap>
             {vector.x}-{vector.y}
           </Stack>
         </FlyoutItem>,

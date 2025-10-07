@@ -31,7 +31,6 @@ import {
   BackgroundRainbowAnimation,
   SlowRainbowStyle,
 } from '@deities/ui/PulseStyle.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
@@ -43,6 +42,7 @@ import HumanHandsdown from '@iconify-icons/pixelarticons/human-handsdown.js';
 import Escort from '@iconify-icons/pixelarticons/human-run.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { memo, useCallback, useMemo } from 'react';
 import activateAction from '../behavior/activate/activateAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -244,7 +244,7 @@ export default memo(function PlayerCard({
         [vars.set('items')]: player.skills.size + (crystal != null ? 1 : 0),
       }}
     >
-      <Stack className={chargeStyle} nowrap start>
+      <Stack between className={chargeStyle} wrap>
         {Array(availableCharges + 1)
           .fill(0)
           .map((_, index) => (
@@ -291,8 +291,8 @@ export default memo(function PlayerCard({
           wide && widePlayerInfoStyle,
         )}
       >
-        <Stack nowrap>
-          <Stack vertical>
+        <Stack between wrap>
+          <VStack between wrap>
             <div
               className={cx(
                 ellipsis,
@@ -323,7 +323,7 @@ export default memo(function PlayerCard({
                 : user?.displayName}
               {isBot(player) && <Icon className={iconStyle} icon={Android} />}
             </div>
-            <Stack alignCenter className={infoStyle} gap nowrap start>
+            <Stack alignCenter between className={infoStyle} gap wrap>
               <Funds
                 className={cx(
                   ellipsis,
@@ -336,9 +336,10 @@ export default memo(function PlayerCard({
               {timeout && player.isHumanPlayer() && player.time != null && (
                 <Stack
                   alignCenter
+                  between
                   className={cx(shrinkStyle, nowrapStyle)}
                   gap={4}
-                  nowrap
+                  wrap
                 >
                   <Icon icon={Watch} />
                   {map.isCurrentPlayer(player.id) ? (
@@ -351,14 +352,22 @@ export default memo(function PlayerCard({
               {objectiveList}
             </Stack>
             {wide && (
-              <Stack alignCenter className={infoStyle} gap nowrap start>
-                <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
+              <Stack alignCenter between className={infoStyle} gap wrap>
+                <Stack
+                  between
+                  className={cx(playerStatsStyle, nowrapStyle)}
+                  wrap
+                >
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
                   <span>
                     {shouldShow ? calculateFunds(map, player) : '???'}
                   </span>
                 </Stack>
-                <Stack className={cx(playerStatsStyle, nowrapStyle)} nowrap>
+                <Stack
+                  between
+                  className={cx(playerStatsStyle, nowrapStyle)}
+                  wrap
+                >
                   <Icon className={playerStatsBeforeIconStyle} icon={Chart} />
                   <span>
                     {shouldShow ? calculateUnitValue(map, player) : '???'}
@@ -388,9 +397,10 @@ export default memo(function PlayerCard({
                   ] as const
                 ).map(([icon, getValue], index) => (
                   <Stack
+                    between
                     className={cx(playerStatsStyle, nowrapStyle)}
                     key={index}
-                    nowrap
+                    wrap
                   >
                     <Icon
                       className={playerStatsBeforeIconStyle}
@@ -402,14 +412,15 @@ export default memo(function PlayerCard({
                 ))}
               </Stack>
             )}
-          </Stack>
+          </VStack>
           {player.skills.size || invasions ? (
             <Stack
+              between
               className={cx(
                 skillBoxStyle,
                 charge > 0 && skillBoxWithChargeStyle,
               )}
-              nowrap
+              wrap
             >
               {[...new Set([...player.activeSkills, ...player.skills])].map(
                 (skill) => {
@@ -521,7 +532,7 @@ const PlayerCardObjective = ({
 
   return (
     (icon && status != null && (
-      <Stack className={nowrapStyle} gap={2} key={id} nowrap>
+      <Stack between className={nowrapStyle} gap={2} key={id} wrap>
         <div>
           <Icon className={winConditionIconStyle} icon={icon} />
           {status}

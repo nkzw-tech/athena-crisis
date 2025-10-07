@@ -20,11 +20,11 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import getTagColor from '@deities/ui/lib/getTagColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import usePerformanceResult from '../hooks/usePerformanceResult.tsx';
@@ -73,7 +73,7 @@ const Description = ({
       break;
     case 'power':
       return (
-        <Stack gap vertical>
+        <VStack between gap wrap>
           <div>
             <fbt desc="Achieved power metric">
               Achieved:{' '}
@@ -87,7 +87,7 @@ const Description = ({
               Required: <fbt:param name="expectedPower">{power}</fbt:param>
             </fbt>
           </div>
-        </Stack>
+        </VStack>
       );
     case 'style': {
       if (style) {
@@ -154,12 +154,13 @@ const Card = ({
     >
       <Stack
         alignCenter
+        between
         className={cx(fullStyle, innerStyle)}
         gap={24}
-        nowrap
         stretch
+        wrap
       >
-        <Stack gap vertical>
+        <VStack between gap wrap>
           <h2 className={textStyle}>
             {getTranslatedPerformanceTypeName(type)}
           </h2>
@@ -174,7 +175,7 @@ const Card = ({
               {description}
             </div>
           )}
-        </Stack>
+        </VStack>
         <StarIcon
           className={achieved ? achievedAnimationStyle : missedAnimationStyle}
           starClassName={achieved ? achievedStarAnimationStyle : undefined}
@@ -220,10 +221,11 @@ const SummaryCard = ({
     >
       <Stack
         alignCenter
+        between
         className={cx(fullStyle, summaryInnerStyle)}
         gap={24}
-        nowrap
         stretch
+        wrap
       >
         <h2 className={textStyle}>
           <fbt desc="Label for summary headline">Summary</fbt>
@@ -233,10 +235,10 @@ const SummaryCard = ({
           center
           className={summaryStyle}
           flex1
-          nowrap
           style={{
             [vars.set('results')]: result.length,
           }}
+          wrap
         >
           {result.map(([type, achieved]) => (
             <StarIcon
@@ -340,12 +342,18 @@ export default function MapPerformanceMetrics({
           ease: [0.34, 1.26, 0.64, 1],
         }}
       >
-        <Box className={cx(fullStyle, mapPerformanceStyle)} vertical>
+        <Box
+          between
+          className={cx(fullStyle, mapPerformanceStyle)}
+          vertical
+          wrap
+        >
           {mapName && (
             <Stack
               center
               className={headlineStyle}
               onClick={hide ? () => setHide(false) : undefined}
+              wrap
             >
               <h2
                 className={ellipsis}
@@ -394,13 +402,14 @@ export default function MapPerformanceMetrics({
                       center
                       className={cx(fadeStyle, bottomStyle)}
                       gap={16}
+                      wrap
                     >
                       <div>
                         <fbt desc="Label for previous result">
                           Previous Best
                         </fbt>
                       </div>
-                      <Stack>
+                      <Stack between wrap>
                         {previousResult.map(([type, achieved]) => (
                           <StarIcon
                             className={cx(

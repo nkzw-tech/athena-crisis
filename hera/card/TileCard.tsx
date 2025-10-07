@@ -27,7 +27,6 @@ import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import Hidden from '@iconify-icons/pixelarticons/hidden.js';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
@@ -35,6 +34,7 @@ import Visible from '@iconify-icons/pixelarticons/visible.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { memo, useMemo } from 'react';
 import Decorators from '../Decorators.tsx';
 import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
@@ -89,20 +89,20 @@ export default memo(function TileCard({
 
   return (
     <>
-      <Stack alignCenter gap nowrap start>
+      <Stack alignCenter gap>
         <TilePreview
           map={previewMap}
           size={tile.style.decorator ? 'tall' : undefined}
         />
-        <Stack gap start vertical>
+        <VStack gap wrap>
           <CardTitle>{tile.name}</CardTitle>
-        </Stack>
+        </VStack>
       </Stack>
-      <Stack gap={16} vertical>
+      <VStack between gap={16} wrap>
         <AttributeGridBox>
           {tile.isInaccessible() ? (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon horizontalFlip icon={Reply} />
                 <fbt desc="Label for movement">Movement</fbt>
               </Stack>
@@ -112,7 +112,7 @@ export default memo(function TileCard({
               <div />
             </>
           ) : null}
-          <Stack nowrap start>
+          <Stack>
             <Icon icon={Hidden} />
             <fbt desc="Label for cover">Cover</fbt>
           </Stack>
@@ -126,7 +126,7 @@ export default memo(function TileCard({
 
           {vision === -1 ? (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Visible} />
                 <fbt desc="Label for vision">Vision</fbt>
               </Stack>
@@ -137,7 +137,7 @@ export default memo(function TileCard({
             </>
           ) : (
             <>
-              <Stack nowrap start>
+              <Stack>
                 <Icon icon={Visible} />
                 <div className={maxWidthStyle}>
                   <fbt desc="Label for vision cost">Vision Cost</fbt>
@@ -152,15 +152,15 @@ export default memo(function TileCard({
             </>
           )}
         </AttributeGridBox>
-        <Stack gap vertical>
+        <VStack between gap wrap>
           <CardInfoHeading>
             <fbt desc="About tile headline">About</fbt>
           </CardInfoHeading>
           <p>{tile.description}</p>
-        </Stack>
+        </VStack>
         <TileMovement biome={biome} map={map} player={player} tile={tile} />
         <TileDecorators decoratorMap={decorators} map={previewMap} />
-      </Stack>
+      </VStack>
     </>
   );
 });
@@ -201,11 +201,11 @@ const TileMovement = memo(function TileMovement({
 
   return (
     <Tick animationConfig={AnimationConfig}>
-      <Stack gap vertical>
+      <VStack between gap wrap>
         <CardInfoHeading>
           <fbt desc="Headline for unit movement information">Unit Movement</fbt>
         </CardInfoHeading>
-        <Stack gap start>
+        <Stack gap wrap>
           {movementTypes
             .map(([cost, movementTypes]) => {
               const units = [
@@ -236,7 +236,7 @@ const TileMovement = memo(function TileMovement({
             })
             .filter(isPresent)}
         </Stack>
-      </Stack>
+      </VStack>
     </Tick>
   );
 });
@@ -260,11 +260,11 @@ const TileDecorators = memo(function TileDecorators({
   }
 
   return (
-    <Stack gap vertical>
+    <VStack between gap wrap>
       <CardInfoHeading>
         <fbt desc="Decorations headline">Decorations</fbt>
       </CardInfoHeading>
-      <AdaptiveStack gap start>
+      <AdaptiveStack gap>
         {[...new Set(decorators)].map((decorator) => {
           const count = decoratorCount.get(decorator.id) || 1;
           const decoratorColor = numberToPlayerID(decorator.id);
@@ -274,11 +274,11 @@ const TileDecorators = memo(function TileDecorators({
               className={tagStyle}
               gap
               key={decorator.id}
-              start
               style={{
                 backgroundColor: getColor(decoratorColor, 0.2),
                 color: getColor(decoratorColor),
               }}
+              wrap
             >
               <Decorators
                 map={map.copy({
@@ -296,7 +296,7 @@ const TileDecorators = memo(function TileDecorators({
           );
         })}
       </AdaptiveStack>
-    </Stack>
+    </VStack>
   );
 });
 

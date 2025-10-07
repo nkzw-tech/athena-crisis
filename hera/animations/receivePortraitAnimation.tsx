@@ -5,8 +5,8 @@ import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import arrayShuffle from 'array-shuffle';
 import { fbt } from 'fbtee';
 import { motion } from 'framer-motion';
@@ -39,7 +39,7 @@ export default async function receivePortraitAnimation(
       animations: state.animations.set(new AnimationKey(), {
         color: player,
         component: ({ duration, isVisible }) => (
-          <Stack center className={portraitContainerStyle} nowrap>
+          <Stack center className={portraitContainerStyle}>
             {[0, 1, 2].map((variant) => (
               <motion.div
                 animate={{

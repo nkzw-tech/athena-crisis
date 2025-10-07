@@ -1,4 +1,4 @@
-import Stack from './Stack.tsx';
+import Stack from '@nkzw/stack';
 import Tag from './Tag.tsx';
 
 type TagListProps<T> = Readonly<{
@@ -39,7 +39,7 @@ export default function TagList<T>({
   ...props
 }: Omit<TagListProps<T>, 'stringify'> & { stringify?: (tag: T) => string }) {
   return (
-    <Stack alignCenter className={className} gap start stretch>
+    <Stack alignCenter className={className} gap stretch wrap>
       <TagListInternal stringify={stringify} {...props} />
     </Stack>
   );

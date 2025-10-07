@@ -9,12 +9,12 @@ import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Live from '@deities/ui/icons/Live.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Pause from '@iconify-icons/pixelarticons/pause.js';
 import Play from '@iconify-icons/pixelarticons/play.js';
 import Reload from '@iconify-icons/pixelarticons/reload.js';
+import Stack, { VStack } from '@nkzw/stack';
 import useRelativeTime from '@nkzw/use-relative-time';
 import { ReactNode } from 'react';
 import { useLocaleContext } from '../i18n/LocaleContext.tsx';
@@ -32,7 +32,7 @@ const TimeCard = ({
   children: ReactNode;
   player: Player;
 }) => (
-  <Stack alignCenter center className={textStyle} flex1 gap nowrap>
+  <Stack alignCenter center className={textStyle} flex1 gap wrap>
     <div className={miniIconStyle}>
       <MiniPlayerIcon gap id={player.id} />
     </div>
@@ -105,7 +105,7 @@ export default function ReplayBar({
       inlineUI={inlineUI}
       visible={replayIsVisible || (hasTimeout && !isBot)}
     >
-      <Stack flex1 gap vertical>
+      <VStack between flex1 gap wrap>
         {hasTimeout && !isBot ? (
           isTimeBankTimer(timer) ? (
             <TimeBankRemainingTime player={currentPlayer} timeout={timeout} />
@@ -114,7 +114,7 @@ export default function ReplayBar({
           )
         ) : null}
         {replayIsVisible && (
-          <Stack alignCenter nowrap stretch>
+          <Stack alignCenter between stretch wrap>
             {currentViewer !== currentPlayer.id ? (
               <span
                 className={cx(
@@ -172,7 +172,7 @@ export default function ReplayBar({
             )}
           </Stack>
         )}
-      </Stack>
+      </VStack>
     </ActionBar>
   );
 }

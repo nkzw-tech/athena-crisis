@@ -7,8 +7,8 @@ import {
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { memo, useEffect, useState } from 'react';
 import Portrait from '../character/Portrait.tsx';
 import Medal from '../Medal.tsx';
@@ -34,17 +34,17 @@ export default memo(function LeaderCard({
 
   const viewerIsPlayer = viewer != null && viewer === player;
   return (
-    <Stack gap nowrap>
+    <Stack between gap>
       <div className={fullWidthStyle}>
-        <Stack gap={16} vertical>
-          <Stack gap vertical>
+        <VStack between gap={16} wrap>
+          <VStack between gap wrap>
             <CardTitle player={player}>{unit.getName(viewer)}</CardTitle>
-            <Stack gap start>
+            <Stack gap wrap>
               <Medal player={unit.player} />
               <LeaderTitle gender={info.gender} />
             </Stack>
-          </Stack>
-          <Stack gap vertical>
+          </VStack>
+          <VStack between gap wrap>
             {viewerIsPlayer && (
               <CardInfoHeading player={player}>
                 <fbt desc="About unit leader headline">About</fbt>
@@ -65,7 +65,7 @@ export default memo(function LeaderCard({
                 />
               </div>
               {viewerIsPlayer ? <p>{info.characterDescription}</p> : null}
-              <Stack gap vertical>
+              <VStack between gap wrap>
                 <CardInfoHeading className={marginTopStyle} player={player}>
                   <fbt desc="About leader unit buffs">Bonus</fbt>
                 </CardInfoHeading>
@@ -78,10 +78,10 @@ export default memo(function LeaderCard({
                     attack and defense bonus.
                   </fbt>
                 </div>
-              </Stack>
+              </VStack>
             </div>
-          </Stack>
-        </Stack>
+          </VStack>
+        </VStack>
       </div>
     </Stack>
   );

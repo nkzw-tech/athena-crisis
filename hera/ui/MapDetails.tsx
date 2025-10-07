@@ -9,7 +9,6 @@ import Icon from '@deities/ui/Icon.tsx';
 import NoSkill from '@deities/ui/icons/NoSkill.tsx';
 import Size from '@deities/ui/icons/Size.tsx';
 import Skills from '@deities/ui/icons/Skills.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import { css, cx } from '@emotion/css';
@@ -23,6 +22,7 @@ import Timeline from '@iconify-icons/pixelarticons/timeline.js';
 import Tournament from '@iconify-icons/pixelarticons/tournament.js';
 import User from '@iconify-icons/pixelarticons/user.js';
 import Users from '@iconify-icons/pixelarticons/users.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { ReactNode } from 'react';
 import getMapSizeName from '../lib/getMapSizeName.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
@@ -74,8 +74,8 @@ export default function MapDetails({
 }: MapDetailsProps) {
   const { initialCharge, seedCapital } = map.config;
   return map ? (
-    <Stack gap={16} stretch vertical>
-      <Stack gap={gap === 8 ? true : gap} vertical>
+    <VStack between gap={16} stretch wrap>
+      <VStack between gap={gap === 8 ? true : gap} wrap>
         {creator &&
         !SpecialUsers.has(creator.id) &&
         !tags?.includes('official') ? (
@@ -98,35 +98,35 @@ export default function MapDetails({
         ) : null}
         {subText}
         {isCampaign && showCampaign ? (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon icon={Campaign} />{' '}
             <fbt desc="Label for campaign games">Campaign</fbt>
           </Stack>
         ) : null}
         {rating && rating > 0 ? (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon icon={Timeline} /> {rating.toFixed(1)}
           </Stack>
         ) : null}
-        <Stack alignCenter gap start>
+        <Stack alignCenter gap wrap>
           <Icon icon={User} /> {map.active.length}
           {' - '}
           {map.teams.map(({ players }) => players.size).join('v')}
         </Stack>
-        <Stack alignCenter gap start>
+        <Stack alignCenter gap wrap>
           <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))}{' '}
           {map.size.width}x{map.size.height}
         </Stack>
-        <Stack alignCenter gap start>
+        <Stack alignCenter gap wrap>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
         </Stack>
         {!showGameState && (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon className={iconOffsetStyle} icon={Coin} /> {seedCapital}
           </Stack>
         )}
         {!showGameState && initialCharge > 0 && (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon className={iconOffsetStyle} icon={Charge} />{' '}
             {initialCharge === 1 ? (
               <fbt desc="Label for initial charges">1 Charge</fbt>
@@ -138,7 +138,7 @@ export default function MapDetails({
           </Stack>
         )}
         {teamPlay && (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon icon={Users} />{' '}
             <fbt desc="Label for teamplay maps">Teamplay</fbt>
           </Stack>
@@ -146,14 +146,14 @@ export default function MapDetails({
         {showGameState && (
           <>
             {isValidTimer(timer) ? (
-              <Stack alignCenter gap start>
+              <Stack alignCenter gap wrap>
                 <Icon icon={Watch} /> {getTranslatedTimerName(timer)}
               </Stack>
             ) : null}
 
             {!isCampaign && (
               <>
-                <Stack alignCenter gap start>
+                <Stack alignCenter gap wrap>
                   <Icon icon={hasSkills ? Skills : NoSkill} />{' '}
                   {hasSkills ? (
                     <fbt desc="Label for a game with skills">Skills</fbt>
@@ -161,7 +161,7 @@ export default function MapDetails({
                     <fbt desc="Label for a game without skills">No skills</fbt>
                   )}
                 </Stack>
-                <Stack alignCenter gap start>
+                <Stack alignCenter gap wrap>
                   <Icon icon={Tournament} />{' '}
                   {isRanked ? (
                     <fbt desc="Label for ranked game">Ranked</fbt>
@@ -174,7 +174,7 @@ export default function MapDetails({
           </>
         )}
         {showRound && (
-          <Stack alignCenter gap start>
+          <Stack alignCenter gap wrap>
             <Icon className={iconOffsetStyle} icon={Hourglass} />{' '}
             {showRound === 'ended' ? (
               <fbt desc="Description for map rounds">
@@ -194,13 +194,13 @@ export default function MapDetails({
             )}
           </Stack>
         )}
-      </Stack>
+      </VStack>
       {buttons && (
-        <Stack alignCenter className={buttonStyle} gap={24} start>
+        <Stack alignCenter className={buttonStyle} gap={24} wrap>
           {buttons}
         </Stack>
       )}
-    </Stack>
+    </VStack>
   ) : null;
 }
 

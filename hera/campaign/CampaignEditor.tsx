@@ -34,7 +34,6 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import ScrollContainer from '@deities/ui/ScrollContainer.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import {
   TypeaheadDataSource,
   TypeaheadDataSourceEntry,
@@ -44,6 +43,7 @@ import Check from '@iconify-icons/pixelarticons/check.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Copy from '@iconify-icons/pixelarticons/copy.js';
 import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -461,9 +461,9 @@ export default function CampaignEditor({
         >
           <Stack
             alignCenter
+            between
             className={primaryButtonStyle}
             gap
-            nowrap
             onClick={onCopy}
           >
             <div className={ellipsis}>
@@ -481,9 +481,9 @@ export default function CampaignEditor({
                   {hasCopied ? (
                     <Stack
                       alignCenter
+                      between
                       className={smallTextStyle}
                       gap={2}
-                      nowrap
                     >
                       <Icon height={18} icon={Check} width={18} />
                       <fbt desc="Text for copying a link">Copied</fbt>
@@ -651,7 +651,7 @@ export default function CampaignEditor({
         {showAllDialogue && (
           <Dialog onClose={onClose} size="large" transformOrigin="90% top">
             <DialogScrollContainer key="dialogue" navigate>
-              <Stack gap={24} vertical>
+              <VStack between gap={24} wrap>
                 <h1>
                   <fbt desc="Headline for all campaign dialogue">
                     All Dialogue
@@ -664,7 +664,7 @@ export default function CampaignEditor({
                   maps={maps}
                   setMap={setMap}
                 />
-              </Stack>
+              </VStack>
             </DialogScrollContainer>
           </Dialog>
         )}

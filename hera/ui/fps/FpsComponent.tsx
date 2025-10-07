@@ -63,7 +63,7 @@ export default function Fps() {
   const hidden = useHide();
   const { avgFps, currentFps } = useFps(20);
   return currentFps != null ? (
-    <Box blur center className={cx(style, maybeFade(hidden))}>
+    <Box blur center className={cx(style, maybeFade(hidden))} wrap>
       {currentFps} fps/{parseInteger(avgFps)} avg
     </Box>
   ) : null;

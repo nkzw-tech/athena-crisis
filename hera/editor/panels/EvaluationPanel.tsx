@@ -10,10 +10,10 @@ import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import Box from '@deities/ui/Box.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
 import Spinner from '@deities/ui/Spinner.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css } from '@emotion/css';
 import groupBy from '@nkzw/core/groupBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { List } from 'fbtee';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import useClientGameAction from '../../hooks/useClientGameAction.tsx';
@@ -126,10 +126,10 @@ export default function EvaluationPanel({
   const isEvaluating = !!currentMap && runs > 0;
 
   return (
-    <Stack alignNormal>
-      <Stack gap={24} stretch vertical verticalPadding>
+    <Stack alignStart between wrap>
+      <VStack between gap={24} stretch verticalPadding wrap>
         {resultsByPlayer?.length && currentMap ? (
-          <Box flex1 gap={16} start vertical>
+          <Box flex1 gap={16} vertical wrap>
             <h2>
               <fbt desc="Headline for evaluation a map">Results</fbt>
             </h2>
@@ -138,11 +138,11 @@ export default function EvaluationPanel({
                 if (!player) {
                   return (
                     <Fragment key={0}>
-                      <Stack className={playerIconStyle}>
+                      <Stack between className={playerIconStyle} wrap>
                         <MiniPlayerIcon id={0} />
                       </Stack>
-                      <Stack gap vertical>
-                        <Stack gap start>
+                      <VStack between gap wrap>
+                        <Stack gap wrap>
                           <fbt desc="Label for games that ended in a draw">
                             Draw
                           </fbt>
@@ -159,7 +159,7 @@ export default function EvaluationPanel({
                           </fbt>
                         </Stack>
                         <Rounds results={results} />
-                      </Stack>
+                      </VStack>
                     </Fragment>
                   );
                 }
@@ -173,13 +173,13 @@ export default function EvaluationPanel({
 
                 return (
                   <Fragment key={player}>
-                    <Stack className={playerIconStyle} gap start>
+                    <Stack className={playerIconStyle} gap wrap>
                       {winners.map((player) => (
                         <MiniPlayerIcon id={player} key={player} />
                       ))}
                     </Stack>
-                    <Stack gap vertical>
-                      <Stack gap start>
+                    <VStack between gap wrap>
+                      <Stack gap wrap>
                         <List
                           items={winners.map(
                             getTranslatedFactionName.bind(
@@ -201,18 +201,18 @@ export default function EvaluationPanel({
                         </fbt>
                       </Stack>
                       <Rounds results={results} />
-                    </Stack>
+                    </VStack>
                   </Fragment>
                 );
               })}
             </div>
           </Box>
         ) : null}
-        <Box flex1 gap start vertical>
+        <Box flex1 gap vertical wrap>
           <h2>
             <fbt desc="Headline for evaluation a map">Evaluate this Map</fbt>
           </h2>
-          <Stack gap={16} start>
+          <Stack gap={16} wrap>
             <button disabled={isEvaluating} onClick={startEvaluation}>
               <fbt desc="Button to start an evaluation">Start evaluation</fbt>
             </button>
@@ -236,7 +236,7 @@ export default function EvaluationPanel({
             </ErrorText>
           )}
         </Box>
-      </Stack>
+      </VStack>
     </Stack>
   );
 }

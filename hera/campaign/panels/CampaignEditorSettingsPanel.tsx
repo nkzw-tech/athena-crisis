@@ -8,7 +8,6 @@ import Box from '@deities/ui/Box.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
 import {
@@ -16,6 +15,7 @@ import {
   TypeaheadDataSourceEntry,
 } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { RangeSelector } from '../../card/Range.tsx';
 import useTagDataSource from '../../hooks/useTagDataSource.tsx';
@@ -70,10 +70,10 @@ export default function CampaignEditorSettingsPanel({
   const dataSource = useTagDataSource();
 
   return (
-    <Stack className={marginStyle} gap={24} vertical verticalPadding>
-      <Box gap vertical>
+    <VStack between className={marginStyle} gap={24} verticalPadding wrap>
+      <Box between gap vertical wrap>
         <label>
-          <Stack gap start vertical>
+          <VStack gap wrap>
             <h2>
               <fbt desc="Campaign name label">Campaign Name</fbt>
             </h2>
@@ -88,11 +88,11 @@ export default function CampaignEditorSettingsPanel({
               type="text"
               value={campaignName}
             />
-          </Stack>
+          </VStack>
         </label>
       </Box>
-      <Box gap vertical>
-        <Stack gap vertical>
+      <Box between gap vertical wrap>
+        <VStack between gap wrap>
           <h2>
             <fbt desc="Label for campaign tags">Tags</fbt>
           </h2>
@@ -114,9 +114,9 @@ export default function CampaignEditorSettingsPanel({
               tag will be visible in the campaign list and on your profile.
             </fbt>
           </p>
-        </Stack>
+        </VStack>
       </Box>
-      <Box gap vertical>
+      <Box between gap vertical wrap>
         <h2>
           <fbt desc="Label for campaign owners">Owners</fbt>
         </h2>
@@ -133,7 +133,7 @@ export default function CampaignEditorSettingsPanel({
           </fbt>
         </div>
       </Box>
-      <Box gap vertical>
+      <Box between gap vertical wrap>
         <h2>
           <fbt desc="Label for campaign description">Description</fbt>
         </h2>
@@ -143,15 +143,15 @@ export default function CampaignEditorSettingsPanel({
           value={description}
         />
       </Box>
-      <Box gap={16} vertical>
+      <Box between gap={16} vertical wrap>
         <h2>
           <fbt desc="Label for campaign settings">Campaign Settings</fbt>
         </h2>
-        <Stack alignCenter gap>
+        <Stack alignCenter between gap wrap>
           <span>
             <fbt desc="Label for campaign playstyle">Playstyle</fbt>
           </span>
-          <Stack gap={16}>
+          <Stack between gap={16} wrap>
             <InlineLink
               className={buttonStyle}
               onClick={() => setPlayStyle(null)}
@@ -173,7 +173,7 @@ export default function CampaignEditorSettingsPanel({
             ))}
           </Stack>
         </Stack>
-        <Stack alignCenter gap>
+        <Stack alignCenter between gap wrap>
           <span>
             <fbt desc="Label for campaign difficulty">
               Campaign Difficulty Rating
@@ -182,7 +182,7 @@ export default function CampaignEditorSettingsPanel({
           <RangeSelector invert onSelect={setDifficulty} value={difficulty} />
         </Stack>
       </Box>
-      <Box gap={16}>
+      <Box between gap={16} wrap>
         <InlineLink onClick={() => saveCampaign()}>
           <fbt desc="Button to save a campaign">Save Campaign</fbt>
         </InlineLink>
@@ -201,7 +201,7 @@ export default function CampaignEditorSettingsPanel({
           </>
         ) : null}
       </Box>
-    </Stack>
+    </VStack>
   );
 }
 

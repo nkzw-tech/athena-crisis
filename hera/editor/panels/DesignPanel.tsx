@@ -37,9 +37,9 @@ import {
   VerticalDrawingMode,
 } from '@deities/ui/icons/DrawingMode.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import Fill from '@iconify-icons/pixelarticons/fill-half.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { memo, useCallback, useMemo } from 'react';
 import InlineTileList, { SelectTileFn } from '../../card/InlineTileList.tsx';
@@ -284,8 +284,8 @@ export default memo(function DesignPanel({
 
   const panelContent = useMemo(
     () => (
-      <Stack gap={24} vertical verticalPadding>
-        <Box gap={32} ref={setRef}>
+      <VStack between gap={24} verticalPadding wrap>
+        <Box between gap={32} ref={setRef} wrap>
           <InlineTileList
             biome={biome}
             onLongPress={onLongPress}
@@ -322,7 +322,7 @@ export default memo(function DesignPanel({
             </InlineLink>
           </InlineTileList>
         </Box>
-        <Box gap={32}>
+        <Box between gap={32} wrap>
           <InlineTileList
             biome={biome}
             buildings={buildings}
@@ -349,7 +349,7 @@ export default memo(function DesignPanel({
             />
           </InlineTileList>
         </Box>
-        <Box gap={32}>
+        <Box between gap={32} wrap>
           <InlineTileList
             biome={biome}
             onLongPress={onLongPress}
@@ -370,7 +370,7 @@ export default memo(function DesignPanel({
             />
           </InlineTileList>
         </Box>
-      </Stack>
+      </VStack>
     ),
     [
       alert,
@@ -396,11 +396,11 @@ export default memo(function DesignPanel({
 
   return (
     <Tick animationConfig={AnimationConfig}>
-      <Stack alignNormal gap={24} nowrap>
+      <Stack alignStart between gap={24}>
         {panelContent}
-        <Stack gap={24} vertical>
-          <Box className={drawingModeContainerStyle}>
-            <Stack gap={16} start vertical>
+        <VStack between gap={24} wrap>
+          <Box between className={drawingModeContainerStyle} wrap>
+            <VStack gap={16} wrap>
               <InlineLink
                 className={cx(fillStyle, ellipsis)}
                 onClick={() => {
@@ -450,9 +450,9 @@ export default memo(function DesignPanel({
                   width={32}
                 />
               </InlineLink>
-            </Stack>
+            </VStack>
           </Box>
-          <Box center gap={32}>
+          <Box center gap={32} wrap>
             <EditorPlayerSelector
               actions={actions}
               currentPlayer={currentPlayer}
@@ -460,7 +460,7 @@ export default memo(function DesignPanel({
               vertical
             />
           </Box>
-        </Stack>
+        </VStack>
       </Stack>
     </Tick>
   );

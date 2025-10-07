@@ -21,6 +21,8 @@ export default function ActionBar({
         visible && visibleStyle,
       )}
       {...props}
+      between
+      wrap
     />
   );
 }

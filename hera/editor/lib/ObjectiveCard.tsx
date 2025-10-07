@@ -26,12 +26,12 @@ import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import sortBy from '@nkzw/core/sortBy.js';
+import Stack, { VStack } from '@nkzw/stack';
 import { useCallback, useState } from 'react';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getCampaignTranslation from '../../i18n/getCampaignTranslation.tsx';
@@ -124,6 +124,7 @@ export default function ObjectiveCard({
 
   return (
     <Box
+      between
       className={boxStyle}
       gap={16}
       style={{
@@ -133,6 +134,7 @@ export default function ObjectiveCard({
             : undefined,
       }}
       vertical
+      wrap
     >
       {canDelete && (
         <Icon button className={deleteStyle} icon={Close} onClick={onDelete} />
@@ -141,10 +143,10 @@ export default function ObjectiveCard({
         <ObjectiveTitle id={id} objective={objective} />
       </h2>
       <Form>
-        <Stack gap={16} vertical>
+        <VStack between gap={16} wrap>
           {hasPlayers && (
-            <Stack alignCenter gap={16} nowrap>
-              <Stack flex1>
+            <Stack alignCenter between gap={16}>
+              <Stack between flex1 wrap>
                 <fbt desc="Player selector for objective">Players</fbt>
               </Stack>
               {map.active.map((id) => (
@@ -171,11 +173,11 @@ export default function ObjectiveCard({
             </Stack>
           )}
           {hasLabel && (
-            <Stack alignCenter nowrap>
-              <Stack flex1>
+            <Stack alignCenter between>
+              <Stack between flex1 wrap>
                 <fbt desc="Label selector for objective">Labels</fbt>
               </Stack>
-              <Stack start>
+              <Stack wrap>
                 <ManyLabelSelector
                   active={objective.label}
                   onChange={(label) =>
@@ -190,7 +192,7 @@ export default function ObjectiveCard({
           )}
           {objectiveHasAmounts(objective) && (
             <label>
-              <Stack alignCenter gap start>
+              <Stack alignCenter gap wrap>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for objective amount">Amount</fbt>
                 </span>
@@ -220,7 +222,7 @@ export default function ObjectiveCard({
           )}
           {objectiveHasRounds(objective) && (
             <label>
-              <Stack alignCenter gap start>
+              <Stack alignCenter gap wrap>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for objective rounds">Rounds</fbt>
                 </span>
@@ -250,9 +252,9 @@ export default function ObjectiveCard({
               </Stack>
             </label>
           )}
-          <Stack className={lineHeightStyle} gap={16} nowrap>
+          <Stack between className={lineHeightStyle} gap={16}>
             <label className={labelStyle}>
-              <Stack alignCenter gap nowrap start>
+              <Stack alignCenter gap>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for secret objective checkbox">Secret</fbt>
                 </span>
@@ -279,9 +281,9 @@ export default function ObjectiveCard({
           </Stack>
           {!isDefaultObjective && (
             <>
-              <Stack className={lineHeightStyle} gap={16} nowrap>
+              <Stack between className={lineHeightStyle} gap={16}>
                 <label className={labelStyle}>
-                  <Stack alignCenter gap nowrap start>
+                  <Stack alignCenter gap>
                     <span className={labelWidthStyle}>
                       <fbt desc="Label for optional objective checkbox">
                         Optional
@@ -311,9 +313,9 @@ export default function ObjectiveCard({
                 )}
               </Stack>
               {canEditPerformance && isOptional && (
-                <Stack alignCenter className={lineHeightStyle} gap>
+                <Stack alignCenter between className={lineHeightStyle} gap wrap>
                   <label>
-                    <Stack alignCenter gap start>
+                    <Stack alignCenter gap wrap>
                       <span className={labelWidthStyle}>
                         <fbt desc="Label for enabling this objective to reward a bonus star">
                           Bonus
@@ -336,12 +338,12 @@ export default function ObjectiveCard({
             </>
           )}
           {(isAdmin || isOptional) && (
-            <Stack gap={16} vertical>
-              <Stack alignCenter gap start>
+            <VStack between gap={16} wrap>
+              <Stack alignCenter gap wrap>
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for objective reward">Reward</fbt>
                 </span>
-                <Stack alignCenter gap={16} start>
+                <Stack alignCenter gap={16} wrap>
                   <SkillSelector
                     availableSkills={Skills}
                     currentSkill={
@@ -385,7 +387,7 @@ export default function ObjectiveCard({
                           )
                         }
                       >
-                        <Stack className={selectorStyle} gap vertical>
+                        <VStack between className={selectorStyle} gap wrap>
                           {[...UnlockableBiomes].map((biome) => (
                             <InlineLink
                               className={linkStyle}
@@ -404,7 +406,7 @@ export default function ObjectiveCard({
                               {getTranslatedBiomeName(biome)}
                             </InlineLink>
                           ))}
-                        </Stack>
+                        </VStack>
                       </Dropdown>
                       <Dropdown
                         title={
@@ -424,7 +426,7 @@ export default function ObjectiveCard({
                           )
                         }
                       >
-                        <Stack className={selectorStyle} gap vertical>
+                        <VStack between className={selectorStyle} gap wrap>
                           {([1, 2] as const).map((variant) => (
                             <InlineLink
                               className={linkStyle}
@@ -446,7 +448,7 @@ export default function ObjectiveCard({
                               </fbt>
                             </InlineLink>
                           ))}
-                        </Stack>
+                        </VStack>
                       </Dropdown>
                       <Dropdown
                         title={
@@ -466,7 +468,7 @@ export default function ObjectiveCard({
                           )
                         }
                       >
-                        <Stack className={selectorStyle} gap vertical>
+                        <VStack between className={selectorStyle} gap wrap>
                           {([2, 3, 4] as const).map((slot) => (
                             <InlineLink
                               className={linkStyle}
@@ -488,18 +490,18 @@ export default function ObjectiveCard({
                               </fbt>
                             </InlineLink>
                           ))}
-                        </Stack>
+                        </VStack>
                       </Dropdown>
                       <Dropdown
                         title={
                           reward?.type === 'Crystal' ? (
                             <Stack
+                              between
                               className={cx(
                                 borderStyle,
                                 crystalBoxStyle,
                                 highlightStyle,
                               )}
-                              nowrap
                             >
                               <div className={crystalScaleStyle}>
                                 <CrystalIcon animate crystal={reward.crystal} />
@@ -517,7 +519,12 @@ export default function ObjectiveCard({
                           )
                         }
                       >
-                        <Stack className={crystalSelectorStyle} gap vertical>
+                        <VStack
+                          between
+                          className={crystalSelectorStyle}
+                          gap
+                          wrap
+                        >
                           {Crystals.map((crystal) => (
                             <InlineLink
                               className={linkStyle}
@@ -533,13 +540,13 @@ export default function ObjectiveCard({
                                 reward.crystal === crystal
                               }
                             >
-                              <Stack gap nowrap>
+                              <Stack between gap>
                                 <CrystalIcon animate crystal={crystal} />
                                 <div>{getTranslatedCrystalName(crystal)}</div>
                               </Stack>
                             </InlineLink>
                           ))}
-                        </Stack>
+                        </VStack>
                       </Dropdown>
                     </>
                   )}
@@ -581,9 +588,9 @@ export default function ObjectiveCard({
                   </p>
                 </InfoBox>
               )}
-            </Stack>
+            </VStack>
           )}
-          <Stack reverse>
+          <Stack between reverse wrap>
             <InlineLink onClick={selectEffect}>
               {
                 <fbt desc="Button to define an effect for this objective">
@@ -600,7 +607,7 @@ export default function ObjectiveCard({
             )}
           </Stack>
           {campaigns && campaigns?.length > 0 && (
-            <Stack>
+            <Stack between wrap>
               <p>
                 <fbt desc="Explanation for where the objective is used">
                   This objective is used in the{' '}
@@ -622,7 +629,7 @@ export default function ObjectiveCard({
               </p>
             </Stack>
           )}
-        </Stack>
+        </VStack>
       </Form>
     </Box>
   );

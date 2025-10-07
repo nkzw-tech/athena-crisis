@@ -26,7 +26,6 @@ import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
@@ -34,6 +33,7 @@ import Close from '@iconify-icons/pixelarticons/close.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
+import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useInView } from 'framer-motion';
 import { memo, ReactNode, RefObject, useMemo, useRef, useState } from 'react';
@@ -74,7 +74,7 @@ const biomes = Biomes.filter((biome) => biome !== Biome.Spaceship);
 
 const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
   onChange && index != null ? (
-    <Stack alignCenter gap={4} nowrap>
+    <Stack alignCenter between gap={4}>
       {!first && (
         <Icon
           button
@@ -108,7 +108,7 @@ const ActionHeadline = ({
   children: ReactNode;
   focused?: boolean;
 } & TopBarProps) => (
-  <Stack className={headlineStyle} nowrap>
+  <Stack between className={headlineStyle}>
     <h2>{children}</h2>
     {!focused && <TopBarIcons {...props} />}
   </Stack>
@@ -205,9 +205,7 @@ export default memo(function ActionCard({
     return (
       <Stack
         className={messageStyle}
-        nowrap
         ref={ref}
-        start
         style={{
           [vars.set('portraits')]: portrait.variants,
         }}
@@ -234,7 +232,7 @@ export default memo(function ActionCard({
             />
           }
         >
-          <Stack gap nowrap>
+          <Stack between gap>
             {Array.from({ length: portrait.variants }, (_, index) => index).map(
               (variant) => (
                 <div
@@ -264,19 +262,18 @@ export default memo(function ActionCard({
         <MessageComponent
           className={cx(messageBoxStyle, !shouldFormatText && marginStyle)}
           gap
-          start
           vertical
         >
-          <Stack alignCenter className={headlineStyle} gap nowrap>
-            <Stack alignCenter gap nowrap stretch>
-              <Stack alignCenter gap nowrap start>
+          <Stack alignCenter between className={headlineStyle} gap>
+            <Stack alignCenter between gap stretch>
+              <Stack alignCenter gap>
                 {!hasCurrentPlayer && (
                   <Dropdown
                     dropdownClassName={playerSelectorStyle}
                     shouldRenderControls={!!(canChange && shouldRenderControls)}
                     title={<PlayerIcon id={player} inline />}
                   >
-                    <Stack className={playerSelectorListStyle} nowrap vertical>
+                    <VStack between className={playerSelectorListStyle}>
                       {playerIDs.map((id) => (
                         <PlayerIcon
                           id={id}
@@ -293,7 +290,7 @@ export default memo(function ActionCard({
                           selected={player === id}
                         />
                       ))}
-                    </Stack>
+                    </VStack>
                   </Dropdown>
                 )}
                 <UnitSelector
@@ -319,7 +316,7 @@ export default memo(function ActionCard({
               </Stack>
               {canChange && (
                 <label>
-                  <Stack alignCenter gap nowrap start>
+                  <Stack alignCenter gap>
                     <input
                       checked={!!action.silhouette}
                       onChange={
@@ -377,7 +374,7 @@ export default memo(function ActionCard({
     const { player } = action;
     const vectors = [...action.units.keys()];
     return (
-      <Box className={boxStyle} gap={16} vertical>
+      <Box between className={boxStyle} gap={16} vertical wrap>
         <ActionHeadline
           first={first}
           focused={focused}
@@ -387,8 +384,8 @@ export default memo(function ActionCard({
         >
           <fbt desc="Label for Spawn Effect">Spawn</fbt>
         </ActionHeadline>
-        <Stack gap vertical>
-          <Stack alignNormal>
+        <VStack between gap wrap>
+          <Stack alignStart between wrap>
             <Tick animationConfig={AnimationConfig}>
               <InlineTileList
                 biome={biome}
@@ -431,12 +428,12 @@ export default memo(function ActionCard({
               />
             </Tick>
           </Stack>
-        </Stack>
-        <Stack alignCenter gap={16}>
+        </VStack>
+        <Stack alignCenter between gap={16} wrap>
           <fbt desc="Label to pick which player to spawn units as">
             Spawn units as player:
           </fbt>
-          <Stack gap={16} nowrap>
+          <Stack between gap={16}>
             {canChange ? (
               <>
                 <InlineLink
@@ -473,7 +470,7 @@ export default memo(function ActionCard({
           </Stack>
         </Stack>
         {canChange ? (
-          <Stack start>
+          <Stack wrap>
             <InlineLink onClick={() => onChange(index, 'toggle-select-units')}>
               {focused ? (
                 <fbt desc="Label to stop selecting units">
@@ -493,7 +490,7 @@ export default memo(function ActionCard({
   } else if (action.type === 'ActivateCrystal') {
     const { biome, crystal } = action;
     return (
-      <Box className={boxStyle} gap={16} vertical>
+      <Box between className={boxStyle} gap={16} vertical wrap>
         <ActionHeadline
           first={first}
           focused={focused}
@@ -503,10 +500,10 @@ export default memo(function ActionCard({
         >
           <fbt desc="Label for Spawn Effect">Activate Crystal</fbt>
         </ActionHeadline>
-        <Stack gap={16} vertical>
+        <VStack between gap={16} wrap>
           {canChange ? (
             <>
-              <Stack alignCenter center gap={16}>
+              <Stack alignCenter center gap={16} wrap>
                 {Crystals.map((crystal) => (
                   <InlineLink
                     className={crystalStyle}
@@ -524,7 +521,7 @@ export default memo(function ActionCard({
                 ))}
               </Stack>
               {map && (
-                <Stack center gap>
+                <Stack center gap wrap>
                   <BiomeSelector
                     biomes={biomes}
                     hasContentRestrictions={false}
@@ -549,7 +546,7 @@ export default memo(function ActionCard({
               )}
             </>
           ) : (
-            <Stack alignCenter center gap={24}>
+            <Stack alignCenter center gap={24} wrap>
               <CrystalSprite animate crystal={crystal} />
               {biome != null && (
                 <InlineTileList
@@ -560,7 +557,7 @@ export default memo(function ActionCard({
               )}
             </Stack>
           )}
-        </Stack>
+        </VStack>
       </Box>
     );
   } else if (
@@ -572,7 +569,7 @@ export default memo(function ActionCard({
     const value = isCharge ? action.charges : action.funds;
     const { player } = action;
     return (
-      <Box className={boxStyle} gap={16} vertical>
+      <Box between className={boxStyle} gap={16} vertical wrap>
         <ActionHeadline
           first={first}
           focused={focused}
@@ -586,7 +583,7 @@ export default memo(function ActionCard({
             <fbt desc="Label for Increase Funds Effect">Increase Funds</fbt>
           )}
         </ActionHeadline>
-        <Stack alignCenter gap>
+        <Stack alignCenter between gap wrap>
           <span>
             {isCharge ? (
               <fbt desc="Label for Increase Charge Effect">Charges:</fbt>
@@ -615,9 +612,9 @@ export default memo(function ActionCard({
             value
           )}
         </Stack>
-        <Stack alignCenter gap={16}>
+        <Stack alignCenter between gap={16} wrap>
           <fbt desc="Label to pick a player">Player:</fbt>
-          <Stack gap={16} nowrap>
+          <Stack between gap={16}>
             {canChange ? (
               <>
                 {playerIDsWithoutNeutral.map((id) => (
@@ -645,8 +642,8 @@ export default memo(function ActionCard({
   }
 
   return (
-    <Box className={boxStyle}>
-      <Stack className={headlineStyle} nowrap>
+    <Box between className={boxStyle} wrap>
+      <Stack between className={headlineStyle}>
         <h2>{action.type}</h2>
         <TopBarIcons
           first={first}

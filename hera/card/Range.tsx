@@ -9,8 +9,8 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import { StarEmpty, StarFull, StarHalf } from '@deities/ui/icons/Stars.tsx';
-import Stack from '@deities/ui/Stack.tsx';
 import { css, cx } from '@emotion/css';
+import Stack from '@nkzw/stack';
 import { memo, useState } from 'react';
 
 const colors = {
@@ -68,8 +68,6 @@ export default memo(function Range({
         wide ? selectorContainerStyle : containerStyle,
         end && endStyle,
       )}
-      nowrap
-      start
     >
       <div className={rangeStyle} style={style}>
         {starIcon(value, 1)}
@@ -102,12 +100,7 @@ export const LargeRange = memo(function LargeRange({
   };
 
   return (
-    <Stack
-      alignEnd
-      className={cx(containerStyle, end && endStyle)}
-      nowrap
-      start
-    >
+    <Stack alignEnd className={cx(containerStyle, end && endStyle)}>
       <div className={rangeStyle} style={style}>
         {halfStarIcon(value, 1)}
       </div>
@@ -145,13 +138,11 @@ export const RangeSelector = memo(function RangeSelector({
     <Stack
       alignEnd
       className={selectorContainerStyle}
-      nowrap
       onPointerEnter={() => setIsActive(true)}
       onPointerLeave={() => {
         setIsActive(false);
         setValue(initialValue || 0);
       }}
-      start
     >
       <div
         className={cx(
