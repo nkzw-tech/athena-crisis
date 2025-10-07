@@ -173,6 +173,9 @@ importers:
       '@nkzw/relay-utils':
         specifier: ^1.0.1
         version: 1.0.1(react-relay@20.1.1(react@19.2.0))(react@19.2.0)
+      '@nkzw/stack':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.0)
       '@nkzw/use-relative-time':
         specifier: ^1.2.1
         version: 1.2.1(react@19.2.0)
@@ -573,6 +576,9 @@ importers:
       '@nkzw/core':
         specifier: ^1.3.0
         version: 1.3.0
+      '@nkzw/stack':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.0)
       '@nkzw/use-visibility-state':
         specifier: ^1.0.3
         version: 1.0.3(react@19.2.0)
@@ -652,6 +658,9 @@ importers:
       '@nkzw/core':
         specifier: ^1.3.0
         version: 1.3.0
+      '@nkzw/stack':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.0)
       '@nkzw/use-visibility-state':
         specifier: ^1.0.3
         version: 1.0.3(react@19.2.0)
@@ -732,6 +741,9 @@ importers:
       '@nkzw/immutable-map':
         specifier: ^1.2.2
         version: 1.2.2
+      '@nkzw/stack':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.0)
       '@nkzw/use-relative-time':
         specifier: ^1.2.1
         version: 1.2.1(react@19.2.0)
@@ -916,6 +928,9 @@ importers:
       '@nkzw/joymap':
         specifier: ^4.0.2
         version: 4.0.2
+      '@nkzw/stack':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.0)
       fbtee:
         specifier: ^1.6.0
         version: 1.6.0(@nkzw/babel-plugin-fbtee@1.6.0)(react@19.2.0)
@@ -2464,6 +2479,18 @@ packages:
 
   '@nkzw/safe-word-list@2.1.0':
     resolution: {integrity: sha512-P1sP0XzX51piUkiJTkDtpPBnRvuRr1NQ5lyH+Yarr6kZvgyjj2nOgTSf+8xGgVx3g4qeyGYDXWeHJcmd9PGUaA==}
+
+  '@nkzw/stack@2.3.1':
+    resolution: {integrity: sha512-3kaaWhKlJukvdq6Iwb9Fr26nbs6voSfLGa+Hs7byMJbTE3RRKht/IEhe5fezKgaJdUiI7sisTcaSgN3dQRSIBw==}
+    peerDependencies:
+      nativewind: ^4.1.23
+      react: 19.0.0-rc.1
+      react-native: '>=0.67.0'
+    peerDependenciesMeta:
+      nativewind:
+        optional: true
+      react-native:
+        optional: true
 
   '@nkzw/use-relative-time@1.2.1':
     resolution: {integrity: sha512-aq4yAQ3LXMRTbxsaulsOkphnIQhESpZ7zzmGB34uGK52QQvYm5OUOevb5FeIGUqOpktc+4agEyq87RyCMrbAJg==}
@@ -12461,6 +12488,10 @@ snapshots:
       react-relay: 20.1.1(react@19.2.0)
 
   '@nkzw/safe-word-list@2.1.0': {}
+
+  '@nkzw/stack@2.3.1(react@19.2.0)':
+    dependencies:
+      react: 19.2.0
 
   '@nkzw/use-relative-time@1.2.1(react@19.2.0)':
     dependencies:
