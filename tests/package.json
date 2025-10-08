@@ -25,18 +25,18 @@
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/css": "^11.13.5",
     "@nkzw/immutable-map": "^1.2.2",
-    "@playwright/browser-chromium": "^1.55.1",
+    "@playwright/browser-chromium": "^1.56.0",
     "@types/jest-image-snapshot": "^6.4.0",
     "@types/object-inspect": "^1.13.0",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
     "chalk": "^5.6.2",
     "fbtee": "^1.6.0",
     "jest-image-snapshot": "^6.5.1",
-    "playwright": "^1.55.1",
+    "playwright": "^1.56.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-error-boundary": "^6.0.0",
-    "term-img": "^7.0.0"
+    "term-img": "^7.1.0"
   }
 }
