@@ -244,7 +244,7 @@ export default memo(function PlayerCard({
         [vars.set('items')]: player.skills.size + (crystal != null ? 1 : 0),
       }}
     >
-      <Stack between className={chargeStyle}>
+      <Stack className={chargeStyle}>
         {Array(availableCharges + 1)
           .fill(0)
           .map((_, index) => (
