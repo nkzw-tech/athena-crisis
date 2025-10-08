@@ -158,9 +158,8 @@ const Card = ({
         className={cx(fullStyle, innerStyle)}
         gap={24}
         stretch
-        wrap
       >
-        <VStack between gap wrap>
+        <VStack between gap>
           <h2 className={textStyle}>
             {getTranslatedPerformanceTypeName(type)}
           </h2>
@@ -225,7 +224,6 @@ const SummaryCard = ({
         className={cx(fullStyle, summaryInnerStyle)}
         gap={24}
         stretch
-        wrap
       >
         <h2 className={textStyle}>
           <fbt desc="Label for summary headline">Summary</fbt>
@@ -238,7 +236,6 @@ const SummaryCard = ({
           style={{
             [vars.set('results')]: result.length,
           }}
-          wrap
         >
           {result.map(([type, achieved]) => (
             <StarIcon

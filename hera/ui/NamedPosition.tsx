@@ -46,9 +46,9 @@ export default function NamedPosition({
       items={[
         hasName || showHealth ? (
           <FlyoutItem center color={unit.player} key="unit-name">
-            <Stack center gap={4} wrap>
+            <Stack center gap={4}>
               {hasName && (
-                <Stack between gap={4} wrap>
+                <Stack between gap={4}>
                   {unit.getName(currentViewer)}
                   {unit.isLeader() && <Medal player={unit.player} zoom={1} />}
                 </Stack>
@@ -61,7 +61,6 @@ export default function NamedPosition({
                     color:
                       getHealthColor(unit.health) || applyVar('text-color'),
                   }}
-                  wrap
                 >
                   {unit.health}
                   <Icon icon={Heart} />
@@ -73,7 +72,7 @@ export default function NamedPosition({
         unit.transports?.length ? (
           <FlyoutItem color={unit.player} key="unit-transports" size="large">
             <Tick animationConfig={animationConfig}>
-              <Stack between gap style={{ zoom: 0.75 }} wrap>
+              <Stack between gap style={{ zoom: 0.75 }}>
                 {unit.transports.map((transportedUnit, index) => (
                   <TransportedUnitTile
                     animationConfig={animationConfig}

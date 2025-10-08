@@ -32,7 +32,7 @@ const TimeCard = ({
   children: ReactNode;
   player: Player;
 }) => (
-  <Stack alignCenter center className={textStyle} flex1 gap wrap>
+  <Stack alignCenter center className={textStyle} flex1 gap>
     <div className={miniIconStyle}>
       <MiniPlayerIcon gap id={player.id} />
     </div>
@@ -114,7 +114,7 @@ export default function ReplayBar({
           )
         ) : null}
         {replayIsVisible && (
-          <Stack alignCenter between stretch wrap>
+          <Stack alignCenter between stretch>
             {currentViewer !== currentPlayer.id ? (
               <span
                 className={cx(

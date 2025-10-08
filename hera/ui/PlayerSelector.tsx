@@ -209,7 +209,7 @@ export const PlayerSkillSelectors = ({
   );
 
   return (
-    <Stack between className={cx(nameStyle, skillStyle)} gap={16} wrap>
+    <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
       {Array(skillSlots)
         .fill(0)
         .map((_, id) => {
@@ -299,7 +299,7 @@ const PlayerItem = ({
         }
       : null;
     return (
-      <Stack between gap wrap>
+      <Stack between gap>
         <Component
           className={itemStyle}
           onClick={!bot ? onClick : undefined}
@@ -344,7 +344,7 @@ const PlayerItem = ({
               toggleFavorite={toggleFavoriteSkill}
             />
           ) : (
-            <Stack between className={cx(nameStyle, skillStyle)} gap={16} wrap>
+            <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
               {[...player.skills].map((skill, index) =>
                 // Skills in pending games are hidden.
                 skill < 0 ? (
@@ -368,7 +368,7 @@ const PlayerItem = ({
   }
 
   return locked && viewerPlayerID !== player.id ? (
-    <Stack between className={cx(itemStyle, lightStyle)} wrap>
+    <Stack between className={cx(itemStyle, lightStyle)}>
       <PlayerIcon id={player.id} />
       <div className={nameStyle}>
         <fbt desc="Text when waiting for a player to join">

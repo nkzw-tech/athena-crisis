@@ -106,7 +106,7 @@ const Tile = ({
         </div>
         <div className={textStyle}>
           <div className={cx(ellipsis, overflowStyle)}>{info.name}</div>
-          <Stack between className={cx(ellipsis, overflowStyle)} gap wrap>
+          <Stack between className={cx(ellipsis, overflowStyle)} gap>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
               <LargeRange
@@ -155,13 +155,7 @@ const renderUnit = (
           unit={unit}
         />
         <div className={textStyle}>
-          <Stack
-            between
-            className={cx(ellipsis, overflowStyle)}
-            gap
-            stretch
-            wrap
-          >
+          <Stack between className={cx(ellipsis, overflowStyle)} gap stretch>
             <div className={ellipsis}>{info.name}</div>
             <Stack alignCenter between gap={4} wrap>
               <Icon className={iconStyle} icon={Heart} />
@@ -174,13 +168,13 @@ const renderUnit = (
               </div>
             </Stack>
           </Stack>
-          <Stack between className={cx(ellipsis, overflowStyle)} gap wrap>
-            <Stack alignCenter between gap={4} wrap>
+          <Stack between className={cx(ellipsis, overflowStyle)} gap>
+            <Stack alignCenter between gap={4}>
               <Icon className={iconStyle} icon={Supply} />
               {unit.fuel}/{info.configuration.fuel}
             </Stack>
             {ammo && (
-              <Stack alignCenter between gap={4} wrap>
+              <Stack alignCenter between gap={4}>
                 <Icon className={iconStyle} icon={Ammo} />
                 {ammo.join(', ')}
               </Stack>
@@ -223,10 +217,9 @@ const renderBuilding = (
           between
           className={cx(ellipsis, overflowStyle)}
           gap={4}
-          wrap
         >
           <div className={ellipsis}>{building.info.name}</div>
-          <Stack alignCenter between gap={4} wrap>
+          <Stack alignCenter between gap={4}>
             <Icon className={iconStyle} icon={Heart} />
             <div
               style={{

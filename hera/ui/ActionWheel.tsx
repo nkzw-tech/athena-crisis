@@ -432,7 +432,6 @@ export function LargeActionButton({
         className={cx(BoxStyle, iconStyle, entityStyle, bottomAlignedStyle)}
         end
         gap={4}
-        wrap
       >
         <div>
           {icon?.(highlighted || highlight, { className: centerIconStyle })}
@@ -466,7 +465,6 @@ function CenterElement({ children }: { children: ReactNode }) {
         center
         className={cx(BoxStyle, iconStyle, entityStyle, ellipsis)}
         gap={4}
-        wrap
       >
         {children}
       </VStack>

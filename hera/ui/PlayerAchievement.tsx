@@ -16,7 +16,7 @@ export default function PlayerAchievement({
   const performance = usePerformanceResult(playerPerformance);
   return (
     <Stack alignCenter center className={nowrapStyle} gap wrap>
-      <Stack between gap={4} wrap>
+      <Stack gap={4}>
         {performance.map(([type, achieved]) => (
           <StarIcon
             key={type}
@@ -44,6 +44,6 @@ const countStyle = css`
 
 const nowrapStyle = css`
   ${Breakpoints.lg} {
-    flex-wrap: nowrap;
+    flex-wrap: nowrap !important;
   }
 `;

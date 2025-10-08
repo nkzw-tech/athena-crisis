@@ -25,7 +25,7 @@ export default function PositionHint({
       delay={300}
       items={[
         <FlyoutItem key="position">
-          <Stack between wrap>
+          <Stack between>
             {vector.x}-{vector.y}
           </Stack>
         </FlyoutItem>,

@@ -104,7 +104,7 @@ export default function UnitPreviews() {
   return hasSprites ? (
     <>
       <Tick animationConfig={AnimationConfig}>
-        <Stack center gap={24} wrap>
+        <Stack center gap={24}>
           {unitPreviews}
         </Stack>
       </Tick>

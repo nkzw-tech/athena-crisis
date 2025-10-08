@@ -617,10 +617,9 @@ const SkillListItem = ({
             isPointerRef.current = event.pointerType === 'touch';
           }
         }}
-        wrap
       >
-        <Stack alignCenter between gap wrap>
-          <Stack alignCenter between gap wrap>
+        <Stack alignCenter between gap>
+          <Stack alignCenter between gap>
             {currentSkill === skill && <div>{'\u00bb'}</div>}
             <SkillIconInternal
               background={background}
@@ -660,7 +659,7 @@ const SkillListItem = ({
         </VStack>
       </VStack>
       {showCost && (
-        <Stack between className={costStyle} gap wrap>
+        <Stack between className={costStyle} gap>
           <Icon className={coinIconStyle} icon={Coin} />
           {getSkillConfig(skill).cost}
         </Stack>
@@ -861,7 +860,6 @@ export function SkillIcon({
         className={cx(!hideDialog && pointerStyle)}
         gap
         onClick={!hideDialog ? () => setShowDialog(true) : undefined}
-        wrap
       >
         <SkillIconInternal
           active={active}
@@ -904,7 +902,7 @@ export function SkillIcon({
 
 export function HiddenSkillIcon() {
   return (
-    <Stack alignCenter between className={pointerStyle} gap wrap>
+    <Stack alignCenter between className={pointerStyle} gap>
       <SkillIconInternal icon={Question} />
     </Stack>
   );
