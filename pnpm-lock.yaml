@@ -63,8 +63,8 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4(vite@7.1.9(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
       babel-plugin-react-compiler:
-        specifier: 19.1.0-rc.3
-        version: 19.1.0-rc.3
+        specifier: ^1.0.0
+        version: 1.0.0
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
@@ -5212,8 +5212,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
-  babel-plugin-react-compiler@19.1.0-rc.3:
-    resolution: {integrity: sha512-mjRn69WuTz4adL0bXGx8Rsyk1086zFJeKmes6aK0xPuK3aaXmDJdLHqwKKMrpm6KAI1MCoUK72d2VeqQbu8YIA==}
+  babel-plugin-react-compiler@1.0.0:
+    resolution: {integrity: sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw==}
 
   babel-plugin-relay@20.1.1:
     resolution: {integrity: sha512-BWlqLPiHbxZTxlyng2rVgsZCwztHNje7H8FR4c+UKy3ErQJBG6BKLr9vUdeR7mAZCH2v0sOAxNhG6zR1FrWjAg==}
@@ -15654,7 +15654,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-react-compiler@19.1.0-rc.3:
+  babel-plugin-react-compiler@1.0.0:
     dependencies:
       '@babel/types': 7.28.4
 
