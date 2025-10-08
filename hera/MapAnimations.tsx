@@ -50,7 +50,6 @@ import Banner from './ui/Banner.tsx';
 import CharacterMessage from './ui/CharacterMessage.tsx';
 import FlashFlyout from './ui/FlashFlyout.tsx';
 import { FlyoutColor, FlyoutItem } from './ui/Flyout.tsx';
-import Message from './ui/Message.tsx';
 import Notice from './ui/Notice.tsx';
 
 type UnitDirection = 'left' | 'right';
@@ -707,9 +706,6 @@ const MapAnimation = ({
           />
         );
       }
-      case 'message': {
-        return <Message {...animation} color={animation.color} {...props} />;
-      }
       case 'scrollIntoView': {
         return (
           <ScrollIntoViewEffect
@@ -726,6 +722,9 @@ const MapAnimation = ({
       case 'unfold':
       case 'unitExplosion':
       case 'unitHeal':
+        return null;
+      // Deprecated feature.
+      case 'message':
         return null;
       default: {
         animation satisfies never;
