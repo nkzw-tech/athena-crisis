@@ -134,9 +134,7 @@ export default function ReplayBar({
                     <fbt desc="Game is live">live</fbt>
                   )
                 ) : isWaiting ? (
-                  <fbt desc="Game is waiting for actions">
-                    waiting for player moves
-                  </fbt>
+                  <fbt desc="Game is waiting for player actions">waiting</fbt>
                 ) : isReplaying ? (
                   <fbt desc="Game is replaying">replay</fbt>
                 ) : null}

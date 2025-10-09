@@ -50,6 +50,16 @@ const actionBarStyle = css`
 `;
 
 const regularStyle = css`
+  @media (min-width: 760px) {
+    ${vars.set('x', '60%')}
+    top: calc(${applyVar('safe-area-top')} + 8px);
+  }
+
+  @media (min-width: 900px) {
+    ${vars.set('x', '50%')}
+    top: calc(${applyVar('safe-area-top')} + 8px);
+  }
+
   @media (min-width: 1100px) {
     ${vars.set('x', '24px')}
     top: calc(${applyVar('safe-area-top')} + 8px);
