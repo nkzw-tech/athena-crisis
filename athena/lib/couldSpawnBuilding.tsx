@@ -1,11 +1,17 @@
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import { BuildingInfo } from '../info/Building.tsx';
-import { Plain, ShipyardConstructionSite, TileTypes } from '../info/Tile.tsx';
+import {
+  Pier,
+  Plain,
+  ShipyardConstructionSite,
+  TileTypes,
+} from '../info/Tile.tsx';
 import { PlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 import writeTile from '../mutation/writeTile.tsx';
 import canBuild from './canBuild.tsx';
+import canPlaceTile from './canPlaceTile.tsx';
 
 export default function couldSpawnBuilding(
   map: MapData,
@@ -29,14 +35,23 @@ export default function couldSpawnBuilding(
       ? tile.type & TileTypes.Sea
       : tile === Plain
   ) {
+    const tile = getFirstOrThrow(
+      new Set([...(placeOn || []), ...editorPlaceOn]),
+    );
+
+    if (
+      !canPlaceTile(
+        map,
+        vector,
+        tile === ShipyardConstructionSite ? Pier : tile,
+      )
+    ) {
+      return false;
+    }
+
     const tileMap = map.map.slice();
     const modifiers = map.modifiers.slice();
-    writeTile(
-      tileMap,
-      modifiers,
-      map.getTileIndex(vector),
-      getFirstOrThrow(new Set([...(placeOn || []), ...editorPlaceOn])),
-    );
+    writeTile(tileMap, modifiers, map.getTileIndex(vector), tile);
     map = map.copy({
       map: tileMap,
     });
