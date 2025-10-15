@@ -83,7 +83,7 @@ const Tile = ({
       configuration: { cover },
     } = info;
     return (
-      <Box between blur className={boxStyle} wrap>
+      <Box between blur className={boxStyle}>
         <div
           style={{
             height: `${tileSize * 1.5}px`,
@@ -106,7 +106,7 @@ const Tile = ({
         </div>
         <div className={textStyle}>
           <div className={cx(ellipsis, overflowStyle)}>{info.name}</div>
-          <Stack between className={cx(ellipsis, overflowStyle)} gap>
+          <Stack className={cx(ellipsis, overflowStyle)} gap>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
               <LargeRange
@@ -142,7 +142,7 @@ const renderUnit = (
       );
 
     return (
-      <Box between blur className={boxStyle} wrap>
+      <Box between blur className={boxStyle}>
         <UnitTile
           animationConfig={animationConfig}
           biome={biome}
@@ -157,7 +157,7 @@ const renderUnit = (
         <div className={textStyle}>
           <Stack between className={cx(ellipsis, overflowStyle)} gap stretch>
             <div className={ellipsis}>{info.name}</div>
-            <Stack alignCenter between gap={4} wrap>
+            <Stack alignCenter between gap={4}>
               <Icon className={iconStyle} icon={Heart} />
               <div
                 style={{
@@ -203,7 +203,6 @@ const renderBuilding = (
           building.label != null && buildingWithLabelStyle,
         )}
         gap
-        wrap
       >
         <BuildingTile
           biome={biome}
