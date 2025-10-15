@@ -22,11 +22,10 @@ export const getMessagePlayer = (
   user: UserLikeWithID,
   player: PlayerID | null,
   playerDetails: PlayerDetails,
-) => {
-  return player && playerDetails.get(player)?.id === user.id
+) =>
+  player && playerDetails.get(player)?.id === user.id
     ? player
     : toPlayerID(user.character.color);
-};
 
 export default function MapMessageContainer({
   animationConfig,
