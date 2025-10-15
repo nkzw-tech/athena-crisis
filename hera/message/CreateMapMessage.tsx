@@ -475,6 +475,7 @@ export default function CreateMapMessage({
       playerDetails={playerDetails}
       scale={scale}
       scroll
+      shouldDelay={false}
       user={user}
       vector={vector}
       zIndex={zIndex}

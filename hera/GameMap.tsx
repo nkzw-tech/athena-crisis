@@ -2202,6 +2202,9 @@ export default class GameMap extends Component<Props, State> {
                     message={message}
                     playerDetails={playerDetails}
                     scale={scale}
+                    shouldDelay={
+                      map.units.has(vector) || map.buildings.has(vector)
+                    }
                     toggleLikeMessage={toggleLikeMessage}
                     update={this._update}
                     vector={vector}

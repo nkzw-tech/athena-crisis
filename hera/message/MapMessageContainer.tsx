@@ -37,6 +37,7 @@ export default function MapMessageContainer({
   playerDetails,
   scale,
   scroll,
+  shouldDelay,
   user,
   vector,
   zIndex,
@@ -50,6 +51,7 @@ export default function MapMessageContainer({
   playerDetails: PlayerDetails;
   scale: number;
   scroll?: true;
+  shouldDelay: boolean;
   user: ClientMapMessage['user'];
   vector: Vector;
   zIndex: number;
@@ -83,7 +85,11 @@ export default function MapMessageContainer({
   const playerID = isPresent ? player : toPlayerID(user.character.color);
 
   return (
-    <div className={containerStyle} ref={ref} style={{ zIndex }}>
+    <div
+      className={cx(containerStyle, shouldDelay && delayStyle)}
+      ref={ref}
+      style={{ zIndex }}
+    >
       <div
         className={maskStyle}
         style={{
@@ -139,6 +145,10 @@ const containerStyle = css`
   position: absolute;
   transform: translate3d(0, -55%, 0);
   transition: opacity 150ms ease-in-out;
+`;
+
+const delayStyle = css`
+  transition-delay: 450ms;
 `;
 
 const relativeStyle = css`

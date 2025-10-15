@@ -108,6 +108,7 @@ export default function MapMessageComponent({
   message,
   playerDetails,
   scale,
+  shouldDelay,
   toggleLikeMessage,
   update,
   vector,
@@ -121,6 +122,7 @@ export default function MapMessageComponent({
   message: ClientMapMessage;
   playerDetails: PlayerDetails;
   scale: number;
+  shouldDelay: boolean;
   toggleLikeMessage:
     | ((id: string) => Promise<PartialClientMapMessage>)
     | undefined;
@@ -209,6 +211,7 @@ export default function MapMessageComponent({
       player={player}
       playerDetails={playerDetails}
       scale={scale}
+      shouldDelay={shouldDelay}
       user={user}
       vector={vector}
       zIndex={zIndex}
