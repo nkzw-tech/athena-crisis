@@ -1,5 +1,14 @@
+import { join } from 'node:path';
+import dotenv from 'dotenv';
 import { defineConfig } from 'vitest/config';
 import createResolver from './infra/createResolver.tsx';
+
+const root = process.cwd();
+
+dotenv.config({
+  path: join(root, 'artemis', '.env'),
+  quiet: true,
+});
 
 export default defineConfig({
   resolve: {
