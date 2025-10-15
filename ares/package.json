@@ -50,7 +50,7 @@
     "react-router-dom": "^7.9.4",
     "relay-runtime": "^20.1.1",
     "socket.io-client": "^4.8.1",
-    "tinybase": "^6.7.0",
+    "tinybase": "^6.7.1",
     "workbox-core": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
@@ -62,7 +62,7 @@
     "@sentry/vite-plugin": "^4.4.0",
     "@types/babel__core": "^7.20.5",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
+    "@types/react-dom": "^19.2.2",
     "@types/react-relay": "^18.2.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/relay-runtime": "^19.0.3",
@@ -70,7 +70,7 @@
     "glob": "11.0.3",
     "relay-compiler": "^20.1.1",
     "vite-plugin-minify": "^2.1.0",
-    "vite-plugin-pwa": "^1.0.3",
+    "vite-plugin-pwa": "^1.1.0",
     "vite-plugin-restart": "^1.0.0"
   }
 }
