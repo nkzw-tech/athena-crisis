@@ -42,7 +42,7 @@
     "cordova-plugin-purchase": "^13.12.1",
     "fbtee": "^1.7.0",
     "framer-motion": "^12.23.24",
-    "p-limit": "^7.1.1",
+    "p-limit": "^7.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-error-boundary": "^6.0.0",
