@@ -74,7 +74,6 @@ import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import UICrystalIcon from '@deities/ui/icons/UICrystalIcon.tsx';
 import { css, cx } from '@emotion/css';
-import Charge from '@iconify-icons/pixelarticons/ac.js';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
 import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import groupBy from '@nkzw/core/groupBy.js';
@@ -1095,6 +1094,21 @@ export default memo(function SkillDescription({
       </>
     ) : null,
     unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
+    isPower && charges ? (
+      <div className="paragraph">
+        <span>
+          <fbt desc="Power charge cost">
+            <span className={typeStyle} style={{ color: getColor(color) }}>
+              Cost:
+            </span>{' '}
+            <fbt:param name="charges">{charges}</fbt:param>{' '}
+            <fbt:plural count={charges} many="charges" name="number of charges">
+              charge
+            </fbt:plural>
+          </fbt>
+        </span>
+      </div>
+    ) : null,
     isPower && activateOnInvasion ? (
       <div className="paragraph">
         <span className={typeStyle} style={{ color: getColor(color) }}>
@@ -1104,23 +1118,23 @@ export default memo(function SkillDescription({
         </span>{' '}
         {activateOnInvasion === 'no-command' ? (
           <fbt desc="Description for skill behavior">
-            Consume any crystal except a{' '}
+            Consuming any crystal except a{' '}
             <fbt:param name="crystalName">
               {getTranslatedCrystalName(Crystal.Command)}
             </fbt:param>{' '}
-            to activate this power.
+            will activate this power immediately.
           </fbt>
         ) : activateOnInvasion === 'phantom-only' ? (
           <fbt desc="Description for skill behavior">
-            Consume a{' '}
+            Consuming a{' '}
             <fbt:param name="crystalNameB">
               {getTranslatedCrystalName(Crystal.Phantom)}
             </fbt:param>{' '}
-            to activate this power.
+            will activate this power immediately.
           </fbt>
         ) : (
           <fbt desc="Description for skill behavior">
-            Consume any crystal to activate this power.
+            Consuming any crystal will activate this power immediately.
           </fbt>
         )}
       </div>
@@ -1129,17 +1143,6 @@ export default memo(function SkillDescription({
       <div className="paragraph" style={{ color: getColor('red') }}>
         <Icon className={chargeIconStyle} icon={UICrystalIcon} />
         <fbt desc="Power charge cost">Requires an active crystal.</fbt>
-      </div>
-    ) : null,
-    isPower && charges ? (
-      <div className="paragraph">
-        <Icon className={chargeIconStyle} icon={Charge} />
-        <fbt desc="Power charge cost">
-          Cost: <fbt:param name="charges">{charges}</fbt:param>{' '}
-          <fbt:plural count={charges} many="charges" name="number of charges">
-            charge
-          </fbt:plural>
-        </fbt>
       </div>
     ) : null,
   ]

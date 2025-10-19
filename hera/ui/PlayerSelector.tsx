@@ -299,7 +299,7 @@ const PlayerItem = ({
         }
       : null;
     return (
-      <Stack between gap>
+      <Stack gap>
         <Component
           className={itemStyle}
           onClick={!bot ? onClick : undefined}
