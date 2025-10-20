@@ -3,7 +3,7 @@ import minBy from '@nkzw/core/minBy.js';
 import random from '@nkzw/core/random.js';
 import randomEntry from '@nkzw/core/randomEntry.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import arrayShuffle from 'array-shuffle';
+import arrayShuffle, { arrayToShuffled } from 'array-shuffle';
 import {
   Barracks,
   Factory,
@@ -109,7 +109,7 @@ export function generateBuildings(
     if (center && streetPath.length >= 3) {
       const [up, right, down, left] = center.adjacent();
       currentMap = map.copy({ map: tiles });
-      const possibleRivers = arrayShuffle([
+      const possibleRivers = arrayToShuffled([
         currentMap.getTile(up) !== Street.id ? up : null,
         currentMap.getTile(right) !== Street.id ? right : null,
         currentMap.getTile(down) !== Street.id ? down : null,

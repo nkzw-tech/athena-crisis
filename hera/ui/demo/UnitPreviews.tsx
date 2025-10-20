@@ -14,7 +14,7 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import { css, cx } from '@emotion/css';
 import randomEntry from '@nkzw/core/randomEntry.js';
 import Stack from '@nkzw/stack';
-import arrayShuffle from 'array-shuffle';
+import { arrayToShuffled } from 'array-shuffle';
 import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
@@ -78,7 +78,7 @@ export default function UnitPreviews() {
 
   const unitPreviews = useMemo(
     () =>
-      arrayShuffle(
+      arrayToShuffled(
         mapUnitsWithContentRestriction((unit) => unit, new Set())
           .filter(
             (unit) =>

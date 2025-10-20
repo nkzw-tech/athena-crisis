@@ -1,4 +1,4 @@
-import arrayShuffle from 'array-shuffle';
+import { arrayToShuffled } from 'array-shuffle';
 
 const NAMES = [
   'Albatross',
@@ -116,7 +116,7 @@ const NAMES = [
 ];
 
 export default function nameGenerator(): () => string {
-  const names = arrayShuffle(NAMES);
+  const names = arrayToShuffled(NAMES);
   let next = 0;
   return () => {
     if (next >= names.length) {

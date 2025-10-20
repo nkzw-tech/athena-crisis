@@ -27,7 +27,7 @@ import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import arrayShuffle from 'array-shuffle';
+import { arrayToShuffled } from 'array-shuffle';
 import { fbt } from 'fbtee';
 import addIncreaseValueAnimation from '../animations/addIncreaseValueAnimation.tsx';
 import animateFireworks, {
@@ -620,7 +620,7 @@ async function processActionResponse(
           onComplete: (state) =>
             animateFireworks(
               state,
-              arrayShuffle([
+              arrayToShuffled([
                 ...getPossibleFireworksPositions(map, toPlayer),
               ]).slice(0, fireworks),
               (state) => {

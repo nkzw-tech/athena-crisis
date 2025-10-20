@@ -7,7 +7,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css } from '@emotion/css';
 import Stack from '@nkzw/stack';
-import arrayShuffle from 'array-shuffle';
+import { arrayToShuffled } from 'array-shuffle';
 import { fbt } from 'fbtee';
 import { motion } from 'framer-motion';
 import { resetBehavior } from '../behavior/Behavior.tsx';
@@ -33,7 +33,7 @@ export default async function receivePortraitAnimation(
     return state;
   }
 
-  const ids = arrayShuffle(PlayerIDs);
+  const ids = arrayToShuffled(PlayerIDs);
   return new Promise((resolve) =>
     update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
