@@ -40,6 +40,7 @@
     "bufferutil": "^4.0.9",
     "chalk": "^5.6.2",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "discord.js": "^14.23.2",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
