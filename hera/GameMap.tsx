@@ -1878,6 +1878,7 @@ export default class GameMap extends Component<Props, State> {
         editor,
         fogStyle,
         gameId,
+        hasMessages,
         mapName,
         margin,
         playerAchievement,
@@ -1981,7 +1982,7 @@ export default class GameMap extends Component<Props, State> {
               fogStyle={fogStyle}
               getLayer={getLayer}
               map={map}
-              messages={messages}
+              messages={hasMessages ? messages : undefined}
               onAnimationComplete={this._animationComplete}
               paused={paused}
               playerDetails={playerDetails}
@@ -2188,32 +2189,34 @@ export default class GameMap extends Component<Props, State> {
             )}
           </AnimatePresence>
           <AnimatePresence>
-            {highlightedPositions?.map((vector) => {
-              const message = messages.get(vector);
-              return (
-                message && (
-                  <MapMessage
-                    animationConfig={animationConfig}
-                    biome={map.config.biome}
-                    currentUser={currentUser}
-                    deleteMessage={deleteMessage}
-                    key={`message-${vector}`}
-                    maskRef={this._maskRef}
-                    message={message}
-                    playerDetails={playerDetails}
-                    scale={scale}
-                    shouldDelay={
-                      map.units.has(vector) || map.buildings.has(vector)
-                    }
-                    toggleLikeMessage={toggleLikeMessage}
-                    update={this._update}
-                    vector={vector}
-                    zIndex={zIndex}
-                  />
-                )
-              );
-            })}
-            {behavior?.type === 'message' &&
+            {hasMessages &&
+              highlightedPositions?.map((vector) => {
+                const message = messages.get(vector);
+                return (
+                  message && (
+                    <MapMessage
+                      animationConfig={animationConfig}
+                      biome={map.config.biome}
+                      currentUser={currentUser}
+                      deleteMessage={deleteMessage}
+                      key={`message-${vector}`}
+                      maskRef={this._maskRef}
+                      message={message}
+                      playerDetails={playerDetails}
+                      scale={scale}
+                      shouldDelay={
+                        map.units.has(vector) || map.buildings.has(vector)
+                      }
+                      toggleLikeMessage={toggleLikeMessage}
+                      update={this._update}
+                      vector={vector}
+                      zIndex={zIndex}
+                    />
+                  )
+                );
+              })}
+            {hasMessages &&
+              behavior?.type === 'message' &&
               selectedMessagePosition &&
               currentUser &&
               createMessage && (
