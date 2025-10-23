@@ -361,7 +361,12 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     12,
     [
       'If only I had {tag}',
-      [MessageTag.Unit, MessageTag.Skill, MessageTag.Resource],
+      [
+        MessageTag.Unit,
+        MessageTag.Building,
+        MessageTag.Skill,
+        MessageTag.Resource,
+      ],
       '…',
     ],
   ],
