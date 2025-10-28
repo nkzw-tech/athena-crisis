@@ -145,7 +145,6 @@ export default defineConfig({
       'process.env.IS_LANDING_PAGE': `1`,
     },
     plugins: [
-      // @ts-expect-error
       react({
         babel: {
           plugins: [babelPluginEmotion],
