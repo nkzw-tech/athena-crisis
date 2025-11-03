@@ -1,8 +1,9 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import deities from '@deities/eslint-plugin';
 import nkzw from '@nkzw/eslint-config';
 import fbtee from '@nkzw/eslint-plugin-fbtee';
+import findWorkspaces from '@nkzw/find-workspaces';
 import workspaces from 'eslint-plugin-workspaces';
 
 export default [
@@ -62,25 +63,13 @@ export default [
             '**/__tests__/**',
             'eslint.config.js',
           ],
-          packageDir: [import.meta.dirname].concat(
+          packageDir: findWorkspaces(import.meta.dirname).concat(
             existsSync(join(import.meta.dirname, './electron'))
               ? ['./electron']
               : [],
             existsSync(join(import.meta.dirname, './mobile'))
               ? ['./mobile']
               : [],
-            readFileSync('./pnpm-workspace.yaml', 'utf8')
-              .split('\n')
-              .slice(1)
-              .map((n) =>
-                join(
-                  import.meta.dirname,
-                  n
-                    .replaceAll(/\s*-\s+/g, '')
-                    .replaceAll("'", '')
-                    .replaceAll('\r', ''),
-                ),
-              ),
           ),
         },
       ],
