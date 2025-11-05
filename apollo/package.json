@@ -10,7 +10,7 @@
   "type": "module",
   "dependencies": {
     "@deities/athena": "workspace:*",
-    "@nkzw/core": "^1.3.0",
+    "@nkzw/core": "^1.3.1",
     "@nkzw/immutable-map": "^1.2.2",
     "array-shuffle": "^4.0.0"
   }

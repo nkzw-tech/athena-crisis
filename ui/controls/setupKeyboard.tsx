@@ -161,6 +161,12 @@ const keyupListener = (event: KeyboardEvent) => {
 const preventDefault = (event: Event) => event.preventDefault();
 let setup = false;
 
+const unmount = () => {
+  document.removeEventListener('keydown', keydownListener);
+  document.removeEventListener('keyup', keyupListener);
+  document.removeEventListener('contextmenu', preventDefault);
+};
+
 export default function setupKeyboard() {
   if (!setup) {
     setup = true;
@@ -174,9 +180,5 @@ export default function setupKeyboard() {
     }
   }
 
-  return () => {
-    document.removeEventListener('keydown', keydownListener);
-    document.removeEventListener('keyup', keyupListener);
-    document.removeEventListener('contextmenu', preventDefault);
-  };
+  return unmount;
 }

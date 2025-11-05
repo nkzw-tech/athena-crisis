@@ -86,10 +86,12 @@ class Input {
 
   block(layer: InputLayer) {
     this._block = layer;
-    return () => {
-      this._block = null;
-    };
+    return this.unblock;
   }
+
+  unblock = () => {
+    this._block = null;
+  };
 
   register<T extends EventName>(
     type: T,
