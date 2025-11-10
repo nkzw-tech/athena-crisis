@@ -43,7 +43,7 @@ export default abstract class AbstractSelectBehavior {
       map.buildings.get(vector),
     );
 
-    return this.getState(vector, state, unit, building);
+    return this.getState(vector, state, unit, building, actions);
   }
 
   protected getState(
@@ -51,6 +51,7 @@ export default abstract class AbstractSelectBehavior {
     state: State,
     unit: Unit | null,
     building: Building | null,
+    actions: Actions,
   ): StateLike | null {
     const { highlightedPositions, messages } = state;
     const unitState = unit && this.onSelect(vector, state, unit);
@@ -103,6 +104,7 @@ export function BaseSelectComponent({
       state: State,
       unit: Unit | null,
       building: Building | null,
+      actions: Actions,
     ) => StateLike | null;
   }>): ReactElement | null {
   return (
@@ -110,12 +112,12 @@ export function BaseSelectComponent({
       actions={actions}
       onSelectBuilding={useCallback(
         (position, building) =>
-          actions.update(getState(position, state, null, building)),
+          actions.update(getState(position, state, null, building, actions)),
         [actions, getState, state],
       )}
       onSelectUnit={useCallback(
         (position, unit) =>
-          actions.update(getState(position, state, unit, null)),
+          actions.update(getState(position, state, unit, null, actions)),
         [actions, getState, state],
       )}
       state={state}

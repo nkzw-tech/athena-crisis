@@ -159,13 +159,13 @@ export default class EntityBehavior extends AbstractSelectBehavior {
     } = state;
     const selectBuilding = useCallback(
       (position: Vector, building: Building) =>
-        update(this.getState(position, state, null, building)),
-      [state, update],
+        update(this.getState(position, state, null, building, actions)),
+      [actions, state, update],
     );
     const selectUnit = useCallback(
       (position: Vector, unit: Unit) =>
-        update(this.getState(position, state, unit, null)),
-      [state, update],
+        update(this.getState(position, state, unit, null, actions)),
+      [actions, state, update],
     );
     if (selectedPosition && selectedBuilding && selectedUnit) {
       return (

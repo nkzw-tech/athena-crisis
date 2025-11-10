@@ -654,7 +654,7 @@ export default class GameMap extends Component<Props, State> {
   private _reset = () => {
     const { behavior, position, radius } = this.state;
     if (position && behavior?.type !== 'attackRadius' && !radius?.locked) {
-      behavior?.clearTimers?.();
+      behavior?.clearTimers?.(this._actions.clearTimer);
       this.setState({
         position: null,
         radius: !radius || radius.type === RadiusType.Attack ? null : radius,
@@ -1511,6 +1511,10 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _pauseReplay = async () => {
+    if (this.state.replayState.isPaused) {
+      return;
+    }
+
     this._clearReplayTimers();
     const pauseStart = dateNow();
     const timers = new Set<TimerState>();
@@ -1534,6 +1538,10 @@ export default class GameMap extends Component<Props, State> {
   };
 
   private _resumeReplay = async () => {
+    if (!this.state.replayState.isPaused) {
+      return;
+    }
+
     this._clearReplayTimers();
 
     await this._update({
@@ -1658,7 +1666,7 @@ export default class GameMap extends Component<Props, State> {
     const tile = vector && map.getTileInfo(vector);
     if (unit || building || tile) {
       if (behavior?.type === 'base') {
-        behavior.clearTimers?.();
+        behavior.clearTimers?.(this._actions.clearTimer);
       }
       AudioPlayer.playSound('UI/LongPress');
       this._showGameInfo({

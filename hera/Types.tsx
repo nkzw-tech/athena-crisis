@@ -309,7 +309,7 @@ export type MapBehavior = Readonly<{
     actions?: Actions,
     shouldConfirm?: boolean,
   ) => StateLike | null;
-  readonly clearTimers?: () => void;
+  readonly clearTimers?: (clearTimer: ClearTimerFunction) => void;
   readonly component?: ComponentType<StateWithActions>;
   readonly deactivate?: (actions: Actions | null) => StateLike | null;
   readonly enter?: (

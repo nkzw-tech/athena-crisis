@@ -9,7 +9,13 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { attackable, moveable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
-import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
+import {
+  Actions,
+  ClearTimerFunction,
+  State,
+  StateLike,
+  StateWithActions,
+} from '../Types.tsx';
 import AbstractSelectBehavior, {
   BaseSelectComponent,
 } from './AbstractSelectBehavior.tsx';
@@ -25,8 +31,10 @@ export default class Base extends AbstractSelectBehavior {
   public readonly type = 'base' as const;
   private timer: number | null = null;
 
-  deactivate(): StateLike | null {
-    this.clearTimers();
+  deactivate(actions: Actions | null): StateLike | null {
+    if (actions) {
+      this.clearTimers(actions.clearTimer);
+    }
 
     return {
       highlightedPositions: null,
@@ -34,7 +42,7 @@ export default class Base extends AbstractSelectBehavior {
   }
 
   enter(vector: Vector, state: State, actions: Actions): StateLike | null {
-    this.clearTimers();
+    this.clearTimers(actions.clearTimer);
 
     const { highlightedPositions, map, messages, radius } = state;
     if (map.units.has(vector) || messages.has(vector)) {
@@ -51,9 +59,9 @@ export default class Base extends AbstractSelectBehavior {
     return newState;
   }
 
-  clearTimers() {
+  clearTimers(clearTimer: ClearTimerFunction) {
     if (this.timer) {
-      clearTimeout(this.timer);
+      clearTimer(this.timer);
       this.timer = null;
     }
   }
@@ -233,14 +241,15 @@ export default class Base extends AbstractSelectBehavior {
     state: State,
     unit: Unit | null,
     building: Building | null,
+    actions: Actions,
   ): StateLike | null => {
-    let newState = super.getState(vector, state, unit, building);
+    let newState = super.getState(vector, state, unit, building, actions);
     if (
       newState?.selectedBuilding &&
       newState.selectedPosition &&
       newState.selectedUnit
     ) {
-      this.clearTimers();
+      this.clearTimers(actions.clearTimer);
       if (state.radius?.type === RadiusType.Attack) {
         newState = { ...newState, radius: null };
       }
