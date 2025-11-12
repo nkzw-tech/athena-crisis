@@ -10,7 +10,7 @@ export default function maybeRecoverUnitCost(
   if (shouldRecover && unit && player.activeSkills.has(Skill.CostRecovery)) {
     const cost = unit.info.getCostFor(player);
     if (cost < Number.POSITIVE_INFINITY) {
-      return player.modifyFunds(cost * CostRecoverySkillModifier);
+      return player.modifyFunds(Math.ceil(cost * CostRecoverySkillModifier));
     }
   }
 

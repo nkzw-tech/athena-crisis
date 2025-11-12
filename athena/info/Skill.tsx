@@ -999,6 +999,8 @@ export function getBuildingCost(
   return min;
 }
 
+const ceil = (value: number) => Math.ceil(Math.round(value * 1e4) / 1e4);
+
 export function getUnitCost(
   unit: UnitInfo,
   cost: number,
@@ -1016,7 +1018,7 @@ export function getUnitCost(
     const skill: Skill = skills.values().next().value!;
     return unitIsBlocked(unit, skill)
       ? Number.POSITIVE_INFINITY
-      : Math.ceil((costs?.get(skill) || min) * modifier);
+      : ceil((costs?.get(skill) || min) * modifier);
   }
 
   for (const skill of skills) {
@@ -1030,7 +1032,7 @@ export function getUnitCost(
     }
   }
 
-  return Math.ceil(min * modifier);
+  return ceil(min * modifier);
 }
 
 export function hasUnlockedBuilding(
