@@ -64,7 +64,7 @@ These are secondary packages focused on specific domains:
 
 # Contributing
 
-We welcome contributions to Athena Crisis. Some feature development is funded via [Polar](https://polar.sh): [`nkzw-tech/athena-crisis` on Polar](https://polar.sh/nkzw-tech/athena-crisis). Here are some guidelines to get you started:
+We welcome contributions to Athena Crisis. Here are some guidelines to get you started:
 
 - The style guide is enforced through tests and linting. Please run `pnpm test` to run all checks. If they pass, you are good to send a Pull Request.
 - We suggest adding tests to Pull Requests. You can find many examples in the [`tests` folder](https://github.com/nkzw-tech/athena-crisis/tree/main/tests).
