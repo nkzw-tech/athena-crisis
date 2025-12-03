@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Athena Crisis</title>
+    <meta
+      name="viewport"
+      content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#f2f2f2"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#121212"
+    />
+    <meta content="/keyart.jpg" key="og-image" property="og:image" />
+    <meta
+      content="A modern retro turn-based strategy game."
+      key="description"
+      name="description"
+    />
+    <meta
+      content="https://app.athenacrisis.com"
+      key="og-url"
+      property="og:url"
+    />
+    <meta content="Athena Crisis" key="og-title" property="og:title" />
+    <meta
+      content="A modern retro turn-based strategy game."
+      key="og-description"
+      property="og:description"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="preload"
+      href="/fonts/AthenaNova.woff2"
+      as="font"
+      crossorigin
+      type="font/woff2"
+    />
+    <link href="${favicon}" rel="shortcut icon" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <style type="text/css">
+      @font-face {
+        font-display: swap;
+        font-family: Athena;
+        src: url('/fonts/AthenaNova.woff2');
+      }
+      @font-face {
+        size-adjust: 95%;
+        font-display: swap;
+        font-family: MadouFutoMaru;
+        src: url('/fonts/MadouFutoMaru.woff2');
+      }
+      @font-face {
+        size-adjust: 75%;
+        font-display: swap;
+        font-family: PressStart2P;
+        src: url('/fonts/PressStart2P.woff2');
+      }
+      @font-face {
+        font-display: swap;
+        font-family: AthenaLatin;
+        src: url('/fonts/AthenaNova.woff2');
+        unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F, U+20A0-20CF;
+      }
+      #video {
+        align-items: center;
+        background: #000;
+        display: none;
+        inset: 0;
+        justify-content: center;
+        opacity: 1;
+        pointer-events: none;
+        position: fixed;
+        transform: scale(1);
+        transition:
+          opacity 350ms ease-in-out,
+          transform 350ms ease-in-out;
+        z-index: 100000;
+      }
+      #video.fade {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(2);
+      }
+      #video video {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background"></div>
+    <div id="app"></div>
+    <script src="/src/index.tsx" type="module"></script>
+  </body>
+</html>

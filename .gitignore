@@ -7,6 +7,7 @@
 ares/.enum_manifest.json
 ares/.src_manifest.json
 ares/**/__generated__
+ares/dist/
 ares/src/generated/*
 ares/vite.config.ts.timestamp-*
 artemis/prisma/athena-prisma-client
