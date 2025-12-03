@@ -22,14 +22,14 @@
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.0.0",
     "fbtee": "^1.7.2",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.23.25",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-error-boundary": "^6.0.0"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
-    "@types/react": "^19.2.4",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3"
   }
 }

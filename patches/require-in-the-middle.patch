@@ -1,5 +1,5 @@
 diff --git a/index.js b/index.js
-index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7a6e68b5b 100644
+index d3d49f9fc650cebde88bbe690f824e59a41a922f..b8decec83c6877b2208df32a5ed288768f02db1f 100644
 --- a/index.js
 +++ b/index.js
 @@ -3,7 +3,6 @@
@@ -10,65 +10,7 @@ index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7
  
  // Using the default export is discouraged, but kept for backward compatibility.
  // Use this instead:
-@@ -34,56 +33,9 @@ if (Module.isBuiltin) { // Added in node v18.6.0, v16.17.0
- 
-     return builtinModules.has(moduleName)
-   }
--} else {
--  const _resolve = require('resolve')
--  const [major, minor] = process.versions.node.split('.').map(Number)
--  if (major === 8 && minor < 8) {
--    // For node versions `[8.0, 8.8)` the "http2" module was built-in but
--    // behind the `--expose-http2` flag. `resolve` only considers unflagged
--    // modules to be core: https://github.com/browserify/resolve/issues/139
--    // However, for `ExportsCache` to work for "http2" we need it to be
--    // considered core.
--    isCore = moduleName => {
--      if (moduleName === 'http2') {
--        return true
--      }
--      // Prefer `resolve.core` lookup to `resolve.isCore(moduleName)` because
--      // the latter is doing version range matches for every call.
--      return !!_resolve.core[moduleName]
--    }
--  } else {
--    isCore = moduleName => {
--      // Prefer `resolve.core` lookup to `resolve.isCore(moduleName)` because
--      // the latter is doing version range matches for every call.
--      return !!_resolve.core[moduleName]
--    }
--  }
- }
- 
--let _resolve
--
--function resolve (moduleName, basedir) {
--  // Feature detection: This property was added in Node.js 8.9.0, the same time
--  // as the `paths` options argument was added to the `require.resolve` function,
--  // which is the one we want
--  if (!_resolve) {
--    // require.resolve might be undefined when using Node SEA mode:
--    // https://nodejs.org/api/single-executable-applications.html
--    // Also see https://github.com/nodejs/require-in-the-middle/issues/105
--    if (require.resolve && require.resolve.paths) {
--      _resolve = function (moduleName, basedir) {
--        return require.resolve(moduleName, { paths: [basedir] })
--      }
--    } else {
--      const resolve = require('resolve')
--      _resolve = function (moduleName, basedir) {
--        return resolve.sync(moduleName, { basedir })
--      }
--    }
--  }
--
--  return _resolve(moduleName, basedir)
--}
-+const resolve = function (moduleName, basedir) {}
- 
- // 'foo/bar.js' or 'foo/bar/index.js' => 'foo/bar'
- const normalize = /([/\\]index)?(\.js)?$/
-@@ -142,6 +94,9 @@ class ExportsCache {
+@@ -95,6 +94,9 @@ class ExportsCache {
  
  function Hook (modules, options, onrequire) {
    if ((this instanceof Hook) === false) return new Hook(modules, options, onrequire)
@@ -78,7 +20,7 @@ index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7
    if (typeof modules === 'function') {
      onrequire = modules
      modules = null
-@@ -277,7 +232,7 @@ function Hook (modules, options, onrequire) {
+@@ -230,7 +232,7 @@ function Hook (modules, options, onrequire) {
        moduleName = parsedPath.name
        basedir = parsedPath.dir
      } else {
@@ -87,7 +29,7 @@ index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7
        if (stat === undefined) {
          debug('could not parse filename: %s', filename)
          return exports // abort if filename could not be parsed
-@@ -356,22 +311,6 @@ function Hook (modules, options, onrequire) {
+@@ -309,22 +311,6 @@ function Hook (modules, options, onrequire) {
  
  Hook.prototype.unhook = function () {
    this._unhooked = true
@@ -111,16 +53,15 @@ index 11ea82a17f8f002e77f62e3cb614495de2b0ef71..cfb2e44d5f6efb260eb179daa970d3e7
  
  function resolveModuleName (stat) {
 diff --git a/package.json b/package.json
-index 2088ad71ed8dffa26ad5f02e434153d7a7bec8d0..66d2e8782c8be8f5055281b0a0083a0b731b90db 100644
+index fe7cf1468bd6827bc617d0a625f68bdd3336389f..fb8d28697e6c90048b63a88cd6d627c8f2967642 100644
 --- a/package.json
 +++ b/package.json
-@@ -5,9 +5,7 @@
+@@ -5,8 +5,7 @@
    "main": "index.js",
    "types": "types/index.d.ts",
    "dependencies": {
 -    "debug": "^4.3.5",
--    "module-details-from-path": "^1.0.3",
--    "resolve": "^1.22.8"
+-    "module-details-from-path": "^1.0.3"
 +    "debug": "^4.3.5"
    },
    "devDependencies": {
