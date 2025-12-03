@@ -25,7 +25,7 @@
     "dev:client": "./ares/ares.tsx",
     "dev:prisma-generate": "if [ -d artemis/prisma ]; then pnpm prisma generate; else exit 0; fi",
     "dev:server": "./artemis/artemis.tsx",
-    "dev:setup": "pnpm dev:prisma-generate && pnpm relay && pnpm codegen && pnpm fbtee",
+    "dev:setup": "pnpm dev:prisma-generate && pnpm codegen && pnpm fbtee",
     "dev:update-deps": "rm -rf pnpm-lock.yaml node_modules/ **/node_modules && pnpm dev:setup",
     "fbtee": "cd ares && if [ -d src ]; then pnpm fbt; else exit 0; fi",
     "format": "prettier --experimental-cli --write .",
@@ -76,7 +76,7 @@
     "prettier": "^3.8.1",
     "prettier-plugin-packagejson": "^3.0.0",
     "ts-node": "^10.9.2",
-    "vite": "^7.3.1",
+    "vite": "^8.0.0-beta.11",
     "vitest": "^4.0.18"
   },
   "engines": {
