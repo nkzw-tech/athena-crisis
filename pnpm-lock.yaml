@@ -285,9 +285,6 @@ importers:
       vite-plugin-pwa:
         specifier: ^1.2.0
         version: 1.2.0(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(workbox-build@7.3.0(@types/babel__core@7.20.5))(workbox-window@7.4.0)
-      vite-plugin-restart:
-        specifier: ^2.0.0
-        version: 2.0.0(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
 
   art:
     dependencies:
@@ -10187,11 +10184,6 @@ packages:
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
         optional: true
-
-  vite-plugin-restart@2.0.0:
-    resolution: {integrity: sha512-OYsD89msjtd72HHpXnidZmQ+14ztJR74IxQq9aPa48LUx3IeukS+NmnVtk+/VaNoYQJLnTFWG3Sbq/AEwaAyeQ==}
-    peerDependencies:
-      vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   vite-plugin-singlefile@2.3.0:
     resolution: {integrity: sha512-DAcHzYypM0CasNLSz/WG0VdKOCxGHErfrjOoyIPiNxTPTGmO6rRD/te93n1YL/s+miXq66ipF1brMBikf99c6A==}
@@ -22043,11 +22035,6 @@ snapshots:
       workbox-window: 7.4.0
     transitivePeerDependencies:
       - supports-color
-
-  vite-plugin-restart@2.0.0(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2)):
-    dependencies:
-      micromatch: 4.0.8
-      vite: 7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2)
 
   vite-plugin-singlefile@2.3.0(rollup@4.53.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2)):
     dependencies:
