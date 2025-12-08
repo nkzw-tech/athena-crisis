@@ -21,9 +21,9 @@
     "fbtee": "^1.7.2",
     "framer-motion": "^12.23.25",
     "howler": "^2.2.4",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.10.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-router-dom": "^7.10.1",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {

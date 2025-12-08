@@ -31,8 +31,8 @@
     "fbtee": "^1.7.2",
     "framer-motion": "^12.23.25",
     "licht-theme": "^1.7.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "vocs": "^1.2.1"
   }
 }

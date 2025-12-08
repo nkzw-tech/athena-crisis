@@ -28,8 +28,8 @@
     "array-shuffle": "^4.0.0",
     "fbtee": "^1.7.2",
     "framer-motion": "^12.23.25",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",
