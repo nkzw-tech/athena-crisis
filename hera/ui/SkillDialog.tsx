@@ -399,7 +399,7 @@ export function SkillContainer({
   const key = currentSkill && focus ? `skill-${currentSkill}` : 'skill';
   return (
     <DialogScrollContainer key={key} navigate={false}>
-      <VStack between gap={16} wrap>
+      <VStack gap={16}>
         {focus ? (
           <h2>
             <fbt desc="Headline to view a skill">Skill</fbt>
@@ -416,7 +416,7 @@ export function SkillContainer({
           </h1>
         )}
         {initialAvailableSkills.size > 1 && (
-          <Stack between gap={16} wrap>
+          <Stack gap={16} wrap>
             <InlineLink
               active={activeGroup === 0}
               className={buttonStyle}
@@ -463,7 +463,7 @@ export function SkillContainer({
             )}
           </Stack>
         )}
-        <VStack between gap wrap>
+        <VStack gap>
           {enabledSkills?.map((skill, index) => (
             <SkillListItem
               allowTouch={allowTouch}
@@ -485,13 +485,13 @@ export function SkillContainer({
           ))}
         </VStack>
         {selectedSkills?.size ? (
-          <VStack between gap={16} wrap>
+          <VStack gap={16}>
             <h2>
               <fbt desc="Headline to for already selected skills">
                 Skills selected in other slots
               </fbt>
             </h2>
-            <VStack between gap wrap>
+            <VStack gap>
               {[...selectedSkills].map((skill) => (
                 <SkillListItem
                   allowTouch={false}
@@ -510,11 +510,11 @@ export function SkillContainer({
           </VStack>
         ) : null}
         {disabledSkills?.length ? (
-          <VStack between gap={16} wrap>
+          <VStack gap={16}>
             <h2>
               <fbt desc="Headline to for disabled skills">Disabled skills</fbt>
             </h2>
-            <VStack between gap={16} wrap>
+            <VStack gap={16}>
               {disabledSkills.map((skill) => (
                 <SkillListItem
                   allowTouch={false}
@@ -596,15 +596,12 @@ const SkillListItem = ({
 
   return (
     <VStack
-      between
       className={cx(boxStyle, selected && selectedBoxStyle)}
       gap
       key={skill}
       ref={element}
-      wrap
     >
       <VStack
-        between
         className={cx(
           itemStyle,
           isBlocked && blockedStyle,
@@ -618,8 +615,8 @@ const SkillListItem = ({
           }
         }}
       >
-        <Stack alignCenter between gap>
-          <Stack alignCenter between gap>
+        <Stack alignCenter gap>
+          <Stack alignCenter gap>
             {currentSkill === skill && <div>{'\u00bb'}</div>}
             <SkillIconInternal
               background={background}
@@ -653,13 +650,13 @@ const SkillListItem = ({
             </div>
           )}
         </Stack>
-        <VStack between className={descriptionStyle} gap wrap>
+        <VStack className={descriptionStyle} gap>
           <SkillDescription color={color} skill={skill} type="regular" />
           <SkillDescription color={color} skill={skill} type="power" />
         </VStack>
       </VStack>
       {showCost && (
-        <Stack between className={costStyle} gap>
+        <Stack className={costStyle} gap>
           <Icon className={coinIconStyle} icon={Coin} />
           {getSkillConfig(skill).cost}
         </Stack>
@@ -683,7 +680,7 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
   return (
     <Dialog onClose={onClose} size={'small'} transformOrigin={'center center'}>
       <DialogScrollContainer key="skill" navigate={false}>
-        <VStack between gap={16} wrap>
+        <VStack gap={16}>
           <h1>
             <fbt desc="Headline to view a skill">Skill</fbt>
           </h1>
@@ -856,7 +853,6 @@ export function SkillIcon({
     <>
       <Stack
         alignCenter
-        between
         className={cx(!hideDialog && pointerStyle)}
         gap
         onClick={!hideDialog ? () => setShowDialog(true) : undefined}
@@ -902,7 +898,7 @@ export function SkillIcon({
 
 export function HiddenSkillIcon() {
   return (
-    <Stack alignCenter between className={pointerStyle} gap>
+    <Stack alignCenter className={pointerStyle}>
       <SkillIconInternal icon={Question} />
     </Stack>
   );
