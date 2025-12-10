@@ -15,10 +15,10 @@
     "fbtee:translate": "fbtee translate --source-strings ../source_strings.json --output-dir src/generated"
   },
   "dependencies": {
-    "@capacitor/app": "^7.1.0",
-    "@capacitor/core": "^7.4.4",
-    "@capacitor/push-notifications": "^7.0.3",
-    "@capacitor/status-bar": "^7.0.3",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0",
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
