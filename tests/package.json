@@ -34,8 +34,8 @@
     "fbtee": "^1.7.2",
     "jest-image-snapshot": "^6.5.1",
     "playwright": "^1.57.0",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-error-boundary": "^6.0.0",
     "term-img": "^7.1.0"
   }
