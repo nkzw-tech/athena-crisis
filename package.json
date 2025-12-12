@@ -10,8 +10,7 @@
   "type": "module",
   "scripts": {
     "ac": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --env-file ./artemis/.env ./artemis/scripts/ac.tsx",
-    "build-assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
-    "build-assets:force": "rm -rf node_modules **/node_modules && pnpm enable-canvas && pnpm install && pnpm dev:setup && pnpm build-assets && pnpm disable-canvas",
+    "build:assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
     "build:client": "rm -rf ./dist/ares && pnpm fbtee && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
     "build:demo": "export IS_DEMO=1 && rm -rf ./dist/ares-demo && pnpm fbtee && pnpm vite build --outDir ../dist/ares-demo -c ./ares/vite.config.ts ./ares/",
     "build:docker-server": "RELEASE_ID=$(git rev-parse --short HEAD) docker buildx build --load -f Dockerfile --platform=linux/amd64 --tag athena-crisis --build-arg RELEASE_ID=$RELEASE_ID .",
@@ -28,8 +27,6 @@
     "dev:server": "./artemis/artemis.tsx",
     "dev:setup": "pnpm dev:prisma-generate && pnpm relay && pnpm codegen && pnpm fbtee",
     "dev:update-deps": "rm -rf pnpm-lock.yaml node_modules/ **/node_modules && pnpm dev:setup",
-    "disable-canvas": "jq '.pnpm |= (if has(\"onlyBuiltDependencies\") then .neverBuiltDependencies = .onlyBuiltDependencies | del(.onlyBuiltDependencies) else . end)' package.json > package.tmp.json && mv package.tmp.json package.json && git restore pnpm-lock.yaml",
-    "enable-canvas": "jq '.pnpm |= (if has(\"neverBuiltDependencies\") then .onlyBuiltDependencies = .neverBuiltDependencies | del(.neverBuiltDependencies) else . end)' package.json > package.tmp.json && mv package.tmp.json package.json && canvasKey=$(yq e '.packages | keys' pnpm-lock.yaml | grep 'canvas@3\\.' | head -n 1 | sed 's/- //') && yq e \".packages[\\\"$canvasKey\\\"].requiresBuild = true\" -i pnpm-lock.yaml && yq e 'del(.neverBuiltDependencies)' -i pnpm-lock.yaml",
     "fbtee": "cd ares && if [ -d src ]; then pnpm fbt; else exit 0; fi",
     "format": "prettier --experimental-cli --write .",
     "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || exit 0",
