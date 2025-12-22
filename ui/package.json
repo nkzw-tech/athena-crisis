@@ -23,7 +23,7 @@
     "howler": "^2.2.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^7.10.1",
+    "react-router-dom": "^7.11.0",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
