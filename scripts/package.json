@@ -14,7 +14,7 @@
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
     "@deities/hermes": "workspace:*",
-    "canvas": "^3.2.0",
+    "canvas": "^3.2.1",
     "chalk": "^5.6.2",
     "glob": "13.0.0"
   }
