@@ -19,7 +19,7 @@
     "@nkzw/joymap": "^4.0.2",
     "@nkzw/stack": "^2.3.2",
     "fbtee": "^1.7.2",
-    "framer-motion": "^12.26.2",
+    "framer-motion": "^12.27.0",
     "howler": "^2.2.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
