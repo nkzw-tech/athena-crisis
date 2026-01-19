@@ -47,6 +47,7 @@ export type MapDetailsProps = Readonly<{
   showCampaign?: boolean;
   showGameState?: boolean;
   showRound?: 'ended' | 'ongoing';
+  showSeedCapital?: boolean;
   subText?: ReactNode;
   tags?: ReadonlyArray<string>;
   teamPlay?: boolean;
@@ -67,12 +68,14 @@ export default function MapDetails({
   showCampaign,
   showGameState,
   showRound,
+  showSeedCapital,
   subText,
   tags,
   teamPlay,
   timer,
 }: MapDetailsProps) {
   const { initialCharge, seedCapital } = map.config;
+  const shouldShowSeedCapital = !showGameState || showSeedCapital;
   return map ? (
     <VStack between gap={16} stretch wrap>
       <VStack between gap={gap === 8 ? true : gap} wrap>
@@ -120,7 +123,7 @@ export default function MapDetails({
         <Stack alignCenter gap wrap>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
         </Stack>
-        {!showGameState && (
+        {shouldShowSeedCapital && (
           <Stack alignCenter gap wrap>
             <Icon className={iconOffsetStyle} icon={Coin} /> {seedCapital}
           </Stack>
