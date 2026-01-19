@@ -96,11 +96,14 @@ const getAlert = (error: Error) => {
   } as const;
 };
 
-export default function ErrorOverlay({ error }: { error: Error }) {
+export default function ErrorOverlay({ error }: { error: unknown }) {
   const { alert } = useAlert();
 
   useEffect(() => {
-    if (!(error instanceof FetchError) || !error.skipInDev) {
+    if (
+      (!(error instanceof FetchError) || !error.skipInDev) &&
+      error instanceof Error
+    ) {
       captureException(error);
       alert(getAlert(error));
     }

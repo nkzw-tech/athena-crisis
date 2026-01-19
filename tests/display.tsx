@@ -48,14 +48,14 @@ const animationSpeed = {
   regular: InstantAnimationConfig,
 };
 
-const ErrorComponent = ({ error }: { error: Error }) => (
+const ErrorComponent = ({ error }: { error: unknown }) => (
   <>
     {Object.keys(window.MapHasRendered).map((key) => {
       // eslint-disable-next-line react-hooks/immutability
       window.MapHasRendered[key] = true;
       return (
         <div className={redStyle} data-testid={`map-${key}`} key={key}>
-          {error.message}
+          {error instanceof Error ? error.message : String(error)}
         </div>
       );
     })}
