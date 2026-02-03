@@ -1,8 +1,20 @@
+diff --git a/src/ts/store.ts b/src/ts/store.ts
+index 44f43d2eb096f0eca4d863dc009e82feb1b3bb36..b679442f52ea5469eeaaf97098dfae77e197c5dd 100644
+--- a/src/ts/store.ts
++++ b/src/ts/store.ts
+@@ -840,7 +840,6 @@ else {
+ 
+ /** @private */
+ function initCDVPurchase() {
+-    console.log('Create CdvPurchase...');
+     const oldStore = window.CdvPurchase?.store;
+     window.CdvPurchase = CdvPurchase;
+     if (oldStore) {
 diff --git a/www/store.js b/www/store.js
-index 6b26e36fb02bf3d483ebbeaf1a86476c28206ec1..f2ab848afd49e49e3d993c7866e6b05f73f8d165 100644
+index 3fc7c6ba91825cfc09d7c7816345848cbaf68d16..179464e9c96106c6ae2179246b37a0fa571259e7 100644
 --- a/www/store.js
 +++ b/www/store.js
-@@ -2009,7 +2009,6 @@ else {
+@@ -2158,7 +2158,6 @@ else {
  /** @private */
  function initCDVPurchase() {
      var _a;

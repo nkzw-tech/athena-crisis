@@ -1,8 +1,8 @@
 // Thanks Tomo
 import { css, cx } from '@emotion/css';
 import {
-  ChangeEvent,
   FocusEvent,
+  InputEvent,
   KeyboardEvent,
   ReactNode,
   RefObject,
@@ -280,8 +280,8 @@ export default function Typeahead<T>({
   }, []);
 
   const onInput = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) =>
-      dataSource.query(event.target.value),
+    (event: InputEvent<HTMLInputElement>) =>
+      dataSource.query((event.target as HTMLInputElement).value),
     [dataSource],
   );
 
