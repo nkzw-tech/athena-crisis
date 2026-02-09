@@ -27,12 +27,12 @@
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
     "fbtee": "^1.7.2",
-    "framer-motion": "^12.30.0",
+    "framer-motion": "^12.33.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3"
   }
 }
