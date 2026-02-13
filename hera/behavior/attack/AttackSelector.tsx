@@ -109,26 +109,13 @@ export default function AttackSelector({
             });
       const unitDamage =
         entities.unit &&
-        getDamageInformation(
-          selectedUnit,
-          entities.unit,
-          futureMap,
-          targetPosition,
-          position,
-        );
+        getDamageInformation(selectedUnit, entities.unit, futureMap, targetPosition, position);
       const buildingDamage =
         entities.building &&
-        getDamageInformation(
-          selectedUnit,
-          entities.building,
-          futureMap,
-          targetPosition,
-          position,
-        );
+        getDamageInformation(selectedUnit, entities.building, futureMap, targetPosition, position);
       const unitB = entities.unit?.modifyHealth(-(unitDamage?.damage || 0));
       const playerB = unitB && map.getPlayer(unitB);
-      const hasCounterAttackPower =
-        playerB && hasCounterAttackSkill(playerB.activeSkills);
+      const hasCounterAttackPower = playerB && hasCounterAttackSkill(playerB.activeSkills);
       const counterAttack = hasCounterAttackPower
         ? 1
         : playerB && hasCounterAttackSkill(playerB.skills)
@@ -142,8 +129,7 @@ export default function AttackSelector({
         !unitB.isDead() &&
         unitB.canAttackAt(1, playerB) &&
         (!origin || origin.distance(position) === 1) &&
-        (isShortRange ||
-          selectedUnit.canAttackAt(1, map.getPlayer(selectedUnit))) &&
+        (isShortRange || selectedUnit.canAttackAt(1, map.getPlayer(selectedUnit))) &&
         unitB.getAttackWeapon(selectedUnit) &&
         getDamageInformation(
           hasCounterAttackPower ? entities.unit : unitB,
@@ -158,8 +144,7 @@ export default function AttackSelector({
         <Tick animationConfig={animationConfig}>
           <FlashFlyout
             align={
-              entities.building ||
-              (entities.unit && entities.unit.health < MaxHealth)
+              entities.building || (entities.unit && entities.unit.health < MaxHealth)
                 ? 'top'
                 : 'top-lower'
             }
@@ -180,15 +165,11 @@ export default function AttackSelector({
                   }
                   key="building"
                 >
-                  {buildingDamage.damage != null &&
-                  buildingDamage.damage > 0 ? (
+                  {buildingDamage.damage != null && buildingDamage.damage > 0 ? (
                     <>
                       {entities.building.health} - {buildingDamage.damage}
                       {' → '}
-                      {Math.max(
-                        0,
-                        entities.building.health - buildingDamage.damage,
-                      )}
+                      {Math.max(0, entities.building.health - buildingDamage.damage)}
                       <Icon className={iconStyle} icon={Heart} />
                     </>
                   ) : (

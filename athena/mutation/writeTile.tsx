@@ -1,10 +1,4 @@
-import {
-  getTile,
-  getTileInfo,
-  TileField,
-  TileInfo,
-  TileLayer,
-} from '../info/Tile.tsx';
+import { getTile, getTileInfo, TileField, TileInfo, TileLayer } from '../info/Tile.tsx';
 import { ModifierField } from '../MapData.tsx';
 
 const getModifier = (modifier: ModifierField, layer: TileLayer): number => {

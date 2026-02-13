@@ -5,34 +5,24 @@ import paletteSwap, { HEX } from '@nkzw/palette-swap';
 import Variants from 'athena-crisis:asset-variants';
 import { AssetDomain, AssetVersion } from './AssetInfo.tsx';
 import BiomeVariants from './BiomeVariants.tsx';
-import VariantConfiguration, {
-  SpriteVariantConfiguration,
-} from './VariantConfiguration.tsx';
+import VariantConfiguration, { SpriteVariantConfiguration } from './VariantConfiguration.tsx';
 
 type Resource = Readonly<[name: string, url: string]>;
 type Resources = ReadonlyArray<Resource>;
 type PaletteSwapFn = typeof paletteSwap;
 type PaletteSwapParameters = Parameters<PaletteSwapFn>;
-type DropFirstInTuple<T extends Array<unknown>> = T extends [
-  unknown,
-  ...infer Rest,
-]
-  ? Rest
-  : never;
+type DropFirstInTuple<T extends Array<unknown>> = T extends [unknown, ...infer Rest] ? Rest : never;
 type MaybePaletteSwapParameters = [
   image: PaletteSwapParameters[0] | null,
   ...DropFirstInTuple<PaletteSwapParameters>,
 ];
 
-type Canvas =
-  ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V> ? V : never;
+type Canvas = ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V> ? V : never;
 
 type CanvasToURLFn = (canvas: Canvas, name: string) => Promise<string>;
 
 const shouldSwap = () =>
-  process.env.NODE_ENV !== 'production' ||
-  process.env.IS_DEMO ||
-  !navigator.onLine;
+  process.env.NODE_ENV !== 'production' || process.env.IS_DEMO || !navigator.onLine;
 
 // Keep remote images in memory forever.
 const imageCache = [];
@@ -73,9 +63,8 @@ const _canvasToURL = (canvas: Canvas) =>
     }, 'image/png'),
   );
 
-const imageIsDefined = (
-  args: MaybePaletteSwapParameters,
-): args is PaletteSwapParameters => args[0] !== null;
+const imageIsDefined = (args: MaybePaletteSwapParameters): args is PaletteSwapParameters =>
+  args[0] !== null;
 
 const swap = (...args: MaybePaletteSwapParameters) => {
   if (shouldSwap() && imageIsDefined(args)) {
@@ -96,9 +85,7 @@ let portraitsPrepared = false;
 let spritesPrepared = false;
 
 if (Variants.size !== VariantConfiguration.size) {
-  throw new Error(
-    `Sprites: 'Variant' and 'VariantMap' definitions are out of sync.`,
-  );
+  throw new Error(`Sprites: 'Variant' and 'VariantMap' definitions are out of sync.`);
 }
 
 const _prepareSprites = async (
@@ -117,65 +104,61 @@ const _prepareSprites = async (
 
     const variantDetails = Variants.get(imageName);
     promises.push(
-      (shouldSwap() && variantDetails
-        ? loadImage(variantDetails.source)
-        : nullPromise
-      ).then((image) =>
-        Promise.all(
-          swap(
-            image,
-            variantDetails?.variants ||
-              new Map([...variantNames].map((name) => [name, emptyMap])),
-            variantDetails ? variantDetails.staticColors : emptySet,
-            null,
-            {
-              ignoreMissing,
-              imageName,
-            },
-          ).map(async ([variant, canvas]) => {
-            const name = `${imageName}-${variant}`;
-            const resource = canvas
-              ? await canvasToURL(canvas, name)
-              : getFallbackURL(name);
-            const item = [name, resource] as Resource;
-            if (asImage) {
-              imageMap.set(name, cacheImage(resource));
-            }
+      (shouldSwap() && variantDetails ? loadImage(variantDetails.source) : nullPromise).then(
+        (image) =>
+          Promise.all(
+            swap(
+              image,
+              variantDetails?.variants ||
+                new Map([...variantNames].map((name) => [name, emptyMap])),
+              variantDetails ? variantDetails.staticColors : emptySet,
+              null,
+              {
+                ignoreMissing,
+                imageName,
+              },
+            ).map(async ([variant, canvas]) => {
+              const name = `${imageName}-${variant}`;
+              const resource = canvas ? await canvasToURL(canvas, name) : getFallbackURL(name);
+              const item = [name, resource] as Resource;
+              if (asImage) {
+                imageMap.set(name, cacheImage(resource));
+              }
 
-            // Preload only the images that are most likely used on most maps.
-            if (!canvas && (variant === 0 || variant === 1 || variant === 2)) {
-              imageMap.set(name, cacheImage(resource));
-            }
+              // Preload only the images that are most likely used on most maps.
+              if (!canvas && (variant === 0 || variant === 1 || variant === 2)) {
+                imageMap.set(name, cacheImage(resource));
+              }
 
-            if (!waterSwap) {
-              return [item];
-            }
+              if (!waterSwap) {
+                return [item];
+              }
 
-            return canvas
-              ? loadImage(resource)
-                  .then((blobImage) =>
-                    Promise.all(
-                      swap(blobImage, BiomeVariants, null, null, {
-                        ignoreMissing: true,
-                      }).map(async ([biome, waterSwapCanvas]) => {
-                        const name = `${imageName}-${variant}-${biome}`;
-                        const resource = waterSwapCanvas
-                          ? await canvasToURL(waterSwapCanvas, name)
-                          : getFallbackURL(name);
-                        return [name, resource] as Resource;
-                      }),
-                    ),
-                  )
-                  .then((waterSwapResources) => [item, ...waterSwapResources])
-              : [
-                  item,
-                  ...[...BiomeVariants.keys()].map((biome) => {
-                    const name = `${imageName}-${variant}-${biome}`;
-                    return [name, getFallbackURL(name)] as Resource;
-                  }),
-                ];
-          }),
-        ),
+              return canvas
+                ? loadImage(resource)
+                    .then((blobImage) =>
+                      Promise.all(
+                        swap(blobImage, BiomeVariants, null, null, {
+                          ignoreMissing: true,
+                        }).map(async ([biome, waterSwapCanvas]) => {
+                          const name = `${imageName}-${variant}-${biome}`;
+                          const resource = waterSwapCanvas
+                            ? await canvasToURL(waterSwapCanvas, name)
+                            : getFallbackURL(name);
+                          return [name, resource] as Resource;
+                        }),
+                      ),
+                    )
+                    .then((waterSwapResources) => [item, ...waterSwapResources])
+                : [
+                    item,
+                    ...[...BiomeVariants.keys()].map((biome) => {
+                      const name = `${imageName}-${variant}-${biome}`;
+                      return [name, getFallbackURL(name)] as Resource;
+                    }),
+                  ];
+            }),
+          ),
       ),
     );
   }
@@ -187,11 +170,7 @@ const _prepareSprites = async (
   }
 
   injectGlobal(
-    images
-      .map(
-        ([name, url]) => `.Sprite-${name} { background-image: url('${url}'); }`,
-      )
-      .join('\n'),
+    images.map(([name, url]) => `.Sprite-${name} { background-image: url('${url}'); }`).join('\n'),
   );
   portraitsPrepared = true;
   spritesPrepared = true;
@@ -212,17 +191,9 @@ export async function preparePortraits() {
   );
 }
 
-export async function prepareSprites(
-  canvasToURL: CanvasToURLFn = _canvasToURL,
-  isBuild = false,
-) {
+export async function prepareSprites(canvasToURL: CanvasToURLFn = _canvasToURL, isBuild = false) {
   return (
-    preparePromise ||
-    (preparePromise = _prepareSprites(
-      VariantConfiguration,
-      canvasToURL,
-      isBuild,
-    ))
+    preparePromise || (preparePromise = _prepareSprites(VariantConfiguration, canvasToURL, isBuild))
   );
 }
 
@@ -234,15 +205,9 @@ export function hasPreparedSprites() {
   return spritesPrepared;
 }
 
-export function hasSpriteURL(
-  sprite: SpriteVariant,
-  variant: number,
-  biome?: Biome,
-) {
+export function hasSpriteURL(sprite: SpriteVariant, variant: number, biome?: Biome) {
   if (!sprites.size) {
-    throw new Error(
-      `Invalid \`hasSpriteURL('${sprite}', ${variant}, ${biome})\` invocation.`,
-    );
+    throw new Error(`Invalid \`hasSpriteURL('${sprite}', ${variant}, ${biome})\` invocation.`);
   }
 
   return sprites.has(`${sprite}-${variant}${biome ? `-${biome}` : ''}`);
@@ -250,9 +215,7 @@ export function hasSpriteURL(
 
 export function spriteURL(sprite: SpriteVariant, variant: number) {
   if (!sprites.size) {
-    throw new Error(
-      `Invalid \`spriteURL('${sprite}', ${variant})\` invocation.`,
-    );
+    throw new Error(`Invalid \`spriteURL('${sprite}', ${variant})\` invocation.`);
   }
 
   const image = sprites.get(`${sprite}-${variant}`);
@@ -263,14 +226,9 @@ export function spriteURL(sprite: SpriteVariant, variant: number) {
   return image;
 }
 
-export function spriteImage(
-  sprite: SpriteVariant,
-  variant: number,
-): HTMLImageElement {
+export function spriteImage(sprite: SpriteVariant, variant: number): HTMLImageElement {
   if (!sprites.size) {
-    throw new Error(
-      `Invalid \`spriteImage('${sprite}', ${variant})\` invocation.`,
-    );
+    throw new Error(`Invalid \`spriteImage('${sprite}', ${variant})\` invocation.`);
   }
 
   const image = imageMap.get(`${sprite}-${variant}`);

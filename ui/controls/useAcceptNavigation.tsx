@@ -14,12 +14,7 @@ export default function useAcceptNavigation(
   useInput(
     'accept',
     useCallback(() => {
-      if (
-        timer.current == null &&
-        count > 0 &&
-        selected >= 0 &&
-        selected < count
-      ) {
+      if (timer.current == null && count > 0 && selected >= 0 && selected < count) {
         setActive(selected);
         timer.current = setTimeout(() => {
           setActive(-1);

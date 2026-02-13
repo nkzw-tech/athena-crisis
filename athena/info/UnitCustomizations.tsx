@@ -143,8 +143,7 @@ export type UnitCustomization = {
 };
 
 type AllCustomizations = typeof UnitCustomizations;
-export type UnitCustomizationTypes =
-  AllCustomizations[keyof AllCustomizations]['sprite'];
+export type UnitCustomizationTypes = AllCustomizations[keyof AllCustomizations]['sprite'];
 
 export const UnitCustomizationById = new Map<number, UnitCustomization>(
   Object.entries(UnitCustomizations).map(([, value]) => [value.id, value]),

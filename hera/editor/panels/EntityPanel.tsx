@@ -5,11 +5,7 @@ import { generateUnitName } from '@deities/athena/info/UnitNames.tsx';
 import hasLeader from '@deities/athena/lib/hasLeader.tsx';
 import removeLeader from '@deities/athena/lib/removeLeader.tsx';
 import { AIBehaviors } from '@deities/athena/map/AIBehavior.tsx';
-import {
-  AnimationConfig,
-  MaxHealth,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, MaxHealth, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -29,14 +25,7 @@ import isPresent from '@nkzw/core/isPresent.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
-import {
-  ChangeEvent,
-  Fragment,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react';
+import { ChangeEvent, Fragment, RefObject, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { StateWithActions } from '../../Types.tsx';
@@ -123,8 +112,7 @@ export default function EntityPanel({
           isBuilding(entity) &&
           entity.info.isHQ() &&
           (map.buildings.some(
-            (building) =>
-              building.info.isHQ() && map.matchesPlayer(building, player),
+            (building) => building.info.isHQ() && map.matchesPlayer(building, player),
           ) ||
             player === 0)
         ) {
@@ -133,9 +121,7 @@ export default function EntityPanel({
 
         updateEntity(
           `player-${player}`,
-          isUnit(entity)
-            ? entity.setPlayer(player).removeLeader()
-            : entity.setPlayer(player),
+          isUnit(entity) ? entity.setPlayer(player).removeLeader() : entity.setPlayer(player),
           await update(changePlayer(state.map, player)),
         );
       }
@@ -148,9 +134,7 @@ export default function EntityPanel({
       if (player != null) {
         updateEntity(
           `player-${player}`,
-          unit.isBeingRescuedBy(player)
-            ? unit.stopBeingRescued()
-            : unit.rescue(player),
+          unit.isBeingRescuedBy(player) ? unit.stopBeingRescued() : unit.rescue(player),
         );
       }
     },
@@ -192,10 +176,7 @@ export default function EntityPanel({
 
   const toggleShield = useCallback(() => {
     if (editor && entity && isUnit(entity)) {
-      updateEntity(
-        'leader',
-        entity[entity.shield ? 'deactivateShield' : 'activateShield'](),
-      );
+      updateEntity('leader', entity[entity.shield ? 'deactivateShield' : 'activateShield']());
     }
   }, [editor, entity, updateEntity]);
 
@@ -209,10 +190,7 @@ export default function EntityPanel({
         return;
       }
 
-      const key =
-        event.code === 'Backquote'
-          ? 0
-          : (parseInteger(event.key) as PlayerID | null);
+      const key = event.code === 'Backquote' ? 0 : (parseInteger(event.key) as PlayerID | null);
       if (key != null) {
         updatePlayer(entity, PlayerIDs.includes(key) ? key : null);
       }
@@ -246,12 +224,7 @@ export default function EntityPanel({
     [entity, updateEntity],
   );
 
-  if (
-    !selectedPosition ||
-    !entity ||
-    !editor ||
-    (selectedBuilding && selectedUnit)
-  ) {
+  if (!selectedPosition || !entity || !editor || (selectedBuilding && selectedUnit)) {
     return (
       <Stack between gap={24} verticalPadding wrap>
         <Box between wrap>
@@ -338,16 +311,12 @@ export default function EntityPanel({
                           return null;
                         }
 
-                        const onAmmoChange = (
-                          event: ChangeEvent<HTMLInputElement>,
-                        ) => {
+                        const onAmmoChange = (event: ChangeEvent<HTMLInputElement>) => {
                           const ammo = parseInteger(event.target.value);
                           if (ammo != null) {
                             updateEntity(
                               `ammo-${id}`,
-                              entity.setAmmo(
-                                new Map(entity.ammo).set(id, ammo),
-                              ),
+                              entity.setAmmo(new Map(entity.ammo).set(id, ammo)),
                             );
                           }
                         };
@@ -365,12 +334,7 @@ export default function EntityPanel({
                               type="range"
                               value={ammo}
                             />
-                            <Stack
-                              alignCenter
-                              between
-                              className={textStyle}
-                              gap
-                            >
+                            <Stack alignCenter between className={textStyle} gap>
                               <NumberInput
                                 max={String(weapon.supply)}
                                 min="0"
@@ -392,26 +356,16 @@ export default function EntityPanel({
               {entity.player > 0 && (
                 <label>
                   <Stack alignCenter gap wrap>
-                    <input
-                      checked={entity.isLeader()}
-                      onChange={toggleLeader}
-                      type="checkbox"
-                    />
+                    <input checked={entity.isLeader()} onChange={toggleLeader} type="checkbox" />
                     <span>
-                      <fbt desc="Label for changing the leader unit">
-                        Leader
-                      </fbt>
+                      <fbt desc="Label for changing the leader unit">Leader</fbt>
                     </span>
                   </Stack>
                 </label>
               )}
               <label>
                 <Stack alignCenter gap wrap>
-                  <input
-                    checked={!!entity.shield}
-                    onChange={toggleShield}
-                    type="checkbox"
-                  />
+                  <input checked={!!entity.shield} onChange={toggleShield} type="checkbox" />
                   <span>
                     <fbt desc="Label for activating a shield">Shield</fbt>
                   </span>
@@ -422,8 +376,7 @@ export default function EntityPanel({
         </Box>
         {(isUnit(entity) ||
           (entityIsBuilding &&
-            !entity.info.getAllBuildableUnits()[Symbol.iterator]().next()
-              .done)) && (
+            !entity.info.getAllBuildableUnits()[Symbol.iterator]().next().done)) && (
           <Box className={fitContentStyle} gap={16} vertical wrap>
             <Stack alignCenter wrap>
               <Icon className={iconStyle} icon={Magic} />
@@ -475,10 +428,7 @@ export default function EntityPanel({
         {!isStructure && (
           <Box gap={16} wrap>
             {PlayerIDs.filter(
-              (id) =>
-                (entityIsBuilding && !entity.info.isHQ()) ||
-                isUnit(entity) ||
-                id > 0,
+              (id) => (entityIsBuilding && !entity.info.isHQ()) || isUnit(entity) || id > 0,
             ).map((id) => (
               <PlayerIcon
                 id={id}
@@ -510,9 +460,7 @@ export default function EntityPanel({
         <Box wrap>
           <LabelSelector
             active={entity.label}
-            onChange={(label) =>
-              updateEntity(`label-${label}`, entity.copy({ label }))
-            }
+            onChange={(label) => updateEntity(`label-${label}`, entity.copy({ label }))}
           />
         </Box>
       </Stack>

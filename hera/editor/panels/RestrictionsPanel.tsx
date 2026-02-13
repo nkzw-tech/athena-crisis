@@ -4,10 +4,7 @@ import {
 } from '@deities/athena/info/Building.tsx';
 import { Skill, Skills } from '@deities/athena/info/Skill.tsx';
 import { getTileInfo, Plain } from '@deities/athena/info/Tile.tsx';
-import {
-  mapUnits,
-  mapUnitsWithContentRestriction,
-} from '@deities/athena/info/Unit.tsx';
+import { mapUnits, mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -49,8 +46,7 @@ export default function RestrictionsPanel({
   const { map } = state;
   const { config } = map;
   const currentPlayer = map.getFirstPlayerID();
-  const { biome, blocklistedBuildings, blocklistedSkills, blocklistedUnits } =
-    config;
+  const { biome, blocklistedBuildings, blocklistedSkills, blocklistedUnits } = config;
 
   const biomeBuildingRestrictions = getBiomeBuildingRestrictions(biome);
   const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
@@ -58,15 +54,14 @@ export default function RestrictionsPanel({
   const skills = useMemo(() => new Set(user.skills), [user.skills]);
   const buildings = useMemo(
     () =>
-      (hasContentRestrictions
-        ? mapBuildingsWithContentRestriction
-        : mapBuildings)((building) => building, skills)
+      (hasContentRestrictions ? mapBuildingsWithContentRestriction : mapBuildings)(
+        (building) => building,
+        skills,
+      )
         .filter((building) => !building.isStructure() && !building.isHQ())
         .map((info) => {
           const building = info.create(currentPlayer);
-          return blocklistedBuildings.has(info.id)
-            ? building.complete()
-            : building;
+          return blocklistedBuildings.has(info.id) ? building.complete() : building;
         })
         .filter((building) => !biomeBuildingRestrictions?.has(building.info)),
     [
@@ -80,20 +75,11 @@ export default function RestrictionsPanel({
 
   const units = useMemo(
     () =>
-      (hasContentRestrictions ? mapUnitsWithContentRestriction : mapUnits)(
-        (info) => {
-          const unit = info.create(currentPlayer);
-          return blocklistedUnits.has(info.id) ? unit.complete() : unit;
-        },
-        skills,
-      ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
-    [
-      biomeUnitRestrictions,
-      blocklistedUnits,
-      currentPlayer,
-      hasContentRestrictions,
-      skills,
-    ],
+      (hasContentRestrictions ? mapUnitsWithContentRestriction : mapUnits)((info) => {
+        const unit = info.create(currentPlayer);
+        return blocklistedUnits.has(info.id) ? unit.complete() : unit;
+      }, skills).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
+    [biomeUnitRestrictions, blocklistedUnits, currentPlayer, hasContentRestrictions, skills],
   );
 
   const selectBuilding = useCallback(
@@ -115,13 +101,7 @@ export default function RestrictionsPanel({
         }
       }
     },
-    [
-      blocklistedBuildings,
-      editor?.selected?.building?.id,
-      setEditorState,
-      state.map,
-      update,
-    ],
+    [blocklistedBuildings, editor?.selected?.building?.id, setEditorState, state.map, update],
   );
 
   const selectUnit = useCallback(
@@ -143,13 +123,7 @@ export default function RestrictionsPanel({
         }
       }
     },
-    [
-      update,
-      state.map,
-      blocklistedUnits,
-      editor?.selected?.unit?.id,
-      setEditorState,
-    ],
+    [update, state.map, blocklistedUnits, editor?.selected?.unit?.id, setEditorState],
   );
 
   const [showSkillSelector, setShowSkillSelector] = useState(false);
@@ -181,8 +155,7 @@ export default function RestrictionsPanel({
         <Box between wrap>
           <p>
             <fbt desc="Description for restricting buildings and units on maps">
-              Select the entities that cannot be created by any player during
-              play.
+              Select the entities that cannot be created by any player during play.
             </fbt>
           </p>
         </Box>
@@ -206,9 +179,7 @@ export default function RestrictionsPanel({
                 <InlineTileList
                   biome={biome}
                   onSelect={selectUnit}
-                  tiles={units.map(
-                    (unit) => getAnyUnitTile(unit.info) || Plain,
-                  )}
+                  tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
                   units={units}
                 />
               </Box>
@@ -222,12 +193,7 @@ export default function RestrictionsPanel({
           {blocklistedSkills.size ? (
             <Stack gap={16} wrap>
               {[...blocklistedSkills].map((skill) => (
-                <SkillIcon
-                  dialogSize="small"
-                  key={skill}
-                  showName
-                  skill={skill}
-                />
+                <SkillIcon dialogSize="small" key={skill} showName skill={skill} />
               ))}
             </Stack>
           ) : null}

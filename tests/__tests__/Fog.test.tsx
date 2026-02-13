@@ -35,9 +35,7 @@ const map = withModifiers(
     config: {
       fog: true,
     },
-    map: [
-      1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1,
-    ],
+    map: [1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1],
     size: { height: 5, width: 5 },
     teams: [
       {
@@ -74,8 +72,7 @@ test('units that will be supplied by a hidden adjacent supply unit are not destr
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: [4,4], miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
     `);
@@ -87,9 +84,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
   const helicopterVec = vec(1, 3);
   const initialMap = map.copy({
     active: [...map.active, 3],
-    buildings: map.buildings
-      .set(vec(1, 5), HQ.create(3))
-      .set(vec(1, 4), House.create(2)),
+    buildings: map.buildings.set(vec(1, 5), HQ.create(3)).set(vec(1, 4), House.create(2)),
     teams: map.teams.set(
       3,
       new Team(
@@ -135,8 +130,7 @@ test('capturing an opponent HQ will reveal nearby units and buildings', async ()
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Capture (5,5) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 3 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -222,8 +216,7 @@ test('neutralizes the opponent HQ when it is no longer visible', async () => {
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (4,5 → 5,5) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -270,8 +263,7 @@ test(`a unit that gets blocked and issues a 'HiddenMove' action is marked as com
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       HiddenMove { path: [4,4 → 3,4 → 2,4], completed: true, fuel: 37, unit: Helicopter { id: 9, health: 100, player: 2, fuel: 39, ammo: [ [ 1, 8 ] ] } }"
     `);
@@ -299,13 +291,9 @@ test(`hidden labels are dropped from buildings and units`, async () => {
           type: Criteria.DefeatLabel,
         }),
     }),
-    units: map.units
-      .set(from, Infantry.create(1))
-      .set(vecA, Helicopter.create(2, { label: 2 })),
+    units: map.units.set(from, Infantry.create(1)).set(vecA, Helicopter.create(2, { label: 2 })),
   });
-  const [, gameActionResponse] = await executeGameActions(initialMap, [
-    MoveAction(from, to),
-  ]);
+  const [, gameActionResponse] = await executeGameActions(initialMap, [MoveAction(from, to)]);
   const screenshot = await captureGameActionResponse(
     initialMap,
     gameActionResponse,

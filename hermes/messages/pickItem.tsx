@@ -1,7 +1,6 @@
-export default function pickItem<
-  S,
-  T extends [S, number, ...ReadonlyArray<unknown>],
->(items: ReadonlyArray<T>): T[0] | null {
+export default function pickItem<S, T extends [S, number, ...ReadonlyArray<unknown>]>(
+  items: ReadonlyArray<T>,
+): T[0] | null {
   const total = items.reduce((sum, [, weight]) => sum + weight, 0);
   const probabilities = [];
   let cumulativeSum = 0;

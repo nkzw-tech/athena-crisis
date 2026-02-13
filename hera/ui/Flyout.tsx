@@ -11,8 +11,7 @@ import { Actions } from '../Types.tsx';
 
 export type FlyoutColor = BaseColor | null | 'error';
 
-export const shouldPositionLeft = (position: Vector, width: number) =>
-  position.x > (width / 3) * 2;
+export const shouldPositionLeft = (position: Vector, width: number) => position.x > (width / 3) * 2;
 
 export default function Flyout({
   align,
@@ -35,19 +34,13 @@ export default function Flyout({
   width: number;
   zIndex?: number;
 }) {
-  const items = Array.isArray(initialItems)
-    ? initialItems.filter(isPresent)
-    : [initialItems];
+  const items = Array.isArray(initialItems) ? initialItems.filter(isPresent) : [initialItems];
   const isTop = align === 'top' || align === 'top-lower';
   return (
     <div
       className={cx(
         baseStyle,
-        isTop
-          ? topStyle
-          : shouldPositionLeft(position, width)
-            ? leftStyle
-            : rightStyle,
+        isTop ? topStyle : shouldPositionLeft(position, width) ? leftStyle : rightStyle,
         align === 'top-lower' && topLowerStyle,
         mini && miniStyle,
         opaque && opaqueStyle,
@@ -97,8 +90,7 @@ export function FlyoutItem({
   onPointerLeave,
   size,
 }: FlyoutProps) {
-  const itemColor =
-    color === 'error' ? applyVar('error-color') : color && getColor(color);
+  const itemColor = color === 'error' ? applyVar('error-color') : color && getColor(color);
   const Component = onClick && !disabled ? 'a' : 'div';
   return (
     <Component

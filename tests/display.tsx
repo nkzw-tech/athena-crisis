@@ -1,10 +1,7 @@
 /// <reference types="vite/client" />
 
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
-import {
-  InstantAnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
@@ -64,16 +61,10 @@ const ErrorComponent = ({ error }: { error: unknown }) => (
 
 const DisplayMap = ({ url: initialURL }: { url: string }) => {
   const url = useMemo(() => new URL(initialURL), [initialURL]);
-  const maps = useMemo(
-    () => url.searchParams.getAll('map[]'),
-    [url.searchParams],
-  );
+  const maps = useMemo(() => url.searchParams.getAll('map[]'), [url.searchParams]);
   const viewers = url.searchParams.getAll('viewer[]');
   const gameActionResponses = url.searchParams.getAll('gameActionResponse[]');
-  const eventEmitters = useMemo(
-    () => maps.map(() => new EventTarget()),
-    [maps],
-  );
+  const eventEmitters = useMemo(() => maps.map(() => new EventTarget()), [maps]);
 
   initializeHasRendered(gameActionResponses);
 

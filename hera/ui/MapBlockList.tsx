@@ -17,27 +17,19 @@ export default function MapBlockList({ map }: { map: MapData }) {
   const { biome, blocklistedBuildings, blocklistedUnits } = config;
 
   const buildings = useMemo(
-    () =>
-      [...blocklistedBuildings].map((id) =>
-        getBuildingInfoOrThrow(id).create(currentPlayer),
-      ),
+    () => [...blocklistedBuildings].map((id) => getBuildingInfoOrThrow(id).create(currentPlayer)),
     [blocklistedBuildings, currentPlayer],
   );
 
   const units = useMemo(
-    () =>
-      [...blocklistedUnits].map((id) =>
-        getUnitInfoOrThrow(id).create(currentPlayer),
-      ),
+    () => [...blocklistedUnits].map((id) => getUnitInfoOrThrow(id).create(currentPlayer)),
     [blocklistedUnits, currentPlayer],
   );
 
   const tiles = useMemo(
     () => [
       ...units.map((unit) => getAnyUnitTile(unit.info) || Plain),
-      ...buildings.map((building) =>
-        getTileInfo(getAnyBuildingTileField(building.info)),
-      ),
+      ...buildings.map((building) => getTileInfo(getAnyBuildingTileField(building.info))),
     ],
     [buildings, units],
   );
@@ -46,9 +38,7 @@ export default function MapBlockList({ map }: { map: MapData }) {
     <Tick animationConfig={AnimationConfig}>
       <Box between vertical wrap>
         <h2>
-          <fbt desc="Headline for restricted entities on a map">
-            Restricted Entities
-          </fbt>
+          <fbt desc="Headline for restricted entities on a map">Restricted Entities</fbt>
         </h2>
         <Stack alignStart between wrap>
           <InlineTileList

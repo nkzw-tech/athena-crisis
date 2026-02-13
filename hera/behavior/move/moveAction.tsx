@@ -11,10 +11,7 @@ export default function moveAction(
   to: Vector,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (
-    state: State,
-    actionResponse: MoveActionResponse,
-  ) => StateLike | null,
+  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
   path: ReadonlyArray<Vector> | null,
   realPosition: Vector = from,
   partial?: boolean,

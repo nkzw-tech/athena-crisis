@@ -86,9 +86,7 @@ export default function NewVersionNotification({
       {hasNewVersion && (
         <Notification delay={2000}>
           <p>
-            <fbt desc="New version notification">
-              Athena Crisis was updated.
-            </fbt>{' '}
+            <fbt desc="New version notification">Athena Crisis was updated.</fbt>{' '}
             <Reload reload={reload} />
           </p>
         </Notification>

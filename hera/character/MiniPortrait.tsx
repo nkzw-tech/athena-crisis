@@ -1,9 +1,6 @@
 import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import Player, {
-  isHumanPlayer,
-  PlayerID,
-} from '@deities/athena/map/Player.tsx';
+import Player, { isHumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';

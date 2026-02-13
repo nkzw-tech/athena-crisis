@@ -14,13 +14,7 @@ export default function getSymmetricPositions(
     if (drawingMode === 'horizontal-vertical') {
       vectors.add(mirrorVector(origin, mapSize, 'horizontal'));
       vectors.add(mirrorVector(origin, mapSize, 'vertical'));
-      vectors.add(
-        mirrorVector(
-          mirrorVector(origin, mapSize, 'horizontal'),
-          mapSize,
-          'vertical',
-        ),
-      );
+      vectors.add(mirrorVector(mirrorVector(origin, mapSize, 'horizontal'), mapSize, 'vertical'));
     } else {
       vectors.add(mirrorVector(origin, mapSize, drawingMode));
     }

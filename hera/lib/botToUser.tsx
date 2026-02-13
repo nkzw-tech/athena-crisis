@@ -1,9 +1,4 @@
-import {
-  getAllUnits,
-  getUnitInfo,
-  Pioneer,
-  UnitInfo,
-} from '@deities/athena/info/Unit.tsx';
+import { getAllUnits, getUnitInfo, Pioneer, UnitInfo } from '@deities/athena/info/Unit.tsx';
 import { Bot } from '@deities/athena/map/Player.tsx';
 import { UserLike } from '../hooks/useUserMap.tsx';
 import getSkillBasedPortrait from './getSkillBasedPortrait.tsx';

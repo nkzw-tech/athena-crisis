@@ -1,8 +1,5 @@
 [
-  [
-    "Move",
-    [0, ["type", "from", "to", "complete", "fuel", "completed", "path"]]
-  ],
+  ["Move", [0, ["type", "from", "to", "complete", "fuel", "completed", "path"]]],
   [
     "AttackUnit",
     [
@@ -44,10 +41,7 @@
   ],
   ["Capture", [3, ["type", "from", "building", "player"]]],
   ["Supply", [4, ["type", "from", "player"]]],
-  [
-    "CreateUnit",
-    [5, ["type", "from", "id", "to", "unit", "free", "skipBehaviorRotation"]]
-  ],
+  ["CreateUnit", [5, ["type", "from", "id", "to", "unit", "free", "skipBehaviorRotation"]]],
   ["DropUnit", [6, ["type", "from", "index", "to"]]],
   ["CreateBuilding", [7, ["type", "from", "id", "building", "free"]]],
   ["Fold", [8, ["type", "from"]]],
@@ -55,29 +49,13 @@
   ["CompleteUnit", [10, ["type", "from"]]],
   [
     "EndTurn",
-    [
-      11,
-      [
-        "type",
-        "current",
-        "funds",
-        "player",
-        "next",
-        "round",
-        "rotatePlayers",
-        "supply",
-        "miss"
-      ]
-    ]
+    [11, ["type", "current", "funds", "player", "next", "round", "rotatePlayers", "supply", "miss"]]
   ],
   ["Message", [12, ["type", "message", "player"]]],
   ["AttackUnitGameOver", [13, ["type", "fromPlayer", "toPlayer"]]],
   ["BeginTurnGameOver", [14, ["type", "abandoned", "fromPlayer"]]],
   ["CaptureGameOver", [15, ["type", "fromPlayer", "toPlayer"]]],
-  [
-    "GameEnd",
-    [16, ["type", "objective", "objectiveId", "toPlayer", "chaosStars"]]
-  ],
+  ["GameEnd", [16, ["type", "objective", "objectiveId", "toPlayer", "chaosStars"]]],
   ["HiddenMove", [17, ["type", "path", "completed", "fuel", "unit"]]],
   [
     "HiddenSourceAttackUnit",
@@ -157,10 +135,7 @@
   ["Heal", [27, ["type", "from", "to"]]],
   ["MoveUnit", [28, ["type", "from"]]],
   ["Sabotage", [29, ["type", "from", "to"]]],
-  [
-    "CharacterMessage",
-    [30, ["type", "message", "player", "unitId", "variant", "silhouette"]]
-  ],
+  ["CharacterMessage", [30, ["type", "message", "player", "unitId", "variant", "silhouette"]]],
   ["CreateTracks", [31, ["type", "from"]]],
   ["SpawnEffect", [32, ["type", "units", "player", "teams", "buildings"]]],
   [

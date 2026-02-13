@@ -4,12 +4,7 @@ import { EntityType } from '../map/Entity.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 
-export default function canAccessBridge(
-  map: MapData,
-  unit: UnitInfo,
-  to: Vector,
-  tile: TileInfo,
-) {
+export default function canAccessBridge(map: MapData, unit: UnitInfo, to: Vector, tile: TileInfo) {
   return (
     !(tile.type & TileTypes.Bridge) ||
     unit.type !== EntityType.Ship ||

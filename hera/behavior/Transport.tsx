@@ -8,10 +8,7 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import addMoveAnimation from '../lib/addMoveAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  ActionButton,
-  CancelActionButton,
-} from '../ui/ActionWheel.tsx';
+import ActionWheel, { ActionButton, CancelActionButton } from '../ui/ActionWheel.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import NullBehavior from './NullBehavior.tsx';
 
@@ -30,12 +27,8 @@ const loadAction = (
   const { map, selectedPosition } = state;
   if (selectedPosition && transport) {
     const { moveable, path: initialPath, position } = transport;
-    const path =
-      initialPath || getMovementPath(map, position, moveable, null).path;
-    const actionResponse = optimisticAction(
-      state,
-      MoveAction(selectedPosition, position, path),
-    );
+    const path = initialPath || getMovementPath(map, position, moveable, null).path;
+    const actionResponse = optimisticAction(state, MoveAction(selectedPosition, position, path));
     update({
       animations: addMoveAnimation(state.animations, {
         endSound: 'Unit/Load',
@@ -65,8 +58,7 @@ export default class Transport {
   activate(state: State) {
     const { map } = state;
     const { moveable, path: initialPath, position } = this.transport;
-    const path =
-      initialPath || getMovementPath(map, position, moveable, null).path;
+    const path = initialPath || getMovementPath(map, position, moveable, null).path;
     return {
       radius: {
         fields: getPathFields(path, moveable),
@@ -78,8 +70,7 @@ export default class Transport {
   }
 
   component = ({ actions, state }: StateWithActions) => {
-    const { map, navigationDirection, selectedPosition, tileSize, zIndex } =
-      state;
+    const { map, navigationDirection, selectedPosition, tileSize, zIndex } = state;
     const { position } = this.transport;
     return selectedPosition ? (
       <ActionWheel
@@ -89,16 +80,9 @@ export default class Transport {
         tileSize={tileSize}
         zIndex={zIndex}
       >
-        <CancelActionButton
-          actions={actions}
-          navigationDirection={navigationDirection}
-        />
+        <CancelActionButton actions={actions} navigationDirection={navigationDirection} />
         <ActionButton
-          label={
-            <fbt desc="Load button label (as short as possible, ideally one word)">
-              Load
-            </fbt>
-          }
+          label={<fbt desc="Load button label (as short as possible, ideally one word)">Load</fbt>}
           navigationDirection={navigationDirection}
           onClick={() => loadAction(this.transport, actions, state)}
           type="load"

@@ -1,10 +1,7 @@
 import { CharacterMessageEffectAction } from '@deities/apollo/Action.tsx';
 import { Effects, EffectTrigger } from '@deities/apollo/Effects.tsx';
 
-export default function getAllEffectCharacters(
-  effects: Effects | null,
-  effect?: EffectTrigger,
-) {
+export default function getAllEffectCharacters(effects: Effects | null, effect?: EffectTrigger) {
   return effects
     ? [
         ...new Map(

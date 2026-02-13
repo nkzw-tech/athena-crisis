@@ -27,9 +27,7 @@ export const EffectObjectiveTitle = ({
       return <fbt desc="Game end effect name for draw.">Draw</fbt>;
     default: {
       const objective = objectives?.get(id);
-      return objective ? (
-        <ObjectiveTitle id={id} objective={objective} />
-      ) : null;
+      return objective ? <ObjectiveTitle id={id} objective={objective} /> : null;
     }
   }
 };
@@ -75,9 +73,7 @@ export default memo(function EffectTitle({
             {condition.type === 'GameEnd' ? (
               <fbt desc="Label for 'GameEnd' effect">Game End</fbt>
             ) : (
-              <fbt desc="Label for 'OptionalObjective' effect">
-                Optional Objective
-              </fbt>
+              <fbt desc="Label for 'OptionalObjective' effect">Optional Objective</fbt>
             )}
           </span>
         )}
@@ -85,10 +81,7 @@ export default memo(function EffectTitle({
         {condition && (
           <>
             <span>-</span>
-            <EffectObjectiveTitle
-              id={condition.value}
-              objectives={objectives}
-            />
+            <EffectObjectiveTitle id={condition.value} objectives={objectives} />
           </>
         )}
       </div>

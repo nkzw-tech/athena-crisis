@@ -7,14 +7,9 @@ export default memo(function Container({
   className,
   offset,
   ...props
-}: HTMLAttributes<HTMLDivElement> &
-  Omit<StackProps, 'vertical'> & { offset?: boolean }) {
+}: HTMLAttributes<HTMLDivElement> & Omit<StackProps, 'vertical'> & { offset?: boolean }) {
   return (
-    <VStack
-      {...props}
-      className={cx(containerStyle, offset && offsetStyle, className)}
-      wrap
-    />
+    <VStack {...props} className={cx(containerStyle, offset && offsetStyle, className)} wrap />
   );
 });
 

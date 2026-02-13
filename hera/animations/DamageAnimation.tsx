@@ -13,9 +13,7 @@ const frameCount = 18;
 const frames = generateFrames(spriteSize, frameCount, 'vertical');
 
 const maybeAnimation = Weapons.Flamethrower.hitAnimation;
-const fireAnimation = Array.isArray(maybeAnimation)
-  ? maybeAnimation[0]
-  : maybeAnimation;
+const fireAnimation = Array.isArray(maybeAnimation) ? maybeAnimation[0] : maybeAnimation;
 
 export default function DamageAnimation({
   animation,
@@ -60,12 +58,7 @@ export default function DamageAnimation({
     <Animation
       frames={frames}
       onStep={onStep}
-      position={
-        new SpriteVector(
-          (x - 1) * size - (spriteSize - size) / 2,
-          (y - 1.65) * size,
-        )
-      }
+      position={new SpriteVector((x - 1) * size - (spriteSize - size) / 2, (y - 1.65) * size)}
       size={spriteSize}
       sound="Unit/Spawn"
       source={Sprites.Damage}

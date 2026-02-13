@@ -7,23 +7,16 @@ import MapData from '@deities/athena/MapData.tsx';
 import maxBy from '@nkzw/core/maxBy.js';
 import { ActivatePowerActionResponse } from '../ActionResponse.tsx';
 
-export function getActivatePowerTargetCluster(
-  map: MapData,
-  playerID: PlayerID,
-) {
+export function getActivatePowerTargetCluster(map: MapData, playerID: PlayerID) {
   return (
     maxBy(
       calculateClusters(map.size, [
-        ...map.units
-          .filter((unit) => map.isNonNeutralOpponent(playerID, unit))
-          .keys(),
+        ...map.units.filter((unit) => map.isNonNeutralOpponent(playerID, unit)).keys(),
       ]),
       (cluster) =>
         cluster.expandStar().reduce((sum, vector) => {
           const unit = map.units.get(vector);
-          return (
-            sum + (unit && map.isNonNeutralOpponent(playerID, unit) ? 1 : 0)
-          );
+          return sum + (unit && map.isNonNeutralOpponent(playerID, unit) ? 1 : 0);
         }, 0),
     ) || null
   );

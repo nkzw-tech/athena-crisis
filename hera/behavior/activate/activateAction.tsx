@@ -31,14 +31,8 @@ export default async function activateAction(
   target: Vector | null,
 ) {
   const { action, update } = actions;
-  const [remoteAction, , actionResponse] = action(
-    state,
-    getActionMutator(item, target),
-  );
-  if (
-    actionResponse.type === 'ActivatePower' ||
-    actionResponse.type === 'ActivateCrystal'
-  ) {
+  const [remoteAction, , actionResponse] = action(state, getActionMutator(item, target));
+  if (actionResponse.type === 'ActivatePower' || actionResponse.type === 'ActivateCrystal') {
     await update({
       ...(await (actionResponse.type === 'ActivatePower'
         ? clientActivatePowerAction(actions, state, actionResponse)

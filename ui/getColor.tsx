@@ -24,15 +24,7 @@ const pink = `rgb(${varPink})`;
 const purple = `rgb(${varPurple})`;
 const red = `rgb(${varRed})`;
 
-export type Color =
-  | 'blue'
-  | 'cyan'
-  | 'green'
-  | 'neutral'
-  | 'orange'
-  | 'pink'
-  | 'purple'
-  | 'red';
+export type Color = 'blue' | 'cyan' | 'green' | 'neutral' | 'orange' | 'pink' | 'purple' | 'red';
 
 export type BaseColor = Color | DynamicPlayerID;
 

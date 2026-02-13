@@ -97,11 +97,7 @@ export default function MapEditorControlPanel({
   setMapName: (name: string) => void;
   setTags: (tags: ReadonlyArray<string>) => void;
   tags: ReadonlyArray<string>;
-  togglePlaytest: (
-    map: MapData,
-    _?: boolean,
-    actAsEveryPlayer?: boolean,
-  ) => void;
+  togglePlaytest: (map: MapData, _?: boolean, actAsEveryPlayer?: boolean) => void;
   user: UserWithUnlocks;
   visible: boolean;
 }) {
@@ -123,9 +119,7 @@ export default function MapEditorControlPanel({
     (scenario: Scenario) => setEditorState({ scenario }),
     [setEditorState],
   );
-  const canEditPerformance = !!(
-    campaignLock || mapObject?.campaigns.edges?.length
-  );
+  const canEditPerformance = !!(campaignLock || mapObject?.campaigns.edges?.length);
 
   return (
     <Drawer
@@ -235,13 +229,7 @@ export default function MapEditorControlPanel({
               />
             );
           case 'evaluation':
-            return (
-              <EvaluationPanel
-                actions={actions}
-                editor={editor}
-                state={state}
-              />
-            );
+            return <EvaluationPanel actions={actions} editor={editor} state={state} />;
           case 'settings':
             return (
               <MapEditorSettingsPanel
@@ -296,11 +284,7 @@ const Sidebar = ({
   restorePreviousState: () => void;
   setEditorState: SetEditorStateFunction;
   setPosition: (position: DrawerPosition) => void;
-  togglePlaytest: (
-    map: MapData,
-    _?: boolean,
-    actAsEveryPlayer?: boolean,
-  ) => void;
+  togglePlaytest: (map: MapData, _?: boolean, actAsEveryPlayer?: boolean) => void;
 }) => {
   const { alert } = useAlert();
   const isBottom = position === 'bottom';
@@ -308,11 +292,7 @@ const Sidebar = ({
   const isMedium = useMedia(`(min-width: ${sm}px)`);
   const isLarge = useMedia(`(min-width: ${lg}px)`);
   const isXLarge = useMedia(`(min-width: ${xl}px)`);
-  const secondaryWidthCheck = isBottom
-    ? isMedium
-    : drawerIsLarge
-      ? isLarge
-      : isXLarge;
+  const secondaryWidthCheck = isBottom ? isMedium : drawerIsLarge ? isLarge : isXLarge;
   const partition = drawerIsLarge && isLarge ? 4 : secondaryWidthCheck ? 3 : 2;
 
   const buttonProps = usePress({
@@ -460,11 +440,7 @@ const Sidebar = ({
       </span>
     </InlineLink>,
     previousState && previousState.map != state.map ? (
-      <InlineLink
-        className={linkStyle}
-        key="restore"
-        onClick={() => restorePreviousState()}
-      >
+      <InlineLink className={linkStyle} key="restore" onClick={() => restorePreviousState()}>
         <span className={textStyle}>
           <fbt desc="Button to restore the map">Restore</fbt>
         </span>
@@ -487,16 +463,10 @@ const Sidebar = ({
   if (isMedium) {
     secondary.unshift(
       <Stack gap key="icons" reverse wrap>
-        <InlineLink
-          onClick={() => setPosition('left')}
-          selected={position === 'left'}
-        >
+        <InlineLink onClick={() => setPosition('left')} selected={position === 'left'}>
           <Icon icon={Left} />
         </InlineLink>
-        <InlineLink
-          onClick={() => setPosition('bottom')}
-          selected={position === 'bottom'}
-        >
+        <InlineLink onClick={() => setPosition('bottom')} selected={position === 'bottom'}>
           <Icon icon={Bottom} />
         </InlineLink>
       </Stack>,
@@ -514,12 +484,7 @@ const Sidebar = ({
               dropdownClassName={moreStyle}
               title={<Icon icon={More} />}
             >
-              <Box
-                between
-                className={cx(moreInnerStyle, 'dropdown-content')}
-                gap
-                vertical
-              >
+              <Box between className={cx(moreInnerStyle, 'dropdown-content')} gap vertical>
                 {secondary}
               </Box>
             </Dropdown>

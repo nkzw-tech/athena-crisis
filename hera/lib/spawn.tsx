@@ -27,9 +27,7 @@ export default function spawn(
   }
 
   const [position, unit] = entry;
-  const team = teams?.find(({ players }) =>
-    players.some(({ id }) => id === unit.player),
-  );
+  const team = teams?.find(({ players }) => players.some(({ id }) => id === unit.player));
   const newTeam = team
     ? team.copy({
         players: team.players.filter(({ id }) => id === unit.player),
@@ -39,8 +37,7 @@ export default function spawn(
   const crystal = newPlayer?.isHumanPlayer() ? newPlayer.crystal : null;
   const name =
     (newPlayer?.isBot() && newPlayer.name) ||
-    (newPlayer?.isHumanPlayer() &&
-      getUserDisplayName(state.playerDetails, newPlayer.id)) ||
+    (newPlayer?.isHumanPlayer() && getUserDisplayName(state.playerDetails, newPlayer.id)) ||
     null;
 
   const spawnUnit = (state: State) => ({
@@ -53,16 +50,7 @@ export default function spawn(
         actions.scheduleTimer(
           () =>
             actions.update((state) =>
-              spawn(
-                actions,
-                state,
-                remainingUnits,
-                teams,
-                speed,
-                type,
-                onComplete,
-                true,
-              ),
+              spawn(actions, state, remainingUnits, teams, speed, type, onComplete, true),
             ),
           animationConfig.ExplosionStep,
         );
@@ -76,10 +64,7 @@ export default function spawn(
               });
 
               if (!map.maybeGetPlayer(unit.player)) {
-                map = mergeTeams(
-                  map,
-                  newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined,
-                );
+                map = mergeTeams(map, newTeam ? ImmutableMap([[newTeam.id, newTeam]]) : undefined);
               }
 
               return {

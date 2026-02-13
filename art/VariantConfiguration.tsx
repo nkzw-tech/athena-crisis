@@ -1,9 +1,6 @@
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  PlainDynamicPlayerID,
-  PlayerIDs,
-} from '@deities/athena/map/Player.tsx';
+import { PlainDynamicPlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import { HEX } from '@nkzw/palette-swap';
 import BiomeVariants from './BiomeVariants.tsx';
 
@@ -19,12 +16,7 @@ export type SpriteVariantConfiguration = Readonly<{
 const variantNames = new Set(PlayerIDs);
 const biomeVariantNames = new Set(BiomeVariants.keys());
 
-const dynamicPlayerVariantNames = new Set<PlainDynamicPlayerID>([
-  ...variantNames,
-  -1,
-  -2,
-  -3,
-]);
+const dynamicPlayerVariantNames = new Set<PlainDynamicPlayerID>([...variantNames, -1, -2, -3]);
 
 export default new Map<SpriteVariant, SpriteVariantConfiguration>([
   [

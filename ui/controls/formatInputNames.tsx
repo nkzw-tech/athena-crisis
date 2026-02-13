@@ -4,11 +4,7 @@ import { GamepadType } from './setupGamePad.tsx';
 
 type ButtonNames = Exclude<
   EventName,
-  | 'navigateSecondary'
-  | 'accept:released'
-  | 'detail:released'
-  | 'point'
-  | 'reset'
+  'navigateSecondary' | 'accept:released' | 'detail:released' | 'point' | 'reset'
 >;
 
 const generic = {

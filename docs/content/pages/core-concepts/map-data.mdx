@@ -45,9 +45,7 @@ This creates a map with a 3x3 grid of plain fields (id `1`) and a Mountain in th
 
 We said "add some units", but in reality we created a completely new map with the units added. If we render this map, we see a Flamethrower on one side, and an Infantry on the other:
 
-<ClientComponent
-  module={lazy(() => import('../../examples/map-data-examples.tsx'))}
-/>
+<ClientComponent module={lazy(() => import('../../examples/map-data-examples.tsx'))} />
 
 ## Vectors & Positions
 
@@ -88,9 +86,7 @@ vec(5, 5).distance(vec(1, 1)); // 8, Manhattan distance
 Since most data structures are immutable, it's common to access data fields directly. For example, to find all opponents of the current player you can do:
 
 ```tsx
-const opposingUnits = map.units.filter((unit) =>
-  map.isOpponent(unit, map.currentPlayer),
-);
+const opposingUnits = map.units.filter((unit) => map.isOpponent(unit, map.currentPlayer));
 ```
 
 This example will return a new `ImmutableMap` of all units. `MapData` contains many helper methods to query map state. For example, `map.isOpponent` checks if two players or entities are opponents, `map.isTeam(unit, player)` checks if they are the same team. To check if a unit matches a player, you can use `map.matchesPlayer(unit, player). These checks are necessary because a game can have multiple teams each consisting of one or more players.

@@ -13,10 +13,7 @@ const prepareMap = (map: MapData, userId: string) =>
   startGame(
     mapWithAIPlayers(
       map.copy({
-        teams: updatePlayer(
-          map.teams,
-          HumanPlayer.from(map.getCurrentPlayer(), userId),
-        ),
+        teams: updatePlayer(map.teams, HumanPlayer.from(map.getCurrentPlayer(), userId)),
       }),
     ),
   );
@@ -26,11 +23,7 @@ export default function useClientGame(
   userId: string,
   effects: Effects,
   lastAction: ActionResponse | null,
-): [
-  game: ClientGame,
-  setGame: (game: ClientGame) => void,
-  undo: (type: UndoType) => void,
-] {
+): [game: ClientGame, setGame: (game: ClientGame) => void, undo: (type: UndoType) => void] {
   const [game, setGame] = useState<ClientGame>(() => {
     const state = prepareMap(map, userId);
     return {
@@ -42,9 +35,5 @@ export default function useClientGame(
     };
   });
 
-  return [
-    game,
-    setGame,
-    useCallback((type: UndoType) => setGame(undo(game, type)), [game]),
-  ];
+  return [game, setGame, useCallback((type: UndoType) => setGame(undo(game, type)), [game])];
 }

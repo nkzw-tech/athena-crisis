@@ -33,18 +33,10 @@ export default function HealthAnimation({
 }) {
   useEffect(() => {
     if (onComplete) {
-      const timer = scheduleTimer(
-        onComplete,
-        animationConfig.AnimationDuration * 1.5,
-      );
+      const timer = scheduleTimer(onComplete, animationConfig.AnimationDuration * 1.5);
       return () => clearTimer(timer);
     }
-  }, [
-    animationConfig.AnimationDuration,
-    clearTimer,
-    onComplete,
-    scheduleTimer,
-  ]);
+  }, [animationConfig.AnimationDuration, clearTimer, onComplete, scheduleTimer]);
 
   if (onComplete && animationConfig.Instant) {
     return null;

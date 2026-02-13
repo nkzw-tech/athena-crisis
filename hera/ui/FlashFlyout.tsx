@@ -51,10 +51,7 @@ export default function FlashFlyout({
         );
       }
 
-      const timer = scheduleTimer(
-        onComplete,
-        animationConfig.AnimationDuration * 2,
-      );
+      const timer = scheduleTimer(onComplete, animationConfig.AnimationDuration * 2);
       return () => clearTimer(timer);
     }
   }, [

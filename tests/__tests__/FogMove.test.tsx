@@ -70,11 +70,7 @@ const initialMap = rawMap.copy({
       vecB,
       APU.create(2)
         .setFuel(0)
-        .setAmmo(
-          new Map(
-            [...(APU.getAmmunitionSupply() || [])].map(([id]) => [id, 0]),
-          ),
-        ),
+        .setAmmo(new Map([...(APU.getAmmunitionSupply() || [])].map(([id]) => [id, 0]))),
     )
     .set(vecC, Infantry.create(1)),
 });
@@ -113,33 +109,7 @@ test('units will hide in hidden fields in fog', async () => {
 
 test('does not hide in hidden fields too far from the target', async () => {
   const map = initialMap.copy({
-    map: [
-      1,
-      Forest.id,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-    ],
+    map: [1, Forest.id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   });
 
   const [, , gameState] = await executeGameAction(

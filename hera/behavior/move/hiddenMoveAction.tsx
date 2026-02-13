@@ -30,27 +30,18 @@ export default function hiddenMoveAction(
             }
           : null),
         animations: addMoveAnimation(animations, {
-          endSound:
-            to && map.units.get(to) && vision.isVisible(map, to)
-              ? 'Unit/Load'
-              : undefined,
+          endSound: to && map.units.get(to) && vision.isVisible(map, to) ? 'Unit/Load' : undefined,
           from,
           onComplete: (state) => {
             const newState = {
               ...state,
-              map: applyHiddenActionResponse(
-                state.map,
-                state.vision,
-                actionResponse,
-              ),
+              map: applyHiddenActionResponse(state.map, state.vision, actionResponse),
             };
             requestFrame(() => onComplete(newState));
             return newState;
           },
           path,
-          pathVisibility: initialPath.map((vector) =>
-            vision.isVisible(state.map, vector),
-          ),
+          pathVisibility: initialPath.map((vector) => vision.isVisible(state.map, vector)),
           tiles: path.map((vector) => map.getTileInfo(vector)),
         }),
         behavior: new NullBehavior(),

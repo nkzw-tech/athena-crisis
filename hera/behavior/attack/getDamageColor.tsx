@@ -1,10 +1,7 @@
 import { MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { FlyoutColor } from '../../ui/Flyout.tsx';
 
-export default function getDamageColor(
-  damage: number | null,
-  previousHealth: number,
-): FlyoutColor {
+export default function getDamageColor(damage: number | null, previousHealth: number): FlyoutColor {
   const thresholdYellow = MaxHealth * 0.3;
   const thresholdRed = MaxHealth * 0.15;
   return !damage

@@ -11,14 +11,9 @@ import { fbt } from 'fbtee';
 import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
-import toTransformOrigin, {
-  ClientCoordinates,
-} from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import buySkillAction from './buySkill/buySkillAction.tsx';
@@ -31,11 +26,7 @@ export default class BuySkills {
 
   activate(state: State): StateLike | null {
     const { animations, selectedBuilding, selectedPosition } = state;
-    if (
-      selectedBuilding &&
-      selectedPosition &&
-      !selectedBuilding.skills?.size
-    ) {
+    if (selectedBuilding && selectedPosition && !selectedBuilding.skills?.size) {
       return {
         animations: addFlashAnimation(animations, {
           children: fbt('No available skills!', 'Error message'),
@@ -64,37 +55,23 @@ export default class BuySkills {
       tileSize,
       zIndex,
     } = state;
-    if (
-      currentViewer &&
-      selectedBuilding &&
-      selectedPosition &&
-      selectedBuilding.skills?.size
-    ) {
+    if (currentViewer && selectedBuilding && selectedPosition && selectedBuilding.skills?.size) {
       const currentPlayer = map.getCurrentPlayer();
       const funds = currentPlayer.funds;
       const skillCosts = new Map(
-        [...selectedBuilding.skills].map((skill) => [
-          skill,
-          getSkillConfig(skill).cost,
-        ]),
+        [...selectedBuilding.skills].map((skill) => [skill, getSkillConfig(skill).cost]),
       );
 
       const skills = sortBy(
         [...selectedBuilding.skills],
         (skill) => skillCosts.get(skill) || Number.POSITIVE_INFINITY,
       ).filter(
-        (skill) =>
-          (skillCosts.get(skill) || Number.POSITIVE_INFINITY) <
-          Number.POSITIVE_INFINITY,
+        (skill) => (skillCosts.get(skill) || Number.POSITIVE_INFINITY) < Number.POSITIVE_INFINITY,
       );
 
       const skillsToDisplay =
-        skills.length > MAX_SKILLS
-          ? skills.slice(cursor, cursor + MAX_SKILLS - 1)
-          : skills;
-      const entityCount =
-        skillsToDisplay.length +
-        (skillsToDisplay.length < skills.length ? 1 : 0);
+        skills.length > MAX_SKILLS ? skills.slice(cursor, cursor + MAX_SKILLS - 1) : skills;
+      const entityCount = skillsToDisplay.length + (skillsToDisplay.length < skills.length ? 1 : 0);
       let position = 0;
 
       return (
@@ -125,10 +102,7 @@ export default class BuySkills {
             };
 
             const showInfo = (
-              event:
-                | MouseEvent
-                | LongPressReactEvents<Element>
-                | ClientCoordinates,
+              event: MouseEvent | LongPressReactEvents<Element> | ClientCoordinates,
             ) =>
               showGameInfo({
                 action: isDisabled ? undefined : buy,
@@ -148,11 +122,7 @@ export default class BuySkills {
                 icon={(highlight) => (
                   <>
                     <div className={skillIconStyle}>
-                      <SkillIcon
-                        disabled={isDisabled}
-                        hideDialog
-                        skill={skill}
-                      />
+                      <SkillIcon disabled={isDisabled} hideDialog skill={skill} />
                     </div>
                     <Icon
                       className={infoIconStyle}
@@ -184,11 +154,7 @@ export default class BuySkills {
               icon={(highlight, props) => <Icon icon={More} {...props} />}
               label={null}
               navigationDirection={navigationDirection}
-              onClick={() =>
-                setCursor((cursor) =>
-                  cursor === 0 ? cursor + MAX_SKILLS - 1 : 0,
-                )
-              }
+              onClick={() => setCursor((cursor) => (cursor === 0 ? cursor + MAX_SKILLS - 1 : 0))}
               position={position}
             />
           )}

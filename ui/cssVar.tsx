@@ -66,9 +66,7 @@ export class CSSVariables<T> {
   private getId(name: T) {
     const value = this.map.get(name);
     if (!value) {
-      const value =
-        String(this.id++) +
-        (process.env.NODE_ENV === 'development' ? `-${name}` : '');
+      const value = String(this.id++) + (process.env.NODE_ENV === 'development' ? `-${name}` : '');
       this.map.set(name, value);
       return value;
     }
@@ -76,9 +74,7 @@ export class CSSVariables<T> {
   }
 
   set(name: T, value?: string | number): `--${string}` {
-    return `--${this.prefix}${this.getId(name)}${
-      value != null ? `: ${value};` : ''
-    }`;
+    return `--${this.prefix}${this.getId(name)}${value != null ? `: ${value};` : ''}`;
   }
 
   apply(name: T): `var(--${string})` {
@@ -95,9 +91,7 @@ export const applyVar = variables.apply.bind(variables);
 export function insetStyle(inset: number | string) {
   return {
     [variables.set('inset-z')]: inset ? 1 : 0,
-    [variables.set('inset')]: `${
-      typeof inset === 'string' ? inset : `${inset}px`
-    }`,
+    [variables.set('inset')]: `${typeof inset === 'string' ? inset : `${inset}px`}`,
   };
 }
 

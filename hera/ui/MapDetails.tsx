@@ -79,17 +79,12 @@ export default function MapDetails({
   return map ? (
     <VStack between gap={16} stretch wrap>
       <VStack between gap={gap === 8 ? true : gap} wrap>
-        {creator &&
-        !SpecialUsers.has(creator.id) &&
-        !tags?.includes('official') ? (
+        {creator && !SpecialUsers.has(creator.id) && !tags?.includes('official') ? (
           <div>
             <fbt desc="Map created by">
               by{' '}
               <fbt:param name="username">
-                <Tag
-                  tag={creator.displayName}
-                  to={getUserRoute(creator.username)}
-                />
+                <Tag tag={creator.displayName} to={getUserRoute(creator.username)} />
               </fbt:param>
             </fbt>
           </div>
@@ -102,8 +97,7 @@ export default function MapDetails({
         {subText}
         {isCampaign && showCampaign ? (
           <Stack alignCenter gap wrap>
-            <Icon icon={Campaign} />{' '}
-            <fbt desc="Label for campaign games">Campaign</fbt>
+            <Icon icon={Campaign} /> <fbt desc="Label for campaign games">Campaign</fbt>
           </Stack>
         ) : null}
         {rating && rating > 0 ? (
@@ -117,8 +111,8 @@ export default function MapDetails({
           {map.teams.map(({ players }) => players.size).join('v')}
         </Stack>
         <Stack alignCenter gap wrap>
-          <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))}{' '}
-          {map.size.width}x{map.size.height}
+          <Icon icon={Size} /> {getMapSizeName(getMapSize(map.size, MapSize))} {map.size.width}x
+          {map.size.height}
         </Stack>
         <Stack alignCenter gap wrap>
           <Icon icon={Chess} /> {getTranslatedBiomeName(map.config.biome)}
@@ -142,8 +136,7 @@ export default function MapDetails({
         )}
         {teamPlay && (
           <Stack alignCenter gap wrap>
-            <Icon icon={Users} />{' '}
-            <fbt desc="Label for teamplay maps">Teamplay</fbt>
+            <Icon icon={Users} /> <fbt desc="Label for teamplay maps">Teamplay</fbt>
           </Stack>
         )}
         {showGameState && (
@@ -182,11 +175,7 @@ export default function MapDetails({
             {showRound === 'ended' ? (
               <fbt desc="Description for map rounds">
                 <fbt:param name="round">{map.round}</fbt:param>{' '}
-                <fbt:plural
-                  count={map.round}
-                  many="Rounds"
-                  name="number of rounds"
-                >
+                <fbt:plural count={map.round} many="Rounds" name="number of rounds">
                   Round
                 </fbt:plural>
               </fbt>

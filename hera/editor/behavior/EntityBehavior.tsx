@@ -11,19 +11,11 @@ import { State, StateLike, StateWithActions } from '../../Types.tsx';
 import ActionWheel, { ActionButton } from '../../ui/ActionWheel.tsx';
 import SelectEntity from '../../ui/SelectEntity.tsx';
 
-const UnfoldButton = ({
-  actions: { update },
-  availableActions,
-  state,
-}: MenuItemProps) => {
+const UnfoldButton = ({ actions: { update }, availableActions, state }: MenuItemProps) => {
   const { map, navigationDirection, selectedPosition, selectedUnit } = state;
   return selectedUnit && selectedPosition && availableActions.has('unfold') ? (
     <ActionButton
-      label={
-        <fbt desc="Unfold button label (as short as possible, ideally one word)">
-          Unfold
-        </fbt>
-      }
+      label={<fbt desc="Unfold button label (as short as possible, ideally one word)">Unfold</fbt>}
       navigationDirection={navigationDirection}
       onClick={() => {
         const unit = selectedUnit.unfold();
@@ -39,19 +31,11 @@ const UnfoldButton = ({
   ) : null;
 };
 
-const FoldButton = ({
-  actions: { update },
-  availableActions,
-  state,
-}: MenuItemProps) => {
+const FoldButton = ({ actions: { update }, availableActions, state }: MenuItemProps) => {
   const { map, navigationDirection, selectedPosition, selectedUnit } = state;
   return selectedUnit && selectedPosition && availableActions.has('fold') ? (
     <ActionButton
-      label={
-        <fbt desc="Fold button label (as short as possible, ideally one word)">
-          Fold
-        </fbt>
-      }
+      label={<fbt desc="Fold button label (as short as possible, ideally one word)">Fold</fbt>}
       navigationDirection={navigationDirection}
       onClick={() => {
         const unit = selectedUnit.fold();
@@ -83,16 +67,12 @@ const CaptureButton = ({
             Stop Capture
           </fbt>
         ) : (
-          <fbt desc="Capture button label (as short as possible, ideally one word)">
-            Capture
-          </fbt>
+          <fbt desc="Capture button label (as short as possible, ideally one word)">Capture</fbt>
         )
       }
       navigationDirection={navigationDirection}
       onClick={() => {
-        const unit = isCapturing
-          ? selectedUnit.stopCapture()
-          : selectedUnit.capture();
+        const unit = isCapturing ? selectedUnit.stopCapture() : selectedUnit.capture();
         update({
           map: map.copy({
             units: map.units.set(selectedPosition, unit),
@@ -144,27 +124,16 @@ export default class EntityBehavior extends AbstractSelectBehavior {
     return { building, unit };
   }
 
-  override component = ({
-    actions,
-    state,
-  }: StateWithActions): ReactElement | null => {
+  override component = ({ actions, state }: StateWithActions): ReactElement | null => {
     const { update } = actions;
-    const {
-      map,
-      selectedBuilding,
-      selectedPosition,
-      selectedUnit,
-      tileSize,
-      zIndex,
-    } = state;
+    const { map, selectedBuilding, selectedPosition, selectedUnit, tileSize, zIndex } = state;
     const selectBuilding = useCallback(
       (position: Vector, building: Building) =>
         update(this.getState(position, state, null, building, actions)),
       [actions, state, update],
     );
     const selectUnit = useCallback(
-      (position: Vector, unit: Unit) =>
-        update(this.getState(position, state, unit, null, actions)),
+      (position: Vector, unit: Unit) => update(this.getState(position, state, unit, null, actions)),
       [actions, state, update],
     );
     if (selectedPosition && selectedBuilding && selectedUnit) {
@@ -206,16 +175,8 @@ export default class EntityBehavior extends AbstractSelectBehavior {
                 state={state}
                 type={selectedUnit.isCapturing() ? 'stopCapture' : 'capture'}
               />
-              <FoldButton
-                actions={actions}
-                availableActions={availableActions}
-                state={state}
-              />
-              <UnfoldButton
-                actions={actions}
-                availableActions={availableActions}
-                state={state}
-              />
+              <FoldButton actions={actions} availableActions={availableActions} state={state} />
+              <UnfoldButton actions={actions} availableActions={availableActions} state={state} />
             </ActionWheel>
           )}
           <Cursor

@@ -20,8 +20,7 @@ export default function Fireworks({
   return (
     <Animation
       delay={useMemo(
-        () =>
-          frames.map((_, index) => (index < 3 ? delay * 0.75 : delay * 1.75)),
+        () => frames.map((_, index) => (index < 3 ? delay * 0.75 : delay * 1.75)),
         [delay],
       )}
       frames={frames}

@@ -1,15 +1,10 @@
-import {
-  AnimationConfig,
-  FastAnimationConfig,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, FastAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { useMemo } from 'react';
 import { AnimationSpeed } from '../lib/AnimationSpeed.tsx';
 
 export type AnimationSpeed = 'FastAI' | 'FastAll' | 'Normal';
 
-export default function useAnimationSpeed(
-  animationSpeed: AnimationSpeed | null | undefined,
-) {
+export default function useAnimationSpeed(animationSpeed: AnimationSpeed | null | undefined) {
   return useMemo(
     () =>
       animationSpeed === AnimationSpeed.FastAll

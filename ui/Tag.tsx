@@ -57,22 +57,14 @@ export default function Tag({
   const children = (
     <>
       {tag}
-      {onRemove && (
-        <Icon button className={iconStyle} icon={Close} onClick={onRemove} />
-      )}
+      {onRemove && <Icon button className={iconStyle} icon={Close} onClick={onRemove} />}
     </>
   );
 
   useActive(active, onClick, to);
 
   return to ? (
-    <Link
-      className={className}
-      key={tag}
-      onClick={onClick}
-      style={style}
-      to={to}
-    >
+    <Link className={className} key={tag} onClick={onClick} style={style} to={to}>
       {children}
     </Link>
   ) : (

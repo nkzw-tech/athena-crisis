@@ -23,14 +23,10 @@ import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { GameStateWithGameActionResponseEntry } from './hooks/useReplayGameState.tsx';
 import { PlayState } from './ReplayMap.tsx';
 
-const isNewPlayer = (
-  previousMap: MapData | undefined,
-  activeMap: MapData | undefined,
-) =>
+const isNewPlayer = (previousMap: MapData | undefined, activeMap: MapData | undefined) =>
   previousMap &&
   activeMap &&
-  (previousMap.currentPlayer !== activeMap.currentPlayer ||
-    previousMap.round !== activeMap.round);
+  (previousMap.currentPlayer !== activeMap.currentPlayer || previousMap.round !== activeMap.round);
 
 export default function ReplayPanel({
   currentIndex,
@@ -126,10 +122,7 @@ export default function ReplayPanel({
 
   useInput(
     'previous',
-    useCallback(
-      () => setCurrentIndex(previousTurn),
-      [previousTurn, setCurrentIndex],
-    ),
+    useCallback(() => setCurrentIndex(previousTurn), [previousTurn, setCurrentIndex]),
   );
 
   useInput(
@@ -148,10 +141,7 @@ export default function ReplayPanel({
             >
               <Icon horizontalFlip icon={FastForward} />
             </InlineLink>
-            <InlineLink
-              disabled={!hasState(previous)}
-              onClick={() => setCurrentIndex(previous)}
-            >
+            <InlineLink disabled={!hasState(previous)} onClick={() => setCurrentIndex(previous)}>
               <Icon icon={Back} />
             </InlineLink>
             <Slider
@@ -173,17 +163,10 @@ export default function ReplayPanel({
               value={String(currentMap?.round || 1)}
             />
             {currentMap && <MiniPlayerIcon id={currentMap.currentPlayer} />}
-            <InlineLink
-              onClick={() =>
-                setPlayState(playState === 'paused' ? 'playing' : 'paused')
-              }
-            >
+            <InlineLink onClick={() => setPlayState(playState === 'paused' ? 'playing' : 'paused')}>
               <Icon icon={playState === 'paused' ? Play : Pause} />
             </InlineLink>
-            <InlineLink
-              disabled={!hasState(next)}
-              onClick={() => setCurrentIndex(next)}
-            >
+            <InlineLink disabled={!hasState(next)} onClick={() => setCurrentIndex(next)}>
               <Icon icon={Next} />
             </InlineLink>
             <InlineLink

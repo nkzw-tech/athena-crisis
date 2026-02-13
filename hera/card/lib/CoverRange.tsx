@@ -12,9 +12,4 @@ const min =
     ({ configuration: { cover } }) => cover,
   )?.configuration.cover || 0) - 0.01;
 
-export default getAttributeRange(
-  tiles,
-  ({ configuration: { cover } }) => cover,
-  min,
-  10,
-);
+export default getAttributeRange(tiles, ({ configuration: { cover } }) => cover, min, 10);

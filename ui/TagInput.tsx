@@ -2,10 +2,7 @@ import { css, cx } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { useMemo, useRef } from 'react';
 import { TagListInternal } from './TagList.tsx';
-import Typeahead, {
-  TypeaheadDataSource,
-  TypeaheadDataSourceEntry,
-} from './Typeahead.tsx';
+import Typeahead, { TypeaheadDataSource, TypeaheadDataSourceEntry } from './Typeahead.tsx';
 
 export default function TagInput<T>({
   dataSource,
@@ -35,12 +32,7 @@ export default function TagInput<T>({
       stretch
       wrap
     >
-      <TagListInternal
-        editable
-        setTags={setTags}
-        stringify={stringify}
-        tags={tags}
-      />
+      <TagListInternal editable setTags={setTags} stringify={stringify} tags={tags} />
       <div className={inputStyle}>
         <Typeahead
           dataSource={dataSource}
@@ -52,9 +44,7 @@ export default function TagInput<T>({
           onBackspace={() => setTags(tags.slice(0, -1))}
           onSelect={(result) => {
             setTags([
-              ...new Map(
-                [...tags, result.data].map((tag) => [toValue(tag), tag]),
-              ).values(),
+              ...new Map([...tags, result.data].map((tag) => [toValue(tag), tag])).values(),
             ]);
             return '';
           }}

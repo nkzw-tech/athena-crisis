@@ -10,11 +10,7 @@ export default function useMenuNavigation(
   layer: InputLayer = 'menu',
   nowrap = false,
   initial: 'selected' | number = -1,
-): [
-  selected: number,
-  active: number,
-  reset: (currentSelected?: number) => void,
-] {
+): [selected: number, active: number, reset: (currentSelected?: number) => void] {
   const [count, setCount] = useState(initialCount);
   const [selected, setSelected] = useState(
     initial !== 'selected' && isValid(count, initial) ? initial : -1,
@@ -23,13 +19,7 @@ export default function useMenuNavigation(
 
   if (count !== initialCount) {
     setCount(initialCount);
-    setSelected(
-      initial === 'selected'
-        ? selected
-        : isValid(initialCount, initial)
-          ? initial
-          : -1,
-    );
+    setSelected(initial === 'selected' ? selected : isValid(initialCount, initial) ? initial : -1);
     if (active !== -1) {
       resetActive();
     }

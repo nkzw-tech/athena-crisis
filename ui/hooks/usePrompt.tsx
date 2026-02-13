@@ -2,13 +2,7 @@ import { useEffect } from 'react';
 import { useBlocker } from 'react-router-dom';
 import useAlert from './useAlert.tsx';
 
-export function usePrompt({
-  message,
-  when,
-}: {
-  message: string;
-  when: boolean;
-}) {
+export function usePrompt({ message, when }: { message: string; when: boolean }) {
   const { alert } = useAlert();
   const blocker = useBlocker(when);
 

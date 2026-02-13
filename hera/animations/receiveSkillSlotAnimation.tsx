@@ -13,10 +13,7 @@ export default async function receiveSkillSlotAnimation(
   actionResponse: ReceiveRewardActionResponse,
 ): Promise<State> {
   const { player } = actionResponse;
-  const slot =
-    actionResponse.reward.type === 'SkillSlot'
-      ? actionResponse.reward.slot
-      : null;
+  const slot = actionResponse.reward.type === 'SkillSlot' ? actionResponse.reward.slot : null;
 
   if (!slot) {
     return state;

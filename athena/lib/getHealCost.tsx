@@ -5,8 +5,7 @@ import getUnitValue from './getUnitValue.tsx';
 
 export default function getHealCost(unit: Unit, player: Player) {
   return Math.round(
-    ((Math.min(MaxHealth, unit.health + HealAmount) - unit.health) /
-      MaxHealth) *
+    ((Math.min(MaxHealth, unit.health + HealAmount) - unit.health) / MaxHealth) *
       getUnitValue(unit, player) *
       0.8,
   );

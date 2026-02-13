@@ -6,12 +6,7 @@ import { EditorState } from '../Types.tsx';
 export default class VectorBehavior {
   public readonly type = 'vector' as const;
 
-  enter(
-    vector: Vector,
-    state: State,
-    actions: Actions,
-    editor?: EditorState,
-  ): StateLike | null {
+  enter(vector: Vector, state: State, actions: Actions, editor?: EditorState): StateLike | null {
     return editor?.isDrawing ? this.put(vector, state, actions, editor) : null;
   }
 

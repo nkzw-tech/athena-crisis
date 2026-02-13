@@ -10,15 +10,10 @@ import Player from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
-const getUnitRatio = (
-  map: MapData,
-  player: Player,
-  activeType: ActiveUnitTypes,
-) => {
+const getUnitRatio = (map: MapData, player: Player, activeType: ActiveUnitTypes) => {
   const allUnits = map.units.filter(
     (unit, vector) =>
-      map.matchesPlayer(unit, player) &&
-      matchesActiveType(activeType, unit, vector),
+      map.matchesPlayer(unit, player) && matchesActiveType(activeType, unit, vector),
   );
   const completedUnits = allUnits.filter((unit) => unit.isCompleted());
   return completedUnits.size / allUnits.size;

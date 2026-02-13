@@ -1,9 +1,6 @@
 import Team from '@deities/athena/map/Team.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  GameEndActionResponse,
-  OptionalObjectiveActionResponse,
-} from '../Objective.tsx';
+import { GameEndActionResponse, OptionalObjectiveActionResponse } from '../Objective.tsx';
 
 export default function getMatchingTeam(
   map: MapData,

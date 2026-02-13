@@ -6,20 +6,15 @@ import { defineConfig } from 'vocs';
 import presets from '../infra/babelPresets.tsx';
 import createResolver from '../infra/createResolver.tsx';
 
-const Licht = JSON.parse(
-  readFileSync('./node_modules/licht-theme/licht.json', 'utf8'),
-);
-const Dunkel = JSON.parse(
-  readFileSync('./node_modules/dunkel-theme/dunkel.json', 'utf8'),
-);
+const Licht = JSON.parse(readFileSync('./node_modules/licht-theme/licht.json', 'utf8'));
+const Dunkel = JSON.parse(readFileSync('./node_modules/dunkel-theme/dunkel.json', 'utf8'));
 
 export default defineConfig({
   basePath: '/open-source',
   baseUrl: 'https://athenacrisis.com/open-source',
   description: 'Open Source Docs & Playground',
   editLink: {
-    pattern:
-      'https://github.com/nkzw-tech/athena-crisis/tree/main/docs/content/pages/:path',
+    pattern: 'https://github.com/nkzw-tech/athena-crisis/tree/main/docs/content/pages/:path',
     text: 'Edit on GitHub',
   },
   font: {
@@ -30,12 +25,7 @@ export default defineConfig({
   head: (
     <>
       <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
-      <link
-        as="font"
-        href="/fonts/AthenaNova.woff2"
-        rel="preload"
-        type="font/woff2"
-      />
+      <link as="font" href="/fonts/AthenaNova.woff2" rel="preload" type="font/woff2" />
     </>
   ),
   iconUrl: '/favicon.png',
@@ -47,8 +37,7 @@ export default defineConfig({
       },
     },
   },
-  ogImageUrl:
-    'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
+  ogImageUrl: 'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
   rootDir: './content',
   sidebar: [
     {

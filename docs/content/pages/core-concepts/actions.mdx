@@ -120,11 +120,7 @@ export const SleepAction = (from: Vector) =>
 Now, if you are writing a test to simulate some game actions, you can use the mutator like this:
 
 ```tsx
-const response = executeGameActions(map, [
-  MoveAction(from, to),
-  SleepAction(to),
-  EndTurnAction(),
-]);
+const response = executeGameActions(map, [MoveAction(from, to), SleepAction(to), EndTurnAction()]);
 ```
 
 TypeScript may point you to a few more utility functions that need handling for your action, but once you are done we can move on to the UI layer.
@@ -136,10 +132,7 @@ We are now ready to make our first change to the Athena Crisis game client. Most
 For our new action, we need to first implement the handler for what happens when another player or the AI execute this action. This code lives in [`processActionResponse`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/action-response/processActionResponse.tsx) which is a wrapper around `applyActionResponse` to animate game state and apply the ActionResponse at the right time. The client side Sleep Action could look something like this:
 
 ```tsx
-export function sleepAction(
-  { optimisticAction, update }: Actions,
-  state: State,
-): Promise<State> {
+export function sleepAction({ optimisticAction, update }: Actions, state: State): Promise<State> {
   const { map, selectedPosition, vision } = state;
   if (selectedPosition) {
     return update({

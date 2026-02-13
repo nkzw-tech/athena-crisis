@@ -40,9 +40,7 @@ export default function DeleteTile({
           zoom: scale,
         }}
       >
-        {active && (
-          <Cursor color="red" position={vec(1, 1)} size={tileSize} zIndex={1} />
-        )}
+        {active && <Cursor color="red" position={vec(1, 1)} size={tileSize} zIndex={1} />}
       </div>
     </InlineLink>
   );

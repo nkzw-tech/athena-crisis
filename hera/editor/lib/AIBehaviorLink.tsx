@@ -32,18 +32,13 @@ export default function AIBehaviorLink({
 }: {
   behavior: AIBehavior;
   entity: Entity;
-  updateEntity: (
-    undoKey: EntityUndoKey,
-    entity: Entity,
-  ) => Promise<State | void>;
+  updateEntity: (undoKey: EntityUndoKey, entity: Entity) => Promise<State | void>;
 }) {
   if (isUnit(entity)) {
     return (
       <InlineLink
         className={buttonStyle}
-        onClick={() =>
-          updateEntity(`behavior-${behavior}`, entity.setAIBehavior(behavior))
-        }
+        onClick={() => updateEntity(`behavior-${behavior}`, entity.setAIBehavior(behavior))}
         selectedText={entity.matchesBehavior(behavior)}
       >
         {getAIBehaviorText(behavior)}

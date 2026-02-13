@@ -18,17 +18,9 @@ type AttackableEntities =
     }
   | null;
 
-export default function getAttackableEntities(
-  vector: Vector,
-  state: State,
-): AttackableEntities {
+export default function getAttackableEntities(vector: Vector, state: State): AttackableEntities {
   const { attackable, map, selectedUnit, vision } = state;
-  if (
-    selectedUnit &&
-    attackable &&
-    attackable.has(vector) &&
-    vision.isVisible(map, vector)
-  ) {
+  if (selectedUnit && attackable && attackable.has(vector) && vision.isVisible(map, vector)) {
     const targetUnit = map.units.get(vector);
     const targetBuilding = map.buildings.get(vector);
     const building =
@@ -44,13 +36,7 @@ export default function getAttackableEntities(
         ? targetUnit
         : null;
 
-    return building && unit
-      ? { building, unit }
-      : building
-        ? { building }
-        : unit
-          ? { unit }
-          : null;
+    return building && unit ? { building, unit } : building ? { building } : unit ? { unit } : null;
   }
   return null;
 }

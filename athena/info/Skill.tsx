@@ -557,9 +557,7 @@ const attackTilePowerStatusEffects = new Map<Skill, TileMovementMap>([
   [Skill.BuyUnitSuperTank, new Map([[TileTypes.Street, treadTileAttack]])],
 ]);
 
-const attackLeaderPowerStatusEffects: SkillMap = new Map([
-  [Skill.BuyUnitCommander, 1],
-]);
+const attackLeaderPowerStatusEffects: SkillMap = new Map([[Skill.BuyUnitCommander, 1]]);
 
 const defenseStatusEffects: SkillMap = new Map([
   [Skill.AttackIncreaseMajorDefenseDecreaseMajor, -0.2],
@@ -607,10 +605,7 @@ const defenseMovementTypeStatusEffects: MovementSkillMap = new Map([
       [MovementTypes.Tread, -0.15],
     ]),
   ],
-  [
-    Skill.UnitRailDefenseIncreasePowerAttackIncrease,
-    new Map([[MovementTypes.Rail, 0.2]]),
-  ],
+  [Skill.UnitRailDefenseIncreasePowerAttackIncrease, new Map([[MovementTypes.Rail, 0.2]])],
   [Skill.BuyUnitDroneBomber, new Map([[MovementTypes.Air, 0.1]])],
 ]);
 
@@ -644,27 +639,15 @@ const skillRangePowerEffects = new Map<number, RangeSkillMap>([
   [UnitID.DroneBomber, new Map([[Skill.BuyUnitDroneBomber, [3, 7]]])],
 ]);
 
-const skillMovementTypeRadiusEffects = new Map<
-  MovementType,
-  Map<Skill, number>
->([
-  [
-    MovementTypes.Tires,
-    new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
-  ],
-  [
-    MovementTypes.Tread,
-    new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]]),
-  ],
+const skillMovementTypeRadiusEffects = new Map<MovementType, Map<Skill, number>>([
+  [MovementTypes.Tires, new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]])],
+  [MovementTypes.Tread, new Map([[Skill.MovementIncreaseGroundUnitDefenseDecrease, 1]])],
   [MovementTypes.HeavySoldier, new Map([[Skill.BuyUnitSuperAPU, 1]])],
   [MovementTypes.AirInfantry, new Map([[Skill.DragonSaboteur, 1]])],
   [MovementTypes.Amphibious, new Map([[Skill.ShipIncreaseAttackAndRange, 1]])],
 ]);
 
-const skillMovementTypeRadiusPowerEffects = new Map<
-  MovementType,
-  Map<Skill, number>
->([
+const skillMovementTypeRadiusPowerEffects = new Map<MovementType, Map<Skill, number>>([
   [
     MovementTypes.Tires,
     new Map([
@@ -730,10 +713,7 @@ const buildingCosts = new Map<ID, Map<Skill, number>>([
 ]);
 
 const blockedUnits = new Map<Skill, ReadonlySet<ID>>([
-  [
-    Skill.BuyUnitZombieDefenseDecreaseMajor,
-    new Set([UnitID.Pioneer, UnitID.Infantry]),
-  ],
+  [Skill.BuyUnitZombieDefenseDecreaseMajor, new Set([UnitID.Pioneer, UnitID.Infantry])],
   [Skill.BuyUnitAIU, new Set([UnitID.Infantry])],
 ]);
 
@@ -742,10 +722,7 @@ const healPower = new Map<Skill, ActiveUnitTypes>([
     Skill.HealVehiclesAttackDecrease,
     new Set([MovementTypes.Tires, MovementTypes.Tread, MovementTypes.Rail]),
   ],
-  [
-    Skill.HealInfantryMedicPower,
-    new Set([MovementTypes.AirInfantry, MovementTypes.Soldier]),
-  ],
+  [Skill.HealInfantryMedicPower, new Set([MovementTypes.AirInfantry, MovementTypes.Soldier])],
   [Skill.BuyUnitSuperTank, new Set([MovementTypes.Tread])],
 ]);
 
@@ -784,10 +761,7 @@ const getTileStatusEffect = (
   tile: TileInfo | null,
 ) =>
   tile && tileStatusEffects && isUnitInfo(entity)
-    ? (tileStatusEffects
-        .get(skill)
-        ?.get(tile.group)
-        ?.get(entity.movementType) ?? 0)
+    ? (tileStatusEffects.get(skill)?.get(tile.group)?.get(entity.movementType) ?? 0)
     : 0;
 
 const someOneSkill = (
@@ -803,12 +777,7 @@ const someOneSkill = (
   skill
     ? (statusEffects.get(skill) ?? 0) +
       (entity
-        ? getUnitStatusEffect(
-            unitStatusEffects,
-            leaderStatusEffects,
-            skill,
-            entity,
-          ) +
+        ? getUnitStatusEffect(unitStatusEffects, leaderStatusEffects, skill, entity) +
           getMovementStatusEffect(movementStatusEffects, skill, entity.info) +
           getTileStatusEffect(tileStatusEffects, skill, entity.info, tile)
         : 0)
@@ -955,8 +924,7 @@ export function getBlockedUnits(skill: Skill) {
   return blockedUnits.get(skill);
 }
 
-const unitIsBlocked = (unit: UnitInfo, skill: Skill) =>
-  blockedUnits.get(skill)?.has(unit.id);
+const unitIsBlocked = (unit: UnitInfo, skill: Skill) => blockedUnits.get(skill)?.has(unit.id);
 
 export function getBuildingCost(
   building: BuildingInfo,
@@ -964,17 +932,11 @@ export function getBuildingCost(
   skills: ReadonlySet<Skill>,
   activeSkills: ReadonlySet<Skill>,
 ) {
-  if (
-    building.id === BuildingID.PowerStation &&
-    activeSkills.has(Skill.UnlockPowerStation)
-  ) {
+  if (building.id === BuildingID.PowerStation && activeSkills.has(Skill.UnlockPowerStation)) {
     return 500;
   }
 
-  if (
-    building.id === BuildingID.ResearchLab &&
-    activeSkills.has(Skill.UnlockScientist)
-  ) {
+  if (building.id === BuildingID.ResearchLab && activeSkills.has(Skill.UnlockScientist)) {
     return 600;
   }
 
@@ -1035,10 +997,7 @@ export function getUnitCost(
   return ceil(min * modifier);
 }
 
-export function hasUnlockedBuilding(
-  building: BuildingInfo,
-  skills: ReadonlySet<Skill>,
-) {
+export function hasUnlockedBuilding(building: BuildingInfo, skills: ReadonlySet<Skill>) {
   if (building.id === BuildingID.ResearchLab) {
     return true;
   }
@@ -1133,11 +1092,7 @@ export function getUnitRadius(
   );
 }
 
-const getSkillUnitRange = (
-  unit: UnitInfo,
-  effects: RangeMap,
-  skills: ReadonlySet<Skill>,
-) => {
+const getSkillUnitRange = (unit: UnitInfo, effects: RangeMap, skills: ReadonlySet<Skill>) => {
   if (skills.size === 0) {
     return null;
   }
@@ -1193,60 +1148,35 @@ export function getSkillEffect(skillType: SkillStatusType, skill: Skill) {
   }
 }
 
-export function getSkillDefenseMovementTypeStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
-  return (
-    (type === 'regular' && defenseMovementTypeStatusEffects.get(skill)) || null
-  );
+export function getSkillDefenseMovementTypeStatusEffect(skill: Skill, type: SkillActivationType) {
+  return (type === 'regular' && defenseMovementTypeStatusEffects.get(skill)) || null;
 }
 
-export function getSkillTileDefenseStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
+export function getSkillTileDefenseStatusEffect(skill: Skill, type: SkillActivationType) {
   return (type === 'regular' && defenseTileStatusEffects.get(skill)) || null;
 }
 
-export function getSkillAttackUnitStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
+export function getSkillAttackUnitStatusEffect(skill: Skill, type: SkillActivationType) {
   return type === 'regular'
     ? attackUnitStatusEffects.get(skill)
     : attackUnitPowerStatusEffects.get(skill) || null;
 }
 
-export function getSkillDefenseUnitStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
+export function getSkillDefenseUnitStatusEffect(skill: Skill, type: SkillActivationType) {
   return (type === 'regular' && defenseUnitStatusEffects.get(skill)) || null;
 }
 
-export function getSkillAttackLeaderUnitStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
-  return type === 'regular'
-    ? null
-    : attackLeaderPowerStatusEffects.get(skill) || null;
+export function getSkillAttackLeaderUnitStatusEffect(skill: Skill, type: SkillActivationType) {
+  return type === 'regular' ? null : attackLeaderPowerStatusEffects.get(skill) || null;
 }
 
-export function getSkillAttackMovementTypeStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
+export function getSkillAttackMovementTypeStatusEffect(skill: Skill, type: SkillActivationType) {
   return type === 'regular'
     ? attackMovementTypeStatusEffects.get(skill)
     : attackMovementTypePowerStatusEffects.get(skill) || null;
 }
 
-export function getSkillTileAttackStatusEffect(
-  skill: Skill,
-  type: SkillActivationType,
-) {
+export function getSkillTileAttackStatusEffect(skill: Skill, type: SkillActivationType) {
   return (
     (type === 'regular'
       ? attackTileStatusEffects.get(skill)
@@ -1270,9 +1200,7 @@ export function getSkillUnitCosts(skill: Skill, type: SkillActivationType) {
 export function getSkillUnitMovement(skill: Skill, type: SkillActivationType) {
   const movementTypes = new Map<MovementType, number>();
   const effects =
-    type === 'regular'
-      ? skillMovementTypeRadiusEffects
-      : skillMovementTypeRadiusPowerEffects;
+    type === 'regular' ? skillMovementTypeRadiusEffects : skillMovementTypeRadiusPowerEffects;
   for (const [unit, movement] of effects) {
     const radius = movement.get(skill);
     if (radius) {
@@ -1284,8 +1212,7 @@ export function getSkillUnitMovement(skill: Skill, type: SkillActivationType) {
 
 export function getUnitRangeForSkill(skill: Skill, type: SkillActivationType) {
   const unitTypes = new Map<ID, [number, number]>();
-  const effects =
-    type === 'regular' ? skillRangeEffects : skillRangePowerEffects;
+  const effects = type === 'regular' ? skillRangeEffects : skillRangePowerEffects;
   for (const [unit, rangeMap] of effects) {
     const range = rangeMap.get(skill);
     if (range) {
@@ -1319,21 +1246,14 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.BuyUnitCannon) {
     for (const [vector, unit] of map.units) {
-      if (
-        unit.isUnfolded() &&
-        unit.isCompleted() &&
-        map.matchesPlayer(unit, player)
-      ) {
+      if (unit.isUnfolded() && unit.isCompleted() && map.matchesPlayer(unit, player)) {
         list.push(vector);
       }
     }
   }
 
   for (const [vector, unit] of map.units) {
-    if (
-      map.matchesPlayer(unit, player) &&
-      skillRangePowerEffects.get(unit.id)?.get(skill)
-    ) {
+    if (map.matchesPlayer(unit, player) && skillRangePowerEffects.get(unit.id)?.get(skill)) {
       list.push(vector);
     }
   }
@@ -1349,11 +1269,7 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.DragonSaboteur) {
     for (const [vector, unit] of map.units) {
-      if (
-        unit.id === UnitID.Saboteur &&
-        unit.isLeader() &&
-        map.matchesPlayer(unit, player)
-      ) {
+      if (unit.id === UnitID.Saboteur && unit.isLeader() && map.matchesPlayer(unit, player)) {
         list.push(vector);
       }
     }
@@ -1380,11 +1296,7 @@ const getSkillActiveUnitTypes = (
 
   if (skill === Skill.BuyUnitCommander) {
     for (const [vector, unit] of map.units) {
-      if (
-        unit.isLeader() &&
-        unit.info.hasAttack() &&
-        map.matchesPlayer(unit, player)
-      ) {
+      if (unit.isLeader() && unit.info.hasAttack() && map.matchesPlayer(unit, player)) {
         list.push(vector);
       }
     }
@@ -1414,9 +1326,7 @@ const getSkillActiveUnitTypes = (
         .filter(
           (unit, vector) =>
             map.matchesPlayer(player, unit) &&
-            attackTileMap
-              .get(map.getTileInfo(vector).group)
-              ?.get(unit.info.movementType),
+            attackTileMap.get(map.getTileInfo(vector).group)?.get(unit.info.movementType),
         )
         .keys(),
     );
@@ -1425,21 +1335,14 @@ const getSkillActiveUnitTypes = (
   return list;
 };
 
-export function getActiveUnitTypes(
-  map: MapData,
-  player: Player,
-): ActiveUnitTypes {
+export function getActiveUnitTypes(map: MapData, player: Player): ActiveUnitTypes {
   const skills = player.activeSkills;
   if (!skills.size) {
     return new Set();
   }
 
   if (skills.size === 1) {
-    const value = getSkillActiveUnitTypes(
-      map,
-      player,
-      skills.values().next().value!,
-    );
+    const value = getSkillActiveUnitTypes(map, player, skills.values().next().value!);
     return value === 'all' ? value : new Set(value);
   }
 

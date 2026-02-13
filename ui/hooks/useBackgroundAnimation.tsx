@@ -19,10 +19,7 @@ const concurrency = navigator.hardwareConcurrency ?? null;
 
 export default function useBackgroundAnimation() {
   useEffect(() => {
-    if (
-      (memory != null && memory < 2) ||
-      (concurrency != null && concurrency < 2)
-    ) {
+    if ((memory != null && memory < 2) || (concurrency != null && concurrency < 2)) {
       return;
     }
 

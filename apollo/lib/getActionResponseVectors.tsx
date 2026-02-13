@@ -46,9 +46,7 @@ export default function getActionResponseVectors(
     case 'ActivatePower':
     case 'EndTurn': {
       const player =
-        actionResponse.type === 'EndTurn'
-          ? actionResponse.next.player
-          : map.getCurrentPlayer();
+        actionResponse.type === 'EndTurn' ? actionResponse.next.player : map.getCurrentPlayer();
 
       const match = (entity: Entity) => map.matchesPlayer(entity, player);
       let vectors = map.units.filter(match).keySeq().toArray();
@@ -63,15 +61,10 @@ export default function getActionResponseVectors(
       const { player: dynamicPlayer, unitId } = actionResponse;
       const player = resolveDynamicPlayerID(map, dynamicPlayer);
       const position = map.units.findKey(
-        (unit) =>
-          unit.id === unitId &&
-          unit.isLeader() &&
-          map.matchesPlayer(unit, player),
+        (unit) => unit.id === unitId && unit.isLeader() && map.matchesPlayer(unit, player),
       );
       // Select the position above if possible because it shows the character name.
-      return position
-        ? [map.contains(position.up()) ? position.up() : position]
-        : [];
+      return position ? [map.contains(position.up()) ? position.up() : position] : [];
     }
     case 'Swap': {
       const { source } = actionResponse;

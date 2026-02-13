@@ -126,11 +126,7 @@ export default function Animation({
 
   return (
     <div
-      className={
-        'sprite' in props && props.sprite
-          ? sprite(props.sprite, variant)
-          : undefined
-      }
+      className={'sprite' in props && props.sprite ? sprite(props.sprite, variant) : undefined}
       ref={setRef}
       style={{
         ...('source' in props && props.source

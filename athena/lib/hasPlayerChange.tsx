@@ -6,7 +6,6 @@ export default function hasPlayerChange(
   activeMap: PlainMap | MapData,
 ) {
   return (
-    previousMap.currentPlayer !== activeMap.currentPlayer ||
-    previousMap.round !== activeMap.round
+    previousMap.currentPlayer !== activeMap.currentPlayer || previousMap.round !== activeMap.round
   );
 }

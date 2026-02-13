@@ -1,7 +1,4 @@
-import {
-  EndTurnAction,
-  RescueAction,
-} from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { EndTurnAction, RescueAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Pioneer } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -40,14 +37,12 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
       .set(vecC, Pioneer.create(1)),
   });
 
-  const [gameStateA, gameActionResponseA] = await executeGameActions(
-    initialMap,
-    [RescueAction(vecA, vecB), RescueAction(vecC, vecB)],
-  );
+  const [gameStateA, gameActionResponseA] = await executeGameActions(initialMap, [
+    RescueAction(vecA, vecB),
+    RescueAction(vecC, vecB),
+  ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "Rescue (1,1 → 2,1) { player: 1, name: null }
     Rescue (3,1 → 2,1) { player: 1, name: -11 }"
@@ -57,19 +52,14 @@ test('rescuing takes two units in one turn or one unit in two turns', async () =
   const lastMapA = gameStateA.at(-1)![1];
   expect(lastMapA.units.get(vecB)!.player).toBe(1);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    initialMap,
-    [
-      RescueAction(vecA, vecB),
-      EndTurnAction(),
-      EndTurnAction(),
-      RescueAction(vecA, vecB),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(initialMap, [
+    RescueAction(vecA, vecB),
+    EndTurnAction(),
+    EndTurnAction(),
+    RescueAction(vecA, vecB),
+  ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseB),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(
     `
     "Rescue (1,1 → 2,1) { player: 1, name: null }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -101,9 +91,7 @@ test('in-progress rescues can be stolen by other players', async () => {
     RescueAction(vecA, vecB),
   ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
     "Rescue (1,1 → 2,1) { player: 1, name: null }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }

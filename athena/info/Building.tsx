@@ -218,10 +218,7 @@ export class BuildingInfo {
   }
 
   isAccessibleBy(unitInfo: UnitInfo) {
-    return (
-      this.configuration.isAccessible &&
-      unitInfo.hasAbility(Ability.AccessBuildings)
-    );
+    return this.configuration.isAccessible && unitInfo.hasAbility(Ability.AccessBuildings);
   }
 
   isHQ() {
@@ -292,20 +289,12 @@ export const Factory = new BuildingInfo(
     placeOn: new Set([ConstructionSite]),
     restrictedUnits: SpecialUnits,
     sort: 3,
-    unitTypes: new Set([
-      EntityType.Ground,
-      EntityType.Artillery,
-      EntityType.Rail,
-    ]),
+    unitTypes: new Set([EntityType.Ground, EntityType.Artillery, EntityType.Rail]),
   },
   { name: 'Buildings', position: new SpriteVector(6, 0) },
 );
 
-const AirUnitTypes = new Set([
-  EntityType.LowAltitude,
-  EntityType.Airplane,
-  EntityType.AirSoldier,
-]);
+const AirUnitTypes = new Set([EntityType.LowAltitude, EntityType.Airplane, EntityType.AirSoldier]);
 
 export const Airbase = new BuildingInfo(
   4,
@@ -537,11 +526,7 @@ export const RepairShop = new BuildingInfo(
     cost: 300,
     defense: 30,
     funds: MinFunds * 1.5,
-    healTypes: new Set([
-      EntityType.Ground,
-      EntityType.Artillery,
-      EntityType.Amphibious,
-    ]),
+    healTypes: new Set([EntityType.Ground, EntityType.Artillery, EntityType.Amphibious]),
     placeOn: new Set([ConstructionSite]),
     sort: 4,
   },
@@ -670,9 +655,7 @@ export function getBuildingInfo(id: number): BuildingInfo | null {
 export function getBuildingInfoOrThrow(id: number): BuildingInfo {
   const building = getBuildingInfo(id);
   if (!building) {
-    throw new Error(
-      `getBuildingInfoOrThrow: Could not find building with id '${id}'.`,
-    );
+    throw new Error(`getBuildingInfoOrThrow: Could not find building with id '${id}'.`);
   }
   return building;
 }
@@ -680,28 +663,18 @@ export function getBuildingInfoOrThrow(id: number): BuildingInfo {
 const buildings = Buildings.slice().sort((infoA, infoB) => {
   const sortA = infoA.configuration.sort;
   const sortB = infoB.configuration.sort;
-  return sortA === sortB
-    ? infoA.id > infoB.id
-      ? 1
-      : -1
-    : sortA > sortB
-      ? 1
-      : -1;
+  return sortA === sortB ? (infoA.id > infoB.id ? 1 : -1) : sortA > sortB ? 1 : -1;
 });
 
 export function getAllBuildings(): ReadonlyArray<BuildingInfo> {
   return buildings;
 }
 
-export function filterBuildings(
-  fn: (buildingInfo: BuildingInfo) => boolean,
-): Array<BuildingInfo> {
+export function filterBuildings(fn: (buildingInfo: BuildingInfo) => boolean): Array<BuildingInfo> {
   return buildings.filter(fn);
 }
 
-export function mapBuildings<T>(
-  fn: (buildingInfo: BuildingInfo) => T,
-): Array<T> {
+export function mapBuildings<T>(fn: (buildingInfo: BuildingInfo) => T): Array<T> {
   return buildings.map(fn);
 }
 
@@ -719,7 +692,7 @@ export function mapBuildingsWithContentRestriction<T>(
 }
 
 export const BuildableTiles = new Set(
-  filterBuildings(
-    ({ configuration: { canBeCreated } }) => canBeCreated,
-  ).flatMap(({ configuration: { placeOn } }) => (placeOn ? [...placeOn] : [])),
+  filterBuildings(({ configuration: { canBeCreated } }) => canBeCreated).flatMap(
+    ({ configuration: { placeOn } }) => (placeOn ? [...placeOn] : []),
+  ),
 );

@@ -1,7 +1,4 @@
-import {
-  AttributeRange,
-  AttributeRangeWithZero,
-} from '@deities/athena/lib/getAttributeRange.tsx';
+import { AttributeRange, AttributeRangeWithZero } from '@deities/athena/lib/getAttributeRange.tsx';
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -10,10 +7,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
-import {
-  TypeaheadDataSource,
-  TypeaheadDataSourceEntry,
-} from '@deities/ui/Typeahead.tsx';
+import { TypeaheadDataSource, TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
@@ -26,9 +20,7 @@ export type UserNode = Readonly<{
   id: string;
 }>;
 
-const emptySuggestions = [
-  new TypeaheadDataSourceEntry('published', 'published', 'published'),
-];
+const emptySuggestions = [new TypeaheadDataSourceEntry('published', 'published', 'published')];
 
 export default function CampaignEditorSettingsPanel({
   campaignExists,
@@ -81,9 +73,7 @@ export default function CampaignEditorSettingsPanel({
               className={inputStyle}
               onBlur={(event) => event.target.classList.add('validate')}
               onChange={(event) => setCampaignName(event.target.value)}
-              placeholder={String(
-                fbt('campaign name', 'placeholder for campaign name'),
-              )}
+              placeholder={String(fbt('campaign name', 'placeholder for campaign name'))}
               required
               type="text"
               value={campaignName}
@@ -157,9 +147,7 @@ export default function CampaignEditorSettingsPanel({
               onClick={() => setPlayStyle(null)}
               selected={playStyle == null}
             >
-              <fbt desc="Button to allow the user to select their playstyle">
-                User Selectable
-              </fbt>
+              <fbt desc="Button to allow the user to select their playstyle">User Selectable</fbt>
             </InlineLink>
             {Object.values(PlayStyle).map((currentPlayStyle) => (
               <InlineLink
@@ -175,9 +163,7 @@ export default function CampaignEditorSettingsPanel({
         </Stack>
         <Stack alignCenter between gap wrap>
           <span>
-            <fbt desc="Label for campaign difficulty">
-              Campaign Difficulty Rating
-            </fbt>
+            <fbt desc="Label for campaign difficulty">Campaign Difficulty Rating</fbt>
           </span>
           <RangeSelector invert onSelect={setDifficulty} value={difficulty} />
         </Stack>
@@ -194,9 +180,7 @@ export default function CampaignEditorSettingsPanel({
               </InlineLink>
             )}
             <InlineLink onClick={exportMaps}>
-              <fbt desc="Button to export all maps from a campaign">
-                Export all Maps
-              </fbt>
+              <fbt desc="Button to export all maps from a campaign">Export all Maps</fbt>
             </InlineLink>
           </>
         ) : null}

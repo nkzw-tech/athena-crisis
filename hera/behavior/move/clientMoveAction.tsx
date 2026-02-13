@@ -17,10 +17,7 @@ export default function clientMoveAction(
   initialPath: ReadonlyArray<Vector> | null | undefined,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (
-    state: State,
-    actionResponse: MoveActionResponse,
-  ) => StateLike | null,
+  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
   realPosition: Vector = from,
   partial?: boolean,
 ): StateLike {
@@ -41,12 +38,8 @@ export default function clientMoveAction(
             }
 
             update({
-              ...onComplete(
-                await processGameActionResponse(gameActionResponse),
-                actionResponse,
-              ),
-              ...(gameActionResponse.others?.at(-1)?.actionResponse.type ===
-              'GameEnd'
+              ...onComplete(await processGameActionResponse(gameActionResponse), actionResponse),
+              ...(gameActionResponse.others?.at(-1)?.actionResponse.type === 'GameEnd'
                 ? {
                     behavior: new NullBehavior(),
                   }

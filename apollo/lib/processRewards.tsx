@@ -2,10 +2,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
 import applyActionResponse from '../actions/applyActionResponse.tsx';
-import {
-  GameEndActionResponse,
-  OptionalObjectiveActionResponse,
-} from '../Objective.tsx';
+import { GameEndActionResponse, OptionalObjectiveActionResponse } from '../Objective.tsx';
 import { GameState, MutableGameState } from '../Types.tsx';
 import getMatchingTeam from './getMatchingTeam.tsx';
 
@@ -21,9 +18,7 @@ export function processRewards(
       [
         actionResponse.objective?.reward,
         isGameEnd
-          ? map.config.objectives.find(
-              (objective) => objective.type === Criteria.Default,
-            )?.reward
+          ? map.config.objectives.find((objective) => objective.type === Criteria.Default)?.reward
           : null,
       ].filter(isPresent),
     );
@@ -45,11 +40,7 @@ export function processRewards(
               reward,
               type: 'ReceiveReward',
             } as const;
-            map = applyActionResponse(
-              map,
-              map.createVisionObject(player),
-              rewardActionResponse,
-            );
+            map = applyActionResponse(map, map.createVisionObject(player), rewardActionResponse);
             gameState.push([rewardActionResponse, map]);
           }
         }

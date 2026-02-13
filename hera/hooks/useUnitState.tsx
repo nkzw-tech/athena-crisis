@@ -72,11 +72,7 @@ const heal = (unitState: UnitState, sprite: UnitAnimationSprite) =>
     type: 'heal',
   }) as const;
 
-const fold = (
-  type: 'unfold' | 'fold',
-  unitState: UnitState,
-  unfoldSprite: UnitAnimationSprite,
-) =>
+const fold = (type: 'unfold' | 'fold', unitState: UnitState, unfoldSprite: UnitAnimationSprite) =>
   ({
     animation: {
       ...unfoldSprite,
@@ -174,19 +170,11 @@ export default function useUnitState(
         () => {
           setUnitState(getNextUnitState(currentState, entity));
         },
-        AnimationConfig.AnimationDuration *
-          (currentState.type === 'heal' ? 3 : 8),
+        AnimationConfig.AnimationDuration * (currentState.type === 'heal' ? 3 : 8),
       );
       return () => clearInterval(interval);
     }
-  }, [
-    currentState,
-    info.sprite.portrait.variants,
-    entity,
-    player,
-    shouldApplyOffset,
-    offset,
-  ]);
+  }, [currentState, info.sprite.portrait.variants, entity, player, shouldApplyOffset, offset]);
 
   return [entity, map, props];
 }

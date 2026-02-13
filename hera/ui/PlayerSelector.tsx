@@ -68,9 +68,7 @@ export default function PlayerSelector({
   onSelect?: ((player: PlayerID) => void) | null;
   onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
-  onSelectSkills?:
-    | ((player: PlayerID, slot: number, skill: Skill | null) => void)
-    | null;
+  onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
   selectedPlayer?: PlayerID | null;
   showFirstPlayer?: true;
   skillSlots?: number;
@@ -128,17 +126,10 @@ export default function PlayerSelector({
     showFirstPlayer && map.active[0] !== sortBy([...map.active], (id) => id)[0];
 
   return (
-    <Component
-      className={boxStyle}
-      gap={16}
-      selected={selectedPlayer != null}
-      vertical
-    >
+    <Component className={boxStyle} gap={16} selected={selectedPlayer != null} vertical>
       <h2>
         {onSelect ? (
-          <fbt desc="headline to choose player position">
-            Choose your position
-          </fbt>
+          <fbt desc="headline to choose player position">Choose your position</fbt>
         ) : onSelectSkill ? (
           skillSlots && skillSlots > 1 ? (
             <fbt desc="headline for picking skills">Pick your skills</fbt>
@@ -194,19 +185,12 @@ export const PlayerSkillSelectors = ({
   favorites?: ReadonlySet<Skill>;
   isFocused?: boolean;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
-  onSelectSkills?:
-    | ((player: PlayerID, slot: number, skill: Skill | null) => void)
-    | null;
+  onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
   player: Player;
   skillSlots: number;
   toggleFavorite?: (skill: Skill) => void;
 }) => {
-  const [focused] = useHorizontalMenuNavigation(
-    isFocused ? skillSlots : 0,
-    'menu',
-    false,
-    0,
-  );
+  const [focused] = useHorizontalMenuNavigation(isFocused ? skillSlots : 0, 'menu', false, 0);
 
   return (
     <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
@@ -223,10 +207,7 @@ export const PlayerSkillSelectors = ({
               availableSkills={availableSkills}
               blocklistedSkills={blocklistedSkills}
               currentSkill={currentSkill}
-              disabled={
-                disabledSkillSlots != null &&
-                id + 1 > skillSlots - disabledSkillSlots
-              }
+              disabled={disabledSkillSlots != null && id + 1 > skillSlots - disabledSkillSlots}
               favorites={favorites}
               isFocused={isFocused && focused === id}
               key={id}
@@ -278,9 +259,7 @@ const PlayerItem = ({
   onSelect?: () => void;
   onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
-  onSelectSkills?:
-    | ((player: PlayerID, slot: number, skill: Skill | null) => void)
-    | null;
+  onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
   player: Player;
   skillSlots?: number;
   toggleFavoriteSkill?: (skill: Skill) => void;
@@ -289,8 +268,7 @@ const PlayerItem = ({
 }) => {
   if (!player.isPlaceholder()) {
     const bot = !user || isBot(player);
-    const isInteractive =
-      onSelect || onSelectSkill || onSelectSkills || (onClick && !bot);
+    const isInteractive = onSelect || onSelectSkill || onSelectSkills || (onClick && !bot);
     const Component = isInteractive ? InlineLink : 'div';
     const props = isInteractive
       ? {
@@ -300,11 +278,7 @@ const PlayerItem = ({
       : null;
     return (
       <Stack gap>
-        <Component
-          className={itemStyle}
-          onClick={!bot ? onClick : undefined}
-          {...props}
-        >
+        <Component className={itemStyle} onClick={!bot ? onClick : undefined} {...props}>
           <PlayerIcon id={player.id} selected={player.id === viewerPlayerID} />
           <div
             className={cx(nameStyle, isDisabled && disabledStyle)}
@@ -371,9 +345,7 @@ const PlayerItem = ({
     <Stack between className={cx(itemStyle, lightStyle)}>
       <PlayerIcon id={player.id} />
       <div className={nameStyle}>
-        <fbt desc="Text when waiting for a player to join">
-          Waiting for a player…
-        </fbt>
+        <fbt desc="Text when waiting for a player to join">Waiting for a player…</fbt>
       </div>
     </Stack>
   ) : (
@@ -386,10 +358,7 @@ const PlayerItem = ({
     >
       <PlayerIcon id={player.id} />
       <div className={selfCenterStyle}>
-        <PlayerPosition
-          color={playerToColor(player.id)}
-          hasPlayer={!!viewerPlayerID}
-        />
+        <PlayerPosition color={playerToColor(player.id)} hasPlayer={!!viewerPlayerID} />
       </div>
     </InlineLink>
   );

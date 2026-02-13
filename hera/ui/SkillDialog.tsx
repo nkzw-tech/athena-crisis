@@ -1,8 +1,4 @@
-import {
-  getSkillConfig,
-  Skill,
-  SkillGroup,
-} from '@deities/athena/info/Skill.tsx';
+import { getSkillConfig, Skill, SkillGroup } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -14,11 +10,7 @@ import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuN
 import useInput from '@deities/ui/controls/useInput.tsx';
 import useMenuNavigation from '@deities/ui/controls/useMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
-import Dialog, {
-  DialogScrollContainer,
-  DialogTab,
-  DialogTabBar,
-} from '@deities/ui/Dialog.tsx';
+import Dialog, { DialogScrollContainer, DialogTab, DialogTabBar } from '@deities/ui/Dialog.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
@@ -38,14 +30,7 @@ import Coin from '@iconify-icons/pixelarticons/coin.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { Sprites } from 'athena-crisis:images';
-import {
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ReactElement, ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 import getTranslatedCrystalName from '../invasions/getTranslatedCrystalName.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import SkillDescription from './SkillDescription.tsx';
@@ -92,11 +77,7 @@ const SkillIconInternal = ({
           className={cx(borderIconStyle, active && RainbowStyle)}
           icon={(borderStyle && SkillBorderIcons[borderStyle]) || SkillBorder}
           style={{
-            color: disabled
-              ? applyVar('text-color-light')
-              : color
-                ? getColor(color)
-                : undefined,
+            color: disabled ? applyVar('text-color-light') : color ? getColor(color) : undefined,
             height: SkillBorder.height,
             width: SkillBorder.width,
           }}
@@ -222,11 +203,7 @@ export default function SkillDialog({
   transformOrigin?: string;
 }) {
   return (
-    <Dialog
-      onClose={onClose}
-      size={size}
-      transformOrigin={transformOrigin || 'center center'}
-    >
+    <Dialog onClose={onClose} size={size} transformOrigin={transformOrigin || 'center center'}>
       <SkillContainer
         actionName={actionName}
         allowTouch={allowTouch}
@@ -307,18 +284,14 @@ export function SkillContainer({
           );
     return [
       availableSkills,
-      new Set(
-        [...initialAvailableSkills].map((skill) => getSkillConfig(skill).group),
-      ),
+      new Set([...initialAvailableSkills].map((skill) => getSkillConfig(skill).group)),
     ] as const;
   }, [group, initialAvailableSkills, favoriteList]);
 
   const partition = groupBy(availableSkills, (skill) =>
     selectedSkills?.has(skill)
       ? 'selected'
-      : !blocklistedAreDisabled &&
-          !toggleBlocklist &&
-          initialBlocklistedSkills?.has(skill)
+      : !blocklistedAreDisabled && !toggleBlocklist && initialBlocklistedSkills?.has(skill)
         ? 'disabled'
         : 'enabled',
   );
@@ -471,11 +444,7 @@ export function SkillContainer({
               currentSkill={!focus ? currentSkill : undefined}
               isFavorite={favorites?.has(skill)}
               key={skill}
-              onSelect={
-                !hasAction || !canAction || canAction(skill)
-                  ? onSelect
-                  : undefined
-              }
+              onSelect={!hasAction || !canAction || canAction(skill) ? onSelect : undefined}
               selected={selected === index + offset}
               showCost={showCost}
               skill={skill}
@@ -563,8 +532,7 @@ const SkillListItem = ({
 }) => {
   const element = useRef<HTMLDivElement>(null);
   const isPointerRef = useRef(false);
-  const { alpha, borderStyle, colors, icon, name, textColor } =
-    getSkillConfigForDisplay(skill);
+  const { alpha, borderStyle, colors, icon, name, textColor } = getSkillConfigForDisplay(skill);
 
   const onClick = useCallback(() => {
     if (!isPointerRef.current) {
@@ -595,18 +563,9 @@ const SkillListItem = ({
   const color: BaseColor = Array.isArray(colors) ? colors[0] : colors;
 
   return (
-    <VStack
-      className={cx(boxStyle, selected && selectedBoxStyle)}
-      gap
-      key={skill}
-      ref={element}
-    >
+    <VStack className={cx(boxStyle, selected && selectedBoxStyle)} gap key={skill} ref={element}>
       <VStack
-        className={cx(
-          itemStyle,
-          isBlocked && blockedStyle,
-          selected && 'hover',
-        )}
+        className={cx(itemStyle, isBlocked && blockedStyle, selected && 'hover')}
         gap
         onClick={isInteractive ? onClick : undefined}
         onPointerDown={(event) => {
@@ -628,8 +587,7 @@ const SkillListItem = ({
               className={tagStyle}
               style={{
                 background,
-                color:
-                  alpha != null && alpha >= 0.5 ? textColor : getColor(color),
+                color: alpha != null && alpha >= 0.5 ? textColor : getColor(color),
               }}
             >
               {name}
@@ -643,10 +601,7 @@ const SkillListItem = ({
                 toggleFavorite(skill);
               }}
             >
-              <StarIcon
-                size="small"
-                type={isFavorite ? 'achieved' : 'missed'}
-              />
+              <StarIcon size="small" type={isFavorite ? 'achieved' : 'missed'} />
             </div>
           )}
         </Stack>
@@ -687,12 +642,9 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
           <InfoBox>
             <p>
               <fbt desc="Explanation for why a skill slot is disabled.">
-                You cannot bring more skills into an invasion than the player
-                with the{' '}
-                <fbt:param name="crystalName">
-                  {getTranslatedCrystalName(Crystal.Power)}
-                </fbt:param>
-                . They currently have fewer unlocked skill slots than you.
+                You cannot bring more skills into an invasion than the player with the{' '}
+                <fbt:param name="crystalName">{getTranslatedCrystalName(Crystal.Power)}</fbt:param>.
+                They currently have fewer unlocked skill slots than you.
               </fbt>
             </p>
           </InfoBox>
@@ -764,9 +716,7 @@ export function SkillSelector({
   const config = currentSkill && getSkillConfigForDisplay(currentSkill);
   const background = (config && gradient(config.colors, config.alpha)) || '';
   const color: BaseColor =
-    (config &&
-      (Array.isArray(config.colors) ? config.colors[0] : config.colors)) ||
-    '';
+    (config && (Array.isArray(config.colors) ? config.colors[0] : config.colors)) || '';
 
   return (
     <>
@@ -844,8 +794,7 @@ export function SkillIcon({
     }
   }, [showDialog]);
 
-  const { alpha, borderStyle, colors, icon, name, textColor } =
-    getSkillConfigForDisplay(skill);
+  const { alpha, borderStyle, colors, icon, name, textColor } = getSkillConfigForDisplay(skill);
   const background = gradient(colors, alpha);
   const color: BaseColor = Array.isArray(colors) ? colors[0] : colors;
 
@@ -872,8 +821,7 @@ export function SkillIcon({
             className={tagStyle}
             style={{
               background,
-              color:
-                alpha != null && alpha >= 0.5 ? textColor : getColor(color),
+              color: alpha != null && alpha >= 0.5 ? textColor : getColor(color),
             }}
           >
             {name}

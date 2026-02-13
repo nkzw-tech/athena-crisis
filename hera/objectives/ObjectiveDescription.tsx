@@ -1,9 +1,5 @@
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
-import {
-  Criteria,
-  Objective,
-  objectiveHasLabel,
-} from '@deities/athena/Objectives.tsx';
+import { Criteria, Objective, objectiveHasLabel } from '@deities/athena/Objectives.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -63,28 +59,22 @@ const ObjectiveText = ({
         <UILabel className={labelStyle} color={id} key={`label-${id}`} />
       ))) ||
     null;
-  const labelList =
-    labels && list(labels, type === Criteria.DefeatOneLabel ? 'or' : 'and');
+  const labelList = labels && list(labels, type === Criteria.DefeatOneLabel ? 'or' : 'and');
 
   switch (type) {
     case Criteria.Default:
       return (
         <fbt desc="Explanation for the default win condition">
-          You win by either defeating all opposing units or capturing all HQs.
-          Capturing an opponent&apos;s HQ also gives you control of their
-          buildings.
+          You win by either defeating all opposing units or capturing all HQs. Capturing an
+          opponent&apos;s HQ also gives you control of their buildings.
         </fbt>
       );
     case Criteria.CaptureLabel:
       return (
         <fbt desc="Explanation for the capture by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by capturing all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by capturing
+          all buildings with the{' '}
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
@@ -93,14 +83,9 @@ const ObjectiveText = ({
     case Criteria.CaptureAmount:
       return (
         <fbt desc="Explanation for the capture by amount win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by capturing{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by capturing{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="buildings"
-            name="number of buildings"
-          >
+          <fbt:plural count={objective.amount} many="buildings" name="number of buildings">
             building
           </fbt:plural>
           .
@@ -110,8 +95,7 @@ const ObjectiveText = ({
     case Criteria.DefeatLabel:
       return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by defeating{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by defeating{' '}
           <fbt:plural
             count={type === Criteria.DefeatOneLabel ? 1 : 0}
             many="all units"
@@ -120,11 +104,7 @@ const ObjectiveText = ({
             one unit
           </fbt:plural>{' '}
           with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
@@ -133,14 +113,9 @@ const ObjectiveText = ({
     case Criteria.DefeatAmount:
       return (
         <fbt desc="Explanation for the defeat by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by defeating{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by defeating{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="units"
-            name="number of units"
-          >
+          <fbt:plural count={objective.amount} many="units" name="number of units">
             unit
           </fbt:plural>
           .
@@ -149,13 +124,9 @@ const ObjectiveText = ({
     case Criteria.EscortLabel:
       return (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by escorting all units with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by escorting
+          all units with the{' '}
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
@@ -164,14 +135,9 @@ const ObjectiveText = ({
     case Criteria.Survival:
       return (
         <fbt desc="Explanation for the survival win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by surviving{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by surviving{' '}
           <fbt:param name="rounds">{objective.rounds}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.rounds}
-            many="rounds"
-            name="number of rounds"
-          >
+          <fbt:plural count={objective.rounds} many="rounds" name="number of rounds">
             round
           </fbt:plural>
           .
@@ -180,36 +146,22 @@ const ObjectiveText = ({
     case Criteria.EscortAmount:
       return labels?.length ? (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by escorting{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by escorting{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="units"
-            name="number of units"
-          >
+          <fbt:plural count={objective.amount} many="units" name="number of units">
             unit
           </fbt:plural>{' '}
           with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       ) : (
         <fbt desc="Explanation for the escort by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by escorting{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by escorting{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="units"
-            name="number of units"
-          >
+          <fbt:plural count={objective.amount} many="units" name="number of units">
             unit
           </fbt:plural>
           .
@@ -218,36 +170,22 @@ const ObjectiveText = ({
     case Criteria.RescueAmount:
       return labels?.length ? (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by rescuing{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by rescuing{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="units"
-            name="number of units"
-          >
+          <fbt:plural count={objective.amount} many="units" name="number of units">
             unit
           </fbt:plural>{' '}
           with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
         </fbt>
       ) : (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by rescuing{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by rescuing{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="units"
-            name="number of units"
-          >
+          <fbt:plural count={objective.amount} many="units" name="number of units">
             unit
           </fbt:plural>
           .
@@ -256,13 +194,9 @@ const ObjectiveText = ({
     case Criteria.RescueLabel:
       return (
         <fbt desc="Explanation for the rescue by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by rescuing all units with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by rescuing
+          all units with the{' '}
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
@@ -271,13 +205,9 @@ const ObjectiveText = ({
     case Criteria.DestroyLabel:
       return (
         <fbt desc="Explanation for the destroy by label win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by destroying all buildings with the{' '}
-          <fbt:plural
-            count={labels?.length || 0}
-            many="labels"
-            name="number of labels"
-          >
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by destroying
+          all buildings with the{' '}
+          <fbt:plural count={labels?.length || 0} many="labels" name="number of labels">
             label
           </fbt:plural>{' '}
           <fbt:param name="label">{labelList}</fbt:param>.
@@ -286,14 +216,9 @@ const ObjectiveText = ({
     case Criteria.DestroyAmount:
       return (
         <fbt desc="Explanation for the destroy by amount win condition with multiple players">
-          <fbt:param name="players">{playerList}</fbt:param> can achieve the
-          objective by destroying{' '}
+          <fbt:param name="players">{playerList}</fbt:param> can achieve the objective by destroying{' '}
           <fbt:param name="amount">{objective.amount}</fbt:param>{' '}
-          <fbt:plural
-            count={objective.amount}
-            many="buildings"
-            name="number of buildings"
-          >
+          <fbt:plural count={objective.amount} many="buildings" name="number of buildings">
             building
           </fbt:plural>
           .
@@ -360,10 +285,7 @@ export default function ObjectiveDescription({
         </div>
       )}
       {objective.type !== Criteria.Default && objective.completed?.size ? (
-        <CompletedConditionText
-          playerDetails={playerDetails}
-          players={[...objective.completed]}
-        />
+        <CompletedConditionText playerDetails={playerDetails} players={[...objective.completed]} />
       ) : null}
     </VStack>
   );

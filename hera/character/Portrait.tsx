@@ -1,9 +1,6 @@
 import { spriteImage } from '@deities/art/Sprites.tsx';
 import { Brute, SuperAPU, UnitInfo } from '@deities/athena/info/Unit.tsx';
-import {
-  DynamicPlayerID,
-  encodeDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { DynamicPlayerID, encodeDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useMedia from '@deities/ui/hooks/useMedia.tsx';
@@ -70,8 +67,7 @@ export default memo(function Portrait({
         y: (position.y + (variant || 0) + 6) * PortraitHeight,
       },
     ];
-    let currentPosition =
-      ((Number(document.timeline.currentTime) || 0) / 1000) % 1 < 0.5 ? 0 : 1;
+    let currentPosition = ((Number(document.timeline.currentTime) || 0) / 1000) % 1 < 0.5 ? 0 : 1;
 
     const draw = () => {
       context.drawImage(
@@ -95,16 +91,7 @@ export default memo(function Portrait({
       const interval = setInterval(draw, 1000 / positions.length);
       return () => clearInterval(interval);
     }
-  }, [
-    hasPortraits,
-    animate,
-    paused,
-    player,
-    position,
-    variant,
-    silhouette,
-    unit,
-  ]);
+  }, [hasPortraits, animate, paused, player, position, variant, silhouette, unit]);
 
   return (
     <canvas

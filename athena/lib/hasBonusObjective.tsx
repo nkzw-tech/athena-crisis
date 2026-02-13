@@ -19,7 +19,6 @@ export default function hasBonusObjective(map: MapData, player: PlayerID) {
 
 export function achievedOneBonusObjective(map: MapData, player: PlayerID) {
   return map.config.objectives.some(
-    (objective) =>
-      isBonusObjective(player, objective) && !!objective.completed?.has(player),
+    (objective) => isBonusObjective(player, objective) && !!objective.completed?.has(player),
   );
 }

@@ -42,8 +42,8 @@ const getAlert = (error: Error) => {
       text: (
         <span>
           <fbt desc="Error message description">
-            There was an error preparing the assets for Athena Crisis on your
-            platform. For now, please <a href={route}>download the app</a>
+            There was an error preparing the assets for Athena Crisis on your platform. For now,
+            please <a href={route}>download the app</a>
             or use Chrome or Safari to play Athena Crisis.
           </fbt>
         </span>
@@ -61,8 +61,7 @@ const getAlert = (error: Error) => {
         <Stack alignCenter between gap={16} wrap>
           <Stack between flex1 wrap>
             <fbt desc="Error message description">
-              Athena Crisis is currently undergoing maintenance. Please try
-              again later.
+              Athena Crisis is currently undergoing maintenance. Please try again later.
             </fbt>
           </Stack>
           <img alt="Maxima" className={pixelatedStyle} src="/Maxima.gif" />
@@ -100,10 +99,7 @@ export default function ErrorOverlay({ error }: { error: unknown }) {
   const { alert } = useAlert();
 
   useEffect(() => {
-    if (
-      (!(error instanceof FetchError) || !error.skipInDev) &&
-      error instanceof Error
-    ) {
+    if ((!(error instanceof FetchError) || !error.skipInDev) && error instanceof Error) {
       captureException(error);
       alert(getAlert(error));
     }

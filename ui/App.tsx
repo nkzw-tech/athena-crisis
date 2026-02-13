@@ -64,10 +64,7 @@ export type RemoteCallMessage = Readonly<{
 export type RemoteCallMessageName = keyof RemoteCallMessage;
 
 type RemoteCallInterface = Readonly<{
-  message: <T extends RemoteCallMessageName>(
-    name: T,
-    data: RemoteCallMessage[T],
-  ) => void;
+  message: <T extends RemoteCallMessageName>(name: T, data: RemoteCallMessage[T]) => void;
 }>;
 
 declare global {
@@ -81,10 +78,7 @@ const emptyFunction = () => {};
 const emptyFalseFunction = () => Promise.resolve(false);
 
 window.$__AC__R = {
-  message: <T extends RemoteCallMessageName>(
-    name: T,
-    data: RemoteCallMessage[T],
-  ) => {
+  message: <T extends RemoteCallMessageName>(name: T, data: RemoteCallMessage[T]) => {
     switch (name) {
       case 'pushState':
         if (data.url) {
@@ -110,12 +104,10 @@ export const App: App = {
   canQuit: !!app,
   canToggleFullScreen: app?.canToggleFullScreen || (() => false),
   downloadURL: app?.downloadURL || ((url: string) => window.open(url)),
-  getCurrentAppVersion: () =>
-    navigator.userAgent.match(/AthenaCrisis\/([\w.-]+)/)?.[1] || null,
+  getCurrentAppVersion: () => navigator.userAgent.match(/AthenaCrisis\/([\w.-]+)/)?.[1] || null,
   getInitialURL: app?.getInitialURL || (() => null),
   getLatestAppVersion: () => process.env.NATIVE_APP_VERSION || '',
-  getSteamAuthenticationTicket:
-    app?.getSteamAuthenticationTicket || (() => Promise.resolve(null)),
+  getSteamAuthenticationTicket: app?.getSteamAuthenticationTicket || (() => Promise.resolve(null)),
   getSteamUserId: app?.getSteamUserId || (() => ''),
   getSteamUserName: app?.getSteamUserName || (() => ''),
   isFullscreen:
@@ -136,8 +128,7 @@ export const App: App = {
       navigate(initialURL.replace('https://app.athenacrisis.com', '') as Route);
     }
   },
-  showFloatingGamepadTextInput:
-    app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
+  showFloatingGamepadTextInput: app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
   showGamepadTextInput: app?.showGamepadTextInput ?? emptyFalseFunction,
   toggleFullscreen:
     app?.toggleFullscreen ||
@@ -158,9 +149,7 @@ export const App: App = {
     try {
       navigator.clipboard.write([
         new ClipboardItem({
-          'text/plain': promise.then(
-            (text) => new Blob([text], { type: 'text/plain' }),
-          ),
+          'text/plain': promise.then((text) => new Blob([text], { type: 'text/plain' })),
         }),
       ]);
     } catch {

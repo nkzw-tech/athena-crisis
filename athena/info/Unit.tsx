@@ -11,13 +11,7 @@ import { ID } from '../MapData.tsx';
 import { AttackSprite } from './AttackSprite.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
 import { SoundName } from './Music.tsx';
-import {
-  getUnitCost,
-  getUnitRadius,
-  getUnitRange,
-  hasUnlockedUnit,
-  Skill,
-} from './Skill.tsx';
+import { getUnitCost, getUnitRadius, getUnitRange, hasUnlockedUnit, Skill } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
 import TileID from './TileID.tsx';
 import UnitID from './UnitID.tsx';
@@ -319,21 +313,14 @@ export class WeaponAnimation {
     direction: 'left' | 'right' | 'up' | 'down',
     mirror = false,
   ) {
-    const positions =
-      (style === 'unfold' && this.unfoldPositions) || this.positions;
+    const positions = (style === 'unfold' && this.unfoldPositions) || this.positions;
     if (positions) {
       const offsetDirection =
-        direction === 'left' || direction === 'right'
-          ? 'horizontal'
-          : direction;
+        direction === 'left' || direction === 'right' ? 'horizontal' : direction;
       const alternative =
-        mirror &&
-        offsetDirection === 'horizontal' &&
-        positions.horizontalAlternative;
+        mirror && offsetDirection === 'horizontal' && positions.horizontalAlternative;
       if (alternative) {
-        return direction === 'left'
-          ? { ...alternative, x: alternative.x * -1 }
-          : alternative;
+        return direction === 'left' ? { ...alternative, x: alternative.x * -1 } : alternative;
       }
       return positions[offsetDirection];
     }
@@ -391,11 +378,7 @@ export class Weapon {
     public readonly animation: WeaponAnimation,
     public readonly hitAnimation?:
       | WeaponAnimation
-      | [
-          horizontal: WeaponAnimation,
-          up: WeaponAnimation,
-          down: WeaponAnimation,
-        ],
+      | [horizontal: WeaponAnimation, up: WeaponAnimation, down: WeaponAnimation],
     public readonly supply?: Supply | null,
     public readonly flatDamage: boolean = false,
     public readonly id: WeaponID = 1,
@@ -531,8 +514,7 @@ export class UnitInfo {
     direction: 1 | -1;
     position: SpriteVector;
   };
-  private ammunitionSupply: ReadonlyMap<number, number> | null | undefined =
-    undefined;
+  private ammunitionSupply: ReadonlyMap<number, number> | null | undefined = undefined;
 
   constructor(
     public readonly id: ID,
@@ -552,10 +534,7 @@ export class UnitInfo {
       weapons?: ReadonlyArray<Weapon>;
     }> | null,
     public readonly transports: UnitTransportConfiguration | null,
-    sprite: Omit<
-      SpriteConfig,
-      'attackStance' | 'directionOffset' | 'invert'
-    > & {
+    sprite: Omit<SpriteConfig, 'attackStance' | 'directionOffset' | 'invert'> & {
       attackStance?: 'long' | 'short' | 'once';
       directionOffset?: 1 | 2 | 3;
       invert?: false;
@@ -579,12 +558,7 @@ export class UnitInfo {
       ...attack,
       primaryWeapon: attack?.weapons?.[0] || null,
       weapons: attack?.weapons
-        ? new Map(
-            attack.weapons.map((weapon, index) => [
-              index + 1,
-              weapon.withId(index + 1),
-            ]),
-          )
+        ? new Map(attack.weapons.map((weapon, index) => [index + 1, weapon.withId(index + 1)]))
         : null,
     };
   }
@@ -620,11 +594,7 @@ export class UnitInfo {
   }
 
   get characterDescription(): string {
-    const description = formatText(
-      this.internalCharacterDescription,
-      this,
-      'characterName',
-    );
+    const description = formatText(this.internalCharacterDescription, this, 'characterName');
     Object.defineProperty(this, 'characterDescription', {
       value: description,
       writable: true,
@@ -712,10 +682,7 @@ export class UnitInfo {
   }
 
   canTransport(unitInfo: UnitInfo, tile: TileInfo) {
-    return !!(
-      this.transports?.entities.has(unitInfo.type) &&
-      this.canDropFrom(unitInfo, tile)
-    );
+    return !!(this.transports?.entities.has(unitInfo.type) && this.canDropFrom(unitInfo, tile));
   }
 
   canDropFrom(unitInfo: UnitInfo, tile: TileInfo) {
@@ -737,9 +704,7 @@ export class UnitInfo {
       if (weapons) {
         const actualWeapons = [...weapons]
           .filter(([, { supply }]) => supply != null)
-          .map(([id, { supply }]) => [id, supply]) as ReadonlyArray<
-          [number, number]
-        >;
+          .map(([id, { supply }]) => [id, supply]) as ReadonlyArray<[number, number]>;
         this.ammunitionSupply = new Map(actualWeapons);
       } else {
         this.ammunitionSupply = null;
@@ -806,33 +771,25 @@ const AntiAirAnimation = new WeaponAnimation('AntiAir', 'Attack/AntiAirGun', {
   size: 24,
 });
 
-const ArtilleryAnimation = new WeaponAnimation(
-  'Artillery',
-  'Attack/Artillery',
-  {
-    frames: 9,
-    positions: {
-      down: sprite(-0.2, 0.3),
-      horizontal: sprite(-0.4, -0.19),
-      up: sprite(0.25, -0.45),
-    },
-    recoil: true,
+const ArtilleryAnimation = new WeaponAnimation('Artillery', 'Attack/Artillery', {
+  frames: 9,
+  positions: {
+    down: sprite(-0.2, 0.3),
+    horizontal: sprite(-0.4, -0.19),
+    up: sprite(0.25, -0.45),
   },
-);
+  recoil: true,
+});
 
-const HeavyArtilleryAnimation = new WeaponAnimation(
-  'HeavyArtillery',
-  'Attack/HeavyArtillery',
-  {
-    frames: 12,
-    positions: {
-      down: sprite(-0.2, 0.3),
-      horizontal: sprite(-0.5, -0.3),
-      up: sprite(0.25, -0.65),
-    },
-    recoil: true,
+const HeavyArtilleryAnimation = new WeaponAnimation('HeavyArtillery', 'Attack/HeavyArtillery', {
+  frames: 12,
+  positions: {
+    down: sprite(-0.2, 0.3),
+    horizontal: sprite(-0.5, -0.3),
+    up: sprite(0.25, -0.65),
   },
-);
+  recoil: true,
+});
 
 const SparkAnimation = new WeaponAnimation('Spark', null, {
   frames: 11,
@@ -851,15 +808,11 @@ const OctopusBiteHitAnimationPositions = {
   horizontal: sprite(0.086, 0),
 };
 
-const OctopusBiteHitAnimation = new WeaponAnimation(
-  'AttackOctopus',
-  'Attack/TentacleWhip',
-  {
-    frames: 16,
-    positions: OctopusBiteHitAnimationPositions,
-    recoil: false,
-  },
-);
+const OctopusBiteHitAnimation = new WeaponAnimation('AttackOctopus', 'Attack/TentacleWhip', {
+  frames: 16,
+  positions: OctopusBiteHitAnimationPositions,
+  recoil: false,
+});
 
 const BiteAnimation = new WeaponAnimation('Empty', 'Attack/Bite', {
   frames: 15,
@@ -904,16 +857,12 @@ const SmokeAnimation = new WeaponAnimation('Smoke', null, {
   size: 40,
 });
 
-const ExplosionImpactAnimation = new WeaponAnimation(
-  'ExplosionImpact',
-  'ExplosionImpact',
-  {
-    frames: 10,
-    leadingFrames: 10,
-    recoil: false,
-    size: 48,
-  },
-);
+const ExplosionImpactAnimation = new WeaponAnimation('ExplosionImpact', 'ExplosionImpact', {
+  frames: 10,
+  leadingFrames: 10,
+  recoil: false,
+  size: 48,
+});
 
 const LightGunAnimation = new WeaponAnimation('LightGun', 'Attack/LightGun', {
   frames: 13,
@@ -1220,9 +1169,7 @@ const Bite = new Weapon(
   BiteHitAnimation,
 );
 
-const LightAirToAirMissile = AirToAirMissile.withName(
-  'Light Air To Air Missile',
-)
+const LightAirToAirMissile = AirToAirMissile.withName('Light Air To Air Missile')
   .withDamage(
     new Map([
       [EntityType.Airplane, 80],
@@ -1349,9 +1296,7 @@ export const Weapons = {
     EmptyAnimation.withSound('Attack/Club'),
     PowHitAnimation,
   ),
-  CorrosiveAirToAirMissile: LightAirToAirMissile.withName(
-    'Corrosive Air Missile',
-  ),
+  CorrosiveAirToAirMissile: LightAirToAirMissile.withName('Corrosive Air Missile'),
   CorrosiveBomb: new Weapon(
     'Corrosive Bomb',
     new Map([
@@ -1655,9 +1600,7 @@ export const Weapons = {
     }),
   ),
   SoldierMG,
-  SuperMiniGun: MiniGun.withName('Super Mini Gun').withDamage(
-    buff(MiniGun.damage, 40),
-  ),
+  SuperMiniGun: MiniGun.withName('Super Mini Gun').withDamage(buff(MiniGun.damage, 40)),
   TentacleWhip: new Weapon(
     'Tentacle Whip',
     new Map([
@@ -1676,20 +1619,14 @@ export const Weapons = {
       OctopusBiteHitAnimation.copy({
         cell: 1,
         positions: {
-          horizontal: sprite(
-            0.08,
-            OctopusBiteHitAnimationPositions.horizontal.x,
-          ),
+          horizontal: sprite(0.08, OctopusBiteHitAnimationPositions.horizontal.x),
         },
         rotate: false,
       }),
       OctopusBiteHitAnimation.copy({
         cell: 2,
         positions: {
-          horizontal: sprite(
-            -0.044,
-            -OctopusBiteHitAnimationPositions.horizontal.x,
-          ),
+          horizontal: sprite(-0.044, -OctopusBiteHitAnimationPositions.horizontal.x),
         },
         rotate: false,
       }),
@@ -1727,10 +1664,7 @@ export const Weapons = {
   ),
   ZombieBite: new Weapon(
     'Zombie Bite',
-    buff(
-      new Map([...Bite.damage, [EntityType.Rail, 80], [EntityType.Ship, 80]]),
-      -50,
-    ),
+    buff(new Map([...Bite.damage, [EntityType.Rail, 80], [EntityType.Ship, 80]]), -50),
     BiteAnimation.withSound('Attack/ZombieBite'),
     BiteHitAnimation,
     5,
@@ -2156,9 +2090,7 @@ export const Humvee = new UnitInfo(
   {
     type: AttackType.ShortRange,
     weapons: [
-      Weapons.MG.withDamage(
-        new Map([...Weapons.MG.damage, [EntityType.LowAltitude, 55]]),
-      )
+      Weapons.MG.withDamage(new Map([...Weapons.MG.damage, [EntityType.LowAltitude, 55]]))
         .withSupply(7)
         .withAnimationPositions({
           down: sprite(0, 0.4),
@@ -2429,11 +2361,7 @@ export const TransportHelicopter = new UnitInfo(
     cost: 200,
     fuel: 60,
     radius: 7,
-    supplyTypes: new Set([
-      EntityType.AirSoldier,
-      EntityType.LowAltitude,
-      EntityType.Airplane,
-    ]),
+    supplyTypes: new Set([EntityType.AirSoldier, EntityType.LowAltitude, EntityType.Airplane]),
     vision: 3,
   },
   new UnitAbilities({
@@ -2645,10 +2573,7 @@ export const AcidBomber = new UnitInfo(
   DefaultUnitAbilities.copy({ poison: true }),
   {
     type: AttackType.ShortRange,
-    weapons: [
-      Weapons.CorrosiveBomb.withSupply(4),
-      Weapons.CorrosiveAirToAirMissile.withSupply(3),
-    ],
+    weapons: [Weapons.CorrosiveBomb.withSupply(4), Weapons.CorrosiveAirToAirMissile.withSupply(3)],
   },
   null,
   {
@@ -3232,11 +3157,7 @@ export const SuperTank = new UnitInfo(
   DefaultUnitAbilities,
   {
     type: AttackType.ShortRange,
-    weapons: [
-      Weapons.HeavyGun.withDamage(buff(Weapons.HeavyGun.damage, 25)).withSupply(
-        10,
-      ),
-    ],
+    weapons: [Weapons.HeavyGun.withDamage(buff(Weapons.HeavyGun.damage, 25)).withSupply(10)],
   },
   null,
   {
@@ -4040,13 +3961,7 @@ export const SpecialUnits = new Set([
   InfernoJetpack,
 ]);
 
-export const SecretUnits = new Set([
-  Truck,
-  ArtilleryHumvee,
-  ReconDrone,
-  AIU,
-  InfernoJetpack,
-]);
+export const SecretUnits = new Set([Truck, ArtilleryHumvee, ReconDrone, AIU, InfernoJetpack]);
 
 export const DefaultSupplyUnits = {
   air: TransportHelicopter,
@@ -4079,9 +3994,7 @@ export function filterUnits(
   return units.filter(fn);
 }
 
-export function mapUnits<T>(
-  fn: (unitInfo: UnitInfo, index: number) => T,
-): Array<T> {
+export function mapUnits<T>(fn: (unitInfo: UnitInfo, index: number) => T): Array<T> {
   return units.map(fn);
 }
 
@@ -4092,8 +4005,7 @@ export function mapUnitsWithContentRestriction<T>(
   return units
     .filter(
       (unit) =>
-        (!SpecialUnits.has(unit) &&
-          unit.getCostFor(null) < Number.POSITIVE_INFINITY) ||
+        (!SpecialUnits.has(unit) && unit.getCostFor(null) < Number.POSITIVE_INFINITY) ||
         hasUnlockedUnit(unit, skills),
     )
     .map(fn);
@@ -4103,16 +4015,14 @@ export function getAllUnits(): ReadonlyArray<UnitInfo> {
   return units;
 }
 
-export function mapMovementTypes<T>(
-  fn: (movementType: MovementType) => T,
-): Array<T> {
-  return (
-    Object.keys(MovementTypes) as ReadonlyArray<keyof typeof MovementTypes>
-  ).map((key) => fn(MovementTypes[key]));
+export function mapMovementTypes<T>(fn: (movementType: MovementType) => T): Array<T> {
+  return (Object.keys(MovementTypes) as ReadonlyArray<keyof typeof MovementTypes>).map((key) =>
+    fn(MovementTypes[key]),
+  );
 }
 
 export function mapWeapons<T>(fn: (weapon: Weapon) => T): Array<T> {
-  return (Object.keys(Weapons) as ReadonlyArray<keyof typeof Weapons>).map(
-    (key) => fn(Weapons[key]),
+  return (Object.keys(Weapons) as ReadonlyArray<keyof typeof Weapons>).map((key) =>
+    fn(Weapons[key]),
   );
 }

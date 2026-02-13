@@ -6,11 +6,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import { Bot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  Criteria,
-  Objective,
-  ObjectiveID,
-} from '@deities/athena/Objectives.tsx';
+import { Criteria, Objective, ObjectiveID } from '@deities/athena/Objectives.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
@@ -121,21 +117,17 @@ export function applyObjectives(
   activeMap: MapData,
   lastActionResponse: ActionResponse,
 ): GameState | null {
-  let [objectiveId, objective] =
-    checkObjectives(previousMap, activeMap, lastActionResponse) || [];
+  let [objectiveId, objective] = checkObjectives(previousMap, activeMap, lastActionResponse) || [];
 
   let actionResponses = !isRelevantObjective(objective)
     ? checkDefaultObjectives(previousMap, activeMap, lastActionResponse)
     : null;
 
   if (actionResponses) {
-    const maybeMap = applyActionResponses(activeMap, actionResponses).at(
-      -1,
-    )?.[1];
+    const maybeMap = applyActionResponses(activeMap, actionResponses).at(-1)?.[1];
 
     if (maybeMap) {
-      [objectiveId, objective] =
-        checkObjectives(previousMap, maybeMap, lastActionResponse) || [];
+      [objectiveId, objective] = checkObjectives(previousMap, maybeMap, lastActionResponse) || [];
 
       if (isRelevantObjective(objective)) {
         actionResponses = null;
@@ -150,8 +142,7 @@ export function applyObjectives(
   const gameState: MutableGameState = [];
   let map = activeMap;
 
-  const player =
-    objective && pickWinningPlayer(map, lastActionResponse, objective);
+  const player = objective && pickWinningPlayer(map, lastActionResponse, objective);
 
   let reevaluate = false;
   let optionalObjective = toOptionalObjective(objective, objectiveId, player);
@@ -166,16 +157,13 @@ export function applyObjectives(
     optionalObjective = null;
     reevaluate = true;
 
-    const [objectiveId, objective] =
-      checkObjectives(previousMap, map, lastActionResponse) || [];
-    const player =
-      objective && pickWinningPlayer(map, lastActionResponse, objective);
+    const [objectiveId, objective] = checkObjectives(previousMap, map, lastActionResponse) || [];
+    const player = objective && pickWinningPlayer(map, lastActionResponse, objective);
     optionalObjective = toOptionalObjective(objective, objectiveId, player);
   }
 
   if (!actionResponses && reevaluate) {
-    [objectiveId, objective] =
-      checkObjectives(previousMap, map, lastActionResponse) || [];
+    [objectiveId, objective] = checkObjectives(previousMap, map, lastActionResponse) || [];
   }
 
   if (actionResponses) {
@@ -242,11 +230,7 @@ export function checkGameEndCondition(
               new Vision(fromPlayer.id),
               EndTurnAction(),
             ) || [];
-          if (
-            newMap &&
-            endTurnActionResponse &&
-            endTurnActionResponse.type == 'EndTurn'
-          ) {
+          if (newMap && endTurnActionResponse && endTurnActionResponse.type == 'EndTurn') {
             map = newMap.copy({ active: map.active });
             gameState.push([endTurnActionResponse, map]);
           }
@@ -268,13 +252,9 @@ export function applyObjectiveActionResponse(
       const currentPlayer = actionResponse.fromPlayer
         ? map.getPlayer(actionResponse.fromPlayer)
         : map.getCurrentPlayer();
-      return currentPlayer.isHumanPlayer() &&
-        currentPlayer.crystal === Crystal.Command
+      return currentPlayer.isHumanPlayer() && currentPlayer.crystal === Crystal.Command
         ? map.copy({
-            teams: updatePlayer(
-              map.teams,
-              Bot.from(currentPlayer, actionResponse.name),
-            ),
+            teams: updatePlayer(map.teams, Bot.from(currentPlayer, actionResponse.name)),
           })
         : map;
     }
@@ -344,11 +324,7 @@ export function applyObjectiveActionResponse(
   }
 }
 
-export function checkCapture(
-  previousMap: MapData,
-  map: MapData,
-  action: ActionResponse,
-) {
+export function checkCapture(previousMap: MapData, map: MapData, action: ActionResponse) {
   if (action.type === 'Capture' && action.building && action.player) {
     const fromPlayer = map.getPlayer(action.player);
     const building = map.buildings.get(action.from);
@@ -358,8 +334,7 @@ export function checkCapture(
       toPlayer &&
       previousBuilding &&
       toPlayer !== previousBuilding.player &&
-      (previousBuilding.info.isHQ() ||
-        !hasUnitsOrProductionBuildings(map, fromPlayer, 'any'))
+      (previousBuilding.info.isHQ() || !hasUnitsOrProductionBuildings(map, fromPlayer, 'any'))
     ) {
       return [
         {
@@ -375,15 +350,7 @@ export function checkCapture(
 
 export function checkAttackUnit(
   map: MapData,
-  {
-    from,
-    hasCounterAttack,
-    playerA,
-    playerB,
-    to,
-    unitA,
-    unitB,
-  }: AttackUnitActionResponse,
+  { from, hasCounterAttack, playerA, playerB, to, unitA, unitB }: AttackUnitActionResponse,
 ) {
   const fromPlayer = map.getPlayer(playerA);
   const toPlayer = map.getPlayer(playerB);
@@ -400,14 +367,11 @@ export function checkAttackUnit(
 export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
   const actionResponses: Array<ObjectiveActionResponse> = [];
   const currentPlayer = activeMap.getCurrentPlayer();
-  const playerHasLost =
-    hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer);
+  const playerHasLost = hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer);
   const team = activeMap
     .getPlayers()
     .filter(
-      (player) =>
-        player.id !== currentPlayer.id &&
-        activeMap.matchesTeam(player, currentPlayer),
+      (player) => player.id !== currentPlayer.id && activeMap.matchesTeam(player, currentPlayer),
     );
 
   if (playerHasLost) {
@@ -417,13 +381,7 @@ export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
     } as const;
     actionResponses.push(playerGameOverActionResponse);
 
-    if (
-      checkGameEnd(
-        applyActionResponses(activeMap, [playerGameOverActionResponse]).at(
-          -1,
-        )?.[1],
-      )
-    ) {
+    if (checkGameEnd(applyActionResponses(activeMap, [playerGameOverActionResponse]).at(-1)?.[1])) {
       return actionResponses;
     }
   }
@@ -435,17 +393,14 @@ export function checkActivatePower(previousMap: MapData, activeMap: MapData) {
 
   for (const opponent of opponents) {
     const opponentHasLost =
-      hasUnits(previousMap, opponent) &&
-      checkHasUnits(activeMap, opponent, activePlayer)?.[0];
+      hasUnits(previousMap, opponent) && checkHasUnits(activeMap, opponent, activePlayer)?.[0];
 
     if (opponentHasLost) {
       actionResponses.push(opponentHasLost);
     }
   }
 
-  if (
-    !checkGameEnd(applyActionResponses(activeMap, actionResponses).at(-1)?.[1])
-  ) {
+  if (!checkGameEnd(applyActionResponses(activeMap, actionResponses).at(-1)?.[1])) {
     for (const player of team) {
       const teammateHasLost =
         hasUnits(previousMap, player) &&
@@ -472,11 +427,7 @@ export function checkToggleLightning(
   }
 
   return !activeMap.units.has(to)
-    ? checkHasUnits(
-        activeMap,
-        previousMap.getPlayer(unitB.player),
-        previousMap.getPlayer(playerA),
-      )
+    ? checkHasUnits(activeMap, previousMap.getPlayer(unitB.player), previousMap.getPlayer(playerA))
     : null;
 }
 
@@ -502,8 +453,7 @@ export function checkAttackBuilding(
     const responses =
       (hasCounterAttack && (!unitA || playerA !== map.units.get(from)?.player)
         ? checkHasUnits(map, fromPlayer, toPlayer)
-        : null) ||
-      (!building && !unitC ? checkHasUnits(map, toPlayer, fromPlayer) : null);
+        : null) || (!building && !unitC ? checkHasUnits(map, toPlayer, fromPlayer) : null);
 
     if (responses?.length) {
       actionResponses.push(...responses);
@@ -511,8 +461,7 @@ export function checkAttackBuilding(
   }
 
   if (!building) {
-    const toPlayer =
-      playerB != null && playerB !== 0 ? map.getPlayer(playerB) : null;
+    const toPlayer = playerB != null && playerB !== 0 ? map.getPlayer(playerB) : null;
     if (toPlayer && !hasUnitsOrProductionBuildings(map, toPlayer, 'any')) {
       actionResponses.push({
         fromPlayer: toPlayer.id,
@@ -551,10 +500,7 @@ const checkDefaultObjectives = (
 
 const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   const previousPlayer = activeMap.getPlayer(previousMap.getCurrentPlayer().id);
-  if (
-    previousPlayer.isHumanPlayer() &&
-    previousPlayer.misses >= AllowedMisses
-  ) {
+  if (previousPlayer.isHumanPlayer() && previousPlayer.misses >= AllowedMisses) {
     return [
       previousPlayer.crystal === Crystal.Command
         ? ({
@@ -570,8 +516,7 @@ const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
   }
 
   const currentPlayer = activeMap.getCurrentPlayer();
-  return hasUnits(previousMap, currentPlayer) &&
-    !hasUnits(activeMap, currentPlayer)
+  return hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer)
     ? [{ fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' } as const]
     : null;
 };
@@ -605,15 +550,9 @@ const checkGameEnd = (map: MapData | undefined) => {
     : null;
 };
 
-const convertBuildings = (
-  map: MapData,
-  fromPlayer: Player,
-  toPlayer: PlayerID,
-) =>
+const convertBuildings = (map: MapData, fromPlayer: Player, toPlayer: PlayerID) =>
   map.buildings.map((building) =>
-    map.matchesPlayer(building, fromPlayer)
-      ? building.capture(map, toPlayer)
-      : building,
+    map.matchesPlayer(building, fromPlayer) ? building.capture(map, toPlayer) : building,
   );
 
 const deleteUnits = (map: MapData, fromPlayer: Player) =>

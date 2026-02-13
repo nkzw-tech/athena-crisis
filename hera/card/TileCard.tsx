@@ -1,11 +1,6 @@
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { MovementTypes } from '@deities/athena/info/MovementType.tsx';
-import {
-  getAllTiles,
-  Plain,
-  TileInfo,
-  tilesToTileMap,
-} from '@deities/athena/info/Tile.tsx';
+import { getAllTiles, Plain, TileInfo, tilesToTileMap } from '@deities/athena/info/Tile.tsx';
 import { mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import getAttributeRange, {
   getAttributeRangeValue,
@@ -49,11 +44,7 @@ import Range, { LargeRange } from './Range.tsx';
 import TilePreview from './TilePreview.tsx';
 
 const tiles = getAllTiles();
-const visionRange = getAttributeRange(
-  tiles,
-  ({ configuration: { vision } }) => vision,
-  1,
-);
+const visionRange = getAttributeRange(tiles, ({ configuration: { vision } }) => vision, 1);
 
 export default memo(function TileCard({
   decorators,
@@ -77,9 +68,7 @@ export default memo(function TileCard({
       config: {
         biome,
       },
-      decorators: decorators?.size
-        ? [...decorators].map(([{ x, y }, { id }]) => [x, y, id])
-        : [],
+      decorators: decorators?.size ? [...decorators].map(([{ x, y }, { id }]) => [x, y, id]) : [],
       map: tilesToTileMap([tile]),
       modifiers: [modifierField || 0],
     });
@@ -90,10 +79,7 @@ export default memo(function TileCard({
   return (
     <>
       <Stack alignCenter gap>
-        <TilePreview
-          map={previewMap}
-          size={tile.style.decorator ? 'tall' : undefined}
-        />
+        <TilePreview map={previewMap} size={tile.style.decorator ? 'tall' : undefined} />
         <VStack gap wrap>
           <CardTitle>{tile.name}</CardTitle>
         </VStack>
@@ -118,9 +104,7 @@ export default memo(function TileCard({
           </Stack>
           <div>
             <span className={smallCoverStyle}>{cover}</span>
-            <span className={largeCoverStyle}>
-              {coverName ? `${coverName}: ${cover}` : cover}
-            </span>
+            <span className={largeCoverStyle}>{coverName ? `${coverName}: ${cover}` : cover}</span>
           </div>
           <LargeRange end value={getAttributeRangeValue(CoverRange, cover)} />
 
@@ -144,11 +128,7 @@ export default memo(function TileCard({
                 </div>
               </Stack>
               <div>{vision}</div>
-              <Range
-                end
-                invert
-                value={getAttributeRangeValue(visionRange, vision)}
-              />
+              <Range end invert value={getAttributeRangeValue(visionRange, vision)} />
             </>
           )}
         </AttributeGridBox>
@@ -210,9 +190,7 @@ const TileMovement = memo(function TileMovement({
             .map(([cost, movementTypes]) => {
               const units = [
                 ...groupBy(
-                  availableUnits.filter((unit) =>
-                    movementTypes.has(unit.info.movementType),
-                  ),
+                  availableUnits.filter((unit) => movementTypes.has(unit.info.movementType)),
                   (unit) => unit.info.movementType,
                 ).values(),
               ];
@@ -222,11 +200,7 @@ const TileMovement = memo(function TileMovement({
                   biome={biome}
                   cost={cost}
                   key={cost}
-                  size={
-                    cost !== -1 && tileFieldHasDecorator(tile.id, biome)
-                      ? 'tall'
-                      : undefined
-                  }
+                  size={cost !== -1 && tileFieldHasDecorator(tile.id, biome) ? 'tall' : undefined}
                   tiles={units.map(([unit]) =>
                     cost === -1 ? getAnyUnitTile(unit.info) || Plain : tile,
                   )}

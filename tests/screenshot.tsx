@@ -1,8 +1,5 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
-import {
-  EncodedGameActionResponse,
-  GameState,
-} from '@deities/apollo/Types.tsx';
+import { EncodedGameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -18,18 +15,11 @@ const getURL = (
 ) =>
   `${BASE_URL}?${maps
     .map((map) => 'map[]=' + encodeURIComponent(JSON.stringify(map)))
-    .join('&')}&${(Array.isArray(viewers)
-    ? viewers
-    : Array(maps.length).fill(viewers)
-  )
+    .join('&')}&${(Array.isArray(viewers) ? viewers : Array(maps.length).fill(viewers))
     .map((viewer) => 'viewer[]=' + encodeURIComponent(viewer))
     .join('&')}${
     gameActionResponse
-      ?.map(
-        (response) =>
-          '&gameActionResponse[]=' +
-          encodeURIComponent(JSON.stringify(response)),
-      )
+      ?.map((response) => '&gameActionResponse[]=' + encodeURIComponent(JSON.stringify(response)))
       .join('') || ''
   }`;
 
@@ -80,10 +70,7 @@ export async function capture(
   return screenshots;
 }
 
-export async function captureOne(
-  map: MapData,
-  viewers: string,
-): Promise<Image> {
+export async function captureOne(map: MapData, viewers: string): Promise<Image> {
   return (await capture([map], viewers))[0];
 }
 

@@ -33,9 +33,7 @@ export default function FileDropZone<T>({
 
       const isValidFile =
         file.type === 'application/json' ||
-        accept
-          .split(',')
-          .some((part) => file.name.toLowerCase().endsWith(part));
+        accept.split(',').some((part) => file.name.toLowerCase().endsWith(part));
 
       if (!isValidFile) {
         onError('invalid-file-type');

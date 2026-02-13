@@ -13,11 +13,7 @@ export default function validateSkills(
   const validatedSkills = new Set<Skill>();
   const skillSet = new Set(playerSkills);
 
-  if (
-    !hasSkills ||
-    !skillSet.size ||
-    skillSet.size > unlockedSkillSlots.length
-  ) {
+  if (!hasSkills || !skillSet.size || skillSet.size > unlockedSkillSlots.length) {
     return validatedSkills;
   }
 

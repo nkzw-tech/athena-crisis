@@ -1,7 +1,4 @@
-import {
-  mapBuildings,
-  mapBuildingsWithContentRestriction,
-} from '../info/Building.tsx';
+import { mapBuildings, mapBuildingsWithContentRestriction } from '../info/Building.tsx';
 import { Skill } from '../info/Skill.tsx';
 import { mapUnits, mapUnitsWithContentRestriction } from '../info/Unit.tsx';
 import MapData from '../MapData.tsx';
@@ -18,9 +15,10 @@ export default function filterByBiomeRestriction(
   const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
 
   const availableBuildings = new Set(
-    (hasContentRestrictions
-      ? mapBuildingsWithContentRestriction
-      : mapBuildings)((building) => building, skills || new Set())
+    (hasContentRestrictions ? mapBuildingsWithContentRestriction : mapBuildings)(
+      (building) => building,
+      skills || new Set(),
+    )
       .filter((building) => !biomeBuildingRestrictions?.has(building))
       .map(({ id }) => id),
   );
@@ -34,9 +32,7 @@ export default function filterByBiomeRestriction(
   );
 
   return map.copy({
-    buildings: map.buildings.filter((building) =>
-      availableBuildings.has(building.id),
-    ),
+    buildings: map.buildings.filter((building) => availableBuildings.has(building.id)),
     units: map.units.filter((unit) => availableUnits.has(unit.id)),
   });
 }

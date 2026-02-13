@@ -6,17 +6,11 @@ export type GameTimerValue = (typeof GameTimerValue)[number];
 
 const timerSet = new Set(GameTimerValue);
 
-export function validateTimer(
-  timer: number | null | undefined,
-): GameTimerValue {
-  return timerSet.has(timer as GameTimerValue)
-    ? (timer as GameTimerValue)
-    : null;
+export function validateTimer(timer: number | null | undefined): GameTimerValue {
+  return timerSet.has(timer as GameTimerValue) ? (timer as GameTimerValue) : null;
 }
 
-export function isValidTimer(
-  timer: number | null | undefined,
-): timer is GameTimerValue {
+export function isValidTimer(timer: number | null | undefined): timer is GameTimerValue {
   return !!timerSet.has(timer as GameTimerValue);
 }
 

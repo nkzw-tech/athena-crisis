@@ -6,9 +6,7 @@ import Team from '../map/Team.tsx';
 import MapData from '../MapData.tsx';
 import validateSkills from './validateSkills.tsx';
 
-export type TeamsList = ReadonlyArray<
-  Readonly<{ id: number; players: ReadonlyArray<number> }>
->;
+export type TeamsList = ReadonlyArray<Readonly<{ id: number; players: ReadonlyArray<number> }>>;
 
 export default function validateTeams(
   map: MapData,

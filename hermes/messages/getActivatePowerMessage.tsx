@@ -14,8 +14,7 @@ export default function getActivatePowerMessage(
   vision: VisionT,
   skill: Skill,
 ) {
-  const messages =
-    ActivatePowerMessages.get(skill) || ActivatePowerMessages.get(-1);
+  const messages = ActivatePowerMessages.get(skill) || ActivatePowerMessages.get(-1);
 
   if (!messages) {
     return null;
@@ -24,10 +23,7 @@ export default function getActivatePowerMessage(
   const currentPlayer = previousMap.getCurrentPlayer();
   const activeUnitTypes = previousMap
     .copy({
-      teams: updatePlayer(
-        previousMap.teams,
-        currentPlayer.activateSkill(skill),
-      ),
+      teams: updatePlayer(previousMap.teams, currentPlayer.activateSkill(skill)),
     })
     .getActiveUnitTypes()
     .get(currentPlayer.id);
@@ -48,8 +44,7 @@ export default function getActivatePowerMessage(
       ? messages
       : messages.filter(([message]) => units.has(message.unitId))
   ).filter(
-    ([, , userIds]) =>
-      !userIds || (maybeHumanPlayer && userIds.has(maybeHumanPlayer.userId)),
+    ([, , userIds]) => !userIds || (maybeHumanPlayer && userIds.has(maybeHumanPlayer.userId)),
   );
 
   const message = pickItem(filteredMessages);

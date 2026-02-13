@@ -12,14 +12,11 @@ export default function getFlashDelay(
     };
   }
 
-  return (animation?.type === 'attackBuildingFlash' ||
-    animation?.type === 'attackUnitFlash') &&
+  return (animation?.type === 'attackBuildingFlash' || animation?.type === 'attackUnitFlash') &&
     animation.weapon
     ? {
         animationDelay: `${
-          (animation.weapon.animation.frames *
-            animation.weapon.animation.repeat -
-            3) *
+          (animation.weapon.animation.frames * animation.weapon.animation.repeat - 3) *
           animationConfig.ExplosionStep
         }ms`,
         animationDuration: `${3 * animationConfig.ExplosionStep}ms`,

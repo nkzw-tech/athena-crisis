@@ -39,8 +39,7 @@ export default async function endTurnAction(actions: Actions, state: State) {
         actionResponse,
         state,
         remoteAction.then(
-          (gameActionResponse) =>
-            getEndTurnActionResponse(gameActionResponse)?.supply || null,
+          (gameActionResponse) => getEndTurnActionResponse(gameActionResponse)?.supply || null,
         ),
         (state) => {
           remoteAction.then(async (gameActionResponse) => {
@@ -57,8 +56,7 @@ export default async function endTurnAction(actions: Actions, state: State) {
               ),
             });
 
-            const newState =
-              await processGameActionResponse(gameActionResponse);
+            const newState = await processGameActionResponse(gameActionResponse);
             if (newState.lastActionResponse?.type !== 'GameEnd') {
               await update(resetBehavior());
             }

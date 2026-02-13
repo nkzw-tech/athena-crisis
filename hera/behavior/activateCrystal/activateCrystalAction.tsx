@@ -28,10 +28,7 @@ export default async function activateCrystalAction(
           return null;
         },
         onConvert: (state) => ({
-          map: applyPartialActivateCrystalActionResponse(
-            state.map,
-            actionResponse,
-          ),
+          map: applyPartialActivateCrystalActionResponse(state.map, actionResponse),
         }),
         type: 'crystal',
       }),

@@ -2,11 +2,7 @@ import vec from '../map/vec.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
 
-export default function getVectorRadius(
-  map: MapData,
-  vector: Vector,
-  radius: number,
-) {
+export default function getVectorRadius(map: MapData, vector: Vector, radius: number) {
   const vectors = new Set<Vector>();
   for (let x = 0; x <= radius; x++) {
     for (let y = 0; y <= radius - x; y++) {

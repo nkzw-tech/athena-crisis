@@ -34,11 +34,7 @@ export default function ZoomButton({
   return (
     <MenuButton
       className={cx(
-        position === 'top'
-          ? topStyle
-          : position === 'bottom'
-            ? bottomStyle
-            : null,
+        position === 'top' ? topStyle : position === 'bottom' ? bottomStyle : null,
         className,
       )}
       fade={fade}

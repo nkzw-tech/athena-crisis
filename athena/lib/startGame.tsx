@@ -21,10 +21,7 @@ export default function startGame(map: MapData): MapData {
   return assignUnitNames(
     map.copy({
       buildings: map.buildings.map((building) => building.recover()),
-      teams: updatePlayer(
-        map.teams,
-        player.modifyFunds(calculateFunds(map, player)),
-      ),
+      teams: updatePlayer(map.teams, player.modifyFunds(calculateFunds(map, player))),
       units: map.units.map((unit) => unit.ensureValidAttributes().recover()),
     }),
   );

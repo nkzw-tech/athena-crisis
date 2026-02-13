@@ -8,9 +8,7 @@ const mappings = new Map([
   ['athena-crisis:images', join(root, 'hera/render/Images')],
 ] as const);
 
-export default function createResolver(
-  { forceRemoteAudio } = { forceRemoteAudio: false },
-) {
+export default function createResolver({ forceRemoteAudio } = { forceRemoteAudio: false }) {
   return {
     customResolver(id: string) {
       if (

@@ -11,12 +11,7 @@ export default class SelectTarget {
 
   select(vector: Vector, state: State, actions: Actions): StateLike | null {
     actions.requestFrame(async () => {
-      await activateAction(
-        actions,
-        state,
-        { skill: this.skill, type: 'Skill' },
-        vector,
-      );
+      await activateAction(actions, state, { skill: this.skill, type: 'Skill' }, vector);
     });
 
     return null;

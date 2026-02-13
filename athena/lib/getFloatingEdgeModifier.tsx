@@ -18,8 +18,7 @@ export default function getFloatingEdgeModifier(
   if (vector.y === 0) {
     const adjacent = vector.down();
     const left = vector.x === 1 || isSea(map.getTile(adjacent.left(), 0));
-    const right =
-      vector.x === map.size.width || isSea(map.getTile(adjacent.right(), 0));
+    const right = vector.x === map.size.width || isSea(map.getTile(adjacent.right(), 0));
     const tile = map.getTile(adjacent, 0);
     const adjacentModifier = tile && map.getModifier(adjacent, 0);
     if (shouldPlaceSeaDecorator(tile, adjacentModifier)) {
@@ -52,8 +51,7 @@ export default function getFloatingEdgeModifier(
   } else if (vector.y === map.size.height + 1) {
     const adjacent = vector.up();
     const left = vector.x === 1 || isSea(map.getTile(adjacent.left(), 0));
-    const right =
-      vector.x === map.size.width || isSea(map.getTile(adjacent.right(), 0));
+    const right = vector.x === map.size.width || isSea(map.getTile(adjacent.right(), 0));
     const tile = map.getTile(adjacent, 0);
     const adjacentModifier = tile && map.getModifier(adjacent, 0);
     if (shouldPlaceSeaDecorator(tile, adjacentModifier)) {
@@ -86,8 +84,7 @@ export default function getFloatingEdgeModifier(
   } else if (vector.x === 0) {
     const adjacent = vector.right();
     const up = vector.y === 1 || isSea(map.getTile(adjacent.up(), 0));
-    const down =
-      vector.y === map.size.height || isSea(map.getTile(adjacent.down(), 0));
+    const down = vector.y === map.size.height || isSea(map.getTile(adjacent.down(), 0));
     const tile = map.getTile(adjacent, 0);
     const adjacentModifier = tile && map.getModifier(adjacent, 0);
     if (shouldPlaceSeaDecorator(tile, adjacentModifier)) {
@@ -95,15 +92,9 @@ export default function getFloatingEdgeModifier(
         up && down
           ? Modifier.RightWallAreaDecorator
           : up
-            ? [
-                Modifier.RightWallAreaDecorator,
-                Modifier.BottomRightAreaDecorator,
-              ]
+            ? [Modifier.RightWallAreaDecorator, Modifier.BottomRightAreaDecorator]
             : down
-              ? [
-                  Modifier.RightWallAreaDecorator,
-                  Modifier.TopRightAreaDecorator,
-                ]
+              ? [Modifier.RightWallAreaDecorator, Modifier.TopRightAreaDecorator]
               : Modifier.RightWall;
     } else {
       modifier =
@@ -114,8 +105,7 @@ export default function getFloatingEdgeModifier(
   } else if (vector.x === map.size.width + 1) {
     const adjacent = vector.left();
     const up = vector.y === 1 || isSea(map.getTile(adjacent.up(), 0));
-    const down =
-      vector.y === map.size.height || isSea(map.getTile(adjacent.down(), 0));
+    const down = vector.y === map.size.height || isSea(map.getTile(adjacent.down(), 0));
     const tile = map.getTile(adjacent, 0);
     const adjacentModifier = tile && map.getModifier(adjacent, 0);
     if (shouldPlaceSeaDecorator(tile, adjacentModifier)) {

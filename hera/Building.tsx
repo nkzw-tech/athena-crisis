@@ -98,10 +98,7 @@ const BuildingTile = memo(function BuildingTile({
 
           const progress = Math.min(timestamp - start, duration);
           style.height = height + progress * pixelsPerStep * 2 + 'px';
-          style.setProperty(
-            vars.set('y'),
-            positionY - progress * pixelsPerStep + 'px',
-          );
+          style.setProperty(vars.set('y'), positionY - progress * pixelsPerStep + 'px');
           if (progress < duration) {
             requestFrame(step);
           }
@@ -156,9 +153,7 @@ const BuildingTile = memo(function BuildingTile({
             ? alternateOutlineStyle
             : outlineStyle
           : null,
-        animation &&
-          animation.type == 'attackBuildingFlash' &&
-          attackFlashStyle,
+        animation && animation.type == 'attackBuildingFlash' && attackFlashStyle,
         fade && fadeStyle,
         animation?.type === 'capture' ? captureStyle : null,
       )}
@@ -183,9 +178,7 @@ const BuildingTile = memo(function BuildingTile({
           className={absoluteStyle}
           style={{
             backgroundImage: `url('${Sprites.Crane}')`,
-            backgroundPositionY: `calc(${Tick.vars.apply(
-              'building',
-            )} * ${-size}px)`,
+            backgroundPositionY: `calc(${Tick.vars.apply('building')} * ${-size}px)`,
             height: size,
             left: size / 2 + 'px',
             width: size / 2 + 'px',
@@ -221,13 +214,7 @@ const BuildingTile = memo(function BuildingTile({
 export default BuildingTile;
 
 const vars = new CSSVariables<
-  | 'brightness'
-  | 'drop-shadow-color'
-  | 'drop-shadow-size'
-  | 'saturation'
-  | 'skew'
-  | 'x'
-  | 'y'
+  'brightness' | 'drop-shadow-color' | 'drop-shadow-size' | 'saturation' | 'skew' | 'x' | 'y'
 >('b');
 
 const absoluteStyle = css`
@@ -302,11 +289,7 @@ const alternateOutlineStyle = css`
 `;
 
 const fadeStyle = css`
-  mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.5) 45%,
-    rgba(0, 0, 0, 1) 65%
-  );
+  mask-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 1) 65%);
   mask-type: alpha;
 `;
 

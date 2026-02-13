@@ -11,19 +11,10 @@ export default function assignDeterministicUnitNames(
 ): ImmutableMap<Vector, Unit> {
   const { addLeader, hasLeader } = getLeaders(map);
   let offset = 0;
-  const assignName = <T extends Unit | TransportedUnit>(
-    unit: T,
-    vector: Vector,
-  ): T => {
+  const assignName = <T extends Unit | TransportedUnit>(unit: T, vector: Vector): T => {
     if (!unit.hasName()) {
       const isLeader = unit.player > 0 && !hasLeader(unit.player, unit.info);
-      const name = getDeterministicUnitName(
-        map,
-        vector,
-        unit.player,
-        unit.info,
-        offset++,
-      );
+      const name = getDeterministicUnitName(map, vector, unit.player, unit.info, offset++);
       if (isLeader) {
         addLeader(unit.player, unit.info);
       }

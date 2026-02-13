@@ -14,10 +14,7 @@ const defaultTeams: PlainTeams = [
 
 const getTeams = (teams?: PlainTeams): PlainTeams => {
   const seen = new Set(teams?.map(({ id }) => id));
-  return [
-    ...(teams || []),
-    ...defaultTeams.filter(({ id }) => !seen.has(toPlayerID(id))),
-  ];
+  return [...(teams || []), ...defaultTeams.filter(({ id }) => !seen.has(toPlayerID(id)))];
 };
 
 test('validates teams', () => {
@@ -46,9 +43,7 @@ test('validates teams', () => {
     }),
   );
 
-  expect(
-    validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray(),
-  ).toBeUndefined();
+  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray()).toBeUndefined();
 
   map = withModifiers(
     MapData.createMap({
@@ -63,8 +58,7 @@ test('validates teams', () => {
     }),
   );
 
-  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray())
-    .toMatchInlineSnapshot(`
+  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray()).toMatchInlineSnapshot(`
       [
         [
           1,
@@ -147,8 +141,7 @@ test('validates teams', () => {
     }),
   );
 
-  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray())
-    .toMatchInlineSnapshot(`
+  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray()).toMatchInlineSnapshot(`
       [
         [
           1,
@@ -199,7 +192,5 @@ test('validates teams', () => {
     }),
   );
 
-  expect(
-    validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray(),
-  ).toBeUndefined();
+  expect(validateTeams(map, toTeamArray(map.teams))[0]?.teams.toArray()).toBeUndefined();
 });

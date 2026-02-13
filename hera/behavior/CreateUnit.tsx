@@ -26,16 +26,11 @@ import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { MouseEvent, useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
-import toTransformOrigin, {
-  ClientCoordinates,
-} from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
 import UnitTile from '../Unit.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import createUnitAction from './createUnit/createUnitAction.tsx';
@@ -90,20 +85,12 @@ export default class CreateUnit {
     const { action, requestFrame, update } = actions;
     const { unitToBuild } = this;
     const { radius, selectedPosition } = state;
-    if (
-      selectedPosition &&
-      unitToBuild != null &&
-      radius &&
-      radius.fields.get(vector)
-    ) {
+    if (selectedPosition && unitToBuild != null && radius && radius.fields.get(vector)) {
       requestFrame(async () => {
         update(
           await createUnitAction(
             actions,
-            ...action(
-              state,
-              CreateUnitAction(selectedPosition, unitToBuild.id, vector),
-            ),
+            ...action(state, CreateUnitAction(selectedPosition, unitToBuild.id, vector)),
           ),
         );
       });
@@ -150,17 +137,13 @@ export default class CreateUnit {
     if (showActionWheel) {
       const currentPlayer = map.getCurrentPlayer();
       const funds = currentPlayer.funds;
-      const units = sortBy(
-        getBuildableUnits(map, selectedBuilding, selectedPosition),
-        (unit) => unit.getCostFor(currentPlayer),
+      const units = sortBy(getBuildableUnits(map, selectedBuilding, selectedPosition), (unit) =>
+        unit.getCostFor(currentPlayer),
       );
       const { hasLeader } = getLeaders(map, selectedBuilding.player);
       const unitsToDisplay =
-        units.length > MAX_UNITS
-          ? units.slice(cursor, cursor + MAX_UNITS - 1)
-          : units;
-      const entityCount =
-        unitsToDisplay.length + (unitsToDisplay.length < units.length ? 1 : 0);
+        units.length > MAX_UNITS ? units.slice(cursor, cursor + MAX_UNITS - 1) : units;
+      const entityCount = unitsToDisplay.length + (unitsToDisplay.length < units.length ? 1 : 0);
       let position = 0;
       return (
         <ActionWheel
@@ -177,12 +160,7 @@ export default class CreateUnit {
             const cost = unit.getCostFor(currentPlayer);
             const isDisabled =
               funds < cost ||
-              !getDeployableVectors(
-                map,
-                unit,
-                selectedPosition,
-                currentPlayer.id,
-              ).length;
+              !getDeployableVectors(map, unit, selectedPosition, currentPlayer.id).length;
             const entity = unit.create(selectedBuilding.player, {
               name: getDeterministicUnitName(
                 map,
@@ -196,15 +174,9 @@ export default class CreateUnit {
             const create = () => {
               if (!isDisabled && selectedPosition) {
                 const fields = new Map(
-                  getDeployableVectors(
-                    map,
-                    unit,
-                    selectedPosition,
-                    currentPlayer.id,
-                  ).map((vector) => [
-                    vector,
-                    RadiusItem(vector, 0, selectedPosition),
-                  ]),
+                  getDeployableVectors(map, unit, selectedPosition, currentPlayer.id).map(
+                    (vector) => [vector, RadiusItem(vector, 0, selectedPosition)],
+                  ),
                 );
                 const first = getFirst(fields.keys());
                 update({
@@ -221,10 +193,7 @@ export default class CreateUnit {
             };
 
             const showInfo = (
-              event:
-                | MouseEvent
-                | LongPressReactEvents<Element>
-                | ClientCoordinates,
+              event: MouseEvent | LongPressReactEvents<Element> | ClientCoordinates,
             ) =>
               showGameInfo({
                 create: isDisabled ? undefined : create,
@@ -248,13 +217,7 @@ export default class CreateUnit {
                         .get(currentPlayer.id)
                         ?.equippedUnitCustomizations.get(unit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
-                      highlightStyle={
-                        highlight
-                          ? entity.canMove()
-                            ? 'move'
-                            : 'idle'
-                          : undefined
-                      }
+                      highlightStyle={highlight ? (entity.canMove() ? 'move' : 'idle') : undefined}
                       size={tileSize}
                       tile={Plain}
                       unit={isDisabled ? entity.complete() : entity}
@@ -282,24 +245,13 @@ export default class CreateUnit {
                     </Stack>
                     <Stack center className={detailSyle} gap={4}>
                       <Stack alignCenter gap={2}>
-                        <Icon
-                          className={iconStyle}
-                          horizontalFlip
-                          icon={Shield}
-                        />
+                        <Icon className={iconStyle} horizontalFlip icon={Shield} />
                         <div>
-                          {Math.floor(
-                            unit.defense *
-                              getDefenseStatusEffect(map, entity, null),
-                          )}
+                          {Math.floor(unit.defense * getDefenseStatusEffect(map, entity, null))}
                         </div>
                       </Stack>
                       <Stack alignCenter gap={2}>
-                        <Icon
-                          className={iconStyle}
-                          horizontalFlip
-                          icon={Reply}
-                        />
+                        <Icon className={iconStyle} horizontalFlip icon={Reply} />
                         <div>{unit.getRadiusFor(currentPlayer)}</div>
                       </Stack>
                       <Stack alignCenter gap={2}>
@@ -333,11 +285,7 @@ export default class CreateUnit {
               icon={(highlight, props) => <Icon icon={More} {...props} />}
               label={null}
               navigationDirection={navigationDirection}
-              onClick={() =>
-                setCursor((cursor) =>
-                  cursor === 0 ? cursor + MAX_UNITS - 1 : 0,
-                )
-              }
+              onClick={() => setCursor((cursor) => (cursor === 0 ? cursor + MAX_UNITS - 1 : 0))}
               position={position}
             />
           )}

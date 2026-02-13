@@ -1,8 +1,5 @@
 import { BuildingHeight } from '@deities/athena/info/Building.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';

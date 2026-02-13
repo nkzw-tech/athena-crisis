@@ -57,10 +57,7 @@ export default function Drawer({
         <VStack
           alignCenter
           between
-          className={cx(
-            'lightMode',
-            !hasInset && panelWithoutInsetStyle[position],
-          )}
+          className={cx('lightMode', !hasInset && panelWithoutInsetStyle[position])}
         >
           {sidebar && (
             <Stack between className={cx(panelStyle[position], sidebarStyle)}>
@@ -245,7 +242,5 @@ const sidebarStyle = css`
   z-index: 2;
 `;
 
-export const getDrawerPaddingStyle = (
-  position: DrawerPosition,
-  expand: boolean,
-) => (expand ? expandedPaddingStyles : paddingStyles)[position];
+export const getDrawerPaddingStyle = (position: DrawerPosition, expand: boolean) =>
+  (expand ? expandedPaddingStyles : paddingStyles)[position];

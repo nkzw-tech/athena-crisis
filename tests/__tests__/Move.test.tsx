@@ -25,9 +25,7 @@ const map = withModifiers(
     config: {
       fog: true,
     },
-    map: [
-      1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1,
-    ],
+    map: [1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1],
     size: { height: 5, width: 5 },
     teams: [
       {
@@ -54,14 +52,8 @@ const player1 = map.getPlayer(1);
 const vision = map.createVisionObject(player1);
 
 test('unit gets blocked by another unit in the fog', () => {
-  const [actionResponse] = execute(
-    map,
-    vision,
-    MoveAction(vec(1, 2), vec(4, 2)),
-  )!;
-  expect(
-    formatActionResponse(actionResponse, { colors: false }),
-  ).toMatchInlineSnapshot(
+  const [actionResponse] = execute(map, vision, MoveAction(vec(1, 2), vec(4, 2)))!;
+  expect(formatActionResponse(actionResponse, { colors: false })).toMatchInlineSnapshot(
     `"Move (1,2 → 3,2) { fuel: 38, completed: true, path: [2,2 → 3,2] }"`,
   );
 });
@@ -101,8 +93,7 @@ test('transporters receive the correct unit in fog', async () => {
     DropUnitAction(to, 0, vec(2, 2)),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       HiddenMove { path: [3,3 → 3,2], completed: false, fuel: 39, unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40 } }
       DropUnit (3,2 → 2,2) { index: 0 }"
@@ -152,8 +143,7 @@ test('transporters can be loaded even if they are completed', async () => {
     MoveAction(from, to),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       CompleteUnit (3,2)
       Move (3,3 → 3,2) { fuel: 39, completed: false, path: [3,2] }"
@@ -165,31 +155,17 @@ test('units use the correct amount of fuel with custom paths', () => {
     map: Array(map.map.length).fill(1),
     units: map.units.set(vec(1, 2), Humvee.create(1)),
   });
-  const [actionResponseA] = execute(
-    mapA,
-    vision,
-    MoveAction(vec(1, 2), vec(3, 1)),
-  )!;
-  expect(
-    formatActionResponse(actionResponseA, { colors: false }),
-  ).toMatchInlineSnapshot(
+  const [actionResponseA] = execute(mapA, vision, MoveAction(vec(1, 2), vec(3, 1)))!;
+  expect(formatActionResponse(actionResponseA, { colors: false })).toMatchInlineSnapshot(
     `"Move (1,2 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1] }"`,
   );
 
   const [actionResponseB] = execute(
     mapA,
     vision,
-    MoveAction(vec(1, 2), vec(3, 1), [
-      vec(2, 2),
-      vec(2, 3),
-      vec(3, 3),
-      vec(3, 2),
-      vec(3, 1),
-    ]),
+    MoveAction(vec(1, 2), vec(3, 1), [vec(2, 2), vec(2, 3), vec(3, 3), vec(3, 2), vec(3, 1)]),
   )!;
-  expect(
-    formatActionResponse(actionResponseB, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(actionResponseB, { colors: false })).toMatchInlineSnapshot(
     `"Move (1,2 → 3,1) { fuel: 45, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2 → 3,1] }"`,
   );
 });
@@ -207,9 +183,7 @@ test('units can be loaded into transporters', () => {
     vision,
     MoveAction(from, to, [vec(2, 2), vec(2, 3), vec(3, 3), to]),
   )!;
-  expect(
-    formatActionResponse(actionResponseA, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(actionResponseA, { colors: false })).toMatchInlineSnapshot(
     `"Move (1,2 → 3,2) { fuel: 26, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2] }"`,
   );
 
@@ -218,10 +192,6 @@ test('units can be loaded into transporters', () => {
   });
 
   expect(
-    execute(
-      mapB,
-      vision,
-      MoveAction(from, to, [vec(2, 2), vec(2, 3), vec(3, 3), to]),
-    ),
+    execute(mapB, vision, MoveAction(from, to, [vec(2, 2), vec(2, 3), vec(3, 3), to])),
   ).toBeNull();
 });

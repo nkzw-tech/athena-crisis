@@ -9,12 +9,9 @@ export default function canPlaceRailTrack(map: MapData, vector: Vector) {
   }
 
   const tile = map.getTileInfo(vector);
-  const filter = (vector: Vector) =>
-    map.contains(vector) && map.getTileInfo(vector) === RailTrack;
+  const filter = (vector: Vector) => map.contains(vector) && map.getTileInfo(vector) === RailTrack;
   if (tile.id === Plain.id) {
-    return (
-      canPlaceTile(map, vector, RailTrack) && vector.adjacent().some(filter)
-    );
+    return canPlaceTile(map, vector, RailTrack) && vector.adjacent().some(filter);
   }
 
   if (tile.id === River.id) {

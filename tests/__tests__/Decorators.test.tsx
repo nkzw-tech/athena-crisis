@@ -38,9 +38,7 @@ const map = withModifiers(
       [11, 20, 106],
       [17, 20, 87],
     ],
-    map: [
-      1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 6, 6, 6, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1,
-    ],
+    map: [1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 6, 6, 6, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1],
     size: {
       height: 5,
       width: 5,
@@ -93,10 +91,7 @@ const map = withModifiers(
 );
 
 test('correctly renders decorators', async () => {
-  const screenshot = await captureOne(
-    map,
-    HumanPlayer.from(map.getPlayer(1), '1').userId,
-  );
+  const screenshot = await captureOne(map, HumanPlayer.from(map.getPlayer(1), '1').userId);
   printGameState('Decorators', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 });

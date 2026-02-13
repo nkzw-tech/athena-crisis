@@ -24,8 +24,7 @@ export default function maybeConvertPlayer(
     }
   }
 
-  return assignDeterministicUnitNames(
-    map,
-    ImmutableMap<Vector, Unit>([[vector, newUnit]]),
-  ).get(vector)!;
+  return assignDeterministicUnitNames(map, ImmutableMap<Vector, Unit>([[vector, newUnit]])).get(
+    vector,
+  )!;
 }

@@ -24,10 +24,7 @@ export default async function receivePortraitAnimation(
   actionResponse: ReceiveRewardActionResponse,
 ): Promise<State> {
   const { player } = actionResponse;
-  const unit =
-    actionResponse.reward.type === 'UnitPortraits'
-      ? actionResponse.reward.unit
-      : null;
+  const unit = actionResponse.reward.type === 'UnitPortraits' ? actionResponse.reward.unit : null;
 
   if (!unit) {
     return state;
@@ -54,8 +51,7 @@ export default async function receivePortraitAnimation(
                 key={variant}
                 style={{ position: 'relative' }}
                 transition={{
-                  delay:
-                    duration * 5 * (variant === 0 ? 1 : variant === 1 ? 0 : 2),
+                  delay: duration * 5 * (variant === 0 ? 1 : variant === 1 ? 0 : 2),
                   duration: duration * 10,
                   ease: [0.34, 1.56, 0.64, 1],
                 }}

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  RefObject,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react';
+import { createContext, ReactNode, RefObject, useContext, useEffect, useRef } from 'react';
 import { PageTransitionDuration } from '../PageTransition.tsx';
 import useLocation from './useLocation.tsx';
 

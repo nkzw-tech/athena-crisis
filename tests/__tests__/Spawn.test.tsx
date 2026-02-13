@@ -31,9 +31,7 @@ const map = withModifiers(
       blocklistedUnits: [Bomber.id],
       fog: true,
     },
-    map: [
-      1, 1, 3, 1, 3, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 3, 1, 1, 2, 2, 2, 1, 1,
-    ],
+    map: [1, 1, 3, 1, 3, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 3, 1, 1, 2, 2, 2, 1, 1],
     size: { height: 5, width: 5 },
     teams: [
       { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },
@@ -53,21 +51,7 @@ test('spawns units and adds new players', async () => {
         1,
         team1.copy({
           players: ImmutableMap([
-            [
-              4,
-              new Bot(
-                4,
-                'Test Player',
-                1,
-                500,
-                undefined,
-                new Set(),
-                new Set(),
-                0,
-                null,
-                0,
-              ),
-            ],
+            [4, new Bot(4, 'Test Player', 1, 500, undefined, new Set(), new Set(), 0, null, 0)],
           ]),
         }),
       ],
@@ -77,21 +61,7 @@ test('spawns units and adds new players', async () => {
           5,
           '',
           ImmutableMap([
-            [
-              5,
-              new Bot(
-                5,
-                'Test Player',
-                5,
-                500,
-                undefined,
-                new Set(),
-                new Set(),
-                0,
-                null,
-                0,
-              ),
-            ],
+            [5, new Bot(5, 'Test Player', 5, 500, undefined, new Set(), new Set(), 0, null, 0)],
           ]),
         ),
       ],
@@ -120,9 +90,7 @@ test('spawns units and adds new players', async () => {
     player1.userId,
   );
 
-  expect(
-    snapshotEncodedActionResponse(encodedGameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(encodedGameActionResponse)).toMatchInlineSnapshot(
     `"Spawn { units: [2,2 → Fighter Jet { id: 18, health: 100, player: 1, fuel: 50, ammo: [ [ 1, 8 ] ], name: 'Titan' }, 1,3 → Bomber { id: 19, health: 100, player: 4, fuel: 40, ammo: [ [ 1, 5 ] ], name: 'Léon' }, 3,2 → Bomber { id: 19, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 5 ] ], name: 'Léon' }], teams: [ { id: 1, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 4, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] }, { id: 5, name: '', players: [ { activeSkills: [], ai: undefined, charge: 0, funds: 500, id: 5, misses: 0, name: 'Test Player', skills: [], stats: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] } ] } ], buildings: [] }"`,
   );
 
@@ -168,14 +136,9 @@ test('spawns new units at adjacent fields if necessary', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = await executeGameActions(
-    initialMap,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [3,2 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Zephyr' }], teams: null, buildings: [] }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -186,9 +149,10 @@ test('drops a spawn if no adjacent field is available', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 2);
   const initialMap = map.copy({
-    units: ImmutableMap(
-      vecB.expand().map((vector) => [vector, Pioneer.create(1)]),
-    ).set(vecA, Pioneer.create(2)),
+    units: ImmutableMap(vecB.expand().map((vector) => [vector, Pioneer.create(1)])).set(
+      vecA,
+      Pioneer.create(2),
+    ),
   });
 
   const effects: Effects = new Map([
@@ -209,14 +173,9 @@ test('drops a spawn if no adjacent field is available', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = await executeGameActions(
-    initialMap,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       CompleteUnit (1,1)
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -239,9 +198,7 @@ test('stops capturing if there is nothing to capture on that field', async () =>
           actions: [
             {
               type: 'SpawnEffect',
-              units: ImmutableMap([
-                [vecB, Pioneer.create(2).setFuel(0).capture()],
-              ]),
+              units: ImmutableMap([[vecB, Pioneer.create(2).setFuel(0).capture()]]),
             },
           ],
           occurrence: 'once',
@@ -250,14 +207,9 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     ],
   ]);
 
-  const [, gameActionResponseA] = await executeGameActions(
-    mapA,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponseA] = await executeGameActions(mapA, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam', capturing: true }], teams: null, buildings: [] }
       Capture (2,2) { building: House { id: 2, health: 100, player: 2 }, player: 1 }
@@ -268,14 +220,9 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     buildings: map.buildings.delete(vecB),
   });
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapB,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapB, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam' }], teams: null, buildings: [] }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -285,14 +232,9 @@ test('stops capturing if there is nothing to capture on that field', async () =>
     buildings: map.buildings.set(vecB, House.create(2)),
   });
 
-  const [, gameActionResponseC] = await executeGameActions(
-    mapC,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponseC] = await executeGameActions(mapC, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 600, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [2,2 → Pioneer { id: 1, health: 100, player: 2, fuel: 0, name: 'Sam' }], teams: null, buildings: [] }
       EndTurn { current: { funds: 600, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -306,10 +248,6 @@ test('correctly keeps track of active players', async () => {
     units: ImmutableMap([[vec(1, 1), Bomber.create(1)]]),
   } as const);
 
-  const newMap = applyActionResponse(
-    vision.apply(map),
-    vision,
-    gameStateEntry![0],
-  );
+  const newMap = applyActionResponse(vision.apply(map), vision, gameStateEntry![0]);
   expect(newMap.active).toEqual([1, 2]);
 });

@@ -20,12 +20,7 @@ export default function Spinner({
   }, [show]);
 
   return (
-    <Component
-      alignCenter
-      className={containerStyle}
-      gap
-      style={{ opacity: show ? 1 : 0 }}
-    >
+    <Component alignCenter className={containerStyle} gap style={{ opacity: show ? 1 : 0 }}>
       <div className={dotStyle}></div>
       <div className={dotStyle}></div>
       <div className={dotStyle}></div>

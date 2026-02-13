@@ -46,9 +46,7 @@ const canPlacePier = (map: MapData, vector: Vector, modifier: Modifier) => {
     vector.adjacent().some((vector, index) => {
       const tile = map.getTile(vector, 0);
       return (
-        tile &&
-        !(getTileInfo(tile).type & TileTypes.Sea) &&
-        !PierModifiers[index].has(modifier)
+        tile && !(getTileInfo(tile).type & TileTypes.Sea) && !PierModifiers[index].has(modifier)
       );
     })
   ) {
@@ -57,15 +55,8 @@ const canPlacePier = (map: MapData, vector: Vector, modifier: Modifier) => {
   return true;
 };
 
-export default function canPlaceTile(
-  map: MapData,
-  vector: Vector,
-  tile: TileInfo,
-): boolean {
-  if (
-    !map.contains(vector) ||
-    getBiomeStyle(map.config.biome).tileRestrictions?.has(tile)
-  ) {
+export default function canPlaceTile(map: MapData, vector: Vector, tile: TileInfo): boolean {
+  if (!map.contains(vector) || getBiomeStyle(map.config.biome).tileRestrictions?.has(tile)) {
     return false;
   }
 
@@ -77,19 +68,14 @@ export default function canPlaceTile(
     tile === Weeds ||
     tile == GasBubbles
   ) {
-    if (
-      tile === Island &&
-      map.getTileInfo(vector, 0).type & TileTypes.DeepSea
-    ) {
+    if (tile === Island && map.getTileInfo(vector, 0).type & TileTypes.DeepSea) {
       return false;
     }
 
     return vector
       .expandWithDiagonals()
       .every(
-        (vector) =>
-          !map.getTile(vector, 0) ||
-          map.getTileInfo(vector, 0).type & TileTypes.Sea,
+        (vector) => !map.getTile(vector, 0) || map.getTileInfo(vector, 0).type & TileTypes.Sea,
       );
   }
 
@@ -152,54 +138,43 @@ export default function canPlaceTile(
 
       // For the purpose of placing bridges, consider waterfalls as rivers.
       const layer0Tile = map.getTileInfo(vector, 0);
-      return getWaterfallModifier(map, vector, layer0Tile, 0)
-        ? River.id
-        : layer0Tile.id;
+      return getWaterfallModifier(map, vector, layer0Tile, 0) ? River.id : layer0Tile.id;
     });
     const horizontal = [left, right].every(isConnectedWith);
     const vertical = [up, down].every(isConnectedWith);
     if (currentTile === River) {
       return (
-        (horizontal && [up, down].every(isRiver)) ||
-        (vertical && [left, right].every(isRiver))
+        (horizontal && [up, down].every(isRiver)) || (vertical && [left, right].every(isRiver))
       );
     } else if (currentTile === Trench) {
       return (
-        (horizontal && [up, down].every(isTrench)) ||
-        (vertical && [left, right].every(isTrench))
+        (horizontal && [up, down].every(isTrench)) || (vertical && [left, right].every(isTrench))
       );
     } else if (currentTile.type & TileTypes.Sea) {
-      if (
-        (horizontal && [up, down].every(isSea)) ||
-        (vertical && [left, right].every(isSea))
-      ) {
+      if ((horizontal && [up, down].every(isSea)) || (vertical && [left, right].every(isSea))) {
         return true;
       }
 
       if (
-        (isConnectedWith(up) ||
-          [up, map.getTile(vector.up(2))].every(isConnectedType)) &&
+        (isConnectedWith(up) || [up, map.getTile(vector.up(2))].every(isConnectedType)) &&
         ![left, right].some(isConnectedType)
       ) {
         return true;
       }
       if (
-        (isConnectedWith(down) ||
-          [down, map.getTile(vector.down(2))].every(isConnectedType)) &&
+        (isConnectedWith(down) || [down, map.getTile(vector.down(2))].every(isConnectedType)) &&
         ![left, right].some(isConnectedType)
       ) {
         return true;
       }
       if (
-        (isConnectedWith(left) ||
-          [left, map.getTile(vector.left(2))].every(isConnectedType)) &&
+        (isConnectedWith(left) || [left, map.getTile(vector.left(2))].every(isConnectedType)) &&
         ![up, down].some(isConnectedType)
       ) {
         return true;
       }
       if (
-        (isConnectedWith(right) ||
-          [right, map.getTile(vector.right(2))].every(isConnectedType)) &&
+        (isConnectedWith(right) || [right, map.getTile(vector.right(2))].every(isConnectedType)) &&
         ![up, down].some(isConnectedType)
       ) {
         return true;

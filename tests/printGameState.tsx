@@ -4,10 +4,7 @@ import chalk from 'chalk';
 import terminalImage from 'term-img';
 import type { Image } from './screenshot.tsx';
 
-export function printGameState(
-  actionResponse: ActionResponse | string,
-  screenshot: Image,
-) {
+export function printGameState(actionResponse: ActionResponse | string, screenshot: Image) {
   // eslint-disable-next-line no-console
   console.log(
     typeof actionResponse === 'string'

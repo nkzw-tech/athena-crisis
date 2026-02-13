@@ -90,9 +90,7 @@ export default abstract class Entity {
   }
 
   dropLabel(labels: PlayerIDSet): this {
-    return this.label != null && labels.has(this.label)
-      ? this.copy({ label: null })
-      : this;
+    return this.label != null && labels.has(this.label) ? this.copy({ label: null }) : this;
   }
 
   abstract complete(): Entity;
@@ -100,9 +98,7 @@ export default abstract class Entity {
   abstract recover(): Entity;
 }
 
-export function getEntityInfoGroup(
-  entity: Readonly<{ type: EntityType }>,
-): EntityGroup {
+export function getEntityInfoGroup(entity: Readonly<{ type: EntityType }>): EntityGroup {
   const { type: entityType } = entity;
   switch (entityType) {
     case EntityType.Artillery:
@@ -143,16 +139,10 @@ export function isBuilding(entity: Entity): entity is Building {
 
 export function isUnit(entity: Entity): entity is Unit {
   const entityType = getEntityGroup(entity);
-  return (
-    entityType === 'land' || entityType === 'air' || entityType === 'naval'
-  );
+  return entityType === 'land' || entityType === 'air' || entityType === 'naval';
 }
 
-export function isUnitInfo(
-  entity: Readonly<{ type: EntityType }>,
-): entity is UnitInfo {
+export function isUnitInfo(entity: Readonly<{ type: EntityType }>): entity is UnitInfo {
   const entityType = getEntityInfoGroup(entity);
-  return (
-    entityType === 'land' || entityType === 'air' || entityType === 'naval'
-  );
+  return entityType === 'land' || entityType === 'air' || entityType === 'naval';
 }

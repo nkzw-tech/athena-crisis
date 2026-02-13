@@ -76,12 +76,7 @@ const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
   onChange && index != null ? (
     <Stack alignCenter between gap={4}>
       {!first && (
-        <Icon
-          button
-          className={iconStyle}
-          icon={ChevronUp}
-          onClick={() => onChange(index, 'up')}
-        />
+        <Icon button className={iconStyle} icon={ChevronUp} onClick={() => onChange(index, 'up')} />
       )}
       {!last && (
         <Icon
@@ -91,12 +86,7 @@ const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
           onClick={() => onChange(index, 'down')}
         />
       )}
-      <Icon
-        button
-        className={iconStyle}
-        icon={Close}
-        onClick={() => onChange(index, 'delete')}
-      />
+      <Icon button className={iconStyle} icon={Close} onClick={() => onChange(index, 'delete')} />
     </Stack>
   ) : null;
 
@@ -169,10 +159,9 @@ export default memo(function ActionCard({
         <InfoBox>
           <p className={lightStyle}>
             <fbt desc="Game end spawn effect conflict note">
-              Note: This Action is associated with a Game End Effect and will be
-              removed upon saving. If you want to keep this action, please
-              change the effect type, for example by changing the objective to
-              be optional.
+              Note: This Action is associated with a Game End Effect and will be removed upon
+              saving. If you want to keep this action, please change the effect type, for example by
+              changing the objective to be optional.
             </fbt>
           </p>
         </InfoBox>
@@ -186,15 +175,12 @@ export default memo(function ActionCard({
     const player = hasCurrentPlayer
       ? resolveDynamicPlayerID(map, action.player, currentPlayer)
       : action.player;
-    const shouldFormatText =
-      formatText && playerDetails && map && userDisplayName;
+    const shouldFormatText = formatText && playerDetails && map && userDisplayName;
     const message = shouldFormatText
       ? formatCharacterText(
           translateMessage(action),
           unit,
-          hasCurrentPlayer && currentPlayer === player
-            ? 'characterName'
-            : 'name',
+          hasCurrentPlayer && currentPlayer === player ? 'characterName' : 'name',
           map,
           (typeof player === 'number' ? player : currentPlayer) || 0,
           playerDetails,
@@ -233,30 +219,26 @@ export default memo(function ActionCard({
           }
         >
           <Stack between gap>
-            {Array.from({ length: portrait.variants }, (_, index) => index).map(
-              (variant) => (
-                <div
-                  className={cx(
-                    selectPortraitStyle,
-                    (action.variant || 0) === variant && selectedPortraitStyle,
-                  )}
-                  key={variant}
-                  onClick={
-                    canChange
-                      ? () => onChange(index, 'update', { ...action, variant })
-                      : undefined
-                  }
-                >
-                  <Portrait
-                    animate={isVisible}
-                    player={player}
-                    silhouette={action.silhouette}
-                    unit={unit}
-                    variant={variant}
-                  />
-                </div>
-              ),
-            )}
+            {Array.from({ length: portrait.variants }, (_, index) => index).map((variant) => (
+              <div
+                className={cx(
+                  selectPortraitStyle,
+                  (action.variant || 0) === variant && selectedPortraitStyle,
+                )}
+                key={variant}
+                onClick={
+                  canChange ? () => onChange(index, 'update', { ...action, variant }) : undefined
+                }
+              >
+                <Portrait
+                  animate={isVisible}
+                  player={player}
+                  silhouette={action.silhouette}
+                  unit={unit}
+                  variant={variant}
+                />
+              </div>
+            ))}
           </Stack>
         </Dropdown>
         <MessageComponent
@@ -337,12 +319,7 @@ export default memo(function ActionCard({
                 </label>
               )}
             </Stack>
-            <TopBarIcons
-              first={first}
-              index={index}
-              last={last}
-              onChange={onChange}
-            />
+            <TopBarIcons first={first} index={index} last={last} onChange={onChange} />
           </Stack>
           {canChange ? (
             <textarea
@@ -356,16 +333,11 @@ export default memo(function ActionCard({
                 })
               }
               onFocus={() => setAnimate(true)}
-              placeholder={fbt(
-                'Type a message…',
-                'Placeholder for action message text',
-              )}
+              placeholder={fbt('Type a message…', 'Placeholder for action message text')}
               value={action.message}
             />
           ) : (
-            <div className={cx(textareaStyle, selectableTextStyle)}>
-              {message}
-            </div>
+            <div className={cx(textareaStyle, selectableTextStyle)}>{message}</div>
           )}
         </MessageComponent>
       </Stack>
@@ -414,25 +386,19 @@ export default memo(function ActionCard({
 
                         onChange(index, 'update', {
                           ...action,
-                          units: ImmutableMap(
-                            units.filter((_, index) => index !== unitIndex),
-                          ),
+                          units: ImmutableMap(units.filter((_, index) => index !== unitIndex)),
                         });
                       }
                     : undefined
                 }
-                tiles={vectors.map(
-                  (vector) => map?.getTileInfo(vector) || Plain,
-                )}
+                tiles={vectors.map((vector) => map?.getTileInfo(vector) || Plain)}
                 units={[...action.units.values()]}
               />
             </Tick>
           </Stack>
         </VStack>
         <Stack alignCenter between gap={16} wrap>
-          <fbt desc="Label to pick which player to spawn units as">
-            Spawn units as player:
-          </fbt>
+          <fbt desc="Label to pick which player to spawn units as">Spawn units as player:</fbt>
           <Stack between gap={16}>
             {canChange ? (
               <>
@@ -473,13 +439,9 @@ export default memo(function ActionCard({
           <Stack wrap>
             <InlineLink onClick={() => onChange(index, 'toggle-select-units')}>
               {focused ? (
-                <fbt desc="Label to stop selecting units">
-                  Stop selecting units
-                </fbt>
+                <fbt desc="Label to stop selecting units">Stop selecting units</fbt>
               ) : (
-                <fbt desc="Button to select spawn effect units">
-                  Select units
-                </fbt>
+                <fbt desc="Button to select spawn effect units">Select units</fbt>
               )}
             </InlineLink>
           </Stack>
@@ -549,21 +511,14 @@ export default memo(function ActionCard({
             <Stack alignCenter center gap={24} wrap>
               <CrystalSprite animate crystal={crystal} />
               {biome != null && (
-                <InlineTileList
-                  biome={biome}
-                  scrollIntoView={false}
-                  tiles={[Plain]}
-                />
+                <InlineTileList biome={biome} scrollIntoView={false} tiles={[Plain]} />
               )}
             </Stack>
           )}
         </VStack>
       </Box>
     );
-  } else if (
-    action.type === 'IncreaseChargeEffect' ||
-    action.type === 'IncreaseFundsEffect'
-  ) {
+  } else if (action.type === 'IncreaseChargeEffect' || action.type === 'IncreaseFundsEffect') {
     const isCharge = action.type === 'IncreaseChargeEffect';
     const max = isCharge ? MaxCharges : Number.MAX_SAFE_INTEGER;
     const value = isCharge ? action.charges : action.funds;
@@ -645,12 +600,7 @@ export default memo(function ActionCard({
     <Box between className={boxStyle} wrap>
       <Stack between className={headlineStyle}>
         <h2>{action.type}</h2>
-        <TopBarIcons
-          first={first}
-          index={index}
-          last={last}
-          onChange={onChange}
-        />
+        <TopBarIcons first={first} index={index} last={last} onChange={onChange} />
       </Stack>
     </Box>
   );

@@ -7,12 +7,7 @@ import {
 } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
-import {
-  BazookaBear,
-  Cannon,
-  Pioneer,
-  SmallTank,
-} from '@deities/athena/info/Unit.tsx';
+import { BazookaBear, Cannon, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -26,33 +21,31 @@ BuildingInfo.setConstructor(Building);
 test('ensures the configuration for buildings and the units they can create is correct', () => {
   expect(
     new Map(
-      filterBuildings((building) => building.canBuildUnits()).map(
-        (building) => [
-          building.name,
-          [
-            ...building
-              .create(1)
-              .getBuildableUnits(
-                new HumanPlayer(
-                  1,
-                  '1',
-                  1,
-                  0,
-                  undefined,
-                  new Set(),
-                  new Set(),
-                  0,
-                  null,
-                  0,
-                  null,
-                  null,
-                ),
+      filterBuildings((building) => building.canBuildUnits()).map((building) => [
+        building.name,
+        [
+          ...building
+            .create(1)
+            .getBuildableUnits(
+              new HumanPlayer(
+                1,
+                '1',
+                1,
+                0,
+                undefined,
+                new Set(),
+                new Set(),
+                0,
+                null,
+                0,
+                null,
+                null,
               ),
-          ]
-            .map((unit) => unit.name)
-            .sort(),
-        ],
-      ),
+            ),
+        ]
+          .map((unit) => unit.name)
+          .sort(),
+      ]),
     ),
   ).toMatchInlineSnapshot(`
     Map {
@@ -152,21 +145,11 @@ test('units can be added to buildings via skills', () => {
     null,
   );
 
-  expect(
-    new Set(Factory.create(1).getBuildableUnits(playerWithSkill)).has(Cannon),
-  ).toBeTruthy();
-  expect(
-    new Set(Factory.create(1).getBuildableUnits(playerWithoutSkill)).has(
-      Cannon,
-    ),
-  ).toBeFalsy();
+  expect(new Set(Factory.create(1).getBuildableUnits(playerWithSkill)).has(Cannon)).toBeTruthy();
+  expect(new Set(Factory.create(1).getBuildableUnits(playerWithoutSkill)).has(Cannon)).toBeFalsy();
 
-  expect(Cannon.getCostFor(playerWithSkill)).toBeLessThan(
-    Number.POSITIVE_INFINITY,
-  );
-  expect(Cannon.getCostFor(playerWithoutSkill)).toEqual(
-    Number.POSITIVE_INFINITY,
-  );
+  expect(Cannon.getCostFor(playerWithSkill)).toBeLessThan(Number.POSITIVE_INFINITY);
+  expect(Cannon.getCostFor(playerWithoutSkill)).toEqual(Number.POSITIVE_INFINITY);
 });
 
 test('units can be added to the Bar via skills', () => {
@@ -199,21 +182,11 @@ test('units can be added to the Bar via skills', () => {
     null,
   );
 
-  expect(
-    new Set(Bar.create(1).getBuildableUnits(playerWithSkill)).has(BazookaBear),
-  ).toBeTruthy();
-  expect(
-    new Set(Bar.create(1).getBuildableUnits(playerWithoutSkill)).has(
-      BazookaBear,
-    ),
-  ).toBeFalsy();
+  expect(new Set(Bar.create(1).getBuildableUnits(playerWithSkill)).has(BazookaBear)).toBeTruthy();
+  expect(new Set(Bar.create(1).getBuildableUnits(playerWithoutSkill)).has(BazookaBear)).toBeFalsy();
 
-  expect(BazookaBear.getCostFor(playerWithSkill)).toBeLessThan(
-    Number.POSITIVE_INFINITY,
-  );
-  expect(BazookaBear.getCostFor(playerWithoutSkill)).toEqual(
-    Number.POSITIVE_INFINITY,
-  );
+  expect(BazookaBear.getCostFor(playerWithSkill)).toBeLessThan(Number.POSITIVE_INFINITY);
+  expect(BazookaBear.getCostFor(playerWithoutSkill)).toEqual(Number.POSITIVE_INFINITY);
 });
 
 test('Research Lab status effects are available even in fog', () => {
@@ -222,10 +195,7 @@ test('Research Lab status effects are available even in fog', () => {
       config: {
         fog: true,
       },
-      map: [
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1,
-      ],
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       size: { height: 5, width: 5 },
       teams: [
         { id: 1, name: '', players: [{ funds: 500, id: 1, userId: '1' }] },

@@ -30,11 +30,7 @@ import { StateWithActions } from '../../Types.tsx';
 import hasEffectObjective from '../lib/hasEffectObjective.tsx';
 import ObjectiveCard from '../lib/ObjectiveCard.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
-import {
-  CampaignEdge,
-  EditorState,
-  SetEditorStateFunction,
-} from '../Types.tsx';
+import { CampaignEdge, EditorState, SetEditorStateFunction } from '../Types.tsx';
 
 const maybeRemoveEffect = (
   effects: Effects,
@@ -50,9 +46,7 @@ const maybeRemoveEffect = (
   const list = effects.get(trigger);
   if (list) {
     const newList = new Set(
-      [...list].filter(
-        ({ conditions }) => !hasEffectObjective(trigger, index, conditions),
-      ),
+      [...list].filter(({ conditions }) => !hasEffectObjective(trigger, index, conditions)),
     );
     const newEffects = new Map(effects).set(trigger, newList);
     if (!newList.size) {
@@ -114,10 +108,7 @@ const maybeSwapEffect = (
 
   const newEffects = new Map(effects);
   if (target) {
-    newEffects.set(
-      newTrigger,
-      new Set([...(newEffects.get(newTrigger) || []), ...target]),
-    );
+    newEffects.set(newTrigger, new Set([...(newEffects.get(newTrigger) || []), ...target]));
   }
 
   const origin = partition.get('origin');
@@ -173,9 +164,7 @@ export default function ObjectivePanel({
             ?.filter(filterNodes)
             .map((edge) => edge.node)
             .map(({ levels, name, slug }) => ({
-              level: toLevelMap<ClientLevelID>(JSON.parse(levels || '')).get(
-                mapId,
-              ),
+              level: toLevelMap<ClientLevelID>(JSON.parse(levels || '')).get(mapId),
               name,
               slug,
             }))
@@ -191,20 +180,13 @@ export default function ObjectivePanel({
       }
 
       if (!objective) {
-        maybeRemoveEffect(
-          editor.effects,
-          existingObjective,
-          id,
-          setEditorState,
-        );
+        maybeRemoveEffect(editor.effects, existingObjective, id, setEditorState);
         actions.update({
           map: map.copy({
             config: map.config.copy({
               objectives:
                 objectives.size === 1
-                  ? ImmutableMap([
-                      [0, getInitialObjective(map, Criteria.Default)],
-                    ])
+                  ? ImmutableMap([[0, getInitialObjective(map, Criteria.Default)]])
                   : objectives.delete(id),
             }),
           }),
@@ -244,9 +226,7 @@ export default function ObjectivePanel({
               });
             }}
           >
-            <fbt desc="Label to stop selecting location">
-              Stop selecting location
-            </fbt>
+            <fbt desc="Label to stop selecting location">Stop selecting location</fbt>
           </InlineLink>
         </Box>
       </VStack>
@@ -258,9 +238,8 @@ export default function ObjectivePanel({
       {sortBy([...objectives], ([id]) => id).map(([id, objective]) => (
         <ObjectiveCard
           campaigns={
-            objectivesInCampaigns?.filter(
-              ({ level }) => level && levelUsesObjective(id, level),
-            ) || null
+            objectivesInCampaigns?.filter(({ level }) => level && levelUsesObjective(id, level)) ||
+            null
           }
           canDelete={objectives.size > 1 || objective.type !== Criteria.Default}
           canEditPerformance={canEditPerformance}
@@ -271,9 +250,7 @@ export default function ObjectivePanel({
           map={mapWithActivePlayers}
           objective={objective}
           onChange={(objective) => updateObjective(id, objective)}
-          selectEffect={() =>
-            setEditorState(selectObjectiveEffect(editor, id, objective))
-          }
+          selectEffect={() => setEditorState(selectObjectiveEffect(editor, id, objective))}
           selectLocation={() => {
             if (objectiveHasVectors(objective)) {
               setEditorState({
@@ -286,11 +263,7 @@ export default function ObjectivePanel({
           validate={validate}
         />
       ))}
-      <Select
-        selectedItem={
-          <fbt desc="Headline for adding a new objective">New Objective</fbt>
-        }
-      >
+      <Select selectedItem={<fbt desc="Headline for adding a new objective">New Objective</fbt>}>
         <VStack between gap={4} wrap>
           {(objectives.some(({ type }) => type === Criteria.Default)
             ? CriteriaListWithoutDefault
@@ -304,10 +277,7 @@ export default function ObjectivePanel({
                   map: map.copy({
                     config: map.config.copy({
                       objectives: objectives
-                        .set(
-                          getNextObjectiveId(objectives),
-                          getInitialObjective(map, type),
-                        )
+                        .set(getNextObjectiveId(objectives), getInitialObjective(map, type))
                         .sortBy((_, id) => id),
                     }),
                   }),

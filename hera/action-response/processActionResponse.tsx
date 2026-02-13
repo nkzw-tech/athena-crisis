@@ -5,10 +5,7 @@ import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVecto
 import getLosingPlayer from '@deities/apollo/lib/getLosingPlayer.tsx';
 import getMatchingTeam from '@deities/apollo/lib/getMatchingTeam.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import {
-  GameActionResponse,
-  GameActionResponses,
-} from '@deities/apollo/Types.tsx';
+import { GameActionResponse, GameActionResponses } from '@deities/apollo/Types.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import canLoad from '@deities/athena/lib/canLoad.tsx';
@@ -16,11 +13,7 @@ import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import getWinningInvaders from '@deities/athena/lib/getWinningInvaders.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
 import spawnBuildings from '@deities/athena/lib/spawnBuildings.tsx';
-import {
-  isHumanPlayer,
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { isHumanPlayer, PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
@@ -62,9 +55,7 @@ import hiddenMoveAction from '../behavior/move/hiddenMoveAction.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { toggleLightningAnimation } from '../behavior/radar/toggleLightningAction.tsx';
 import rescueAction from '../behavior/rescue/rescueAction.tsx';
-import sabotageAction, {
-  addSabotageAnimation,
-} from '../behavior/sabotage/sabotageAction.tsx';
+import sabotageAction, { addSabotageAnimation } from '../behavior/sabotage/sabotageAction.tsx';
 import unfoldAction from '../behavior/unfold/unfoldAction.tsx';
 import translateMessage from '../i18n/translateMessage.tsx';
 import abandonInvasion from '../lib/abandonInvasion.tsx';
@@ -80,12 +71,7 @@ import sleep from '../lib/sleep.tsx';
 import spawn from '../lib/spawn.tsx';
 import startGameAnimation from '../lib/startGameAnimation.tsx';
 import { RadiusType } from '../Radius.tsx';
-import {
-  Actions,
-  AnimationSpeed,
-  PlayerHasRewardFunction,
-  State,
-} from '../Types.tsx';
+import { Actions, AnimationSpeed, PlayerHasRewardFunction, State } from '../Types.tsx';
 import ActionResponseError from './ActionResponseError.tsx';
 
 const applyRemoteActionResponse = <T extends ActionResponse>(
@@ -129,11 +115,7 @@ async function processActionResponse(
 
   await scrollIntoView(getActionResponseVectors(map, actionResponse));
 
-  const remoteActionResponse = applyRemoteActionResponse(
-    map,
-    vision,
-    actionResponse,
-  );
+  const remoteActionResponse = applyRemoteActionResponse(map, vision, actionResponse);
   const [remoteAction, newMap] = remoteActionResponse;
 
   switch (type) {
@@ -141,11 +123,7 @@ async function processActionResponse(
       const { from, path, to } = actionResponse;
       const unit = map.units.get(from);
       if (!unit) {
-        throw new ActionResponseError(
-          `${type}: Could not find unit.`,
-          actionResponse,
-          map,
-        );
+        throw new ActionResponseError(`${type}: Could not find unit.`, actionResponse, map);
       }
 
       await update((state) =>
@@ -182,8 +160,7 @@ async function processActionResponse(
     case 'AttackBuilding': {
       const { from, to, type } = actionResponse;
       const unitA = map.units.get(from);
-      const entityB =
-        type === 'AttackUnit' ? map.units.get(to) : map.buildings.get(to);
+      const entityB = type === 'AttackUnit' ? map.units.get(to) : map.buildings.get(to);
 
       if (!unitA || !entityB) {
         throw new ActionResponseError(
@@ -192,31 +169,14 @@ async function processActionResponse(
           map,
         );
       }
-      return clientAttackAction(
-        actions,
-        ...remoteActionResponse,
-        from,
-        unitA,
-        to,
-        entityB,
-        state,
-      );
+      return clientAttackAction(actions, ...remoteActionResponse, from, unitA, to, entityB, state);
     }
     case 'Capture':
-      return captureAction(
-        actions,
-        ...remoteActionResponse,
-        actionResponse.from,
-      );
+      return captureAction(actions, ...remoteActionResponse, actionResponse.from);
     case 'Supply': {
       const { from, player } = actionResponse;
       const unit = map.units.get(from);
-      const unitsToRefill = getUnitsToRefill(
-        map,
-        vision,
-        map.getPlayer(player),
-        from,
-      );
+      const unitsToRefill = getUnitsToRefill(map, vision, map.getPlayer(player), from);
       await update((state) =>
         animateSupply(state, sortByVectorKey(unitsToRefill), (state) => {
           resolve({
@@ -233,18 +193,11 @@ async function processActionResponse(
     case 'CreateUnit':
       return createUnitAction(actions, ...remoteActionResponse);
     case 'DropUnit':
-      await update((state) =>
-        dropUnitAction(newMap, actionResponse, state, resolveWithNull),
-      );
+      await update((state) => dropUnitAction(newMap, actionResponse, state, resolveWithNull));
       break;
     case 'CreateBuilding':
       await update((state) =>
-        addCreateBuildingAnimation(
-          actions,
-          state,
-          ...remoteActionResponse,
-          resolveWithNull,
-        ),
+        addCreateBuildingAnimation(actions, state, ...remoteActionResponse, resolveWithNull),
       );
       break;
     case 'CreateTracks':
@@ -298,17 +251,9 @@ async function processActionResponse(
       }));
       break;
     case 'CharacterMessage': {
-      const {
-        player: dynamicPlayer,
-        silhouette,
-        unitId,
-        variant,
-      } = actionResponse;
+      const { player: dynamicPlayer, silhouette, unitId, variant } = actionResponse;
       const player = resolveDynamicPlayerID(map, dynamicPlayer);
-      if (
-        player !== messageState.lastPlayerId ||
-        unitId !== messageState.lastUnitId
-      ) {
+      if (player !== messageState.lastPlayerId || unitId !== messageState.lastUnitId) {
         messageState.count += 1;
       }
       messageState.lastPlayerId = player;
@@ -381,12 +326,7 @@ async function processActionResponse(
     }
     case 'ToggleLightning': {
       newState = await update(
-        await toggleLightningAnimation(
-          actions,
-          actionResponse.to,
-          state,
-          newMap,
-        ),
+        await toggleLightningAnimation(actions, actionResponse.to, state, newMap),
       );
       requestFrame(() => resolve({ ...state, ...newState, map: newMap }));
       break;
@@ -397,12 +337,7 @@ async function processActionResponse(
       await update((state) =>
         actionResponse.from
           ? sabotageAction(actionResponse, state, resolveWithNull)
-          : addSabotageAnimation(
-              newMap,
-              actionResponse.to,
-              state,
-              resolveWithNull,
-            ),
+          : addSabotageAnimation(newMap, actionResponse.to, state, resolveWithNull),
       );
       break;
     }
@@ -423,10 +358,7 @@ async function processActionResponse(
               if (buildings) {
                 for (const [from, building] of buildings) {
                   state = await update({
-                    map: spawnBuildings(
-                      state.map,
-                      ImmutableMap([[from, building]]),
-                    ).copy({
+                    map: spawnBuildings(state.map, ImmutableMap([[from, building]])).copy({
                       buildings: state.map.buildings,
                     }),
                   });
@@ -454,8 +386,7 @@ async function processActionResponse(
     case 'Swap': {
       const { source, sourceUnit, target, targetUnit } = actionResponse;
 
-      const isBeingLoaded =
-        targetUnit && canLoad(map, targetUnit, sourceUnit, target);
+      const isBeingLoaded = targetUnit && canLoad(map, targetUnit, sourceUnit, target);
       const despawns = [[source, sourceUnit] as const];
       const spawns = !isBeingLoaded ? [[target, sourceUnit] as const] : null;
 
@@ -469,24 +400,16 @@ async function processActionResponse(
           requestFrame(() => {
             if (spawns) {
               update(
-                spawn(
-                  actions,
-                  state,
-                  spawns,
-                  null,
-                  'fast',
-                  'spawn',
-                  (state) => {
-                    requestFrame(() =>
-                      resolve({
-                        ...state,
-                        map: newMap,
-                      }),
-                    );
+                spawn(actions, state, spawns, null, 'fast', 'spawn', (state) => {
+                  requestFrame(() =>
+                    resolve({
+                      ...state,
+                      map: newMap,
+                    }),
+                  );
 
-                    return null;
-                  },
-                ),
+                  return null;
+                }),
               );
             } else {
               resolve({
@@ -506,13 +429,7 @@ async function processActionResponse(
       await update((state) =>
         actionResponse.from
           ? healAction(actionResponse, state, resolveWithNull)
-          : addHealAnimation(
-              newMap,
-              null,
-              actionResponse.to,
-              state,
-              resolveWithNull,
-            ),
+          : addHealAnimation(newMap, null, actionResponse.to, state, resolveWithNull),
       );
       break;
     case 'HiddenFundAdjustment':
@@ -543,9 +460,7 @@ async function processActionResponse(
     case 'PreviousTurnGameOver':
     case 'BeginTurnGameOver':
     case 'CaptureGameOver': {
-      const abandoned =
-        actionResponse.type === 'BeginTurnGameOver' &&
-        !!actionResponse.abandoned;
+      const abandoned = actionResponse.type === 'BeginTurnGameOver' && !!actionResponse.abandoned;
       const losingPlayer = getLosingPlayer(map, actionResponse);
       if (losingPlayer) {
         await update((state) =>
@@ -583,12 +498,7 @@ async function processActionResponse(
             length: 'medium',
             player: 0,
             sound: null,
-            text: String(
-              fbt(
-                `The game ended in a draw!`,
-                'Text for when a game ended in a draw.',
-              ),
-            ),
+            text: String(fbt(`The game ended in a draw!`, 'Text for when a game ended in a draw.')),
             type: 'banner',
           }),
         }));
@@ -610,8 +520,7 @@ async function processActionResponse(
           ).map(({ id }) => id),
         ]),
       ];
-      const fireworks =
-        state.currentViewer && winners.includes(state.currentViewer) ? 5 : 3;
+      const fireworks = state.currentViewer && winners.includes(state.currentViewer) ? 5 : 3;
       await update((currentState) => ({
         ...state,
         animations: currentState.animations.set(new AnimationKey(), {
@@ -620,9 +529,10 @@ async function processActionResponse(
           onComplete: (state) =>
             animateFireworks(
               state,
-              arrayToShuffled([
-                ...getPossibleFireworksPositions(map, toPlayer),
-              ]).slice(0, fireworks),
+              arrayToShuffled([...getPossibleFireworksPositions(map, toPlayer)]).slice(
+                0,
+                fireworks,
+              ),
               (state) => {
                 requestFrame(async () => {
                   state = await maybeReceiveChaosStarsAnimation(
@@ -642,10 +552,7 @@ async function processActionResponse(
           sound: null,
           text: String(
             fbt(
-              fbt.list(
-                'winners',
-                winners.map(getTranslatedFactionName.bind(null, playerDetails)),
-              ) +
+              fbt.list('winners', winners.map(getTranslatedFactionName.bind(null, playerDetails))) +
                 ' ' +
                 fbt.plural('wins', winners.length, {
                   many: 'win',
@@ -680,9 +587,7 @@ async function processActionResponse(
     }
     case 'Start': {
       const { animations, mapName } = state;
-      return mapName
-        ? await startGameAnimation(actions, animations, mapName)
-        : state;
+      return mapName ? await startGameAnimation(actions, animations, mapName) : state;
     }
     case 'SetPlayer':
     case 'SetPlayerTime':
@@ -733,10 +638,7 @@ async function processActionResponse(
           break;
         default: {
           rewardType satisfies never;
-          throw new UnknownTypeError(
-            'processActionResponse:ReceiveReward',
-            rewardType,
-          );
+          throw new UnknownTypeError('processActionResponse:ReceiveReward', rewardType);
         }
       }
 
@@ -755,11 +657,7 @@ async function processActionResponse(
     }
     case 'AbandonInvasion': {
       state = await update(abandonInvasion(state, actionResponse.name));
-      state = await maybeReceiveChaosStarsAnimation(
-        actions,
-        state,
-        actionResponse.chaosStars,
-      );
+      state = await maybeReceiveChaosStarsAnimation(actions, state, actionResponse.chaosStars);
 
       requestFrame(() =>
         resolve({
@@ -829,16 +727,13 @@ export default async function processActionResponses(
         behavior: new NullBehavior(),
         lastActionResponse,
         lastActionTime:
-          lastActionResponse.type === 'EndTurn' &&
-          isFakeEndTurn(lastActionResponse)
+          lastActionResponse.type === 'EndTurn' && isFakeEndTurn(lastActionResponse)
             ? undefined
             : dateNow(),
         radius: null,
       };
       const nextResponse = responses[0]?.actionResponse;
-      const isLive =
-        state.currentViewer !==
-        (newState.map || state.map).getCurrentPlayer().id;
+      const isLive = state.currentViewer !== (newState.map || state.map).getCurrentPlayer().id;
 
       state = await actions.update({
         ...newState,

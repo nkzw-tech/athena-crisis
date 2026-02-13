@@ -5,11 +5,7 @@ import getAttackStatusEffect from '@deities/athena/lib/getAttackStatusEffect.tsx
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import getParentToMoveTo from '@deities/athena/lib/getParentToMoveTo.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
-import {
-  CounterAttack,
-  MaxHealth,
-  MinDamage,
-} from '@deities/athena/map/Configuration.tsx';
+import { CounterAttack, MaxHealth, MinDamage } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -61,14 +57,7 @@ export default function getPossibleAttacks(
       let _parentVector: Vector | null;
       const getParentVector = () => {
         return (
-          _parentVector ||
-          (_parentVector = getParentToMoveTo(
-            map,
-            unitA,
-            position,
-            item,
-            fields,
-          ))
+          _parentVector || (_parentVector = getParentToMoveTo(map, unitA, position, item, fields))
         );
       };
 
@@ -77,11 +66,7 @@ export default function getPossibleAttacks(
       }
 
       // If the unit is not reachable by the current unit, do not attempt an attack.
-      if (
-        parent &&
-        !position.equals(parent) &&
-        mapWithVision.units.has(parent)
-      ) {
+      if (parent && !position.equals(parent) && mapWithVision.units.has(parent)) {
         return;
       }
 
@@ -113,9 +98,7 @@ export default function getPossibleAttacks(
       ) {
         const parentVector = getParentVector();
         const sabotageWeight =
-          (parentVector &&
-            getSabotageWeight(entityB, map.getPlayer(entityB))) ||
-          0;
+          (parentVector && getSabotageWeight(entityB, map.getPlayer(entityB))) || 0;
         if (parentVector && sabotageWeight > 0) {
           possibleAttacks.push({
             attackable: fields,
@@ -151,9 +134,7 @@ export default function getPossibleAttacks(
       ) {
         if (
           !entityB.isBeingRescued() ||
-          map
-            .getTeam(unitA.player)
-            .players.some((player) => entityB.isBeingRescuedBy(player.id))
+          map.getTeam(unitA.player).players.some((player) => entityB.isBeingRescuedBy(player.id))
         ) {
           return;
         }
@@ -170,13 +151,14 @@ export default function getPossibleAttacks(
         !entityIsBuilding &&
         unitA.info.isShortRange() &&
         entityB.info.hasAttack() &&
-        entityB.info.canAttackAt(
-          1,
-          entityB.info.getRangeFor(map.getPlayer(entityB)),
-        )
+        entityB.info.canAttackAt(1, entityB.info.getRangeFor(map.getPlayer(entityB)))
       ) {
-        const [attackStatusEffect, flatDamageStatusEffect] =
-          getAttackStatusEffect(map, entityB, vector, targetTile);
+        const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+          map,
+          entityB,
+          vector,
+          targetTile,
+        );
         const counterDamage = calculateLikelyDamage(
           entityB.modifyHealth(-damage),
           unitA,
@@ -184,11 +166,7 @@ export default function getPossibleAttacks(
           vector,
           parent || position,
           attackStatusEffect,
-          getDefenseStatusEffect(
-            map,
-            unitA,
-            parent ? map.getTileInfo(position) : originTile,
-          ),
+          getDefenseStatusEffect(map, unitA, parent ? map.getTileInfo(position) : originTile),
           flatDamageStatusEffect,
           CounterAttack,
         );
@@ -224,8 +202,7 @@ export default function getPossibleAttacks(
         } else if (
           entityB.isTransportingUnits() ||
           entityB.info.isLongRange() ||
-          ((building?.info.isHQ() ||
-            building?.canBuildUnits(map.getPlayer(entityB))) &&
+          ((building?.info.isHQ() || building?.canBuildUnits(map.getPlayer(entityB))) &&
             map.matchesTeam(unitA, building))
         ) {
           weight *= 6;
@@ -272,8 +249,7 @@ const getSabotageWeight = (unit: Unit, player: Player) => {
 
   const cost = info.getCostFor(player);
   return (
-    (((cost < Number.POSITIVE_INFINITY ? cost / MinFunds : 0) + info.defense) *
-      2 -
+    (((cost < Number.POSITIVE_INFINITY ? cost / MinFunds : 0) + info.defense) * 2 -
       info.configuration.fuel) *
     2
   );

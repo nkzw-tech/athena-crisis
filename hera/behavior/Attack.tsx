@@ -40,14 +40,7 @@ export default class Attack {
           const { selectedPosition, selectedUnit } = state;
           if (selectedPosition && selectedUnit) {
             requestAnimationFrame(() =>
-              attackAction(
-                actions,
-                selectedPosition,
-                selectedUnit,
-                vector,
-                entityB,
-                state,
-              ),
+              attackAction(actions, selectedPosition, selectedUnit, vector, entityB, state),
             );
           }
         }
@@ -92,11 +85,7 @@ export default class Attack {
     );
   }
 
-  activate(
-    state: State,
-    actions?: Actions,
-    shouldConfirm?: boolean,
-  ): StateLike | null {
+  activate(state: State, actions?: Actions, shouldConfirm?: boolean): StateLike | null {
     const { attackable } = state;
     if (attackable?.size) {
       const first = getFirst(attackable.keys());
@@ -110,8 +99,7 @@ export default class Attack {
       return {
         confirmAction:
           confirm && actions
-            ? this.attackAction(first, { ...state, radius }, actions, true)
-                ?.confirmAction
+            ? this.attackAction(first, { ...state, radius }, actions, true)?.confirmAction
             : null,
         position: first,
         radius,
@@ -127,14 +115,7 @@ export default class Attack {
       (entity: Entity) => {
         const { selectedAttackable, selectedPosition, selectedUnit } = state;
         if (selectedPosition && selectedUnit && selectedAttackable) {
-          attackAction(
-            actions,
-            selectedPosition,
-            selectedUnit,
-            selectedAttackable,
-            entity,
-            state,
-          );
+          attackAction(actions, selectedPosition, selectedUnit, selectedAttackable, entity, state);
         }
       },
       [actions, state],
@@ -158,11 +139,7 @@ export default class Attack {
           state={state}
         />
         {state.confirmAction && (
-          <ConfirmAction
-            state={state}
-            {...state.confirmAction}
-            actions={actions}
-          />
+          <ConfirmAction state={state} {...state.confirmAction} actions={actions} />
         )}
       </>
     );

@@ -39,12 +39,7 @@ export default async function toggleLightningAction(
   const [remoteAction, newMap] = action(state, ToggleLightningAction(from, to));
 
   state = await update(
-    await toggleLightningAnimation(
-      actions,
-      to,
-      await update(resetBehavior(NullBehavior)),
-      newMap,
-    ),
+    await toggleLightningAnimation(actions, to, await update(resetBehavior(NullBehavior)), newMap),
   );
 
   const { self } = await remoteAction;

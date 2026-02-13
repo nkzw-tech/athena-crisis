@@ -2,9 +2,7 @@ import MapData from '../MapData.tsx';
 import calculateClusters from './calculateClusters.tsx';
 
 export default function calculateEmptyClusters(map: MapData) {
-  const movementTypes = [
-    ...new Set(map.units.map((unit) => unit.info.movementType).values()),
-  ];
+  const movementTypes = [...new Set(map.units.map((unit) => unit.info.movementType).values())];
   const occupied = new Set(
     [
       ...map.units.keys(),
@@ -19,8 +17,7 @@ export default function calculateEmptyClusters(map: MapData) {
         (vector) =>
           !occupied.has(vector) &&
           movementTypes.some(
-            (movementType) =>
-              map.getTileInfo(vector).getMovementCost({ movementType }) !== -1,
+            (movementType) => map.getTileInfo(vector).getMovementCost({ movementType }) !== -1,
           ),
       ),
   );

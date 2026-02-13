@@ -7,20 +7,14 @@ export default function updateEditorHistory(
 ) {
   const { undoStack, undoStackIndex } = undoContext.current;
 
-  const lastKey = undoStack.at(
-    undoStackIndex != null ? undoStackIndex : -1,
-  )?.[0];
+  const lastKey = undoStack.at(undoStackIndex != null ? undoStackIndex : -1)?.[0];
   const indexModifier = entry[0] === lastKey ? 0 : 1;
 
   undoContext.current = {
     undoStack: [
       ...undoStack.slice(
         0,
-        undoStackIndex != null
-          ? undoStackIndex + indexModifier
-          : indexModifier
-            ? undefined
-            : -1,
+        undoStackIndex != null ? undoStackIndex + indexModifier : indexModifier ? undefined : -1,
       ),
       entry,
     ],

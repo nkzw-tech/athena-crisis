@@ -28,10 +28,8 @@ export default function calculateLikelyDamage(
           unitA,
           entityB,
           weapon,
-          (Number.isFinite(coverA) ? coverA : 0) +
-            (map.buildings.has(from) ? BuildingCover : 0),
-          (Number.isFinite(coverB) ? coverB : 0) +
-            (map.buildings.has(to) ? BuildingCover : 0),
+          (Number.isFinite(coverA) ? coverA : 0) + (map.buildings.has(from) ? BuildingCover : 0),
+          (Number.isFinite(coverB) ? coverB : 0) + (map.buildings.has(to) ? BuildingCover : 0),
           attackStatusEffect,
           defenseStatusEffect,
           flatDamageStatusEffect,

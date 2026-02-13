@@ -70,10 +70,7 @@ const InfoButton = ({
   });
 
   return (
-    <MenuButton
-      className={cx(buttonStyle, !bottom && infoButtonStyle)}
-      fade={fade}
-    >
+    <MenuButton className={cx(buttonStyle, !bottom && infoButtonStyle)} fade={fade}>
       <Icon
         button
         className={cx(iconStyle)}
@@ -131,16 +128,10 @@ const AttackRadiusButton = ({
   useInput('keyboard:tertiary', show);
 
   return (
-    <MenuButton
-      className={cx(buttonStyle, attackRadiusButtonStyle)}
-      fade={fade}
-    >
+    <MenuButton className={cx(buttonStyle, attackRadiusButtonStyle)} fade={fade}>
       <Icon
         button
-        className={cx(
-          iconStyle,
-          (!playerCanEndTurn || !fields?.size) && disabledButtonStyle,
-        )}
+        className={cx(iconStyle, (!playerCanEndTurn || !fields?.size) && disabledButtonStyle)}
         icon={Attack}
         onClick={show}
       />
@@ -166,10 +157,7 @@ const getAvailableUnits = (
       .toArray()) ||
   [];
 
-const rotatePositions = (
-  positions: ReadonlyArray<Vector>,
-  direction: 'next' | 'previous',
-) => {
+const rotatePositions = (positions: ReadonlyArray<Vector>, direction: 'next' | 'previous') => {
   const newPositions = [...positions];
   if (direction === 'next') {
     newPositions.push(newPositions.shift()!);
@@ -179,10 +167,7 @@ const rotatePositions = (
   return newPositions;
 };
 
-const useExpandable = (
-  ref: RefObject<HTMLElement | null>,
-  canExpand: boolean,
-) => {
+const useExpandable = (ref: RefObject<HTMLElement | null>, canExpand: boolean) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   if (isExpanded && !canExpand) {
@@ -218,24 +203,18 @@ const NextButton = ({
   const { behavior, currentViewer, map, selectedPosition, vision } = state;
   const [positions, setPositions] = useState<ReadonlyArray<Vector>>([]);
   const attackable =
-    behavior?.type === 'attack' && state.attackable?.size
-      ? state.attackable
-      : null;
+    behavior?.type === 'attack' && state.attackable?.size ? state.attackable : null;
 
   useEffect(() => {
     (() =>
       setPositions(
         sortVectors(
-          attackable
-            ? [...attackable.keys()]
-            : getAvailableUnits(map, currentViewer, vision),
+          attackable ? [...attackable.keys()] : getAvailableUnits(map, currentViewer, vision),
         ),
       ))();
   }, [attackable, currentViewer, map, vision]);
 
-  const hasAnimations = positions.some((vector) =>
-    state.animations.has(vector),
-  );
+  const hasAnimations = positions.some((vector) => state.animations.has(vector));
 
   const select = useCallback(
     async (direction: 'next' | 'previous') => {
@@ -307,8 +286,7 @@ const NextButton = ({
         button
         className={cx(
           iconStyle,
-          (!positions.length || hasAnimations || !playerCanEndTurn) &&
-            disabledButtonStyle,
+          (!positions.length || hasAnimations || !playerCanEndTurn) && disabledButtonStyle,
         )}
         horizontalFlip
         icon={Next}
@@ -318,21 +296,9 @@ const NextButton = ({
   );
 };
 
-const ReplayDownloadButton = ({
-  fade,
-  onClick,
-}: {
-  fade?: boolean;
-  onClick: () => void;
-}) => (
+const ReplayDownloadButton = ({ fade, onClick }: { fade?: boolean; onClick: () => void }) => (
   <MenuButton className={cx(buttonStyle, nextButtonStyle)} fade={fade}>
-    <Icon
-      button
-      className={cx(iconStyle)}
-      horizontalFlip
-      icon={Download}
-      onClick={onClick}
-    />
+    <Icon button className={cx(iconStyle)} horizontalFlip icon={Download} onClick={onClick} />
   </MenuButton>
 );
 
@@ -403,9 +369,7 @@ const EndTurnButton = ({
           update({ position: null });
           highlightTimerRef.current = setTimeout(() => {
             const { attackable, behavior, radius, selectedPosition } = state;
-            const fields = new Map(
-              availableUnits.map((vector) => [vector, RadiusItem(vector)]),
-            );
+            const fields = new Map(availableUnits.map((vector) => [vector, RadiusItem(vector)]));
 
             scrollIntoView(availableUnits, true);
             update({
@@ -422,9 +386,7 @@ const EndTurnButton = ({
             setTimeout(
               () =>
                 update((state) =>
-                  state.behavior === behavior
-                    ? { attackable, radius, selectedPosition }
-                    : null,
+                  state.behavior === behavior ? { attackable, radius, selectedPosition } : null,
                 ),
               600,
             );
@@ -475,17 +437,10 @@ const EndTurnButton = ({
             and end turn?
           </fbt>
         ) : (
-          <fbt desc="Confirmation to skip the turn">
-            Do you want to skip this turn?
-          </fbt>
+          <fbt desc="Confirmation to skip the turn">Do you want to skip this turn?</fbt>
         )}
       </div>
-      <Icon
-        button
-        className={closeIconStyle}
-        icon={Close}
-        onClick={() => setIsExpanded(false)}
-      />
+      <Icon button className={closeIconStyle} icon={Close} onClick={() => setIsExpanded(false)} />
       <Icon
         button
         className={cx(
@@ -570,12 +525,7 @@ const UndoButton = ({
       {canUndoAction && (
         <>
           <Icon button icon={Close} onClick={() => setIsExpanded(false)} />
-          <Icon
-            button
-            horizontalFlip
-            icon={Undo}
-            onClick={() => undo('Turn')}
-          />
+          <Icon button horizontalFlip icon={Undo} onClick={() => undo('Turn')} />
         </>
       )}
       <Icon
@@ -616,9 +566,7 @@ export const MessageButton = ({
         style={
           highlight
             ? {
-                color: getColor(
-                  getMessagePlayer(currentUser, currentViewer, playerDetails),
-                ),
+                color: getColor(getMessagePlayer(currentUser, currentViewer, playerDetails)),
               }
             : undefined
         }
@@ -670,10 +618,8 @@ export default function GameActions({
 
   const hasEnded = lastActionResponse?.type === 'GameEnd';
   const maxZoom = useScale() + 1;
-  const playerCanEndTurn =
-    !preventRemoteActions && !paused && canEndTurn(state);
-  const viewerPlayer =
-    currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
+  const playerCanEndTurn = !preventRemoteActions && !paused && canEndTurn(state);
+  const viewerPlayer = currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
   const canUndo = !!(
     undo &&
     !hasEnded &&
@@ -718,10 +664,7 @@ export default function GameActions({
       >
         {setZoom && (
           <ZoomButton
-            className={cx(
-              buttonStyle,
-              undo ? zoomButtonStyle : undoButtonStyle,
-            )}
+            className={cx(buttonStyle, undo ? zoomButtonStyle : undoButtonStyle)}
             fade={fade}
             hide={false}
             max={maxZoom}
@@ -731,12 +674,7 @@ export default function GameActions({
           />
         )}
         {undo && (
-          <UndoButton
-            canUndo={canUndo}
-            canUndoAction={canUndoAction}
-            fade={fade}
-            undo={onUndo}
-          />
+          <UndoButton canUndo={canUndo} canUndoAction={canUndoAction} fade={fade} undo={onUndo} />
         )}
         <InfoButton actions={actions} fade={fade} state={state} />
         <AttackRadiusButton
@@ -761,13 +699,8 @@ export default function GameActions({
         {children}
       </div>
       {hide && hasEnded && (
-        <div
-          className={containerStyle}
-          style={!inlineUI ? insetStyle(inset) : undefined}
-        >
-          {onDownloadReplay && (
-            <ReplayDownloadButton fade={fade} onClick={onDownloadReplay} />
-          )}
+        <div className={containerStyle} style={!inlineUI ? insetStyle(inset) : undefined}>
+          {onDownloadReplay && <ReplayDownloadButton fade={fade} onClick={onDownloadReplay} />}
           <InfoButton actions={actions} bottom fade={fade} state={state} />
         </div>
       )}
@@ -779,10 +712,7 @@ export default function GameActions({
       <div className={inlineContainerStyle} style={{ zIndex: zIndex - 1 }}>
         {content}
       </div>
-      <div
-        className={cx(inlineContainerStyle, replayBarStyle)}
-        style={{ zIndex: zIndex - 1 }}
-      >
+      <div className={cx(inlineContainerStyle, replayBarStyle)} style={{ zIndex: zIndex - 1 }}>
         {replayBar}
       </div>
     </>
@@ -867,9 +797,7 @@ const zoomButtonStyle = css`
 
 const extraButtonStyle = css`
   ${vars.set('bottom-offset', 7.5)}
-  right: calc(${(size - 6) * 1.5}px + ${applyVar(
-    'inset',
-  )} + env(safe-area-inset-right));
+  right: calc(${(size - 6) * 1.5}px + ${applyVar('inset')} + env(safe-area-inset-right));
 
   ${Breakpoints.height.xxs} {
     ${vars.set('bottom-offset', 9)}

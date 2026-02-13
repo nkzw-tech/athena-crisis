@@ -1,10 +1,6 @@
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
-import {
-  PlayerID,
-  PlayerIDSet,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { PlayerID, PlayerIDSet, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import Unit, { TransportedUnit } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -20,10 +16,7 @@ import { ActionResponse } from '../ActionResponse.tsx';
 import isDestructiveActionResponse from './isDestructiveActionResponse.tsx';
 import isMoveActionResponse from './isMoveActionResponse.tsx';
 
-export function shouldCheckDefaultObjectives(
-  map: MapData,
-  actionResponse: ActionResponse,
-) {
+export function shouldCheckDefaultObjectives(map: MapData, actionResponse: ActionResponse) {
   const { objectives } = map.config;
   if (isDestructiveActionResponse(actionResponse)) {
     return (
@@ -68,9 +61,7 @@ export function pickWinningPlayer(
   }
 
   if (objective.type === Criteria.DefeatAmount) {
-    return (
-      objective.players?.length ? objective.players : activeMap.active
-    ).find(
+    return (objective.players?.length ? objective.players : activeMap.active).find(
       (playerID) =>
         (!objective.optional || !objective.completed?.has(playerID)) &&
         activeMap.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
@@ -112,8 +103,7 @@ const filterUnitsByLabels = (label: PlayerIDSet | undefined) => {
     (unit.isTransportingUnits() &&
       unit.transports.some(
         (unit) =>
-          (unit.label != null && label?.has(unit.label)) ||
-          filterUnitsByLabels(label)(unit),
+          (unit.label != null && label?.has(unit.label)) || filterUnitsByLabels(label)(unit),
       ));
 };
 
@@ -126,8 +116,7 @@ const filterEnemies = (map: MapData, player: PlayerID) => (entity: Entity) =>
   map.isOpponent(entity, player);
 
 export function capturedByPlayer(map: MapData, player: PlayerID) {
-  return map.buildings.filter((building) => map.matchesPlayer(building, player))
-    .size;
+  return map.buildings.filter((building) => map.matchesPlayer(building, player)).size;
 }
 
 export function destroyedBuildingsByPlayer(map: MapData, player: PlayerID) {
@@ -173,36 +162,28 @@ function checkObjective(
         ? actionResponse.playerC
         : previousMap.currentPlayer;
   const isDefault = objective.type === Criteria.Default;
-  const matchesPlayer =
-    !isDefault && matchesPlayerList(objective.players, player);
+  const matchesPlayer = !isDefault && matchesPlayerList(objective.players, player);
   const isEndTurn = actionResponse.type === 'EndTurn';
-  const isSurvivalAndEndTurn =
-    objective.type === Criteria.Survival && isEndTurn;
+  const isSurvivalAndEndTurn = objective.type === Criteria.Survival && isEndTurn;
   const targetPlayer = isEndTurn ? actionResponse.next.player : player;
   const ignoreIfOptional = !isDefault && objective.optional;
 
   if (
     objective.type !== Criteria.Default &&
-    objective.completed?.has(
-      isSurvivalAndEndTurn ? actionResponse.next.player : player,
-    )
+    objective.completed?.has(isSurvivalAndEndTurn ? actionResponse.next.player : player)
   ) {
     return false;
   }
 
   if (isDestructive) {
     if (!isDefault && isEndTurn) {
-      const matchesTargetPlayerList = matchesPlayerList(
-        objective.players,
-        targetPlayer,
-      );
+      const matchesTargetPlayerList = matchesPlayerList(objective.players, targetPlayer);
       if (
         (objective.type === Criteria.DefeatAmount &&
           !ignoreIfOptional &&
           !matchesTargetPlayerList &&
           (objective.players?.length ? objective.players : map.active).some(
-            (playerID) =>
-              map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
+            (playerID) => map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
           )) ||
         (objective.type === Criteria.DefeatLabel &&
           !ignoreIfOptional &&
@@ -252,9 +233,7 @@ function checkObjective(
       (objective.type === Criteria.DefeatLabel &&
         matchesPlayer &&
         count(
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)),
+          map.units.filter(filterUnitsByLabels(objective.label)).filter(filterEnemies(map, player)),
         ) === 0 &&
         count(
           previousMap.units
@@ -264,9 +243,7 @@ function checkObjective(
       (objective.type === Criteria.DefeatOneLabel &&
         matchesPlayer &&
         count(
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)),
+          map.units.filter(filterUnitsByLabels(objective.label)).filter(filterEnemies(map, player)),
         ) <
           count(
             previousMap.units
@@ -276,43 +253,31 @@ function checkObjective(
       (objective.type === Criteria.DefeatAmount &&
         matchesPlayer &&
         (objective.players?.length ? objective.players : map.active).some(
-          (playerID) =>
-            map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
+          (playerID) => map.getPlayer(playerID).stats.destroyedUnits >= objective.amount,
         )) ||
       (objective.type === Criteria.CaptureLabel &&
         !ignoreIfOptional &&
-        map.buildings
-          .filter(filterByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size <
+        map.buildings.filter(filterByLabels(objective.label)).filter(filterEnemies(map, player))
+          .size <
           previousMap.buildings
             .filter(filterByLabels(objective.label))
             .filter(filterEnemies(map, player)).size) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
         objective.type === Criteria.DestroyLabel &&
-        map.buildings
-          .filter(filterByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size === 0 &&
+        map.buildings.filter(filterByLabels(objective.label)).filter(filterEnemies(map, player))
+          .size === 0 &&
         previousMap.buildings
           .filter(filterByLabels(objective.label))
           .filter(filterEnemies(previousMap, player)).size > 0) ||
       (objective.type === Criteria.RescueLabel &&
         !ignoreIfOptional &&
-        count(
-          map.units
-            .filter(filterNeutral)
-            .filter(filterByLabels(objective.label)),
-        ) <
-          count(
-            previousMap.units
-              .filter(filterNeutral)
-              .filter(filterByLabels(objective.label)),
-          )) ||
+        count(map.units.filter(filterNeutral).filter(filterByLabels(objective.label))) <
+          count(previousMap.units.filter(filterNeutral).filter(filterByLabels(objective.label)))) ||
       (actionResponse.type === 'AttackUnit' &&
         objective.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
-        count(map.units.filter(filterNeutral)) +
-          rescuedUnitsByPlayer(map, player) <
+        count(map.units.filter(filterNeutral)) + rescuedUnitsByPlayer(map, player) <
           objective.amount) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
@@ -344,9 +309,7 @@ function checkObjective(
             .filter(filterEnemies(map, player)),
         ) > 0 &&
         count(
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)),
+          map.units.filter(filterUnitsByLabels(objective.label)).filter(filterEnemies(map, player)),
         ) < objective.amount) ||
       (isSurvivalAndEndTurn &&
         objective.rounds <= actionResponse.round &&
@@ -361,9 +324,8 @@ function checkObjective(
         capturedByPlayer(map, player) >= objective.amount) ||
       (objective.type === Criteria.CaptureLabel &&
         matchesPlayer &&
-        !map.buildings
-          .filter(filterByLabels(objective.label))
-          .filter(filterEnemies(map, player)).size &&
+        !map.buildings.filter(filterByLabels(objective.label)).filter(filterEnemies(map, player))
+          .size &&
         previousMap.buildings
           .filter(filterByLabels(objective.label))
           .filter(filterEnemies(map, player)).size > 0)
@@ -372,8 +334,7 @@ function checkObjective(
 
   if (
     isRescue &&
-    (objective.type === Criteria.RescueLabel ||
-      objective.type === Criteria.RescueAmount)
+    (objective.type === Criteria.RescueLabel || objective.type === Criteria.RescueAmount)
   ) {
     const previousNeutralUnits = previousMap.units.filter(filterNeutral);
     const neutralUnits = map.units.filter(filterNeutral);
@@ -381,8 +342,7 @@ function checkObjective(
       (objective.type === Criteria.RescueLabel &&
         matchesPlayer &&
         count(neutralUnits.filter(filterByLabels(objective.label))) === 0 &&
-        count(previousNeutralUnits.filter(filterByLabels(objective.label))) >
-          0) ||
+        count(previousNeutralUnits.filter(filterByLabels(objective.label))) > 0) ||
       (objective.type === Criteria.RescueAmount &&
         matchesPlayer &&
         rescuedUnitsByPlayer(map, player) >= objective.amount)
@@ -422,16 +382,14 @@ function checkObjective(
         .filter(filterUnitsByLabels(objective.label))
         .filter((unit) => map.matchesPlayer(unit, player));
       return (
-        count(units) > 0 &&
-        count(units.filter((_, vector) => !objective.vectors.has(vector))) === 0
+        count(units) > 0 && count(units.filter((_, vector) => !objective.vectors.has(vector))) === 0
       );
     }
 
     return (
       objective.type === Criteria.EscortAmount &&
       matchesPlayer &&
-      escortedByPlayer(map, player, objective.vectors, objective.label) >=
-        objective.amount
+      escortedByPlayer(map, player, objective.vectors, objective.label) >= objective.amount
     );
   }
 

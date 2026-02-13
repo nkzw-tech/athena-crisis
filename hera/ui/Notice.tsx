@@ -1,7 +1,4 @@
-import {
-  AnimationConfig,
-  DoubleSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -12,8 +9,7 @@ import { BaseAnimationProps, NoticeAnimation } from '../MapAnimations.tsx';
 import useSkipAnimation from './lib/useSkipAnimation.tsx';
 
 export default function Notice(
-  props: Omit<NoticeAnimation, 'animationConfig' | 'onComplete' | 'type'> &
-    BaseAnimationProps,
+  props: Omit<NoticeAnimation, 'animationConfig' | 'onComplete' | 'type'> & BaseAnimationProps,
 ) {
   if (useSkipAnimation(props)) {
     return null;
@@ -41,9 +37,7 @@ export default function Notice(
           scheduleTimer(onComplete, AnimationConfig.AnimationDuration * 10)
         }
         style={{
-          ...(color
-            ? { [cssVar('background-color')]: getColor(color, 0.7) }
-            : null),
+          ...(color ? { [cssVar('background-color')]: getColor(color, 0.7) } : null),
           zIndex,
         }}
         transition={{

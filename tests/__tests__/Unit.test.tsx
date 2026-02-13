@@ -1,7 +1,4 @@
-import {
-  AttackUnitAction,
-  MoveAction,
-} from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { AttackUnitAction, MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import resizeMap from '@deities/apollo/lib/resizeMap.tsx';
 import { Barracks, House, HQ } from '@deities/athena/info/Building.tsx';
 import { findTile, Plain, Sea } from '@deities/athena/info/Tile.tsx';
@@ -48,17 +45,11 @@ test('displays all units and all possible states correctly', async () => {
       units = units.set(vec(x++, y), unit.create(1).unfold());
     }
     if (unit.transports && unit.canTransport(Pioneer, Plain)) {
-      units = units.set(
-        vec(x++, y),
-        unit.create(1).load(Pioneer.create(1).transport()),
-      );
+      units = units.set(vec(x++, y), unit.create(1).load(Pioneer.create(1).transport()));
       if (unit.transports.limit > 1 && unit.sprite.transportsMany) {
         units = units.set(
           vec(x++, y),
-          unit
-            .create(1)
-            .load(Pioneer.create(1).transport())
-            .load(Pioneer.create(1).transport()),
+          unit.create(1).load(Pioneer.create(1).transport()).load(Pioneer.create(1).transport()),
         );
       }
     }
@@ -74,10 +65,7 @@ test('displays all units and all possible states correctly', async () => {
   units = units.merge(
     units
       .filter((_, vector) => vector.x === 1)
-      .mapEntries(([vector, unit]) => [
-        vec(size.width, vector.y),
-        unit.setPlayer(2),
-      ]),
+      .mapEntries(([vector, unit]) => [vec(size.width, vector.y), unit.setPlayer(2)]),
   );
 
   const map = withModifiers(
@@ -161,10 +149,7 @@ test('correctly palette swaps water on naval units', async () => {
     ]),
   });
 
-  const screenshot = await captureOne(
-    map,
-    HumanPlayer.from(map.getPlayer(1), '1').userId,
-  );
+  const screenshot = await captureOne(map, HumanPlayer.from(map.getPlayer(1), '1').userId);
   printGameState('Naval Units', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 });
@@ -190,10 +175,7 @@ test('renders Dragons differently on water', async () => {
     ]),
   });
 
-  const screenshot = await captureOne(
-    map,
-    HumanPlayer.from(map.getPlayer(1), '1').userId,
-  );
+  const screenshot = await captureOne(map, HumanPlayer.from(map.getPlayer(1), '1').userId);
   printGameState('Dragon Units', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 });
@@ -213,10 +195,7 @@ test('displays labels correctly', async () => {
   const player1 = HumanPlayer.from(map.getPlayer(1), '1');
   const player2 = map.getPlayer(2);
   map = map.copy({
-    buildings: map.buildings.set(
-      vec(1, 2),
-      Barracks.create(player1, { label: 2 }),
-    ),
+    buildings: map.buildings.set(vec(1, 2), Barracks.create(player1, { label: 2 })),
     units: map.units
       .set(vec(2, 2), Pioneer.create(player1, { label: 3 }))
       .set(vec(2, 3), Helicopter.create(player2, { label: 1 }).setFuel(1))
@@ -302,8 +281,7 @@ test('escort radius with label', async () => {
     MoveAction(v3, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -335,9 +313,7 @@ test('capture might be stopped when a unit is converted to another faction', asy
     AttackUnitAction(vecA, vecB),
   ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `"AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 46, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 29, ammo: [ [ 1, 3 ] ] }, chargeA: 309, chargeB: 284 }"`,
   );
 
@@ -373,9 +349,7 @@ test('capture does not stop when a unit is converted to another faction and they
     AttackUnitAction(vecB, vecA),
   ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `"AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 41, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 1, ammo: [ [ 1, 4 ] ] }, chargeA: 206, chargeB: 396 }"`,
   );
 

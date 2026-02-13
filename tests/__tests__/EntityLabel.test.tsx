@@ -68,9 +68,7 @@ test('carries labels forward when creating buildings or units', async () => {
     CreateUnitAction(to, APU.id, to),
   ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
     "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1] }
     CreateUnit (1,1 → 1,1) { unit: Infantry { id: 2, health: 100, player: 1, fuel: 50, moved: true, name: 'Valentin', completed: true, label: 1 }, free: false, skipBehaviorRotation: false }
@@ -98,8 +96,7 @@ test('does not lose labels when transporting units', async () => {
     EndTurnAction(),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       DropUnit (2,1 → 1,1) { index: 0 }
       EndTurn { current: { funds: 5000, player: 1 }, next: { funds: 5000, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
@@ -115,9 +112,7 @@ test('capture retains a label', async () => {
     units: map.units.set(from, Pioneer.create(player1).capture()),
   });
 
-  const [gameState] = await executeGameActions(initialMap, [
-    CaptureAction(from),
-  ]);
+  const [gameState] = await executeGameActions(initialMap, [CaptureAction(from)]);
 
   const label = gameState.at(-1)?.[1].buildings.get(from)?.label;
   expect(label).toEqual(initialMap.buildings.get(from)?.label);

@@ -25,10 +25,7 @@ export default function EditorPlayerSelector({
         return;
       }
 
-      const key =
-        event.code === 'Backquote'
-          ? 0
-          : (parseInteger(event.key) as PlayerID | null);
+      const key = event.code === 'Backquote' ? 0 : (parseInteger(event.key) as PlayerID | null);
       const id = key != null && PlayerIDs.includes(key) ? key : null;
       if (id != null) {
         update(({ map }) => changePlayer(map, id));

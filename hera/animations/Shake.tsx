@@ -14,10 +14,7 @@ export default function Shake({
   scheduleTimer: TimerFunction;
 }) {
   useEffect(() => {
-    const timer = scheduleTimer(
-      onComplete,
-      animationConfig.AnimationDuration * 1.8,
-    );
+    const timer = scheduleTimer(onComplete, animationConfig.AnimationDuration * 1.8);
     return () => clearTimer(timer);
   }, [animationConfig, clearTimer, onComplete, scheduleTimer]);
 

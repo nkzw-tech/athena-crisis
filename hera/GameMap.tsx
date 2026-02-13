@@ -5,10 +5,7 @@ import { Effects } from '@deities/apollo/Effects.tsx';
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
-import {
-  GameActionResponse,
-  GameActionResponses,
-} from '@deities/apollo/Types.tsx';
+import { GameActionResponse, GameActionResponses } from '@deities/apollo/Types.tsx';
 import dropLabels from '@deities/athena/lib/dropLabels.tsx';
 import getAverageVector from '@deities/athena/lib/getAverageVector.tsx';
 import getDecoratorsAtField from '@deities/athena/lib/getDecoratorsAtField.tsx';
@@ -21,10 +18,7 @@ import {
   MaxSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import {
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
@@ -45,12 +39,7 @@ import { css, cx, keyframes } from '@emotion/css';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import { AnimatePresence } from 'framer-motion';
-import {
-  Component,
-  createRef,
-  PointerEvent as ReactPointerEvent,
-  RefObject,
-} from 'react';
+import { Component, createRef, PointerEvent as ReactPointerEvent, RefObject } from 'react';
 import processActionResponses from './action-response/processActionResponse.tsx';
 import BaseBehavior from './behavior/Base.tsx';
 import { resetBehavior, setBaseClass } from './behavior/Behavior.tsx';
@@ -68,12 +57,7 @@ import isInView from './lib/isInView.tsx';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import sleep from './lib/sleep.tsx';
 import MapComponent from './Map.tsx';
-import {
-  Animation,
-  Animations,
-  hasCharacterMessage,
-  MapAnimations,
-} from './MapAnimations.tsx';
+import { Animation, Animations, hasCharacterMessage, MapAnimations } from './MapAnimations.tsx';
 import Mask, { parseVector } from './Mask.tsx';
 import MaskWithSubtiles from './MaskWithSubtiles.tsx';
 import CreateMapMessage from './message/CreateMapMessage.tsx';
@@ -117,18 +101,15 @@ const layerOffsets = {
   /* eslint-enable perfectionist/sort-objects */
 } as const;
 
-const getLayer: GetLayerFunction = (y, type) =>
-  baseZIndex + y * layerOffset + layerOffsets[type];
+const getLayer: GetLayerFunction = (y, type) => baseZIndex + y * layerOffset + layerOffsets[type];
 
-const hasShake = (animations: Animations) =>
-  animations.some(({ type }) => type === 'shake');
+const hasShake = (animations: Animations) => animations.some(({ type }) => type === 'shake');
 
 const getVision = (
   map: MapData,
   currentViewer: PlayerID | null,
   spectatorCodes: ReadonlyArray<string> | undefined,
-) =>
-  map.createVisionObject(getClientViewer(map, currentViewer, spectatorCodes));
+) => map.createVisionObject(getClientViewer(map, currentViewer, spectatorCodes));
 
 const behaviorWithHighlightedFields = new Set([
   'base',
@@ -139,16 +120,8 @@ const behaviorWithHighlightedFields = new Set([
   'vector',
 ]);
 
-const effectTypes = [
-  RadiusType.Effect1,
-  RadiusType.Effect2,
-  RadiusType.Effect3,
-];
-const escortTypes = [
-  RadiusType.Escort1,
-  RadiusType.Escort2,
-  RadiusType.Escort3,
-];
+const effectTypes = [RadiusType.Effect1, RadiusType.Effect2, RadiusType.Effect3];
+const escortTypes = [RadiusType.Escort1, RadiusType.Escort2, RadiusType.Escort3];
 const toRadiusInfo = (vectors: ReadonlyArray<Vector>, type: RadiusType) => ({
   fields: new Map(vectors.map((vector) => [vector, RadiusItem(vector)])),
   path: [],
@@ -168,14 +141,9 @@ const getEffectState = (map: MapData, effects: Effects | undefined) => {
       for (const action of effect.actions) {
         if (action.type === 'SpawnEffect') {
           const { player: dynamicPlayer, units } = action;
-          const player =
-            dynamicPlayer != null
-              ? resolveDynamicPlayerID(map, dynamicPlayer)
-              : null;
+          const player = dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
           extraUnits = extraUnits.merge(
-            units.map((unit) =>
-              player != null ? unit.setPlayer(player) : unit,
-            ),
+            units.map((unit) => (player != null ? unit.setPlayer(player) : unit)),
           );
           radius.push(toRadiusInfo([...units.keys()], effectTypes[id]));
           id = (id + 1) % 3;
@@ -247,10 +215,7 @@ const getInitialState = (props: Props) => {
   const vision = getVision(map, currentViewer, spectatorCodes);
   const newState = {
     additionalRadius: null,
-    animationConfig: getCurrentAnimationConfig(
-      map.getCurrentPlayer(),
-      props.animationSpeed,
-    ),
+    animationConfig: getCurrentAnimationConfig(map.getCurrentPlayer(), props.animationSpeed),
     animations: ImmutableMap() as Animations,
     attackable: null,
     behavior,
@@ -306,9 +271,7 @@ const getInitialState = (props: Props) => {
 };
 
 const getScale = (scale: number | undefined, element: HTMLElement) =>
-  scale ||
-  parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale'))) ||
-  2;
+  scale || parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale'))) || 2;
 
 export default class GameMap extends Component<Props, State> {
   static defaultProps = {
@@ -402,10 +365,7 @@ export default class GameMap extends Component<Props, State> {
       };
     }
 
-    if (
-      'playerDetails' in props &&
-      props.playerDetails !== state.playerDetails
-    ) {
+    if ('playerDetails' in props && props.playerDetails !== state.playerDetails) {
       newState = {
         ...(newState || state),
         playerDetails: props.playerDetails,
@@ -429,16 +389,11 @@ export default class GameMap extends Component<Props, State> {
     if (props.dangerouslyApplyExternalState) {
       newState = {
         ...(newState || state),
-        ...('lastActionResponse' in props &&
-        props.lastActionResponse !== undefined
+        ...('lastActionResponse' in props && props.lastActionResponse !== undefined
           ? { lastActionResponse: props.lastActionResponse }
           : null),
         map: props.editor ? props.map : dropLabels(props.map),
-        vision: getVision(
-          props.map,
-          (newState || state).currentViewer,
-          props.spectatorCodes,
-        ),
+        vision: getVision(props.map, (newState || state).currentViewer, props.spectatorCodes),
       };
     }
 
@@ -453,9 +408,7 @@ export default class GameMap extends Component<Props, State> {
 
     if (scroll) {
       const container =
-        (inset &&
-          this._maskRef.current?.closest(`.${ScrollContainerClassName}`)) ||
-        window;
+        (inset && this._maskRef.current?.closest(`.${ScrollContainerClassName}`)) || window;
       if (container === window) {
         (this.context as RefObject<boolean>).current = true;
       }
@@ -466,9 +419,7 @@ export default class GameMap extends Component<Props, State> {
       if (!paused && !editor && onAction && behavior?.type === 'base') {
         if (!lastActionResponse) {
           await this._update(resetBehavior(NullBehavior));
-          await this.processGameActionResponse(
-            await onAction({ type: 'Start' }),
-          );
+          await this.processGameActionResponse(await onAction({ type: 'Start' }));
         } else if (lastActionResponse.type === 'EndTurn') {
           await sleep(this._scheduleTimer, animationConfig, 'long');
           const { funds, id: player } = map.getCurrentPlayer();
@@ -532,12 +483,7 @@ export default class GameMap extends Component<Props, State> {
       Input.register(
         'cancel',
         (event) =>
-          this._cancel(
-            this.state.position,
-            undefined,
-            event,
-            event.detail?.isEscape || false,
-          ),
+          this._cancel(this.state.position, undefined, event, event.detail?.isEscape || false),
         'dialog',
       ),
       Input.register(
@@ -562,10 +508,7 @@ export default class GameMap extends Component<Props, State> {
 
     if (previousProps.events !== events) {
       if (previousProps.events) {
-        previousProps.events.removeEventListener(
-          'action',
-          this._processRemoteActionResponse,
-        );
+        previousProps.events.removeEventListener('action', this._processRemoteActionResponse);
       }
       events?.addEventListener('action', this._processRemoteActionResponse);
     }
@@ -592,13 +535,8 @@ export default class GameMap extends Component<Props, State> {
   }
 
   private maybeSkipDialogue = () => {
-    const {
-      animations,
-      behavior,
-      lastActionResponse,
-      preventRemoteActions,
-      skipDialogue,
-    } = this.state;
+    const { animations, behavior, lastActionResponse, preventRemoteActions, skipDialogue } =
+      this.state;
     if (
       behavior?.type === 'null' &&
       this._skipDialogueTimer == null &&
@@ -618,9 +556,7 @@ export default class GameMap extends Component<Props, State> {
           for (const [vector, animation] of this.state.animations) {
             if (animation.type === 'characterMessage' && !animation.completed) {
               hasMessage = true;
-              this._requestFrame(() =>
-                this._animationComplete(vector, animation),
-              );
+              this._requestFrame(() => this._animationComplete(vector, animation));
             }
           }
           if (hasMessage) {
@@ -684,9 +620,7 @@ export default class GameMap extends Component<Props, State> {
     }
   };
 
-  private _navigate = ({
-    detail: direction,
-  }: CustomEvent<NavigationDirection>) => {
+  private _navigate = ({ detail: direction }: CustomEvent<NavigationDirection>) => {
     const {
       behavior,
       confirmAction,
@@ -721,15 +655,8 @@ export default class GameMap extends Component<Props, State> {
     }
   };
 
-  private _enter = (
-    vector: Vector,
-    subVector?: Vector,
-    type: MapEnterType = 'synthetic',
-  ) => {
-    if (
-      type === 'pointer' &&
-      (!this._pointerEnabled || this._pointerLock.current)
-    ) {
+  private _enter = (vector: Vector, subVector?: Vector, type: MapEnterType = 'synthetic') => {
+    if (type === 'pointer' && (!this._pointerEnabled || this._pointerLock.current)) {
       this._lastEnteredPosition = vector;
       return;
     }
@@ -754,13 +681,7 @@ export default class GameMap extends Component<Props, State> {
       const { behavior, replayState } = actualState;
       if (!replayState.isReplaying) {
         const newState = behavior?.enter
-          ? behavior.enter(
-              vector,
-              actualState,
-              this._actions,
-              this.props.editor,
-              subVector,
-            )
+          ? behavior.enter(vector, actualState, this._actions, this.props.editor, subVector)
           : null;
         if (newState) {
           return newState;
@@ -782,8 +703,7 @@ export default class GameMap extends Component<Props, State> {
   private _shouldConfirmAction() {
     const { confirmActionStyle } = this.props;
     return (
-      confirmActionStyle === 'always' ||
-      (confirmActionStyle === 'touch' && !!this._isTouch.current)
+      confirmActionStyle === 'always' || (confirmActionStyle === 'touch' && !!this._isTouch.current)
     );
   }
 
@@ -809,21 +729,15 @@ export default class GameMap extends Component<Props, State> {
           : null;
         if (newState) {
           const { selectedPosition } = newState;
-          const hasBehaviorChange =
-            newState.behavior?.type !== actualState.behavior?.type;
+          const hasBehaviorChange = newState.behavior?.type !== actualState.behavior?.type;
           if (
             (newState.selectedUnit || newState.selectedBuilding) &&
             (hasBehaviorChange ||
-              (selectedPosition &&
-                !actualState.selectedPosition?.equals(selectedPosition)))
+              (selectedPosition && !actualState.selectedPosition?.equals(selectedPosition)))
           ) {
             AudioPlayer.playSound('UI/Accept');
             rumbleEffect('accept');
-          } else if (
-            hasBehaviorChange &&
-            !selectedPosition &&
-            actualState.selectedPosition
-          ) {
+          } else if (hasBehaviorChange && !selectedPosition && actualState.selectedPosition) {
             AudioPlayer.playSound('UI/Cancel');
           }
 
@@ -841,8 +755,7 @@ export default class GameMap extends Component<Props, State> {
     event: CustomEvent | null,
     isEscape: boolean,
   ) => {
-    const maybePreventDefault =
-      isEscape && event ? () => event.preventDefault() : null;
+    const maybePreventDefault = isEscape && event ? () => event.preventDefault() : null;
 
     const { behavior } = this.state;
     if (behavior?.type === 'null') {
@@ -867,9 +780,7 @@ export default class GameMap extends Component<Props, State> {
     let newState = {
       ...state.behavior?.deactivate?.(this._actions),
       ...resetBehavior(
-        state.lastActionResponse?.type === 'GameEnd'
-          ? NullBehavior
-          : this.props.behavior,
+        state.lastActionResponse?.type === 'GameEnd' ? NullBehavior : this.props.behavior,
       ),
     };
 
@@ -877,10 +788,7 @@ export default class GameMap extends Component<Props, State> {
       maybePreventDefault?.();
     }
 
-    if (
-      state.gameInfoState ||
-      newState.behavior?.type !== state.behavior?.type
-    ) {
+    if (state.gameInfoState || newState.behavior?.type !== state.behavior?.type) {
       AudioPlayer.playSound('UI/Cancel');
     }
 
@@ -931,28 +839,19 @@ export default class GameMap extends Component<Props, State> {
             if (newBehavior.activate) {
               Object.assign(
                 newState,
-                newBehavior.activate(
-                  newState as State,
-                  this._actions,
-                  this._shouldConfirmAction(),
-                ),
+                newBehavior.activate(newState as State, this._actions, this._shouldConfirmAction()),
               );
             }
           }
-          if (
-            newState.position &&
-            !(newState.map || actualState.map).contains(newState.position)
-          ) {
+          if (newState.position && !(newState.map || actualState.map).contains(newState.position)) {
             newState = {
               ...newState,
               position: null,
             };
           }
           if (
-            (newState.currentViewer &&
-              newState.currentViewer !== this.state.currentViewer) ||
-            (newState.map &&
-              newState.map.config.fog !== this.state.map.config.fog)
+            (newState.currentViewer && newState.currentViewer !== this.state.currentViewer) ||
+            (newState.map && newState.map.config.fog !== this.state.map.config.fog)
           ) {
             newState = {
               ...newState,
@@ -965,8 +864,7 @@ export default class GameMap extends Component<Props, State> {
           }
           if (
             (newState.map && newState.map !== this.state.map) ||
-            (newState.currentUserId &&
-              newState.currentUserId !== this.state.currentUserId)
+            (newState.currentUserId && newState.currentUserId !== this.state.currentUserId)
           ) {
             newState = {
               ...newState,
@@ -998,15 +896,10 @@ export default class GameMap extends Component<Props, State> {
             };
           }
 
-          if (
-            newState.animations &&
-            this.state.animations !== newState.animations
-          ) {
+          if (newState.animations && this.state.animations !== newState.animations) {
             newState = {
               ...newState,
-              animations: newState.animations.filter(
-                ({ completed }) => !completed,
-              ),
+              animations: newState.animations.filter(({ completed }) => !completed),
             };
           }
 
@@ -1038,12 +931,7 @@ export default class GameMap extends Component<Props, State> {
         );
       }
 
-      const actionResult = execute(
-        map,
-        vision,
-        action,
-        this.props.mutateAction,
-      );
+      const actionResult = execute(map, vision, action, this.props.mutateAction);
       if (!actionResult) {
         throw new ActionError(action, map);
       }
@@ -1059,15 +947,10 @@ export default class GameMap extends Component<Props, State> {
       this._throwError(error as Error);
     }
 
-    throw new Error(
-      `Action: Unhandled error when executing action '${action.type}'.`,
-    );
+    throw new Error(`Action: Unhandled error when executing action '${action.type}'.`);
   };
 
-  private _optimisticAction = (
-    state: State,
-    action: Action,
-  ): ActionResponse => {
+  private _optimisticAction = (state: State, action: Action): ActionResponse => {
     const [remoteAction, , actionResponse] = this._action(state, action);
     remoteAction.then(this.processGameActionResponse);
     return actionResponse;
@@ -1135,10 +1018,7 @@ export default class GameMap extends Component<Props, State> {
           // A remote capture action may reveal a hidden label.
           await this._update({
             map: map.copy({
-              buildings: map.buildings.set(
-                from,
-                building.setHealth(MaxHealth).complete(),
-              ),
+              buildings: map.buildings.set(from, building.setHealth(MaxHealth).complete()),
             }),
           });
         }
@@ -1176,9 +1056,7 @@ export default class GameMap extends Component<Props, State> {
         state = await this._update((state) => ({
           // Ensure that attack action buttons are shown if attackable units
           // are now in range.
-          ...(state.behavior?.type === 'menu'
-            ? { behavior: new MenuBehavior() }
-            : null),
+          ...(state.behavior?.type === 'menu' ? { behavior: new MenuBehavior() } : null),
           map: updateVisibleEntities(state.map, state.vision, self),
         }));
       }
@@ -1211,10 +1089,7 @@ export default class GameMap extends Component<Props, State> {
         if (actionResponse.type === 'Spawn' && actionResponse.teams) {
           const currentViewer = actionResponse.teams
             .flatMap(({ players }) => players)
-            .find(
-              (player) =>
-                player.isHumanPlayer() && player.userId === state.currentUserId,
-            )?.id;
+            .find((player) => player.isHumanPlayer() && player.userId === state.currentUserId)?.id;
 
           if (currentViewer) {
             state = await this._update({
@@ -1268,10 +1143,7 @@ export default class GameMap extends Component<Props, State> {
       const isLive = currentViewer !== currentPlayer.id;
       this.setState(
         {
-          animationConfig: getCurrentAnimationConfig(
-            currentPlayer,
-            this.props.animationSpeed,
-          ),
+          animationConfig: getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
           preventRemoteActions: true,
           replayState: {
             isLive,
@@ -1287,8 +1159,7 @@ export default class GameMap extends Component<Props, State> {
         },
         async () => {
           const { currentViewer } = this.state;
-          const { animationSpeed, behavior, onError, playerHasReward } =
-            this.props;
+          const { animationSpeed, behavior, onError, playerHasReward } = this.props;
           try {
             await processActionResponses(
               this.state,
@@ -1326,10 +1197,7 @@ export default class GameMap extends Component<Props, State> {
                 ? this._resetGameInfoState()
                 : null),
               ...(resetBehavior(this.props.behavior) as State),
-              animationConfig: getCurrentAnimationConfig(
-                currentPlayer,
-                this.props.animationSpeed,
-              ),
+              animationConfig: getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
               behavior:
                 lastActionResponse.type === 'GameEnd'
                   ? new NullBehavior()
@@ -1337,9 +1205,7 @@ export default class GameMap extends Component<Props, State> {
                     ? new behavior()
                     : new BaseBehavior(),
               lastActionResponse,
-              position: !this._pointerEnabled
-                ? this.state.previousPosition
-                : null,
+              position: !this._pointerEnabled ? this.state.previousPosition : null,
               preventRemoteActions: false,
               replayState: {
                 isLive,
@@ -1349,10 +1215,7 @@ export default class GameMap extends Component<Props, State> {
                 pauseStart: null,
               },
               showSkipDialogue: false,
-              skipDialogue:
-                lastActionResponse?.type === 'Start'
-                  ? this.state.skipDialogue
-                  : false,
+              skipDialogue: lastActionResponse?.type === 'Start' ? this.state.skipDialogue : false,
             },
             () => {
               if (isLive) {
@@ -1405,22 +1268,15 @@ export default class GameMap extends Component<Props, State> {
       };
     });
 
-  private _processRemoteActionResponse = async (
-    event: Event,
-  ): Promise<void> => {
+  private _processRemoteActionResponse = async (event: Event): Promise<void> => {
     if (this.state.replayState.isPaused) {
       return new Promise((resolve) =>
-        this._resolvers.push(() =>
-          this._processRemoteActionResponse(event).then(resolve),
-        ),
+        this._resolvers.push(() => this._processRemoteActionResponse(event).then(resolve)),
       );
     }
 
-    const gameActionResponse = (event as CustomEvent<GameActionResponse>)
-      .detail;
-    const queue = (this._actionQueue = (
-      this._actionQueue || Promise.resolve()
-    ).then(async () => {
+    const gameActionResponse = (event as CustomEvent<GameActionResponse>).detail;
+    const queue = (this._actionQueue = (this._actionQueue || Promise.resolve()).then(async () => {
       const { animationConfig, animations } =
         await this.processGameActionResponse(gameActionResponse);
 
@@ -1432,9 +1288,7 @@ export default class GameMap extends Component<Props, State> {
       if (animations.size) {
         // Some animations like HealthAnimation do not have an `onComplete` callback.
         // This delay gives these animations a chance to finish before continuing to process the queue.
-        await new Promise((resolve) =>
-          setTimeout(resolve, animationConfig.AnimationDuration * 3),
-        );
+        await new Promise((resolve) => setTimeout(resolve, animationConfig.AnimationDuration * 3));
       }
     }));
     return queue;
@@ -1458,11 +1312,7 @@ export default class GameMap extends Component<Props, State> {
           animation,
           null,
           2,
-        )}\nReceived: ${JSON.stringify(
-          this.state.animations.get(position),
-          null,
-          2,
-        )}`,
+        )}\nReceived: ${JSON.stringify(this.state.animations.get(position), null, 2)}`,
       );
     }
 
@@ -1583,10 +1433,7 @@ export default class GameMap extends Component<Props, State> {
     });
   };
 
-  private _scheduleTimer = async (
-    fn: () => void,
-    delay: number,
-  ): Promise<number> => {
+  private _scheduleTimer = async (fn: () => void, delay: number): Promise<number> => {
     const { replayState } = this.state;
     if (replayState.isPaused) {
       let _resolve: () => void;
@@ -1640,17 +1487,14 @@ export default class GameMap extends Component<Props, State> {
     this.setState((state) => ({
       gameInfoState: {
         ...gameInfoState,
-        ...(gameInfoState.type === 'game-info'
-          ? { panels: this.props.gameInfoPanels }
-          : null),
+        ...(gameInfoState.type === 'game-info' ? { panels: this.props.gameInfoPanels } : null),
       },
       highlightedPositions: null,
       paused: true,
       position: null,
       previousPosition: state.position,
       radius:
-        state.behavior?.type === 'base' &&
-        state.radius?.type === RadiusType.Attack
+        state.behavior?.type === 'base' && state.radius?.type === RadiusType.Attack
           ? null
           : state.radius,
     }));
@@ -1670,9 +1514,7 @@ export default class GameMap extends Component<Props, State> {
       }
       AudioPlayer.playSound('UI/LongPress');
       this._showGameInfo({
-        building: vision.isVisible(map, vector)
-          ? building
-          : building?.hide(map.config.biome, true),
+        building: vision.isVisible(map, vector) ? building : building?.hide(map.config.biome, true),
         decorators: getDecoratorsAtField(map, vector),
         modifierField: map.modifiers[map.getTileIndex(vector)],
         origin,
@@ -1792,12 +1634,7 @@ export default class GameMap extends Component<Props, State> {
         this._update((actualState) => {
           const { behavior, position } = actualState;
           return position && behavior?.enterAlternative
-            ? behavior.enterAlternative(
-                position,
-                actualState,
-                this._actions,
-                editor!,
-              )
+            ? behavior.enterAlternative(position, actualState, this._actions, editor!)
             : null;
         });
       } else {
@@ -1853,17 +1690,10 @@ export default class GameMap extends Component<Props, State> {
     const element = this._getMaskElement(getAverageVector(vectors));
     // Assume that the first and last vectors are the most distant.
     const boundaries =
-      vectors.length === 1
-        ? [element]
-        : [vectors[0], vectors.at(-1)!].map(this._getMaskElement);
+      vectors.length === 1 ? [element] : [vectors[0], vectors.at(-1)!].map(this._getMaskElement);
 
     const scale = getScale(this.props.scale, mask);
-    if (
-      element &&
-      !boundaries.some(
-        (element) => element && isInView(element, scale, DoubleSize),
-      )
-    ) {
+    if (element && !boundaries.some((element) => element && isInView(element, scale, DoubleSize))) {
       element.scrollIntoView({
         behavior: 'smooth',
         block: direction?.x && !direction.y ? 'nearest' : 'center',
@@ -1944,9 +1774,7 @@ export default class GameMap extends Component<Props, State> {
               ? margin === 'minimal'
                 ? `${tileSize * 2}px auto ${tileSize * 4}px`
                 : `${tileSize * 12}px ${tileSize * 7 * Math.floor(map.size.height / 4)}px ${
-                    isFloating
-                      ? tileSize * 5 * Math.floor(map.size.height / 4)
-                      : 0
+                    isFloating ? tileSize * 5 * Math.floor(map.size.height / 4) : 0
                   }px`
               : isFloating
                 ? `${tileSize * 10}px ${tileSize * 20}px`
@@ -1956,25 +1784,16 @@ export default class GameMap extends Component<Props, State> {
           <div
             className={cx(
               mapStyle,
-              (replayState.isReplaying && replayState.isPaused) || paused
-                ? pausedStyle
-                : null,
+              (replayState.isReplaying && replayState.isPaused) || paused ? pausedStyle : null,
               tilted && tiltedStyle,
-              hasShake(animations) &&
-                !replayState.isPaused &&
-                !paused &&
-                explosionAnimation,
+              hasShake(animations) && !replayState.isPaused && !paused && explosionAnimation,
             )}
             onMouseLeave={this._reset}
             onPointerDown={this._pointerDown}
             onPointerUp={this._pointerUp}
             style={{
-              [cssVar('animation-duration')]:
-                `${animationConfig.AnimationDuration}ms`,
-              [cssVar('perspective-height')]: Math.max(
-                0,
-                map.size.height - MaxSize / 2,
-              ),
+              [cssVar('animation-duration')]: `${animationConfig.AnimationDuration}ms`,
+              [cssVar('perspective-height')]: Math.max(0, map.size.height - MaxSize / 2),
 
               height: tileSize * height,
               width: tileSize * width,
@@ -2049,9 +1868,7 @@ export default class GameMap extends Component<Props, State> {
                 radius={radius}
                 selectedPosition={selectedPosition}
                 // Do not pass the selected unit if we are showing the radius for dropping a transported unit.
-                selectedUnit={
-                  behavior?.type === 'dropUnit' ? null : selectedUnit
-                }
+                selectedUnit={behavior?.type === 'dropUnit' ? null : selectedUnit}
                 size={tileSize}
                 vision={vision}
               />
@@ -2062,8 +1879,7 @@ export default class GameMap extends Component<Props, State> {
                 <>
                   <Cursor
                     color={
-                      behavior?.type === 'message' &&
-                      canPlaceMessage(this.state, position)
+                      behavior?.type === 'message' && canPlaceMessage(this.state, position)
                         ? 'red'
                         : undefined
                     }
@@ -2091,8 +1907,7 @@ export default class GameMap extends Component<Props, State> {
               skipBanners={skipBanners}
               state={this.state}
             />
-            {editor?.selected?.decorator ||
-            editor?.selected?.eraseDecorators ? (
+            {editor?.selected?.decorator || editor?.selected?.eraseDecorators ? (
               <MaskWithSubtiles
                 enter={this._enter}
                 map={map}
@@ -2191,9 +2006,7 @@ export default class GameMap extends Component<Props, State> {
         <Portal>
           <AnimatePresence>
             {showSkipDialogue && (
-              <SkipMessages
-                key={`messages-${String(this._skipDialogueTimer)}`}
-              />
+              <SkipMessages key={`messages-${String(this._skipDialogueTimer)}`} />
             )}
           </AnimatePresence>
           <AnimatePresence>
@@ -2212,9 +2025,7 @@ export default class GameMap extends Component<Props, State> {
                       message={message}
                       playerDetails={playerDetails}
                       scale={scale}
-                      shouldDelay={
-                        map.units.has(vector) || map.buildings.has(vector)
-                      }
+                      shouldDelay={map.units.has(vector) || map.buildings.has(vector)}
                       toggleLikeMessage={toggleLikeMessage}
                       update={this._update}
                       vector={vector}

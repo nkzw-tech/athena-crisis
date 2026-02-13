@@ -6,8 +6,6 @@ export default function getMessageKey(
   action: CharacterMessageEffectAction | CharacterMessageActionResponse,
 ) {
   return jenkinsHash(
-    `$$${action.unitId}$$${action.player}$$${action.variant || 0}$$${
-      action.message
-    }`,
+    `$$${action.unitId}$$${action.player}$$${action.variant || 0}$$${action.message}`,
   );
 }

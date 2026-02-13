@@ -4,10 +4,7 @@ import { Decorator } from '@deities/athena/info/Decorator.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  ObjectiveID,
-  ObjectivesWithVectors,
-} from '@deities/athena/Objectives.tsx';
+import { ObjectiveID, ObjectivesWithVectors } from '@deities/athena/Objectives.tsx';
 import { RefObject } from 'react';
 import { Edges } from '../lib/Edges.tsx';
 import { MapCreator } from '../ui/MapDetails.tsx';

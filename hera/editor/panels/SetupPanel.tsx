@@ -39,9 +39,7 @@ export default function MapEditorSetupPanel({
       map.copy({
         teams: updatePlayers(
           map.teams,
-          map
-            .getPlayers()
-            .map((player) => HumanPlayer.from(player, String(-player.id))),
+          map.getPlayers().map((player) => HumanPlayer.from(player, String(-player.id))),
         ),
       }),
     [map],
@@ -51,10 +49,7 @@ export default function MapEditorSetupPanel({
       new Map(
         mapWithPlayers
           .getPlayers()
-          .map(({ id }) => [
-            id,
-            { displayName: getTranslatedFactionName(new Map(), id) },
-          ]),
+          .map(({ id }) => [id, { displayName: getTranslatedFactionName(new Map(), id) }]),
       ),
     [mapWithPlayers],
   );
@@ -154,8 +149,8 @@ export default function MapEditorSetupPanel({
         <InfoBox>
           <p>
             <fbt desc="Skill explanation">
-              Bots can use any skills, but players can only use predefined
-              skills if they&apos;ve unlocked them already.
+              Bots can use any skills, but players can only use predefined skills if they&apos;ve
+              unlocked them already.
             </fbt>
           </p>
         </InfoBox>

@@ -50,16 +50,13 @@ export const PlayerStatisticsEntries = [
   'oneShots',
 ] as const;
 
-export function decodePlayerStatistics(
-  stats: PlainPlayerStatistics | null,
-): PlayerStatistics {
+export function decodePlayerStatistics(stats: PlainPlayerStatistics | null): PlayerStatistics {
   return {
     captured: stats?.[0] ?? InitialPlayerStatistics.captured,
     createdBuildings: stats?.[1] ?? InitialPlayerStatistics.createdBuildings,
     createdUnits: stats?.[2] ?? InitialPlayerStatistics.createdUnits,
     damage: stats?.[3] ?? InitialPlayerStatistics.damage,
-    destroyedBuildings:
-      stats?.[4] ?? InitialPlayerStatistics.destroyedBuildings,
+    destroyedBuildings: stats?.[4] ?? InitialPlayerStatistics.destroyedBuildings,
     destroyedUnits: stats?.[5] ?? InitialPlayerStatistics.destroyedUnits,
     lostBuildings: stats?.[6] ?? InitialPlayerStatistics.lostBuildings,
     lostUnits: stats?.[7] ?? InitialPlayerStatistics.lostUnits,

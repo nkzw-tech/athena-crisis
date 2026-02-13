@@ -14,11 +14,7 @@ import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { isBot, PlayerIDs } from '@deities/athena/map/Player.tsx';
-import {
-  Criteria,
-  Objective,
-  objectiveHasAmounts,
-} from '@deities/athena/Objectives.tsx';
+import { Criteria, Objective, objectiveHasAmounts } from '@deities/athena/Objectives.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -27,10 +23,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
-import {
-  BackgroundRainbowAnimation,
-  SlowRainbowStyle,
-} from '@deities/ui/PulseStyle.tsx';
+import { BackgroundRainbowAnimation, SlowRainbowStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import Android from '@iconify-icons/pixelarticons/android.js';
 import Buildings from '@iconify-icons/pixelarticons/buildings.js';
@@ -102,8 +95,7 @@ export default memo(function PlayerCard({
   const shouldShow =
     !map.config.fog ||
     // Visibility is determined by the Vision's 'currentViewer', which might be a spectator.
-    (vision.currentViewer &&
-      map.maybeGetTeam(vision.currentViewer)?.id === map.getTeam(player).id);
+    (vision.currentViewer && map.maybeGetTeam(vision.currentViewer)?.id === map.getTeam(player).id);
   const charge = shouldShow ? player.charge : 0;
   const availableCharges = Math.floor(charge / Charge);
   const remainingCharge = charge % Charge;
@@ -149,10 +141,7 @@ export default memo(function PlayerCard({
           ? async (item: PlayerEffectItem) => {
               const state = await update(resetBehavior());
 
-              if (
-                item.type === 'Skill' &&
-                getSkillConfig(item.skill).requiresTarget
-              ) {
+              if (item.type === 'Skill' && getSkillConfig(item.skill).requiresTarget) {
                 await update({
                   behavior: new SelectTargetBehavior(item.skill),
                 });
@@ -171,9 +160,7 @@ export default memo(function PlayerCard({
         currentItem,
         origin: origin || 'center center',
         showAction: (item: PlayerEffectItem) =>
-          item.type === 'Skill'
-            ? !!getSkillConfig(item.skill).charges
-            : activeCrystal === null,
+          item.type === 'Skill' ? !!getSkillConfig(item.skill).charges : activeCrystal === null,
         skills: [...player.skills],
         spectatorLink: isViewer ? spectatorLink : undefined,
         type: 'player-effect',
@@ -217,19 +204,12 @@ export default memo(function PlayerCard({
     for (const [id, objective] of objectives) {
       if (
         !objective.hidden &&
-        (objectiveHasAmounts(objective) ||
-          objective.type === Criteria.Survival) &&
+        (objectiveHasAmounts(objective) || objective.type === Criteria.Survival) &&
         matchesPlayerList(objective.players, player.id) &&
         !objective.completed?.has(player.id)
       ) {
         list.push(
-          <PlayerCardObjective
-            id={id}
-            key={id}
-            map={map}
-            objective={objective}
-            player={player}
-          />,
+          <PlayerCardObjective id={id} key={id} map={map} objective={objective} player={player} />,
         );
       }
     }
@@ -267,11 +247,7 @@ export default memo(function PlayerCard({
               style={{
                 backgroundColor: color,
                 width:
-                  availableCharges === index
-                    ? wide
-                      ? (remainingCharge / Charge) * 20
-                      : 0
-                    : 20,
+                  availableCharges === index ? (wide ? (remainingCharge / Charge) * 20 : 0) : 20,
               }}
             />
           ))}
@@ -325,21 +301,11 @@ export default memo(function PlayerCard({
             </div>
             <Stack alignCenter between className={infoStyle} gap>
               <Funds
-                className={cx(
-                  ellipsis,
-                  textStyle,
-                  shrinkStyle,
-                  wide && wideStyle,
-                )}
+                className={cx(ellipsis, textStyle, shrinkStyle, wide && wideStyle)}
                 value={shouldShow ? player.funds : '???'}
               />
               {timeout && player.isHumanPlayer() && player.time != null && (
-                <Stack
-                  alignCenter
-                  between
-                  className={cx(shrinkStyle, nowrapStyle)}
-                  gap={4}
-                >
+                <Stack alignCenter between className={cx(shrinkStyle, nowrapStyle)} gap={4}>
                   <Icon icon={Watch} />
                   {map.isCurrentPlayer(player.id) ? (
                     <TimeBankTimer key={timeout} time={timeout} />
@@ -354,15 +320,11 @@ export default memo(function PlayerCard({
               <Stack alignCenter between className={infoStyle} gap>
                 <Stack between className={cx(playerStatsStyle, nowrapStyle)}>
                   <Icon className={playerStatsBeforeIconStyle} icon={Reload} />
-                  <span>
-                    {shouldShow ? calculateFunds(map, player) : '???'}
-                  </span>
+                  <span>{shouldShow ? calculateFunds(map, player) : '???'}</span>
                 </Stack>
                 <Stack between className={cx(playerStatsStyle, nowrapStyle)}>
                   <Icon className={playerStatsBeforeIconStyle} icon={Chart} />
-                  <span>
-                    {shouldShow ? calculateUnitValue(map, player) : '???'}
-                  </span>
+                  <span>{shouldShow ? calculateUnitValue(map, player) : '???'}</span>
                 </Stack>
                 {(
                   [
@@ -371,32 +333,20 @@ export default memo(function PlayerCard({
                       () =>
                         map.units.reduce(
                           (count, unit) =>
-                            count +
-                            (map.matchesPlayer(unit, player)
-                              ? unit.count()
-                              : 0),
+                            count + (map.matchesPlayer(unit, player) ? unit.count() : 0),
                           0,
                         ),
                     ],
                     [
                       Buildings,
                       () =>
-                        map.buildings.filter((building) =>
-                          map.matchesPlayer(building, player),
-                        ).size,
+                        map.buildings.filter((building) => map.matchesPlayer(building, player))
+                          .size,
                     ],
                   ] as const
                 ).map(([icon, getValue], index) => (
-                  <Stack
-                    between
-                    className={cx(playerStatsStyle, nowrapStyle)}
-                    key={index}
-                  >
-                    <Icon
-                      className={playerStatsBeforeIconStyle}
-                      icon={icon}
-                      key="icon"
-                    />
+                  <Stack between className={cx(playerStatsStyle, nowrapStyle)} key={index}>
+                    <Icon className={playerStatsBeforeIconStyle} icon={icon} key="icon" />
                     <span>{shouldShow ? getValue() : '???'}</span>
                   </Stack>
                 ))}
@@ -404,43 +354,32 @@ export default memo(function PlayerCard({
             )}
           </VStack>
           {player.skills.size || invasions ? (
-            <Stack
-              between
-              className={cx(
-                skillBoxStyle,
-                charge > 0 && skillBoxWithChargeStyle,
-              )}
-            >
-              {[...new Set([...player.activeSkills, ...player.skills])].map(
-                (skill) => {
-                  const isActive = player.activeSkills.has(skill);
-                  return (
-                    <div
-                      className={pointerStyle}
-                      key={skill}
-                      onClick={async (event) => {
-                        event.stopPropagation();
+            <Stack between className={cx(skillBoxStyle, charge > 0 && skillBoxWithChargeStyle)}>
+              {[...new Set([...player.activeSkills, ...player.skills])].map((skill) => {
+                const isActive = player.activeSkills.has(skill);
+                return (
+                  <div
+                    className={pointerStyle}
+                    key={skill}
+                    onClick={async (event) => {
+                      event.stopPropagation();
 
-                        showPlayerEffectDialog(
-                          { skill, type: 'Skill' },
-                          toTransformOrigin(event),
-                        );
-                      }}
-                    >
-                      <SkillIcon
-                        active={isActive}
-                        canActivate={
-                          !isActive &&
-                          canActivatePower(player, skill) &&
-                          map.getCurrentPlayer().id === player.id
-                        }
-                        hideDialog
-                        skill={skill}
-                      />
-                    </div>
-                  );
-                },
-              )}
+                      showPlayerEffectDialog({ skill, type: 'Skill' }, toTransformOrigin(event));
+                    }}
+                  >
+                    <SkillIcon
+                      active={isActive}
+                      canActivate={
+                        !isActive &&
+                        canActivatePower(player, skill) &&
+                        map.getCurrentPlayer().id === player.id
+                      }
+                      hideDialog
+                      skill={skill}
+                    />
+                  </div>
+                );
+              })}
               {crystal != null && (
                 <div
                   className={cx(
@@ -491,28 +430,15 @@ const PlayerCardObjective = ({
         : objective.type === Criteria.CaptureAmount
           ? [Flag, capturedByPlayer(map, player.id), objective.amount]
           : objective.type === Criteria.DestroyAmount
-            ? [
-                Buildings,
-                destroyedBuildingsByPlayer(map, player.id),
-                objective.amount,
-              ]
+            ? [Buildings, destroyedBuildingsByPlayer(map, player.id), objective.amount]
             : objective.type === Criteria.EscortAmount
               ? [
                   Escort,
-                  escortedByPlayer(
-                    map,
-                    player.id,
-                    objective.vectors,
-                    objective.label,
-                  ),
+                  escortedByPlayer(map, player.id, objective.vectors, objective.label),
                   objective.amount,
                 ]
               : objective.type === Criteria.RescueAmount
-                ? [
-                    Rescue,
-                    rescuedUnitsByPlayer(map, player.id),
-                    objective.amount,
-                  ]
+                ? [Rescue, rescuedUnitsByPlayer(map, player.id), objective.amount]
                 : objective.type === Criteria.Survival
                   ? [Hourglass, map.round, objective.rounds]
                   : [null, null],

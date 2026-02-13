@@ -1,7 +1,4 @@
-import {
-  EndTurnAction,
-  MoveAction,
-} from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { EndTurnAction, MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   Airbase,
@@ -100,9 +97,7 @@ test('attempt to attack new units when they are revealed after a move', async ()
   const to = vec(3, 3);
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(to, House.create(player1)),
-    units: initialMap.units
-      .set(from, Infantry.create(2))
-      .set(to, Infantry.create(1)),
+    units: initialMap.units.set(from, Infantry.create(2)).set(to, Infantry.create(1)),
   });
 
   const [, , gameState] = await executeGameAction(
@@ -127,9 +122,7 @@ test('attempt to attack new units when they are revealed after creating a unit',
   const tileMap = initialMap.map.slice();
   tileMap[initialMap.getTileIndex(vecC.up())] = Sea.id;
   const map = initialMap.copy({
-    buildings: initialMap.buildings
-      .set(vecB, House.create(1))
-      .set(vecC, Factory.create(2)),
+    buildings: initialMap.buildings.set(vecB, House.create(1)).set(vecC, Factory.create(2)),
     map: tileMap,
     units: initialMap.units
       .set(vecA, HeavyArtillery.create(2).setFuel(0))
@@ -226,10 +219,7 @@ test('A unit with `stay` behavior will never move or fold', async () => {
 
   const thirdMap = initialMap.copy({
     config: initialMap.config.copy({ fog: false }),
-    units: initialMap.units.set(
-      from,
-      Sniper.create(2, { behavior: AIBehavior.Stay }).unfold(),
-    ),
+    units: initialMap.units.set(from, Sniper.create(2, { behavior: AIBehavior.Stay }).unfold()),
   });
 
   const [, , thirdGameState] = await executeGameAction(
@@ -313,9 +303,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
 
   const currentMap = gameState?.at(-1)?.[1];
   expect(map.units.get(vecB)?.matchesBehavior(AIBehavior.Adaptive)).toBe(true);
-  expect(currentMap?.units.get(vecB)?.matchesBehavior(AIBehavior.Attack)).toBe(
-    true,
-  );
+  expect(currentMap?.units.get(vecB)?.matchesBehavior(AIBehavior.Attack)).toBe(true);
 });
 
 test('AI behavior from buildings carries over in a round-robin fashion', async () => {
@@ -402,16 +390,11 @@ test('AI behavior will not use `Stay` on units that do not have an attack', asyn
     EndTurn { current: { funds: 700, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  expect(gameState!.at(-1)![1].buildings.get(vecA)?.getFirstAIBehavior()).toBe(
-    AIBehavior.Adaptive,
-  );
+  expect(gameState!.at(-1)![1].buildings.get(vecA)?.getFirstAIBehavior()).toBe(AIBehavior.Adaptive);
 
   const player2 = map.getPlayer(2);
   const currentMap = map.copy({
-    teams: updatePlayer(
-      map.teams,
-      player2.setFunds(Pioneer.getCostFor(player2)),
-    ),
+    teams: updatePlayer(map.teams, player2.setFunds(Pioneer.getCostFor(player2))),
   });
 
   const [, , secondGameState] = await executeGameAction(
@@ -427,9 +410,9 @@ test('AI behavior will not use `Stay` on units that do not have an attack', asyn
     EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  expect(
-    secondGameState!.at(-1)![1].buildings.get(vecA)?.getFirstAIBehavior(),
-  ).toBe(AIBehavior.Stay);
+  expect(secondGameState!.at(-1)![1].buildings.get(vecA)?.getFirstAIBehavior()).toBe(
+    AIBehavior.Stay,
+  );
 });
 
 test('AI will not attempt to create a unit it cannot deploy', async () => {
@@ -480,9 +463,7 @@ test('AI will not attack if the damage is too low', async () => {
   const vecB = vec(3, 3);
   const map = initialMap.copy({
     config: initialMap.config.copy({ fog: false }),
-    units: initialMap.units
-      .set(vecA, Infantry.create(2))
-      .set(vecB, HeavyTank.create(1)),
+    units: initialMap.units.set(vecA, Infantry.create(2)).set(vecB, HeavyTank.create(1)),
   });
 
   const [, , gameStateA] = await executeGameAction(
@@ -621,9 +602,7 @@ test('AI does not crash when moving away from a unit which it can no longer see 
   const map = initialMap.copy({
     currentPlayer: 2,
     map: [1, 1, 1, 1, 1, Forest.id, 1, 1, 1],
-    units: initialMap.units
-      .set(vecA, XFighter.create(2))
-      .set(vecB, Jetpack.create(1)),
+    units: initialMap.units.set(vecA, XFighter.create(2)).set(vecB, Jetpack.create(1)),
   });
 
   const [, , gameStateA] = await executeGameAction(
@@ -707,17 +686,13 @@ test('AI does not keep building naval units if the opponent does not have any na
       map: seaTileMap,
       size: new SizeVector(5, 5),
       teams,
-      units: initialMap.units
-        .set(vecD, Battleship.create(1))
-        .set(vecB, Battleship.create(1)),
+      units: initialMap.units.set(vecD, Battleship.create(1)).set(vecB, Battleship.create(1)),
     }),
   );
 
   const mapWithoutOpponentShips = withModifiers(
     initialMap.copy({
-      buildings: initialMap.buildings
-        .set(vecA, Shipyard.create(2))
-        .set(vecC, Factory.create(2)),
+      buildings: initialMap.buildings.set(vecA, Shipyard.create(2)).set(vecC, Factory.create(2)),
       config: initialMap.config.copy({ fog: false }),
       map: tileMap,
       size: new SizeVector(5, 5),
@@ -802,13 +777,9 @@ test('AI will prefer funds generating buildings over factories if it has no inco
     map: [1, Airfield.id, ConstructionSite.id, 1, 1, 1, 1, 1, 1],
     teams: updatePlayers(
       initialMap.teams,
-      initialMap
-        .getPlayers()
-        .map((player) => player.setFunds(Airbase.getCostFor(null))),
+      initialMap.getPlayers().map((player) => player.setFunds(Airbase.getCostFor(null))),
     ),
-    units: initialMap.units
-      .set(vecA, Pioneer.create(2))
-      .set(vecB, Flamethrower.create(2)),
+    units: initialMap.units.set(vecA, Pioneer.create(2)).set(vecB, Flamethrower.create(2)),
   });
 
   const [, , gameStateA] = await executeGameAction(
@@ -831,9 +802,7 @@ test('AI will create factories if it has no income and cannot build funds genera
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const blocklistedBuildings = new Set(
-    filterBuildings(({ configuration }) => configuration.funds > 0).map(
-      ({ id }) => id,
-    ),
+    filterBuildings(({ configuration }) => configuration.funds > 0).map(({ id }) => id),
   );
   const unitBuildings = new Set(
     filterBuildings((building) => building.canBuildUnits()).map(({ id }) => id),
@@ -862,13 +831,10 @@ test('AI will create factories if it has no income and cannot build funds genera
   const actionResponseA = gameStateA!.at(1)![0];
   expect(actionResponseA.type).toBe('CreateBuilding');
   expect(
-    actionResponseA.type === 'CreateBuilding' &&
-      unitBuildings.has(actionResponseA.building.id),
+    actionResponseA.type === 'CreateBuilding' && unitBuildings.has(actionResponseA.building.id),
   ).toBe(true);
 
-  expect(
-    snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)]),
-  ).toMatchInlineSnapshot(
+  expect(snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)])).toMatchInlineSnapshot(
     `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
   );
 
@@ -885,13 +851,10 @@ test('AI will create factories if it has no income and cannot build funds genera
   const actionResponseB = gameStateB!.at(1)![0];
   expect(actionResponseB.type).toBe('CreateBuilding');
   expect(
-    actionResponseB.type === 'CreateBuilding' &&
-      unitBuildings.has(actionResponseB.building.id),
+    actionResponseB.type === 'CreateBuilding' && unitBuildings.has(actionResponseB.building.id),
   ).toBe(true);
 
-  expect(
-    snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)]),
-  ).toMatchInlineSnapshot(
+  expect(snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)])).toMatchInlineSnapshot(
     `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
   );
 });
@@ -899,10 +862,7 @@ test('AI will create factories if it has no income and cannot build funds genera
 test('AI will move onto escort vectors even if it is a long-range unit', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
-      map: [
-        6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6,
-        6,
-      ],
+      map: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6, 6],
       size: {
         height: 5,
         width: 5,
@@ -954,10 +914,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', async (
 test('AI will prioritize units with labels associated with objectives', async () => {
   const initialMap = withModifiers(
     MapData.createMap({
-      map: [
-        6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6,
-        6,
-      ],
+      map: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 6, 6, 6],
       size: {
         height: 5,
         width: 5,
@@ -1010,9 +967,7 @@ test('AI will prioritize units with labels associated with objectives', async ()
 
 test('AI Zombies are aggressive', async () => {
   const map = initialMap.copy({
-    units: initialMap.units
-      .set(vec(1, 1), SuperTank.create(1))
-      .set(vec(2, 1), Zombie.create(2)),
+    units: initialMap.units.set(vec(1, 1), SuperTank.create(1)).set(vec(2, 1), Zombie.create(2)),
   });
 
   const [, , gameStateA] = await executeGameAction(
@@ -1059,8 +1014,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   // Ignore the power activation message.
-  expect(snapshotGameState(gameStateA ? gameStateA?.slice(1) : null))
-    .toMatchInlineSnapshot(`
+  expect(snapshotGameState(gameStateA ? gameStateA?.slice(1) : null)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 3, units: null, free: null }
       AttackUnit (3,3 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 186, chargeB: 356 }
       AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 84, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 5, ammo: [ [ 1, 6 ] ] }, chargeA: 372, chargeB: 712 }
@@ -1136,8 +1090,7 @@ test('skills will only be activated if there are enough units that can be acted 
   );
 
   // Ignore the power activation message.
-  expect(snapshotGameState(gameStateD ? gameStateD.slice(1) : null))
-    .toMatchInlineSnapshot(`
+  expect(snapshotGameState(gameStateD ? gameStateD.slice(1) : null)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 24, units: null, free: null }
       CompleteUnit (1,2)
       Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3] }
@@ -1192,10 +1145,7 @@ test('creates production buildings in the space biome despite not having access 
     config: {
       biome: 4,
     },
-    map: [
-      1, 1, 1, 29, 29, 1, 1, 1, 29, 29, 1, 1, 1, 29, 1, 1, 1, 1, 29, 29, 1, 1,
-      1, 1, 8,
-    ],
+    map: [1, 1, 1, 29, 29, 1, 1, 1, 29, 29, 1, 1, 1, 29, 1, 1, 1, 1, 29, 29, 1, 1, 1, 1, 8],
     size: {
       height: 5,
       width: 5,

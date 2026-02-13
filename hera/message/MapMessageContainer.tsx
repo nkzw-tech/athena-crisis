@@ -1,7 +1,4 @@
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
@@ -23,9 +20,7 @@ export const getMessagePlayer = (
   player: PlayerID | null,
   playerDetails: PlayerDetails,
 ) =>
-  player && playerDetails.get(player)?.id === user.id
-    ? player
-    : toPlayerID(user.character.color);
+  player && playerDetails.get(player)?.id === user.id ? player : toPlayerID(user.character.color);
 
 export default function MapMessageContainer({
   animationConfig,
@@ -68,11 +63,7 @@ export default function MapMessageContainer({
         const currentScale = isSafari ? scale : 1;
         const inverseScale = isSafari ? 1 : scale;
         const left = window.scrollX + position.width + position.x - 2;
-        const top =
-          window.scrollY +
-          position.y +
-          position.height -
-          (inverseScale / 4) * TileSize;
+        const top = window.scrollY + position.y + position.height - (inverseScale / 4) * TileSize;
 
         ref.current.style.left = `${left * currentScale}px`;
         ref.current.style.top = `${top * currentScale}px`;
@@ -85,11 +76,7 @@ export default function MapMessageContainer({
   const playerID = isPresent ? player : toPlayerID(user.character.color);
 
   return (
-    <div
-      className={cx(containerStyle, shouldDelay && delayStyle)}
-      ref={ref}
-      style={{ zIndex }}
-    >
+    <div className={cx(containerStyle, shouldDelay && delayStyle)} ref={ref} style={{ zIndex }}>
       <div
         className={maskStyle}
         style={{
@@ -120,13 +107,7 @@ export default function MapMessageContainer({
           </ScrollContainerWithNavigation>
           <Stack alignCenter between className={bottomStyle} gap>
             <Stack alignCenter gap>
-              <MiniPortrait
-                animate
-                human
-                player={playerID}
-                portraitClip
-                user={user}
-              />
+              <MiniPortrait animate human player={playerID} portraitClip user={user} />
               <div className={cx(nameStyle, ellipsis)}>{user.displayName}</div>
             </Stack>
             {button}

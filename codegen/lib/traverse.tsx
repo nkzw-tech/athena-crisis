@@ -1,9 +1,4 @@
-import traverse, {
-  Node,
-  NodePath,
-  Scope,
-  TraverseOptions,
-} from '@babel/traverse';
+import traverse, { Node, NodePath, Scope, TraverseOptions } from '@babel/traverse';
 
 type TraverseFn = (
   parent: Node,

@@ -1,10 +1,7 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -81,18 +78,14 @@ export default function UnitPreviews() {
       arrayToShuffled(
         mapUnitsWithContentRestriction((unit) => unit, new Set())
           .filter(
-            (unit) =>
-              unit.characterName !== 'Unknown' &&
-              unit.characterDescription !== 'Unknown',
+            (unit) => unit.characterName !== 'Unknown' && unit.characterDescription !== 'Unknown',
           )
           .map((unit) => {
             const player = randomEntry(playerIDs) || playerIDs[0];
             return (
               <UnitPreview
                 key={unit.id}
-                onClick={(event) =>
-                  showGameInfo(event, unit.create(player, { name: -1 }))
-                }
+                onClick={(event) => showGameInfo(event, unit.create(player, { name: -1 }))}
                 unit={unit.create(player)}
               />
             );

@@ -12,24 +12,10 @@ export const metadata: MapMetadata = {
         {
           actions: [
             CharacterMessage(1, 'Phew, that was a close call.', 'self'),
-            CharacterMessage(
-              5,
-              "All troops retreat. We'll be back soon enough!",
-              'opponent',
-              2,
-            ),
-            CharacterMessage(
-              1,
-              'Wait, who are you?? Why are you doing this?',
-              'self',
-              1,
-            ),
+            CharacterMessage(5, "All troops retreat. We'll be back soon enough!", 'opponent', 2),
+            CharacterMessage(1, 'Wait, who are you?? Why are you doing this?', 'self', 1),
             CharacterMessage(2, 'They are gone kid…', 'self'),
-            CharacterMessage(
-              15,
-              "We need to find {14.name}. She'll know what's up.",
-              'self',
-            ),
+            CharacterMessage(15, "We need to find {14.name}. She'll know what's up.", 'self'),
           ],
           conditions: [{ type: 'GameEnd', value: 'win' }],
         },
@@ -46,17 +32,8 @@ export const metadata: MapMetadata = {
               'self',
               1,
             ),
-            CharacterMessage(
-              2,
-              "Something's up. Battle first, talk later.",
-              'self',
-            ),
-            CharacterMessage(
-              5,
-              'All your base are belong to us!',
-              'opponent',
-              1,
-            ),
+            CharacterMessage(2, "Something's up. Battle first, talk later.", 'self'),
+            CharacterMessage(5, 'All your base are belong to us!', 'opponent', 1),
             CharacterMessage(
               2,
               "I wouldn't be so sure of that. {15.name}, a little help?",
@@ -140,9 +117,7 @@ export default withModifiers(
       biome: 0,
       blocklistedBuildings: [10, 11, 16, 17],
       blocklistedSkills: [],
-      blocklistedUnits: [
-        4, 8, 11, 12, 14, 16, 26, 27, 28, 29, 30, 31, 32, 33, 37,
-      ],
+      blocklistedUnits: [4, 8, 11, 12, 14, 16, 26, 27, 28, 29, 30, 31, 32, 33, 37],
       fog: false,
       multiplier: 1,
       objectives: [[0, [0, 0, null]]],

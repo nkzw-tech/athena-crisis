@@ -91,9 +91,7 @@ import {
 } from './InlineEntity.tsx';
 
 const canBuildBar = (unitCosts: ReadonlyMap<ID, number>) =>
-  [...unitCosts.keys()].some((unit) =>
-    SpecialUnits.has(getUnitInfoOrThrow(unit)),
-  );
+  [...unitCosts.keys()].some((unit) => SpecialUnits.has(getUnitInfoOrThrow(unit)));
 
 const UnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
   <fbt desc="Unit names in a list of units">
@@ -104,13 +102,7 @@ const UnitName = ({ color, unit }: { color: BaseColor; unit: UnitInfo }) => (
   </fbt>
 );
 
-const UnitNames = ({
-  color,
-  units,
-}: {
-  color: BaseColor;
-  units: ReadonlyArray<UnitInfo>;
-}) => (
+const UnitNames = ({ color, units }: { color: BaseColor; units: ReadonlyArray<UnitInfo> }) => (
   <fbt desc="List of units">
     <fbt:list
       items={units.map((unit, index) => (
@@ -133,19 +125,13 @@ export const AttackStatusEffect = ({ effect }: { effect: number }) => (
 
 const AttackStatusEffectAllUnits = ({ effect }: { effect: number }) => (
   <fbt desc="Attack status effect description">
-    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for all
-    units
+    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for all units
   </fbt>
 );
 
-export const UnitAttackLeaderStatusEffect = ({
-  effect,
-}: {
-  effect: number;
-}) => (
+export const UnitAttackLeaderStatusEffect = ({ effect }: { effect: number }) => (
   <fbt desc="Leader unit attack status effect description">
-    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for
-    leader units
+    <fbt:param name="attack">{formatEffect(effect)}</fbt:param>% attack for leader units
   </fbt>
 );
 
@@ -157,8 +143,7 @@ export const DefenseStatusEffect = ({ effect }: { effect: number }) => (
 
 const DefenseStatusEffectAllUnits = ({ effect }: { effect: number }) => (
   <fbt desc="Defense status effect description">
-    <fbt:param name="defense">{formatEffect(effect)}</fbt:param>% defense for
-    all units
+    <fbt:param name="defense">{formatEffect(effect)}</fbt:param>% defense for all units
   </fbt>
 );
 
@@ -171,12 +156,10 @@ const CostEffect = ({ effect }: { effect: number }) => (
 const groupMovementTypes = (
   effects: ReadonlyMap<MovementType, number>,
 ): ReadonlyArray<[number, ReadonlyArray<MovementType>]> =>
-  [...groupBy(effects, ([, effect]) => effect)].map(
-    ([effect, movementTypes]) => [
-      effect,
-      movementTypes.map(([movementType]) => movementType),
-    ],
-  );
+  [...groupBy(effects, ([, effect]) => effect)].map(([effect, movementTypes]) => [
+    effect,
+    movementTypes.map(([movementType]) => movementType),
+  ]);
 
 const groupUnitTypes = (
   effects: ReadonlyMap<ID, number>,
@@ -317,16 +300,14 @@ const MovementTypeStatusEffect = ({
 }) =>
   effects.size ? (
     <List
-      items={groupMovementTypes(effects).map(
-        ([effect, movementTypes], index) => (
-          <UnitMovementTypeStatusEffect
-            effect={effect}
-            key={index}
-            movementTypes={movementTypes}
-            type={type}
-          />
-        ),
-      )}
+      items={groupMovementTypes(effects).map(([effect, movementTypes], index) => (
+        <UnitMovementTypeStatusEffect
+          effect={effect}
+          key={index}
+          movementTypes={movementTypes}
+          type={type}
+        />
+      ))}
     />
   ) : null;
 
@@ -346,10 +327,7 @@ const TileTypeStatusEffect = ({
 
   const inverseEffects = new Map<MovementMap, ReadonlyArray<TileType>>();
   for (const [tileType, effect] of effects) {
-    inverseEffects.set(effect, [
-      ...(inverseEffects.get(effect) || []),
-      tileType,
-    ]);
+    inverseEffects.set(effect, [...(inverseEffects.get(effect) || []), tileType]);
   }
 
   return inverseEffects.size ? (
@@ -375,15 +353,7 @@ const TileTypeStatusEffect = ({
   ) : null;
 };
 
-const UnitCost = ({
-  color,
-  cost,
-  unit,
-}: {
-  color: BaseColor;
-  cost: number;
-  unit: UnitInfo;
-}) =>
+const UnitCost = ({ color, cost, unit }: { color: BaseColor; cost: number; unit: UnitInfo }) =>
   SpecialUnits.has(unit) ? (
     <fbt desc="List item of units and their cost enabled through a skill">
       <fbt:param name="name">
@@ -414,24 +384,13 @@ const UnitCost = ({
     </fbt>
   );
 
-const UnitCosts = ({
-  color,
-  costs,
-}: {
-  color: BaseColor;
-  costs: ReadonlyMap<ID, number>;
-}) => (
+const UnitCosts = ({ color, costs }: { color: BaseColor; costs: ReadonlyMap<ID, number> }) => (
   <>
     <fbt desc="List of one or more units that can be built using this skill">
       Build
       <fbt:list
         items={[...costs].map(([unit, cost], index) => (
-          <UnitCost
-            color={color}
-            cost={cost}
-            key={index}
-            unit={getUnitInfoOrThrow(unit)}
-          />
+          <UnitCost color={color} cost={cost} key={index} unit={getUnitInfoOrThrow(unit)} />
         ))}
         name="list"
       />
@@ -452,13 +411,7 @@ const UnitCosts = ({
   </>
 );
 
-const UnitBlocks = ({
-  blocked,
-  color,
-}: {
-  blocked: ReadonlySet<number>;
-  color: BaseColor;
-}) => (
+const UnitBlocks = ({ blocked, color }: { blocked: ReadonlySet<number>; color: BaseColor }) => (
   <fbt desc="List of one or more units that can be built using this skill">
     Cannot build
     <fbt:list
@@ -479,8 +432,7 @@ const UnitMovement = ({
   radius: number;
 }) => (
   <fbt desc="List item of movement types that increase their radius through a skill">
-    <fbt:param name="radius">{`${radius > 0 ? '+' : '-'}${radius}`}</fbt:param>{' '}
-    movement for{' '}
+    <fbt:param name="radius">{`${radius > 0 ? '+' : '-'}${radius}`}</fbt:param> movement for{' '}
     <fbt:param name="movementTypes">
       <MovementTypeNames movementTypes={movementTypes} />
     </fbt:param>{' '}
@@ -488,22 +440,12 @@ const UnitMovement = ({
   </fbt>
 );
 
-const MovementTypeRadius = ({
-  movement,
-}: {
-  movement: ReadonlyMap<MovementType, number>;
-}) => (
+const MovementTypeRadius = ({ movement }: { movement: ReadonlyMap<MovementType, number> }) => (
   <fbt desc="List of one or more movement types that can incresae or decrease their radius using this skill">
     <fbt:list
-      items={groupMovementTypes(movement).map(
-        ([radius, movementTypes], index) => (
-          <UnitMovement
-            key={index}
-            movementTypes={movementTypes}
-            radius={radius}
-          />
-        ),
-      )}
+      items={groupMovementTypes(movement).map(([radius, movementTypes], index) => (
+        <UnitMovement key={index} movementTypes={movementTypes} radius={radius} />
+      ))}
       name="list"
     />
   </fbt>
@@ -527,19 +469,11 @@ const ActiveUnitType = ({
   );
 };
 
-const HealTypes = ({
-  color,
-  types,
-}: {
-  color: BaseColor;
-  types: ActiveUnitTypes;
-}) => (
+const HealTypes = ({ color, types }: { color: BaseColor; types: ActiveUnitTypes }) => (
   <fbt desc="Additional skill description">
     <fbt:param name="unitTypes">
       {types === 'all' ? (
-        <fbt desc="Label for a skill heal effect that applies to all units">
-          all units
-        </fbt>
+        <fbt desc="Label for a skill heal effect that applies to all units">all units</fbt>
       ) : (
         <List
           items={[...types].map((type, index) => (
@@ -561,8 +495,7 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="pluralUnitName">
             <UnitName color={color} unit={Sniper} />
           </fbt:param>{' '}
-          can attack without positioning and they receive the ability to capture
-          buildings.
+          can attack without positioning and they receive the ability to capture buildings.
         </fbt>
       );
     case Skill.NoUnitRestrictions:
@@ -575,18 +508,15 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description">
           Counter attacks are{' '}
-          <fbt:param name="raisedCounterAttack">
-            {RaisedCounterAttack * 100}
-          </fbt:param>
-          % as effective as initial attacks instead of
+          <fbt:param name="raisedCounterAttack">{RaisedCounterAttack * 100}</fbt:param>% as
+          effective as initial attacks instead of
           <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
         </fbt>
       );
     case Skill.UnlockZombie:
       return (
         <fbt desc="Additional skill description">
-          Units with less than{' '}
-          <fbt:param name="hp">{LowHealthZombieSkillConversion}</fbt:param>{' '}
+          Units with less than <fbt:param name="hp">{LowHealthZombieSkillConversion}</fbt:param>{' '}
           health points convert opponents after attacking.
         </fbt>
       );
@@ -598,23 +528,18 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
             <BuildingName building={PowerStation} color={color} />
           </fbt:param>{' '}
           building provides an extra{' '}
-          <fbt:param name="value">
-            {PowerStationSkillMultiplier * 100}
-          </fbt:param>
-          % funds increase.
+          <fbt:param name="value">{PowerStationSkillMultiplier * 100}</fbt:param>% funds increase.
         </fbt>
       );
     case Skill.VampireHeal:
       return (
         <fbt desc="Additional skill description">
           <fbt:param name="movementTypes">
-            <MovementTypeNames
-              movementTypes={[...VampireSoldierMovementTypes]}
-            />
+            <MovementTypeNames movementTypes={[...VampireSoldierMovementTypes]} />
           </fbt:param>{' '}
           units heal
-          <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points
-          at the beginning of their turn.
+          <fbt:param name="value">{VampireSkillHeal}</fbt:param> health points at the beginning of
+          their turn.
         </fbt>
       );
     case Skill.Shield:
@@ -631,9 +556,7 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description">
           Increases charge accumulation speed by
-          <fbt:param name="value">
-            {ChargeSkillChargeMultiplier * 100}
-          </fbt:param>
+          <fbt:param name="value">{ChargeSkillChargeMultiplier * 100}</fbt:param>
           %.
         </fbt>
       );
@@ -678,9 +601,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
   switch (skill) {
     case Skill.BuyUnitCannon:
       return (
-        <fbt desc="Additional skill description">
-          All unfolded units recover and can act again.
-        </fbt>
+        <fbt desc="Additional skill description">All unfolded units recover and can act again.</fbt>
       );
     case Skill.UnitBattleShipMoveAndAct:
       return (
@@ -705,9 +626,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
       );
     case Skill.RecoverAirUnits:
       return (
-        <fbt desc="Additional skill description">
-          All air units recover and can act again.
-        </fbt>
+        <fbt desc="Additional skill description">All air units recover and can act again.</fbt>
       );
     case Skill.BuyUnitBazookaBear:
       return (
@@ -745,9 +664,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description">
           Increases damage to poisoned units by{' '}
-          <fbt:param name="value">
-            {PoisonSkillPowerDamageMultiplier * 100}
-          </fbt:param>
+          <fbt:param name="value">{PoisonSkillPowerDamageMultiplier * 100}</fbt:param>
           %.
         </fbt>
       );
@@ -773,8 +690,7 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description">
           Reduces the health of all opposing units by{' '}
-          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
-          health points.
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param> health points.
         </fbt>
       );
     case Skill.Sabotage:
@@ -839,16 +755,14 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
             <UnitName color={color} unit={Dragon} />
           </fbt:param>{' '}
           engulf adjacent opposing units in flames and cause{' '}
-          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
-          health points of damage.
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param> health points of damage.
         </fbt>
       );
     case Skill.BuyUnitDinosaur:
       return (
         <fbt desc="Additional skill description">
           Triggers a meteor shower, causing all units in the target area to take
-          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param>{' '}
-          health points of damage.
+          <fbt:param name="amount">{getSkillPowerDamage(skill)}</fbt:param> health points of damage.
         </fbt>
       );
     case Skill.VampireHeal:
@@ -856,32 +770,25 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
         <fbt desc="Additional skill description">
           Reduces the health of your{' '}
           <fbt:param name="movementTypes">
-            <MovementTypeNames
-              movementTypes={[...VampireSoldierMovementTypes]}
-            />
+            <MovementTypeNames movementTypes={[...VampireSoldierMovementTypes]} />
           </fbt:param>{' '}
-          units by{' '}
-          <fbt:param name="value">{getSkillPowerDamage(skill)}</fbt:param>{' '}
-          health points.
+          units by <fbt:param name="value">{getSkillPowerDamage(skill)}</fbt:param> health points.
         </fbt>
       );
     case Skill.Shield:
       return (
         <fbt desc="Additional skill description">
-          Grants each unit a shield for one turn that absorbs nearly all damage
-          from the next attack.
+          Grants each unit a shield for one turn that absorbs nearly all damage from the next
+          attack.
         </fbt>
       );
     case Skill.Charge:
       return (
         <fbt desc="Additional skill description">
           Increases the charge meter by
-          <fbt:param name="value">{ChargeSkillCharges}</fbt:param> charges.
-          Attacks are increased by{' '}
-          <fbt:param name="percentage">
-            {ChargeSkillChargeMultiplier * 100}
-          </fbt:param>
-          % for each available charge.
+          <fbt:param name="value">{ChargeSkillCharges}</fbt:param> charges. Attacks are increased by{' '}
+          <fbt:param name="percentage">{ChargeSkillChargeMultiplier * 100}</fbt:param>% for each
+          available charge.
         </fbt>
       );
     case Skill.DragonSaboteur:
@@ -891,9 +798,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="unitName">
             <RawUnitName color={color} unit={Saboteur} />
           </fbt:param>{' '}
-          unit and converts the{' '}
-          <fbt:param name="saboteurName">{Saboteur.name}</fbt:param> leader unit
-          into a
+          unit and converts the <fbt:param name="saboteurName">{Saboteur.name}</fbt:param> leader
+          unit into a
           <fbt:param name="convertedUnitName">
             <RawUnitName color={color} unit={Dragon} />
           </fbt:param>{' '}
@@ -903,9 +809,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.HighTide:
       return (
         <fbt desc="Additional skill description.">
-          Raises the water level, causing the battlefield to shrink inward by
-          one tile on each side. Eliminates any units or structures located at
-          the edges.
+          Raises the water level, causing the battlefield to shrink inward by one tile on each side.
+          Eliminates any units or structures located at the edges.
         </fbt>
       );
     case Skill.Jeep:
@@ -922,8 +827,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
       return (
         <fbt desc="Additional skill description.">
           Recovers
-          <fbt:param name="value">{CostRecoverySkillModifier * 100}</fbt:param>%
-          of the unit cost each time a unit is defeated.
+          <fbt:param name="value">{CostRecoverySkillModifier * 100}</fbt:param>% of the unit cost
+          each time a unit is defeated.
         </fbt>
       );
     case Skill.UnlockScientist:
@@ -953,10 +858,7 @@ const hasSameEffect = <K, V>(modifierMap: ReadonlyMap<K, V>) => {
   return true;
 };
 
-const matchesUnitModifierMap = <K, V>(
-  mapA: ReadonlyMap<K, V>,
-  mapB: ReadonlyMap<K, V> | null,
-) => {
+const matchesUnitModifierMap = <K, V>(mapA: ReadonlyMap<K, V>, mapB: ReadonlyMap<K, V> | null) => {
   if (!hasSameEffect(mapA) || !mapB || !hasSameEffect(mapB)) {
     return false;
   }
@@ -985,32 +887,19 @@ export default memo(function SkillDescription({
 }) {
   const isRegular = type === 'regular';
   const isPower = !isRegular;
-  const { activateOnInvasion, campaignOnly, charges, requiresCrystal } =
-    getSkillConfig(skill);
+  const { activateOnInvasion, campaignOnly, charges, requiresCrystal } = getSkillConfig(skill);
   if (isPower && (charges == null || charges === 0)) {
     return null;
   }
 
   const { colors } = getSkillConfigForDisplay(skill);
   const attack = getSkillEffect(isRegular ? 'attack' : 'attack-power', skill);
-  const cost = getSkillEffect(
-    isRegular ? 'unit-cost' : 'unit-cost-power',
-    skill,
-  );
-  const defense = getSkillEffect(
-    isRegular ? 'defense' : 'defense-power',
-    skill,
-  );
+  const cost = getSkillEffect(isRegular ? 'unit-cost' : 'unit-cost-power', skill);
+  const defense = getSkillEffect(isRegular ? 'defense' : 'defense-power', skill);
   const unitAttack = getSkillAttackUnitStatusEffect(skill, type);
   const unitDefense = getSkillDefenseUnitStatusEffect(skill, type);
-  const movementTypeAttack = getSkillAttackMovementTypeStatusEffect(
-    skill,
-    type,
-  );
-  const movementTypeDefense = getSkillDefenseMovementTypeStatusEffect(
-    skill,
-    type,
-  );
+  const movementTypeAttack = getSkillAttackMovementTypeStatusEffect(skill, type);
+  const movementTypeDefense = getSkillDefenseMovementTypeStatusEffect(skill, type);
   const tileAttack = getSkillTileAttackStatusEffect(skill, type);
   const tileDefense = getSkillTileDefenseStatusEffect(skill, type);
   const unitAttackLeader = getSkillAttackLeaderUnitStatusEffect(skill, type);
@@ -1021,9 +910,7 @@ export default memo(function SkillDescription({
   const unitRange = getUnitRangeForSkill(skill, type);
   const healTypes = isPower ? getHealUnitTypes(skill) : null;
   const additionalEffects = [
-    unitAttackLeader ? (
-      <UnitAttackLeaderStatusEffect effect={unitAttackLeader} />
-    ) : null,
+    unitAttackLeader ? <UnitAttackLeaderStatusEffect effect={unitAttackLeader} /> : null,
     unitAttack?.size ? (
       matchesUnitModifierMap(unitAttack, unitDefense) ? (
         <AttackStatusEffect effect={unitAttack.values().next().value!} />
@@ -1036,9 +923,7 @@ export default memo(function SkillDescription({
     ) : null,
     movementTypeAttack ? (
       matchesUnitModifierMap(movementTypeAttack, unitMovement) ? (
-        <AttackStatusEffect
-          effect={movementTypeAttack.values().next().value!}
-        />
+        <AttackStatusEffect effect={movementTypeAttack.values().next().value!} />
       ) : (
         <MovementTypeStatusEffect effects={movementTypeAttack} type="attack" />
       )
@@ -1049,16 +934,12 @@ export default memo(function SkillDescription({
     ) : null,
     tileAttack?.size ? (
       matchesUnitModifierMap(tileAttack, tileDefense) ? (
-        <AttackStatusEffect
-          effect={tileAttack.values().next().value!.values().next().value!}
-        />
+        <AttackStatusEffect effect={tileAttack.values().next().value!.values().next().value!} />
       ) : (
         <TileTypeStatusEffect effects={tileAttack} type="attack" />
       )
     ) : null,
-    tileDefense?.size ? (
-      <TileTypeStatusEffect effects={tileDefense} type="defense" />
-    ) : null,
+    tileDefense?.size ? <TileTypeStatusEffect effects={tileDefense} type="defense" /> : null,
     healTypes ? <HealTypes color={color} types={healTypes} /> : null,
     cost ? <CostEffect effect={cost} /> : null,
   ].filter(isPresent);
@@ -1080,25 +961,17 @@ export default memo(function SkillDescription({
     !isPower && campaignOnly ? (
       <div className="paragraph" style={{ color: getColor('red') }}>
         <Icon className={chargeIconStyle} icon={WarningBox} />
-        <fbt desc="Skill is only for campaigns">
-          This skill can only be used in campaigns.
-        </fbt>
+        <fbt desc="Skill is only for campaigns">This skill can only be used in campaigns.</fbt>
       </div>
     ) : null,
     charges && isPower ? (
       <span className={typeStyle} style={{ color: getColor(color) }}>
-        <fbt desc="Label for skill status effects when a power is activated">
-          Power:
-        </fbt>
+        <fbt desc="Label for skill status effects when a power is activated">Power:</fbt>
       </span>
     ) : null,
-    isRegular
-      ? getExtraDescription(skill, color)
-      : getExtraPowerDescription(skill, color),
+    isRegular ? getExtraDescription(skill, color) : getExtraPowerDescription(skill, color),
     unitCosts?.size ? <UnitCosts color={color} costs={unitCosts} /> : null,
-    blockedUnits?.size ? (
-      <UnitBlocks blocked={blockedUnits} color={color} />
-    ) : null,
+    blockedUnits?.size ? <UnitBlocks blocked={blockedUnits} color={color} /> : null,
     effects.length ? (
       <>
         <List items={effects} />.
@@ -1123,24 +996,18 @@ export default memo(function SkillDescription({
     isPower && activateOnInvasion ? (
       <div className="paragraph">
         <span className={typeStyle} style={{ color: getColor(color) }}>
-          <fbt desc="Label for skill status effects when a power is activated">
-            Crystal:
-          </fbt>
+          <fbt desc="Label for skill status effects when a power is activated">Crystal:</fbt>
         </span>{' '}
         {activateOnInvasion === 'no-command' ? (
           <fbt desc="Description for skill behavior">
             Consuming any crystal except a{' '}
-            <fbt:param name="crystalName">
-              {getTranslatedCrystalName(Crystal.Command)}
-            </fbt:param>{' '}
+            <fbt:param name="crystalName">{getTranslatedCrystalName(Crystal.Command)}</fbt:param>{' '}
             will activate this power immediately.
           </fbt>
         ) : activateOnInvasion === 'phantom-only' ? (
           <fbt desc="Description for skill behavior">
             Consuming a{' '}
-            <fbt:param name="crystalNameB">
-              {getTranslatedCrystalName(Crystal.Phantom)}
-            </fbt:param>{' '}
+            <fbt:param name="crystalNameB">{getTranslatedCrystalName(Crystal.Phantom)}</fbt:param>{' '}
             will activate this power immediately.
           </fbt>
         ) : (
@@ -1158,9 +1025,7 @@ export default memo(function SkillDescription({
     ) : null,
   ]
     .filter(isPresent)
-    .map((item, index) =>
-      item ? <Fragment key={index}>{item} </Fragment> : null,
-    );
+    .map((item, index) => (item ? <Fragment key={index}>{item} </Fragment> : null));
 
   return list?.length ? (
     <div
@@ -1179,13 +1044,7 @@ const mapEditorUnitUnlocks = new Map<Skill, UnitInfo>([
   [Skill.BuyUnitAlien, Alien],
 ]);
 
-export const SkillUnlockDescription = ({
-  color,
-  skill,
-}: {
-  color: BaseColor;
-  skill: Skill;
-}) => {
+export const SkillUnlockDescription = ({ color, skill }: { color: BaseColor; skill: Skill }) => {
   let unlockContent = null;
   const unitInfo = mapEditorUnitUnlocks.get(skill);
   if (unitInfo) {
@@ -1223,11 +1082,7 @@ export const SkillUnlockDescription = ({
           Unlocks{' '}
           <fbt:list
             items={[...costs].map(([unit], index) => (
-              <UnitName
-                color={color}
-                key={index}
-                unit={getUnitInfoOrThrow(unit)}
-              />
+              <UnitName color={color} key={index} unit={getUnitInfoOrThrow(unit)} />
             ))}
             name="list"
           />{' '}

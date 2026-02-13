@@ -1,7 +1,4 @@
-import {
-  DecoratorInfo,
-  getAllDecorators,
-} from '@deities/athena/info/Decorator.tsx';
+import { DecoratorInfo, getAllDecorators } from '@deities/athena/info/Decorator.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
@@ -70,18 +67,11 @@ export default function DecoratorPanel({
           (selected?.eraseDecorators ? decorators.length : null);
 
         navigate(direction, columns, index, decorators, [
-          (index: number) =>
-            selectDecorator(undefined, { decorator: decorators[index] }),
+          (index: number) => selectDecorator(undefined, { decorator: decorators[index] }),
           () => setEditorState({ selected: { eraseDecorators: true } }),
         ]);
       },
-      [
-        decorator,
-        getColumns,
-        selectDecorator,
-        selected?.eraseDecorators,
-        setEditorState,
-      ],
+      [decorator, getColumns, selectDecorator, selected?.eraseDecorators, setEditorState],
     ),
   );
 
@@ -95,18 +85,14 @@ export default function DecoratorPanel({
           onSelect={selectDecorator}
           selected={
             decorator
-              ? decorators.findIndex(
-                  (currentDecorator) => decorator.id === currentDecorator.id,
-                )
+              ? decorators.findIndex((currentDecorator) => decorator.id === currentDecorator.id)
               : undefined
           }
           tiles={tiles}
         >
           <DeleteTile
             active={selected?.eraseDecorators}
-            onClick={() =>
-              setEditorState({ selected: { eraseDecorators: true } })
-            }
+            onClick={() => setEditorState({ selected: { eraseDecorators: true } })}
             scale={2}
             tileSize={TileSize}
           />

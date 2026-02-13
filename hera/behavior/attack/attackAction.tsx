@@ -20,9 +20,7 @@ export default async function attackAction(
     actions,
     ...actions.action(
       state,
-      isBuilding(entityB)
-        ? AttackBuildingAction(from, to)
-        : AttackUnitAction(from, to),
+      isBuilding(entityB) ? AttackBuildingAction(from, to) : AttackUnitAction(from, to),
     ),
     from,
     unitA,

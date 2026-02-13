@@ -13,12 +13,7 @@ export default async function clientActivatePowerAction(
   const { processGameActionResponse, update } = actions;
   const { vision } = state;
 
-  const message = getActivatePowerMessage(
-    state.map,
-    state.map,
-    vision,
-    actionResponse.skill,
-  );
+  const message = getActivatePowerMessage(state.map, state.map, vision, actionResponse.skill);
 
   if (message) {
     state = await update(resetBehavior(NullBehavior));

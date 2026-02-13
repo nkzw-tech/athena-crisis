@@ -4,10 +4,7 @@ import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitAnimationSprite, Weapon } from '@deities/athena/info/Unit.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  InstantAnimationConfig,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -345,14 +342,10 @@ const unitAnimations = new Set([
   'unitHeal',
 ]);
 
-export function isUnitAnimation(
-  animation?: Animation,
-): animation is UnitAnimation {
+export function isUnitAnimation(animation?: Animation): animation is UnitAnimation {
   return !!(animation && unitAnimations.has(animation.type));
 }
-export function isBuildingAnimation(
-  animation?: Animation,
-): animation is BuildingAnimation {
+export function isBuildingAnimation(animation?: Animation): animation is BuildingAnimation {
   return !!(
     animation &&
     (animation.type === 'createBuilding' ||
@@ -364,8 +357,7 @@ export function isBuildingAnimation(
 export function hasNotableAnimation(animations: Animations) {
   return animations.some(
     (animation) =>
-      animation.type !== 'move' &&
-      (isBuildingAnimation(animation) || isUnitAnimation(animation)),
+      animation.type !== 'move' && (isBuildingAnimation(animation) || isUnitAnimation(animation)),
   );
 }
 
@@ -385,9 +377,7 @@ const ScrollIntoViewEffect = ({
   update: Actions['update'];
 }) => {
   useEffect(() => {
-    scrollIntoView(positions).then(async () =>
-      update(onComplete(await update(null))),
-    );
+    scrollIntoView(positions).then(async () => update(onComplete(await update(null))));
   }, [onComplete, positions, scrollIntoView, update]);
 
   return null;
@@ -437,8 +427,7 @@ const MapAnimation = ({
       animationConfig,
       clearTimer,
       onComplete,
-      rate:
-        AnimationConfig.AnimationDuration / animationConfig.AnimationDuration,
+      rate: AnimationConfig.AnimationDuration / animationConfig.AnimationDuration,
       scheduleTimer,
       zIndex,
     };
@@ -469,10 +458,7 @@ const MapAnimation = ({
       case 'spawn':
         return (
           <Spawn
-            delay={
-              animationConfig.ExplosionStep /
-              (animation.speed === 'fast' ? 2 : 1)
-            }
+            delay={animationConfig.ExplosionStep / (animation.speed === 'fast' ? 2 : 1)}
             onSpawn={animation.onSpawn}
             position={position}
             requestFrame={requestFrame}
@@ -576,8 +562,7 @@ const MapAnimation = ({
       case 'attackBuildingFlash':
       case 'attack': {
         const isFlash =
-          animation.type === 'attackUnitFlash' ||
-          animation.type === 'attackBuildingFlash';
+          animation.type === 'attackUnitFlash' || animation.type === 'attackBuildingFlash';
         const initialDelay =
           (type === 'attack' || isFlash) && animation.hasAttackStance
             ? animationConfig.UnitAnimationStep * 4
@@ -600,8 +585,7 @@ const MapAnimation = ({
           const direction = animation.direction.direction;
           const isVertical = direction === 'up' || direction === 'down';
           const positions =
-            (style === 'unfold' && weaponAnimation.unfoldPositions) ||
-            weaponAnimation.positions;
+            (style === 'unfold' && weaponAnimation.unfoldPositions) || weaponAnimation.positions;
           return (
             <>
               {weaponAnimation.mirror && (
@@ -631,11 +615,7 @@ const MapAnimation = ({
               <AttackAnimation
                 animation={weaponAnimation}
                 delay={animationConfig.ExplosionStep}
-                direction={
-                  isFlash && isVertical && !positions?.[direction]
-                    ? 'left'
-                    : direction
-                }
+                direction={isFlash && isVertical && !positions?.[direction] ? 'left' : direction}
                 initialDelay={initialDelay}
                 position={position}
                 requestFrame={requestFrame}
@@ -654,11 +634,7 @@ const MapAnimation = ({
       case 'flash':
         return (
           <FlashFlyout
-            items={
-              <FlyoutItem color={animation.color}>
-                {animation.children}
-              </FlyoutItem>
-            }
+            items={<FlyoutItem color={animation.color}>{animation.children}</FlyoutItem>}
             // Use the position in the map for the key, but use the position
             // on the object for actual location. This allows to duplicate
             // multiple flyouts in the same place. See addFlashAnimation.
@@ -671,48 +647,25 @@ const MapAnimation = ({
           />
         );
       case 'health':
-        return (
-          <HealthAnimation tileSize={tileSize} {...animation} {...props} />
-        );
+        return <HealthAnimation tileSize={tileSize} {...animation} {...props} />;
       case 'banner':
         return (
           <Banner
             {...animation}
             {...props}
-            animationConfig={
-              skipBanners ? InstantAnimationConfig : animationConfig
-            }
+            animationConfig={skipBanners ? InstantAnimationConfig : animationConfig}
           />
         );
       case 'notice':
-        return (
-          <Notice color={animation.color} text={animation.text} {...props} />
-        );
+        return <Notice color={animation.color} text={animation.text} {...props} />;
       case 'crystal':
-        return (
-          <CrystalAnimation
-            {...animation}
-            {...props}
-            scale={scale}
-            update={update}
-          />
-        );
+        return <CrystalAnimation {...animation} {...props} scale={scale} update={update} />;
       case 'characterMessage': {
-        return (
-          <CharacterMessage
-            playerDetails={playerDetails}
-            {...animation}
-            {...props}
-          />
-        );
+        return <CharacterMessage playerDetails={playerDetails} {...animation} {...props} />;
       }
       case 'scrollIntoView': {
         return (
-          <ScrollIntoViewEffect
-            scrollIntoView={scrollIntoView}
-            update={update}
-            {...animation}
-          />
+          <ScrollIntoViewEffect scrollIntoView={scrollIntoView} update={update} {...animation} />
         );
       }
       // Handled directly within Buildings/Units.
@@ -782,19 +735,11 @@ export function MapAnimations({
   const mainAnimations: Array<ReactElement> = [];
   animations.forEach((animation, position) => {
     const { type } = animation;
-    if (
-      type === 'fold' ||
-      type === 'move' ||
-      type === 'unfold' ||
-      type === 'unitExplosion'
-    ) {
+    if (type === 'fold' || type === 'move' || type === 'unfold' || type === 'unitExplosion') {
       return;
     }
 
-    (withTransition.has(type)
-      ? animationsWithTransitions
-      : mainAnimations
-    ).push(
+    (withTransition.has(type) ? animationsWithTransitions : mainAnimations).push(
       <MapAnimation
         actions={actions}
         animation={animation}

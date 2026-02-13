@@ -1,8 +1,4 @@
-import {
-  AnimationConfig,
-  Charge,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -64,11 +60,7 @@ export default function ActionWheel({
 }) {
   const hasEntities = entityCount && entityCount > 0;
   // Arrangements look more organized if we even out the number of entries.
-  const count = hasEntities
-    ? entityCount < 4
-      ? 4
-      : entityCount + (entityCount % 2)
-    : 0;
+  const count = hasEntities ? (entityCount < 4 ? 4 : entityCount + (entityCount % 2)) : 0;
   const [paused, setPaused] = useState(true);
 
   useEffect(() => {
@@ -77,9 +69,7 @@ export default function ActionWheel({
     }
   }, [hasEntities, position, scrollIntoView]);
 
-  const translate = hasEntities
-    ? `translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) `
-    : '';
+  const translate = hasEntities ? `translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) ` : '';
   return (
     <motion.div
       animate={{
@@ -108,8 +98,7 @@ export default function ActionWheel({
           zIndex,
           ...(hasEntities
             ? {
-                [vars.set('radius-size')]:
-                  count === 9 ? 1.5 : count > 7 ? 1.45 : 1.6,
+                [vars.set('radius-size')]: count === 9 ? 1.5 : count > 7 ? 1.45 : 1.6,
               }
             : null),
         } as MotionStyle
@@ -169,8 +158,7 @@ export function ActionButton({
   shift?: boolean;
   type: ActionButtonType;
 }) {
-  const matchesDirection =
-    navigationPositions[type].equals(navigationDirection);
+  const matchesDirection = navigationPositions[type].equals(navigationDirection);
   const matchesPrevious =
     navigationDirection?.previousX != null &&
     navigationDirection?.previousY != null &&
@@ -180,8 +168,7 @@ export function ActionButton({
     });
 
   const highlight =
-    matchesDirection &&
-    ((!shift && (!matchesPrevious || !hasShift)) || (matchesPrevious && shift));
+    matchesDirection && ((!shift && (!matchesPrevious || !hasShift)) || (matchesPrevious && shift));
 
   const click = useCallback(() => {
     AudioPlayer.playSound('UI/Accept');
@@ -206,22 +193,13 @@ export function ActionButton({
   const isRight = navigationPositions[type] === right;
   return (
     <a
-      className={cx(
-        itemStyle,
-        positions[type],
-        highlight && 'highlight',
-        shift && 'shift',
-      )}
+      className={cx(itemStyle, positions[type], highlight && 'highlight', shift && 'shift')}
       onClick={click}
     >
       <div className={cx(BoxStyle, iconStyle)}>
         <Icon
           className={
-            type === 'drop'
-              ? dropUnitStyle
-              : type === 'complete'
-                ? completeUnitStyle
-                : undefined
+            type === 'drop' ? dropUnitStyle : type === 'complete' ? completeUnitStyle : undefined
           }
           height={`${iconSize}px`}
           horizontalFlip={type === 'load'}
@@ -254,11 +232,7 @@ export const CancelActionButton = ({
   navigationDirection: NavigationDirection | null;
 }) => (
   <ActionButton
-    label={
-      <fbt desc="Cancel button label (as short as possible, ideally one word)">
-        Cancel
-      </fbt>
-    }
+    label={<fbt desc="Cancel button label (as short as possible, ideally one word)">Cancel</fbt>}
     navigationDirection={navigationDirection}
     onClick={() => cancelAction(actions)}
     type="close"
@@ -286,11 +260,7 @@ const isHighlighted = (
     return false;
   }
 
-  if (
-    (count > 4 ? largeCircle : smallCircle)
-      .at(position)
-      ?.equals(navigationDirection)
-  ) {
+  if ((count > 4 ? largeCircle : smallCircle).at(position)?.equals(navigationDirection)) {
     return true;
   }
 
@@ -324,9 +294,7 @@ export function LargeActionButton({
   label: ReactNode | null;
   navigationDirection: NavigationDirection | null;
   onClick: () => void;
-  onLongPress?: (
-    event: LongPressReactEvents<Element> | ClientCoordinates,
-  ) => void;
+  onLongPress?: (event: LongPressReactEvents<Element> | ClientCoordinates) => void;
   position: number;
 }) {
   const [highlight, setHighlight] = useState(false);
@@ -418,10 +386,7 @@ export function LargeActionButton({
       }}
       onPointerLeave={(event) => {
         setHighlight(false);
-        if (
-          'onPointerLeave' in props &&
-          typeof props.onPointerLeave === 'function'
-        ) {
+        if ('onPointerLeave' in props && typeof props.onPointerLeave === 'function') {
           props.onPointerLeave(event);
         }
       }}
@@ -433,9 +398,7 @@ export function LargeActionButton({
         end
         gap={4}
       >
-        <div>
-          {icon?.(highlighted || highlight, { className: centerIconStyle })}
-        </div>
+        <div>{icon?.(highlighted || highlight, { className: centerIconStyle })}</div>
         {detail}
       </VStack>
       {label && (
@@ -460,12 +423,7 @@ export function LargeActionButton({
 function CenterElement({ children }: { children: ReactNode }) {
   return (
     <div className={cx(itemStyle, radiusItemStyle, centerStyle)}>
-      <VStack
-        alignCenter
-        center
-        className={cx(BoxStyle, iconStyle, entityStyle, ellipsis)}
-        gap={4}
-      >
+      <VStack alignCenter center className={cx(BoxStyle, iconStyle, entityStyle, ellipsis)} gap={4}>
         {children}
       </VStack>
     </div>
@@ -758,25 +716,17 @@ const radiusStyle = css`
   ${vars.set(
     'radius',
     `calc(
-    0.5 * ${vars.apply('radius-size')} * ${vars.apply(
-      'item-size',
-    )} / ${vars.apply('tan')}
+    0.5 * ${vars.apply('radius-size')} * ${vars.apply('item-size')} / ${vars.apply('tan')}
   )`,
   )}
-  ${vars.set(
-    'container-size',
-    `calc(2 * ${vars.apply('radius')} + ${vars.apply('item-size')})`,
-  )}
+  ${vars.set('container-size', `calc(2 * ${vars.apply('radius')} + ${vars.apply('item-size')})`)}
   ${vars.set('offset', 1)}
 
   height: ${vars.apply('container-size')};
   position: relative;
   width: ${vars.apply('container-size')};
 
-  ${vars.set(
-    'x',
-    `calc(${vars.apply('radius')} * -1 + ${vars.apply('item-size')} / 2)`,
-  )}
+  ${vars.set('x', `calc(${vars.apply('radius')} * -1 + ${vars.apply('item-size')} / 2)`)}
   ${vars.set(
     'y',
     `calc(
@@ -798,9 +748,7 @@ const bottomAlignedStyle = css`
 const radiusItemStyle = css`
   ${vars.set(
     'rotation',
-    `calc((${vars.apply('position')} - ${vars.apply(
-      'offset',
-    )}) * 1turn / ${vars.apply('count')})`,
+    `calc((${vars.apply('position')} - ${vars.apply('offset')}) * 1turn / ${vars.apply('count')})`,
   )}
   ${vars.set(
     'transform',

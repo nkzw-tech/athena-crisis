@@ -35,9 +35,7 @@ import parseInteger from '@nkzw/core/parseInteger.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { useCallback, useState } from 'react';
-import useTagDataSource, {
-  DEFAULT_TAGS,
-} from '../../hooks/useTagDataSource.tsx';
+import useTagDataSource, { DEFAULT_TAGS } from '../../hooks/useTagDataSource.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
 import getTranslatedPerformanceStyleTypeName from '../../lib/getTranslatedPerformanceStyleTypeName.tsx';
 import getTranslatedPerformanceTypeName from '../../lib/getTranslatedPerformanceTypeName.tsx';
@@ -90,9 +88,9 @@ export default function MapEditorSettingsPanel({
   const dataSource = useTagDataSource();
   const [width, setWidth] = useState(map.size.width);
   const [height, setHeight] = useState(map.size.height);
-  const [metrics, setMetrics] = useState<
-    MapPerformanceMetricsEstimation | null | undefined
-  >(undefined);
+  const [metrics, setMetrics] = useState<MapPerformanceMetricsEstimation | null | undefined>(
+    undefined,
+  );
 
   const setMetric = useCallback(
     (metric: 'pace' | 'power', value: number | null) =>
@@ -200,10 +198,7 @@ export default function MapEditorSettingsPanel({
                       update({
                         map: map.copy({
                           config: config.copy({
-                            initialCharge: Math.max(
-                              0,
-                              Math.min(initialCharge, MaxCharges),
-                            ),
+                            initialCharge: Math.max(0, Math.min(initialCharge, MaxCharges)),
                           }),
                         }),
                       });
@@ -218,17 +213,10 @@ export default function MapEditorSettingsPanel({
         </Stack>
       </Box>
       <Box between className={performanceMetricsStyle} gap={16} vertical wrap>
-        <VStack
-          between
-          className={cx(!canEditPerformance && disabledStyle)}
-          gap={16}
-          wrap
-        >
+        <VStack between className={cx(!canEditPerformance && disabledStyle)} gap={16} wrap>
           <VStack between gap wrap>
             <h2>
-              <fbt desc="Label for player performance">
-                Player Performance Metrics
-              </fbt>
+              <fbt desc="Label for player performance">Player Performance Metrics</fbt>
             </h2>
           </VStack>
           <Stack alignCenter gap={24} wrap>
@@ -274,14 +262,10 @@ export default function MapEditorSettingsPanel({
                     selectedItem={
                       <div className={selectedItemStyle}>
                         {performance.style ? (
-                          getTranslatedPerformanceStyleTypeName(
-                            performance.style[0],
-                          )
+                          getTranslatedPerformanceStyleTypeName(performance.style[0])
                         ) : (
                           <span className={lightStyle}>
-                            <fbt desc="Select a performance style metric">
-                              Select one
-                            </fbt>
+                            <fbt desc="Select a performance style metric">Select one</fbt>
                           </span>
                         )}
                       </div>
@@ -291,22 +275,15 @@ export default function MapEditorSettingsPanel({
                     {PerformanceStyleTypes.map((type) => (
                       <InlineLink
                         key={type}
-                        onClick={() =>
-                          setStyle([type, performance.style?.[1] || 1])
-                        }
+                        onClick={() => setStyle([type, performance.style?.[1] || 1])}
                         selectedText={type === performance.style?.[0]}
                       >
                         {getTranslatedPerformanceStyleTypeName(type)}
                       </InlineLink>
                     ))}
                     {performance.style && (
-                      <InlineLink
-                        className={lightStyle}
-                        onClick={() => setStyle(null)}
-                      >
-                        <fbt desc="Label to remove the performance style metric">
-                          Remove
-                        </fbt>
+                      <InlineLink className={lightStyle} onClick={() => setStyle(null)}>
+                        <fbt desc="Label to remove the performance style metric">Remove</fbt>
                       </InlineLink>
                     )}
                   </Select>
@@ -320,15 +297,12 @@ export default function MapEditorSettingsPanel({
                     min={0}
                     onChange={({ target: { value } }) =>
                       setStyle([
-                        performance.style?.[0] ||
-                          PerformanceStyleType.LostUnits,
+                        performance.style?.[0] || PerformanceStyleType.LostUnits,
                         parseInteger(value || '0') || 0,
                       ])
                     }
                     style={{ width: 80 }}
-                    value={
-                      performance.style?.[1] === 0 ? '' : performance.style?.[1]
-                    }
+                    value={performance.style?.[1] === 0 ? '' : performance.style?.[1]}
                   />
                 </Stack>
               </Stack>
@@ -340,12 +314,8 @@ export default function MapEditorSettingsPanel({
                 disabled
                 type="checkbox"
               />
-              <InlineLink
-                onClick={() => setEditorState({ mode: 'objectives' })}
-              >
-                <fbt desc="Label for a map's bonus objective">
-                  Bonus Objective
-                </fbt>
+              <InlineLink onClick={() => setEditorState({ mode: 'objectives' })}>
+                <fbt desc="Label for a map's bonus objective">Bonus Objective</fbt>
               </InlineLink>
             </Stack>
           </Stack>
@@ -360,8 +330,8 @@ export default function MapEditorSettingsPanel({
                 <Stack wrap>
                   <p>
                     <fbt desc="Description for missing estimated performance metrics">
-                      We are still learning about this map. Please try again
-                      after more people have successfully played this map.
+                      We are still learning about this map. Please try again after more people have
+                      successfully played this map.
                     </fbt>
                   </p>
                 </Stack>
@@ -384,19 +354,13 @@ export default function MapEditorSettingsPanel({
                     <div>{metrics.pace}</div>
                     <div>{metrics.avgPace}</div>
                     <Stack wrap>
-                      <InlineLink
-                        onClick={() => setMetric('pace', metrics.pace)}
-                      >
-                        <fbt desc="Button to apply the estimated metric">
-                          apply
-                        </fbt>
+                      <InlineLink onClick={() => setMetric('pace', metrics.pace)}>
+                        <fbt desc="Button to apply the estimated metric">apply</fbt>
                       </InlineLink>
                     </Stack>
 
                     <Stack alignCenter className={paddingStyle} gap wrap>
-                      <fbt desc="Label for metrics distribution">
-                        Distribution
-                      </fbt>
+                      <fbt desc="Label for metrics distribution">Distribution</fbt>
                     </Stack>
                     <Stack between className={wideColumnStyle}>
                       <Histogram histogram={metrics.histogram} />
@@ -409,12 +373,8 @@ export default function MapEditorSettingsPanel({
                     <div>{metrics.power}</div>
                     <div>{metrics.avgPower}</div>
                     <Stack wrap>
-                      <InlineLink
-                        onClick={() => setMetric('power', metrics.power)}
-                      >
-                        <fbt desc="Button to apply the estimated metric">
-                          apply
-                        </fbt>
+                      <InlineLink onClick={() => setMetric('power', metrics.power)}>
+                        <fbt desc="Button to apply the estimated metric">apply</fbt>
                       </InlineLink>
                     </Stack>
 
@@ -427,24 +387,17 @@ export default function MapEditorSettingsPanel({
                     <div />
 
                     <div className={paddingStyle}>
-                      {getTranslatedPerformanceStyleTypeName(
-                        PerformanceStyleType.LostUnits,
-                      )}
+                      {getTranslatedPerformanceStyleTypeName(PerformanceStyleType.LostUnits)}
                     </div>
                     <div>{metrics.lostUnits}</div>
                     <div>{metrics.avgLostUnits}</div>
                     <Stack wrap>
                       <InlineLink
                         onClick={() =>
-                          setStyle([
-                            PerformanceStyleType.LostUnits,
-                            Math.floor(metrics.lostUnits),
-                          ])
+                          setStyle([PerformanceStyleType.LostUnits, Math.floor(metrics.lostUnits)])
                         }
                       >
-                        <fbt desc="Button to apply the estimated metric">
-                          apply
-                        </fbt>
+                        <fbt desc="Button to apply the estimated metric">apply</fbt>
                       </InlineLink>
                     </Stack>
 
@@ -464,31 +417,22 @@ export default function MapEditorSettingsPanel({
                           ])
                         }
                       >
-                        <fbt desc="Button to apply the estimated metric">
-                          apply
-                        </fbt>
+                        <fbt desc="Button to apply the estimated metric">apply</fbt>
                       </InlineLink>
                     </Stack>
 
                     <div className={paddingStyle}>
-                      {getTranslatedPerformanceStyleTypeName(
-                        PerformanceStyleType.OneShots,
-                      )}
+                      {getTranslatedPerformanceStyleTypeName(PerformanceStyleType.OneShots)}
                     </div>
                     <div>{metrics.oneShots}</div>
                     <div>{metrics.avgOneShots}</div>
                     <Stack wrap>
                       <InlineLink
                         onClick={() =>
-                          setStyle([
-                            PerformanceStyleType.OneShots,
-                            Math.floor(metrics.oneShots),
-                          ])
+                          setStyle([PerformanceStyleType.OneShots, Math.floor(metrics.oneShots)])
                         }
                       >
-                        <fbt desc="Button to apply the estimated metric">
-                          apply
-                        </fbt>
+                        <fbt desc="Button to apply the estimated metric">apply</fbt>
                       </InlineLink>
                     </Stack>
                   </div>
@@ -517,9 +461,7 @@ export default function MapEditorSettingsPanel({
                         </fbt:plural>
                         ,{' '}
                         <fbt:param name="winRatio">
-                          {(metrics.won / (metrics.won + metrics.lost)).toFixed(
-                            2,
-                          )}
+                          {(metrics.won / (metrics.won + metrics.lost)).toFixed(2)}
                         </fbt:param>{' '}
                         win ratio.
                       </fbt>
@@ -532,11 +474,7 @@ export default function MapEditorSettingsPanel({
             mapObject?.id &&
             estimateMapPerformance && (
               <Stack wrap>
-                <InlineLink
-                  onClick={async () =>
-                    setMetrics(await estimateMapPerformance())
-                  }
-                >
+                <InlineLink onClick={async () => setMetrics(await estimateMapPerformance())}>
                   <fbt desc="Button to estimate player performance metrics for this map">
                     Estimate performance metrics for this map
                   </fbt>
@@ -548,16 +486,10 @@ export default function MapEditorSettingsPanel({
         {!canEditPerformance && (
           <>
             <div className={performanceMetricsOverlayBackgroundStyle} />
-            <Box
-              alignCenter
-              center
-              className={performanceMetricsOverlayStyle}
-              wrap
-            >
+            <Box alignCenter center className={performanceMetricsOverlayStyle} wrap>
               <p>
                 <fbt desc="Explanation for why map player performance metrics cannot be changed">
-                  Player performance metrics are only available for campaign
-                  maps.
+                  Player performance metrics are only available for campaign maps.
                 </fbt>
               </p>
             </Box>
@@ -662,8 +594,7 @@ export default function MapEditorSettingsPanel({
                   <Tag tag="pvp" />
                 </span>
               </fbt:param>{' '}
-              tags will be visible in the community map list and on your
-              profile.
+              tags will be visible in the community map list and on your profile.
             </fbt>
           </p>
         </VStack>

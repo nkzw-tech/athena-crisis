@@ -22,9 +22,7 @@ export default function attackFlashAnimation(
         direction: options.direction,
         hasAttackStance: options.hasAttackStance,
         type:
-          options.type === 'unit' && options.direction
-            ? 'attackUnitFlash'
-            : 'attackBuildingFlash',
+          options.type === 'unit' && options.direction ? 'attackUnitFlash' : 'attackBuildingFlash',
         variant: 0,
       }),
     });

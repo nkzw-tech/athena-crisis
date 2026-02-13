@@ -16,11 +16,7 @@ export default function ActionBar({
     <Box
       between
       blur
-      className={cx(
-        actionBarStyle,
-        !inlineUI && regularStyle,
-        visible && visibleStyle,
-      )}
+      className={cx(actionBarStyle, !inlineUI && regularStyle, visible && visibleStyle)}
       wrap
       {...props}
     />

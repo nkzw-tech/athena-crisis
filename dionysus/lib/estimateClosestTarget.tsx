@@ -6,11 +6,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector, { isVector } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  moveable,
-  MoveConfiguration,
-  RadiusItem,
-} from '@deities/athena/Radius.tsx';
+import { moveable, MoveConfiguration, RadiusItem } from '@deities/athena/Radius.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
 import maxBy from '@nkzw/core/maxBy.js';
 import minBy from '@nkzw/core/minBy.js';
@@ -30,18 +26,13 @@ const getPrimaryTarget = (
   radius: ReadonlyMap<Vector, RadiusItem>,
   adjacent = true,
 ) =>
-  minBy(
-    targets.map((vector) => radius.get(vector)).filter(isPresent),
-    minByCost,
-  ) ||
+  minBy(targets.map((vector) => radius.get(vector)).filter(isPresent), minByCost) ||
   // If the target tile is not accessible (mountain, sea, etc.),
   // check the surrounding vectors which might be accessible.
   (adjacent &&
     minBy(
       targets
-        .flatMap((target) =>
-          target.adjacent().map((vector) => radius.get(vector)),
-        )
+        .flatMap((target) => target.adjacent().map((vector) => radius.get(vector)))
         .filter(isPresent),
       minByCost,
     )) ||
@@ -76,13 +67,9 @@ const maybeOptimizeTargets = (
       }
 
       const building = map.buildings.get(currentTarget.vector);
-      if (
-        shouldCaptureBuilding(map, unit.player, building, currentTarget.vector)
-      ) {
+      if (shouldCaptureBuilding(map, unit.player, building, currentTarget.vector)) {
         const weight =
-          getBuildingWeight(building.info) -
-          currentTarget.cost +
-          (map.isNeutral(building) ? 0 : 5);
+          getBuildingWeight(building.info) - currentTarget.cost + (map.isNeutral(building) ? 0 : 5);
 
         if (weight > bestWeight) {
           bestWeight = weight;
@@ -123,9 +110,7 @@ export default function estimateClosestTarget(
   // assuming that no other units are in the way.
   const maxDistance = Math.min(
     vec(1, 1).distance(vec(map.size.width, map.size.height)) * 2,
-    (maxBy(targets, (target) => target.distance(from)) || targets[0]).distance(
-      from,
-    ) * 4,
+    (maxBy(targets, (target) => target.distance(from)) || targets[0]).distance(from) * 4,
   );
   let radius = moveable(
     map,
@@ -151,8 +136,7 @@ export default function estimateClosestTarget(
       : config,
   );
 
-  const navalIsTransportingUnits =
-    getEntityGroup(unit) === 'naval' && unit.isTransportingUnits();
+  const navalIsTransportingUnits = getEntityGroup(unit) === 'naval' && unit.isTransportingUnits();
 
   const dropTargets = new Set<Vector>();
   if (navalIsTransportingUnits) {
@@ -198,11 +182,7 @@ export default function estimateClosestTarget(
         }
 
         const building = map.buildings.get(vector);
-        return (
-          !building ||
-          building.info.isStructure() ||
-          building.info.isAccessibleBy(unit.info)
-        );
+        return !building || building.info.isStructure() || building.info.isAccessibleBy(unit.info);
       },
     });
 
@@ -215,23 +195,14 @@ export default function estimateClosestTarget(
       const transportedUnit = unit.transports[0].deploy();
       const inverseFrom = minBy(targets, (target) => target.distance(from));
       if (inverseFrom) {
-        const inverseRadius = moveable(
-          map,
-          transportedUnit,
-          inverseFrom,
-          maxDistance,
-          {
-            ...MoveConfiguration,
-            getResourceValue: () => Number.POSITIVE_INFINITY,
-          },
-        );
+        const inverseRadius = moveable(map, transportedUnit, inverseFrom, maxDistance, {
+          ...MoveConfiguration,
+          getResourceValue: () => Number.POSITIVE_INFINITY,
+        });
         const inverseTargets = [];
         for (const [vector] of inverseRadius) {
           if (
-            unit.info.canDropFrom(
-              transportedUnit.info,
-              map.getTileInfo(vector),
-            ) &&
+            unit.info.canDropFrom(transportedUnit.info, map.getTileInfo(vector)) &&
             MoveConfiguration.isAccessible(map, unit, vector) &&
             !map.units.has(vector)
           ) {

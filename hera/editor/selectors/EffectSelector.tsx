@@ -38,9 +38,7 @@ export default function EffectSelector({
           <InlineLink
             key={`${trigger}-${key}`}
             onClick={() => setScenario({ effect, trigger })}
-            selectedText={
-              trigger === currentTrigger && currentEffect === effect
-            }
+            selectedText={trigger === currentTrigger && currentEffect === effect}
           >
             <EffectTitle
               effect={effect}

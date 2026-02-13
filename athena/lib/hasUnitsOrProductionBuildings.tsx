@@ -8,13 +8,10 @@ export default function hasUnitsOrProductionBuildings(
 ) {
   return (
     map.units.some(
-      (unit) =>
-        map.matchesPlayer(unit, player) &&
-        (type === 'any' || unit.info.hasAttack()),
+      (unit) => map.matchesPlayer(unit, player) && (type === 'any' || unit.info.hasAttack()),
     ) ||
     map.buildings.some(
-      (building) =>
-        map.matchesPlayer(building, player) && building.canBuildUnits(player),
+      (building) => map.matchesPlayer(building, player) && building.canBuildUnits(player),
     )
   );
 }

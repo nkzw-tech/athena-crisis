@@ -11,10 +11,7 @@ export default function AdaptiveStack({
   return (
     <Stack
       {...props}
-      className={cx(
-        adaptiveStyle,
-        reverse && vertical && adaptiveVerticalReverseStyle,
-      )}
+      className={cx(adaptiveStyle, reverse && vertical && adaptiveVerticalReverseStyle)}
       vertical={vertical}
     />
   );

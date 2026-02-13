@@ -58,9 +58,7 @@ export default function getAvailableUnitActions(
 
   if (
     unit.isTransportingUnits() &&
-    unit.transports.some((unit) =>
-      info.canDropFrom(unit.info, map.getTileInfo(position)),
-    )
+    unit.transports.some((unit) => info.canDropFrom(unit.info, map.getTileInfo(position)))
   ) {
     actions.add('drop');
   }
@@ -68,18 +66,13 @@ export default function getAvailableUnitActions(
   if (
     info.hasAbility(Ability.CreateBuildings) &&
     !map.buildings.has(position) &&
-    filterBuildings((building) =>
-      canBuild(map, building, map.getCurrentPlayer(), position),
-    ).length > 0
+    filterBuildings((building) => canBuild(map, building, map.getCurrentPlayer(), position))
+      .length > 0
   ) {
     actions.add('createBuildings');
   }
 
-  if (
-    building &&
-    map.isOpponent(unit, building) &&
-    unit.canCapture(map.getCurrentPlayer())
-  ) {
+  if (building && map.isOpponent(unit, building) && unit.canCapture(map.getCurrentPlayer())) {
     actions.add('capture');
   }
 
@@ -94,24 +87,15 @@ export default function getAvailableUnitActions(
     actions.add('heal');
   }
 
-  if (
-    info.hasAbility(Ability.Rescue) &&
-    getRescuableVectors(map, position).size
-  ) {
+  if (info.hasAbility(Ability.Rescue) && getRescuableVectors(map, position).size) {
     actions.add('rescue');
   }
 
-  if (
-    info.hasAbility(Ability.Sabotage) &&
-    getSabotageableVectors(map, position).size
-  ) {
+  if (info.hasAbility(Ability.Sabotage) && getSabotageableVectors(map, position).size) {
     actions.add('sabotage');
   }
 
-  if (
-    info.hasAbility(Ability.CreateTracks) &&
-    canPlaceRailTrack(map, position)
-  ) {
+  if (info.hasAbility(Ability.CreateTracks) && canPlaceRailTrack(map, position)) {
     actions.add('createTracks');
   }
 

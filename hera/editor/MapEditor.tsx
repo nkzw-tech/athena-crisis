@@ -1,11 +1,6 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import ActionResponseMutator from '@deities/apollo/ActionResponseMutator.tsx';
-import {
-  decodeEffects,
-  Effects,
-  encodeEffects,
-  Scenario,
-} from '@deities/apollo/Effects.tsx';
+import { decodeEffects, Effects, encodeEffects, Scenario } from '@deities/apollo/Effects.tsx';
 import resizeEffects from '@deities/apollo/lib/resizeEffects.tsx';
 import resizeMap, { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import { Route } from '@deities/apollo/Routes.tsx';
@@ -59,22 +54,12 @@ import random from '@nkzw/core/random.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { AnimatePresence } from 'framer-motion';
-import {
-  ReactNode,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useBiomeMusic, usePlayMusic } from '../audio/Music.tsx';
 import NullBehavior from '../behavior/NullBehavior.tsx';
 import { DrawerPosition, getDrawerPaddingStyle } from '../drawer/Drawer.tsx';
 import GameMap from '../GameMap.tsx';
-import useAnimationSpeed, {
-  AnimationSpeed,
-} from '../hooks/useAnimationSpeed.tsx';
+import useAnimationSpeed, { AnimationSpeed } from '../hooks/useAnimationSpeed.tsx';
 import useClientGameAction from '../hooks/useClientGameAction.tsx';
 import useClientGamePlayerDetails from '../hooks/useClientGamePlayerDetails.tsx';
 import useHide from '../hooks/useHide.tsx';
@@ -152,8 +137,7 @@ const getEditorBaseState = (
     isDrawing: false,
     isErasing: false,
     mode,
-    scenario:
-      scenario && mode === 'effects' ? scenario : getDefaultScenario(effects),
+    scenario: scenario && mode === 'effects' ? scenario : getDefaultScenario(effects),
     selected: {
       tile: Plain.id,
     },
@@ -192,9 +176,7 @@ const prepareEffects = (
       [...startEffect]
         .map((effect) => ({
           ...effect,
-          actions: effect.actions.filter(
-            (action) => action.type !== 'CharacterMessageEffect',
-          ),
+          actions: effect.actions.filter((action) => action.type !== 'CharacterMessageEffect'),
         }))
         .filter((effect) => effect.actions.length),
     );
@@ -274,8 +256,7 @@ export default function MapEditor({
   const users = useMemo(() => new Map([[user.id, user]]), [user]);
   const withHumanPlayer = useCallback(
     (map: MapData, playerId: PlayerID = map.active[0]) => {
-      const player =
-        map.maybeGetPlayer(playerId) || map.getPlayer(map.active[0]);
+      const player = map.maybeGetPlayer(playerId) || map.getPlayer(map.active[0]);
       return map.copy({
         currentPlayer: player.id,
         teams: updatePlayer(map.teams, HumanPlayer.from(player, user.id)),
@@ -296,9 +277,7 @@ export default function MapEditor({
                   isAdmin
                     ? Biomes
                     : Biomes.filter(
-                        (biome) =>
-                          !UnlockableBiomes.has(biome) ||
-                          user.biomes.includes(biome),
+                        (biome) => !UnlockableBiomes.has(biome) || user.biomes.includes(biome),
                       ),
                 ),
               ),
@@ -311,9 +290,7 @@ export default function MapEditor({
   const [eventEmitter] = useState(() => new EventTarget());
   const [renderKey, setRenderKey] = useState(0);
   const [map, _setMap] = useState<MapData>(getInitialMap);
-  const [tags, _setTags] = useState<ReadonlyArray<string>>(
-    mapObject?.tags || [],
-  );
+  const [tags, _setTags] = useState<ReadonlyArray<string>>(mapObject?.tags || []);
   useBiomeMusic(map.config.biome, tags);
   usePlayMusic(map.config.biome);
 
@@ -323,14 +300,7 @@ export default function MapEditor({
   });
 
   const [editor, _setEditorState] = useState<EditorState>(() =>
-    getEditorBaseState(
-      map,
-      mapObject,
-      mode,
-      editorHistory,
-      initialEffects,
-      initialScenario,
-    ),
+    getEditorBaseState(map, mapObject, mode, editorHistory, initialEffects, initialScenario),
   );
 
   const [previousEffects, setPreviousEffects] = useState(editor.effects);
@@ -343,8 +313,7 @@ export default function MapEditor({
         editor.objective &&
         !newState.objective;
 
-      const shouldResetScenario =
-        'mode' in newState && newState.mode !== 'effects';
+      const shouldResetScenario = 'mode' in newState && newState.mode !== 'effects';
 
       const mergedState = {
         ...editor,
@@ -388,10 +357,7 @@ export default function MapEditor({
   }, []);
 
   useEffect(() => {
-    if (
-      previousEffects !== editor.effects ||
-      editorHistory.current.undoStack.length > 1
-    ) {
+    if (previousEffects !== editor.effects || editorHistory.current.undoStack.length > 1) {
       setHasChanges(true);
     }
   }, [editor.effects, previousEffects, setHasChanges]);
@@ -418,17 +384,16 @@ export default function MapEditor({
   const [menuIsExpanded, setMenuIsExpanded] = useState(false);
   const [actAsEveryPlayer, setActAsEveryPlayer] = useState(false);
   const mapAnimationSpeed = useAnimationSpeed(animationSpeed);
-  const [previousState, setPreviousState] =
-    useState<PreviousMapEditorState | null>(() => {
-      try {
-        return {
-          effects: Storage.get(EFFECTS_KEY) || '',
-          map: MapData.fromJSON(Storage.get(MAP_KEY) || ''),
-        };
-        // eslint-disable-next-line no-empty
-      } catch {}
-      return null;
-    });
+  const [previousState, setPreviousState] = useState<PreviousMapEditorState | null>(() => {
+    try {
+      return {
+        effects: Storage.get(EFFECTS_KEY) || '',
+        map: MapData.fromJSON(Storage.get(MAP_KEY) || ''),
+      };
+      // eslint-disable-next-line no-empty
+    } catch {}
+    return null;
+  });
 
   const setMap: SetMapFunction = useCallback(
     (type, map, effects) => {
@@ -449,26 +414,17 @@ export default function MapEditor({
     [editor.effects],
   );
 
-  const updatePreviousMap = useCallback(
-    (map?: MapData, editorEffects?: Effects) => {
-      const effects = JSON.stringify(
-        editorEffects ? encodeEffects(editorEffects) : '',
-      );
-      Storage.set(MAP_KEY, JSON.stringify(map));
-      setPreviousState(map ? { effects, map } : null);
-    },
-    [],
-  );
+  const updatePreviousMap = useCallback((map?: MapData, editorEffects?: Effects) => {
+    const effects = JSON.stringify(editorEffects ? encodeEffects(editorEffects) : '');
+    Storage.set(MAP_KEY, JSON.stringify(map));
+    setPreviousState(map ? { effects, map } : null);
+  }, []);
 
   const togglePlaytest = useCallback(
     (map: MapData, retainMap = false, actAsEveryPlayer = false) => {
       const playTest = !isPlayTesting;
       const [currentMap, error] = playTest
-        ? validateMap(
-            map,
-            AIRegistry,
-            toTeamArray(dropInactivePlayers(map).teams),
-          )
+        ? validateMap(map, AIRegistry, toTeamArray(dropInactivePlayers(map).teams))
         : [map];
       if (!currentMap) {
         setSaveState({ message: getMapValidationErrorText(error) });
@@ -482,9 +438,7 @@ export default function MapEditor({
         editor.mode === 'effects' ? undefined : map.currentPlayer,
         user.id,
       );
-      const newMap = playTest
-        ? startGame(mapWithActivePlayers)
-        : mapWithActivePlayers;
+      const newMap = playTest ? startGame(mapWithActivePlayers) : mapWithActivePlayers;
 
       updatePreviousMap(mapWithActivePlayers, editor.effects);
       const mapToSave = playTest || retainMap ? newMap : previousState?.map;
@@ -527,10 +481,7 @@ export default function MapEditor({
     (currentMap, type = 'Update') => {
       if (!mapName || !isValidName(mapName, "_ -!?'")) {
         setSaveState({
-          message: fbt(
-            'Please enter a valid map name.',
-            'Error dialog when saving a map',
-          ),
+          message: fbt('Please enter a valid map name.', 'Error dialog when saving a map'),
         });
         return;
       }
@@ -559,9 +510,7 @@ export default function MapEditor({
             effects: editor.effects,
             map,
             mapName,
-            tags: mapObject?.id
-              ? tags.filter((tag) => tag !== 'published')
-              : tags,
+            tags: mapObject?.id ? tags.filter((tag) => tag !== 'published') : tags,
           },
           setSaveState,
         );
@@ -665,9 +614,7 @@ export default function MapEditor({
             const index = Math.max(
               -1,
               Math.min(
-                undoStackIndex != null
-                  ? undoStackIndex + direction
-                  : undoStack.length - 2,
+                undoStackIndex != null ? undoStackIndex + direction : undoStack.length - 2,
                 undoStack.length,
               ),
             );
@@ -682,13 +629,9 @@ export default function MapEditor({
 
                 const position = state.selectedPosition;
                 const selectedBuilding =
-                  state.selectedBuilding && position
-                    ? newMap.buildings.get(position)
-                    : null;
+                  state.selectedBuilding && position ? newMap.buildings.get(position) : null;
                 const selectedUnit =
-                  state.selectedUnit && position
-                    ? newMap.units.get(position)
-                    : null;
+                  state.selectedUnit && position ? newMap.units.get(position) : null;
                 if (!newMap.size.equals(state.map.size)) {
                   setMap('cleanup', newMap);
                 }
@@ -758,15 +701,7 @@ export default function MapEditor({
       document.removeEventListener('keydown', keydownListener);
       document.removeEventListener('keyup', keyupListener);
     };
-  }, [
-    editor,
-    isPlayTesting,
-    saveMap,
-    setEditorState,
-    setMap,
-    tilted,
-    toggleDeleteEntity,
-  ]);
+  }, [editor, isPlayTesting, saveMap, setEditorState, setMap, tilted, toggleDeleteEntity]);
 
   useInput(
     'select',
@@ -790,36 +725,15 @@ export default function MapEditor({
     const newMap = getInitialMap();
     setMap('reset', newMap);
     _setEditorState(
-      getEditorBaseState(
-        newMap,
-        mapObject,
-        mode,
-        editorHistory,
-        initialEffects,
-        initialScenario,
-      ),
+      getEditorBaseState(newMap, mapObject, mode, editorHistory, initialEffects, initialScenario),
     );
     updatePreviousMap();
-  }, [
-    getInitialMap,
-    initialEffects,
-    mapObject,
-    mode,
-    initialScenario,
-    setMap,
-    updatePreviousMap,
-  ]);
+  }, [getInitialMap, initialEffects, mapObject, mode, initialScenario, setMap, updatePreviousMap]);
 
   const fillMap = useCallback(() => {
-    const fillTile = editor?.selected?.tile
-      ? getTileInfo(editor.selected.tile)
-      : null;
+    const fillTile = editor?.selected?.tile ? getTileInfo(editor.selected.tile) : null;
     const newMap = withModifiers(
-      generatePlainMap(
-        map.size,
-        map.config.biome,
-        canFillTile(fillTile) ? fillTile : undefined,
-      ),
+      generatePlainMap(map.size, map.config.biome, canFillTile(fillTile) ? fillTile : undefined),
     );
     setMap(
       'reset',
@@ -857,12 +771,7 @@ export default function MapEditor({
     (size: SizeVector, origin: Set<ResizeOrigin>) => {
       const map = stateRef.current?.map;
       if (map && !size.equals(map.size)) {
-        const newEffects = resizeEffects(
-          editor.effects,
-          map.size,
-          size,
-          origin,
-        );
+        const newEffects = resizeEffects(editor.effects, map.size, size, origin);
         const newMap = resizeMap(map, size, origin, editor?.selected?.tile);
         setMap('resize', newMap, newEffects);
         setEditorState({
@@ -905,9 +814,7 @@ export default function MapEditor({
   const playerDetails = useClientGamePlayerDetails(map, user);
   const isMedium = useMedia(`(min-width: ${sm}px)`);
   const [drawerPosition, _setDrawerPosition] = useState<DrawerPosition>(() =>
-    Storage.get('map-editor-position') === 'left' && isMedium
-      ? 'left'
-      : 'bottom',
+    Storage.get('map-editor-position') === 'left' && isMedium ? 'left' : 'bottom',
   );
   const setDrawerPosition = useCallback((position: DrawerPosition) => {
     _setDrawerPosition(position);
@@ -928,9 +835,7 @@ export default function MapEditor({
         confirmActionStyle={confirmActionStyle}
         currentUserId={user.id}
         dangerouslyApplyExternalState={
-          actAsEveryPlayer &&
-          map.config.fog &&
-          game?.lastAction?.type === 'EndTurn'
+          actAsEveryPlayer && map.config.fog && game?.lastAction?.type === 'EndTurn'
         }
         events={eventEmitter}
         fogStyle={fogStyle}
@@ -939,9 +844,7 @@ export default function MapEditor({
         lastActionResponse={game?.lastAction || undefined}
         map={game?.state || map}
         mapName={mapName}
-        mutateAction={
-          actAsEveryPlayer ? ActionResponseMutator.actAsEveryPlayer : undefined
-        }
+        mutateAction={actAsEveryPlayer ? ActionResponseMutator.actAsEveryPlayer : undefined}
         onAction={onAction}
         pan
         playerDetails={playerDetails}
@@ -1027,9 +930,7 @@ export default function MapEditor({
               <div className={ellipsis}>
                 {mapName || (
                   <span className={lightColorStyle}>
-                    <fbt desc="Fallback name for untitled map">
-                      Untitled Map
-                    </fbt>
+                    <fbt desc="Fallback name for untitled map">Untitled Map</fbt>
                   </span>
                 )}
               </div>
@@ -1053,15 +954,11 @@ export default function MapEditor({
               {campaignLock ? (
                 <>
                   <h2>
-                    <fbt desc="Title for current campaign">
-                      Current Campaign
-                    </fbt>
+                    <fbt desc="Title for current campaign">Current Campaign</fbt>
                   </h2>
                   <span className={ellipsis}>
                     {campaignLock.name === '' ? (
-                      <fbt desc="Fallback name for untitled campaign">
-                        Untitled Campaign
-                      </fbt>
+                      <fbt desc="Fallback name for untitled campaign">Untitled Campaign</fbt>
                     ) : (
                       campaignLock.name
                     )}
@@ -1076,10 +973,7 @@ export default function MapEditor({
                     ?.filter(filterNodes)
                     .map(({ node: { name, slug } }) => (
                       <div key={slug}>
-                        <InlineLink
-                          className={ellipsis}
-                          to={getCampaignRoute(slug, 'edit')}
-                        >
+                        <InlineLink className={ellipsis} to={getCampaignRoute(slug, 'edit')}>
                           {name}
                         </InlineLink>
                       </div>
@@ -1107,13 +1001,7 @@ export default function MapEditor({
             </VStack>
           )}
         </PrimaryExpandableMenuButton>
-        <ZoomButton
-          hide={hidden}
-          max={maxZoom}
-          position="top"
-          setZoom={setZoom}
-          zoom={zoom}
-        />
+        <ZoomButton hide={hidden} max={maxZoom} position="top" setZoom={setZoom} zoom={zoom} />
       </Portal>
       <div className={getDrawerPaddingStyle(drawerPosition, expand)}>
         <GameMap

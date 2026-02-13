@@ -23,11 +23,9 @@ export const AttackUnitAction = (from: Vector, to: Vector) =>
 export const AttackBuildingAction = (from: Vector, to: Vector) =>
   ({ from, to, type: 'AttackBuilding' }) as const;
 
-export const CaptureAction = (from: Vector) =>
-  ({ from, type: 'Capture' }) as const;
+export const CaptureAction = (from: Vector) => ({ from, type: 'Capture' }) as const;
 
-export const SupplyAction = (from: Vector) =>
-  ({ from, type: 'Supply' }) as const;
+export const SupplyAction = (from: Vector) => ({ from, type: 'Supply' }) as const;
 
 export const CreateUnitAction = (from: Vector, id: number, to: Vector) =>
   ({ from, id, to, type: 'CreateUnit' }) as const;
@@ -38,16 +36,13 @@ export const DropUnitAction = (from: Vector, index: number, to: Vector) =>
 export const CreateBuildingAction = (from: Vector, id: number) =>
   ({ from, id, type: 'CreateBuilding' }) as const;
 
-export const CreateTracksAction = (from: Vector) =>
-  ({ from, type: 'CreateTracks' }) as const;
+export const CreateTracksAction = (from: Vector) => ({ from, type: 'CreateTracks' }) as const;
 
 export const FoldAction = (from: Vector) => ({ from, type: 'Fold' }) as const;
 
-export const UnfoldAction = (from: Vector) =>
-  ({ from, type: 'Unfold' }) as const;
+export const UnfoldAction = (from: Vector) => ({ from, type: 'Unfold' }) as const;
 
-export const CompleteUnitAction = (from: Vector) =>
-  ({ from, type: 'CompleteUnit' }) as const;
+export const CompleteUnitAction = (from: Vector) => ({ from, type: 'CompleteUnit' }) as const;
 
 export const CompleteBuildingAction = (from: Vector) =>
   ({ from, type: 'CompleteBuilding' }) as const;
@@ -60,11 +55,9 @@ export const MessageAction = (message: string, player?: PlayerID) =>
 export const ToggleLightningAction = (from: Vector, to: Vector) =>
   ({ from, to, type: 'ToggleLightning' }) as const;
 
-export const HealAction = (from: Vector, to: Vector) =>
-  ({ from, to, type: 'Heal' }) as const;
+export const HealAction = (from: Vector, to: Vector) => ({ from, to, type: 'Heal' }) as const;
 
-export const RescueAction = (from: Vector, to: Vector) =>
-  ({ from, to, type: 'Rescue' }) as const;
+export const RescueAction = (from: Vector, to: Vector) => ({ from, to, type: 'Rescue' }) as const;
 
 export const SabotageAction = (from: Vector, to: Vector) =>
   ({ from, to, type: 'Sabotage' }) as const;

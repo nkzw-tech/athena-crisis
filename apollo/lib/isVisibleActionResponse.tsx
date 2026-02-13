@@ -1,9 +1,7 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { ActionResponse } from '../ActionResponse.tsx';
 
-export default function isVisibleActionResponse(
-  actionResponse: ActionResponse,
-) {
+export default function isVisibleActionResponse(actionResponse: ActionResponse) {
   const { type } = actionResponse;
   switch (type) {
     case 'AttackBuilding':

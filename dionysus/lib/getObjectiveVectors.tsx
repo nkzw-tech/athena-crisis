@@ -10,8 +10,7 @@ export default function getObjectiveVectors(map: MapData, unit: Unit) {
       objectiveHasVectors(objective) &&
       (!objective.players || objective.players.includes(unit.player)) &&
       !objective.completed?.has(unit.player) &&
-      (!objective.label?.size ||
-        (unit.label != null && objective.label.has(unit.label)))
+      (!objective.label?.size || (unit.label != null && objective.label.has(unit.label)))
     ) {
       for (const vector of objective.vectors) {
         vectors.add(vector);

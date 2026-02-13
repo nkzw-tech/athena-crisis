@@ -78,11 +78,7 @@ const Alert = ({
   const { hide } = useAlert();
 
   const showCancel = onAccept && !preventCancel;
-  const [selected] = useHorizontalMenuNavigation(
-    showCancel ? 2 : 1,
-    'top',
-    true,
-  );
+  const [selected] = useHorizontalMenuNavigation(showCancel ? 2 : 1, 'top', true);
 
   const cancel = useCallback(
     (event: CustomEvent<unknown> | MouseEvent) => {
@@ -146,12 +142,7 @@ const Alert = ({
                 <div className="paragraph">{text}</div>
               </VStack>
 
-              <Stack
-                {...(showCancel ? null : { end: true })}
-                between
-                reverse={isWindows}
-                wrap
-              >
+              <Stack {...(showCancel ? null : { end: true })} between reverse={isWindows} wrap>
                 {showCancel && (
                   <button
                     className={cx(selected === 0 && cx('focus', PulseStyle))}
@@ -164,9 +155,7 @@ const Alert = ({
                   className={cx(
                     acceptStyle,
                     buttonColor === 'red' && redStyle,
-                    !disableAccept &&
-                      selected === (showCancel ? 1 : 0) &&
-                      cx('focus', PulseStyle),
+                    !disableAccept && selected === (showCancel ? 1 : 0) && cx('focus', PulseStyle),
                   )}
                   onClick={accept}
                 >

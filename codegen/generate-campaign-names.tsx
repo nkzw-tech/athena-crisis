@@ -11,10 +11,7 @@ import sign from './lib/sign.tsx';
 console.log(chalk.bold('› Generating campaign names...'));
 
 const root = process.cwd();
-const globs: ReadonlyArray<string> = [
-  './hermes/map-fixtures/*.tsx',
-  './fixtures/map/*.tsx',
-];
+const globs: ReadonlyArray<string> = ['./hermes/map-fixtures/*.tsx', './fixtures/map/*.tsx'];
 const outputFile = join(root, './hermes/CampaignMapName.tsx');
 const formatWithOxfmt = async (filePath: string, sourceText: string) => {
   const { code, errors } = await format(filePath, sourceText, {
@@ -46,9 +43,7 @@ writeFileSync(
   sign(
     await formatWithOxfmt(
       outputFile,
-      `export type CampaignMapName = ${maps
-        .map((name) => `'${name}'`)
-        .join(' | ')};`,
+      `export type CampaignMapName = ${maps.map((name) => `'${name}'`).join(' | ')};`,
     ),
   ),
 );

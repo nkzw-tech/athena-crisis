@@ -1,12 +1,7 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { Beach, Sea } from '@deities/athena/info/Tile.tsx';
-import {
-  Bomber,
-  HeavyTank,
-  Hovercraft,
-  SmallTank,
-} from '@deities/athena/info/Unit.tsx';
+import { Bomber, HeavyTank, Hovercraft, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -34,8 +29,8 @@ const map = withModifiers(
         ],
       ],
       map: [
-        1, 10, 6, 6, 6, 6, 6, 1, 1, 6, 6, 6, 6, 6, 1, 1, 6, 6, 6, 6, 6, 8, 1, 6,
-        6, 6, 10, 1, 1, 1, 6, 6, 6, 6, 1, 1, 1, 6, 6, 6, 6, 6,
+        1, 10, 6, 6, 6, 6, 6, 1, 1, 6, 6, 6, 6, 6, 1, 1, 6, 6, 6, 6, 6, 8, 1, 6, 6, 6, 10, 1, 1, 1,
+        6, 6, 6, 6, 1, 1, 1, 6, 6, 6, 6, 6,
       ],
       size: {
         height: 6,
@@ -101,33 +96,7 @@ test('AI will hop between islands if necessary', async () => {
     config: {
       fog: true,
     },
-    map: [
-      1,
-      B,
-      S,
-      B,
-      1,
-      1,
-      B,
-      S,
-      B,
-      1,
-      1,
-      B,
-      S,
-      B,
-      1,
-      1,
-      B,
-      S,
-      B,
-      1,
-      1,
-      B,
-      S,
-      B,
-      1,
-    ],
+    map: [1, B, S, B, 1, 1, B, S, B, 1, 1, B, S, B, 1, 1, B, S, B, 1, 1, B, S, B, 1],
     size: {
       height: 5,
       width: 5,
@@ -187,9 +156,7 @@ test('AI will hop between islands if necessary', async () => {
   `);
 
   // Now try with fog:
-  const fogGameState = await execute(
-    map.copy({ config: map.config.copy({ fog: true }) }),
-  );
+  const fogGameState = await execute(map.copy({ config: map.config.copy({ fog: true }) }));
 
   expect(snapshotGameState(fogGameState)).toMatchInlineSnapshot(`
     "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5] }
@@ -211,12 +178,9 @@ test('AI will hop between islands if necessary', async () => {
 });
 
 test('transporters do not stick to opposing naval units when loaded with other units', async () => {
-  const [gameState, gameActionResponse] = await executeGameActions(map, [
-    EndTurnAction(),
-  ]);
+  const [gameState, gameActionResponse] = await executeGameActions(map, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4] }
       Move (6,4 → 2,1) { fuel: 52, completed: false, path: [5,4 → 4,4 → 4,3 → 3,3 → 3,2 → 3,1 → 2,1] }
@@ -234,18 +198,12 @@ test('transporters do not stick to opposing air units on sea when loaded with ot
   const v2 = vec(4, 4);
   const v3 = vec(4, 5);
   const mapA = map.copy({
-    units: map.units
-      .set(v1, Bomber.create(1))
-      .set(v2, Bomber.create(1))
-      .set(v3, Bomber.create(1)),
+    units: map.units.set(v1, Bomber.create(1)).set(v2, Bomber.create(1)).set(v3, Bomber.create(1)),
   });
 
-  const [gameState, gameActionResponse] = await executeGameActions(mapA, [
-    EndTurnAction(),
-  ]);
+  const [gameState, gameActionResponse] = await executeGameActions(mapA, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4] }
       Move (6,4 → 2,1) { fuel: 52, completed: false, path: [6,3 → 5,3 → 5,2 → 4,2 → 4,1 → 3,1 → 2,1] }

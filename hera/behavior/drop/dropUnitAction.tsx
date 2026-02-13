@@ -53,9 +53,7 @@ export default function dropUnitAction(
       tiles: [map.getTileInfo(to)],
     }),
     map: map.copy({
-      units: map.units
-        .set(from, originalUnitA.drop(unitB).recover())
-        .set(to, newUnitB.recover()),
+      units: map.units.set(from, originalUnitA.drop(unitB).recover()).set(to, newUnitB.recover()),
     }),
     ...resetBehavior(NullBehavior),
   };

@@ -7,11 +7,7 @@ import { ActionResponse } from './ActionResponse.tsx';
 import transformEffectValue from './lib/transformEffectValue.tsx';
 
 export type DynamicEffectObjectiveID = 'win' | 'lose' | 'draw' | number;
-const DynamicEffectObjectiveIDs = new Set<DynamicEffectObjectiveID>([
-  'win',
-  'lose',
-  'draw',
-]);
+const DynamicEffectObjectiveIDs = new Set<DynamicEffectObjectiveID>(['win', 'lose', 'draw']);
 
 export type PlainDynamicEffectObjectiveID = number;
 
@@ -31,10 +27,7 @@ export type OptionalObjectiveCondition = Readonly<{
   value: number;
 }>;
 
-export type Condition =
-  | GameEndCondition
-  | OptionalObjectiveCondition
-  | UnitEqualsCondition;
+export type Condition = GameEndCondition | OptionalObjectiveCondition | UnitEqualsCondition;
 
 export type Conditions = ReadonlyArray<Condition>;
 
@@ -44,11 +37,7 @@ const equalsUnit = (
   actionResponse: ActionResponse,
   originalCondition: UnitEqualsCondition,
 ) => {
-  const { from, target } = transformEffectValue(
-    activeMap,
-    actionResponse,
-    originalCondition,
-  );
+  const { from, target } = transformEffectValue(activeMap, actionResponse, originalCondition);
   const unit = activeMap.contains(from) && activeMap.units.get(from);
   return !!(unit && target.includes(unit.id));
 };
@@ -67,10 +56,7 @@ const gameEnd = (
     return value === 'draw';
   }
 
-  if (
-    activeMap.getCurrentPlayer().teamId ===
-    activeMap.getTeam(actionResponse.toPlayer).id
-  ) {
+  if (activeMap.getCurrentPlayer().teamId === activeMap.getTeam(actionResponse.toPlayer).id) {
     return (
       (value === 'win' && !actionResponse.objective) ||
       (typeof value === 'number' && value === actionResponse.objectiveId)
@@ -87,8 +73,7 @@ const optionalObjective = (
   { value }: OptionalObjectiveCondition,
 ) =>
   actionResponse.type === 'OptionalObjective' &&
-  activeMap.getCurrentPlayer().teamId ===
-    activeMap.getTeam(actionResponse.toPlayer).id &&
+  activeMap.getCurrentPlayer().teamId === activeMap.getTeam(actionResponse.toPlayer).id &&
   value === actionResponse.objectiveId;
 
 export function evaluateCondition(
@@ -104,12 +89,7 @@ export function evaluateCondition(
     case 'GameEnd':
       return gameEnd(previousMap, activeMap, actionResponse, condition);
     case 'OptionalObjective':
-      return optionalObjective(
-        previousMap,
-        activeMap,
-        actionResponse,
-        condition,
-      );
+      return optionalObjective(previousMap, activeMap, actionResponse, condition);
     default: {
       condition satisfies never;
       throw new UnknownTypeError('evaluateCondition', type);
@@ -164,8 +144,7 @@ export function validateCondition(map: MapData, condition: Condition) {
         return true;
       }
 
-      const objective =
-        typeof value === 'number' && map.config.objectives.get(value);
+      const objective = typeof value === 'number' && map.config.objectives.get(value);
       return objective && objective.type !== Criteria.Default;
     }
     default: {

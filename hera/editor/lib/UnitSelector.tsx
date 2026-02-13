@@ -1,13 +1,5 @@
-import {
-  mapUnits,
-  mapUnitsWithContentRestriction,
-  UnitInfo,
-} from '@deities/athena/info/Unit.tsx';
-import {
-  DynamicPlayerID,
-  PlayerID,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { mapUnits, mapUnitsWithContentRestriction, UnitInfo } from '@deities/athena/info/Unit.tsx';
+import { DynamicPlayerID, PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -61,15 +53,9 @@ export default memo(function UnitSelector({
       shouldRenderControls={shouldRenderControls}
       title={
         <div
-          className={cx(
-            nowrapStyle,
-            border && borderStyle,
-            highlight && highlightStyle,
-          )}
+          className={cx(nowrapStyle, border && borderStyle, highlight && highlightStyle)}
           key={selectedUnit?.id}
-          style={
-            map && player != null ? { color: getColor(player) } : undefined
-          }
+          style={map && player != null ? { color: getColor(player) } : undefined}
         >
           {selectedUnit ? (
             <>

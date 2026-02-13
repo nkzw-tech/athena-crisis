@@ -3,10 +3,7 @@ import { decodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { ReplayState } from '@deities/apollo/replay/Types.tsx';
-import {
-  GameActionResponseEntry,
-  GameStateEntry,
-} from '@deities/apollo/Types.tsx';
+import { GameActionResponseEntry, GameStateEntry } from '@deities/apollo/Types.tsx';
 import getFirstHumanPlayer from '@deities/athena/lib/getFirstHumanPlayer.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -30,9 +27,7 @@ type MutableGameStateWithGameActionResponseEntry = Array<
 export type GameStateWithGameActionResponseEntry =
   Readonly<MutableGameStateWithGameActionResponseEntry>;
 
-export default function useReplayGameState(
-  replayState: ReplayStateWithViewer | null,
-) {
+export default function useReplayGameState(replayState: ReplayStateWithViewer | null) {
   return useMemo((): [
     gameState: GameStateWithGameActionResponseEntry,
     info: Readonly<{ mapName: string }> | null,
@@ -86,9 +81,7 @@ export default function useReplayGameState(
         case 'actions': {
           if (map && vision) {
             for (const encodedActionResponse of entry.actions) {
-              const actionResponse = decodeActionResponse(
-                encodedActionResponse,
-              );
+              const actionResponse = decodeActionResponse(encodedActionResponse);
               map = applyActionResponse(map, vision, actionResponse);
               gameState.push([actionResponse, map]);
             }
@@ -97,9 +90,7 @@ export default function useReplayGameState(
         }
         case 'gameActions': {
           if (map && vision) {
-            const gameActionResponse = decodeGameActionResponse(
-              entry.gameAction,
-            );
+            const gameActionResponse = decodeGameActionResponse(entry.gameAction);
             if (gameActionResponse?.others) {
               for (const entry of gameActionResponse.others) {
                 const { actionResponse } = entry;

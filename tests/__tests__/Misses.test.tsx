@@ -2,10 +2,7 @@ import {
   AttackUnitAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import {
-  decodeActionResponse,
-  encodeActionResponse,
-} from '@deities/apollo/EncodedActions.tsx';
+import { decodeActionResponse, encodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import timeoutActionResponseMutator from '@deities/apollo/lib/timeoutActionResponseMutator.tsx';
 import { Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
@@ -22,9 +19,7 @@ import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx'
 
 const map = withModifiers(
   MapData.createMap({
-    map: [
-      1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1,
-    ],
+    map: [1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1],
     size: { height: 5, width: 5 },
     teams: [
       {
@@ -46,9 +41,7 @@ test('lose the game when missing two turns in a row', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
   const initialMap = map.copy({
-    units: map.units
-      .set(vecA, SmallTank.create(player1))
-      .set(vecB, Pioneer.create(2)),
+    units: map.units.set(vecA, SmallTank.create(player1)).set(vecB, Pioneer.create(2)),
   });
 
   const [, gameActionResponse] = await executeGameActions(
@@ -58,8 +51,7 @@ test('lose the game when missing two turns in a row', async () => {
     timeoutActionResponseMutator,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: true }
@@ -72,9 +64,7 @@ test('misses reset when taking any action', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(2, 1);
   const initialMap = map.copy({
-    units: map.units
-      .set(vecA, SmallTank.create(player1))
-      .set(vecB, Pioneer.create(2)),
+    units: map.units.set(vecA, SmallTank.create(player1)).set(vecB, Pioneer.create(2)),
   });
 
   const [, gameActionResponse] = await executeGameActions(
@@ -90,8 +80,7 @@ test('misses reset when taking any action', async () => {
     timeoutActionResponseMutator,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 44 }, chargeA: 18, chargeB: 56 }
@@ -142,19 +131,12 @@ test('lose the game, but continue when missing two turns in a row with multiple 
 
   const [, gameActionResponse] = await executeGameActions(
     initialMap,
-    [
-      EndTurnAction(),
-      EndTurnAction(),
-      EndTurnAction(),
-      EndTurnAction(),
-      EndTurnAction(),
-    ],
+    [EndTurnAction(), EndTurnAction(), EndTurnAction(), EndTurnAction(), EndTurnAction()],
     undefined,
     timeoutActionResponseMutator,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 300, player: 3 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 300, player: 3 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
@@ -171,9 +153,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
   const vecB = vec(2, 1);
   const initialMap = map.copy({
     teams: updatePlayer(map.teams, player1.copy({ crystal: Crystal.Command })),
-    units: map.units
-      .set(vecA, SmallTank.create(player1))
-      .set(vecB, Pioneer.create(2)),
+    units: map.units.set(vecA, SmallTank.create(player1)).set(vecB, Pioneer.create(2)),
   });
 
   const [, gameActionResponse] = await executeGameActions(
@@ -186,9 +166,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
   const actionResponse = gameActionResponse[1]?.[2][0];
   expect(actionResponse).toBeDefined();
 
-  const abandonActionResponse = actionResponse
-    ? decodeActionResponse(actionResponse)
-    : null;
+  const abandonActionResponse = actionResponse ? decodeActionResponse(actionResponse) : null;
   if (abandonActionResponse?.type === 'AbandonInvasion') {
     gameActionResponse[1]![2][0] = encodeActionResponse({
       ...abandonActionResponse,
@@ -196,8 +174,7 @@ test('abandon the game when missing two turns in a row during an invasion', asyn
     } as const);
   }
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: true }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: true }
       AbandonInvasion { name: '<name>', chaosStars: null, fromPlayer: 1 }

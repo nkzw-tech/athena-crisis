@@ -18,11 +18,7 @@ export default function PlayerAchievement({
     <Stack alignCenter center className={nowrapStyle} gap wrap>
       <Stack gap={4}>
         {performance.map(([type, achieved]) => (
-          <StarIcon
-            key={type}
-            size="small"
-            type={achieved ? 'achieved' : 'missed'}
-          />
+          <StarIcon key={type} size="small" type={achieved ? 'achieved' : 'missed'} />
         ))}
       </Stack>
       <div className={countStyle}>

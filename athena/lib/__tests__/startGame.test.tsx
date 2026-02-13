@@ -21,10 +21,7 @@ test('`startGame` calculates the correct funds for all players', () => {
       config: {
         seedCapital: 10_000,
       },
-      map: [
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1,
-      ],
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       size: { height: 5, width: 5 },
       teams: [
         {
@@ -63,10 +60,7 @@ test('`startGame` allocates the correct initial charge for all players', () => {
       config: {
         initialCharge: 5,
       },
-      map: [
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1,
-      ],
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       size: { height: 5, width: 5 },
       teams: [
         {

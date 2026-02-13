@@ -2,12 +2,7 @@ import { Route } from '@deities/apollo/Routes.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
-import {
-  getAllTiles,
-  getTileInfo,
-  Plain,
-  TileTypes,
-} from '@deities/athena/info/Tile.tsx';
+import { getAllTiles, getTileInfo, Plain, TileTypes } from '@deities/athena/info/Tile.tsx';
 import {
   Abilities,
   Ability,
@@ -33,10 +28,7 @@ import {
   MoraleStatusEffect,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
-import Entity, {
-  EntityType,
-  getEntityGroup,
-} from '@deities/athena/map/Entity.tsx';
+import Entity, { EntityType, getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Player, {
   numberToPlayerID,
   PlayerID,
@@ -113,16 +105,8 @@ const costRange = getAttributeRange(
   extractCost,
   minBy(units, extractCost)?.getCostFor(null) || 0,
 );
-const movementRange = getAttributeRange(
-  units,
-  (info) => info.getRadiusFor(null),
-  1,
-);
-const visionRange = getAttributeRange(
-  units,
-  ({ configuration: { vision } }) => vision,
-  1,
-);
+const movementRange = getAttributeRange(units, (info) => info.getRadiusFor(null), 1);
+const visionRange = getAttributeRange(units, ({ configuration: { vision } }) => vision, 1);
 const defenseRange = getAttributeRange(units, ({ defense }) => defense, 0.01);
 const supplyRange = getAttributeRange(
   units,
@@ -171,8 +155,7 @@ export default memo(function UnitCard({
 
   const extraVision =
     (unit.isUnfolded() ? 2 : 0) +
-    (unit.info.type === EntityType.Soldier &&
-    map.getTileInfo(vector).type & TileTypes.Mountain
+    (unit.info.type === EntityType.Soldier && map.getTileInfo(vector).type & TileTypes.Mountain
       ? 1
       : 0);
 
@@ -184,9 +167,7 @@ export default memo(function UnitCard({
             animationConfig={AnimationConfig}
             animationKey={defaultVector}
             biome={biome}
-            customSprite={playerDetails
-              .get(unit.player)
-              ?.equippedUnitCustomizations.get(unit.id)}
+            customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
             firstPlayerID={map.getFirstPlayerID()}
             getLayer={() => 100}
             highlightStyle={undefined}
@@ -210,13 +191,7 @@ export default memo(function UnitCard({
               <fbt desc="Unit character name">
                 Name:{' '}
                 <fbt:param name="name">
-                  <Stack
-                    center
-                    gap
-                    inline
-                    style={isLeader ? { color } : undefined}
-                    wrap
-                  >
+                  <Stack center gap inline style={isLeader ? { color } : undefined} wrap>
                     {name}
                     {isLeader && <Medal player={unit.player} />}
                   </Stack>
@@ -266,9 +241,7 @@ export default memo(function UnitCard({
           </Stack>
           <div>
             {vision}
-            {extraVision > 0 ? (
-              <span style={{ color }}> + {extraVision}</span>
-            ) : null}
+            {extraVision > 0 ? <span style={{ color }}> + {extraVision}</span> : null}
           </div>
           <Range end value={getAttributeRangeValue(visionRange, vision)} />
           {range && (
@@ -290,20 +263,14 @@ export default memo(function UnitCard({
                 <fbt desc="Label for build cost">Build Cost</fbt>
               </Stack>
               <div>{cost}</div>
-              <Range
-                end
-                invert
-                value={getAttributeRangeValue(costRange, cost)}
-              />
+              <Range end invert value={getAttributeRangeValue(costRange, cost)} />
             </>
           )}
           {unit.player === 0 && unit.isBeingRescued() && rescuer != null && (
             <>
               <Stack>
                 <Icon icon={Rescue} />
-                <fbt desc="Label for  in progress rescue (text has to be short)">
-                  Rescue…
-                </fbt>
+                <fbt desc="Label for  in progress rescue (text has to be short)">Rescue…</fbt>
               </Stack>
               <Stack alignCenter className={wideColumnStyle} end gap wrap>
                 <MiniPlayerIcon id={rescuer} />
@@ -349,18 +316,11 @@ export default memo(function UnitCard({
           unit={unit}
           vector={vector}
         />
-        <UnitVulnerability
-          biome={biome}
-          map={map}
-          player={player}
-          unit={unit}
-          vector={vector}
-        />
+        <UnitVulnerability biome={biome} map={map} player={player} unit={unit} vector={vector} />
         {!process.env.IS_DEMO && (
           <p className={lightColorStyle}>
             <fbt desc="Explanation for damage information">
-              Note: Cover, status effects and unit defense affect the inflicted
-              damage. See the{' '}
+              Note: Cover, status effects and unit defense affect the inflicted damage. See the{' '}
               <fbt:param name="link">
                 {App.canQuit ? (
                   <InlineLink to={damageChartRoute}>
@@ -376,11 +336,7 @@ export default memo(function UnitCard({
             </fbt>
           </p>
         )}
-        <UnitMovement
-          biome={biome}
-          movementType={info.movementType}
-          player={player}
-        />
+        <UnitMovement biome={biome} movementType={info.movementType} player={player} />
       </VStack>
     </>
   );
@@ -462,10 +418,7 @@ const Weapon = memo(function WeaponAttack({
       tile,
     );
     return (
-      <div
-        key={index}
-        style={isLeader ? { color: getColor(player) } : undefined}
-      >
+      <div key={index} style={isLeader ? { color: getColor(player) } : undefined}>
         {calculateLikelyDamage(
           unit,
           entityB,
@@ -485,9 +438,7 @@ const Weapon = memo(function WeaponAttack({
   return (
     <Tick animationConfig={AnimationConfig}>
       <VStack between gap wrap>
-        <CardInfoHeading style={{ color: getColor(player) }}>
-          {weapon.name}
-        </CardInfoHeading>
+        <CardInfoHeading style={{ color: getColor(player) }}>{weapon.name}</CardInfoHeading>
         <Stack wrap>
           <fbt desc="Label for ammo supply">
             Supply:
@@ -508,15 +459,10 @@ const Weapon = memo(function WeaponAttack({
               ).values(),
             ];
 
-            const damage = unitGroups.map((units) =>
-              units.map(getLikelyDamage),
-            );
+            const damage = unitGroups.map((units) => units.map(getLikelyDamage));
 
             const buildings = [];
-            if (
-              entities.has(EntityType.Building) &&
-              !biomeBuildingRestrictions.has(House)
-            ) {
+            if (entities.has(EntityType.Building) && !biomeBuildingRestrictions.has(House)) {
               const house = House.create(opponent);
               buildings.push(house);
               damage.push([getLikelyDamage(house, -1)]);
@@ -532,9 +478,7 @@ const Weapon = memo(function WeaponAttack({
 
             const tiles = [
               ...unitGroups.map(([unit]) => getAnyUnitTile(unit.info) || Plain),
-              ...buildings.map((building) =>
-                getTileInfo(getAnyBuildingTileField(building.info)),
-              ),
+              ...buildings.map((building) => getTileInfo(getAnyBuildingTileField(building.info))),
             ];
 
             return damage.length ? (
@@ -552,10 +496,7 @@ const Weapon = memo(function WeaponAttack({
                 )}
                 <InlineTileList
                   biome={biome}
-                  buildings={[
-                    ...Array(unitGroups.length).fill(undefined),
-                    ...buildings,
-                  ]}
+                  buildings={[...Array(unitGroups.length).fill(undefined), ...buildings]}
                   extraInfos={damage}
                   tiles={tiles}
                   unitGroups={unitGroups}
@@ -644,8 +585,12 @@ const UnitVulnerability = ({
       ...groupBy(
         availableUnits
           .map((unitB) => {
-            const [attackStatusEffect, flatDamageStatusEffect] =
-              getAttackStatusEffect(map, unitB, vector, tile);
+            const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+              map,
+              unitB,
+              vector,
+              tile,
+            );
             const damage = calculateLikelyDamage(
               unitB,
               unit,
@@ -665,10 +610,7 @@ const UnitVulnerability = ({
           })
           .filter(
             (entry): entry is [Unit, number, AttributeRangeWithZero] =>
-              entry[1] != null &&
-              entry[2] != null &&
-              entry[1] > 0 &&
-              entry[2] > 0,
+              entry[1] != null && entry[2] != null && entry[1] > 0 && entry[2] > 0,
           ),
         ([, , attributeRangeValue]) => attributeRangeValue,
       ),
@@ -676,30 +618,22 @@ const UnitVulnerability = ({
     ([attributeRangeValue]) => -attributeRangeValue,
   ).slice(0, 2);
 
-  const getLikelyDamage = (damage: number, index: number) => (
-    <div key={index}>{damage}</div>
-  );
+  const getLikelyDamage = (damage: number, index: number) => <div key={index}>{damage}</div>;
 
   return (
     <Tick animationConfig={AnimationConfig}>
       <VStack between gap wrap>
         <CardInfoHeading style={{ color: getColor(player) }}>
-          <fbt desc="Headline for who the unit is weak to">
-            Vulnerable Against
-          </fbt>
+          <fbt desc="Headline for who the unit is weak to">Vulnerable Against</fbt>
         </CardInfoHeading>
         <AdaptiveStack className={marginTopStyle} gap={16}>
           {damageGroups.map(([strength, damageMapEntry]) => {
-            const unitGroups = [
-              ...groupBy(damageMapEntry, ([unit]) => unit.info.type).values(),
-            ];
+            const unitGroups = [...groupBy(damageMapEntry, ([unit]) => unit.info.type).values()];
 
             const damage = unitGroups.map((units) =>
               units.map(([, damage], index) => getLikelyDamage(damage, index)),
             );
-            const tiles = unitGroups.map(
-              ([[unit]]) => getAnyUnitTile(unit.info) || Plain,
-            );
+            const tiles = unitGroups.map(([[unit]]) => getAnyUnitTile(unit.info) || Plain);
             return damage.length ? (
               <TileBox key={strength}>
                 {strength <= 1 ? (
@@ -717,9 +651,7 @@ const UnitVulnerability = ({
                   biome={biome}
                   extraInfos={damage}
                   tiles={tiles}
-                  unitGroups={unitGroups.map((units) =>
-                    units.map(([unit]) => unit),
-                  )}
+                  unitGroups={unitGroups.map((units) => units.map(([unit]) => unit))}
                 />
               </TileBox>
             ) : null;
@@ -761,12 +693,9 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
     (ability) =>
       ability !== Ability.MoveAndAct &&
       ability !== Ability.AccessBuildings &&
-      (unit.info.hasAbility(ability) ||
-        (ability === Ability.Capture && unit.canCapture(player))),
+      (unit.info.hasAbility(ability) || (ability === Ability.Capture && unit.canCapture(player))),
   );
-  const heavyEquipmentColor = getColor(
-    numberToPlayerID(Ability.HeavyEquipment - 1),
-  );
+  const heavyEquipmentColor = getColor(numberToPlayerID(Ability.HeavyEquipment - 1));
   const moraleColor = getColor(numberToPlayerID(Ability.Morale - 1));
   return abilities?.length ? (
     <VStack between gap wrap>
@@ -791,17 +720,13 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
             case Ability.CreateBuildings:
               return (
                 <UnitAbility ability={ability} icon={Buildings} key={ability}>
-                  <fbt desc="Unit create building ability">
-                    Create Buildings
-                  </fbt>
+                  <fbt desc="Unit create building ability">Create Buildings</fbt>
                 </UnitAbility>
               );
             case Ability.CreateTracks:
               return (
                 <UnitAbility ability={ability} icon={Track} key={ability}>
-                  <fbt desc="Unit create rail tracks ability">
-                    Create Rail Tracks
-                  </fbt>
+                  <fbt desc="Unit create rail tracks ability">Create Rail Tracks</fbt>
                 </UnitAbility>
               );
             case Ability.Heal:
@@ -871,19 +796,14 @@ const UnitAbilities = ({ player, unit }: { player: Player; unit: Unit }) => {
           />
           <p style={{ color: heavyEquipmentColor }}>
             <fbt desc="Label for a unit that cannot act after being dropped.">
-              Heavy Equipment: Can&apos;t act after being dropped by a
-              transporter.
+              Heavy Equipment: Can&apos;t act after being dropped by a transporter.
             </fbt>
           </p>
         </Stack>
       )}
       {unit.info.hasAbility(Ability.Morale) && (
         <Stack alignCenter gap>
-          <Icon
-            className={extraIconStyle}
-            icon={Volume}
-            style={{ color: moraleColor }}
-          />
+          <Icon className={extraIconStyle} icon={Volume} style={{ color: moraleColor }} />
           <p style={{ color: moraleColor }}>
             <fbt desc="Label for a unit that cannot act after being dropped.">
               Morale Boost: Increases attack of adjacent units by{' '}
@@ -911,9 +831,7 @@ const UnitTransports = ({
   }
 
   const entities = [...transports.entities.keys()].map(getTranslatedEntityName);
-  const units = unit.transports?.map((transportedUnit) =>
-    transportedUnit.deploy(),
-  );
+  const units = unit.transports?.map((transportedUnit) => transportedUnit.deploy());
   return (
     <>
       <VStack between gap wrap>
@@ -928,10 +846,8 @@ const UnitTransports = ({
             </fbt>
           ) : (
             <fbt desc="Unit transport description">
-              This unit can transport up to{' '}
-              <fbt:param name="limit">{transports.limit}</fbt:param> units of
-              type{' '}
-              <fbt:list conjunction="or" items={entities} name="entities" />.
+              This unit can transport up to <fbt:param name="limit">{transports.limit}</fbt:param>{' '}
+              units of type <fbt:list conjunction="or" items={entities} name="entities" />.
             </fbt>
           )}
         </p>
@@ -969,9 +885,7 @@ const UnitMovement = memo(function UnitMovement({
   const tileList = sortBy(
     [
       ...groupBy(
-        getAllTiles().filter(
-          (tile) => !tile.isInaccessible() && !tileRestrictions?.has(tile),
-        ),
+        getAllTiles().filter((tile) => !tile.isInaccessible() && !tileRestrictions?.has(tile)),
         (tile) => tile.getMovementCost({ movementType }),
       ),
     ],
@@ -993,17 +907,11 @@ const UnitMovement = memo(function UnitMovement({
               cost={cost}
               key={cost}
               size={
-                tiles.some((tile) => tileFieldHasDecorator(tile.id, biome))
-                  ? 'medium'
-                  : undefined
+                tiles.some((tile) => tileFieldHasDecorator(tile.id, biome)) ? 'medium' : undefined
               }
               tiles={tiles}
             />
-          )) || (
-            <fbt desc="Text for no movement restriction">
-              No movement restrictions.
-            </fbt>
-          )}
+          )) || <fbt desc="Text for no movement restriction">No movement restrictions.</fbt>}
         </Stack>
       </VStack>
     </VStack>

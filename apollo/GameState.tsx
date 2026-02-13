@@ -1,8 +1,5 @@
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  decodeActionResponse,
-  encodeActionResponse,
-} from './EncodedActions.tsx';
+import { decodeActionResponse, encodeActionResponse } from './EncodedActions.tsx';
 import { EncodedGameState, GameState } from './Types.tsx';
 
 export function encodeGameState(gameState: GameState): EncodedGameState {

@@ -5,11 +5,7 @@ const [HideContext, useHide] = createContextHook(() => {
   const [hidden, setHidden] = useState(false);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.shiftKey &&
-        event.code === 'KeyB'
-      ) {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyB') {
         event.preventDefault();
 
         setHidden((hidden) => !hidden);

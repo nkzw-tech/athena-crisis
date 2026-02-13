@@ -77,9 +77,7 @@ const Description = ({
           <div>
             <fbt desc="Achieved power metric">
               Achieved:{' '}
-              <fbt:param name="power">
-                {Math.round(getPowerValue(stats) * 100) / 100}
-              </fbt:param>
+              <fbt:param name="power">{Math.round(getPowerValue(stats) * 100) / 100}</fbt:param>
             </fbt>
           </div>
           <div>
@@ -94,9 +92,8 @@ const Description = ({
         const [styleType, value] = style;
         return (
           <>
-            {getTranslatedPerformanceStyleTypeName(styleType)}{' '}
-            {getStyleValue(styleType, stats)} <Comparator type={styleType} />{' '}
-            {value}
+            {getTranslatedPerformanceStyleTypeName(styleType)} {getStyleValue(styleType, stats)}{' '}
+            <Comparator type={styleType} /> {value}
           </>
         );
       }
@@ -152,24 +149,12 @@ const Card = ({
         ease: [0.34, 1.26, 0.64, 1],
       }}
     >
-      <Stack
-        alignCenter
-        between
-        className={cx(fullStyle, innerStyle)}
-        gap={24}
-        stretch
-      >
+      <Stack alignCenter between className={cx(fullStyle, innerStyle)} gap={24} stretch>
         <VStack between gap>
-          <h2 className={textStyle}>
-            {getTranslatedPerformanceTypeName(type)}
-          </h2>
+          <h2 className={textStyle}>{getTranslatedPerformanceTypeName(type)}</h2>
           {description && (
             <div
-              className={cx(
-                fadeStyle,
-                descriptionStyle,
-                type === 'bonus' && descriptionBonusStyle,
-              )}
+              className={cx(fadeStyle, descriptionStyle, type === 'bonus' && descriptionBonusStyle)}
             >
               {description}
             </div>
@@ -209,22 +194,14 @@ const SummaryCard = ({
         opacity: 0,
         x: '100%',
       }}
-      onAnimationComplete={() =>
-        setTimeout(() => onComplete(), starDuration * 1.5)
-      }
+      onAnimationComplete={() => setTimeout(() => onComplete(), starDuration * 1.5)}
       transition={{
         delay: instant ? 0 : (cardDuration * 1.5) / 1000,
         duration: instant ? 0 : cardDuration / 1000 / 2,
         ease: [0.34, 1.26, 0.64, 1],
       }}
     >
-      <Stack
-        alignCenter
-        between
-        className={cx(fullStyle, summaryInnerStyle)}
-        gap={24}
-        stretch
-      >
+      <Stack alignCenter between className={cx(fullStyle, summaryInnerStyle)} gap={24} stretch>
         <h2 className={textStyle}>
           <fbt desc="Label for summary headline">Summary</fbt>
         </h2>
@@ -268,12 +245,8 @@ export default function MapPerformanceMetrics({
   const [isDone, setIsDone] = useState(false);
   const [wasHidden, setWasHidden] = useState(false);
   const [hide, setHide] = useState(false);
-  const previousPlayerPerforamnce = maybeDecodePlayerPerformance(
-    playerAchievement?.result,
-  );
-  const previousResult = usePerformanceResult(
-    previousPlayerPerforamnce || null,
-  );
+  const previousPlayerPerforamnce = maybeDecodePlayerPerformance(playerAchievement?.result);
+  const previousResult = usePerformanceResult(previousPlayerPerforamnce || null);
 
   const showNextVisibleCard = useCallback(() => {
     setVisibleCard((visibleCard) => visibleCard + 1);
@@ -294,10 +267,7 @@ export default function MapPerformanceMetrics({
     [map, player, result, showNextVisibleCard],
   );
 
-  const center = vec(
-    Math.floor(map.size.width / 2),
-    Math.floor(map.size.height / 2),
-  );
+  const center = vec(Math.floor(map.size.width / 2), Math.floor(map.size.height / 2));
   useEffect(() => {
     if (cards.length) {
       scrollIntoView([center], true);
@@ -310,8 +280,7 @@ export default function MapPerformanceMetrics({
 
   const hasPreviousResult = !!(
     playerAchievement &&
-    playerAchievement.stars <
-      result.filter(([, achieved]) => achieved).length &&
+    playerAchievement.stars < result.filter(([, achieved]) => achieved).length &&
     previousResult?.length
   );
 
@@ -339,12 +308,7 @@ export default function MapPerformanceMetrics({
           ease: [0.34, 1.26, 0.64, 1],
         }}
       >
-        <Box
-          between
-          className={cx(fullStyle, mapPerformanceStyle)}
-          vertical
-          wrap
-        >
+        <Box between className={cx(fullStyle, mapPerformanceStyle)} vertical wrap>
           {mapName && (
             <Stack
               center
@@ -352,19 +316,13 @@ export default function MapPerformanceMetrics({
               onClick={hide ? () => setHide(false) : undefined}
               wrap
             >
-              <h2
-                className={ellipsis}
-                style={{ color: getColor(getTagColor(mapName)) }}
-              >
+              <h2 className={ellipsis} style={{ color: getColor(getTagColor(mapName)) }}>
                 {getMapName(mapName)}
               </h2>
             </Stack>
           )}
           {hide ? (
-            <InlineLink
-              className={cx(fadeStyle, buttonStyle)}
-              onClick={() => setHide(false)}
-            >
+            <InlineLink className={cx(fadeStyle, buttonStyle)} onClick={() => setHide(false)}>
               <Icon icon={ChevronUp} />
             </InlineLink>
           ) : (
@@ -394,25 +352,14 @@ export default function MapPerformanceMetrics({
                     <Icon icon={Close} />
                   </InlineLink>
                   {hasPreviousResult ? (
-                    <Stack
-                      alignCenter
-                      center
-                      className={cx(fadeStyle, bottomStyle)}
-                      gap={16}
-                      wrap
-                    >
+                    <Stack alignCenter center className={cx(fadeStyle, bottomStyle)} gap={16} wrap>
                       <div>
-                        <fbt desc="Label for previous result">
-                          Previous Best
-                        </fbt>
+                        <fbt desc="Label for previous result">Previous Best</fbt>
                       </div>
                       <Stack between wrap>
                         {previousResult.map(([type, achieved]) => (
                           <StarIcon
-                            className={cx(
-                              previousStarStyle,
-                              wasHidden && instantStyle,
-                            )}
+                            className={cx(previousStarStyle, wasHidden && instantStyle)}
                             key={type}
                             size="small"
                             type={achieved ? 'achieved' : 'missed'}

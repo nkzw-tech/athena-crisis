@@ -2,15 +2,8 @@ import './initializeWorker.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import ActionResponseMutator from '@deities/apollo/ActionResponseMutator.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
-import {
-  decodeEffects,
-  Effects,
-  encodeEffects,
-} from '@deities/apollo/Effects.tsx';
-import {
-  decodeAction,
-  encodeActionResponse,
-} from '@deities/apollo/EncodedActions.tsx';
+import { decodeEffects, Effects, encodeEffects } from '@deities/apollo/Effects.tsx';
+import { decodeAction, encodeActionResponse } from '@deities/apollo/EncodedActions.tsx';
 import { encodeGameState } from '@deities/apollo/GameState.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';

@@ -3,11 +3,7 @@ import { useEffect, useRef } from 'react';
 import useNavigate from '../hooks/useNavigate.tsx';
 import { NativeTimeout } from './throttle.tsx';
 
-export default function useActive(
-  isActive: boolean | undefined,
-  click?: () => void,
-  to?: Route,
-) {
+export default function useActive(isActive: boolean | undefined, click?: () => void, to?: Route) {
   const navigate = useNavigate();
   const timer = useRef<NativeTimeout>(null);
 

@@ -20,26 +20,19 @@ export default function getInterestingVectors(
   const isTransportingUnits = unit.isTransportingUnits();
   const player = map.getPlayer(unit);
   const isDefensive =
-    (unit.matchesBehavior(AIBehavior.Defense) ||
-      unit.matchesBehavior(AIBehavior.Adaptive)) &&
-    (!building ||
-      !map.matchesTeam(building, unit) ||
-      !building?.canBuildUnits(player));
+    (unit.matchesBehavior(AIBehavior.Defense) || unit.matchesBehavior(AIBehavior.Adaptive)) &&
+    (!building || !map.matchesTeam(building, unit) || !building?.canBuildUnits(player));
   const isInDanger =
     !isTransportingUnits &&
     (info.isLongRange() ||
       !info.hasAttack() ||
       (unit.isOutOfAmmo() &&
         !map.units.some(
-          (unitB) =>
-            map.matchesPlayer(unitB, unit) &&
-            unitB.info.abilities.has(Ability.Supply),
+          (unitB) => map.matchesPlayer(unitB, unit) && unitB.info.abilities.has(Ability.Supply),
         ))) &&
     from.adjacent().some((vector) => {
       const unitB = map.units.get(vector);
-      return (
-        unitB && map.isNonNeutralOpponent(unit, unitB) && unitB.info.hasAttack()
-      );
+      return unitB && map.isNonNeutralOpponent(unit, unitB) && unitB.info.hasAttack();
     });
 
   const vectors: Array<Vector> = [];
@@ -66,10 +59,7 @@ export default function getInterestingVectors(
 
   if (info.hasAbility(Ability.CreateBuildings)) {
     map.forEachField((vector) => {
-      if (
-        BuildableTiles.has(map.getTileInfo(vector)) &&
-        !map.buildings.has(vector)
-      ) {
+      if (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)) {
         vectors.push(vector);
       }
     });
@@ -79,9 +69,7 @@ export default function getInterestingVectors(
     for (const [vector, building] of map.buildings) {
       if (
         map.matchesPlayer(unit, building) &&
-        (building.info.isHQ() ||
-          building.info.canHeal(unit.info) ||
-          building.canBuildUnits(player))
+        (building.info.isHQ() || building.info.canHeal(unit.info) || building.canBuildUnits(player))
       ) {
         vectors.push(vector);
       }
@@ -118,12 +106,8 @@ export default function getInterestingVectors(
   if (unit.info.canTransportUnits()) {
     if (isTransportingUnits) {
       // Consider either offensive or defensive units but not both at the same time.
-      const transports = unit.transports.some((transportedUnit) =>
-        transportedUnit.info.hasAttack(),
-      )
-        ? unit.transports.filter((transportedUnit) =>
-            transportedUnit.info.hasAttack(),
-          )
+      const transports = unit.transports.some((transportedUnit) => transportedUnit.info.hasAttack())
+        ? unit.transports.filter((transportedUnit) => transportedUnit.info.hasAttack())
         : unit.transports;
 
       // Do not consider ships as interesting vectors for transported units. This ensures that
@@ -131,9 +115,7 @@ export default function getInterestingVectors(
       const entityGroup = getEntityGroup(unit);
       const shouldFilterMap = entityGroup === 'naval' || entityGroup === 'air';
       const buildings = shouldFilterMap
-        ? map.buildings.filter(
-            (building) => building.info.isHQ() || building.label != null,
-          )
+        ? map.buildings.filter((building) => building.info.isHQ() || building.label != null)
         : map.buildings;
 
       const subsetMap = shouldFilterMap
@@ -166,8 +148,7 @@ export default function getInterestingVectors(
             (unitB, vector) =>
               map.matchesPlayer(unit, unitB) &&
               unit.info.canTransportUnitType(unitB.info) &&
-              vector.distance(from) >
-                unitB.info.getRadiusFor(map.getPlayer(unitB)) &&
+              vector.distance(from) > unitB.info.getRadiusFor(map.getPlayer(unitB)) &&
               !vector.adjacentWithDiagonals().some((vector) => {
                 const unitC = map.units.get(vector);
                 return unitC && map.isNonNeutralOpponent(unit, unitC);
@@ -179,16 +160,12 @@ export default function getInterestingVectors(
   }
 
   if (info.hasAttack()) {
-    const units = map.units.filter((unitB) =>
-      map.isNonNeutralOpponent(unit, unitB),
-    );
+    const units = map.units.filter((unitB) => map.isNonNeutralOpponent(unit, unitB));
     if (units.size) {
       vectors.push(...units.keys());
     } else {
       vectors.push(
-        ...map.buildings
-          .filter((buildingB) => map.isNonNeutralOpponent(unit, buildingB))
-          .keys(),
+        ...map.buildings.filter((buildingB) => map.isNonNeutralOpponent(unit, buildingB)).keys(),
       );
     }
   }

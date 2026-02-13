@@ -28,13 +28,7 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
         }
 
         const info = getTileInfo(tile);
-        writeTile(
-          newMap,
-          newModifiers,
-          index,
-          info,
-          getModifier(map, vector, info, layer),
-        );
+        writeTile(newMap, newModifiers, index, info, getModifier(map, vector, info, layer));
 
         // If the tile has a fallback tile, check if placing this tile on top of the
         // fallback tile is still legal. If not, replace it with the fallback.
@@ -64,20 +58,11 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
         };
 
         if (
-          !canPlaceTile(
-            map.copy({ modifiers: newModifiers.slice() }),
-            vector,
-            info,
-          ) ||
+          !canPlaceTile(map.copy({ modifiers: newModifiers.slice() }), vector, info) ||
           !canPlaceOnFallbackTile()
         ) {
           reconcile = true;
-          writeTile(
-            newMap,
-            newModifiers,
-            index,
-            layer === 1 ? null : info.style.fallback || Plain,
-          );
+          writeTile(newMap, newModifiers, index, layer === 1 ? null : info.style.fallback || Plain);
           map = map.copy({
             map: newMap.slice(),
             modifiers: newModifiers.slice(),
@@ -89,13 +74,7 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
           });
           if (
             building &&
-            !canBuild(
-              mapWithoutBuilding,
-              building.info,
-              building.player,
-              vector,
-              true,
-            )
+            !canBuild(mapWithoutBuilding, building.info, building.player, vector, true)
           ) {
             map = mapWithoutBuilding;
           }
@@ -137,12 +116,7 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
         const decorator = newDecorators[index];
         if (
           decorator &&
-          !canPlaceDecorator(
-            map,
-            vector,
-            decorator,
-            () => Number.POSITIVE_INFINITY,
-          )
+          !canPlaceDecorator(map, vector, decorator, () => Number.POSITIVE_INFINITY)
         ) {
           newDecorators[index] = 0;
         }

@@ -23,10 +23,7 @@ export default function getValidationErrorText(error?: ErrorReason) {
       'There is a problem with this map. There are not enough starting funds or income generating buildings to make this map playable.',
       'Map validation error',
     ),
-    'invalid-map': fbt(
-      'There is a problem with this map.',
-      'Map validation error',
-    ),
+    'invalid-map': fbt('There is a problem with this map.', 'Map validation error'),
     'invalid-objectives': fbt(
       'There is a problem with this map. The objectives are not valid.',
       'Map validation error',

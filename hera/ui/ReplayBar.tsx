@@ -1,8 +1,5 @@
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
-import {
-  GameTimerValue,
-  isTimeBankTimer,
-} from '@deities/apollo/lib/GameTimerValue.tsx';
+import { GameTimerValue, isTimeBankTimer } from '@deities/apollo/lib/GameTimerValue.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -25,13 +22,7 @@ import TimeBankTimer from './TimeBankTimer.tsx';
 
 const reload = () => location.reload();
 
-const TimeCard = ({
-  children,
-  player,
-}: {
-  children: ReactNode;
-  player: Player;
-}) => (
+const TimeCard = ({ children, player }: { children: ReactNode; player: Player }) => (
   <Stack alignCenter center className={textStyle} flex1 gap>
     <div className={miniIconStyle}>
       <MiniPlayerIcon gap id={player.id} />
@@ -40,13 +31,7 @@ const TimeCard = ({
   </Stack>
 );
 
-const TimeBankRemainingTime = ({
-  player,
-  timeout,
-}: {
-  player: Player;
-  timeout: number;
-}) => (
+const TimeBankRemainingTime = ({ player, timeout }: { player: Player; timeout: number }) => (
   <TimeCard player={player}>
     <fbt desc="Turn timer with relative time, example: '4:23 remaining'">
       <fbt:param name="relativeTime">
@@ -57,13 +42,7 @@ const TimeBankRemainingTime = ({
   </TimeCard>
 );
 
-const TurnTimer = ({
-  player,
-  timeout,
-}: {
-  player: Player;
-  timeout: number;
-}) => {
+const TurnTimer = ({ player, timeout }: { player: Player; timeout: number }) => {
   const { shortLocale } = useLocaleContext();
   const relativeTime = useRelativeTime(timeout, shortLocale, dateNow);
 
@@ -101,10 +80,7 @@ export default function ReplayBar({
   const hasTimeout = timeout != null && timeout >= dateNow();
 
   return (
-    <ActionBar
-      inlineUI={inlineUI}
-      visible={replayIsVisible || (hasTimeout && !isBot)}
-    >
+    <ActionBar inlineUI={inlineUI} visible={replayIsVisible || (hasTimeout && !isBot)}>
       <VStack between flex1 gap wrap>
         {hasTimeout && !isBot ? (
           isTimeBankTimer(timer) ? (
@@ -155,9 +131,7 @@ export default function ReplayBar({
               <InlineLink
                 className={labelStyle}
                 onClick={() =>
-                  replayState.isPaused
-                    ? actions.resumeReplay()
-                    : actions.pauseReplay()
+                  replayState.isPaused ? actions.resumeReplay() : actions.pauseReplay()
                 }
               >
                 <Icon icon={replayState.isPaused ? Play : Pause} />

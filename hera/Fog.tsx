@@ -64,10 +64,7 @@ export default memo(function CanvasFog({
 
   return (
     <div
-      className={cx(
-        containerStyle,
-        style !== 'floating' && overflowHiddenStyle,
-      )}
+      className={cx(containerStyle, style !== 'floating' && overflowHiddenStyle)}
       style={{
         height: map.size.height * size,
         width: map.size.width * size,

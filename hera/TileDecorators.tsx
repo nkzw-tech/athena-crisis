@@ -33,14 +33,11 @@ export default function TileDecorators({
   const list = [];
   const showDecorators =
     !map.buildings.has(vector) &&
-    (!layer1Tile ||
-      layer1Tile !== StormCloud ||
-      map.getTile(up, 1) !== StormCloud.id);
+    (!layer1Tile || layer1Tile !== StormCloud || map.getTile(up, 1) !== StormCloud.id);
   if (showDecorators) {
     const isVisibleAbove = vision.isVisible(map, up);
     const hasUnitAbove = isVisibleAbove && map.units.has(up);
-    const dim =
-      hasUnitAbove && radius?.fields.has(vector) && radius.fields.has(up);
+    const dim = hasUnitAbove && radius?.fields.has(vector) && radius.fields.has(up);
     if (layer0Tile?.style.decorator?.isVisible(biome)) {
       list.push(
         <TileDecorator

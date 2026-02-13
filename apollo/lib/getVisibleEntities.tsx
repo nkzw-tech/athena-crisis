@@ -8,9 +8,7 @@ import { VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 
 const equals = (a: Entity | undefined, b: Entity) => {
-  return (
-    a && b && a.player === b.player && a.id === b.id && a.health === b.health
-  );
+  return a && b && a.player === b.player && a.id === b.id && a.health === b.health;
 };
 
 export default function getVisibleEntities(
@@ -19,16 +17,13 @@ export default function getVisibleEntities(
   vision: VisionT,
   labels: PlayerIDSet | null,
 ): [ImmutableMap<Vector, Building>, ImmutableMap<Vector, Unit>] {
-  const { buildings: previousBuildings, units: previousUnits } =
-    vision.apply(previousMap);
+  const { buildings: previousBuildings, units: previousUnits } = vision.apply(previousMap);
   const { buildings, units } = vision.apply(currentMap);
 
   const filteredBuildings = buildings.filter(
     (building, vector) => !equals(previousBuildings.get(vector), building),
   );
-  const filteredUnits = units.filter(
-    (unit, vector) => !equals(previousUnits.get(vector), unit),
-  );
+  const filteredUnits = units.filter((unit, vector) => !equals(previousUnits.get(vector), unit));
 
   return labels?.size
     ? [

@@ -1,10 +1,7 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { SkillReward } from '@deities/athena/map/Reward.tsx';
 
-export type SkillRewardActionResponse = Omit<
-  ReceiveRewardActionResponse,
-  'reward'
-> &
+export type SkillRewardActionResponse = Omit<ReceiveRewardActionResponse, 'reward'> &
   Readonly<{
     reward: SkillReward;
   }>;

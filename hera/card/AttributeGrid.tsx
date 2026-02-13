@@ -13,10 +13,7 @@ export default function AttributeGrid({
   rowGap?: 4 | 8 | 16;
 }) {
   return (
-    <div
-      className={gridStyle}
-      style={rowGap && rowGap !== defaultGap ? { rowGap } : undefined}
-    >
+    <div className={gridStyle} style={rowGap && rowGap !== defaultGap ? { rowGap } : undefined}>
       {children}
     </div>
   );

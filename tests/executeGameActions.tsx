@@ -4,10 +4,7 @@ import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionRe
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import { formatAction } from '@deities/apollo/FormatActions.tsx';
-import {
-  EncodedGameActionResponse,
-  GameState,
-} from '@deities/apollo/Types.tsx';
+import { EncodedGameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
@@ -42,15 +39,14 @@ export default async function executeGameActions(
     }
 
     let currentGameState: GameState | null = null;
-    [actionResponse, activeMap, currentGameState, newEffects] =
-      await executeGameAction(
-        currentMap,
-        currentMap.createVisionObject(currentMap.getCurrentPlayer()),
-        newEffects || new Map(),
-        action,
-        AIRegistry,
-        mutateAction,
-      );
+    [actionResponse, activeMap, currentGameState, newEffects] = await executeGameAction(
+      currentMap,
+      currentMap.createVisionObject(currentMap.getCurrentPlayer()),
+      newEffects || new Map(),
+      action,
+      AIRegistry,
+      mutateAction,
+    );
     if (!actionResponse || !activeMap || !currentGameState) {
       throw new Error(
         `executeGameActions: Failed to execute action \`${formatAction(action, {
@@ -58,10 +54,7 @@ export default async function executeGameActions(
         })}\`.`,
       );
     }
-    gameState = gameState.concat(
-      [[actionResponse, activeMap]],
-      currentGameState,
-    );
+    gameState = gameState.concat([[actionResponse, activeMap]], currentGameState);
     if (currentGameState.at(-1)?.[0].type === 'GameEnd') {
       break;
     }
@@ -69,11 +62,7 @@ export default async function executeGameActions(
     currentMap = gameState.at(-1)![1];
   }
 
-  gameState = onGameEnd(
-    gameState,
-    newEffects || effects || new Map(),
-    map.currentPlayer,
-  );
+  gameState = onGameEnd(gameState, newEffects || effects || new Map(), map.currentPlayer);
 
   return [
     gameState,

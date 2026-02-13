@@ -7,9 +7,7 @@ import { PerformanceStyle } from './PlayerPerformance.tsx';
 import { PlainTeams } from './Team.tsx';
 import { PlainUnit } from './Unit.tsx';
 
-export type PlainEntitiesList<T> = ReadonlyArray<
-  readonly [x: number, y: number, entity: T]
->;
+export type PlainEntitiesList<T> = ReadonlyArray<readonly [x: number, y: number, entity: T]>;
 
 type LegacyWinConditions = ReadonlyArray<PlainObjective>;
 
@@ -22,11 +20,7 @@ export type PlainMapConfig = Readonly<{
   initialCharge: number | undefined;
   multiplier: number;
   objectives?: PlainObjectives;
-  performance?: [
-    pace: number | null,
-    power: number | null,
-    style: PerformanceStyle | null,
-  ];
+  performance?: [pace: number | null, power: number | null, style: PerformanceStyle | null];
   seedCapital: number;
   winConditions?: LegacyWinConditions;
 }>;

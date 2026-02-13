@@ -21,9 +21,7 @@ export default function toClientGame(
 ): ClientGame {
   const map = game.state;
   const [lastActionResponse, activeMap] =
-    gameState && gameState.length > 0
-      ? gameState.at(-1)!
-      : [actionResponse, initialActiveMap];
+    gameState && gameState.length > 0 ? gameState.at(-1)! : [actionResponse, initialActiveMap];
   const ended = lastActionResponse?.type === 'GameEnd';
 
   return {

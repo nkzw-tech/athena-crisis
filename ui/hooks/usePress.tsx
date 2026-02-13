@@ -23,10 +23,7 @@ export default function usePress(
 
   const bind = useLongPress(
     useCallback(
-      (
-        event: LongPressReactEvents<Element>,
-        meta: LongPressCallbackMeta<unknown>,
-      ) => {
+      (event: LongPressReactEvents<Element>, meta: LongPressCallbackMeta<unknown>) => {
         hasLongPress.current = true;
         onLongPress(event, meta);
       },

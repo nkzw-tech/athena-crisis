@@ -6,9 +6,7 @@ export default function getRescuableVectors(map: MapData, position: Vector) {
   const unitA = map.units.get(position);
   return new Set(
     unitA?.info.hasAbility(Ability.Rescue)
-      ? position
-          .adjacent()
-          .filter((vector) => map.units.get(vector)?.player === 0)
+      ? position.adjacent().filter((vector) => map.units.get(vector)?.player === 0)
       : [],
   );
 }

@@ -12,19 +12,12 @@ export default function mergeTeams(map: MapData, newTeams: Teams | undefined) {
     if (teams.has(id)) {
       for (const [playerId, player] of newTeam.players) {
         if (player.teamId !== id) {
-          throw new Error(
-            `mergeTeams: 'player.teamId' does not match the team's 'id'.`,
-          );
+          throw new Error(`mergeTeams: 'player.teamId' does not match the team's 'id'.`);
         }
 
         const maybePlayer = map.maybeGetPlayer(playerId);
-        if (
-          maybePlayer &&
-          (maybePlayer.type === player.type || maybePlayer.teamId !== id)
-        ) {
-          throw new Error(
-            `mergeTeams: player '${playerId}' is already defined.`,
-          );
+        if (maybePlayer && (maybePlayer.type === player.type || maybePlayer.teamId !== id)) {
+          throw new Error(`mergeTeams: player '${playerId}' is already defined.`);
         }
 
         team = team.copy({

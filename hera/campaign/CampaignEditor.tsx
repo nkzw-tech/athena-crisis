@@ -34,10 +34,7 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton.tsx';
 import ScrollContainer from '@deities/ui/ScrollContainer.tsx';
-import {
-  TypeaheadDataSource,
-  TypeaheadDataSourceEntry,
-} from '@deities/ui/Typeahead.tsx';
+import { TypeaheadDataSource, TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
 import Check from '@iconify-icons/pixelarticons/check.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
@@ -120,17 +117,11 @@ export default function CampaignEditor({
   const [difficulty, setDifficulty] = useState<AttributeRangeWithZero>(
     validateAttributeRange(data.difficulty) ? data.difficulty : 0,
   );
-  const [description, setDescription] = useState<string>(
-    data?.description || '',
-  );
+  const [description, setDescription] = useState<string>(data?.description || '');
   const [tags, _setTags] = useState<ReadonlyArray<string>>(data?.tags || []);
   const setTags = useSetTags(_setTags);
-  const [users, _setUsers] = useState<ReadonlyArray<UserNode>>(
-    initialUsers || [],
-  );
-  const [saveState, _setSaveState] = useState<CampaignEditorSaveState | null>(
-    null,
-  );
+  const [users, _setUsers] = useState<ReadonlyArray<UserNode>>(initialUsers || []);
+  const [saveState, _setSaveState] = useState<CampaignEditorSaveState | null>(null);
 
   const setSaveState = useCallback((state: CampaignEditorSaveState | null) => {
     if (state && 'id' in state && state?.id === 'saved') {
@@ -163,9 +154,7 @@ export default function CampaignEditor({
 
   const depthMap = useMemo(() => getCampaignLevelDepths(campaign), [campaign]);
 
-  const [campaignName, _setCampaignName] = useState<string>(
-    campaign?.name || '',
-  );
+  const [campaignName, _setCampaignName] = useState<string>(campaign?.name || '');
   const setCampaignName = useCallback(
     (name: string) => {
       _setCampaignName(name);
@@ -174,19 +163,14 @@ export default function CampaignEditor({
     [setHasChanges, _setCampaignName],
   );
 
-  const [campaignEditorState, _setCampaignEditorState] =
-    useState<CampaignEditorState>(() => ({
-      map: initialMapId ? maps.get(initialMapId) : undefined,
-      mode: 'settings',
-    }));
+  const [campaignEditorState, _setCampaignEditorState] = useState<CampaignEditorState>(() => ({
+    map: initialMapId ? maps.get(initialMapId) : undefined,
+    mode: 'settings',
+  }));
 
-  const showMapEditor = !!(
-    campaignEditorState.map || campaignEditorState.createMap
-  );
+  const showMapEditor = !!(campaignEditorState.map || campaignEditorState.createMap);
 
-  const [playStyle, setPlayStyle] = useState<PlayStyle | null>(
-    data?.playStyle || null,
-  );
+  const [playStyle, setPlayStyle] = useState<PlayStyle | null>(data?.playStyle || null);
 
   const saveCampaign = useCallback(
     (type?: 'Export') => {
@@ -195,9 +179,7 @@ export default function CampaignEditor({
           description,
           difficulty,
           id: data.id,
-          levels: JSON.stringify([
-            ...toPlainCampaign<ClientLevelID>(campaign).levels,
-          ]),
+          levels: JSON.stringify([...toPlainCampaign<ClientLevelID>(campaign).levels]),
           name: campaignName,
           next: campaign.next.mapId,
           owners: users.map(({ id }) => id),
@@ -224,9 +206,7 @@ export default function CampaignEditor({
 
   const updateLevel = useCallback(
     (
-      level:
-        | PlainLevel<ClientLevelID>
-        | ReadonlyArray<PlainLevel<ClientLevelID>>,
+      level: PlainLevel<ClientLevelID> | ReadonlyArray<PlainLevel<ClientLevelID>>,
       newMap?: MapNode,
     ) => {
       const plainCampaign = toPlainCampaign(campaign);
@@ -238,9 +218,7 @@ export default function CampaignEditor({
         });
       }
 
-      const levelList: ReadonlyArray<PlainLevel<ClientLevelID>> = Array.isArray(
-        level,
-      )
+      const levelList: ReadonlyArray<PlainLevel<ClientLevelID>> = Array.isArray(level)
         ? level
         : [level];
       for (const levelData of levelList) {
@@ -312,9 +290,7 @@ export default function CampaignEditor({
       });
       setRenderKey((renderKey) => renderKey + 1);
       addMap(map);
-      mapDataSource.updateEntry(
-        new TypeaheadDataSourceEntry(map.name, map.id, map),
-      );
+      mapDataSource.updateEntry(new TypeaheadDataSourceEntry(map.name, map.id, map));
     },
     [addMap, mapDataSource, setCampaignEditorState],
   );
@@ -415,9 +391,7 @@ export default function CampaignEditor({
   const [hasCopied, setHasCopied] = useState(false);
   const onCopy = useCallback(() => {
     if (slug) {
-      App.writeToClipboard(
-        `${window.location.origin}${getCampaignRoute(slug)}`,
-      );
+      App.writeToClipboard(`${window.location.origin}${getCampaignRoute(slug)}`);
       setHasCopied(true);
     }
   }, [slug]);
@@ -459,19 +433,11 @@ export default function CampaignEditor({
           size="wide"
           toggleExpanded={() => void 0}
         >
-          <Stack
-            alignCenter
-            between
-            className={primaryButtonStyle}
-            gap
-            onClick={onCopy}
-          >
+          <Stack alignCenter between className={primaryButtonStyle} gap onClick={onCopy}>
             <div className={ellipsis}>
               {campaignName || (
                 <span className={lightColorStyle}>
-                  <fbt desc="Fallback name for untitled campaign">
-                    Untitled Campaign
-                  </fbt>
+                  <fbt desc="Fallback name for untitled campaign">Untitled Campaign</fbt>
                 </span>
               )}
             </div>
@@ -479,12 +445,7 @@ export default function CampaignEditor({
               <div>
                 <InlineLink selectedText={hasCopied}>
                   {hasCopied ? (
-                    <Stack
-                      alignCenter
-                      between
-                      className={smallTextStyle}
-                      gap={2}
-                    >
+                    <Stack alignCenter between className={smallTextStyle} gap={2}>
                       <Icon height={18} icon={Check} width={18} />
                       <fbt desc="Text for copying a link">Copied</fbt>
                     </Stack>
@@ -496,13 +457,7 @@ export default function CampaignEditor({
             )}
           </Stack>
         </PrimaryExpandableMenuButton>
-        <ZoomButton
-          hide={hidden}
-          max={2}
-          position="top"
-          setZoom={setZoom}
-          zoom={zoom}
-        />
+        <ZoomButton hide={hidden} max={2} position="top" setZoom={setZoom} zoom={zoom} />
         <MenuButton
           className={mapCreateButtonStyle}
           hide={hidden}
@@ -612,13 +567,12 @@ export default function CampaignEditor({
                   {'id' in saveState ? (
                     saveState.id === 'cycle' ? (
                       <fbt desc="Error message for campaign change causing a cycle">
-                        Campaign cycle detected. Please select a map that
-                        hasn&apos;t come up on the path yet.
+                        Campaign cycle detected. Please select a map that hasn&apos;t come up on the
+                        path yet.
                       </fbt>
                     ) : saveState.id === 'duplicate' ? (
                       <fbt desc="Error message for when a map already exists in this location">
-                        The selected map is already part of this campaign&apos;s
-                        path.
+                        The selected map is already part of this campaign&apos;s path.
                       </fbt>
                     ) : saveState.id === 'name-exists' ? (
                       <fbt desc="A campaign with the same name already exists">
@@ -626,8 +580,7 @@ export default function CampaignEditor({
                       </fbt>
                     ) : saveState.id === 'invalid-name' ? (
                       <fbt desc="Campaign save error with invalid campaign name">
-                        Invalid campaign name. Please choose a different
-                        campaign name.
+                        Invalid campaign name. Please choose a different campaign name.
                       </fbt>
                     ) : saveState.id === 'cannot-remove-self' ? (
                       <fbt desc="Campaign label error when removing yourself">
@@ -651,9 +604,7 @@ export default function CampaignEditor({
             <DialogScrollContainer key="dialogue" navigate>
               <VStack between gap={24} wrap>
                 <h1>
-                  <fbt desc="Headline for all campaign dialogue">
-                    All Dialogue
-                  </fbt>
+                  <fbt desc="Headline for all campaign dialogue">All Dialogue</fbt>
                 </h1>
                 <LevelDialogue
                   depthMap={depthMap}

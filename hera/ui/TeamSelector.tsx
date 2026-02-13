@@ -19,14 +19,7 @@ import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import Stack, { VStack } from '@nkzw/stack';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PlayerIcon from './PlayerIcon.tsx';
 
 export default function TeamSelector({
@@ -47,8 +40,7 @@ export default function TeamSelector({
   const [showGhost, setShowGhost] = useState(false);
   const [previousPlayer, setPreviousPlayer] = useState<PlayerID | null>(null);
   const [originalMap] = useState(map);
-  const isTeamPlayMap =
-    originalMap && originalMap.getPlayers().length !== originalMap.teams.size;
+  const isTeamPlayMap = originalMap && originalMap.getPlayers().length !== originalMap.teams.size;
 
   const teams = useMemo(
     () =>
@@ -70,10 +62,7 @@ export default function TeamSelector({
     [map.active, teams],
   );
   const players: ReadonlyArray<PlayerID> = useMemo(
-    () =>
-      sortedTeams.flatMap(({ players }) =>
-        [...players.values()].map(({ id }) => id),
-      ),
+    () => sortedTeams.flatMap(({ players }) => [...players.values()].map(({ id }) => id)),
 
     [sortedTeams],
   );
@@ -97,9 +86,7 @@ export default function TeamSelector({
         const player = map.getPlayer(id);
         if (currentTeam !== null && currentTeam !== player.teamId) {
           const newTeams = updatePlayer(
-            teams.map((team) =>
-              team.copy({ players: team.players.delete(player.id) }),
-            ),
+            teams.map((team) => team.copy({ players: team.players.delete(player.id) })),
             player.copy({ teamId: currentTeam }),
           );
           const newTeam = newTeams.get(currentTeam)!;
@@ -113,9 +100,7 @@ export default function TeamSelector({
 
           setHasChanged(
             !sortedTeams.every(({ players }) =>
-              players.every(
-                ({ id, teamId }) => originalMap.getPlayer(id).teamId === teamId,
-              ),
+              players.every(({ id, teamId }) => originalMap.getPlayer(id).teamId === teamId),
             ),
           );
 
@@ -144,10 +129,7 @@ export default function TeamSelector({
               : null;
 
           const teamPlayers = sortBy(
-            [
-              ...team.players.map(({ id }) => id).values(),
-              ...(ghostID ? [ghostID] : []),
-            ],
+            [...team.players.map(({ id }) => id).values(), ...(ghostID ? [ghostID] : [])],
             (id) => id,
           );
 
@@ -163,15 +145,12 @@ export default function TeamSelector({
                   [
                     ...new Set([
                       ...team.players.map(({ id }) => id).valueSeq(),
-                      ...(currentPlayer && currentTeam === team.id
-                        ? [currentPlayer]
-                        : []),
+                      ...(currentPlayer && currentTeam === team.id ? [currentPlayer] : []),
                     ]),
                   ],
                   0.5,
                 ),
-                zIndex:
-                  currentPlayer && team.players.has(currentPlayer) ? 2 : 1,
+                zIndex: currentPlayer && team.players.has(currentPlayer) ? 2 : 1,
               }}
               wrap
             >
@@ -221,8 +200,8 @@ export default function TeamSelector({
       {isTeamPlayMap && hasChanged ? (
         <p className={lightStyle}>
           <fbt desc="Explanation for imbalanced team selection">
-            This map was designed with teamplay in mind. Changing the team setup
-            might imbalance the game and make it unenjoyable for some players.
+            This map was designed with teamplay in mind. Changing the team setup might imbalance the
+            game and make it unenjoyable for some players.
           </fbt>
         </p>
       ) : null}
@@ -343,13 +322,11 @@ const PlayerIconWithDrag = ({
         }}
         onPointerMove={(event) => {
           if (isDragging) {
-            const element = [
-              ...document.elementsFromPoint(event.clientX, event.clientY),
-            ].find((element) => element.hasAttribute('data-drop-target'));
+            const element = [...document.elementsFromPoint(event.clientX, event.clientY)].find(
+              (element) => element.hasAttribute('data-drop-target'),
+            );
             if (element) {
-              const maybePlayerID = parseInteger(
-                element.getAttribute('data-drop-target') || '',
-              );
+              const maybePlayerID = parseInteger(element.getAttribute('data-drop-target') || '');
               if (maybePlayerID) {
                 onEnter(toPlayerID(maybePlayerID));
               }
@@ -374,9 +351,7 @@ const PlayerIconWithDrag = ({
 };
 
 const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState<
-    Readonly<{ height?: number; width?: number }>
-  >({
+  const [windowSize, setWindowSize] = useState<Readonly<{ height?: number; width?: number }>>({
     height: undefined,
     width: undefined,
   });

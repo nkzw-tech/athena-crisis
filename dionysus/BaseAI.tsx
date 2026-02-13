@@ -13,9 +13,7 @@ class AIInterruptException {
   public readonly name = 'AIInterruptException';
 }
 
-const isAIInterruptException = (
-  exception: unknown,
-): exception is AIInterruptException => {
+const isAIInterruptException = (exception: unknown): exception is AIInterruptException => {
   const error = exception as { name?: string };
   return 'name' in error && error.name === 'AIInterruptException';
 };
@@ -43,9 +41,7 @@ export default abstract class BaseAI {
   public constructor(private effects: Effects) {}
 
   protected getVision(map: MapData) {
-    return (
-      this.vision || (this.vision = map.createVisionObject(map.currentPlayer))
-    );
+    return this.vision || (this.vision = map.createVisionObject(map.currentPlayer));
   }
 
   protected applyVision(map: MapData): MapData {
@@ -81,16 +77,10 @@ export default abstract class BaseAI {
 
     this.gameState = this.gameState.concat([[actionResponse, currentMap]]);
 
-    const [gameState, effects] = applyConditions(
-      previousMap,
-      this.effects,
-      actionResponse,
-    );
+    const [gameState, effects] = applyConditions(previousMap, this.effects, actionResponse);
     this.effects = effects;
     if (gameState?.length) {
-      if (
-        gameState.some(([actionResponse]) => actionResponse.type === 'Swap')
-      ) {
+      if (gameState.some(([actionResponse]) => actionResponse.type === 'Swap')) {
         this.tryAttacking();
       }
 
@@ -104,10 +94,7 @@ export default abstract class BaseAI {
     }
   }
 
-  protected executeMove(
-    map: MapData,
-    action: MoveAction,
-  ): [map: MapData | null, blocked: boolean] {
+  protected executeMove(map: MapData, action: MoveAction): [map: MapData | null, blocked: boolean] {
     const gameStateStartIndex = this.gameState.length + 1;
     const currentMap = this.execute(map, action);
     const state = this.gameState.at(-1);
@@ -116,8 +103,7 @@ export default abstract class BaseAI {
       const [actionResponse, activeMap] = state;
       if (
         action.type === 'Move' &&
-        ((actionResponse.type === 'Move' &&
-          !action.to.equals(actionResponse.to)) ||
+        ((actionResponse.type === 'Move' && !action.to.equals(actionResponse.to)) ||
           hasSwap(this.gameState, gameStateStartIndex))
       ) {
         return [activeMap, true];

@@ -1,8 +1,4 @@
-import {
-  Criteria,
-  Objective,
-  ObjectiveID,
-} from '@deities/athena/Objectives.tsx';
+import { Criteria, Objective, ObjectiveID } from '@deities/athena/Objectives.tsx';
 import { css, cx } from '@emotion/css';
 import getCriteriaName from '../lib/getCriteriaName.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';

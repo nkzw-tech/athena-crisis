@@ -80,11 +80,7 @@ const names = {
   ],
 };
 
-const amount = Math.min(
-  names.male.length,
-  names.female.length,
-  names.unknown.length,
-);
+const amount = Math.min(names.male.length, names.female.length, names.unknown.length);
 
 export default function getUnitName(gender: Gender, name: number) {
   return names[gender][name < 0 ? name * -1 - 1 : name];

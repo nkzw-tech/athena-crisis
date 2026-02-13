@@ -45,8 +45,7 @@ export default function applyActionResponse(
     type !== 'SetPlayerTime' &&
     type !== 'GameEnd' &&
     (type !== 'EndTurn' ||
-      (actionResponse.current.player === currentPlayer.id &&
-        !actionResponse.miss))
+      (actionResponse.current.player === currentPlayer.id && !actionResponse.miss))
   ) {
     map = map.copy({
       teams: updatePlayer(map.teams, currentPlayer.copy({ misses: 0 })),
@@ -64,36 +63,18 @@ export default function applyActionResponse(
         unitA = unitA.setFuel(fuel).move();
 
         if (unitB && !unitB.info.canTransportUnitType(unitA.info)) {
-          throw new Error(
-            `Tried to move a ${unitA.info.name} into a ${unitB.info.name} at ${to}.`,
-          );
+          throw new Error(`Tried to move a ${unitA.info.name} into a ${unitB.info.name} at ${to}.`);
         }
       }
       return map.copy({
         units: unitA
-          ? units.set(
-              to,
-              unitB
-                ? unitB.load(unitA.transport())
-                : canAct
-                  ? unitA
-                  : unitA.complete(),
-            )
+          ? units.set(to, unitB ? unitB.load(unitA.transport()) : canAct ? unitA : unitA.complete())
           : map.units,
       });
     }
     case 'AttackUnit': {
-      const {
-        chargeA,
-        chargeB,
-        from,
-        hasCounterAttack,
-        playerA,
-        playerB,
-        to,
-        unitA,
-        unitB,
-      } = actionResponse;
+      const { chargeA, chargeB, from, hasCounterAttack, playerA, playerB, to, unitA, unitB } =
+        actionResponse;
       let { units } = map;
       const originalUnitA = map.units.get(from);
       const originalUnitB = map.units.get(to);
@@ -104,10 +85,7 @@ export default function applyActionResponse(
               from,
               maybeConvertPlayer(
                 map,
-                (hasCounterAttack
-                  ? originalUnitA.deactivateShield()
-                  : originalUnitA
-                )
+                (hasCounterAttack ? originalUnitA.deactivateShield() : originalUnitA)
                   .copy(unitA)
                   .maybeUpdateAIBehavior()
                   .complete(),
@@ -123,10 +101,7 @@ export default function applyActionResponse(
               to,
               maybeConvertPlayer(
                 map,
-                originalUnitB
-                  .copy(unitB)
-                  .maybeUpdateAIBehavior()
-                  .deactivateShield(),
+                originalUnitB.copy(unitB).maybeUpdateAIBehavior().deactivateShield(),
                 to,
                 originalUnitA,
                 'complete',
@@ -138,22 +113,16 @@ export default function applyActionResponse(
       let actualPlayerB = map.getPlayer(playerB);
 
       const lostUnits =
-        unitA &&
-        originalUnitA &&
-        units.get(from)?.player === originalUnitA?.player
+        unitA && originalUnitA && units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
       let destroyedUnits =
-        unitB &&
-        originalUnitB &&
-        units.get(to)?.player === originalUnitB?.player
+        unitB && originalUnitB && units.get(to)?.player === originalUnitB?.player
           ? 0
           : originalUnitB?.count() || 1;
 
-      const oneShotB =
-        originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
-      const oneShotA =
-        originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
+      const oneShotB = originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
+      const oneShotA = originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
 
       if (
         !unitB &&
@@ -165,24 +134,14 @@ export default function applyActionResponse(
         destroyedUnits = Math.max(0, destroyedUnits - 1);
       }
 
-      actualPlayerA = maybeRecoverUnitCost(
-        !unitA,
-        actualPlayerA,
-        originalUnitA,
-      );
-      actualPlayerB = maybeRecoverUnitCost(
-        !unitB,
-        actualPlayerB,
-        originalUnitB,
-      );
+      actualPlayerA = maybeRecoverUnitCost(!unitA, actualPlayerA, originalUnitA);
+      actualPlayerB = maybeRecoverUnitCost(!unitB, actualPlayerB, originalUnitB);
 
       return map.copy({
         teams: updatePlayers(map.teams, [
           actualPlayerA
             .modifyStatistics({
-              damage: originalUnitB
-                ? Math.max(0, originalUnitB.health - (unitB?.health || 0))
-                : 0,
+              damage: originalUnitB ? Math.max(0, originalUnitB.health - (unitB?.health || 0)) : 0,
               destroyedUnits,
               lostUnits,
               oneShots: oneShotB,
@@ -231,10 +190,7 @@ export default function applyActionResponse(
               from,
               maybeConvertPlayer(
                 map,
-                (hasCounterAttack
-                  ? originalUnitA.deactivateShield()
-                  : originalUnitA
-                )
+                (hasCounterAttack ? originalUnitA.deactivateShield() : originalUnitA)
                   .copy(unitA)
                   .maybeUpdateAIBehavior()
                   .complete(),
@@ -252,33 +208,22 @@ export default function applyActionResponse(
             : units;
 
       const lostUnitsA =
-        unitA &&
-        originalUnitA &&
-        units.get(from)?.player === originalUnitA?.player
+        unitA && originalUnitA && units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
       const lostUnitsC = originalUnitC && !unitC ? originalUnitC.count() : 0;
-      const oneShotC =
-        originalUnitC && originalUnitC.health >= MaxHealth && !unitC ? 1 : 0;
-      const oneShotA =
-        originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
+      const oneShotC = originalUnitC && originalUnitC.health >= MaxHealth && !unitC ? 1 : 0;
+      const oneShotA = originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
 
       // Update `playerA` and `playerB` first, then update `playerC` which might equal `playerB`.
       let actualPlayerA = map.getPlayer(playerA);
-      actualPlayerA = maybeRecoverUnitCost(
-        !unitA,
-        actualPlayerA,
-        originalUnitA,
-      );
+      actualPlayerA = maybeRecoverUnitCost(!unitA, actualPlayerA, originalUnitA);
 
       const teams = originalBuilding
         ? updatePlayers(map.teams, [
             actualPlayerA
               .modifyStatistics({
-                damage: Math.max(
-                  0,
-                  originalBuilding.health - (building?.health || 0),
-                ),
+                damage: Math.max(0, originalBuilding.health - (building?.health || 0)),
                 destroyedBuildings: building ? 0 : 1,
                 destroyedUnits: lostUnitsC,
                 lostUnits: lostUnitsA,
@@ -300,17 +245,11 @@ export default function applyActionResponse(
           : null;
 
       if (actualPlayerC) {
-        actualPlayerC = maybeRecoverUnitCost(
-          !unitC,
-          actualPlayerC,
-          originalUnitC,
-        );
+        actualPlayerC = maybeRecoverUnitCost(!unitC, actualPlayerC, originalUnitC);
       }
 
       return map.copy({
-        buildings: building
-          ? map.buildings.set(to, building)
-          : map.buildings.delete(to),
+        buildings: building ? map.buildings.set(to, building) : map.buildings.delete(to),
         teams: actualPlayerC
           ? updatePlayer(
               teams,
@@ -335,22 +274,15 @@ export default function applyActionResponse(
       const unit = map.units.get(from);
       return building
         ? map.copy({
-            buildings: map.buildings.set(
-              from,
-              building.setHealth(MaxHealth).complete(),
-            ),
+            buildings: map.buildings.set(from, building.setHealth(MaxHealth).complete()),
             teams: updatePlayer(
               map.teams,
               map.getPlayer(building.player).modifyStatistics({ captured: 1 }),
             ),
-            units: unit
-              ? map.units.set(from, unit.move().complete())
-              : map.units,
+            units: unit ? map.units.set(from, unit.move().complete()) : map.units,
           })
         : map.copy({
-            units: unit
-              ? map.units.set(from, unit.capture().complete())
-              : map.units,
+            units: unit ? map.units.set(from, unit.capture().complete()) : map.units,
           });
     }
     case 'Supply': {
@@ -371,10 +303,7 @@ export default function applyActionResponse(
       return map.copy({
         buildings: map.buildings.set(
           from,
-          (skipBehaviorRotation
-            ? building
-            : building.rotateAIBehavior()
-          ).complete(),
+          (skipBehaviorRotation ? building : building.rotateAIBehavior()).complete(),
         ),
         teams: updatePlayer(
           map.teams,
@@ -392,9 +321,7 @@ export default function applyActionResponse(
       return map.copy({
         units:
           unitA && unitB
-            ? map.units
-                .set(from, unitA.move().drop(unitB))
-                .set(to, unitB.deploy())
+            ? map.units.set(from, unitA.move().drop(unitB)).set(to, unitB.deploy())
             : map.units,
       });
     }
@@ -434,10 +361,7 @@ export default function applyActionResponse(
           map: newMap,
           modifiers: newModifiers,
           teams: unit
-            ? updatePlayer(
-                map.teams,
-                map.getPlayer(unit.player).modifyFunds(-CreateTracksCost),
-              )
+            ? updatePlayer(map.teams, map.getPlayer(unit.player).modifyFunds(-CreateTracksCost))
             : map.teams,
           units: unit ? map.units.set(from, unit.complete()) : map.units,
         }),
@@ -447,23 +371,17 @@ export default function applyActionResponse(
     case 'Fold': {
       const { from } = actionResponse;
       const unit = map.units.get(from);
-      return unit
-        ? map.copy({ units: map.units.set(from, unit.fold().complete()) })
-        : map;
+      return unit ? map.copy({ units: map.units.set(from, unit.fold().complete()) }) : map;
     }
     case 'Unfold': {
       const { from } = actionResponse;
       const unit = map.units.get(from);
-      return unit
-        ? map.copy({ units: map.units.set(from, unit.unfold().complete()) })
-        : map;
+      return unit ? map.copy({ units: map.units.set(from, unit.unfold().complete()) }) : map;
     }
     case 'CompleteUnit': {
       const { from } = actionResponse;
       const unit = map.units.get(from);
-      return unit
-        ? map.copy({ units: map.units.set(from, unit.complete()) })
-        : map;
+      return unit ? map.copy({ units: map.units.set(from, unit.complete()) }) : map;
     }
     case 'CompleteBuilding': {
       const { from } = actionResponse;
@@ -483,15 +401,9 @@ export default function applyActionResponse(
         if (player.skills.has(Skill.Shield)) {
           unitB = unitB.activateShield();
         }
-        const units = map.units.set(
-          to,
-          unitB.modifyHealth(HealAmount).removeStatusEffect(),
-        );
+        const units = map.units.set(to, unitB.modifyHealth(HealAmount).removeStatusEffect());
         return map.copy({
-          teams: updatePlayer(
-            map.teams,
-            player.modifyFunds(-getHealCost(unitB, player)),
-          ),
+          teams: updatePlayer(map.teams, player.modifyFunds(-getHealCost(unitB, player))),
           units: unitA ? units.set(from, unitA.complete()) : units,
         });
       }
@@ -512,11 +424,7 @@ export default function applyActionResponse(
       const unitB = map.units.get(to)!;
       const rescueFinished = unitB.isBeingRescuedBy(player);
       let newUnit = rescueFinished
-        ? unitB
-            .stopBeingRescued()
-            .setPlayer(player)
-            .setHealth(MaxHealth)
-            .recover()
+        ? unitB.stopBeingRescued().setPlayer(player).setHealth(MaxHealth).recover()
         : unitB.rescue(player);
       if (name != null) {
         newUnit = newUnit.withName(name);
@@ -524,10 +432,7 @@ export default function applyActionResponse(
       const units = map.units.set(to, newUnit);
       return map.copy({
         teams: rescueFinished
-          ? updatePlayer(
-              map.teams,
-              map.getPlayer(player).modifyStatistic('rescuedUnits', 1),
-            )
+          ? updatePlayer(map.teams, map.getPlayer(player).modifyStatistic('rescuedUnits', 1))
           : map.teams,
         units: unitA ? units.set(from, unitA.complete()) : units,
       });
@@ -555,9 +460,7 @@ export default function applyActionResponse(
       const unit = actionResponse.unit || map.units.get(to);
       const player = map.getPlayer((playerID || building?.player)!);
       return toggleLightningTile(map, to).copy({
-        buildings: building
-          ? map.buildings.set(from, building.complete())
-          : undefined,
+        buildings: building ? map.buildings.set(from, building.complete()) : undefined,
         teams: updatePlayers(map.teams, [
           player.setCharge(player.charge - Charge).modifyStatistics({
             damage: unit ? unit.health : 0,
@@ -567,9 +470,7 @@ export default function applyActionResponse(
           unit
             ? maybeRecoverUnitCost(
                 !!unit,
-                map
-                  .getPlayer(unit.player)
-                  .modifyStatistic('lostUnits', unit.count()),
+                map.getPlayer(unit.player).modifyStatistic('lostUnits', unit.count()),
                 unit,
               )
             : null,
@@ -597,9 +498,7 @@ export default function applyActionResponse(
     case 'SetPlayer':
     case 'SetViewer': {
       const currentPlayer = map.maybeGetPlayer(
-        actionResponse.type === 'SetPlayer'
-          ? actionResponse.player
-          : vision.currentViewer,
+        actionResponse.type === 'SetPlayer' ? actionResponse.player : vision.currentViewer,
       )?.id;
       return currentPlayer ? map.copy({ currentPlayer }) : map;
     }
@@ -645,15 +544,10 @@ export default function applyActionResponse(
       // Crystal activations may happen prior to the player appearing on the map, or
       // are just used for effects.
       const player =
-        actionResponse.player != null
-          ? map.maybeGetPlayer(actionResponse.player)
-          : null;
+        actionResponse.player != null ? map.maybeGetPlayer(actionResponse.player) : null;
       return player?.isHumanPlayer()
         ? map.copy({
-            teams: updatePlayer(
-              map.teams,
-              player.activateCrystal(actionResponse.crystal),
-            ),
+            teams: updatePlayer(map.teams, player.activateCrystal(actionResponse.crystal)),
           })
         : map;
     }
@@ -680,10 +574,7 @@ export default function applyActionResponse(
           return map;
         default: {
           rewardType satisfies never;
-          throw new UnknownTypeError(
-            'applyActionResponse:ReceiveReward',
-            rewardType,
-          );
+          throw new UnknownTypeError('applyActionResponse:ReceiveReward', rewardType);
         }
       }
     }
@@ -699,27 +590,22 @@ export default function applyActionResponse(
     case 'IncreaseFunds': {
       const player = map.getPlayer(actionResponse.player);
       return map.copy({
-        teams: updatePlayer(
-          map.teams,
-          player.modifyFunds(actionResponse.funds),
-        ),
+        teams: updatePlayer(map.teams, player.modifyFunds(actionResponse.funds)),
       });
     }
     case 'Swap': {
       const { source, sourceUnit, target, targetUnit } = actionResponse;
       if (targetUnit && canLoad(map, targetUnit, sourceUnit, target)) {
         return map.copy({
-          units: map.units
-            .delete(source)
-            .set(target, targetUnit.load(sourceUnit.transport())),
+          units: map.units.delete(source).set(target, targetUnit.load(sourceUnit.transport())),
         });
       }
 
       return map.copy({
-        units: (targetUnit
-          ? map.units.set(source, targetUnit)
-          : map.units.delete(source)
-        ).set(target, sourceUnit),
+        units: (targetUnit ? map.units.set(source, targetUnit) : map.units.delete(source)).set(
+          target,
+          sourceUnit,
+        ),
       });
     }
     case 'SetPlayerTime': {

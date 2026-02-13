@@ -11,11 +11,7 @@ export default function getInterestingVectorsByAbilities(
   map: MapData,
   currentPlayer: Player,
   label: PlayerID | null,
-  {
-    canCreateBuildUnits,
-    canCreateCaptureUnits,
-    canCreateSupplyUnits,
-  }: PotentialUnitAbilities,
+  { canCreateBuildUnits, canCreateCaptureUnits, canCreateSupplyUnits }: PotentialUnitAbilities,
 ): ReadonlyArray<Vector> {
   const vectors: Array<Vector> = [];
 
@@ -37,10 +33,7 @@ export default function getInterestingVectorsByAbilities(
 
   if (canCreateBuildUnits) {
     map.forEachField((vector) => {
-      if (
-        BuildableTiles.has(map.getTileInfo(vector)) &&
-        !map.buildings.has(vector)
-      ) {
+      if (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)) {
         vectors.push(vector);
       }
     });
@@ -53,25 +46,20 @@ export default function getInterestingVectorsByAbilities(
     ) {
       if (
         objectiveHasVectors(objective) &&
-        (!objective.label?.size ||
-          (label != null && objective.label.has(label)))
+        (!objective.label?.size || (label != null && objective.label.has(label)))
       ) {
         vectors.push(...objective.vectors);
       }
     }
   }
 
-  const units = map.units.filter((unitB) =>
-    map.isNonNeutralOpponent(currentPlayer, unitB),
-  );
+  const units = map.units.filter((unitB) => map.isNonNeutralOpponent(currentPlayer, unitB));
   if (units.size) {
     vectors.push(...units.keys());
   } else {
     vectors.push(
       ...map.buildings
-        .filter((buildingB) =>
-          map.isNonNeutralOpponent(currentPlayer, buildingB),
-        )
+        .filter((buildingB) => map.isNonNeutralOpponent(currentPlayer, buildingB))
         .keys(),
     );
   }

@@ -12,10 +12,7 @@ import BuildingTile from '../Building.tsx';
 import Tick from '../Tick.tsx';
 import { Actions, PlayerDetails } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
-import Flyout, {
-  FlyoutItemWithHighlight,
-  shouldPositionLeft,
-} from './Flyout.tsx';
+import Flyout, { FlyoutItemWithHighlight, shouldPositionLeft } from './Flyout.tsx';
 
 export default function EntityPickerFlyout({
   animationConfig,
@@ -56,10 +53,7 @@ export default function EntityPickerFlyout({
         const newDirection = { ...event.detail };
         if ((!direction || direction?.y === 0) && newDirection.y === 0) {
           const isLeft = shouldPositionLeft(position, width);
-          if (
-            (isLeft && newDirection.x === -1) ||
-            (!isLeft && newDirection.x === 1)
-          ) {
+          if ((isLeft && newDirection.x === -1) || (!isLeft && newDirection.x === 1)) {
             newDirection.y = -1;
           }
         }
@@ -70,8 +64,7 @@ export default function EntityPickerFlyout({
     'menu',
   );
 
-  const selected =
-    direction?.y === -1 ? 'building' : direction?.y === 1 ? 'unit' : null;
+  const selected = direction?.y === -1 ? 'building' : direction?.y === 1 ? 'unit' : null;
 
   useInput(
     'accept',
@@ -120,11 +113,7 @@ export default function EntityPickerFlyout({
                   ?.equippedUnitCustomizations.get(unit.id)}
                 firstPlayerID={firstPlayerID}
                 highlightStyle={
-                  selected === 'unit' || highlight
-                    ? unit.canMove()
-                      ? 'move'
-                      : 'idle'
-                    : undefined
+                  selected === 'unit' || highlight ? (unit.canMove() ? 'move' : 'idle') : undefined
                 }
                 size={tileSize}
                 tile={Plain}

@@ -9,9 +9,7 @@ export default function updateActivePlayers(
   userId?: string,
 ) {
   const currentPlayer =
-    currentPlayerID && map.active.includes(currentPlayerID)
-      ? currentPlayerID
-      : map.active[0];
+    currentPlayerID && map.active.includes(currentPlayerID) ? currentPlayerID : map.active[0];
 
   return map.copy({
     currentPlayer,

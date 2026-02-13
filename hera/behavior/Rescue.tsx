@@ -17,10 +17,7 @@ export default class Rescue {
     const unitB = radius?.fields.has(vector) && map.units.get(vector);
     if (selectedPosition && unitB) {
       requestFrame(() =>
-        rescueAction(
-          actions,
-          ...action(state, RescueAction(selectedPosition, vector)),
-        ),
+        rescueAction(actions, ...action(state, RescueAction(selectedPosition, vector))),
       );
       return null;
     }

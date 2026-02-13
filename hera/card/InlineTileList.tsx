@@ -1,10 +1,6 @@
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
-import {
-  TileField,
-  TileInfo,
-  tilesToTileMap,
-} from '@deities/athena/info/Tile.tsx';
+import { TileField, TileInfo, tilesToTileMap } from '@deities/athena/info/Tile.tsx';
 import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifiers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
@@ -131,9 +127,7 @@ export default function InlineTileList({
           tile={tiles[index]}
           tileField={tile}
           unit={units?.[index]}
-          unitCustomization={
-            !unitGroups?.[index] ? unitCustomizations?.[index] : undefined
-          }
+          unitCustomization={!unitGroups?.[index] ? unitCustomizations?.[index] : undefined}
           unitGroup={unitGroups?.[index]}
         />
       ))}
@@ -201,8 +195,7 @@ const InlineTile = ({
   useEffect(() => {
     if (!initialUnit && unitGroup?.length) {
       const timer = setInterval(
-        () =>
-          setCurrentUnitId((id) => (unitGroup.length <= id + 1 ? 0 : id + 1)),
+        () => setCurrentUnitId((id) => (unitGroup.length <= id + 1 ? 0 : id + 1)),
         interval,
       );
       return () => clearInterval(timer);
@@ -222,9 +215,7 @@ const InlineTile = ({
     return singleTilesToModifiers(
       withModifiers(
         baseMap.copy({
-          buildings: building
-            ? baseMap.buildings.set(vector, building)
-            : baseMap.buildings,
+          buildings: building ? baseMap.buildings.set(vector, building) : baseMap.buildings,
           units: unit ? baseMap.units.set(vector, unit) : baseMap.units,
         }),
       ),
@@ -235,8 +226,7 @@ const InlineTile = ({
 
   const props = usePress({
     onLongPress: useCallback(
-      (event) =>
-        onLongPress?.(event, { building, decorator, index, tile, unit }),
+      (event) => onLongPress?.(event, { building, decorator, index, tile, unit }),
       [building, decorator, index, onLongPress, tile, unit],
     ),
     onPress: useCallback(
@@ -259,9 +249,7 @@ const InlineTile = ({
         )}
         key={index}
         onMouseEnter={
-          onSelect && !(isHighlighted || isSelected)
-            ? () => setShowCursor(index)
-            : undefined
+          onSelect && !(isHighlighted || isSelected) ? () => setShowCursor(index) : undefined
         }
         onMouseLeave={onSelect && isHighlighted ? hideCursor : undefined}
         {...props()}
@@ -276,11 +264,7 @@ const InlineTile = ({
           vision={vision}
         />
         {(!lazyDecorators || isVisible) && decorator && (
-          <Decorators
-            map={map}
-            paused={!isVisible || !decorator.animation}
-            tileSize={TileSize}
-          />
+          <Decorators map={map} paused={!isVisible || !decorator.animation} tileSize={TileSize} />
         )}
         <TileDecorators
           getLayer={() => 0}
@@ -328,12 +312,7 @@ const InlineTile = ({
             />
           ))}
         {isHighlighted || isSelected ? (
-          <Cursor
-            color={isSelected ? 'red' : null}
-            position={vector}
-            size={TileSize}
-            zIndex={3}
-          />
+          <Cursor color={isSelected ? 'red' : null} position={vector} size={TileSize} zIndex={3} />
         ) : null}
       </div>
       {extraInfo != null && <div className={extraInfoStyle}>{extraInfo}</div>}
@@ -365,9 +344,7 @@ const InlineUnit = ({
     biome={biome}
     firstPlayerID={1}
     getLayer={() => 0}
-    highlightStyle={
-      isSelected ? 'move' : isHighlighted ? 'move-null' : undefined
-    }
+    highlightStyle={isSelected ? 'move' : isHighlighted ? 'move-null' : undefined}
     maybeOutline={isHighlighted}
     position={vector}
     requestFrame={requestAnimationFrame}
@@ -395,11 +372,7 @@ const InlineUnitWithUnitState = ({
   tile: TileInfo;
   unit: Unit;
 } & Pick<ComponentProps<typeof UnitTile>, 'customSprite'>) => {
-  const [entity, , props] = useUnitState(
-    unit,
-    biome,
-    AnimationConfig.AnimationDuration * offset,
-  );
+  const [entity, , props] = useUnitState(unit, biome, AnimationConfig.AnimationDuration * offset);
   return (
     <InlineUnit
       biome={biome}

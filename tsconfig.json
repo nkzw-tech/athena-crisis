@@ -28,19 +28,8 @@
     "strict": true,
     "target": "es2022"
   },
-  "exclude": [
-    "dist/",
-    "electron/forge.config.cjs",
-    "node_modules",
-    "scripts/fixtures/"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "electron/**.js",
-    "electron/**.cjs",
-    "scripts/setup.js"
-  ],
+  "exclude": ["dist/", "electron/forge.config.cjs", "node_modules", "scripts/fixtures/"],
+  "include": ["**/*.ts", "**/*.tsx", "electron/**.js", "electron/**.cjs", "scripts/setup.js"],
   "ts-node": {
     "compilerOptions": {
       "module": "esnext",

@@ -7,11 +7,7 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
-import {
-  HeavyArtillery,
-  Pioneer,
-  SmallTank,
-} from '@deities/athena/info/Unit.tsx';
+import { HeavyArtillery, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
@@ -50,9 +46,7 @@ const map = withModifiers(
     config: {
       fog: true,
     },
-    map: [
-      1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1,
-    ],
+    map: [1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1],
     size: {
       height: 5,
       width: 5,
@@ -155,8 +149,7 @@ test('create building and create unit actions', async () => {
     CreateUnit (5,5 → 5,5) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 200, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       CreateBuilding (5,4) { building: House { id: 2, health: 100, player: 0 }, free: false }
       CompleteUnit (1,1)
@@ -194,8 +187,7 @@ test('destroy hidden building', async () => {
     EndTurnAction(),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       HiddenDestroyedBuilding (→ 4,5)
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
@@ -222,9 +214,7 @@ test('do not attempt attacking a building via long-range', async () => {
       biome: Biome.Swamp,
       fog: true,
     },
-    map: [
-      4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1, 1,
-    ],
+    map: [4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1, 1],
     size: {
       height: 5,
       width: 5,
@@ -246,9 +236,7 @@ test('do not attempt attacking a building via long-range', async () => {
   const newMap = withModifiers(
     map.copy({
       buildings: map.buildings.set(to, VerticalBarrier.create(0).setHealth(1)),
-      units: map.units
-        .set(from, HeavyArtillery.create(2))
-        .set(vec(1, 1), Pioneer.create(1)),
+      units: map.units.set(from, HeavyArtillery.create(2)).set(vec(1, 1), Pioneer.create(1)),
     }),
   );
 

@@ -1,32 +1,17 @@
-import {
-  getTileInfo,
-  TileField,
-  TileInfo,
-} from '@deities/athena/info/Tile.tsx';
+import { getTileInfo, TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
 import { getLargeAttributeRangeValue } from '@deities/athena/lib/getAttributeRange.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import {
-  AnimationConfig,
-  DoubleSize,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import MapData, {
-  ModifierField,
-  SizeVector,
-} from '@deities/athena/MapData.tsx';
+import MapData, { ModifierField, SizeVector } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
-import cssVar, {
-  applyVar,
-  CSSVariables,
-  insetStyle,
-} from '@deities/ui/cssVar.tsx';
+import cssVar, { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
@@ -109,10 +94,7 @@ const Tile = ({
           <Stack className={cx(ellipsis, overflowStyle)} gap>
             <fbt desc="Tile cover">Cover: </fbt>
             <div className={iconStyle}>
-              <LargeRange
-                end
-                value={getLargeAttributeRangeValue(CoverRange, cover)}
-              />
+              <LargeRange end value={getLargeAttributeRangeValue(CoverRange, cover)} />
             </div>
           </Stack>
         </div>
@@ -136,9 +118,7 @@ const renderUnit = (
     const ammo =
       info.attack.weapons &&
       [...info.attack.weapons.values()].map((weapon) =>
-        weapon.supply
-          ? String(unit.ammo?.get(weapon.id) || 0) + '/' + weapon.supply
-          : '∞',
+        weapon.supply ? String(unit.ammo?.get(weapon.id) || 0) + '/' + weapon.supply : '∞',
       );
 
     return (
@@ -146,9 +126,7 @@ const renderUnit = (
         <UnitTile
           animationConfig={animationConfig}
           biome={biome}
-          customSprite={playerDetails
-            .get(unit.player)
-            ?.equippedUnitCustomizations.get(unit.id)}
+          customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
           firstPlayerID={firstPlayerID}
           size={tileSize}
           tile={tile}
@@ -197,11 +175,7 @@ const renderBuilding = (
       <Box
         between
         blur
-        className={cx(
-          boxStyle,
-          buildingStyle,
-          building.label != null && buildingWithLabelStyle,
-        )}
+        className={cx(boxStyle, buildingStyle, building.label != null && buildingWithLabelStyle)}
         gap
       >
         <BuildingTile
@@ -211,12 +185,7 @@ const renderBuilding = (
           position={vec(1, 2)}
           size={tileSize}
         />
-        <Stack
-          alignCenter
-          between
-          className={cx(ellipsis, overflowStyle)}
-          gap={4}
-        >
+        <Stack alignCenter between className={cx(ellipsis, overflowStyle)} gap={4}>
           <div className={ellipsis}>{building.info.name}</div>
           <Stack alignCenter between gap={4}>
             <Icon className={iconStyle} icon={Heart} />
@@ -252,8 +221,7 @@ export default memo(function MapInfo({
   const isLeft = useRef(true);
   useEffect(() => {
     const listener = (event: MouseEvent) => {
-      const left =
-        window.innerWidth >= lg || event.clientX > window.innerWidth / 2.5;
+      const left = window.innerWidth >= lg || event.clientX > window.innerWidth / 2.5;
       if (left !== isLeft.current) {
         isLeft.current = left;
         document.documentElement.style.setProperty(
@@ -303,12 +271,7 @@ export default memo(function MapInfo({
           vector={position}
           vision={vision}
         />
-        {renderBuilding(
-          map.buildings.get(position),
-          map.config.biome,
-          tileSize,
-          isVisible,
-        )}
+        {renderBuilding(map.buildings.get(position), map.config.biome, tileSize, isVisible)}
         {isVisible &&
           renderUnit(
             map.units.get(position),
@@ -323,11 +286,7 @@ export default memo(function MapInfo({
     </Tick>
   );
 
-  return inlineUI ? (
-    <div className={inlineStyle}>{content}</div>
-  ) : (
-    <Portal>{content}</Portal>
-  );
+  return inlineUI ? <div className={inlineStyle}>{content}</div> : <Portal>{content}</Portal>;
 });
 
 const vars = new CSSVariables<'left-offset' | 'width'>('mi');

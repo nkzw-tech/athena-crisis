@@ -67,16 +67,7 @@ export const useInlineLink = ({
         alignCenter && alignCenterStyle,
         inline && inlineStyle,
       ),
-    [
-      active,
-      alignCenter,
-      disabled,
-      hover,
-      initialClassName,
-      inline,
-      selected,
-      selectedText,
-    ],
+    [active, alignCenter, disabled, hover, initialClassName, inline, selected, selectedText],
   );
   const gap = _gap === true ? defaultGap : _gap;
 
@@ -151,10 +142,7 @@ const linkStyle = css`
   align-content: center;
 
   &.selected {
-    ${pixelBorder(
-      applyVar('text-color-active'),
-      vars.apply('pixel-border-size'),
-    )}
+    ${pixelBorder(applyVar('text-color-active'), vars.apply('pixel-border-size'))}
     background-color: ${applyVar('background-color-light')};
     color: ${applyVar('text-color-active')};
   }
@@ -169,10 +157,7 @@ const linkStyle = css`
   }
 
   &:not(.disabled):not(.active):not(.selected-text).hover {
-    ${pixelBorder(
-      applyVar('background-color-active'),
-      vars.apply('pixel-border-size'),
-    )}
+    ${pixelBorder(applyVar('background-color-active'), vars.apply('pixel-border-size'))}
 
     color: ${applyVar('text-color-bright')};
     background-color: ${applyVar('background-color-active')};
@@ -189,18 +174,12 @@ const linkStyle = css`
   }
 
   &:not(.disabled):not(.active).selected.hover {
-    ${pixelBorder(
-      applyVar('text-color-active'),
-      vars.apply('pixel-border-size'),
-    )}
+    ${pixelBorder(applyVar('text-color-active'), vars.apply('pixel-border-size'))}
   }
 
   @media (hover: hover) {
     &:not(.disabled).selected:hover {
-      ${pixelBorder(
-        applyVar('text-color-active'),
-        vars.apply('pixel-border-size'),
-      )}
+      ${pixelBorder(applyVar('text-color-active'), vars.apply('pixel-border-size'))}
       background-color: ${applyVar('background-color-light')};
       color: ${applyVar('text-color-active')};
     }
@@ -210,10 +189,7 @@ const linkStyle = css`
     }
 
     &:not(.disabled):not(.active):not(.selected-text):hover {
-      ${pixelBorder(
-        applyVar('background-color-active'),
-        vars.apply('pixel-border-size'),
-      )}
+      ${pixelBorder(applyVar('background-color-active'), vars.apply('pixel-border-size'))}
 
       color: ${applyVar('text-color-bright')};
       background-color: ${applyVar('background-color-active')};
@@ -239,16 +215,8 @@ const inlineStyle = css`
   display: inline;
 `;
 
-export const KeyboardShortcut = ({
-  button,
-  shortcut,
-}: {
-  button?: true;
-  shortcut: string;
-}) => (
-  <span
-    className={cx(keyboardShortcutStyle, button && buttonKeyboardShortcutStyle)}
-  >
+export const KeyboardShortcut = ({ button, shortcut }: { button?: true; shortcut: string }) => (
+  <span className={cx(keyboardShortcutStyle, button && buttonKeyboardShortcutStyle)}>
     {shortcut}
   </span>
 );

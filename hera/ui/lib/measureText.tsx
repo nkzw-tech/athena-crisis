@@ -18,8 +18,7 @@ export default function measureText(
 
   context.font = `${fontSize}px ${getCurrentFonts().join(', ')}`;
 
-  const getLetterSpacing = (text: string) =>
-    isSafari ? letterSpacing * (text.length - 1) : 0;
+  const getLetterSpacing = (text: string) => (isSafari ? letterSpacing * (text.length - 1) : 0);
 
   const maxWidth = Math.max(80, containerWidth);
   const lines: Array<string> = [];
@@ -28,12 +27,9 @@ export default function measureText(
   let space = true;
   while (split.length) {
     const word = split[0];
-    const nextLine = `${
-      previousLine !== '' ? previousLine + (space ? ' ' : '') : ''
-    }${word}`;
+    const nextLine = `${previousLine !== '' ? previousLine + (space ? ' ' : '') : ''}${word}`;
     space = true;
-    const width =
-      context.measureText(nextLine).width + getLetterSpacing(nextLine);
+    const width = context.measureText(nextLine).width + getLetterSpacing(nextLine);
     if (width >= maxWidth) {
       // If the word itself is too long to fit on a single line, start splitting it at arbitrary points.
       const width = context.measureText(word).width + getLetterSpacing(word);

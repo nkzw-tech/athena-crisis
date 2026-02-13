@@ -1,9 +1,5 @@
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
-import {
-  HumanPlayer,
-  PlaceholderPlayer,
-  PlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { HumanPlayer, PlaceholderPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -35,10 +31,7 @@ export default function changePlayer(
   );
 
   if (id === 0 || !existingPlayer || !teams.get(player.teamId)) {
-    teams = teams.set(
-      player.teamId,
-      new Team(player.teamId, '', ImmutableMap()),
-    );
+    teams = teams.set(player.teamId, new Team(player.teamId, '', ImmutableMap()));
   }
 
   return {

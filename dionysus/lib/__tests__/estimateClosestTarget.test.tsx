@@ -7,9 +7,7 @@ import estimateClosestTarget from '../estimateClosestTarget.tsx';
 
 const map = withModifiers(
   MapData.createMap({
-    map: [
-      1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1,
-    ],
+    map: [1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1],
     size: { height: 5, width: 5 },
   }),
 );

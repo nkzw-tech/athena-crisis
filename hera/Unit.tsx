@@ -6,10 +6,7 @@ import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import hasLowAmmoSupply from '@deities/athena/lib/hasLowAmmoSupply.tsx';
 import isFuelConsumingUnit from '@deities/athena/lib/isFuelConsumingUnit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  MaxHealth,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
@@ -36,11 +33,7 @@ import {
   UnitHealAnimation,
 } from './MapAnimations.tsx';
 import Tick from './Tick.tsx';
-import {
-  GetLayerFunction,
-  RequestFrameFunction,
-  TimerFunction,
-} from './Types.tsx';
+import { GetLayerFunction, RequestFrameFunction, TimerFunction } from './Types.tsx';
 
 enum ActionStyle {
   Capture = 1,
@@ -94,9 +87,7 @@ const useAmmoStyle = (unit: Unit) => {
       if (ammoArray.every(([, s]) => s === 0)) {
         return AmmoStyle.None;
       } else if (
-        ammoArray.some(([weapon, supply]) =>
-          hasLowAmmoSupply(unit.info, weapon, supply),
-        )
+        ammoArray.some(([weapon, supply]) => hasLowAmmoSupply(unit.info, weapon, supply))
       ) {
         return AmmoStyle.Low;
       }
@@ -177,8 +168,7 @@ const Status = memo(function Status({
   secondaryActionStyle: ActionStyle | null;
 }) {
   const hasOne = !!(fuelStyle || ammoStyle);
-  const hasSecondaryAction =
-    secondaryActionStyle && secondaryActionStyle !== actionStyle;
+  const hasSecondaryAction = secondaryActionStyle && secondaryActionStyle !== actionStyle;
   return (
     <>
       <Action
@@ -232,24 +222,14 @@ const Health = ({
         opacity: hide ? 0 : 1,
         right: hasStatus ? 9 : 2,
         [vars.set('health-color')]:
-          health < MaxHealth / 3
-            ? '#e00'
-            : health < (MaxHealth / 3) * 2
-              ? '#ee0'
-              : '#0e0',
+          health < MaxHealth / 3 ? '#e00' : health < (MaxHealth / 3) * 2 ? '#ee0' : '#0e0',
         [vars.set('health')]: health + '%',
       }}
     />
   ) : null;
 };
 
-const StatusEffect = ({
-  hide,
-  unit: { statusEffect },
-}: {
-  hide: boolean;
-  unit: Unit;
-}) => {
+const StatusEffect = ({ hide, unit: { statusEffect } }: { hide: boolean; unit: Unit }) => {
   return statusEffect ? (
     <div
       className={cx(
@@ -271,41 +251,27 @@ const Shield = ({
   unit: Unit;
 }) => {
   return shield ? (
-    <div
-      className={cx(absoluteStyle, className, shieldStyle, hide && hideStyle)}
-    />
+    <div className={cx(absoluteStyle, className, shieldStyle, hide && hideStyle)} />
   ) : null;
 };
 
-const getSpritePosition = (
-  unit: Unit,
-  animation: UnitAnimation | undefined,
-  tile: TileInfo,
-) => {
-  const isUnfolding =
-    animation?.type === 'fold' || animation?.type === 'unfold';
+const getSpritePosition = (unit: Unit, animation: UnitAnimation | undefined, tile: TileInfo) => {
+  const isUnfolding = animation?.type === 'fold' || animation?.type === 'unfold';
   const { sprite } = unit.info;
   const vector =
-    ((isUnfolding || animation?.type === 'unitExplosion') &&
-      animation.position) ||
+    ((isUnfolding || animation?.type === 'unitExplosion') && animation.position) ||
     (unit.isUnfolded() && sprite.unfold) ||
     (animation?.type === 'unitHeal' && sprite.healSprite?.position) ||
-    (animation?.type === 'attack' && sprite.attackStance
-      ? sprite.position.down(1)
-      : null) ||
+    (animation?.type === 'attack' && sprite.attackStance ? sprite.position.down(1) : null) ||
     (unit.isTransportingUnits() &&
-      ((unit.transports.length > 1 && sprite.transportsMany) ||
-        sprite.transports)) ||
+      ((unit.transports.length > 1 && sprite.transportsMany) || sprite.transports)) ||
     (sprite.alternative && !isSea(tile.id) && sprite.alternative) ||
     sprite.position;
 
   return sprite.leaderAlternative && !unit.isLeader() ? vector.down(6) : vector;
 };
 
-const getDirection = (
-  attackDirection: AttackDirection,
-  spriteDirection: 1 | -1,
-) => {
+const getDirection = (attackDirection: AttackDirection, spriteDirection: 1 | -1) => {
   const { direction } = attackDirection;
   return direction === 'left' || direction === 'right'
     ? spriteDirection === -1
@@ -314,17 +280,12 @@ const getDirection = (
     : direction;
 };
 
-const getAnimationStyle = (
-  animation: UnitAnimation | undefined,
-  spriteDirection: 1 | -1,
-) => {
+const getAnimationStyle = (animation: UnitAnimation | undefined, spriteDirection: 1 | -1) => {
   if (
     (animation?.type === 'attack' || animation?.type === 'capture') &&
     animation.weapon.animation.recoil
   ) {
-    return recoilAnimationStyle[
-      getDirection(animation.direction, spriteDirection)
-    ];
+    return recoilAnimationStyle[getDirection(animation.direction, spriteDirection)];
   } else if (animation?.type === 'attackUnitFlash') {
     return attackFlashStyle[getDirection(animation.direction, spriteDirection)];
   } else if (
@@ -339,13 +300,10 @@ const getAnimationStyle = (
 
 const getDirectionOffset = (info: UnitInfo, direction?: AnimationDirection) =>
   direction
-    ? (direction == 'down' ? 1 : direction == 'up' ? 2 : 0) *
-      info.sprite.directionOffset
+    ? (direction == 'down' ? 1 : direction == 'up' ? 2 : 0) * info.sprite.directionOffset
     : 0;
 
-const isSpawnAnimation = (
-  animation: UnitAnimation | undefined,
-): animation is UnitAnimation => {
+const isSpawnAnimation = (animation: UnitAnimation | undefined): animation is UnitAnimation => {
   return animation?.type === 'spawn' || animation?.type === 'despawn';
 };
 
@@ -404,9 +362,7 @@ export default function UnitTile({
   const hasAttackStance = isAttacking && info.sprite.attackStance;
 
   const spawnAnimation =
-    !animationConfig.Instant && isSpawnAnimation(animation)
-      ? animation.type
-      : null;
+    !animationConfig.Instant && isSpawnAnimation(animation) ? animation.type : null;
   const isAnimating =
     animation &&
     (hasAttackStance ||
@@ -434,8 +390,7 @@ export default function UnitTile({
       : spriteAnimationOffset * idleOffset;
 
   const animationIsLocked =
-    player === 0 ||
-    (isAnimating && (animation.locked || !isFuelConsumingUnit(unit, tile)));
+    player === 0 || (isAnimating && (animation.locked || !isFuelConsumingUnit(unit, tile)));
 
   // The `hasAttackStance` piece here is a hack to ensure that React will
   // reset `backgroundPositionX` upon reconciliation after the animation
@@ -445,21 +400,15 @@ export default function UnitTile({
   const backgroundPositionX = useMemo(
     () =>
       `calc(${hasAttackStance ? '1/1' : '1'} * ${
-        animationIsLocked
-          ? ''
-          : `(${Tick.vars.apply('unit')} * ${-spriteSize}px) - `
+        animationIsLocked ? '' : `(${Tick.vars.apply('unit')} * ${-spriteSize}px) - `
       }${(spritePosition.x + animationOffset) * spriteSize}px)`,
     [animationIsLocked, animationOffset, hasAttackStance, spritePosition.x],
   );
   const backgroundPositionY = -(spritePosition.y * spriteSize) + 'px';
-  const positionOffset =
-    (isAnimating && animation?.offset) || info.sprite.offset || {};
-  const unitDirection =
-    getUnitDirection(firstPlayerID, unit) === 'left' ? -1 : 1;
+  const positionOffset = (isAnimating && animation?.offset) || info.sprite.offset || {};
+  const unitDirection = getUnitDirection(firstPlayerID, unit) === 'left' ? -1 : 1;
   const { direction: currentDirection = null } =
-    (animation && 'direction' in animation && animation.direction) ||
-    direction ||
-    {};
+    (animation && 'direction' in animation && animation.direction) || direction || {};
 
   const style = useMemo(() => {
     const { x, y } = isMoving ? animation.from : position;
@@ -476,17 +425,13 @@ export default function UnitTile({
       [vars.set('direction')]: '' + actualUnitDirection,
       [vars.set('recoil-delay')]: `${
         animationConfig.ExplosionStep *
-        (hasAttackStance &&
-        animation.hasAttackStance &&
-        animation.weapon.animation.recoil
+        (hasAttackStance && animation.hasAttackStance && animation.weapon.animation.recoil
           ? 8
           : isAttacking
             ? animation.weapon.animation.recoilDelay
             : 4)
       }ms`,
-      [vars.set('x')]: `${
-        (x - 1) * size + (positionOffset.x || 0) * actualUnitDirection
-      }px`,
+      [vars.set('x')]: `${(x - 1) * size + (positionOffset.x || 0) * actualUnitDirection}px`,
       [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
       [vars.set('z-index')]: zIndex,
       width: size + 'px',
@@ -530,11 +475,7 @@ export default function UnitTile({
       }
 
       const animate = (
-        animation:
-          | UnfoldAnimation
-          | UnitExplosionAnimation
-          | AttackAnimation
-          | UnitHealAnimation,
+        animation: UnfoldAnimation | UnitExplosionAnimation | AttackAnimation | UnitHealAnimation,
       ) => {
         const { frames } = animation;
         if (!frames) {
@@ -552,8 +493,7 @@ export default function UnitTile({
           return;
         }
 
-        const rate =
-          AnimationConfig.AnimationDuration / animationConfig.AnimationDuration;
+        const rate = AnimationConfig.AnimationDuration / animationConfig.AnimationDuration;
         if (animation.type === 'unitExplosion') {
           AudioPlayer.playSound('Explosion/Infantry', rate);
         } else if (animation.type === 'fold' || animation.type === 'unfold') {
@@ -576,14 +516,9 @@ export default function UnitTile({
 
           const totalProgress = timestamp - start;
           const animationStep =
-            Math.round(totalProgress / animationConfig.UnitAnimationStep) %
-            frames;
+            Math.round(totalProgress / animationConfig.UnitAnimationStep) % frames;
           const backgroundPositionX =
-            -(
-              info.sprite.position.x +
-              animationOffset +
-              Math.abs(offset - animationStep)
-            ) *
+            -(info.sprite.position.x + animationOffset + Math.abs(offset - animationStep)) *
               spriteSize +
             'px';
           unitStyle.backgroundPositionX = backgroundPositionX;
@@ -598,39 +533,25 @@ export default function UnitTile({
 
           if (animation.locked) {
             const multiplier =
-              animation.type === 'unitExplosion' &&
-              animation.fade &&
-              !animation.withExplosion
+              animation.type === 'unitExplosion' && animation.fade && !animation.withExplosion
                 ? 1.5
                 : 0;
             const backgroundPositionX =
-              -(
-                info.sprite.position.x +
-                animationOffset +
-                Math.abs(offset - animationStep)
-              ) *
+              -(info.sprite.position.x + animationOffset + Math.abs(offset - animationStep)) *
                 spriteSize +
               'px';
             unitStyle.backgroundPositionX = backgroundPositionX;
             if (shadowStyle) {
               shadowStyle.backgroundPositionX = backgroundPositionX;
             }
-            style.setProperty(
-              vars.set('transition-multiplier'),
-              String(multiplier),
-            );
+            style.setProperty(vars.set('transition-multiplier'), String(multiplier));
             style.opacity = '0';
-            scheduleTimer(
-              complete,
-              animationConfig.UnitMoveDuration * (multiplier + 1),
-            );
+            scheduleTimer(complete, animationConfig.UnitMoveDuration * (multiplier + 1));
           } else if (hasAttackStance) {
             if (hasAttackStance === 'short') {
               const backgroundPositionX = `calc((${Tick.vars.apply(
                 'unit-attack-stance',
-              )} * ${-spriteSize}px) - ${
-                (spritePosition.x + animationOffset) * spriteSize
-              }px)`;
+              )} * ${-spriteSize}px) - ${(spritePosition.x + animationOffset) * spriteSize}px)`;
               unitStyle.backgroundPositionX = backgroundPositionX;
               if (shadowStyle) {
                 shadowStyle.backgroundPositionX = backgroundPositionX;
@@ -644,8 +565,7 @@ export default function UnitTile({
         };
 
         const backgroundPositionX =
-          -(info.sprite.position.x + animationOffset + offset) * spriteSize +
-          'px';
+          -(info.sprite.position.x + animationOffset + offset) * spriteSize + 'px';
         const backgroundPositionY =
           -(
             spritePosition.y +
@@ -666,10 +586,7 @@ export default function UnitTile({
         }
 
         if (animation.locked) {
-          scheduleTimer(
-            () => requestFrame(next),
-            animationConfig.UnitMoveDuration,
-          );
+          scheduleTimer(() => requestFrame(next), animationConfig.UnitMoveDuration);
         } else {
           requestFrame(next);
         }
@@ -694,10 +611,8 @@ export default function UnitTile({
         const { style } = elementRef.current;
         const { style: unitStyle } = innerElementRef.current;
         const shadowStyle = shadowElementRef.current?.style;
-        const rate =
-          AnimationConfig.AnimationDuration / animationConfig.AnimationDuration;
-        const stepDuration =
-          animationConfig.UnitMoveDuration * (info.sprite.slow ? 1.5 : 1);
+        const rate = AnimationConfig.AnimationDuration / animationConfig.AnimationDuration;
+        const stepDuration = animationConfig.UnitMoveDuration * (info.sprite.slow ? 1.5 : 1);
         const third = stepDuration / 3;
         const quarter = stepDuration / 4;
         const pixelsPerStep = size / stepDuration;
@@ -718,11 +633,7 @@ export default function UnitTile({
         const setDirection = () => {
           const direction = spawnAnimation ? 0 : toY > 0 ? 1 : toY < 0 ? 2 : 0;
           const backgroundPositionY =
-            -(
-              currentSpritePosition.y +
-              direction * info.sprite.directionOffset
-            ) *
-              spriteSize +
+            -(currentSpritePosition.y + direction * info.sprite.directionOffset) * spriteSize +
             'px';
           unitStyle.backgroundPositionY = backgroundPositionY;
           if (shadowStyle) {
@@ -741,17 +652,11 @@ export default function UnitTile({
           const progress = Math.min(timestamp - start, stepDuration);
           style.setProperty(
             vars.set('x'),
-            posX +
-              (positionOffset.x || 0) +
-              progress * pixelsPerStep * toX +
-              'px',
+            posX + (positionOffset.x || 0) + progress * pixelsPerStep * toX + 'px',
           );
           style.setProperty(
             vars.set('y'),
-            posY +
-              (positionOffset.y || 0) +
-              progress * pixelsPerStep * toY +
-              'px',
+            posY + (positionOffset.y || 0) + progress * pixelsPerStep * toY + 'px',
           );
           if (progress > stepDuration / 2 && previousTile !== tile) {
             currentSpritePosition = getSpritePosition(unit, animation, tile);
@@ -769,9 +674,7 @@ export default function UnitTile({
         const playSound = () => {
           const { movementType } = info;
           const type =
-            (movementType.alternative &&
-              !isSea(tile.id) &&
-              movementType.alternative) ||
+            (movementType.alternative && !isSea(tile.id) && movementType.alternative) ||
             movementType;
 
           if (previousType && previousType.sound !== type.sound) {
@@ -829,10 +732,7 @@ export default function UnitTile({
 
             if (!spawnAnimation) {
               style.zIndex = String(getLayer(to.y, 'unit'));
-              style.setProperty(
-                vars.set('direction'),
-                String(toX * -info.sprite.direction || 1),
-              );
+              style.setProperty(vars.set('direction'), String(toX * -info.sprite.direction || 1));
             }
             if (pathVisibility?.length) {
               // `pathVisibility` has one more item than `path`. The first item
@@ -870,17 +770,11 @@ export default function UnitTile({
       move(
         isSpawnAnimation(animation)
           ? {
-              from: isDespawn
-                ? position
-                : new SpriteVector(position.x, position.y + 1 / 12),
+              from: isDespawn ? position : new SpriteVector(position.x, position.y + 1 / 12),
               // This will be handled through the <Spawn /> animation component.
               onComplete: () => null,
               partial: false,
-              path: [
-                isDespawn
-                  ? new SpriteVector(position.x, position.y + 1 / 12)
-                  : position,
-              ],
+              path: [isDespawn ? new SpriteVector(position.x, position.y + 1 / 12) : position],
               pathVisibility: isDespawn ? [true, false] : null,
               tiles: [tile],
               type: 'move',
@@ -935,9 +829,7 @@ export default function UnitTile({
     getAnimationStyle(animation, info.sprite.direction) ||
     (!isCompleted &&
       power &&
-      (maybeOutline
-        ? brightnessAnimationOutlineStyle
-        : brightnessAnimationStyle));
+      (maybeOutline ? brightnessAnimationOutlineStyle : brightnessAnimationStyle));
 
   const highlightOutline =
     highlightStyle &&
@@ -946,21 +838,17 @@ export default function UnitTile({
     !isAnimating &&
     !isMoving &&
     !animationStyle;
-  const shadowImage =
-    ShadowImages.get(unitSprite) || ShadowImages.get(info.sprite.name);
+  const shadowImage = ShadowImages.get(unitSprite) || ShadowImages.get(info.sprite.name);
   const innerStyle = {
     backgroundPositionX,
     backgroundPositionY: currentDirection
-      ? -(spritePosition.y + getDirectionOffset(info, currentDirection)) *
-          spriteSize +
-        'px'
+      ? -(spritePosition.y + getDirectionOffset(info, currentDirection)) * spriteSize + 'px'
       : backgroundPositionY,
     ...getFlashDelay(animation, animationConfig),
   };
 
   const hide = !!animation;
-  const secondaryActionStyle =
-    !isCompleted && unit.hasMoved() ? ActionStyle.Moved : null;
+  const secondaryActionStyle = !isCompleted && unit.hasMoved() ? ActionStyle.Moved : null;
   const actionStyle = unit.isTransportingUnits()
     ? ActionStyle.Transport
     : unit.isCapturing()
@@ -1035,15 +923,9 @@ export default function UnitTile({
           }}
         />
       )}
-      <div
-        className={innerClassName}
-        ref={innerElementRef}
-        style={innerStyle}
-      />
+      <div className={innerClassName} ref={innerElementRef} style={innerStyle} />
       {unit.statusEffect ? <StatusEffect hide={hide} unit={unit} /> : null}
-      {unit.shield ? (
-        <Shield className={completedStyles} hide={hide} unit={unit} />
-      ) : null}
+      {unit.shield ? <Shield className={completedStyles} hide={hide} unit={unit} /> : null}
       <Status
         actionStyle={actionStyle}
         ammoStyle={ammoStyle}
@@ -1054,11 +936,7 @@ export default function UnitTile({
         rescuer={actionStyle === ActionStyle.Rescue ? unit.getRescuer() : null}
         secondaryActionStyle={secondaryActionStyle}
       />
-      <Health
-        hasStatus={!!(ammoStyle || fuelStyle || actionStyle)}
-        hide={hide}
-        unit={unit}
-      />
+      <Health hasStatus={!!(ammoStyle || fuelStyle || actionStyle)} hide={hide} unit={unit} />
     </div>
   );
 }
@@ -1095,9 +973,7 @@ const relativeStyle = css`
 `;
 
 const transition = `
-  filter calc(${applyVar('animation-duration')} / 2 * ${vars.apply(
-    'transition-multiplier',
-  )})
+  filter calc(${applyVar('animation-duration')} / 2 * ${vars.apply('transition-multiplier')})
     ease-in-out,
   opacity calc(${applyVar('unit-move-duration')} * ${vars.apply(
     'transition-multiplier',

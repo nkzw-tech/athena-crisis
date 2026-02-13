@@ -59,9 +59,7 @@ export default function maybeCreatePlayers(
       team.copy({
         players: team.players.set(
           player,
-          createBotWithName(
-            new PlaceholderPlayer(player, player, 0, undefined, new Set()),
-          ),
+          createBotWithName(new PlaceholderPlayer(player, player, 0, undefined, new Set())),
         ),
       }),
     );

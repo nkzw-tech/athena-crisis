@@ -9,14 +9,9 @@ import Info from '@deities/ui/icons/Info.tsx';
 import { css } from '@emotion/css';
 import sortBy from '@nkzw/core/sortBy.js';
 import BuildingTile from '../Building.tsx';
-import toTransformOrigin, {
-  ClientCoordinates,
-} from '../lib/toTransformOrigin.tsx';
+import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
 import FlashFlyout from '../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../ui/Flyout.tsx';
 import { selectFallback } from './Behavior.tsx';
@@ -41,11 +36,7 @@ export default class CreateBuilding {
     } = state;
     if (selectedPosition && selectedUnit) {
       const player = map.getCurrentPlayer();
-      const allowAnyBuilding = hasUnitsOrProductionBuildings(
-        map,
-        player,
-        'with-attack',
-      );
+      const allowAnyBuilding = hasUnitsOrProductionBuildings(map, player, 'with-attack');
       const funds = player.funds;
       const buildings = sortBy(
         filterBuildings(
@@ -75,28 +66,13 @@ export default class CreateBuilding {
             const entity = building.create(player);
             const create = () => {
               const { selectedPosition, selectedUnit } = state;
-              if (
-                isAllowed &&
-                !isDisabled &&
-                selectedPosition &&
-                selectedUnit
-              ) {
-                actions.update(
-                  createBuildingAction(
-                    actions,
-                    selectedPosition,
-                    building,
-                    state,
-                  ),
-                );
+              if (isAllowed && !isDisabled && selectedPosition && selectedUnit) {
+                actions.update(createBuildingAction(actions, selectedPosition, building, state));
               }
             };
 
             const showInfo = (
-              event:
-                | MouseEvent
-                | LongPressReactEvents<Element>
-                | ClientCoordinates,
+              event: MouseEvent | LongPressReactEvents<Element> | ClientCoordinates,
             ) =>
               showGameInfo({
                 building: entity,
@@ -115,9 +91,7 @@ export default class CreateBuilding {
                   <>
                     <BuildingTile
                       biome={map.config.biome}
-                      building={
-                        isDisabled || !isAllowed ? entity.complete() : entity
-                      }
+                      building={isDisabled || !isAllowed ? entity.complete() : entity}
                       highlight={highlight}
                       position={new SpriteVector(1, 2)}
                       size={tileSize}

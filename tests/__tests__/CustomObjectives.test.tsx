@@ -10,12 +10,7 @@ import {
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Effect } from '@deities/apollo/Effects.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
-import {
-  CrashedAirplane,
-  Factory,
-  House,
-  HQ,
-} from '@deities/athena/info/Building.tsx';
+import { CrashedAirplane, Factory, House, HQ } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { ConstructionSite } from '@deities/athena/info/Tile.tsx';
 import {
@@ -33,12 +28,7 @@ import {
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import {
-  Bot,
-  HumanPlayer,
-  PlayerID,
-  PlayerIDs,
-} from '@deities/athena/map/Player.tsx';
+import { Bot, HumanPlayer, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
@@ -80,9 +70,7 @@ const defaultObjective = { hidden: false, type: Criteria.Default } as const;
 // Sort objectives by optional/non-optional.
 const defineObjectives = (objectives: ReadonlyArray<Objective>) =>
   decodeObjectives(
-    encodeObjectives(
-      ImmutableMap(objectives.map((objective, index) => [index, objective])),
-    ),
+    encodeObjectives(ImmutableMap(objectives.map((objective, index) => [index, objective]))),
   );
 
 const optional = (map: MapData) =>
@@ -110,13 +98,9 @@ test('default win criteria', async () => {
       .set(to, Helicopter.create(player2).setHealth(1)),
   });
 
-  const [, gameActionResponse] = await executeGameActions(mapA, [
-    AttackUnitAction(from, to),
-  ]);
+  const [, gameActionResponse] = await executeGameActions(mapA, [AttackUnitAction(from, to)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
     "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 0, chargeB: 3 }
     AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
@@ -155,8 +139,7 @@ test('capture amount win criteria', async () => {
     CaptureAction(v5),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
     "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
     Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
     Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
@@ -185,8 +168,7 @@ test('capture amount win criteria', async () => {
     CaptureAction(v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
@@ -201,8 +183,7 @@ test('capture amount win criteria', async () => {
     [CaptureAction(v2), CaptureAction(v3), CaptureAction(v4)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB_2)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
@@ -225,19 +206,15 @@ test('capture amount win criteria', async () => {
       ]),
     }),
   });
-  const [, gameActionResponseC] = await executeGameActions(
-    mapWithAsymmetricConditions,
-    [
-      CaptureAction(v2),
-      CaptureAction(v3),
-      CaptureAction(v4),
-      EndTurnAction(),
-      CaptureAction(v1),
-    ],
-  );
+  const [, gameActionResponseC] = await executeGameActions(mapWithAsymmetricConditions, [
+    CaptureAction(v2),
+    CaptureAction(v3),
+    CaptureAction(v4),
+    EndTurnAction(),
+    CaptureAction(v1),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
@@ -246,25 +223,16 @@ test('capture amount win criteria', async () => {
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 2 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 
-  const mapWithAsymmetricalOptionalObjectives = optional(
-    mapWithAsymmetricConditions,
-  );
+  const mapWithAsymmetricalOptionalObjectives = optional(mapWithAsymmetricConditions);
 
   expect(validateObjectives(mapWithAsymmetricalOptionalObjectives)).toBe(true);
 
   const [gameStateC_2, gameActionResponseC_2] = await executeGameActions(
     mapWithAsymmetricalOptionalObjectives,
-    [
-      CaptureAction(v2),
-      CaptureAction(v3),
-      CaptureAction(v4),
-      EndTurnAction(),
-      CaptureAction(v1),
-    ],
+    [CaptureAction(v2), CaptureAction(v3), CaptureAction(v4), EndTurnAction(), CaptureAction(v1)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC_2)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
@@ -282,9 +250,7 @@ test('capture amount win criteria also works when creating buildings', async () 
   const v3 = vec(3, 1);
   const v4 = vec(3, 3);
   const mapA = map.copy({
-    buildings: map.buildings
-      .set(v1, House.create(player2))
-      .set(v2, House.create(player2)),
+    buildings: map.buildings.set(v1, House.create(player2)).set(v2, House.create(player2)),
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -311,8 +277,7 @@ test('capture amount win criteria also works when creating buildings', async () 
     CreateBuildingAction(v3, Factory.id),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: false }
@@ -323,17 +288,13 @@ test('capture amount win criteria also works when creating buildings', async () 
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      CaptureAction(v1),
-      CaptureAction(v2),
-      CreateBuildingAction(v3, Factory.id),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    CaptureAction(v1),
+    CaptureAction(v2),
+    CreateBuildingAction(v3, Factory.id),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (2,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       CreateBuilding (3,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: false }
@@ -385,8 +346,7 @@ test('capture label win criteria', async () => {
     CaptureAction(v5),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1, label: 3 }, player: 2 }
@@ -405,18 +365,14 @@ test('capture label win criteria', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      CaptureAction(v2),
-      CaptureAction(v3),
-      CaptureAction(v4),
-      CaptureAction(v5),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    CaptureAction(v2),
+    CaptureAction(v3),
+    CaptureAction(v4),
+    CaptureAction(v5),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,3) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       Capture (2,1) { building: House { id: 2, health: 100, player: 1, label: 3 }, player: 2 }
@@ -431,10 +387,7 @@ test('capture label win criteria fails because building is destroyed', async () 
   const v1 = vec(1, 3);
   const v2 = vec(2, 3);
   const mapA = map.copy({
-    buildings: map.buildings.set(
-      v1,
-      House.create(0, { label: 1 }).setHealth(1),
-    ),
+    buildings: map.buildings.set(v1, House.create(0, { label: 1 }).setHealth(1)),
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -451,13 +404,9 @@ test('capture label win criteria fails because building is destroyed', async () 
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackBuildingAction(v2, v1),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackBuildingAction(v2, v1)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 1 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
@@ -473,9 +422,7 @@ test('capture label win criteria fails because building is destroyed', async () 
     [AttackBuildingAction(v2, v1)],
   );
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA_2),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA_2)).toMatchInlineSnapshot(
     `"AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }"`,
   );
 
@@ -486,9 +433,7 @@ test('capture label win criteria fails because building is destroyed', async () 
     [EndTurnAction(), AttackBuildingAction(v2, v1)],
   );
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseB),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
@@ -503,8 +448,7 @@ test('capture label win criteria fails because building is destroyed', async () 
     [EndTurnAction(), AttackBuildingAction(v2, v1)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB_2)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }"
     `);
@@ -517,9 +461,7 @@ test('capture label win criteria (fail with missing label)', async () => {
   const v2 = vec(1, 2);
   const v3 = vec(3, 3);
   const mapA = map.copy({
-    buildings: map.buildings
-      .set(v1, House.create(player2))
-      .set(v2, House.create(player2)),
+    buildings: map.buildings.set(v1, House.create(player2)).set(v2, House.create(player2)),
     config: map.config.copy({
       objectives: defineObjectives([
         {
@@ -543,8 +485,7 @@ test('capture label win criteria (fail with missing label)', async () => {
     CaptureAction(v2),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
       Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
     `);
@@ -553,13 +494,12 @@ test('capture label win criteria (fail with missing label)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [CaptureAction(v1), CaptureAction(v2)],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    CaptureAction(v1),
+    CaptureAction(v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Capture (1,1) { building: House { id: 2, health: 100, player: 1 }, player: 2 }
     Capture (1,2) { building: House { id: 2, health: 100, player: 1 }, player: 2 }"
   `);
@@ -586,8 +526,7 @@ test('destroy amount win criteria', async () => {
     AttackBuildingAction(v3.right(), v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
@@ -613,8 +552,7 @@ test('destroy amount win criteria', async () => {
     AttackBuildingAction(v3.right(), v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 12 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -659,8 +597,7 @@ test('destroy amount win criteria', async () => {
     ],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB_2)).toMatchInlineSnapshot(`
       "AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,4 → 1,4) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 12 }, objectiveId: 0, toPlayer: 1 }
@@ -686,18 +623,14 @@ test('destroy amount win criteria', async () => {
       ]),
     }),
   });
-  const [, gameActionResponseC] = await executeGameActions(
-    mapWithAsymmetricConditions,
-    [
-      AttackBuildingAction(v2.right(), v2),
-      AttackBuildingAction(v3.right(), v3),
-      EndTurnAction(),
-      AttackBuildingAction(v1.right(), v1),
-    ],
-  );
+  const [, gameActionResponseC] = await executeGameActions(mapWithAsymmetricConditions, [
+    AttackBuildingAction(v2.right(), v2),
+    AttackBuildingAction(v3.right(), v3),
+    EndTurnAction(),
+    AttackBuildingAction(v1.right(), v1),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -705,9 +638,7 @@ test('destroy amount win criteria', async () => {
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 12 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
 
-  const mapWithAsymmetricOptionalObjectives = optional(
-    mapWithAsymmetricConditions,
-  );
+  const mapWithAsymmetricOptionalObjectives = optional(mapWithAsymmetricConditions);
 
   expect(validateObjectives(mapWithAsymmetricOptionalObjectives)).toBe(true);
 
@@ -721,8 +652,7 @@ test('destroy amount win criteria', async () => {
     ],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC_2)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -775,8 +705,7 @@ test('destroy label win criteria', async () => {
     AttackBuildingAction(v4.right(), v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null, playerB: 2 }
@@ -788,18 +717,14 @@ test('destroy label win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      AttackBuildingAction(v1.right(), v1),
-      AttackBuildingAction(v2.right(), v2),
-      AttackBuildingAction(v3.right(), v3),
-      AttackBuildingAction(v4.right(), v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackBuildingAction(v1.right(), v1),
+    AttackBuildingAction(v2.right(), v2),
+    AttackBuildingAction(v3.right(), v3),
+    AttackBuildingAction(v4.right(), v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 3600, chargeC: null, playerB: 2 }
@@ -844,8 +769,7 @@ test('destroy label does not fire without label', async () => {
     AttackBuildingAction(v2.right(), v2),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
@@ -854,16 +778,12 @@ test('destroy label does not fire without label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      AttackBuildingAction(v1.right(), v1),
-      AttackBuildingAction(v2.right(), v2),
-    ],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackBuildingAction(v1.right(), v1),
+    AttackBuildingAction(v2.right(), v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 2400, chargeC: null, playerB: 2 }"
     `);
@@ -898,8 +818,7 @@ test('destroy label win criteria (neutral structure)', async () => {
     AttackBuildingAction(v1.right(), v1),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 3 ], optional: false, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -909,16 +828,12 @@ test('destroy label win criteria (neutral structure)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      AttackBuildingAction(v2.right(), v2),
-      AttackBuildingAction(v1.right(), v1),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackBuildingAction(v2.right(), v2),
+    AttackBuildingAction(v1.right(), v1),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackBuilding (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: null, playerB: 2 }
       AttackBuilding (2,1 → 1,1) { hasCounterAttack: false, playerA: 1, building: null, playerC: null, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitC: null, chargeA: null, chargeB: null, chargeC: null, playerB: 0 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 3 ], optional: true, players: [], reward: null, type: 11 }, objectiveId: 0, toPlayer: 1 }"
@@ -965,8 +880,7 @@ test('defeat with label', async () => {
     AttackUnitAction(v5, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
@@ -977,17 +891,13 @@ test('defeat with label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      AttackUnitAction(v1, v2),
-      AttackUnitAction(v3, v6),
-      AttackUnitAction(v5, v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+    AttackUnitAction(v3, v6),
+    AttackUnitAction(v5, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
@@ -1029,8 +939,7 @@ test('defeat one with label', async () => {
     AttackUnitAction(v3, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [], reward: null, type: 10 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -1040,13 +949,12 @@ test('defeat one with label', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+    AttackUnitAction(v3, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [], reward: null, type: 10 }, objectiveId: 0, toPlayer: 1 }"
@@ -1092,8 +1000,7 @@ test('defeat by amount', async () => {
     AttackUnitAction(v5, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
@@ -1104,17 +1011,13 @@ test('defeat by amount', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      AttackUnitAction(v1, v2),
-      AttackUnitAction(v3, v6),
-      AttackUnitAction(v5, v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+    AttackUnitAction(v3, v6),
+    AttackUnitAction(v5, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
       AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 99, chargeB: 300 }
@@ -1147,12 +1050,9 @@ test('defeat by amount through counter attack', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackUnitAction(v1, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 55, ammo: [ [ 1, 3 ] ] }, chargeA: 63, chargeB: 180 }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
@@ -1161,14 +1061,11 @@ test('defeat by amount through counter attack', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [AttackUnitAction(v1, v2)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+  ]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseB),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(
     `
     "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 55, ammo: [ [ 1, 3 ] ] }, chargeA: 63, chargeB: 180 }
     OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }"
@@ -1201,12 +1098,9 @@ test('defeat with label and Zombie', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackUnitAction(v1, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 47, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 29, ammo: [ [ 1, 3 ] ] }, chargeA: 305, chargeB: 284 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
@@ -1215,13 +1109,11 @@ test('defeat with label and Zombie', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [AttackUnitAction(v1, v2)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 47, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 29, ammo: [ [ 1, 3 ] ] }, chargeA: 305, chargeB: 284 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
     `);
@@ -1252,12 +1144,9 @@ test('defeat by amount and Zombie', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackUnitAction(v1, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 74, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 34 }, chargeA: 147, chargeB: 132 }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
     `);
@@ -1266,13 +1155,11 @@ test('defeat by amount and Zombie', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [AttackUnitAction(v1, v2)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: DryUnit { health: 74, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 34 }, chargeA: 147, chargeB: 132 }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }"
     `);
@@ -1312,8 +1199,7 @@ test('defeat with label (fail because label did not previously exist)', async ()
     AttackUnitAction(v3, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }"
     `);
@@ -1322,13 +1208,12 @@ test('defeat with label (fail because label did not previously exist)', async ()
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [AttackUnitAction(v1, v2), AttackUnitAction(v3, v4)],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    AttackUnitAction(v1, v2),
+    AttackUnitAction(v3, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
     AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }"
   `);
@@ -1377,8 +1262,7 @@ test('defeat with label and a unit hiding inside of another', async () => {
     AttackUnitAction(v5, v2),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2] }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
@@ -1392,20 +1276,16 @@ test('defeat with label and a unit hiding inside of another', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      EndTurnAction(),
-      MoveAction(v3, v2),
-      EndTurnAction(),
-      AttackUnitAction(v9, v6),
-      AttackUnitAction(v1, v2),
-      AttackUnitAction(v5, v2),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    EndTurnAction(),
+    MoveAction(v3, v2),
+    EndTurnAction(),
+    AttackUnitAction(v9, v6),
+    AttackUnitAction(v1, v2),
+    AttackUnitAction(v5, v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2] }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
@@ -1434,9 +1314,7 @@ test('win by survival', async () => {
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Flamethrower.create(player1))
-      .set(v2, Pioneer.create(player2)),
+    units: map.units.set(v1, Flamethrower.create(player1)).set(v2, Pioneer.create(player2)),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
@@ -1448,8 +1326,7 @@ test('win by survival', async () => {
     EndTurnAction(),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
@@ -1461,19 +1338,15 @@ test('win by survival', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      EndTurnAction(),
-      EndTurnAction(),
-      EndTurnAction(),
-      EndTurnAction(),
-      MoveAction(v1, v3),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+    EndTurnAction(),
+    MoveAction(v1, v3),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
@@ -1500,9 +1373,7 @@ test('win by survival in one round', async () => {
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Flamethrower.create(player1))
-      .set(v2, Pioneer.create(player2)),
+    units: map.units.set(v1, Flamethrower.create(player1)).set(v2, Pioneer.create(player2)),
   });
 
   expect(
@@ -1525,12 +1396,9 @@ test('win by survival in one round', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, rounds: 1, type: 5 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
     `);
@@ -1558,13 +1426,11 @@ test('win by survival in one round', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [EndTurnAction()],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    EndTurnAction(),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 2 }, hidden: false, optional: true, players: [ 2 ], reward: null, rounds: 1, type: 5 }, objectiveId: 0, toPlayer: 2 }"
     `);
@@ -1594,9 +1460,7 @@ test('win by survival with optional survival', async () => {
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Flamethrower.create(player1))
-      .set(v2, Pioneer.create(player2)),
+    units: map.units.set(v1, Flamethrower.create(player1)).set(v2, Pioneer.create(player2)),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
@@ -1609,8 +1473,7 @@ test('win by survival with optional survival', async () => {
     EndTurnAction(),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: true, optional: true, players: [ 1 ], reward: null, rounds: 2, type: 5 }, objectiveId: 1, toPlayer: 1 }
@@ -1652,8 +1515,7 @@ test('escort units', async () => {
     MoveAction(v5, v7),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -1663,13 +1525,12 @@ test('escort units', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [MoveAction(v1, v6), MoveAction(v5, v7)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v7),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
@@ -1710,8 +1571,7 @@ test('escort units by label without having units with that label (fails)', async
     MoveAction(v5, v7),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
     `);
@@ -1720,13 +1580,12 @@ test('escort units by label without having units with that label (fails)', async
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [MoveAction(v1, v6), MoveAction(v5, v7)],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v7),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
     Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
   `);
@@ -1767,8 +1626,7 @@ test('escort units (transport)', async () => {
     MoveAction(v4, v7),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1] }
@@ -1779,13 +1637,13 @@ test('escort units (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [MoveAction(v1, v6), MoveAction(v5, v4), MoveAction(v4, v7)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    MoveAction(v4, v7),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1] }
@@ -1821,13 +1679,9 @@ test('escort units by amount (transport)', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    MoveAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [MoveAction(v1, v2)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "Move (1,1 → 1,2) { fuel: 59, completed: false, path: [1,2] }
     GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '1,2' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -1874,8 +1728,7 @@ test('escort units by drop (transport)', async () => {
     DropUnitAction(v4, 0, v7),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       DropUnit (2,1 → 2,2) { index: 0 }
@@ -1890,21 +1743,17 @@ test('escort units by drop (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      DropUnitAction(v4, 0, v5),
-      EndTurnAction(),
-      EndTurnAction(),
-      MoveAction(v5, v4),
-      DropUnitAction(v4, 0, v7),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    DropUnitAction(v4, 0, v5),
+    EndTurnAction(),
+    EndTurnAction(),
+    MoveAction(v5, v4),
+    DropUnitAction(v4, 0, v7),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       DropUnit (2,1 → 2,2) { index: 0 }
@@ -1956,8 +1805,7 @@ test('escort units by label fails', async () => {
     AttackUnitAction(v7, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -1969,18 +1817,14 @@ test('escort units by label fails', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      EndTurnAction(),
-      AttackUnitAction(v7, v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    EndTurnAction(),
+    AttackUnitAction(v7, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2031,8 +1875,7 @@ test('escort units by label fails (transport)', async () => {
     AttackUnitAction(v5, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2046,20 +1889,16 @@ test('escort units by label fails (transport)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      EndTurnAction(),
-      AttackUnitAction(v7, v4),
-      MoveAction(v3, v5),
-      AttackUnitAction(v5, v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    EndTurnAction(),
+    AttackUnitAction(v7, v4),
+    MoveAction(v3, v5),
+    AttackUnitAction(v5, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2103,8 +1942,7 @@ test('escort units by amount', async () => {
     MoveAction(v5, v7),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -2114,13 +1952,12 @@ test('escort units by amount', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [MoveAction(v1, v6), MoveAction(v5, v7)],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v7),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
@@ -2184,8 +2021,7 @@ test('escort units by amount (label)', async () => {
     MoveAction(v3, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
@@ -2227,18 +2063,14 @@ test('escort units by amount (label)', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v5),
-      MoveAction(v3, v4),
-      EndTurnAction(),
-      MoveAction(v2, v6),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v5),
+    MoveAction(v3, v4),
+    EndTurnAction(),
+    MoveAction(v2, v6),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }
@@ -2289,8 +2121,7 @@ test('escort units by amount with label fails', async () => {
     AttackUnitAction(v7, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2302,18 +2133,14 @@ test('escort units by amount with label fails', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      EndTurnAction(),
-      AttackUnitAction(v7, v4),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    EndTurnAction(),
+    AttackUnitAction(v7, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2354,8 +2181,7 @@ test('escort units by amount with label does not fail if there are no labeled un
     AttackUnitAction(v2, v1),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
     "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     AttackUnit (1,2 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
   `);
@@ -2401,8 +2227,7 @@ test('escort units by amount does not fail when enough units are remaining', asy
     AttackUnitAction(v3, v2),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2414,19 +2239,15 @@ test('escort units by amount does not fail when enough units are remaining', asy
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      EndTurnAction(),
-      AttackUnitAction(v7, v4),
-      AttackUnitAction(v3, v2),
-    ],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    EndTurnAction(),
+    AttackUnitAction(v7, v4),
+    AttackUnitAction(v3, v2),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
     Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2473,8 +2294,7 @@ test('escort units by amount does not fail when the player has more units left',
     AttackUnitAction(v7, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2485,18 +2305,14 @@ test('escort units by amount does not fail when the player has more units left',
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      MoveAction(v1, v6),
-      MoveAction(v5, v4),
-      EndTurnAction(),
-      AttackUnitAction(v7, v4),
-    ],
-  );
+  const [, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    MoveAction(v1, v6),
+    MoveAction(v5, v4),
+    EndTurnAction(),
+    AttackUnitAction(v7, v4),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
     Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -2546,8 +2362,7 @@ test('rescue label win criteria', async () => {
     RescueAction(v6, v5),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       Rescue (2,3 → 1,3) { player: 1, name: null }
       Rescue (2,1 → 2,2) { player: 1, name: null }
@@ -2563,22 +2378,18 @@ test('rescue label win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      RescueAction(v2, v1),
-      RescueAction(v4, v3),
-      RescueAction(v6, v5),
-      EndTurnAction(),
-      EndTurnAction(),
-      RescueAction(v2, v1),
-      RescueAction(v4, v3),
-      RescueAction(v6, v5),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+    RescueAction(v6, v5),
+    EndTurnAction(),
+    EndTurnAction(),
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+    RescueAction(v6, v5),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       Rescue (2,3 → 1,3) { player: 1, name: null }
       Rescue (2,1 → 2,2) { player: 1, name: null }
@@ -2630,8 +2441,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     AttackUnitAction(v4, v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 0, 3 ], optional: false, players: [ 1 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
@@ -2646,8 +2456,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v1), AttackUnitAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA_2)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
     `);
@@ -2661,8 +2470,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
@@ -2676,8 +2484,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB_2)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
@@ -2695,21 +2502,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
             3,
             '',
             ImmutableMap([
-              [
-                3,
-                new Bot(
-                  3,
-                  'Bot',
-                  3,
-                  300,
-                  undefined,
-                  new Set(),
-                  new Set(),
-                  0,
-                  null,
-                  0,
-                ),
-              ],
+              [3, new Bot(3, 'Bot', 3, 300, undefined, new Set(), new Set(), 0, null, 0)],
             ]),
           ),
         ],
@@ -2719,8 +2512,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
@@ -2737,21 +2529,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
             3,
             '',
             ImmutableMap([
-              [
-                3,
-                new Bot(
-                  3,
-                  'Bot',
-                  3,
-                  300,
-                  undefined,
-                  new Set(),
-                  new Set(),
-                  0,
-                  null,
-                  0,
-                ),
-              ],
+              [3, new Bot(3, 'Bot', 3, 300, undefined, new Set(), new Set(), 0, null, 0)],
             ]),
           ),
         ],
@@ -2763,8 +2541,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v3), EndTurnAction(), AttackUnitAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC_2)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }"
@@ -2780,8 +2557,7 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
     [RescueAction(v2, v3), EndTurnAction(), AttackBuildingAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1, playerB: 1 }
@@ -2790,17 +2566,13 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   const [gameStateD_2, gameActionResponseD_2] = await executeGameActions(
     mapWithOptionalObjectives.copy({
-      buildings: mapWithOptionalObjectives.buildings.set(
-        v3,
-        House.create(1).setHealth(1),
-      ),
+      buildings: mapWithOptionalObjectives.buildings.set(v3, House.create(1).setHealth(1)),
       units: mapWithOptionalObjectives.units.set(v4, SmallTank.create(2)),
     }),
     [RescueAction(v2, v3), EndTurnAction(), AttackBuildingAction(v4, v3)],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD_2))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD_2)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,3) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackBuilding (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, building: null, playerC: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitC: null, chargeA: null, chargeB: 1200, chargeC: 1, playerB: 1 }"
@@ -2850,8 +2622,7 @@ test('rescue amount win criteria', async () => {
     RescueAction(v4, v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       Rescue (2,3 → 1,3) { player: 1, name: null }
       Rescue (2,1 → 2,2) { player: 1, name: null }
@@ -2866,21 +2637,17 @@ test('rescue amount win criteria', async () => {
 
   expect(validateObjectives(mapWithOptionalObjectives)).toBe(true);
 
-  const [gameStateB, gameActionResponseB] = await executeGameActions(
-    mapWithOptionalObjectives,
-    [
-      RescueAction(v2, v1),
-      RescueAction(v4, v3),
-      RescueAction(v6, v5),
-      EndTurnAction(),
-      EndTurnAction(),
-      RescueAction(v2, v1),
-      RescueAction(v4, v3),
-    ],
-  );
+  const [gameStateB, gameActionResponseB] = await executeGameActions(mapWithOptionalObjectives, [
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+    RescueAction(v6, v5),
+    EndTurnAction(),
+    EndTurnAction(),
+    RescueAction(v2, v1),
+    RescueAction(v4, v3),
+  ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       Rescue (2,3 → 1,3) { player: 1, name: null }
       Rescue (2,1 → 2,2) { player: 1, name: null }
@@ -2927,8 +2694,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
     AttackUnitAction(v4, v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 1, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
       GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 1 ], reward: null, type: 13 }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
@@ -2962,8 +2728,7 @@ test('rescue amount win criteria loses when destroying the rescuable unit', asyn
     AttackUnitAction(v4, v3),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "Rescue (1,2 → 1,1) { player: 1, name: null }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 0, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: null }
@@ -3023,8 +2788,7 @@ test('optional objectives should not be triggered multiple times for the same pl
     AttackUnitAction(v8, v4),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }
@@ -3095,8 +2859,7 @@ test('optional objectives should not end the game, but non-optional one should w
     AttackUnitAction(v4, v8),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
       OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 1, toPlayer: 1 }
@@ -3132,9 +2895,7 @@ test('optional objectives are processed before game end responses', async () => 
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Flamethrower.create(player1))
-      .set(v2, Flamethrower.create(player2)),
+    units: map.units.set(v1, Flamethrower.create(player1)).set(v2, Flamethrower.create(player2)),
   });
 
   const [, gameActionResponseA] = await executeGameActions(
@@ -3166,8 +2927,7 @@ test('optional objectives are processed before game end responses', async () => 
     ]),
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: { skill: 12, type: 'Skill' }, type: 9 }, objectiveId: 1, toPlayer: 1 }
       CharacterMessage { message: 'FIRE!', player: 'self', unitId: 15, variant: 2, silhouette: false }
@@ -3199,19 +2959,14 @@ test('multiple optional objectives can trigger at once', async () => {
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Pioneer.create(player2))
-      .set(v2, Pioneer.create(player1).capture()),
+    units: map.units.set(v1, Pioneer.create(player2)).set(v2, Pioneer.create(player1).capture()),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [CaptureAction(v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 2 }, objectiveId: 2, toPlayer: 1 }"
@@ -3239,19 +2994,14 @@ test('optional and game ending objectives might be triggered at the same time', 
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Pioneer.create(player2))
-      .set(v2, Pioneer.create(player1).capture()),
+    units: map.units.set(v1, Pioneer.create(player2)).set(v2, Pioneer.create(player1).capture()),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [CaptureAction(v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 0, toPlayer: 1 }
       GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 2 }, objectiveId: 1, toPlayer: 1, chaosStars: null }"
@@ -3274,19 +3024,14 @@ test('optional and default game ending objectives might be triggered at the same
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Pioneer.create(player2))
-      .set(v2, Pioneer.create(player1).capture()),
+    units: map.units.set(v1, Pioneer.create(player2)).set(v2, Pioneer.create(player1).capture()),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    CaptureAction(v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [CaptureAction(v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: HQ { id: 1, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
       CaptureGameOver { fromPlayer: 2, toPlayer: 1 }
@@ -3317,9 +3062,7 @@ test('multiple optional objectives have their effects applied correctly', async 
         },
       ]),
     }),
-    units: map.units
-      .set(v1, Pioneer.create(player2))
-      .set(v2, Pioneer.create(player1).capture()),
+    units: map.units.set(v1, Pioneer.create(player2)).set(v2, Pioneer.create(player1).capture()),
   });
 
   expect(validateObjectives(mapA)).toBe(true);
@@ -3352,8 +3095,7 @@ test('multiple optional objectives have their effects applied correctly', async 
     ]),
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "Capture (1,2) { building: House { id: 2, health: 100, player: 1, label: 4 }, player: 2 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4 ], optional: true, players: [], reward: null, type: 1 }, objectiveId: 1, toPlayer: 1 }
       Spawn { units: [1,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Uli' }], teams: null, buildings: [] }
@@ -3415,13 +3157,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [EndTurnAction()]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
@@ -3452,12 +3190,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapB)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(mapB, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseB] = await executeGameActions(mapB, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
       AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
@@ -3487,12 +3222,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapC)).toBe(true);
 
-  const [, gameActionResponseC] = await executeGameActions(mapC, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseC] = await executeGameActions(mapC, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
       AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
@@ -3521,12 +3253,9 @@ test('poison at the begin of a turn properly fires objectives', async () => {
 
   expect(validateObjectives(mapD)).toBe(true);
 
-  const [, gameActionResponseD] = await executeGameActions(mapD, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseD] = await executeGameActions(mapD, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
       AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
@@ -3565,12 +3294,9 @@ test('counter attack triggers objectives correctly', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackUnitAction(v1, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, playerB: 2, unitA: null, unitB: DryUnit { health: 80 }, chargeA: 149, chargeB: 120 }
       GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
     `);
@@ -3597,13 +3323,9 @@ test('counter attack triggers objectives correctly', async () => {
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(mapB, [
-    AttackBuildingAction(v1, v2),
-  ]);
+  const [, gameActionResponseB] = await executeGameActions(mapB, [AttackBuildingAction(v1, v2)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseB),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(
     `
     "AttackBuilding (1,1 → 2,1) { hasCounterAttack: true, playerA: 1, building: House { id: 2, health: 83, player: 2 }, playerC: 2, unitA: null, unitC: DryUnit { health: 100, ammo: [ [ 1, 9 ] ] }, chargeA: 9, chargeB: 0, chargeC: 0, playerB: 2 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
@@ -3644,13 +3366,11 @@ test('rescuing a unit part of an objective of another player ends the game if th
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    RescueAction(v2, v1),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [RescueAction(v2, v1)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(`"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`);
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
+    `"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`,
+  );
 
   const mapB = mapA.copy({
     config: mapA.config.copy({
@@ -3663,13 +3383,11 @@ test('rescuing a unit part of an objective of another player ends the game if th
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseB] = await executeGameActions(mapB, [
-    RescueAction(v2, v1),
-  ]);
+  const [, gameActionResponseB] = await executeGameActions(mapB, [RescueAction(v2, v1)]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseB),
-  ).toMatchInlineSnapshot(`"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`);
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(
+    `"Rescue (2,1 → 1,1) { player: 1, name: -13 }"`,
+  );
 
   const mapC = mapA.copy({
     config: mapA.config.copy({
@@ -3677,12 +3395,9 @@ test('rescuing a unit part of an objective of another player ends the game if th
     }),
   });
 
-  const [, gameActionResponseC] = await executeGameActions(mapC, [
-    RescueAction(v2, v1),
-  ]);
+  const [, gameActionResponseC] = await executeGameActions(mapC, [RescueAction(v2, v1)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
     "Rescue (2,1 → 1,1) { player: 1, name: -13 }
     GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 2 ], reward: null, type: 13 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
   `);
@@ -3693,23 +3408,17 @@ test('rescuing a unit part of an objective of another player ends the game if th
     }),
   });
 
-  const [, gameActionResponseD] = await executeGameActions(mapD, [
-    RescueAction(v2, v1),
-  ]);
+  const [, gameActionResponseD] = await executeGameActions(mapD, [RescueAction(v2, v1)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
     "Rescue (2,1 → 1,1) { player: 1, name: -13 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 2 ], reward: null, type: 8 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
   `);
 
   const mapE = optional(mapD);
-  const [, gameActionResponseE] = await executeGameActions(mapE, [
-    RescueAction(v2, v1),
-  ]);
+  const [, gameActionResponseE] = await executeGameActions(mapE, [RescueAction(v2, v1)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseE))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseE)).toMatchInlineSnapshot(`
     "Rescue (2,1 → 1,1) { player: 1, name: -13 }"
   `);
 });
@@ -3748,22 +3457,17 @@ test('objectives are sorted when decoding so optional objectives are always trig
 
   expect(validateObjectives(mapA)).toBe(true);
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    AttackUnitAction(v1, v2),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [AttackUnitAction(v1, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
     "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
   `);
 
-  const [, gameActionResponseB] = await executeGameActions(
-    MapData.fromJSON(JSON.stringify(mapA)),
-    [AttackUnitAction(v1, v2)],
-  );
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  const [, gameActionResponseB] = await executeGameActions(MapData.fromJSON(JSON.stringify(mapA)), [
+    AttackUnitAction(v1, v2),
+  ]);
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
       OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [], reward: null, type: 3 }, objectiveId: 1, toPlayer: 1 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }

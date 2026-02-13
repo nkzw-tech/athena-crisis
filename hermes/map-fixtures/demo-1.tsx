@@ -12,12 +12,7 @@ export const metadata: MapMetadata = {
         {
           actions: [
             CharacterMessage(1, 'Phew, that was a close call.', 'self', 2),
-            CharacterMessage(
-              5,
-              "All troops retreat. We'll be back soon enough!",
-              'opponent',
-              2,
-            ),
+            CharacterMessage(5, "All troops retreat. We'll be back soon enough!", 'opponent', 2),
             CharacterMessage(15, 'Athena Crisis is fun! FIRE!', 'self', 2),
             CharacterMessage(
               3,
@@ -30,19 +25,9 @@ export const metadata: MapMetadata = {
         },
         {
           actions: [
-            CharacterMessage(
-              5,
-              'We crushed you and we will crush you again.',
-              'opponent',
-              2,
-            ),
+            CharacterMessage(5, 'We crushed you and we will crush you again.', 'opponent', 2),
             CharacterMessage(1, 'How is this possible?', 'self', 1),
-            CharacterMessage(
-              3,
-              "It's ok, you can try as many times as you like.",
-              'self',
-              2,
-            ),
+            CharacterMessage(3, "It's ok, you can try as many times as you like.", 'self', 2),
           ],
           conditions: [{ type: 'GameEnd', value: 'lose' }],
         },

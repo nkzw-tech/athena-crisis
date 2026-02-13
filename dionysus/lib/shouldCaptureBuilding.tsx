@@ -9,11 +9,7 @@ export default function shouldCaptureBuilding(
   building: Building | undefined,
   vector: Vector,
 ): building is Building {
-  if (
-    building &&
-    !building.info.isStructure() &&
-    map.isOpponent(player, building)
-  ) {
+  if (building && !building.info.isStructure() && map.isOpponent(player, building)) {
     const maybeUnit = map.units.get(vector);
     return (
       !maybeUnit ||

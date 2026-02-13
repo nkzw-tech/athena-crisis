@@ -1,11 +1,7 @@
 import { encodeEffects } from '@deities/apollo/Effects.tsx';
 import toSlug from '@deities/apollo/lib/toSlug.tsx';
 import MapEditor from '@deities/hera/editor/MapEditor.tsx';
-import {
-  MapCreateVariables,
-  MapObject,
-  MapUpdateVariables,
-} from '@deities/hera/editor/Types.tsx';
+import { MapCreateVariables, MapObject, MapUpdateVariables } from '@deities/hera/editor/Types.tsx';
 import DemoViewer from '@deities/hera/ui/lib/DemoViewer.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -29,25 +25,18 @@ const decodeMapObject = (data: string | null): MapObject | null => {
               typeof maybeCreator.displayName === 'string'
                 ? maybeCreator.displayName
                 : DemoViewer.displayName,
-            id:
-              typeof maybeCreator.id === 'string'
-                ? maybeCreator.id
-                : DemoViewer.id,
+            id: typeof maybeCreator.id === 'string' ? maybeCreator.id : DemoViewer.id,
             username:
               typeof maybeCreator.username === 'string'
                 ? maybeCreator.username
                 : DemoViewer.username,
           }
         : DemoViewer,
-      effects:
-        typeof maybeMapObject?.effects === 'string'
-          ? maybeMapObject.effects
-          : '',
+      effects: typeof maybeMapObject?.effects === 'string' ? maybeMapObject.effects : '',
       id: typeof maybeMapObject?.id === 'string' ? maybeMapObject.id : '',
       name: typeof maybeMapObject?.name === 'string' ? maybeMapObject.name : '',
       slug: typeof maybeMapObject?.slug === 'string' ? maybeMapObject.slug : '',
-      state:
-        typeof maybeMapObject?.state === 'string' ? maybeMapObject.state : '',
+      state: typeof maybeMapObject?.state === 'string' ? maybeMapObject.state : '',
       tags:
         Array.isArray(maybeMapObject?.tags) &&
         maybeMapObject.tags.every((tag) => typeof tag === 'string')
@@ -68,28 +57,25 @@ export default function MapEditorExample() {
     decodeMapObject(params.get('map')),
   );
 
-  const handleMapUpdate = useCallback(
-    (variables: MapCreateVariables | MapUpdateVariables) => {
-      setMapObject({
-        campaigns: {
-          edges: [],
-        },
-        canEdit: true,
-        creator: {
-          displayName: DemoViewer.displayName,
-          id: DemoViewer.id,
-          username: DemoViewer.username,
-        },
-        effects: JSON.stringify(encodeEffects(variables.effects)),
-        id: 'id' in variables ? variables.id : '',
-        name: variables.mapName,
-        slug: toSlug(variables.mapName),
-        state: JSON.stringify(variables.map.toJSON()),
-        tags: variables.tags,
-      });
-    },
-    [],
-  );
+  const handleMapUpdate = useCallback((variables: MapCreateVariables | MapUpdateVariables) => {
+    setMapObject({
+      campaigns: {
+        edges: [],
+      },
+      canEdit: true,
+      creator: {
+        displayName: DemoViewer.displayName,
+        id: DemoViewer.id,
+        username: DemoViewer.username,
+      },
+      effects: JSON.stringify(encodeEffects(variables.effects)),
+      id: 'id' in variables ? variables.id : '',
+      name: variables.mapName,
+      slug: toSlug(variables.mapName),
+      state: JSON.stringify(variables.map.toJSON()),
+      tags: variables.tags,
+    });
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

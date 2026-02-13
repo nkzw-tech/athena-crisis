@@ -14,9 +14,7 @@ export type EncodedGameStateEntry = readonly [EncodedActionResponse, PlainMap];
 export type GameState = ReadonlyArray<GameStateEntry>;
 export type EncodedGameState = ReadonlyArray<EncodedGameStateEntry>;
 export type MutableGameState = Array<GameStateEntry>;
-export type GameStateWithEffects = ReadonlyArray<
-  readonly [...GameStateEntry, Effects]
->;
+export type GameStateWithEffects = ReadonlyArray<readonly [...GameStateEntry, Effects]>;
 
 type EncodedClientMapMessage = EncodedMapMessage &
   Readonly<{
@@ -57,11 +55,7 @@ export type EncodedGameActionResponseItem = [
 export type EncodedGameActionResponse = [
   actionResponse: EncodedGameActionResponseItem | null,
   actionResponseItems?: ReadonlyArray<
-    [
-      EncodedActionResponse,
-      PlainEntitiesList<PlainBuilding>?,
-      PlainEntitiesList<PlainUnit>?,
-    ]
+    [EncodedActionResponse, PlainEntitiesList<PlainBuilding>?, PlainEntitiesList<PlainUnit>?]
   >,
   timeout?: number | null,
 ];

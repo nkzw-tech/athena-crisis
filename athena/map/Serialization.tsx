@@ -30,8 +30,7 @@ export function decodeDecorators(
   ).fill(0);
   const decoratorSize = size.toDecoratorSizeVector();
   decorators?.forEach(([x, y, decorator]) => {
-    decoratorMap[getDecoratorIndex(new SpriteVector(x, y), decoratorSize)] =
-      decorator;
+    decoratorMap[getDecoratorIndex(new SpriteVector(x, y), decoratorSize)] = decorator;
   });
   return decoratorMap;
 }
@@ -75,13 +74,7 @@ export function decodePlayers(
                 decodePlayerStatistics(player.stats),
                 player.misses || 0,
               )
-            : new PlaceholderPlayer(
-                playerID,
-                teamId,
-                player.funds,
-                player.ai,
-                skills,
-              ),
+            : new PlaceholderPlayer(playerID, teamId, player.funds, player.ai, skills),
       );
     }),
   );
@@ -95,10 +88,7 @@ export function decodeTeams(teams: ReadonlyArray<PlainTeam>): Teams {
   );
 }
 
-export function decodeEntities<
-  T extends Entity,
-  S extends PlainBuilding | PlainUnit,
->(
+export function decodeEntities<T extends Entity, S extends PlainBuilding | PlainUnit>(
   list: PlainEntitiesList<S>,
   entityCreator: (entity: S) => T,
 ): ImmutableMap<Vector, T> {
@@ -113,9 +103,7 @@ export function decodeBuildings(
   return decodeEntities(buildings, Building.fromJSON);
 }
 
-export function decodeUnits(
-  units: PlainEntitiesList<PlainUnit>,
-): ImmutableMap<Vector, Unit> {
+export function decodeUnits(units: PlainEntitiesList<PlainUnit>): ImmutableMap<Vector, Unit> {
   return decodeEntities(units, Unit.fromJSON);
 }
 

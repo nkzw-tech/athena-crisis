@@ -1,10 +1,5 @@
 import { AttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
-import {
-  Beach,
-  isSea,
-  MaybeTileID,
-  Space,
-} from '@deities/athena/info/Tile.tsx';
+import { Beach, isSea, MaybeTileID, Space } from '@deities/athena/info/Tile.tsx';
 import isAmphibiousOnLand from '@deities/athena/lib/isAmphibiousOnLand.tsx';
 import Entity, { getEntityGroup, isUnit } from '@deities/athena/map/Entity.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -31,8 +26,7 @@ export default function addExplosionAnimation(
     isSeaExceptBeach(state.map.getTile(position));
 
   const sprite = isUnitEntity
-    ? ((entity.isUnfolded() || withExplosion) &&
-        entity.info.sprite.alternativeExplosionSprite) ||
+    ? ((entity.isUnfolded() || withExplosion) && entity.info.sprite.alternativeExplosionSprite) ||
       entity.info.sprite.explosionSprite
     : null;
 
@@ -42,9 +36,7 @@ export default function addExplosionAnimation(
       ...state,
       animations: state.animations.delete(position).delete(key),
     };
-    return onComplete(
-      onExplode ? { ...newState, ...onExplode(state) } : newState,
-    );
+    return onComplete(onExplode ? { ...newState, ...onExplode(state) } : newState);
   };
   const animations = withExplosion
     ? state.animations.set(key, {

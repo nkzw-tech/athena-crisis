@@ -1,28 +1,14 @@
 import isPositiveInteger from '@nkzw/core/isPositiveInteger.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import {
-  Behavior,
-  getBuildingInfo,
-  House,
-  MaxSkills,
-} from '../info/Building.tsx';
+import { Behavior, getBuildingInfo, House, MaxSkills } from '../info/Building.tsx';
 import { Skill, Skills } from '../info/Skill.tsx';
 import { getTileInfo } from '../info/Tile.tsx';
 import { getUnitInfo, Pioneer } from '../info/Unit.tsx';
 import { Biomes } from '../map/Biome.tsx';
 import Building from '../map/Building.tsx';
-import {
-  DecoratorsPerSide,
-  MaxCharges,
-  MaxHealth,
-  MaxSize,
-} from '../map/Configuration.tsx';
+import { DecoratorsPerSide, MaxCharges, MaxHealth, MaxSize } from '../map/Configuration.tsx';
 import Entity from '../map/Entity.tsx';
-import Player, {
-  PlaceholderPlayer,
-  PlayerID,
-  toPlayerID,
-} from '../map/Player.tsx';
+import Player, { PlaceholderPlayer, PlayerID, toPlayerID } from '../map/Player.tsx';
 import { PerformanceStyleTypes } from '../map/PlayerPerformance.tsx';
 import Team, { toTeamArray } from '../map/Team.tsx';
 import Unit, { TransportedUnit } from '../map/Unit.tsx';
@@ -77,10 +63,7 @@ const validateMapConfig = (map: MapData) => {
     return false;
   }
 
-  if (
-    (!isPositiveInteger(initialCharge) && initialCharge !== 0) ||
-    initialCharge > MaxCharges
-  ) {
+  if ((!isPositiveInteger(initialCharge) && initialCharge !== 0) || initialCharge > MaxCharges) {
     return false;
   }
 
@@ -105,9 +88,7 @@ const validateMapConfig = (map: MapData) => {
     (pace != null && pace < 1) ||
     (power != null && power < 0) ||
     (style != null &&
-      (!PerformanceStyleTypes.includes(style[0]) ||
-        style[1] == null ||
-        style[1] < 0))
+      (!PerformanceStyleTypes.includes(style[0]) || style[1] == null || style[1] < 0))
   ) {
     return false;
   }
@@ -138,10 +119,7 @@ const validEntity = (entity: Entity | TransportedUnit): boolean => {
 
 const validateBuilding = (building: Building) => {
   const isNeutral = building.player === 0;
-  if (
-    (building.info.isStructure() && !isNeutral) ||
-    (building.info.isHQ() && isNeutral)
-  ) {
+  if ((building.info.isStructure() && !isNeutral) || (building.info.isHQ() && isNeutral)) {
     return false;
   }
 
@@ -153,11 +131,7 @@ const validateBuilding = (building: Building) => {
   );
 };
 
-const addLeader = (
-  leaders: Map<PlayerID, Set<number>>,
-  player: PlayerID,
-  id: number,
-) => {
+const addLeader = (leaders: Map<PlayerID, Set<number>>, player: PlayerID, id: number) => {
   const set = leaders.get(player);
   if (set) {
     set.add(id);
@@ -208,8 +182,7 @@ export const validateUnit = (
     validFuel(unit) &&
     unit.hasValidBehavior() &&
     unit.hasValidName() &&
-    (!unit.transports ||
-      unit.transports.every((unit) => validateUnit(unit, leaders, unit.player)))
+    (!unit.transports || unit.transports.every((unit) => validateUnit(unit, leaders, unit.player)))
   );
 };
 
@@ -282,8 +255,7 @@ export default function validateMap(
 
   if (
     map.map.some(
-      (tile, index) =>
-        !canPlaceTile(map, indexToVector(index, width), getTileInfo(tile)),
+      (tile, index) => !canPlaceTile(map, indexToVector(index, width), getTileInfo(tile)),
     )
   ) {
     return [null, 'invalid-tiles'];
@@ -325,8 +297,7 @@ export default function validateMap(
           map.copy({
             buildings: map.buildings.delete(vector),
             config,
-            currentPlayer:
-              building.player === 0 ? map.currentPlayer : building.player,
+            currentPlayer: building.player === 0 ? map.currentPlayer : building.player,
           }),
           building.info,
           building.player,
@@ -353,8 +324,7 @@ export default function validateMap(
   if (
     !map.units.size &&
     !map.buildings.some(
-      (building) =>
-        building.player !== 0 && building.info.configuration.funds > 0,
+      (building) => building.player !== 0 && building.info.configuration.funds > 0,
     ) &&
     map.config.seedCapital < Pioneer.getCostFor(null) + House.getCostFor(null)
   ) {
@@ -368,13 +338,9 @@ export default function validateMap(
 
   const activePlayers = new Set(active);
   if (
-    map.buildings.filter(
-      (building) =>
-        building.player !== 0 && !activePlayers.has(building.player),
-    ).size ||
-    map.units.filter(
-      (unit) => unit.player !== 0 && !activePlayers.has(unit.player),
-    ).size
+    map.buildings.filter((building) => building.player !== 0 && !activePlayers.has(building.player))
+      .size ||
+    map.units.filter((unit) => unit.player !== 0 && !activePlayers.has(unit.player)).size
   ) {
     return [null, 'inactive-players'];
   }
@@ -393,9 +359,7 @@ export default function validateMap(
               toPlayerID(id),
               id,
               0,
-              player?.ai != null && AIRegistry.has(player.ai)
-                ? player.ai
-                : undefined,
+              player?.ai != null && AIRegistry.has(player.ai) ? player.ai : undefined,
               player?.skills || new Set(),
             ),
           ),

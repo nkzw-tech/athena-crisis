@@ -1,9 +1,6 @@
 import { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
 import { SoundName } from '@deities/athena/info/Music.tsx';
-import {
-  AttackSpriteWithVariants,
-  WeaponAnimation,
-} from '@deities/athena/info/Unit.tsx';
+import { AttackSpriteWithVariants, WeaponAnimation } from '@deities/athena/info/Unit.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -20,10 +17,7 @@ const actualDirections: Record<AnimationDirection, AnimationDirection> = {
   up: 'up',
 };
 
-const frameCache = new Map<
-  AttackSprite | AttackSpriteWithVariants,
-  ReadonlyArray<CSSProperties>
->();
+const frameCache = new Map<AttackSprite | AttackSpriteWithVariants, ReadonlyArray<CSSProperties>>();
 const getFrames = (animation: WeaponAnimation) => {
   const { sprite } = animation;
   const frames = frameCache.get(sprite);
@@ -31,11 +25,7 @@ const getFrames = (animation: WeaponAnimation) => {
     return frames;
   }
 
-  const newFrames = generateFrames(
-    animation.size,
-    animation.frames,
-    'vertical',
-  );
+  const newFrames = generateFrames(animation.size, animation.frames, 'vertical');
   frameCache.set(sprite, newFrames);
   return newFrames;
 };
@@ -81,8 +71,7 @@ export default function AttackAnimation({
     direction = 'right';
   }
 
-  const x =
-    position.x + (offset?.x || 0) * (direction === 'left' || mirror ? 1 : -1);
+  const x = position.x + (offset?.x || 0) * (direction === 'left' || mirror ? 1 : -1);
   const y = position.y + (offset?.y || 0);
 
   return (
@@ -95,10 +84,7 @@ export default function AttackAnimation({
       onComplete={onComplete}
       onStep={onStep}
       position={
-        new SpriteVector(
-          (x - 1) * tileSize - spriteOffset / 2,
-          (y - 1) * tileSize - spriteOffset,
-        )
+        new SpriteVector((x - 1) * tileSize - spriteOffset / 2, (y - 1) * tileSize - spriteOffset)
       }
       rate={rate}
       repeat={animation.repeat}

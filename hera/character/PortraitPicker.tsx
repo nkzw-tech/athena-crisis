@@ -1,9 +1,5 @@
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
-import {
-  numberToPlayerID,
-  PlayerID,
-  PlayerIDs,
-} from '@deities/athena/map/Player.tsx';
+import { numberToPlayerID, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -52,13 +48,7 @@ const PortraitItem = ({
       onClick={() => onSelect({ color, unitId: unit.id, variant })}
       ref={ref}
     >
-      <Portrait
-        animate
-        clip={!selected}
-        player={color}
-        unit={unit}
-        variant={variant}
-      />
+      <Portrait animate clip={!selected} player={color} unit={unit} variant={variant} />
     </a>
   );
 };
@@ -74,11 +64,8 @@ export default memo(function PortraitPicker({
   onSelect: (character: CharacterImage) => void;
   portraits: ReadonlySet<UnitInfo>;
 }) {
-  const [initialCharacter, setInitialCharacter] =
-    useState<CharacterImage | null>(character);
-  const color = PlayerIDs.includes(character.color as PlayerID)
-    ? (character.color as PlayerID)
-    : 1;
+  const [initialCharacter, setInitialCharacter] = useState<CharacterImage | null>(character);
+  const color = PlayerIDs.includes(character.color as PlayerID) ? (character.color as PlayerID) : 1;
 
   const [setRef, getColumns] = useColumns(':scope > a');
 
@@ -113,12 +100,7 @@ export default memo(function PortraitPicker({
     useCallback(() => {
       onSelect({
         ...character,
-        color:
-          color === 0
-            ? PlayerIDs.at(-1)!
-            : color === 1
-              ? 0
-              : numberToPlayerID(color - 2),
+        color: color === 0 ? PlayerIDs.at(-1)! : color === 1 ? 0 : numberToPlayerID(color - 2),
       });
     }, [character, color, onSelect]),
   );
@@ -133,8 +115,7 @@ export default memo(function PortraitPicker({
         }
 
         const index = portraits.findIndex(
-          ([unit, variant]) =>
-            unit.id === character.unitId && variant === character.variant,
+          ([unit, variant]) => unit.id === character.unitId && variant === character.variant,
         );
         navigate(direction, columns, index, portraits, [
           (index: number) => {
@@ -143,14 +124,7 @@ export default memo(function PortraitPicker({
           },
         ]);
       },
-      [
-        getColumns,
-        portraits,
-        character.unitId,
-        character.variant,
-        onSelect,
-        color,
-      ],
+      [getColumns, portraits, character.unitId, character.variant, onSelect, color],
     ),
   );
 
@@ -173,9 +147,7 @@ export default memo(function PortraitPicker({
             key={`${unit.id}-${variant}`}
             onSelect={onSelect}
             selected={
-              !initialCharacter &&
-              unit.id === character.unitId &&
-              variant === character.variant
+              !initialCharacter && unit.id === character.unitId && variant === character.variant
             }
             unit={unit}
             variant={variant}

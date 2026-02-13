@@ -2,13 +2,7 @@ import sortBy from '@nkzw/core/sortBy.js';
 import { Biome } from '../map/Biome.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
 import { ID } from '../MapData.tsx';
-import {
-  PlainTileGroup,
-  SeaTileGroup,
-  TileAnimation,
-  TileInfo,
-  Trench,
-} from './Tile.tsx';
+import { PlainTileGroup, SeaTileGroup, TileAnimation, TileInfo, Trench } from './Tile.tsx';
 
 const sprite = (x: number, y: number) => new SpriteVector(x, y);
 
@@ -122,12 +116,7 @@ const animation = {
   ticks: 6,
 };
 
-const _Bush = new DecoratorInfo(
-  'Bush',
-  DecoratorGroup.Bush,
-  sprite(0, 0),
-  PlainTileGroup,
-);
+const _Bush = new DecoratorInfo('Bush', DecoratorGroup.Bush, sprite(0, 0), PlainTileGroup);
 
 const TreeTrunk = new DecoratorInfo(
   'Tree Trunk',
@@ -147,26 +136,11 @@ const Log = new DecoratorInfo(
   new Map([[Biome.Volcano, sprite(0, 9)]]),
 );
 
-const Barrel = new DecoratorInfo(
-  'Barrel',
-  DecoratorGroup.Barrel,
-  sprite(12, 0),
-  PlainTileGroup,
-);
+const Barrel = new DecoratorInfo('Barrel', DecoratorGroup.Barrel, sprite(12, 0), PlainTileGroup);
 
-const Box = new DecoratorInfo(
-  'Box',
-  DecoratorGroup.Box,
-  sprite(13, 0),
-  PlainTileGroup,
-);
+const Box = new DecoratorInfo('Box', DecoratorGroup.Box, sprite(13, 0), PlainTileGroup);
 
-const Barrier = new DecoratorInfo(
-  'Barrier',
-  DecoratorGroup.Barrier,
-  sprite(15, 0),
-  PlainTileGroup,
-);
+const Barrier = new DecoratorInfo('Barrier', DecoratorGroup.Barrier, sprite(15, 0), PlainTileGroup);
 
 const Ladder = new DecoratorInfo(
   'Ladder',
@@ -202,12 +176,7 @@ const StreetSigns = [
   StreetSign.right(7),
 ];
 
-const Rock = new DecoratorInfo(
-  'Rock',
-  DecoratorGroup.Rock,
-  sprite(12, 9),
-  PlainTileGroup,
-);
+const Rock = new DecoratorInfo('Rock', DecoratorGroup.Rock, sprite(12, 9), PlainTileGroup);
 
 const Mushroom = new DecoratorInfo(
   'Mushroom',
@@ -216,19 +185,9 @@ const Mushroom = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Mushrooms = [
-  Mushroom,
-  Mushroom.right(),
-  Mushroom.right(2),
-  Mushroom.right(3),
-];
+const Mushrooms = [Mushroom, Mushroom.right(), Mushroom.right(2), Mushroom.right(3)];
 
-const Pylon = new DecoratorInfo(
-  'Pylon',
-  DecoratorGroup.Barrier,
-  sprite(16, 2),
-  PlainTileGroup,
-);
+const Pylon = new DecoratorInfo('Pylon', DecoratorGroup.Barrier, sprite(16, 2), PlainTileGroup);
 
 const Pothole = new DecoratorInfo(
   'Pothole',
@@ -245,12 +204,7 @@ const ElectricityPole = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Gate = new DecoratorInfo(
-  'Gate',
-  DecoratorGroup.Gate,
-  sprite(4, 6),
-  PlainTileGroup,
-);
+const Gate = new DecoratorInfo('Gate', DecoratorGroup.Gate, sprite(4, 6), PlainTileGroup);
 
 const StreetLamp = new DecoratorInfo(
   'Street Lamp',
@@ -260,35 +214,15 @@ const StreetLamp = new DecoratorInfo(
   animation,
 );
 
-const Statue = new DecoratorInfo(
-  'Statue',
-  DecoratorGroup.Statue,
-  sprite(6, 6),
-  PlainTileGroup,
-);
+const Statue = new DecoratorInfo('Statue', DecoratorGroup.Statue, sprite(6, 6), PlainTileGroup);
 
-const Arch = new DecoratorInfo(
-  'Arch',
-  DecoratorGroup.Arch,
-  sprite(10, 5),
-  PlainTileGroup,
-);
+const Arch = new DecoratorInfo('Arch', DecoratorGroup.Arch, sprite(10, 5), PlainTileGroup);
 
-const Flower = new DecoratorInfo(
-  'Flower',
-  DecoratorGroup.Flower,
-  sprite(11, 5),
-  PlainTileGroup,
-);
+const Flower = new DecoratorInfo('Flower', DecoratorGroup.Flower, sprite(11, 5), PlainTileGroup);
 
 const Flowers = [Flower, Flower.right(), Flower.right(2), Flower.right(3)];
 
-const Lantern = new DecoratorInfo(
-  'Lantern',
-  DecoratorGroup.Lantern,
-  sprite(8, 8),
-  PlainTileGroup,
-);
+const Lantern = new DecoratorInfo('Lantern', DecoratorGroup.Lantern, sprite(8, 8), PlainTileGroup);
 
 const PowerTransformer = new DecoratorInfo(
   'Power Transformer',
@@ -304,12 +238,7 @@ const Gravestone = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Bones = new DecoratorInfo(
-  'Bones',
-  DecoratorGroup.Bones,
-  sprite(15, 6),
-  PlainTileGroup,
-);
+const Bones = new DecoratorInfo('Bones', DecoratorGroup.Bones, sprite(15, 6), PlainTileGroup);
 
 const Vegetation = new DecoratorInfo(
   'Vegetation',
@@ -318,26 +247,11 @@ const Vegetation = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Shovel = new DecoratorInfo(
-  'Shovel',
-  DecoratorGroup.Shovel,
-  sprite(0, 9),
-  PlainTileGroup,
-);
+const Shovel = new DecoratorInfo('Shovel', DecoratorGroup.Shovel, sprite(0, 9), PlainTileGroup);
 
-const Mask = new DecoratorInfo(
-  'Mask',
-  DecoratorGroup.Mask,
-  sprite(17, 8),
-  PlainTileGroup,
-);
+const Mask = new DecoratorInfo('Mask', DecoratorGroup.Mask, sprite(17, 8), PlainTileGroup);
 
-const Bucket = new DecoratorInfo(
-  'Bucket',
-  DecoratorGroup.Bucket,
-  sprite(16, 8),
-  PlainTileGroup,
-);
+const Bucket = new DecoratorInfo('Bucket', DecoratorGroup.Bucket, sprite(16, 8), PlainTileGroup);
 
 const Shipwreck = new DecoratorInfo(
   'Shipwreck',
@@ -347,12 +261,7 @@ const Shipwreck = new DecoratorInfo(
   animation,
 );
 
-const Sandbag = new DecoratorInfo(
-  'Sandbag',
-  DecoratorGroup.Trench,
-  sprite(18, 0),
-  PlainTileGroup,
-);
+const Sandbag = new DecoratorInfo('Sandbag', DecoratorGroup.Trench, sprite(18, 0), PlainTileGroup);
 
 const TrenchGate = new DecoratorInfo(
   'Trench Gate',
@@ -375,12 +284,7 @@ const StoneLantern = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Mailbox = new DecoratorInfo(
-  'Mailbox',
-  DecoratorGroup.Mailbox,
-  sprite(21, 0),
-  PlainTileGroup,
-);
+const Mailbox = new DecoratorInfo('Mailbox', DecoratorGroup.Mailbox, sprite(21, 0), PlainTileGroup);
 
 const FireHydrant = new DecoratorInfo(
   'Fire Hydrant',
@@ -389,19 +293,9 @@ const FireHydrant = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Snowman = new DecoratorInfo(
-  'Snowman',
-  DecoratorGroup.Snowman,
-  sprite(22, 1),
-  PlainTileGroup,
-);
+const Snowman = new DecoratorInfo('Snowman', DecoratorGroup.Snowman, sprite(22, 1), PlainTileGroup);
 
-const Sign = new DecoratorInfo(
-  'Sign',
-  DecoratorGroup.Sign,
-  sprite(24, 1),
-  PlainTileGroup,
-);
+const Sign = new DecoratorInfo('Sign', DecoratorGroup.Sign, sprite(24, 1), PlainTileGroup);
 
 const Buoy = new DecoratorInfo(
   'Buoy',
@@ -411,33 +305,13 @@ const Buoy = new DecoratorInfo(
   animation,
 );
 
-const Fence = new DecoratorInfo(
-  'Fence',
-  DecoratorGroup.Fence,
-  sprite(19, 2),
-  PlainTileGroup,
-);
+const Fence = new DecoratorInfo('Fence', DecoratorGroup.Fence, sprite(19, 2), PlainTileGroup);
 
-const Pipe = new DecoratorInfo(
-  'Pipe',
-  DecoratorGroup.Pipe,
-  sprite(23, 2),
-  PlainTileGroup,
-);
+const Pipe = new DecoratorInfo('Pipe', DecoratorGroup.Pipe, sprite(23, 2), PlainTileGroup);
 
-const Pumpkin = new DecoratorInfo(
-  'Pumpkin',
-  DecoratorGroup.Pumpkin,
-  sprite(21, 3),
-  PlainTileGroup,
-);
+const Pumpkin = new DecoratorInfo('Pumpkin', DecoratorGroup.Pumpkin, sprite(21, 3), PlainTileGroup);
 
-const Coffin = new DecoratorInfo(
-  'Coffin',
-  DecoratorGroup.Coffin,
-  sprite(20, 1),
-  PlainTileGroup,
-);
+const Coffin = new DecoratorInfo('Coffin', DecoratorGroup.Coffin, sprite(20, 1), PlainTileGroup);
 
 const AnimatedCoffin = new DecoratorInfo(
   'Coffin',
@@ -454,13 +328,10 @@ const SpiderWeb = new DecoratorInfo(
   PlainTileGroup,
 );
 
-const Candle = new DecoratorInfo(
-  'Candle',
-  DecoratorGroup.Candle,
-  sprite(22, 6),
-  PlainTileGroup,
-  { ...animation, clear: true },
-);
+const Candle = new DecoratorInfo('Candle', DecoratorGroup.Candle, sprite(22, 6), PlainTileGroup, {
+  ...animation,
+  clear: true,
+});
 
 const Cauldron = new DecoratorInfo(
   'Cauldron',
@@ -659,8 +530,6 @@ export function getAllDecorators(): ReadonlyArray<DecoratorInfo> {
   return decorators;
 }
 
-export function mapDecorators<T>(
-  fn: (decorator: DecoratorInfo) => T,
-): Array<T> {
+export function mapDecorators<T>(fn: (decorator: DecoratorInfo) => T): Array<T> {
   return Decorators.map((decorator) => decorator && fn(decorator));
 }

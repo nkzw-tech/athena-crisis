@@ -3,14 +3,7 @@ import { expect, test } from 'vitest';
 import startMap from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
 import { Skill } from '../info/Skill.tsx';
 import { Path, Space } from '../info/Tile.tsx';
-import {
-  Battleship,
-  Flamethrower,
-  Humvee,
-  Jetpack,
-  PatrolShip,
-  XFighter,
-} from '../info/Unit.tsx';
+import { Battleship, Flamethrower, Humvee, Jetpack, PatrolShip, XFighter } from '../info/Unit.tsx';
 import updatePlayer from '../lib/updatePlayer.tsx';
 import MapData, { SizeVector } from '../MapData.tsx';
 import { attackable, moveable } from '../Radius.tsx';
@@ -37,9 +30,7 @@ const radiusTestMap = MapData.createMap({
       },
     ],
   ],
-  map: [
-    1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1,
-  ],
+  map: [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1],
   size: {
     height: 5,
     width: 5,
@@ -373,14 +364,14 @@ test('calculate the moveable radius', () => {
     throw new Error(`Radius.test: 'unitA' not found at position ${vecA}.`);
   }
 
-  expect(
-    [...moveable(testMap, unitA, vecA, 1).values()].map(({ vector }) => vector),
-  ).toEqual([vec(15, 6), vec(15, 8), vec(14, 7)]);
+  expect([...moveable(testMap, unitA, vecA, 1).values()].map(({ vector }) => vector)).toEqual([
+    vec(15, 6),
+    vec(15, 8),
+    vec(14, 7),
+  ]);
 
   expect(
-    [...moveable(testMap, unitA, vecA, 2).values()]
-      .map(({ vector }) => vector)
-      .sort(),
+    [...moveable(testMap, unitA, vecA, 2).values()].map(({ vector }) => vector).sort(),
   ).toEqual(
     [
       vec(13, 7),
@@ -395,8 +386,7 @@ test('calculate the moveable radius', () => {
     ].sort(),
   );
 
-  expect(Array.from(attackable(testMap, unitA, vecA, 'cost').keys()).sort())
-    .toMatchInlineSnapshot(`
+  expect(Array.from(attackable(testMap, unitA, vecA, 'cost').keys()).sort()).toMatchInlineSnapshot(`
       [
         [
           12,
@@ -542,9 +532,7 @@ test('verifies that the attackable radius is always correct', () => {
   const map = radiusTestMap;
   const player1 = map.getPlayer(1);
   const vectors = [vec(3, 3), vec(4, 2), vec(4, 3), vec(4, 4)];
-  const units = vectors
-    .map((vector) => map.units.get(vector))
-    .filter(isPresent);
+  const units = vectors.map((vector) => map.units.get(vector)).filter(isPresent);
 
   const getAttackable = (id: number) =>
     Array.from(attackable(map, units[id], vectors[id], 'cost').values())
@@ -553,9 +541,7 @@ test('verifies that the attackable radius is always correct', () => {
         return unit && map.isOpponent(unit, player1);
       })
       .map(({ parent, vector }) => ({ parent, vector }))
-      .sort(({ vector: vecA }, { vector: vecB }) =>
-        String(vecA).localeCompare(String(vecB)),
-      );
+      .sort(({ vector: vecA }, { vector: vecB }) => String(vecA).localeCompare(String(vecB)));
 
   expect(getAttackable(0)).toMatchInlineSnapshot(`
     [
@@ -703,8 +689,8 @@ test('Trenches give a movement bonus to infantry units', () => {
   const vecB = vec(8, 3);
   const map = MapData.createMap({
     map: [
-      19, 19, 19, 19, 1, 1, 1, 1, 6, 6, 1, 19, 1, 1, 1, 1, 6, 19, 19, 19, 19,
-      19, 19, 1, 6, 1, 1, 19, 1, 1, 1, 1, 6, 19, 19, 19, 1, 1, 1, 1,
+      19, 19, 19, 19, 1, 1, 1, 1, 6, 6, 1, 19, 1, 1, 1, 1, 6, 19, 19, 19, 19, 19, 19, 1, 6, 1, 1,
+      19, 1, 1, 1, 1, 6, 19, 19, 19, 1, 1, 1, 1,
     ],
     size: {
       height: 5,
@@ -959,8 +945,7 @@ test('verifies that the attackable radius is always correct for X-Fighters', () 
     units: radiusTestMap.units.set(vecA, unitA),
   });
 
-  expect(Array.from(attackable(map, unitA, vecA, 'cost').keys()).sort())
-    .toMatchInlineSnapshot(`
+  expect(Array.from(attackable(map, unitA, vecA, 'cost').keys()).sort()).toMatchInlineSnapshot(`
       [
         [
           1,
@@ -1609,9 +1594,8 @@ test('calculate the moveable radius for multiple units in the same location', ()
       ]
     `);
 
-  expect(
-    Array.from(moveable(testMap, Flamethrower.create(1), vecA).keys()).sort(),
-  ).toMatchInlineSnapshot(`
+  expect(Array.from(moveable(testMap, Flamethrower.create(1), vecA).keys()).sort())
+    .toMatchInlineSnapshot(`
     [
       [
         10,
@@ -1668,9 +1652,9 @@ test('calculate the moveable radius for multiple units in the same location', ()
     ]
   `);
 
-  expect(
-    Array.from(moveable(testMap, Humvee.create(1), vecA).keys()).sort(),
-  ).toMatchInlineSnapshot(`[]`);
+  expect(Array.from(moveable(testMap, Humvee.create(1), vecA).keys()).sort()).toMatchInlineSnapshot(
+    `[]`,
+  );
 
   expect(Array.from(moveable(testMap, Humvee.create(2), vecA).keys()).sort())
     .toMatchInlineSnapshot(`
@@ -1807,8 +1791,7 @@ test('correctly cancels transition costs in the Space biome', () => {
     throw new Error(`Radius.test: 'unitA' not found at position ${vecA}.`);
   }
 
-  expect(Array.from(moveable(spaceMap, unitA, vecA).keys()).sort())
-    .toMatchInlineSnapshot(`
+  expect(Array.from(moveable(spaceMap, unitA, vecA).keys()).sort()).toMatchInlineSnapshot(`
     [
       [
         2,
@@ -1862,35 +1845,21 @@ test('cannot enter or exit a Spaceship without a bridge', () => {
     config: {
       biome: 4,
     },
-    map: [
-      Space.id,
-      Space.id,
-      Space.id,
-      Path.id,
-      Space.id,
-      Space.id,
-      Space.id,
-      Space.id,
-      Space.id,
-    ],
+    map: [Space.id, Space.id, Space.id, Path.id, Space.id, Space.id, Space.id, Space.id, Space.id],
     size: {
       height: 3,
       width: 3,
     },
   });
 
-  expect(
-    Array.from(moveable(map, unitA, vecA).keys()).sort(),
-  ).toMatchInlineSnapshot(`[]`);
+  expect(Array.from(moveable(map, unitA, vecA).keys()).sort()).toMatchInlineSnapshot(`[]`);
 
   expect(moveable(map, unitA, vecB).has(vecA)).toBeFalsy();
 });
 
 test('Naval units cannot access bridges unless they are below a Sea tile', () => {
   const map = radiusTestMap.copy({
-    buildings: radiusTestMap.buildings.deleteAll(
-      radiusTestMap.buildings.keys(),
-    ),
+    buildings: radiusTestMap.buildings.deleteAll(radiusTestMap.buildings.keys()),
     map: [
       6,
       6,

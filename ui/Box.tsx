@@ -18,13 +18,7 @@ export default memo(function Box({
   return (
     <Stack
       {...props}
-      className={cx(
-        boxStyle,
-        BoxStyle,
-        blur && blurStyle,
-        selected && selectedStyle,
-        className,
-      )}
+      className={cx(boxStyle, BoxStyle, blur && blurStyle, selected && selectedStyle, className)}
     />
   );
 });

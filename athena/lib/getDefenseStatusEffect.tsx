@@ -14,11 +14,6 @@ export default function getDefenseStatusEffect(
     0,
     1 +
       (isUnit(entity) && entity.isLeader() ? LeaderStatusEffect : 0) +
-      getSkillDefenseStatusEffects(
-        entity,
-        tile,
-        player.skills,
-        player.activeSkills,
-      ),
+      getSkillDefenseStatusEffects(entity, tile, player.skills, player.activeSkills),
   );
 }

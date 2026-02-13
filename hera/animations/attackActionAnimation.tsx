@@ -31,8 +31,7 @@ export default function attackActionAnimation(
   },
 ): Promise<State> {
   const { map } = state;
-  const originalEntityB =
-    to && (isBuilding ? map.buildings.get(to) : map.units.get(to));
+  const originalEntityB = to && (isBuilding ? map.buildings.get(to) : map.units.get(to));
 
   return weapon
     ? new Promise((resolve) => {
@@ -48,17 +47,11 @@ export default function attackActionAnimation(
             : state.animations
           ).set(from, {
             direction,
-            frames: attackStance
-              ? attackStance === 'long'
-                ? 16
-                : 8
-              : undefined,
+            frames: attackStance ? (attackStance === 'long' ? 16 : 8) : undefined,
             hasAttackStance: !!attackStance,
             onComplete: (state) => {
               const animations =
-                to && oppositeDirection
-                  ? state.animations.delete(to)
-                  : state.animations;
+                to && oppositeDirection ? state.animations.delete(to) : state.animations;
 
               resolve({
                 ...state,

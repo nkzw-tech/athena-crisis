@@ -24,9 +24,7 @@ import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx'
 const initialMap = withModifiers(
   MapData.createMap({
     config: { fog: true },
-    map: [
-      1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1,
-    ],
+    map: [1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1],
     size: { height: 5, width: 5 },
     teams: [
       { id: 1, name: '', players: [{ funds: 500, id: 1, userId: 'User-1' }] },
@@ -67,8 +65,7 @@ test('skills are active until the beginning of the next turn', async () => {
     EndTurnAction(),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       AttackUnit (1,2 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 87, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 40, ammo: [ [ 1, 6 ] ] }, chargeA: 133, chargeB: 15259 }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
@@ -86,21 +83,15 @@ test('crystals activate powers', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(1, 2);
   const mapA = initialMap.copy({
-    teams: updatePlayer(
-      initialMap.teams,
-      initialMap.getPlayer(1).copy({ skills }),
-    ),
-    units: initialMap.units
-      .set(vecA, SmallTank.create(1))
-      .set(vecB, SmallTank.create(2)),
+    teams: updatePlayer(initialMap.teams, initialMap.getPlayer(1).copy({ skills })),
+    units: initialMap.units.set(vecA, SmallTank.create(1)).set(vecB, SmallTank.create(2)),
   });
 
   const [gameStateA, gameActionResponseA] = await executeGameActions(mapA, [
     ActivateCrystalAction(Crystal.Power),
   ]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "ActivateCrystal { crystal: 0, player: 1, biome: null, hq: null }
       ActivatePower () { skill: 38, units: null, free: true }"
     `);
@@ -131,8 +122,7 @@ test('crystals activate powers', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Start
     ActivateCrystal { crystal: 4, player: null, biome: 3, hq: null }
     BeginGame"
@@ -178,9 +168,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
   const actions = [ActivatePowerAction(Skill.HighTide, null)];
   const [, gameActionResponseA] = await executeGameActions(mapA, actions);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponseA),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "ActivatePower () { skill: 41, units: null, free: false }
     AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
@@ -194,8 +182,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
   });
   const [, gameActionResponseB] = await executeGameActions(mapB, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 41, units: null, free: false }
       BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
@@ -231,8 +218,7 @@ test('players can defeat themselves with powers or defeat their team', async () 
   });
   const [, gameActionResponseC] = await executeGameActions(mapC, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
     "ActivatePower () { skill: 41, units: null, free: false }
     AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
     GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
@@ -244,23 +230,18 @@ test('players can defeat themselves with powers or defeat their team', async () 
   });
   const [, gameActionResponseD] = await executeGameActions(mapD, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
     "ActivatePower () { skill: 41, units: null, free: false }
     AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }"
   `);
 
   // Player defeats themselves, game continues.
   const mapF = mapD.copy({
-    units: mapD.units
-      .delete(vecC)
-      .set(vecA, Pioneer.create(1))
-      .set(vecG, Pioneer.create(3)),
+    units: mapD.units.delete(vecC).set(vecA, Pioneer.create(1)).set(vecG, Pioneer.create(3)),
   });
   const [, gameActionResponseF] = await executeGameActions(mapF, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseF))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseF)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 41, units: null, free: false }
       BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
@@ -268,14 +249,11 @@ test('players can defeat themselves with powers or defeat their team', async () 
 
   // Player defeats themselves and opponent, game ends.
   const mapG = mapC.copy({
-    units: mapC.units
-      .set(vecC, SmallTank.create(3))
-      .set(vecA, Pioneer.create(1)),
+    units: mapC.units.set(vecC, SmallTank.create(3)).set(vecA, Pioneer.create(1)),
   });
   const [, gameActionResponseG] = await executeGameActions(mapG, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseG))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseG)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 41, units: null, free: false }
       BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       AttackUnitGameOver { fromPlayer: 2, toPlayer: 3 }
@@ -284,14 +262,11 @@ test('players can defeat themselves with powers or defeat their team', async () 
 
   // Player defeats themselves and teammate, game ends.
   const mapH = mapC.copy({
-    units: mapC.units
-      .set(vecC, SmallTank.create(2))
-      .set(vecE, Pioneer.create(1)),
+    units: mapC.units.set(vecC, SmallTank.create(2)).set(vecE, Pioneer.create(1)),
   });
   const [, gameActionResponseH] = await executeGameActions(mapH, actions);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseH))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseH)).toMatchInlineSnapshot(`
       "ActivatePower () { skill: 41, units: null, free: false }
       BeginTurnGameOver { abandoned: false, fromPlayer: 1 }
       AttackUnitGameOver { fromPlayer: 3, toPlayer: 2 }

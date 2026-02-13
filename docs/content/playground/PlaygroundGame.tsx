@@ -68,8 +68,7 @@ export default function PlaygroundGame({
         tilted
       >
         {(props, actions) => {
-          const hide =
-            !isInView || props.lastActionResponse?.type === 'GameEnd';
+          const hide = !isInView || props.lastActionResponse?.type === 'GameEnd';
 
           return (
             <>

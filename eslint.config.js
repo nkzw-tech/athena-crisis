@@ -64,24 +64,15 @@ export default [
             'eslint.config.js',
           ],
           packageDir: findWorkspaces(import.meta.dirname).concat(
-            existsSync(join(import.meta.dirname, './electron'))
-              ? ['./electron']
-              : [],
-            existsSync(join(import.meta.dirname, './mobile'))
-              ? ['./mobile']
-              : [],
+            existsSync(join(import.meta.dirname, './electron')) ? ['./electron'] : [],
+            existsSync(join(import.meta.dirname, './mobile')) ? ['./mobile'] : [],
           ),
         },
       ],
       'import-x/no-unresolved': [
         2,
         {
-          ignore: [
-            String.raw`\?worker`,
-            'athena-crisis:*',
-            'glob',
-            'virtual:*',
-          ],
+          ignore: [String.raw`\?worker`, 'athena-crisis:*', 'glob', 'virtual:*'],
         },
       ],
       'no-extra-parens': 0,

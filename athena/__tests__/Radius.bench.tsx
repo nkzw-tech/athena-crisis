@@ -13,10 +13,7 @@ describe('movement radius', () => {
 });
 
 describe('movement radius for each unit', () => {
-  const vector = vec(
-    Math.floor(startMap.size.width / 2),
-    Math.floor(startMap.size.height / 2),
-  );
+  const vector = vec(Math.floor(startMap.size.width / 2), Math.floor(startMap.size.height / 2));
   bench('base case', () => {
     for (const unit of getAllUnits()) {
       moveable(startMap, unit.create(1), vector);

@@ -18,24 +18,14 @@ export const metadata: MapMetadata = {
               2,
             ),
             CharacterMessage(1, 'How could we lose?', 'self', 1),
-            CharacterMessage(
-              3,
-              "Don't worry, you can try as many times as you like.",
-              'self',
-              2,
-            ),
+            CharacterMessage(3, "Don't worry, you can try as many times as you like.", 'self', 2),
           ],
           conditions: [{ type: 'GameEnd', value: 'lose' }],
         },
         {
           actions: [
             CharacterMessage(1, 'We did it!', 'self', 2),
-            CharacterMessage(
-              49,
-              "Next time we won't make it this easy for you!",
-              'opponent',
-              1,
-            ),
+            CharacterMessage(49, "Next time we won't make it this easy for you!", 'opponent', 1),
             CharacterMessage(15, 'FIRE!', 'self', 2),
             CharacterMessage(
               3,

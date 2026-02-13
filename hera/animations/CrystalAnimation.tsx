@@ -36,13 +36,7 @@ export default function CrystalAnimation({
           <div className={circleStyle} onAnimationEnd={onComplete} />
         ) : (
           <div className={spriteStyle}>
-            <CrystalSprite
-              animate
-              crystal={crystal}
-              onComplete={complete}
-              portal
-              scale={scale}
-            />
+            <CrystalSprite animate crystal={crystal} onComplete={complete} portal scale={scale} />
           </div>
         )}
       </div>

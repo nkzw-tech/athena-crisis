@@ -20,15 +20,13 @@ export const isIPhone = /iphone/i.test(userAgent);
 
 export const isIOS =
   !!userAgent.match(/i(?:pad|phone)/i) ||
-  (/(macintosh|macintel|macppc|mac68k|macos)/i.test(userAgent) &&
-    navigator.maxTouchPoints > 0);
+  (/(macintosh|macintel|macppc|mac68k|macos)/i.test(userAgent) && navigator.maxTouchPoints > 0);
 
 export const isAndroid = /android/i.test(userAgent);
 
 export const isSafari =
   /constructor/i.test(maybeWindow.HTMLElement as unknown as string) ||
-  ((pushNotification) =>
-    pushNotification.toString() === '[object SafariRemoteNotification]')(
+  ((pushNotification) => pushNotification.toString() === '[object SafariRemoteNotification]')(
     !maybeWindow['safari'] ||
       (typeof safari !== 'undefined' && maybeWindow['safari'].pushNotification),
   ) ||

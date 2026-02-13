@@ -14,17 +14,10 @@ import {
 import { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
-import {
-  FastAnimationConfig,
-  HealAmount,
-  MaxHealth,
-} from '@deities/athena/map/Configuration.tsx';
+import { FastAnimationConfig, HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
-import Vector, {
-  sortByVectorKey,
-  sortVectors,
-} from '@deities/athena/map/Vector.tsx';
+import Vector, { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -74,20 +67,13 @@ export default async function activatePowerAction(
         length: 'medium',
         onComplete: (state) => {
           const { vision } = state;
-          const finalMap = applyActionResponse(
-            state.map,
-            vision,
-            actionResponse,
-          );
+          const finalMap = applyActionResponse(state.map, vision, actionResponse);
 
           const unitTypes = state.map
             .copy({
               teams: updatePlayer(
                 state.map.teams,
-                finalMap
-                  .getPlayer(player.id)
-                  .disableActiveSkills()
-                  .activateSkill(skill),
+                finalMap.getPlayer(player.id).disableActiveSkills().activateSkill(skill),
               ),
               units: actionResponse.units
                 ? state.map.units.merge(actionResponse.units)
@@ -96,17 +82,9 @@ export default async function activatePowerAction(
             .getActiveUnitTypes()
             .get(player.id);
 
-          const unitsToDamage = getUnitsToDamage(
-            state.map,
-            player,
-            skill,
-            from,
-            vision,
-          );
+          const unitsToDamage = getUnitsToDamage(state.map, player, skill, from, vision);
           const unitsToHeal = getUnitsToHealSkill(state.map, player.id, skill);
-          const healVectors = new Set(
-            unitsToHeal ? [...unitsToHeal.keys()] : [],
-          );
+          const healVectors = new Set(unitsToHeal ? [...unitsToHeal.keys()] : []);
 
           const damage = unitsToDamage?.size
             ? (state: State) =>
@@ -119,22 +97,18 @@ export default async function activatePowerAction(
                   next,
                   ({ map }, vector) => {
                     const unit = map.units.get(vector);
-                    const newMap =
-                      unit && onPowerUnitDamageEffect(skill, map, vector, unit);
+                    const newMap = unit && onPowerUnitDamageEffect(skill, map, vector, unit);
                     return newMap ? { map: newMap } : null;
                   },
                 )
             : null;
 
           const healUnits = unitsToHeal?.size
-            ? (state: State) =>
-                animateHeal(state, sortByVectorKey(unitsToHeal), next)
+            ? (state: State) => animateHeal(state, sortByVectorKey(unitsToHeal), next)
             : null;
 
           const shouldUpgradeFirst = skill === Skill.SpawnUnitInfernoJetpack;
-          const unitsToUpgrade = (
-            shouldUpgradeFirst ? state.map : finalMap
-          ).units.filter(
+          const unitsToUpgrade = (shouldUpgradeFirst ? state.map : finalMap).units.filter(
             (unit, vector) =>
               !healVectors.has(vector) &&
               state.map.matchesPlayer(unit, player) &&
@@ -144,15 +118,7 @@ export default async function activatePowerAction(
 
           const spawnUnits = unitsToSpawn?.size
             ? (state: State) =>
-                spawn(
-                  actions,
-                  state,
-                  [...unitsToSpawn],
-                  null,
-                  'slow',
-                  'spawn',
-                  next,
-                )
+                spawn(actions, state, [...unitsToSpawn], null, 'slow', 'spawn', next)
             : null;
 
           const upgrade = unitsToUpgrade.size
@@ -179,9 +145,7 @@ export default async function activatePowerAction(
           const queue = [
             damage,
             healUnits,
-            ...(shouldUpgradeFirst
-              ? [upgrade, spawnUnits]
-              : [spawnUnits, upgrade]),
+            ...(shouldUpgradeFirst ? [upgrade, spawnUnits] : [spawnUnits, upgrade]),
           ].filter(isPresent);
 
           const next = (state: State): StateLike | null => {
@@ -193,10 +157,7 @@ export default async function activatePowerAction(
             requestFrame(async () => {
               if (skill === Skill.HighTide) {
                 await scrollIntoView([
-                  vec(
-                    Math.floor(state.map.size.width / 2),
-                    Math.floor(state.map.size.height / 2),
-                  ),
+                  vec(Math.floor(state.map.size.width / 2), Math.floor(state.map.size.height / 2)),
                 ]);
                 await update({
                   animations: state.animations.set(new AnimationKey(), {

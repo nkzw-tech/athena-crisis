@@ -6,25 +6,14 @@ export default function getTranslatedPerformanceStyleTypeName(
 ) {
   switch (performanceType) {
     case PerformanceStyleType.LostUnits:
-      return (
-        <fbt desc="Label for lost units performance style type">Lost Units</fbt>
-      );
+      return <fbt desc="Label for lost units performance style type">Lost Units</fbt>;
     case PerformanceStyleType.CapturedBuildings:
-      return (
-        <fbt desc="Label for captured buildings performance style type">
-          Captures
-        </fbt>
-      );
+      return <fbt desc="Label for captured buildings performance style type">Captures</fbt>;
     case PerformanceStyleType.OneShots:
-      return (
-        <fbt desc="Label for one shots performance style type">One Shots</fbt>
-      );
+      return <fbt desc="Label for one shots performance style type">One Shots</fbt>;
     default: {
       performanceType satisfies never;
-      throw new UnknownTypeError(
-        'getTranslatedPerformanceStyleTypeName',
-        performanceType,
-      );
+      throw new UnknownTypeError('getTranslatedPerformanceStyleTypeName', performanceType);
     }
   }
 }

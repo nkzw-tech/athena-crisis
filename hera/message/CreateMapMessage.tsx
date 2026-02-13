@@ -4,16 +4,8 @@ import { getUnitInfoOrThrow, SecretUnits } from '@deities/athena/info/Unit.tsx';
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
-import {
-  numberToPlayerID,
-  PlayerID,
-  PlayerIDs,
-  toPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { numberToPlayerID, PlayerID, PlayerIDs, toPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import {
   isEntityMessageTag,
@@ -165,11 +157,7 @@ const ComposeMessage = ({
     ) : null;
 
   return (
-    <VStack
-      between
-      gap={value == null && tag === MessageTag.Building ? 16 : true}
-      wrap
-    >
+    <VStack between gap={value == null && tag === MessageTag.Building ? 16 : true} wrap>
       <Stack between gap stretch>
         <MessageTemplateListItem
           hasNext={conjunction != null}
@@ -179,12 +167,7 @@ const ComposeMessage = ({
           replacement={replacement}
           tags={tags}
         />
-        <Icon
-          button
-          className={iconStyle}
-          icon={Back}
-          onClick={removeTemplate}
-        />
+        <Icon button className={iconStyle} icon={Back} onClick={removeTemplate} />
       </Stack>
       <Stack between gap stretch>
         <VStack between gap stretch wrap>
@@ -202,8 +185,7 @@ const ComposeMessage = ({
                   ) : (
                     [...MessageConjunctions]
                       .map(([id]) => {
-                        const conjunction =
-                          TranslatedMessageConjunctions.get(id)?.();
+                        const conjunction = TranslatedMessageConjunctions.get(id)?.();
                         return conjunction ? (
                           <Tag
                             color={numberToPlayerID(id)}
@@ -227,9 +209,7 @@ const ComposeMessage = ({
                     }
                     setValue={(value) => setNext({ ...next, value })}
                     template={
-                      (next?.template != null &&
-                        MessageTemplate.get(next.template)) ||
-                      null
+                      (next?.template != null && MessageTemplate.get(next.template)) || null
                     }
                     value={next?.value || []}
                   />
@@ -247,10 +227,7 @@ const ComposeMessage = ({
                   .map(([id]) => {
                     if (tag === MessageTag.Unit) {
                       const unit = getUnitInfoOrThrow(id);
-                      if (
-                        SecretUnits.has(unit) ||
-                        unitRestrictions?.has(unit.type)
-                      ) {
+                      if (SecretUnits.has(unit) || unitRestrictions?.has(unit.type)) {
                         return null;
                       }
                     } else if (
@@ -368,8 +345,7 @@ export default function CreateMapMessage({
   const [conjunction, _setConjunction] = useState<number | null>(null);
   const [next, setNext] = useState<PartialPlainMapMessage | null>(null);
 
-  const currentTemplate =
-    (template != null && MessageTemplate.get(template)) || null;
+  const currentTemplate = (template != null && MessageTemplate.get(template)) || null;
 
   const setTemplate = useCallback((template: number | null) => {
     _setTemplate(template);
@@ -397,10 +373,7 @@ export default function CreateMapMessage({
   );
 
   const canSend = useMemo(
-    () =>
-      currentTemplate &&
-      isValidMapMessageValue(value) &&
-      (conjunction == null || nextMessage),
+    () => currentTemplate && isValidMapMessageValue(value) && (conjunction == null || nextMessage),
     [conjunction, currentTemplate, nextMessage, value],
   );
 
@@ -441,17 +414,7 @@ export default function CreateMapMessage({
         messages: new Map(messages).set(vector, { ...clientMessage, id }),
       }));
     }
-  }, [
-    conjunction,
-    currentPlayer,
-    nextMessage,
-    onCreate,
-    template,
-    update,
-    user,
-    value,
-    vector,
-  ]);
+  }, [conjunction, currentPlayer, nextMessage, onCreate, template, update, user, value, vector]);
 
   return user ? (
     <MapMessageContainer
@@ -481,12 +444,7 @@ export default function CreateMapMessage({
       zIndex={zIndex}
     >
       {template == null && (
-        <Icon
-          button
-          className={absoluteIconStyle}
-          icon={Close}
-          onClick={close}
-        />
+        <Icon button className={absoluteIconStyle} icon={Close} onClick={close} />
       )}
       <ComposeMessage
         biome={biome}

@@ -30,9 +30,7 @@ export type CampaignEditorState = Readonly<{
   mode: CampaignEditorMode;
 }>;
 
-export type SetCampaignEditorStateFunction = (
-  state: Partial<CampaignEditorState>,
-) => void;
+export type SetCampaignEditorStateFunction = (state: Partial<CampaignEditorState>) => void;
 
 export type CampaignObject = Readonly<{
   description: string;

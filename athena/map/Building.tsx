@@ -1,10 +1,5 @@
 import getFirst from '@nkzw/core/getFirst.js';
-import {
-  Barracks,
-  BuildingInfo,
-  getBuildingInfo,
-  SpawnPlatform,
-} from '../info/Building.tsx';
+import { Barracks, BuildingInfo, getBuildingInfo, SpawnPlatform } from '../info/Building.tsx';
 import { Skill } from '../info/Skill.tsx';
 import filterNullables from '../lib/filterNullables.tsx';
 import hasHQ from '../lib/hasHQ.tsx';
@@ -36,13 +31,7 @@ export default class Building extends Entity {
     if (!buildingInfo) {
       throw new Error(`Invalid building '${id}'.`);
     }
-    super(
-      id,
-      health,
-      buildingInfo.isStructure() ? 0 : player,
-      completed,
-      label,
-    );
+    super(id, health, buildingInfo.isStructure() ? 0 : player, completed, label);
     this.info = buildingInfo;
   }
 
@@ -61,11 +50,7 @@ export default class Building extends Entity {
 
   private convert(biome: Biome, player: PlayerID) {
     return this.copy({
-      id: this.info.isHQ()
-        ? biome === Biome.Spaceship
-          ? SpawnPlatform.id
-          : Barracks.id
-        : this.id,
+      id: this.info.isHQ() ? (biome === Biome.Spaceship ? SpawnPlatform.id : Barracks.id) : this.id,
       player,
     });
   }
@@ -77,8 +62,7 @@ export default class Building extends Entity {
   }
 
   neutralize(biome: Biome, displayOnly = false) {
-    return this.player === 0 ||
-      (!displayOnly && this.info.configuration.attackStatusEffect)
+    return this.player === 0 || (!displayOnly && this.info.configuration.attackStatusEffect)
       ? this
       : this.convert(biome, 0);
   }
@@ -182,23 +166,11 @@ export default class Building extends Entity {
   }
 
   override toJSON(): PlainBuilding {
-    const {
-      behaviors: b,
-      completed: f,
-      health: h,
-      id: i,
-      label: l,
-      player: p,
-      skills: s,
-    } = this;
+    const { behaviors: b, completed: f, health: h, id: i, label: l, player: p, skills: s } = this;
 
     return {
-      ...(b?.size
-        ? { b: b.size === 1 ? this.getFirstAIBehavior() : [...b] }
-        : null),
-      ...(s?.size
-        ? { s: s.size === 1 ? s.values().next().value : [...s] }
-        : null),
+      ...(b?.size ? { b: b.size === 1 ? this.getFirstAIBehavior() : [...b] } : null),
+      ...(s?.size ? { s: s.size === 1 ? s.values().next().value : [...s] } : null),
       ...(f ? { f: 1 } : null),
       h,
       i,

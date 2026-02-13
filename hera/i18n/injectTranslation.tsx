@@ -19,12 +19,8 @@ export default function injectTranslation<
   entityMap: Record<string, () => string>,
   fields?: [T, S],
 ) {
-  const [fieldName, internalFieldName] = fields || [
-    'name' as T,
-    'internalName' as S,
-  ];
-  const isDescription =
-    fieldName === 'description' || fieldName === 'characterDescription';
+  const [fieldName, internalFieldName] = fields || ['name' as T, 'internalName' as S];
+  const isDescription = fieldName === 'description' || fieldName === 'characterDescription';
 
   Object.defineProperty(object.prototype, fieldName, {
     configurable: true,
@@ -34,8 +30,7 @@ export default function injectTranslation<
       },
     ) {
       const value = isDescription ? String(this.id) : this[internalFieldName];
-      const name =
-        (value && entityMap[value]) || (() => this[internalFieldName]);
+      const name = (value && entityMap[value]) || (() => this[internalFieldName]);
       Object.defineProperty(this, fieldName, {
         configurable: true,
         get: name,

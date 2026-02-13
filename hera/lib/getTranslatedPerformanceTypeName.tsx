@@ -1,9 +1,7 @@
 import { PerformanceType } from '@deities/athena/map/PlayerPerformance.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
-export default function getTranslatedPerformanceTypeName(
-  performanceType: PerformanceType,
-) {
+export default function getTranslatedPerformanceTypeName(performanceType: PerformanceType) {
   switch (performanceType) {
     case 'pace':
       return <fbt desc="Label for pace performance metric">Pace</fbt>;
@@ -15,10 +13,7 @@ export default function getTranslatedPerformanceTypeName(
       return <fbt desc="Label for bonus performance metric">Bonus</fbt>;
     default: {
       performanceType satisfies never;
-      throw new UnknownTypeError(
-        'getTranslatedPerformanceTypeName',
-        performanceType,
-      );
+      throw new UnknownTypeError('getTranslatedPerformanceTypeName', performanceType);
     }
   }
 }

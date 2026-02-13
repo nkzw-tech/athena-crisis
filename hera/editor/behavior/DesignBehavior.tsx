@@ -42,13 +42,7 @@ import addFlashAnimation from '../../lib/addFlashAnimation.tsx';
 import explodeUnits from '../../lib/explodeUnits.tsx';
 import spawn from '../../lib/spawn.tsx';
 import { RadiusType } from '../../Radius.tsx';
-import {
-  Actions,
-  MapBehavior,
-  State,
-  StateLike,
-  StateWithActions,
-} from '../../Types.tsx';
+import { Actions, MapBehavior, State, StateLike, StateWithActions } from '../../Types.tsx';
 import FlashFlyout from '../../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../../ui/Flyout.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
@@ -71,24 +65,16 @@ const encodeEntities = (entities: ImmutableMap<Vector, Entity>) =>
     .map(({ id }, vector) => `${id}:${vector}`)
     .join(',');
 
-const isDesignBehavior = (
-  behavior?: MapBehavior | null,
-): behavior is DesignBehavior => {
+const isDesignBehavior = (behavior?: MapBehavior | null): behavior is DesignBehavior => {
   return behavior?.type === 'design';
 };
 
 const canPlaceMapEditorTile = (map: MapData, vector: Vector, info: TileInfo) =>
   canPlaceTile(map, vector, info === ShipyardConstructionSite ? Pier : info) ||
   (info === DeepSea &&
-    vector
-      .expandWithDiagonals()
-      .every((vector) => canPlaceTile(map, vector, Sea)));
+    vector.expandWithDiagonals().every((vector) => canPlaceTile(map, vector, Sea)));
 
-const getTemporaryMapForBuilding = (
-  map: MapData,
-  vector: Vector,
-  building: Building,
-) => {
+const getTemporaryMapForBuilding = (map: MapData, vector: Vector, building: Building) => {
   const { editorPlaceOn, placeOn } = building.info.configuration;
   const tiles = new Set([...(placeOn || []), ...editorPlaceOn]);
   const tile = getFirstOrThrow(tiles);
@@ -124,10 +110,7 @@ const getDecorator = (
             return [index, map.decorators[index]];
           })
           .find(([, decorator]) => decorator) || []
-      : null) || [
-      getDecoratorIndex(subVector, decoratorMapSize),
-      editor.selected?.decorator,
-    ]
+      : null) || [getDecoratorIndex(subVector, decoratorMapSize), editor.selected?.decorator]
   );
 };
 
@@ -177,8 +160,7 @@ export default class DesignBehavior {
     const { animations, map } = state;
     const hasUnit = map.units.has(vector);
     const hasBuilding = map.buildings.has(vector);
-    const isErasingUnit =
-      hasUnit && (editor?.isErasing || editor?.selected?.eraseUnits);
+    const isErasingUnit = hasUnit && (editor?.isErasing || editor?.selected?.eraseUnits);
     const isErasingBuilding =
       hasBuilding && (editor?.isErasing || editor?.selected?.eraseBuildings);
 
@@ -236,8 +218,7 @@ export default class DesignBehavior {
             },
     });
 
-    return maybeEntity &&
-      !map.matchesPlayer(map.getCurrentPlayer(), maybeEntity)
+    return maybeEntity && !map.matchesPlayer(map.getCurrentPlayer(), maybeEntity)
       ? changePlayer(state.map, maybeEntity.player)
       : null;
   }
@@ -252,21 +233,11 @@ export default class DesignBehavior {
     const players = PlayerIDs.filter((id) => id !== 0);
     const currentPlayerId = state.map.getCurrentPlayer().id;
     vectors.forEach((vector, index) => {
-      const playerIndex =
-        currentPlayerId != 0 ? players.indexOf(currentPlayerId) : -1;
-      const playerId =
-        playerIndex === -1
-          ? 0
-          : players[(playerIndex + index) % players.length];
+      const playerIndex = currentPlayerId != 0 ? players.indexOf(currentPlayerId) : -1;
+      const playerId = playerIndex === -1 ? 0 : players[(playerIndex + index) % players.length];
       newState = {
         ...newState,
-        ...this.put(
-          vector,
-          { ...state, ...newState },
-          actions,
-          editor,
-          playerId,
-        ),
+        ...this.put(vector, { ...state, ...newState }, actions, editor, playerId),
       };
     });
     return newState;
@@ -332,11 +303,7 @@ export default class DesignBehavior {
       };
     } else if (isErasing || selected.eraseTiles || selected.tile) {
       return this.putTile(
-        selected.tile
-          ? getTileInfo(selected.tile)
-          : map.getTile(vector, 1)
-            ? null
-            : Plain,
+        selected.tile ? getTileInfo(selected.tile) : map.getTile(vector, 1) ? null : Plain,
         vector,
         state,
         actions,
@@ -344,24 +311,10 @@ export default class DesignBehavior {
       );
     } else if (selected.unit) {
       this.previous = null;
-      return this.putUnit(
-        selected.unit,
-        vector,
-        state,
-        actions,
-        editor,
-        playerId,
-      );
+      return this.putUnit(selected.unit, vector, state, actions, editor, playerId);
     } else if (selected.building) {
       this.previous = null;
-      return this.putBuilding(
-        selected.building,
-        vector,
-        state,
-        actions,
-        editor,
-        playerId,
-      );
+      return this.putBuilding(selected.building, vector, state, actions, editor, playerId);
     }
     return null;
   }
@@ -388,18 +341,13 @@ export default class DesignBehavior {
 
     const tileToPlace = reduceTiles(
       (info, tile) =>
-        info === tile.style.connectsWith && canPlaceTile(map, vector, tile)
-          ? tile
-          : info,
+        info === tile.style.connectsWith && canPlaceTile(map, vector, tile) ? tile : info,
       info,
     );
 
     if (tileToPlace === DeepSea) {
       vector.adjacentWithDiagonals().forEach((vector) => {
-        if (
-          map.contains(vector) &&
-          !(map.getTileInfo(vector, 0).type & TileTypes.Sea)
-        ) {
+        if (map.contains(vector) && !(map.getTileInfo(vector, 0).type & TileTypes.Sea)) {
           writeTile(newMap, newModifiers, map.getTileIndex(vector), Sea);
         }
       });
@@ -414,10 +362,7 @@ export default class DesignBehavior {
       };
     }
 
-    if (
-      previous?.position.distance(vector) === 1 &&
-      CrossOverTiles.has(previous.tile)
-    ) {
+    if (previous?.position.distance(vector) === 1 && CrossOverTiles.has(previous.tile)) {
       for (const tile of [River, Trench]) {
         const temporaryMap = newMap.slice();
         const index = map.getTileIndex(previous.position);
@@ -564,19 +509,11 @@ export default class DesignBehavior {
     const { units } = map;
     if (unit.isCapturing()) {
       const building = map.buildings.get(vector);
-      unit =
-        building && map.isOpponent(building, unit) ? unit : unit.stopCapture();
+      unit = building && map.isOpponent(building, unit) ? unit : unit.stopCapture();
     }
-    const newUnits = ImmutableMap([
-      [vector, unit.removeLeader().setPlayer(playerId)],
-    ]);
+    const newUnits = ImmutableMap([[vector, unit.removeLeader().setPlayer(playerId)]]);
 
-    return canDeploy(
-      map.copy({ units: units.delete(vector) }),
-      unit.info,
-      vector,
-      true,
-    )
+    return canDeploy(map.copy({ units: units.delete(vector) }), unit.info, vector, true)
       ? {
           ...spawn(
             actions,
@@ -641,14 +578,7 @@ export default class DesignBehavior {
       const { editorPlaceOn, placeOn } = building.info.configuration;
       const tiles = new Set([...(placeOn || []), ...editorPlaceOn]);
       if (!tiles.has(map.getTileInfo(vector))) {
-        const newState = this.putTile(
-          getFirstOrThrow(tiles),
-          vector,
-          state,
-          actions,
-          editor,
-          true,
-        );
+        const newState = this.putTile(getFirstOrThrow(tiles), vector, state, actions, editor, true);
 
         if (!newState?.map) {
           return newState;
@@ -657,11 +587,7 @@ export default class DesignBehavior {
         if (!map.maybeGetPlayer(playerId)) {
           map = mergeTeams(
             map,
-            maybeCreatePlayers(
-              map,
-              undefined,
-              ImmutableMap([[vector, newBuilding]]),
-            ),
+            maybeCreatePlayers(map, undefined, ImmutableMap([[vector, newBuilding]])),
           );
         }
 
@@ -716,8 +642,7 @@ export default class DesignBehavior {
   }
 
   component({ editor, state }: StateWithActions) {
-    const { animationConfig, behavior, map, position, tileSize, zIndex } =
-      state;
+    const { animationConfig, behavior, map, position, tileSize, zIndex } = state;
 
     if (!editor || !position) {
       return null;
@@ -734,8 +659,7 @@ export default class DesignBehavior {
       } = {},
     } = editor;
 
-    const decoratorCanBePlaced =
-      decorator && canPlaceDecorator(state.map, position, decorator);
+    const decoratorCanBePlaced = decorator && canPlaceDecorator(state.map, position, decorator);
     const isErasingDecorators = !!(eraseDecorators || (decorator && isErasing));
     if (
       (decoratorCanBePlaced || isErasingDecorators) &&
@@ -744,12 +668,7 @@ export default class DesignBehavior {
     ) {
       const { subVector } = behavior;
       const decorators = map.decorators.slice().fill(0);
-      const [index, decoratorId] = getDecorator(
-        state,
-        editor,
-        subVector,
-        isErasingDecorators,
-      );
+      const [index, decoratorId] = getDecorator(state, editor, subVector, isErasingDecorators);
       if (index && decoratorId) {
         decorators[index] = decoratorId;
         return (
@@ -773,12 +692,7 @@ export default class DesignBehavior {
 
     if (
       (unit &&
-        !canDeploy(
-          map.copy({ units: map.units.delete(position) }),
-          unit.info,
-          position,
-          true,
-        )) ||
+        !canDeploy(map.copy({ units: map.units.delete(position) }), unit.info, position, true)) ||
       (building &&
         (!canBuild(
           getTemporaryMapForBuilding(
@@ -806,17 +720,12 @@ export default class DesignBehavior {
           map.buildings.filter(
             (b) =>
               b.id == building.id &&
-              map.matchesPlayer(
-                building.info.isStructure() ? 0 : map.getCurrentPlayer(),
-                b,
-              ),
+              map.matchesPlayer(building.info.isStructure() ? 0 : map.getCurrentPlayer(), b),
           ).size >= building.info.configuration.limit) ||
         (decorator &&
           !decoratorCanBePlaced &&
           map.reduceEachDecorator((sum) => sum + 1, 0) >= decoratorLimit);
-      const limit = building
-        ? building.info.configuration.limit
-        : decoratorLimit;
+      const limit = building ? building.info.configuration.limit : decoratorLimit;
 
       return (
         <FlashFlyout

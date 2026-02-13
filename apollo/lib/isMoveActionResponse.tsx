@@ -7,13 +7,7 @@ import {
   SwapActionResponse,
 } from '../ActionResponse.tsx';
 
-const moveActions = new Set([
-  'CreateUnit',
-  'DropUnit',
-  'Move',
-  'Spawn',
-  'Swap',
-]);
+const moveActions = new Set(['CreateUnit', 'DropUnit', 'Move', 'Spawn', 'Swap']);
 
 export default function isMoveActionResponse(
   actionResponse: ActionResponse,

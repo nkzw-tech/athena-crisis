@@ -4,10 +4,7 @@ import { Plain, TileInfo, TileType } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
@@ -20,10 +17,7 @@ import InlineTileList from '../card/InlineTileList.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
 import UnitTile from '../Unit.tsx';
 
-type InlineTagProps = Pick<
-  ComponentProps<typeof Tag>,
-  'isMessage' | 'onRemove' | 'size'
->;
+type InlineTagProps = Pick<ComponentProps<typeof Tag>, 'isMessage' | 'onRemove' | 'size'>;
 
 export const UnitName = ({
   color,
@@ -98,12 +92,7 @@ export function MovementTypeNames({
   return (
     <List
       items={movementTypes.map((movementType, index) => (
-        <MovementTypeName
-          key={index}
-          movementType={movementType}
-          size={size}
-          {...props}
-        />
+        <MovementTypeName key={index} movementType={movementType} size={size} {...props} />
       ))}
     />
   );
@@ -147,14 +136,7 @@ export function TileTypeName({
 }: {
   tileType: TileType;
 } & InlineTagProps) {
-  return (
-    <Tag
-      color="team"
-      size={size}
-      tag={getTranslatedTileTypeName(tileType)}
-      {...props}
-    />
-  );
+  return <Tag color="team" size={size} tag={getTranslatedTileTypeName(tileType)} {...props} />;
 }
 
 const nowrapStyle = css`

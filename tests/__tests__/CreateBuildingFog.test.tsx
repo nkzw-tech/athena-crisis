@@ -69,11 +69,7 @@ test('buildings appear properly when they are created in fog', async () => {
     CreateBuildingAction(vec(4, 5), House.id),
     EndTurnAction(),
   ]);
-  const screenshot = await captureGameActionResponse(
-    map,
-    gameActionResponse,
-    player1.userId,
-  );
+  const screenshot = await captureGameActionResponse(map, gameActionResponse, player1.userId);
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 });

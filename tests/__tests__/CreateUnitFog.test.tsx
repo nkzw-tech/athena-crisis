@@ -99,11 +99,7 @@ test('units on a factory do not disappear when a unit is created and moved into 
     CreateUnitAction(from, Pioneer.id, to),
     EndTurnAction(),
   ]);
-  const screenshot = await captureGameActionResponse(
-    map,
-    gameActionResponse,
-    player1.userId,
-  );
+  const screenshot = await captureGameActionResponse(map, gameActionResponse, player1.userId);
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
 });

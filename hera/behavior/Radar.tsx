@@ -9,10 +9,7 @@ import Zap from '@iconify-icons/pixelarticons/zap.js';
 import { fbt } from 'fbtee';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  ActionWheelCharge,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import ActionWheel, { ActionWheelCharge, LargeActionButton } from '../ui/ActionWheel.tsx';
 import { selectFallback } from './Behavior.tsx';
 import toggleLightningAction from './radar/toggleLightningAction.tsx';
 
@@ -53,9 +50,7 @@ export default class Radar {
     const { radius, selectedPosition } = state;
     if (selectedPosition && radius && radius.fields.get(vector)) {
       actions.requestFrame(async () =>
-        actions.update(
-          await toggleLightningAction(actions, selectedPosition, vector, state),
-        ),
+        actions.update(await toggleLightningAction(actions, selectedPosition, vector, state)),
       );
       return null;
     }
@@ -64,14 +59,7 @@ export default class Radar {
 
   component = ({ actions, state }: StateWithActions) => {
     const { update } = actions;
-    const {
-      animationConfig,
-      map,
-      navigationDirection,
-      selectedPosition,
-      tileSize,
-      zIndex,
-    } = state;
+    const { animationConfig, map, navigationDirection, selectedPosition, tileSize, zIndex } = state;
     if (!this.radarType && selectedPosition) {
       const { charge, id } = map.getCurrentPlayer();
       let canEnableLightning = false;
@@ -117,9 +105,7 @@ export default class Radar {
             entityCount={2}
             icon={(highlight, props) => <Icon icon={ZapOn} {...props} />}
             label={
-              <fbt desc="Short label to describe the enable lightning action">
-                Enable Lightning
-              </fbt>
+              <fbt desc="Short label to describe the enable lightning action">Enable Lightning</fbt>
             }
             navigationDirection={navigationDirection}
             onClick={() => update({ behavior: new Radar('on') })}

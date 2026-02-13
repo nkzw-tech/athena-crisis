@@ -21,10 +21,7 @@ export default async function receiveCrystalAnimation(
   actionResponse: ReceiveRewardActionResponse,
 ): Promise<State> {
   const { player } = actionResponse;
-  const crystal =
-    actionResponse.reward.type === 'Crystal'
-      ? actionResponse.reward.crystal
-      : null;
+  const crystal = actionResponse.reward.type === 'Crystal' ? actionResponse.reward.crystal : null;
 
   return crystal === null
     ? state
@@ -72,10 +69,7 @@ export default async function receiveCrystalAnimation(
             style: 'flashy',
             text: String(
               fbt(
-                fbt.param(
-                  'user',
-                  getUserDisplayName(state.playerDetails, player),
-                ) +
+                fbt.param('user', getUserDisplayName(state.playerDetails, player)) +
                   ' received a ' +
                   fbt.param('crystal', getTranslatedCrystalName(crystal)),
                 'Receive reward message',

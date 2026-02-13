@@ -27,9 +27,7 @@ const formatWithOxfmt = async (filePath: string, sourceText: string) => {
 };
 
 const files = (
-  await Promise.all(
-    globSync(`${path}/{nodes,mutations}/*.tsx`.split(sep).join(posix.sep)),
-  )
+  await Promise.all(globSync(`${path}/{nodes,mutations}/*.tsx`.split(sep).join(posix.sep)))
 )
   .map((file) => relative(path, file.slice(0, file.lastIndexOf('.'))))
   .sort((a, b) => String(a).localeCompare(String(b)));

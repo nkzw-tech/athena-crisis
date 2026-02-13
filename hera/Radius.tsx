@@ -93,13 +93,9 @@ const Item = memo(function Item({
   }
 
   const isEffect =
-    type === RadiusType.Effect1 ||
-    type === RadiusType.Effect2 ||
-    type === RadiusType.Effect3;
+    type === RadiusType.Effect1 || type === RadiusType.Effect2 || type === RadiusType.Effect3;
   const isEscort =
-    type === RadiusType.Escort1 ||
-    type === RadiusType.Escort2 ||
-    type === RadiusType.Escort3;
+    type === RadiusType.Escort1 || type === RadiusType.Escort2 || type === RadiusType.Escort3;
 
   return (
     <motion.div
@@ -111,8 +107,7 @@ const Item = memo(function Item({
         opposite && oppositeMaskStyle,
         ...borderStyles,
         dim && dimStyle,
-        type === RadiusType.Attack &&
-          (biome === Biome.Volcano || biome === Biome.Luna)
+        type === RadiusType.Attack && (biome === Biome.Volcano || biome === Biome.Luna)
           ? alternateAttackStyle
           : colors[type],
         isEffect && radialMaskStyle,
@@ -145,10 +140,7 @@ const getArrowPath = (
 
   const first = originalPath[0];
   const path = [
-    new SpriteVector(
-      from.x + (first.x - from.x) * 0.65,
-      from.y + (first.y - from.y) * 0.65,
-    ),
+    new SpriteVector(from.x + (first.x - from.x) * 0.65, from.y + (first.y - from.y) * 0.65),
   ];
 
   // First, add additional half-steps to the path.
@@ -183,10 +175,7 @@ const getArrowPath = (
   const last = path.at(-1)!;
   const secondToLast = path.at(-2) || first;
   return [
-    new SpriteVector(
-      from.x + (first.x - from.x) * 0.63,
-      from.y + (first.y - from.y) * 0.63,
-    ),
+    new SpriteVector(from.x + (first.x - from.x) * 0.63, from.y + (first.y - from.y) * 0.63),
     ...path.slice(0, -1),
     new SpriteVector(
       last.x + (secondToLast.x - last.x) * 0.1,
@@ -196,11 +185,7 @@ const getArrowPath = (
     .map((vector, index) => {
       const control: Vector | null = controlPoints[index];
       return `${
-        index
-          ? control
-            ? `Q${(control.x - 0.5) * size},${(control.y - 0.5) * size} `
-            : 'L'
-          : 'M'
+        index ? (control ? `Q${(control.x - 0.5) * size},${(control.y - 0.5) * size} ` : 'L') : 'M'
       }${(vector.x - 0.5) * size},${(vector.y - 0.5) * size}`;
     })
     .join('');
@@ -244,10 +229,7 @@ export default memo(function Radius({
             vision.isVisible(map, vector) &&
             selectedUnit &&
             (!isPlayable(map, currentViewer, unit) ||
-              !unit.info.canTransport(
-                selectedUnit.info,
-                map.getTileInfo(vector),
-              ))) ||
+              !unit.info.canTransport(selectedUnit.info, map.getTileInfo(vector)))) ||
           (map.buildings.has(vector) &&
             selectedUnit &&
             !selectedUnit.info.hasAbility(Ability.AccessBuildings))
@@ -258,9 +240,7 @@ export default memo(function Radius({
     }
     subPath = path.slice(0, index + 1);
   }
-  const arrowPath = !showCircle
-    ? getArrowPath(subPath, selectedPosition, size)
-    : null;
+  const arrowPath = !showCircle ? getArrowPath(subPath, selectedPosition, size) : null;
 
   return (
     <>
@@ -270,13 +250,7 @@ export default memo(function Radius({
           dim={dim}
           fields={fields}
           getLayer={(y) =>
-            getLayer(
-              y +
-                (vision.isVisible(map, vector) && map.units.has(vector)
-                  ? 0
-                  : 1),
-              'radius',
-            )
+            getLayer(y + (vision.isVisible(map, vector) && map.units.has(vector) ? 0 : 1), 'radius')
           }
           key={'r' + String(vector)}
           opposite={opposite}
@@ -338,9 +312,7 @@ export default memo(function Radius({
   );
 });
 
-const vars = new CSSVariables<
-  'opacity' | 'color' | 'background-light' | 'x' | 'y'
->('r');
+const vars = new CSSVariables<'opacity' | 'color' | 'background-light' | 'x' | 'y'>('r');
 
 const itemStyle = css`
   ${vars.set('opacity', 0.4)}
@@ -423,19 +395,13 @@ const colors: Record<RadiusType, string> = {
     border-radius: 8px;
     animation: ${keyframes`
       0% {
-        transform: translate3d(${vars.apply(
-          'x',
-        )}, ${vars.apply('y')}, 0) scale(1, 1);
+        transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) scale(1, 1);
       }
       50% {
-        transform: translate3d(${vars.apply(
-          'x',
-        )}, ${vars.apply('y')}, 0) scale(1.1, 1.1);        
+        transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) scale(1.1, 1.1);        
       }
       100% {
-        transform: translate3d(${vars.apply(
-          'x',
-        )}, ${vars.apply('y')}, 0) scale(0.9, 0.9);
+        transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) scale(0.9, 0.9);
       }
     `} ease-in-out 2s infinite alternate;
   `,

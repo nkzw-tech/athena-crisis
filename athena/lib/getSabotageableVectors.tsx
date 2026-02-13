@@ -12,9 +12,7 @@ export default function getSabotageableVectors(
       ? position.adjacent().filter((vector) => {
           const unitB = map.units.get(vector);
           return (
-            unitB &&
-            map.isOpponent(unitB, unitA) &&
-            unitA.info.canSabotageUnitType(unitB.info)
+            unitB && map.isOpponent(unitB, unitA) && unitA.info.canSabotageUnitType(unitB.info)
           );
         })
       : [],

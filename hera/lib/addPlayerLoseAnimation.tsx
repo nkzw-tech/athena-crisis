@@ -27,12 +27,7 @@ export default function addPlayerLoseAnimation(
           .keys();
         return {
           behavior: new NullBehavior(),
-          ...explodeUnits(
-            actions,
-            state,
-            sortVectors([...unitsToExplode]),
-            onComplete,
-          ),
+          ...explodeUnits(actions, state, sortVectors([...unitsToExplode]), onComplete),
         };
       },
       player: player.id,
@@ -40,17 +35,13 @@ export default function addPlayerLoseAnimation(
       text: String(
         abandoned
           ? fbt(
-              fbt.param(
-                'user',
-                getUserDisplayName(state.playerDetails, player.id),
-              ) + ' abandoned this game and disappeared!',
+              fbt.param('user', getUserDisplayName(state.playerDetails, player.id)) +
+                ' abandoned this game and disappeared!',
               'Player was defeated',
             )
           : fbt(
-              fbt.param(
-                'color',
-                getTranslatedFactionName(state.playerDetails, player.id),
-              ) + ' was defeated!',
+              fbt.param('color', getTranslatedFactionName(state.playerDetails, player.id)) +
+                ' was defeated!',
               'Player was defeated',
             ),
       ),

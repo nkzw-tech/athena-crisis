@@ -1,8 +1,4 @@
-import {
-  Crystal,
-  CrystalAttackEffect,
-  MaxChaosStars,
-} from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal, CrystalAttackEffect, MaxChaosStars } from '@deities/athena/invasions/Crystal.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
 

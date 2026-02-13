@@ -17,9 +17,7 @@ test('creates valid maps', async () => {
   for (let i = 0; i < 50; i++) {
     const map = withModifiers(
       generateSea(
-        generateBuildings(
-          generateRandomMap(new SizeVector(random(10, 30), random(10, 30))),
-        ),
+        generateBuildings(generateRandomMap(new SizeVector(random(10, 30), random(10, 30)))),
       ),
     );
     const validatedMap = validateMap(map, AIRegistry);

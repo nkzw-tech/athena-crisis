@@ -21,8 +21,6 @@ export default function MapEditorMirrorCursors({
 
   const vectors = getSymmetricPositions(orign, drawingMode, mapSize);
   return vectors.size
-    ? [...vectors].map((vector) => (
-        <Cursor {...props} key={vector.toString()} position={vector} />
-      ))
+    ? [...vectors].map((vector) => <Cursor {...props} key={vector.toString()} position={vector} />)
     : null;
 }

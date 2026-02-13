@@ -31,10 +31,7 @@ export default function shouldAttack(
     return false;
   }
 
-  if (
-    !unitA.getAttackWeapon(entityB) &&
-    !unitA.info.hasAbility(Ability.Sabotage)
-  ) {
+  if (!unitA.getAttackWeapon(entityB) && !unitA.info.hasAbility(Ability.Sabotage)) {
     return false;
   }
 

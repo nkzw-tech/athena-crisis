@@ -36,23 +36,15 @@ export default function Notification({
       }}
       className={cx(
         containerStyle,
-        position === 'top'
-          ? topStyle
-          : position === 'top-right'
-            ? topRightStyle
-            : bottomStyle,
+        position === 'top' ? topStyle : position === 'top-right' ? topRightStyle : bottomStyle,
       )}
       exit={{
         opacity: 0,
-        transform: `scale(0.9) translate3d(0, ${
-          (offset + direction * -1) * 100
-        }%, 0)`,
+        transform: `scale(0.9) translate3d(0, ${(offset + direction * -1) * 100}%, 0)`,
       }}
       initial={{
         opacity: 0,
-        transform: `scale(0.9) translate3d(0, ${
-          (offset + direction * -1) * 100
-        }%, 0)`,
+        transform: `scale(0.9) translate3d(0, ${(offset + direction * -1) * 100}%, 0)`,
       }}
       style={insetStyle(inset)}
       transition={{
@@ -61,10 +53,7 @@ export default function Notification({
         ease: [0.34, 1.56, 0.64, 1],
       }}
     >
-      <Component
-        center={center}
-        className={cx(boxStyle, size === 'fit' && fitStyle)}
-      >
+      <Component center={center} className={cx(boxStyle, size === 'fit' && fitStyle)}>
         {children}
       </Component>
     </motion.div>

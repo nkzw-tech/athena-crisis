@@ -24,11 +24,7 @@ import AddActionButton from '../lib/AddActionButton.tsx';
 import EffectTitle, { EffectObjectiveTitle } from '../lib/EffectTitle.tsx';
 import selectObjectiveEffect from '../lib/selectObjectiveEffect.tsx';
 import EffectSelector from '../selectors/EffectSelector.tsx';
-import {
-  EditorState,
-  SetEditorStateFunction,
-  SetMapFunction,
-} from '../Types.tsx';
+import { EditorState, SetEditorStateFunction, SetMapFunction } from '../Types.tsx';
 
 export type ActionChangeFn = (
   index: number,
@@ -80,8 +76,7 @@ export default function EffectsPanel({
       [...effectList].flatMap(({ conditions }) =>
         conditions
           ?.map((condition) =>
-            condition.type === 'GameEnd' ||
-            condition.type === 'OptionalObjective'
+            condition.type === 'GameEnd' || condition.type === 'OptionalObjective'
               ? condition.value
               : null,
           )
@@ -150,9 +145,7 @@ export default function EffectsPanel({
           if (action) {
             updateEffect({
               ...effect,
-              actions: actions.map((_action, i) =>
-                i === index ? action : _action,
-              ),
+              actions: actions.map((_action, i) => (i === index ? action : _action)),
             });
           }
           break;
@@ -208,9 +201,7 @@ export default function EffectsPanel({
           {possibleEffects.length ? (
             <>
               <h2 className={flexStyle}>
-                <fbt desc="Headline for choosing a new effect">
-                  Choose a new Effect
-                </fbt>
+                <fbt desc="Headline for choosing a new effect">Choose a new Effect</fbt>
               </h2>
               <VStack between gap wrap>
                 {possibleEffects}
@@ -328,9 +319,7 @@ export default function EffectsPanel({
               })
             }
           >
-            <fbt desc="Button to add a new character message in the map editor">
-              Add Message
-            </fbt>
+            <fbt desc="Button to add a new character message in the map editor">Add Message</fbt>
           </Button>
           <AddActionButton
             isAdmin={!!isAdmin}

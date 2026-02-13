@@ -117,14 +117,8 @@ export default function Menu({
   useBlockInput('top', isOpen);
 
   useLayoutEffect(() => {
-    document.documentElement.style.setProperty(
-      cssVar('ui-scale'),
-      isOpen ? '0.85' : '1',
-    );
-    document.documentElement.style.setProperty(
-      cssVar('ui-is-scaled'),
-      isOpen ? '1' : '0',
-    );
+    document.documentElement.style.setProperty(cssVar('ui-scale'), isOpen ? '0.85' : '1');
+    document.documentElement.style.setProperty(cssVar('ui-is-scaled'), isOpen ? '1' : '0');
     document.documentElement.style.setProperty(
       cssVar('transform-origin'),
       window.scrollX +
@@ -150,25 +144,11 @@ export default function Menu({
 
   return (
     <Portal>
-      <div
-        className={cx(menuStyle, isOpen && openStyle, isOpen && MenuClassName)}
-      >
-        <div
-          className={dotStyle}
-          style={{ left: -2, opacity: isOpen ? 1 : 0, top: -2 }}
-        />
-        <div
-          className={dotStyle}
-          style={{ opacity: isOpen ? 1 : 0, right: -2, top: -2 }}
-        />
-        <div
-          className={dotStyle}
-          style={{ bottom: -2, left: -2, opacity: isOpen ? 1 : 0 }}
-        />
-        <div
-          className={dotStyle}
-          style={{ bottom: -2, opacity: isOpen ? 1 : 0, right: -2 }}
-        />
+      <div className={cx(menuStyle, isOpen && openStyle, isOpen && MenuClassName)}>
+        <div className={dotStyle} style={{ left: -2, opacity: isOpen ? 1 : 0, top: -2 }} />
+        <div className={dotStyle} style={{ opacity: isOpen ? 1 : 0, right: -2, top: -2 }} />
+        <div className={dotStyle} style={{ bottom: -2, left: -2, opacity: isOpen ? 1 : 0 }} />
+        <div className={dotStyle} style={{ bottom: -2, opacity: isOpen ? 1 : 0, right: -2 }} />
         {isOpen && (
           <motion.div
             animate={{
@@ -199,20 +179,14 @@ export default function Menu({
           {canToggleFullScreen && (
             <VStack between gap wrap>
               <a onClick={toggleFullscreen}>
-                <Icon
-                  button
-                  icon={isFullScreen ? ExitFullscreen : Fullscreen}
-                />
+                <Icon button icon={isFullScreen ? ExitFullscreen : Fullscreen} />
               </a>
             </VStack>
           )}
         </VStack>
         <Stack
           between
-          className={cx(
-            controlsContainerStyle,
-            isOpen && openControlsContainerStyle,
-          )}
+          className={cx(controlsContainerStyle, isOpen && openControlsContainerStyle)}
           stretch
           wrap
         >

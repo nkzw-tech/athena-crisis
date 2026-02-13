@@ -10,59 +10,29 @@ export default function getCriteriaName(criteria: Criteria) {
         'Panel button name for default win condition with HQ.',
       );
     case Criteria.CaptureLabel:
-      return fbt(
-        'Capture buildings by label',
-        'Panel button name for capturing by label.',
-      );
+      return fbt('Capture buildings by label', 'Panel button name for capturing by label.');
     case Criteria.CaptureAmount:
-      return fbt(
-        'Capture buildings by amount',
-        'Panel button name for capture.',
-      );
+      return fbt('Capture buildings by amount', 'Panel button name for capture.');
     case Criteria.DefeatLabel:
-      return fbt(
-        'Defeat units by label',
-        'Panel button name for defeat by label.',
-      );
+      return fbt('Defeat units by label', 'Panel button name for defeat by label.');
     case Criteria.EscortLabel:
-      return fbt(
-        'Escort units by label',
-        'Panel button name for escorting any.',
-      );
+      return fbt('Escort units by label', 'Panel button name for escorting any.');
     case Criteria.Survival:
       return fbt('Survival', 'Panel button name for survival.');
     case Criteria.EscortAmount:
       return fbt('Escort units by amount', 'Panel button name for escort.');
     case Criteria.RescueAmount:
-      return fbt(
-        'Rescue units by amount',
-        'Panel button name for rescuing by amount.',
-      );
+      return fbt('Rescue units by amount', 'Panel button name for rescuing by amount.');
     case Criteria.RescueLabel:
-      return fbt(
-        'Rescue units by label',
-        'Panel button name for rescuing by label.',
-      );
+      return fbt('Rescue units by label', 'Panel button name for rescuing by label.');
     case Criteria.DefeatAmount:
-      return fbt(
-        'Defeat units by amount',
-        'Panel button name for defeat by amount.',
-      );
+      return fbt('Defeat units by amount', 'Panel button name for defeat by amount.');
     case Criteria.DefeatOneLabel:
-      return fbt(
-        'Defeat one unit by label',
-        'Panel button name for defeat one by label.',
-      );
+      return fbt('Defeat one unit by label', 'Panel button name for defeat one by label.');
     case Criteria.DestroyLabel:
-      return fbt(
-        'Destroy buildings by label',
-        'Panel button name for destroy by label.',
-      );
+      return fbt('Destroy buildings by label', 'Panel button name for destroy by label.');
     case Criteria.DestroyAmount:
-      return fbt(
-        'Destroy buildings by amount',
-        'Panel button name for destroy by amount.',
-      );
+      return fbt('Destroy buildings by amount', 'Panel button name for destroy by amount.');
     default: {
       criteria satisfies never;
       throw new UnknownTypeError('getCriteriaName', criteria);

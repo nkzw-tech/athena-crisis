@@ -4,19 +4,8 @@ import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import AvailableLanguages from '@deities/i18n/AvailableLanguages.tsx';
 import { Fonts } from '@deities/ui/CSS.tsx';
 import Storage from '@deities/ui/Storage.tsx';
-import {
-  LocaleContextProps,
-  setupLocaleContext,
-  TranslationDictionary,
-} from 'fbtee';
-import {
-  createContext,
-  Fragment,
-  ReactNode,
-  use,
-  useActionState,
-  useEffect,
-} from 'react';
+import { LocaleContextProps, setupLocaleContext, TranslationDictionary } from 'fbtee';
+import { createContext, Fragment, ReactNode, use, useActionState, useEffect } from 'react';
 import { CharacterMap } from './EntityMap.tsx';
 import { injectCharacterNameTranslation } from './injectTranslation.tsx';
 
@@ -29,9 +18,7 @@ export type LocaleContext = {
   shortLocale: string;
 };
 
-export const Context = createContext<LocaleContext>(
-  null as unknown as LocaleContext,
-);
+export const Context = createContext<LocaleContext>(null as unknown as LocaleContext);
 
 let currentFonts = ['Athena'];
 
@@ -43,11 +30,7 @@ export async function createLocaleContext(props?: Partial<LocaleContextProps>) {
   const translations: TranslationDictionary = {};
   const { getLocale, setLocale } = setupLocaleContext({
     availableLanguages: AvailableLanguages,
-    clientLocales: [
-      Storage.get(storageKey) || '',
-      navigator.language,
-      ...navigator.languages,
-    ],
+    clientLocales: [Storage.get(storageKey) || '', navigator.language, ...navigator.languages],
     loadLocale: () => Promise.resolve({}),
     translations,
     ...props,
@@ -76,9 +59,7 @@ export async function createLocaleContext(props?: Partial<LocaleContextProps>) {
     useEffect(() => {
       document.documentElement.lang = locale;
 
-      currentFonts = Fonts[locale as unknown as keyof typeof Fonts] || [
-        'Athena',
-      ];
+      currentFonts = Fonts[locale as unknown as keyof typeof Fonts] || ['Athena'];
 
       const listener = () => _setLocale(navigator.language);
       window.addEventListener('languagechange', listener);

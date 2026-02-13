@@ -19,33 +19,7 @@ import withModifiers from '../withModifiers.tsx';
 test('assignUnitNames` assigns unit names to all units', () => {
   let map = withModifiers(
     MapData.createMap({
-      map: [
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        Sea.id,
-      ],
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Sea.id],
       size: { height: 5, width: 5 },
       teams: [
         {
@@ -88,10 +62,7 @@ test('assignUnitNames` assigns unit names to all units', () => {
             transports: [
               Truck.create(2)
                 .copy({
-                  transports: [
-                    Jetpack.create(2).transport(),
-                    RocketLauncher.create(2).transport(),
-                  ],
+                  transports: [Jetpack.create(2).transport(), RocketLauncher.create(2).transport()],
                 })
                 .transport(),
             ],
@@ -100,9 +71,7 @@ test('assignUnitNames` assigns unit names to all units', () => {
     }),
   );
 
-  expect(
-    map.units.filter((unit) => unit.info === Pioneer && unit.isLeader()).size,
-  ).toBe(2);
+  expect(map.units.filter((unit) => unit.info === Pioneer && unit.isLeader()).size).toBe(2);
 
   const flatten = <T extends Unit | TransportedUnit>(
     unit: T,
@@ -110,23 +79,20 @@ test('assignUnitNames` assigns unit names to all units', () => {
     if (!unit.transports) {
       return [unit];
     }
-    return unit.transports?.length
-      ? [unit, ...unit.transports.flatMap(flatten)]
-      : [unit];
+    return unit.transports?.length ? [unit, ...unit.transports.flatMap(flatten)] : [unit];
   };
 
-  expect(
-    [...map.units.values()].flatMap(flatten).filter((unit) => unit.isLeader())
-      .length,
-  ).toBe(11);
+  expect([...map.units.values()].flatMap(flatten).filter((unit) => unit.isLeader()).length).toBe(
+    11,
+  );
 
   expect(map.units.get(vec(1, 3))?.isLeader()).toBe(true);
   expect(map.units.get(vec(3, 3))?.isLeader()).toBe(true);
 
-  expect(
-    map.units.map((unit) => unit.getName(1)).filter((name) => !!name).size,
-  ).toEqual(map.units.size);
-  expect(
-    map.units.map((unit) => unit.getName(2)).filter((name) => !!name).size,
-  ).toEqual(map.units.size);
+  expect(map.units.map((unit) => unit.getName(1)).filter((name) => !!name).size).toEqual(
+    map.units.size,
+  );
+  expect(map.units.map((unit) => unit.getName(2)).filter((name) => !!name).size).toEqual(
+    map.units.size,
+  );
 });

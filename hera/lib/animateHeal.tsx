@@ -7,21 +7,11 @@ import { State, StateLike, StateToStateLike } from '../Types.tsx';
 import AnimationKey from './AnimationKey.tsx';
 import getUnitDirection from './getUnitDirection.tsx';
 
-const temporarilyHealUnit = (
-  map: MapData,
-  position: Vector,
-  amount: number,
-): MapData => {
-  const unit = map.units
-    .get(position)
-    ?.modifyHealth(amount)
-    .removeStatusEffect();
+const temporarilyHealUnit = (map: MapData, position: Vector, amount: number): MapData => {
+  const unit = map.units.get(position)?.modifyHealth(amount).removeStatusEffect();
   return unit
     ? map.copy({
-        units: map.units.set(
-          position,
-          amount >= HealAmount ? unit.refill() : unit,
-        ),
+        units: map.units.set(position, amount >= HealAmount ? unit.refill() : unit),
       })
     : map;
 };
@@ -41,11 +31,7 @@ export default function animateHeal(
             onComplete: (state) => ({
               animations: state.animations.set(position, {
                 onComplete: (state: State) => {
-                  const map = temporarilyHealUnit(
-                    state.map,
-                    position,
-                    item[1][1],
-                  );
+                  const map = temporarilyHealUnit(state.map, position, item[1][1]);
                   return {
                     map,
                     ...animateHeal(
@@ -53,8 +39,7 @@ export default function animateHeal(
                         ...state,
                         animations: state.animations.set(new AnimationKey(), {
                           change:
-                            (map.units.get(position)?.health || MaxHealth) -
-                            item[1][0].health,
+                            (map.units.get(position)?.health || MaxHealth) - item[1][0].health,
                           position,
                           previousHealth: item[1][0].health,
                           type: 'health',
@@ -67,10 +52,7 @@ export default function animateHeal(
                   };
                 },
                 type: 'heal',
-                unitDirection: getUnitDirection(
-                  state.map.getFirstPlayerID(),
-                  item[1][0],
-                ),
+                unitDirection: getUnitDirection(state.map.getFirstPlayerID(), item[1][0]),
               }),
             }),
             positions: [position],

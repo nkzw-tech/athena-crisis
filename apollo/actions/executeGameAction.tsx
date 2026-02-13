@@ -32,14 +32,9 @@ export function executeAIAction(
   let iterations = 0;
   const maxIterations = 100 * (activeMap?.active.length || 1);
 
-  while (
-    activeMap &&
-    activeMap.active.length > 1 &&
-    activeMap.getCurrentPlayer().isBot()
-  ) {
+  while (activeMap && activeMap.active.length > 1 && activeMap.getCurrentPlayer().isBot()) {
     const player = activeMap.getCurrentPlayer();
-    const AIClass = ((player.ai != null && AIRegistry.get(player.ai)) ||
-      AIRegistry.get(0))!.class;
+    const AIClass = ((player.ai != null && AIRegistry.get(player.ai)) || AIRegistry.get(0))!.class;
 
     const ai = new AIClass(effects);
     while (activeMap) {
@@ -61,10 +56,7 @@ export function executeAIAction(
       // Prune unnecessary game states.
       for (let i = state.length - 1; i > 0; i--) {
         const [actionResponse] = state[i];
-        if (
-          actionResponse.type === 'EndTurn' ||
-          actionResponse.type === 'CompleteUnit'
-        ) {
+        if (actionResponse.type === 'EndTurn' || actionResponse.type === 'CompleteUnit') {
           state.pop();
         } else {
           break;
@@ -85,9 +77,7 @@ export default async function executeGameAction(
   AIRegistry: AIRegistryT | null,
   mutateAction?: MutateActionResponseFn,
   onEndTurn?: (map: MapData) => Promise<GameState | null>,
-): Promise<
-  [ActionResponse, MapData, GameState, Effects] | [null, null, null, null]
-> {
+): Promise<[ActionResponse, MapData, GameState, Effects] | [null, null, null, null]> {
   const actionResult = execute(map, vision, action, mutateAction);
   if (!actionResult) {
     return [null, null, null, null];
@@ -101,8 +91,7 @@ export default async function executeGameAction(
   if (
     onEndTurn &&
     !hasEnded &&
-    (actionResponse.type === 'EndTurn' ||
-      gameState?.some(([{ type }]) => type === 'EndTurn'))
+    (actionResponse.type === 'EndTurn' || gameState?.some(([{ type }]) => type === 'EndTurn'))
   ) {
     const endTurnGameState = await onEndTurn(lastMap);
     if (endTurnGameState?.length) {
@@ -111,16 +100,11 @@ export default async function executeGameAction(
     }
   }
 
-  const shouldInvokeAI = !!(
-    AIRegistry &&
-    !hasEnded &&
-    lastMap.getCurrentPlayer().isBot()
-  );
+  const shouldInvokeAI = !!(AIRegistry && !hasEnded && lastMap.getCurrentPlayer().isBot());
   return [
     actionResponse,
     activeMap,
-    ...((shouldInvokeAI &&
-      executeAIAction(lastMap, AIRegistry, newEffects, gameState)) || [
+    ...((shouldInvokeAI && executeAIAction(lastMap, AIRegistry, newEffects, gameState)) || [
       gameState,
       newEffects,
     ]),

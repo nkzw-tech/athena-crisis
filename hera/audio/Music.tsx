@@ -76,21 +76,14 @@ export function usePlayMusic(dep?: unknown) {
     }
     context.timer = setTimeout(
       () => AudioPlayer.play(context.songByRoute.get(pathname) || fallbackSong),
-      isPlaying(
-        document
-          .getElementById('video')
-          ?.querySelector<HTMLVideoElement>('video'),
-      )
+      isPlaying(document.getElementById('video')?.querySelector<HTMLVideoElement>('video'))
         ? 3000
         : 100,
     );
   }, [pathname, dep]);
 }
 
-export function biomeToSong(
-  biome: Biome,
-  tags: ReadonlyArray<string> | undefined,
-): SongName {
+export function biomeToSong(biome: Biome, tags: ReadonlyArray<string> | undefined): SongName {
   if (tags?.includes('eos-dawn')) {
     return 'eos-dawn';
   } else if (tags?.includes('gaias-rise')) {

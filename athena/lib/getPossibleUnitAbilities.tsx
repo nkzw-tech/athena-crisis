@@ -22,9 +22,7 @@ export function getPossibleUnitAbilitiesForBuildings(
   return getPossibleUnitAbilities([...unitInfos]);
 }
 
-export default function getPossibleUnitAbilities(
-  unitInfos: ReadonlyArray<UnitInfo>,
-) {
+export default function getPossibleUnitAbilities(unitInfos: ReadonlyArray<UnitInfo>) {
   let canCreateBuildUnits = false;
   let canCreateCaptureUnits = false;
   let canCreateSupplyUnits = false;

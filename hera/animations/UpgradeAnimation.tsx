@@ -35,12 +35,7 @@ export default function UpgradeAnimation({
         },
         [onUpgrade, update],
       )}
-      position={
-        new SpriteVector(
-          (x - 0.8) * size - (spriteSize - size) / 2,
-          (y - 2.5) * size,
-        )
-      }
+      position={new SpriteVector((x - 0.8) * size - (spriteSize - size) / 2, (y - 2.5) * size)}
       size={spriteSize}
       sound="Unit/Spawn"
       source={Sprites.Upgrade}

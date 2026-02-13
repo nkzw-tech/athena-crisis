@@ -23,12 +23,8 @@ test('picks a new HQ closer to friendly units', () => {
   const vecA = vec(1, 1);
   const vecB = vec(10, 10);
   const mapA = map.copy({
-    buildings: map.buildings
-      .set(vecA, Barracks.create(1))
-      .set(vecB, Barracks.create(1)),
-    units: map.units
-      .set(vecA, SmallTank.create(1))
-      .set(vecB.up(), SmallTank.create(2)),
+    buildings: map.buildings.set(vecA, Barracks.create(1)).set(vecB, Barracks.create(1)),
+    units: map.units.set(vecA, SmallTank.create(1)).set(vecB.up(), SmallTank.create(2)),
   });
 
   expect(hasHQ(mapA, 1)).toBe(false);
@@ -47,9 +43,7 @@ test('does not pick a building occupied by an opponent', () => {
   const vecA = vec(1, 1);
   const vecB = vec(10, 10);
   const mapA = map.copy({
-    buildings: map.buildings
-      .set(vecA, Barracks.create(1))
-      .set(vecB, Barracks.create(1)),
+    buildings: map.buildings.set(vecA, Barracks.create(1)).set(vecB, Barracks.create(1)),
     units: map.units
       .set(vecA, SmallTank.create(2))
       .set(vecA.right(), SmallTank.create(1))

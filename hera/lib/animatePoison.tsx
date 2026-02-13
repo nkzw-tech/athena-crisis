@@ -31,9 +31,7 @@ export default function animatePoison(
                   map: state.map.copy({
                     units: state.map.units.set(
                       position,
-                      state.map.units
-                        .get(position)!
-                        .modifyHealth(-PoisonDamage),
+                      state.map.units.get(position)!.modifyHealth(-PoisonDamage),
                     ),
                   }),
                   ...animatePoison(state, remainingItems, onComplete),

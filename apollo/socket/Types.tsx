@@ -9,18 +9,12 @@ export type ClientToServerEvents = {
     action: EncodedAction,
     emit: (gameActionResponse: EncodedGameActionResponseWithError) => void,
   ) => void;
-  '/game/spectate': (
-    gameID: string,
-    spectatorCodes: ReadonlyArray<string>,
-  ) => void;
+  '/game/spectate': (gameID: string, spectatorCodes: ReadonlyArray<string>) => void;
 };
 
 export type ServerToClientEvents = {
   '/campaign-state/update': (campaignStateID: string) => void;
-  '/game/action': (
-    gameID: string,
-    response: EncodedGameActionResponseWithError,
-  ) => void;
+  '/game/action': (gameID: string, response: EncodedGameActionResponseWithError) => void;
   '/pending-game/update': (pendingGameID: string) => void;
   '/restart-server': () => void;
 };

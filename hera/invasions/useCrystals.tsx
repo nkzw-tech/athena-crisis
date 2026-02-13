@@ -1,8 +1,4 @@
-import {
-  Crystal,
-  CrystalMap,
-  Crystals,
-} from '@deities/athena/invasions/Crystal.tsx';
+import { Crystal, CrystalMap, Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import { useMemo } from 'react';
 import safeParseArray from '../lib/safeParseArray.tsx';
 

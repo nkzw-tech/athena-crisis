@@ -1,8 +1,5 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import {
-  GameEndCondition,
-  OptionalObjectiveCondition,
-} from '@deities/apollo/Condition.tsx';
+import { GameEndCondition, OptionalObjectiveCondition } from '@deities/apollo/Condition.tsx';
 import getMessageKey from '@deities/apollo/lib/getMessageKey.tsx';
 import { mapBuildings } from '@deities/athena/info/Building.tsx';
 import { mapDecorators } from '@deities/athena/info/Decorator.tsx';
@@ -72,21 +69,16 @@ const formatWithOxfmt = async (filePath: string, sourceText: string) => {
 
 console.log(chalk.bold('› Generating translations...'));
 
-const globs: ReadonlyArray<string> = [
-  './hermes/map-fixtures/*.tsx',
-  './fixtures/map/*.tsx',
-];
+const globs: ReadonlyArray<string> = ['./hermes/map-fixtures/*.tsx', './fixtures/map/*.tsx'];
 const maps = await Promise.all(
   globs.flatMap((path) =>
     globSync(join(root, path).split(sep).join(posix.sep))
       .sort()
       .map((filename) =>
-        (import(pathToFileURL(filename).toString()) as Promise<MapModule>).then(
-          (module) => ({
-            id: basename(filename, extname(filename)),
-            module,
-          }),
-        ),
+        (import(pathToFileURL(filename).toString()) as Promise<MapModule>).then((module) => ({
+          id: basename(filename, extname(filename)),
+          module,
+        })),
       ),
   ),
 );
@@ -97,9 +89,7 @@ const campaigns = await Promise.all(
   globSync(join(root, './fixtures/campaign/*.tsx').split(sep).join(posix.sep))
     .sort()
     .map((filename) =>
-      (
-        import(pathToFileURL(filename).toString()) as Promise<CampaignModule>
-      ).then((module) => ({
+      (import(pathToFileURL(filename).toString()) as Promise<CampaignModule>).then((module) => ({
         id: basename(filename, extname(filename)),
         module,
       })),
@@ -136,24 +126,17 @@ const campaignMaps = isOpenSourceRepository
         for (const [level] of unrollCampaign(module.default)) {
           const map = mapsById.get(level);
           if (!map) {
-            throw new Error(
-              `Could not find map ${level} for campaign ${module.default.name}.`,
-            );
+            throw new Error(`Could not find map ${level} for campaign ${module.default.name}.`);
           }
-          const maybeMapNumber = map.metadata.tags?.find((tag) =>
-            parseInteger(tag),
-          );
-          const mapNumber = maybeMapNumber
-            ? parseInteger(maybeMapNumber)
-            : null;
+          const maybeMapNumber = map.metadata.tags?.find((tag) => parseInteger(tag));
+          const mapNumber = maybeMapNumber ? parseInteger(maybeMapNumber) : null;
 
           if (
             publishedLevels === Number.POSITIVE_INFINITY ||
             (mapNumber && mapNumber > 0 && mapNumber <= publishedLevels)
           ) {
             maps.push({
-              campaignName:
-                name === 'Prequel Campaign' ? 'Proto Campaign' : name,
+              campaignName: name === 'Prequel Campaign' ? 'Proto Campaign' : name,
               map,
             });
           }
@@ -182,11 +165,8 @@ const characterMessages = campaignMaps.flatMap(
     for (const [trigger, effectList] of effects) {
       for (const effect of effectList) {
         const condition = effect.conditions?.find(
-          (
-            condition,
-          ): condition is GameEndCondition | OptionalObjectiveCondition =>
-            condition.type === 'GameEnd' ||
-            condition.type === 'OptionalObjective',
+          (condition): condition is GameEndCondition | OptionalObjectiveCondition =>
+            condition.type === 'GameEnd' || condition.type === 'OptionalObjective',
         );
         const objective = condition?.value ?? null;
         let count = 1;
@@ -235,10 +215,7 @@ const entityMap = new Map([
   ['Tile', mapTiles(extractName).sort(sort)],
   ['Unit', mapUnits(extractName).sort(sort)],
   ['Weapon', mapWeapons(extractName).sort(sort)],
-  [
-    'Map',
-    maps.map(({ module: { metadata } }) => metadata.name || '').sort(sort),
-  ],
+  ['Map', maps.map(({ module: { metadata } }) => metadata.name || '').sort(sort)],
 ]);
 
 const descriptionMap = new Map<string, ReadonlyArray<EntityDescription>>([
@@ -293,8 +270,7 @@ const replaceSubstitutions = (text: string, currentId: number) => {
   const existingSubstitutions = new Set();
   return text.replaceAll(/{(?:(\d+)\.)?name}/g, (_, maybeId) => {
     const maybeUnitID = maybeId?.length && parseInteger(maybeId);
-    const unit =
-      (maybeUnitID && getUnitInfo(maybeUnitID)) || getUnitInfo(currentId);
+    const unit = (maybeUnitID && getUnitInfo(maybeUnitID)) || getUnitInfo(currentId);
     if (!unit) {
       throw new Error(
         `generate-entity-translations: Could not find unit for name substitution for unit with id '${currentId}'.`,
@@ -320,9 +296,7 @@ const toCommon = (typeName: string, list: ReadonlyArray<string>) =>
       commonNames.add(name);
       return `${JSON.stringify(name)}: ${JSON.stringify(
         `${typeName} name${
-          typeName === 'Map'
-            ? ` (Only translate map names if it helps with understanding)`
-            : ''
+          typeName === 'Map' ? ` (Only translate map names if it helps with understanding)` : ''
         }`,
       )}`;
     })
@@ -330,25 +304,15 @@ const toCommon = (typeName: string, list: ReadonlyArray<string>) =>
 
 const nameMapToCode = (list: ReadonlyArray<string>) =>
   Array.from(new Set(list))
-    .map(
-      (field) =>
-        `${JSON.stringify(field)}: () => String(fbt.c(${JSON.stringify(
-          field,
-        )}))`,
-    )
+    .map((field) => `${JSON.stringify(field)}: () => String(fbt.c(${JSON.stringify(field)}))`)
     .join(',\n');
 
-const descriptionMapToCode = (
-  typeName: string,
-  list: ReadonlyArray<EntityDescription>,
-) =>
+const descriptionMapToCode = (typeName: string, list: ReadonlyArray<EntityDescription>) =>
   Array.from(new Set(list))
     .map(
       ({ description, detail, hasNameSubstitution, id }) =>
         `${JSON.stringify(String(id))}: () => String(fbt(\`${
-          hasNameSubstitution
-            ? replaceSubstitutions(description, id)
-            : description
+          hasNameSubstitution ? replaceSubstitutions(description, id) : description
         }\`, ${JSON.stringify(detail ? `${typeName} - ${detail}` : typeName)}))`,
     )
     .join(',\n');
@@ -358,17 +322,12 @@ const entities = [];
 
 for (const [typeName, names] of entityMap) {
   common.push(...toCommon(typeName, names));
-  entities.push(
-    `export const ${typeName}Map = {${nameMapToCode(names)}} as const;`,
-  );
+  entities.push(`export const ${typeName}Map = {${nameMapToCode(names)}} as const;`);
 }
 
 for (const [typeName, descriptions] of descriptionMap) {
   entities.push(
-    `export const ${typeName}Map = {${descriptionMapToCode(
-      typeName,
-      descriptions,
-    )}} as const;`,
+    `export const ${typeName}Map = {${descriptionMapToCode(typeName, descriptions)}} as const;`,
   );
 }
 
@@ -408,9 +367,7 @@ for (const [id, conjunction] of MessageConjunctions) {
 const templates = [];
 const punctuations = [];
 for (const [id, [message, , punctuation]] of MessageTemplate) {
-  templates.push(
-    `[${id}, () => String(fbt(\`${message}\`, \`Message system template.\`))]`,
-  );
+  templates.push(`[${id}, () => String(fbt(\`${message}\`, \`Message system template.\`))]`);
   punctuations.push(
     `[${id}, () => String(fbt(\`${punctuation}\`, ${JSON.stringify(`Message system punctuation for '${message}'.`)}))]`,
   );
@@ -418,10 +375,7 @@ for (const [id, [message, , punctuation]] of MessageTemplate) {
 
 writeFileSync(
   COMMON_OUTPUT_FILE,
-  await formatWithOxfmt(
-    COMMON_OUTPUT_FILE,
-    sign(`export default {${common.join(',\n')}};`),
-  ),
+  await formatWithOxfmt(COMMON_OUTPUT_FILE, sign(`export default {${common.join(',\n')}};`)),
 );
 
 writeFileSync(

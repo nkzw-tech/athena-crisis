@@ -29,9 +29,7 @@ export default function TransportedUnitTile({
       <UnitTile
         animationConfig={animationConfig}
         biome={map.config.biome}
-        customSprite={playerDetails
-          .get(unit.player)
-          ?.equippedUnitCustomizations.get(unit.id)}
+        customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
         firstPlayerID={map.getFirstPlayerID()}
         highlightStyle={highlight ? 'idle' : undefined}
         size={tileSize}

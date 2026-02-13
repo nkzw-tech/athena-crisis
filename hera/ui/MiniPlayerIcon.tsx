@@ -4,13 +4,7 @@ import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
 
-export default function MiniPlayerIcon({
-  gap,
-  id,
-}: {
-  gap?: true;
-  id: PlayerID;
-}) {
+export default function MiniPlayerIcon({ gap, id }: { gap?: true; id: PlayerID }) {
   return (
     <span
       className={cx(style, gap && gapStyle)}

@@ -30,9 +30,7 @@ const sizes = {
   padding: 16,
 };
 
-export default function Banner(
-  props: Omit<BannerAnimation, 'onComplete'> & BaseAnimationProps,
-) {
+export default function Banner(props: Omit<BannerAnimation, 'onComplete'> & BaseAnimationProps) {
   const {
     clearTimer,
     color,
@@ -51,9 +49,7 @@ export default function Banner(
   } = props;
 
   const [showComponent, setShowComponent] = useState(false);
-  const [clientWidth, setClientWidth] = useState<number>(
-    () => document.body.clientWidth,
-  );
+  const [clientWidth, setClientWidth] = useState<number>(() => document.body.clientWidth);
   const isLarge = clientWidth >= sm;
   const lines = useMemo(
     () =>
@@ -66,10 +62,7 @@ export default function Banner(
   );
 
   useEffect(() => {
-    const listener = throttle(
-      () => setClientWidth(document.body.clientWidth),
-      100,
-    );
+    const listener = throttle(() => setClientWidth(document.body.clientWidth), 100);
     window.addEventListener('resize', listener);
     return () => window.removeEventListener('resize', listener);
   }, [clientWidth]);
@@ -89,19 +82,13 @@ export default function Banner(
   }
 
   const duration = AnimationConfig.AnimationDuration / 1000 / multiplier;
-  const direction =
-    initialDirection || (player === 0 || player % 2 ? 'right' : 'left');
+  const direction = initialDirection || (player === 0 || player % 2 ? 'right' : 'left');
   const isFlashy = style === 'flashy';
   const child: Variants = {
     hidden: {
       opacity: 0,
       transition,
-      x:
-        isFlashy && direction !== 'up'
-          ? direction === 'right'
-            ? '-100%'
-            : '100%'
-          : '',
+      x: isFlashy && direction !== 'up' ? (direction === 'right' ? '-100%' : '100%') : '',
       y: 20,
     },
     visible: {
@@ -152,9 +139,7 @@ export default function Banner(
           <div
             className={cx(
               backgroundStyle,
-              (isFlashy ? flashyBackgroundStyle : backgroundAnimationStyle)[
-                direction
-              ],
+              (isFlashy ? flashyBackgroundStyle : backgroundAnimationStyle)[direction],
             )}
             style={{
               background: gradient(color, 0.9),
@@ -164,44 +149,36 @@ export default function Banner(
             const words = line.split(' ');
             return [
               ...words.flatMap((word, wordIndex) => [
-                ...(isSafari ? [word] : Array.from(word)).map(
-                  (letter, index) => (
-                    <motion.span
-                      className={letterStyle}
-                      key={`${lineIndex}$${wordIndex}$${index}`}
-                      onAnimationComplete={
-                        lineIndex === lines.length - 1 &&
-                        wordIndex === words.length - 1 &&
-                        (isSafari || index === word.length - 1)
-                          ? () => {
-                              setShowComponent(true);
-                              scheduleTimer(
-                                onComplete,
-                                AnimationConfig.AnimationDuration *
-                                  (length === 'short'
-                                    ? 1
-                                    : length === 'medium'
-                                      ? 3
-                                      : 7) *
-                                  (Component ? 4.5 : 1),
-                              );
-                            }
-                          : undefined
-                      }
-                      variants={child}
-                    >
-                      {letter}
-                    </motion.span>
-                  ),
-                ),
+                ...(isSafari ? [word] : Array.from(word)).map((letter, index) => (
+                  <motion.span
+                    className={letterStyle}
+                    key={`${lineIndex}$${wordIndex}$${index}`}
+                    onAnimationComplete={
+                      lineIndex === lines.length - 1 &&
+                      wordIndex === words.length - 1 &&
+                      (isSafari || index === word.length - 1)
+                        ? () => {
+                            setShowComponent(true);
+                            scheduleTimer(
+                              onComplete,
+                              AnimationConfig.AnimationDuration *
+                                (length === 'short' ? 1 : length === 'medium' ? 3 : 7) *
+                                (Component ? 4.5 : 1),
+                            );
+                          }
+                        : undefined
+                    }
+                    variants={child}
+                  >
+                    {letter}
+                  </motion.span>
+                )),
                 ' ',
               ]),
               <br key={`br-${lineIndex}`} />,
             ];
           })}
-          {Component && (
-            <Component duration={duration} isVisible={showComponent} />
-          )}
+          {Component && <Component duration={duration} isVisible={showComponent} />}
         </motion.div>
       </motion.div>
     </Portal>

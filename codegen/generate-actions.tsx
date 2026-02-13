@@ -1,12 +1,7 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
 import { parse } from '@babel/parser';
 import { NodePath } from '@babel/traverse';
-import {
-  TSType,
-  TSTypeAliasDeclaration,
-  TSTypeElement,
-  TSTypeReference,
-} from '@babel/types';
+import { TSType, TSTypeAliasDeclaration, TSTypeElement, TSTypeReference } from '@babel/types';
 import groupBy from '@nkzw/core/groupBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
@@ -92,8 +87,7 @@ type ValueType = Readonly<
   | { type: 'object'; value: ReadonlyArray<Prop> }
 >;
 
-const getShortName = (name: string) =>
-  name.replace(/Action(Response)?$|Condition$/, '');
+const getShortName = (name: string) => name.replace(/Action(Response)?$|Condition$/, '');
 
 const actionMap = new Map<string, [number, Array<string>]>(
   JSON.parse(readFileSync(stableActionMapFileName, 'utf8')),
@@ -103,17 +97,13 @@ const conditionMap = new Map<string, [number, Array<string>]>(
 );
 const getStableTypeID = (() => {
   let actionCounter = (Array.from(actionMap.values()).pop()?.[0] ?? -1) + 1;
-  let conditionCounter =
-    (Array.from(conditionMap.values()).pop()?.[0] ?? -1) + 1;
+  let conditionCounter = (Array.from(conditionMap.values()).pop()?.[0] ?? -1) + 1;
 
   return (type: ActionType, name: string) => {
     const map = type === 'action' ? actionMap : conditionMap;
     const shortName = getShortName(name);
     if (!map.has(shortName)) {
-      map.set(shortName, [
-        type === 'action' ? actionCounter++ : conditionCounter++,
-        [],
-      ]);
+      map.set(shortName, [type === 'action' ? actionCounter++ : conditionCounter++, []]);
     }
     return map.get(shortName)![0];
   };
@@ -178,17 +168,14 @@ const resolveValueType = (node: TSType): ValueType => {
     ) {
       const parameter = node.typeParameters.params[0];
       const value =
-        isAllowedReference(parameter) &&
-        parameter.typeName.type === 'Identifier'
+        isAllowedReference(parameter) && parameter.typeName.type === 'Identifier'
           ? parameter.typeName.name
           : parameter.type === 'TSNumberKeyword'
             ? 'number'
             : null;
       if (value) {
         return {
-          readonly:
-            node.typeName.type === 'Identifier' &&
-            node.typeName.name === 'ReadonlyArray',
+          readonly: node.typeName.type === 'Identifier' && node.typeName.name === 'ReadonlyArray',
           type: 'array',
           value,
         };
@@ -222,14 +209,10 @@ const extractProp = (node: TSTypeElement): Prop => {
     };
   }
 
-  throw new Error(
-    `generate-actions: Could not extract member information from '${node.type}'.`,
-  );
+  throw new Error(`generate-actions: Could not extract member information from '${node.type}'.`);
 };
 
-const extract = (
-  files: ReadonlyArray<string>,
-): ReadonlyArray<ExtractedType> => {
+const extract = (files: ReadonlyArray<string>): ReadonlyArray<ExtractedType> => {
   const types: Array<ExtractedType> = [];
   files.map((file) => {
     const ast = parse(readFileSync(join(root, file), 'utf8'), {
@@ -259,10 +242,7 @@ const extract = (
                 return index === -1 ? Number.POSITIVE_INFINITY : index;
               })
             : unsortedProps.sort(
-                (
-                  { name: nameA, optional: optionalA },
-                  { name: nameB, optional: optionalB },
-                ) => {
+                ({ name: nameA, optional: optionalA }, { name: nameB, optional: optionalB }) => {
                   if (nameA === 'type') {
                     return -1;
                   } else if (nameB === 'type') {
@@ -309,10 +289,7 @@ const encodePropType = (
     const { type, value } = valueType;
     const suffix = optional ? ' | null' : '';
     if (name === 'type' && type === 'literal') {
-      return [
-        ...list,
-        `${name}: ${getStableTypeID(actionType, actionName) + suffix}`,
-      ];
+      return [...list, `${name}: ${getStableTypeID(actionType, actionName) + suffix}`];
     }
 
     if (type === 'boolean') {
@@ -336,11 +313,7 @@ const encodePropType = (
     }
 
     if (type === 'reference' && value === 'Vector') {
-      return [
-        ...list,
-        `${name}X: number ${suffix}`,
-        `${name}Y: number ${suffix}`,
-      ];
+      return [...list, `${name}X: number ${suffix}`, `${name}Y: number ${suffix}`];
     }
 
     if (type === 'reference') {
@@ -355,75 +328,67 @@ const encodeProps = (
   actionType: ActionType,
   prefix?: string,
 ): ReadonlyArray<string> =>
-  props.reduce<Array<string>>(
-    (list, { name, optional, value: { type, value } }) => {
-      const identifier = `${prefix ? prefix + '.' : `${actionType}.`}${name}`;
-      if (name === 'type' && type === 'literal' && typeof value === 'string') {
-        return [...list, String(getStableTypeID(actionType, value))];
-      }
+  props.reduce<Array<string>>((list, { name, optional, value: { type, value } }) => {
+    const identifier = `${prefix ? prefix + '.' : `${actionType}.`}${name}`;
+    if (name === 'type' && type === 'literal' && typeof value === 'string') {
+      return [...list, String(getStableTypeID(actionType, value))];
+    }
 
-      if (type === 'boolean') {
-        return [...list, `${identifier} ? 1 : ${optional ? `null` : `0`}`];
-      }
+    if (type === 'boolean') {
+      return [...list, `${identifier} ? 1 : ${optional ? `null` : `0`}`];
+    }
 
-      if (type === 'entities') {
+    if (type === 'entities') {
+      return [
+        ...list,
+        optional
+          ? `${identifier} != null ? encodeEntities(${identifier}) : null`
+          : `encodeEntities(${identifier})`,
+      ];
+    }
+
+    if (type === 'array') {
+      if (value === 'Vector') {
         return [
           ...list,
-          optional
-            ? `${identifier} != null ? encodeEntities(${identifier}) : null`
-            : `encodeEntities(${identifier})`,
+          `${
+            optional ? `${identifier}?.length ? ` : ''
+          }${identifier}.flatMap(vector => [vector.x, vector.y])${optional ? ` : null` : ''}`,
+        ];
+      }
+      return [...list, identifier];
+    }
+
+    if (type === 'object' && typeof value !== 'string') {
+      return [...list, ...encodeProps(value, actionType, identifier)];
+    }
+
+    if (type === 'reference' && value === 'Vector') {
+      if (optional) {
+        return [
+          ...list,
+          `${identifier} != null ? ${identifier}.x : null`,
+          `${identifier} != null ? ${identifier}.y : null`,
         ];
       }
 
-      if (type === 'array') {
-        if (value === 'Vector') {
-          return [
-            ...list,
-            `${
-              optional ? `${identifier}?.length ? ` : ''
-            }${identifier}.flatMap(vector => [vector.x, vector.y])${
-              optional ? ` : null` : ''
-            }`,
-          ];
-        }
-        return [...list, identifier];
+      return [...list, `${identifier}.x`, `${identifier}.y`];
+    }
+
+    if (type === 'reference' && typeof value === 'string') {
+      const encodeCall = scalarReferences.has(value)
+        ? identifier
+        : customEncoderReferences.has(value)
+          ? `encode${value}(${identifier})`
+          : `${identifier}.toJSON()`;
+      if (optional) {
+        return [...list, `${identifier} != null ? ${encodeCall} : null`];
       }
+      return [...list, encodeCall];
+    }
 
-      if (type === 'object' && typeof value !== 'string') {
-        return [...list, ...encodeProps(value, actionType, identifier)];
-      }
-
-      if (type === 'reference' && value === 'Vector') {
-        if (optional) {
-          return [
-            ...list,
-            `${identifier} != null ? ${identifier}.x : null`,
-            `${identifier} != null ? ${identifier}.y : null`,
-          ];
-        }
-
-        return [...list, `${identifier}.x`, `${identifier}.y`];
-      }
-
-      if (type === 'reference' && typeof value === 'string') {
-        const encodeCall = scalarReferences.has(value)
-          ? identifier
-          : customEncoderReferences.has(value)
-            ? `encode${value}(${identifier})`
-            : `${identifier}.toJSON()`;
-        if (optional) {
-          return [...list, `${identifier} != null ? ${encodeCall} : null`];
-        }
-        return [...list, encodeCall];
-      }
-
-      return [
-        ...list,
-        optional ? `${identifier} != null ? ${identifier} : null` : identifier,
-      ];
-    },
-    [],
-  );
+    return [...list, optional ? `${identifier} != null ? ${identifier} : null` : identifier];
+  }, []);
 
 const decodeProps = (
   actionName: string,
@@ -466,9 +431,7 @@ const decodeProps = (
               ...list,
               `${name}: ${
                 optional ? `action[${counter}] ? ` : ''
-              }decodeVectorArray(action[${counter}])${
-                optional ? ` : undefined` : ''
-              }`,
+              }decodeVectorArray(action[${counter}])${optional ? ` : undefined` : ''}`,
             ],
           };
         }
@@ -478,12 +441,7 @@ const decodeProps = (
             counter: counter + value.length,
             list: [
               ...list,
-              `${name}: {${decodeProps(
-                actionName,
-                actionType,
-                value,
-                counter,
-              ).join(',')}}`,
+              `${name}: {${decodeProps(actionName, actionType, value, counter).join(',')}}`,
             ],
           };
         }
@@ -496,12 +454,8 @@ const decodeProps = (
               optional
                 ? `${name}: ${actionType}[${counter}] && ${actionType}[${
                     counter + 1
-                  }] ? vec(${actionType}[${counter}], ${actionType}[${
-                    counter + 1
-                  }]) : undefined`
-                : `${name}: vec(${actionType}[${counter}], ${actionType}[${
-                    counter + 1
-                  }])`,
+                  }] ? vec(${actionType}[${counter}], ${actionType}[${counter + 1}]) : undefined`
+                : `${name}: vec(${actionType}[${counter}], ${actionType}[${counter + 1}])`,
             ],
           };
         }
@@ -525,12 +479,7 @@ const decodeProps = (
 
         return {
           counter: counter + 1,
-          list: [
-            ...list,
-            `${name}: ${actionType}[${counter}]${
-              optional ? ` ?? undefined` : ``
-            }`,
-          ],
+          list: [...list, `${name}: ${actionType}[${counter}]${optional ? ` ?? undefined` : ``}`],
         };
       },
       { counter, list: [] },
@@ -542,14 +491,8 @@ const directionMapper = new Map([
 ]);
 
 const fieldMappers = new Map([
-  [
-    'CreateBuilding',
-    new Map([['id', "name: '${c.green(getBuildingInfo(action.id)?.name)}'"]]),
-  ],
-  [
-    'CreateUnit',
-    new Map([['id', "name: '${c.green(getUnitInfo(action.id)?.name)}'"]]),
-  ],
+  ['CreateBuilding', new Map([['id', "name: '${c.green(getBuildingInfo(action.id)?.name)}'"]])],
+  ['CreateUnit', new Map([['id', "name: '${c.green(getUnitInfo(action.id)?.name)}'"]])],
   ['HiddenSourceAttackBuilding', directionMapper],
   ['HiddenSourceAttackUnit', directionMapper],
   ['HiddenTargetAttackBuilding', directionMapper],
@@ -588,9 +531,7 @@ const formatValue = (
   }
 
   if (type === 'object' && typeof value !== 'string') {
-    return `{ ${value
-      .map((prop) => formatProp(name, prop, prefix + name))
-      .join(', ')} }`;
+    return `{ ${value.map((prop) => formatProp(name, prop, prefix + name)).join(', ')} }`;
   }
 
   if (type === 'reference' && value === 'Vector') {
@@ -627,8 +568,7 @@ const formatProp = (
   { name, optional, value }: Prop,
   prefix?: string,
 ): string => {
-  return fieldMappers.has(shortActionName) &&
-    fieldMappers.get(shortActionName)!.has(name)
+  return fieldMappers.has(shortActionName) && fieldMappers.get(shortActionName)!.has(name)
     ? fieldMappers.get(shortActionName)!.get(name)!
     : `${name}: ${formatValue(name, optional, value, prefix)}`;
 };
@@ -637,9 +577,7 @@ const formatAction = ({ name: actionName, props }: ExtractedType): string => {
   const shortName = getShortName(actionName);
   const from = props.find(({ name }) => name === 'from');
   const to = props.find(({ name }) => name === 'to');
-  props = props.filter(
-    ({ name }) => name !== 'type' && name !== 'from' && name !== 'to',
-  );
+  props = props.filter(({ name }) => name !== 'type' && name !== 'from' && name !== 'to');
   const content = ` \${c.dim('{')} ${props
     .map((prop) => formatProp(shortName, prop))
     .join(', ')} \${c.dim('}')}`;
@@ -671,9 +609,7 @@ const formatAction = ({ name: actionName, props }: ExtractedType): string => {
     }${
       props.length
         ? allAreOptional
-          ? `\${${props
-              .map(({ name }) => `action.${name}`)
-              .join(' || ')} ? \`${content}\` : ''}`
+          ? `\${${props.map(({ name }) => `action.${name}`).join(' || ')} ? \`${content}\` : ''}`
           : content
         : ''
     }\`;`;
@@ -760,12 +696,8 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     ]`;
     }),
     `
-    export type EncodedAction = ${actions
-      .map(({ name }) => `Encoded${name}`)
-      .join(' | ')}`,
-    `export type EncodedCondition = ${conditions
-      .map(({ name }) => `Encoded${name}`)
-      .join(' | ')}`,
+    export type EncodedAction = ${actions.map(({ name }) => `Encoded${name}`).join(' | ')}`,
+    `export type EncodedCondition = ${conditions.map(({ name }) => `Encoded${name}`).join(' | ')}`,
     `export type EncodedActionResponse = ${actionResponses
       .map(({ name }) => `Encoded${name}`)
       .join(' | ')}`,
@@ -970,9 +902,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       ...(value.type === 'object' ? getPropNames(value.value) : []),
     ]);
 
-  const getOptionalProps = (
-    props: ReadonlyArray<Prop>,
-  ): ReadonlyArray<string> =>
+  const getOptionalProps = (props: ReadonlyArray<Prop>): ReadonlyArray<string> =>
     props.flatMap(({ name, optional, value }) =>
       // Do not reorder to/from Vectors since it changes existing encoded actions.
       optional && name !== 'to' && name !== 'from'
@@ -982,10 +912,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
 
   const newActionMap = new Map<string, [number, ReadonlySet<string>]>();
   for (const action of actions) {
-    newActionMap.set(getShortName(action.name), [
-      action.id,
-      new Set(getPropNames(action.props)),
-    ]);
+    newActionMap.set(getShortName(action.name), [action.id, new Set(getPropNames(action.props))]);
   }
 
   for (const action of actionResponses) {
@@ -1032,9 +959,7 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       ),
     ),
   );
-  const encodedActionsOutput = sign(
-    await formatWithOxfmt(encodedActionsFileName, code.join('\n')),
-  );
+  const encodedActionsOutput = sign(await formatWithOxfmt(encodedActionsFileName, code.join('\n')));
   const formatActionsOutput = sign(
     await formatWithOxfmt(formatActionsFileName, formatCode.join('\n')),
   );

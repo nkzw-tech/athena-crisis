@@ -2,10 +2,7 @@ import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
 import { validateUnit } from '@deities/athena/lib/validateMap.tsx';
 import { Biomes } from '@deities/athena/map/Biome.tsx';
-import {
-  MaxCharges,
-  MaxMessageLength,
-} from '@deities/athena/map/Configuration.tsx';
+import { MaxCharges, MaxMessageLength } from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
@@ -30,10 +27,7 @@ const validateCharacterMessage = (action: CharacterMessageEffectAction) => {
     return null;
   }
 
-  if (
-    variant != null &&
-    (variant < 0 || variant >= unit.sprite.portrait.variants)
-  ) {
+  if (variant != null && (variant < 0 || variant >= unit.sprite.portrait.variants)) {
     return null;
   }
 
@@ -64,9 +58,7 @@ const validateSpawnEffect = (map: MapData, action: SpawnEffectAction) => {
         !!toPlayerID(id) &&
         !map.maybeGetTeam(id) &&
         players.size > 0 &&
-        players.every(
-          (player) => !!toPlayerID(player.id) && !map.maybeGetPlayer(player.id),
-        ),
+        players.every((player) => !!toPlayerID(player.id) && !map.maybeGetPlayer(player.id)),
     )
   ) {
     return null;

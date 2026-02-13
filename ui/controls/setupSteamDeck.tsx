@@ -1,15 +1,7 @@
 import { App } from '../App.tsx';
 import { FloatingGamepadTextInputMode } from './GamepadTextInput.tsx';
 
-const inputTypes = new Set([
-  'text',
-  'password',
-  'search',
-  'email',
-  'number',
-  'tel',
-  'url',
-]);
+const inputTypes = new Set(['text', 'password', 'search', 'email', 'number', 'tel', 'url']);
 let currentElement: HTMLInputElement | null = null;
 let setupHasRun = false;
 

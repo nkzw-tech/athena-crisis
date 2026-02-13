@@ -118,8 +118,7 @@ test('collects statistics on attacks', async () => {
 
   // Stats for other players in fog are not visible.
   const fogMap = new Fog(player1.id).apply(lastMap);
-  expect({ ...fogMap.getPlayer(player1.id).stats, damage: 0 })
-    .toMatchInlineSnapshot(`
+  expect({ ...fogMap.getPlayer(player1.id).stats, damage: 0 }).toMatchInlineSnapshot(`
       {
         "captured": 0,
         "createdBuildings": 0,
@@ -161,14 +160,10 @@ test('one shots work through counter attacks', async () => {
         skills,
       }),
     ),
-    units: map.units
-      .set(fromA, Infantry.create(player1))
-      .set(toA, APU.create(player2)),
+    units: map.units.set(fromA, Infantry.create(player1)).set(toA, APU.create(player2)),
   });
 
-  const [gameState] = await executeGameActions(initialMap, [
-    AttackUnitAction(fromA, toA),
-  ]);
+  const [gameState] = await executeGameActions(initialMap, [AttackUnitAction(fromA, toA)]);
 
   const lastMap = gameState.at(-1)![1];
   const statsA = lastMap.getPlayer(player1.id).stats;
@@ -293,13 +288,9 @@ test('collects statistics on captures and creating units', async () => {
   const vecC = vec(1, 3);
   const vecD = vec(2, 3);
   const initialMap = map.copy({
-    buildings: map.buildings
-      .set(vecA, House.create(player2))
-      .set(vecD, Barracks.create(player1)),
+    buildings: map.buildings.set(vecA, House.create(player2)).set(vecD, Barracks.create(player1)),
     map: map.map.map((tile, index) =>
-      indexToVector(index, map.size.width).equals(vecC)
-        ? ConstructionSite.id
-        : tile,
+      indexToVector(index, map.size.width).equals(vecC) ? ConstructionSite.id : tile,
     ),
     units: map.units
       .set(vecA, Pioneer.create(player1).capture())
@@ -374,9 +365,7 @@ test('capturing a HQ will add each captured building to the statistics', async (
     units: map.units.set(vecA, Pioneer.create(player1).capture()),
   });
 
-  const [gameState] = await executeGameActions(initialMap, [
-    CaptureAction(vecA),
-  ]);
+  const [gameState] = await executeGameActions(initialMap, [CaptureAction(vecA)]);
 
   const statsA = gameState.at(0)![1].getPlayer(player1.id).stats;
   const statsB = gameState.at(1)![1].getPlayer(player1.id).stats;
@@ -451,21 +440,7 @@ test('tracks statistics for players of the same team in fog', async () => {
             1,
             '',
             ImmutableMap([
-              [
-                3,
-                new Bot(
-                  3,
-                  'Bot',
-                  1,
-                  300,
-                  undefined,
-                  new Set(),
-                  new Set(),
-                  0,
-                  null,
-                  0,
-                ),
-              ],
+              [3, new Bot(3, 'Bot', 1, 300, undefined, new Set(), new Set(), 0, null, 0)],
             ]),
           ),
         ],
@@ -475,27 +450,19 @@ test('tracks statistics for players of the same team in fog', async () => {
     },
   );
 
-  const [gameState, encodedGameActionResponse] = await executeGameActions(
-    initialMap,
-    [EndTurnAction(), AttackUnitAction(vecC, vecB)],
-  );
+  const [gameState, encodedGameActionResponse] = await executeGameActions(initialMap, [
+    EndTurnAction(),
+    AttackUnitAction(vecC, vecB),
+  ]);
 
   const { others } = decodeGameActionResponse(encodedGameActionResponse);
 
-  let fogMap = applyActionResponse(
-    vision.apply(initialMap),
-    vision,
-    others![0].actionResponse,
-  );
+  let fogMap = applyActionResponse(vision.apply(initialMap), vision, others![0].actionResponse);
   for (const { actionResponse, buildings, units } of others!) {
-    fogMap = updateVisibleEntities(
-      applyActionResponse(fogMap, vision, actionResponse),
-      vision,
-      {
-        buildings,
-        units,
-      },
-    );
+    fogMap = updateVisibleEntities(applyActionResponse(fogMap, vision, actionResponse), vision, {
+      buildings,
+      units,
+    });
   }
 
   const lastMap = gameState.at(-1)![1];
@@ -523,23 +490,7 @@ test('increases the `destroyedUnits` count of other players when a unit self-des
       new Team(
         3,
         '',
-        ImmutableMap([
-          [
-            3,
-            new Bot(
-              3,
-              'Bot',
-              3,
-              300,
-              undefined,
-              new Set(),
-              new Set(),
-              0,
-              null,
-              0,
-            ),
-          ],
-        ]),
+        ImmutableMap([[3, new Bot(3, 'Bot', 3, 300, undefined, new Set(), new Set(), 0, null, 0)]]),
       ),
     ),
     units: map.units
@@ -572,33 +523,12 @@ test('increases the `lostUnits` count of a player when a unit self-destructs', a
       new Team(
         3,
         '',
-        ImmutableMap([
-          [
-            3,
-            new Bot(
-              3,
-              'Bot',
-              3,
-              300,
-              undefined,
-              new Set(),
-              new Set(),
-              0,
-              null,
-              0,
-            ),
-          ],
-        ]),
+        ImmutableMap([[3, new Bot(3, 'Bot', 3, 300, undefined, new Set(), new Set(), 0, null, 0)]]),
       ),
     ),
     units: map.units
       .set(fromA, Helicopter.create(player1))
-      .set(
-        toA,
-        Helicopter.create(player2)
-          .setHealth(1)
-          .setStatusEffect(UnitStatusEffect.Poison),
-      )
+      .set(toA, Helicopter.create(player2).setHealth(1).setStatusEffect(UnitStatusEffect.Poison))
       .set(fromB, Helicopter.create(player2))
       .set(toB, Helicopter.create(3)),
   });
@@ -632,9 +562,7 @@ test('counts transported units correctly', async () => {
       .set(vec(3, 3), Helicopter.create(player2)),
   });
 
-  const [gameState] = await executeGameActions(initialMap, [
-    AttackUnitAction(fromA, toA),
-  ]);
+  const [gameState] = await executeGameActions(initialMap, [AttackUnitAction(fromA, toA)]);
 
   const lastMap = gameState.at(-1)![1];
   const statsA = lastMap.getPlayer(player1.id).stats;

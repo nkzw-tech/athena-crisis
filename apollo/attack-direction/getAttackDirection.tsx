@@ -18,13 +18,7 @@ export class AttackDirection {
 
   static fromJSON(direction: PlainAttackDirection): AttackDirection {
     return new AttackDirection(
-      direction === 0
-        ? 'right'
-        : direction === 1
-          ? 'left'
-          : direction === 2
-            ? 'up'
-            : 'down',
+      direction === 0 ? 'right' : direction === 1 ? 'left' : direction === 2 ? 'up' : 'down',
     );
   }
 }

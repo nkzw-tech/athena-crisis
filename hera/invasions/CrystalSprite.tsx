@@ -44,17 +44,7 @@ export default memo(function CrystalSprite({
     let offsetX = 0;
     const draw = () => {
       context.clearRect(0, 0, size, size);
-      context.drawImage(
-        CrystalImage,
-        offsetX * size,
-        y,
-        size,
-        size,
-        0,
-        0,
-        size,
-        size,
-      );
+      context.drawImage(CrystalImage, offsetX * size, y, size, size, 0, 0, size, size);
       offsetX = (offsetX + 1) % (portal ? 32 : 16);
 
       if (offsetX === 0 && onComplete && !complete) {

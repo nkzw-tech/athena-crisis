@@ -1,10 +1,7 @@
 import Vector from '../map/Vector.tsx';
 import { SizeVector } from '../MapData.tsx';
 
-export default function getDecoratorIndex(
-  vector: Vector,
-  size: SizeVector,
-): number {
+export default function getDecoratorIndex(vector: Vector, size: SizeVector): number {
   if (!size.contains(vector)) {
     throw new Error(`vector: Invalid vector '${String(vector)}'.`);
   }

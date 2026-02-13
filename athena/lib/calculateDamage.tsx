@@ -15,22 +15,14 @@ export default function calculateDamage(
   luckA: number,
 ): number {
   if (weapon.flatDamage) {
-    return Math.max(
-      MinDamage,
-      (weapon.getDamage(entityB) || 0) + flatDamageStatusEffect,
-    );
+    return Math.max(MinDamage, (weapon.getDamage(entityB) || 0) + flatDamageStatusEffect);
   }
 
   const health = 0.666 * (unitA.health / MaxHealth) + 0.334;
   const offenseA =
-    isUnit(entityB) && entityB.shield
-      ? 0
-      : weapon.getDamage(entityB) * attackStatusEffect;
+    isUnit(entityB) && entityB.shield ? 0 : weapon.getDamage(entityB) * attackStatusEffect;
   const defenseB = entityB.info.defense * defenseStatusEffect;
   const coverA2 = isEntityWithoutCover(unitA) ? 1 : 1 + coverA / 400;
   const coverB2 = isEntityWithoutCover(entityB) ? 1 : 1 + coverB / 100;
-  return Math.max(
-    MinDamage,
-    health * offenseA * coverA2 * luckA - defenseB * coverB2,
-  );
+  return Math.max(MinDamage, health * offenseA * coverA2 * luckA - defenseB * coverB2);
 }

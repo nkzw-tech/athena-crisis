@@ -27,14 +27,8 @@ export function getFrame(
   tick: number,
 ) {
   const animation =
-    modifier != null && WaterfallModifiers.has(modifier)
-      ? WaterfallAnimation
-      : info.animation;
-  if (
-    modifier != null &&
-    animation?.modifiers &&
-    !animation.modifiers.has(modifier)
-  ) {
+    modifier != null && WaterfallModifiers.has(modifier) ? WaterfallAnimation : info.animation;
+  if (modifier != null && animation?.modifiers && !animation.modifiers.has(modifier)) {
     return null;
   }
 

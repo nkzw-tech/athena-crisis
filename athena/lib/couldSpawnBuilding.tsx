@@ -1,11 +1,6 @@
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import { BuildingInfo } from '../info/Building.tsx';
-import {
-  Pier,
-  Plain,
-  ShipyardConstructionSite,
-  TileTypes,
-} from '../info/Tile.tsx';
+import { Pier, Plain, ShipyardConstructionSite, TileTypes } from '../info/Tile.tsx';
 import { PlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -30,22 +25,10 @@ export default function couldSpawnBuilding(
 
   const { editorPlaceOn, placeOn } = building.configuration;
   const tile = map.getTileInfo(vector);
-  if (
-    placeOn?.has(ShipyardConstructionSite)
-      ? tile.type & TileTypes.Sea
-      : tile === Plain
-  ) {
-    const tile = getFirstOrThrow(
-      new Set([...(placeOn || []), ...editorPlaceOn]),
-    );
+  if (placeOn?.has(ShipyardConstructionSite) ? tile.type & TileTypes.Sea : tile === Plain) {
+    const tile = getFirstOrThrow(new Set([...(placeOn || []), ...editorPlaceOn]));
 
-    if (
-      !canPlaceTile(
-        map,
-        vector,
-        tile === ShipyardConstructionSite ? Pier : tile,
-      )
-    ) {
+    if (!canPlaceTile(map, vector, tile === ShipyardConstructionSite ? Pier : tile)) {
       return false;
     }
 

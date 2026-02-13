@@ -9,16 +9,8 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { attackable, moveable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
-import {
-  Actions,
-  ClearTimerFunction,
-  State,
-  StateLike,
-  StateWithActions,
-} from '../Types.tsx';
-import AbstractSelectBehavior, {
-  BaseSelectComponent,
-} from './AbstractSelectBehavior.tsx';
+import { Actions, ClearTimerFunction, State, StateLike, StateWithActions } from '../Types.tsx';
+import AbstractSelectBehavior, { BaseSelectComponent } from './AbstractSelectBehavior.tsx';
 import { resetBehavior } from './Behavior.tsx';
 import BuySkills from './BuySkills.tsx';
 import CreateUnit from './CreateUnit.tsx';
@@ -49,8 +41,7 @@ export default class Base extends AbstractSelectBehavior {
       this.showInfo(vector, state, actions);
     }
 
-    let newState: StateLike | null =
-      radius?.type === RadiusType.Attack ? { radius: null } : null;
+    let newState: StateLike | null = radius?.type === RadiusType.Attack ? { radius: null } : null;
 
     if (highlightedPositions) {
       newState = { ...newState, highlightedPositions: null };
@@ -66,11 +57,7 @@ export default class Base extends AbstractSelectBehavior {
     }
   }
 
-  private async showInfo(
-    vector: Vector,
-    state: State,
-    { scheduleTimer, update }: Actions,
-  ) {
+  private async showInfo(vector: Vector, state: State, { scheduleTimer, update }: Actions) {
     const { map, messages, selectedPosition, vision } = state;
     const unit = map.units.get(vector);
     const message = messages.get(vector);
@@ -88,8 +75,7 @@ export default class Base extends AbstractSelectBehavior {
             ...(showAttackRadius && !state.radius
               ? {
                   radius: {
-                    dim:
-                      showAttackRadius && !unit.canAttack(map.getPlayer(unit)),
+                    dim: showAttackRadius && !unit.canAttack(map.getPlayer(unit)),
                     fields: attackable(map, unit.recover(), vector, 'cost'),
                     path: null,
                     type: RadiusType.Attack,
@@ -107,43 +93,31 @@ export default class Base extends AbstractSelectBehavior {
     return selectedBuilding && selectedUnit ? resetBehavior() : null;
   }
 
-  protected onSelect(
-    vector: Vector,
-    state: State,
-    entity: Entity,
-  ): StateLike | null {
+  protected onSelect(vector: Vector, state: State, entity: Entity): StateLike | null {
     const { currentViewer, map, vision } = state;
     if (isUnit(entity)) {
       const entityIsPlayable = isPlayable(map, currentViewer, entity);
       const player = map.getPlayer(entity);
       const fields =
-        !entity.hasMoved() &&
-        !entity.isUnfolded() &&
-        (!entity.isCapturing() || !entityIsPlayable)
+        !entity.hasMoved() && !entity.isUnfolded() && (!entity.isCapturing() || !entityIsPlayable)
           ? moveable(vision.apply(map), entity, vector)
           : null;
       if (
         fields?.size ||
         !entityIsPlayable ||
-        (entity.isUnfolded() &&
-          getAttackableEntitiesInRange(map, vector, vision).size)
+        (entity.isUnfolded() && getAttackableEntitiesInRange(map, vector, vision).size)
       ) {
         const additionalFields =
-          !entityIsPlayable &&
-          entity.canAttack(player) &&
-          entity.info.hasAttack()
+          !entityIsPlayable && entity.canAttack(player) && entity.info.hasAttack()
             ? attackable(map, entity, vector, 'cover')
             : null;
 
-        const isLongRange =
-          entity.info.isLongRange() && !entity.info.canAct(player);
+        const isLongRange = entity.info.isLongRange() && !entity.info.canAct(player);
         const additionalRadius = additionalFields?.size
           ? {
               fields: new Map(
                 [...additionalFields].filter(
-                  isLongRange
-                    ? Boolean
-                    : ([vector]: [Vector, unknown]) => !fields?.has(vector),
+                  isLongRange ? Boolean : ([vector]: [Vector, unknown]) => !fields?.has(vector),
                 ),
               ),
               path: null,
@@ -181,9 +155,7 @@ export default class Base extends AbstractSelectBehavior {
 
     if (isBuilding(entity)) {
       const hasRadarBehavior = entity.info.hasBehavior(Behavior.Radar);
-      const hasSellSkillsBehavior = entity.info.hasBehavior(
-        Behavior.SellSkills,
-      );
+      const hasSellSkillsBehavior = entity.info.hasBehavior(Behavior.SellSkills);
       if (
         hasRadarBehavior ||
         hasSellSkillsBehavior ||
@@ -208,11 +180,7 @@ export default class Base extends AbstractSelectBehavior {
     return null;
   }
 
-  protected canSelectCandidates(
-    state: State,
-    unit?: Unit | null,
-    building?: Building | null,
-  ) {
+  protected canSelectCandidates(state: State, unit?: Unit | null, building?: Building | null) {
     const { currentViewer, map } = state;
     if (
       unit &&
@@ -227,10 +195,7 @@ export default class Base extends AbstractSelectBehavior {
       unit = null;
     }
 
-    if (
-      building &&
-      (building.isCompleted() || !isPlayable(map, currentViewer, building))
-    ) {
+    if (building && (building.isCompleted() || !isPlayable(map, currentViewer, building))) {
       building = null;
     }
     return { building: building || null, unit: unit || null };
@@ -244,11 +209,7 @@ export default class Base extends AbstractSelectBehavior {
     actions: Actions,
   ): StateLike | null => {
     let newState = super.getState(vector, state, unit, building, actions);
-    if (
-      newState?.selectedBuilding &&
-      newState.selectedPosition &&
-      newState.selectedUnit
-    ) {
+    if (newState?.selectedBuilding && newState.selectedPosition && newState.selectedUnit) {
       this.clearTimers(actions.clearTimer);
       if (state.radius?.type === RadiusType.Attack) {
         newState = { ...newState, radius: null };
@@ -260,11 +221,7 @@ export default class Base extends AbstractSelectBehavior {
   override component = ({ actions, state }: StateWithActions) => {
     return (
       <>
-        <BaseSelectComponent
-          actions={actions}
-          getState={this.getState}
-          state={state}
-        />
+        <BaseSelectComponent actions={actions} getState={this.getState} state={state} />
         <TeleportIndicator
           state={state}
           unit={Pioneer.create(state.map.currentPlayer)}

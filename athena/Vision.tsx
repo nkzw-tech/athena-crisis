@@ -71,21 +71,15 @@ export class Fog {
     const team = map.maybeGetTeam(this.currentViewer);
     return map.copy({
       buildings: map.buildings.map((building, vector) =>
-        vision[map.getTileIndex(vector)] === 1
-          ? building
-          : building.hide(map.config.biome),
+        vision[map.getTileIndex(vector)] === 1 ? building : building.hide(map.config.biome),
       ),
       teams: updatePlayers(
         map.teams,
         map
           .getPlayers()
-          .map((player) =>
-            team?.players.has(player.id) ? player : player.resetStatistics(),
-          ),
+          .map((player) => (team?.players.has(player.id) ? player : player.resetStatistics())),
       ),
-      units: map.units.filter(
-        (_, vector) => vision[map.getTileIndex(vector)] === 1,
-      ),
+      units: map.units.filter((_, vector) => vision[map.getTileIndex(vector)] === 1),
     });
   }
 }

@@ -70,10 +70,6 @@ const absoluteStyle = css`
 `;
 
 const fadeStyle = css`
-  mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.65) 65%,
-    rgba(0, 0, 0, 1) 85%
-  );
+  mask-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.65) 65%, rgba(0, 0, 0, 1) 85%);
   mask-type: alpha;
 `;

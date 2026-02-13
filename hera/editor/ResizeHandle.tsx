@@ -1,34 +1,18 @@
 import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
-import {
-  MaxSize,
-  MinSize,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { MaxSize, MinSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import parseInteger from '@nkzw/core/parseInteger.js';
-import {
-  MouseEvent as ReactMouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 type Size = Readonly<{ x: number; y: number }>;
 
 const getSizeVectorPlusOne = (size: SizeVector) =>
-  new SizeVector(
-    Math.min(MaxSize, size.width + 1),
-    Math.min(MaxSize, size.height + 1),
-  );
+  new SizeVector(Math.min(MaxSize, size.width + 1), Math.min(MaxSize, size.height + 1));
 
 const limit = (value: number, dimension: number) =>
-  Math.min(
-    MaxSize,
-    Math.max(MinSize, dimension + Math.round(value / TileSize)),
-  );
+  Math.min(MaxSize, Math.max(MinSize, dimension + Math.round(value / TileSize)));
 
 const limitSize = (delta: Size, size: SizeVector) => {
   return {
@@ -38,11 +22,7 @@ const limitSize = (delta: Size, size: SizeVector) => {
 };
 
 const getScale = (element: HTMLElement | null) =>
-  (element &&
-    parseInteger(
-      getComputedStyle(element).getPropertyValue(cssVar('scale')),
-    )) ||
-  2;
+  (element && parseInteger(getComputedStyle(element).getPropertyValue(cssVar('scale')))) || 2;
 
 const getSize = (
   element: HTMLElement,
@@ -125,9 +105,7 @@ export default function ResizeHandle({
     <div className={cx(style, (start || isVisible) && visibleStyle)}>
       <div
         className={cx(dragHandleStyle)}
-        onDoubleClick={() =>
-          onResize(getSizeVectorPlusOne(size), new Set(['top', 'left']))
-        }
+        onDoubleClick={() => onResize(getSizeVectorPlusOne(size), new Set(['top', 'left']))}
         onMouseDown={(event) => event.stopPropagation()}
         onPointerDown={(event) => resizeStart(event, new Set(['top', 'left']))}
         ref={ref}
@@ -140,9 +118,7 @@ export default function ResizeHandle({
       />
       <div
         className={dragHandleStyle}
-        onDoubleClick={() =>
-          onResize(getSizeVectorPlusOne(size), new Set(['top', 'right']))
-        }
+        onDoubleClick={() => onResize(getSizeVectorPlusOne(size), new Set(['top', 'right']))}
         onMouseDown={(event) => event.stopPropagation()}
         onPointerDown={(event) => resizeStart(event, new Set(['top', 'right']))}
         ref={ref}
@@ -155,13 +131,9 @@ export default function ResizeHandle({
       />
       <div
         className={dragHandleStyle}
-        onDoubleClick={() =>
-          onResize(getSizeVectorPlusOne(size), new Set(['bottom', 'left']))
-        }
+        onDoubleClick={() => onResize(getSizeVectorPlusOne(size), new Set(['bottom', 'left']))}
         onMouseDown={(event) => event.stopPropagation()}
-        onPointerDown={(event) =>
-          resizeStart(event, new Set(['bottom', 'left']))
-        }
+        onPointerDown={(event) => resizeStart(event, new Set(['bottom', 'left']))}
         ref={ref}
         style={{
           bottom: 0,
@@ -172,13 +144,9 @@ export default function ResizeHandle({
       />
       <div
         className={dragHandleStyle}
-        onDoubleClick={() =>
-          onResize(getSizeVectorPlusOne(size), new Set(['bottom', 'right']))
-        }
+        onDoubleClick={() => onResize(getSizeVectorPlusOne(size), new Set(['bottom', 'right']))}
         onMouseDown={(event) => event.stopPropagation()}
-        onPointerDown={(event) =>
-          resizeStart(event, new Set(['bottom', 'right']))
-        }
+        onPointerDown={(event) => resizeStart(event, new Set(['bottom', 'right']))}
         ref={ref}
         style={{
           bottom: 0,

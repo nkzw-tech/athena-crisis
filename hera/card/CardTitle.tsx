@@ -13,11 +13,7 @@ export default function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement> & { player?: PlayerID }) {
   const color = player != null && getColor(player);
   return (
-    <h1
-      {...props}
-      className={cx(h1Style, className)}
-      style={color ? { ...style, color } : style}
-    />
+    <h1 {...props} className={cx(h1Style, className)} style={color ? { ...style, color } : style} />
   );
 }
 
@@ -29,11 +25,7 @@ export function CardInfoHeading({
 }: HTMLAttributes<HTMLHeadingElement> & { player?: PlayerID }) {
   const color = player != null && getColor(player);
   return (
-    <h2
-      {...props}
-      className={cx(h2Style, className)}
-      style={color ? { ...style, color } : style}
-    />
+    <h2 {...props} className={cx(h2Style, className)} style={color ? { ...style, color } : style} />
   );
 }
 

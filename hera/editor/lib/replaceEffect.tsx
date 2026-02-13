@@ -10,9 +10,7 @@ export default function replaceEffect(
   const effectList = newEffects.get(trigger);
   if (effectList) {
     const newEffectList = new Set(
-      [...effectList].map((item) =>
-        item === currentEffect ? newEffect : item,
-      ),
+      [...effectList].map((item) => (item === currentEffect ? newEffect : item)),
     );
     newEffects.set(trigger, newEffectList);
     return newEffects;

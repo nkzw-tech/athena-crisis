@@ -19,12 +19,7 @@ import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
-import {
-  Charge,
-  HealAmount,
-  MaxHealth,
-  MinSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { Charge, HealAmount, MaxHealth, MinSize } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit, { UnitConversion } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -35,21 +30,13 @@ import resizeMap from '../lib/resizeMap.tsx';
 const conversions = new Map<Skill, Readonly<UnitConversion>>([
   [Skill.SpawnUnitInfernoJetpack, { from: Flamethrower, to: InfernoJetpack }],
   [Skill.UnlockZombie, { from: Pioneer, to: Zombie }],
-  [
-    Skill.DragonSaboteur,
-    { from: Saboteur, onlyLeader: true, recover: true, to: Dragon },
-  ],
+  [Skill.DragonSaboteur, { from: Saboteur, onlyLeader: true, recover: true, to: Dragon }],
 ]);
 
-const getAllOpponents = (
-  map: MapData,
-  player: Player,
-  vision: VisionT | null,
-) =>
+const getAllOpponents = (map: MapData, player: Player, vision: VisionT | null) =>
   map.units.filter(
     (unit, vector) =>
-      (!vision || vision.isVisible(map, vector)) &&
-      map.isNonNeutralOpponent(player, unit),
+      (!vision || vision.isVisible(map, vector)) && map.isNonNeutralOpponent(player, unit),
   );
 
 export function getUnitsToDamage(
@@ -65,21 +52,16 @@ export function getUnitsToDamage(
     const vectors = new Set(
       [
         ...map.units
-          .filter(
-            (unit) => unit.id === Dragon.id && map.matchesPlayer(unit, player),
-          )
+          .filter((unit) => unit.id === Dragon.id && map.matchesPlayer(unit, player))
           .keys(),
       ].flatMap((vector) => vector.adjacent()),
     );
 
-    return getAllOpponents(map, player, vision).filter((_, vector) =>
-      vectors.has(vector),
-    );
+    return getAllOpponents(map, player, vision).filter((_, vector) => vectors.has(vector));
   } else if (skill === Skill.VampireHeal) {
     return map.units.filter(
       (unit) =>
-        map.matchesPlayer(unit, player) &&
-        VampireSoldierMovementTypes.has(unit.info.movementType),
+        map.matchesPlayer(unit, player) && VampireSoldierMovementTypes.has(unit.info.movementType),
     );
   } else if (skill === Skill.BuyUnitDinosaur && from) {
     const vectors = new Set(from.expandStar());
@@ -109,12 +91,7 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
   return null;
 }
 
-export function onPowerUnitDamageEffect(
-  skill: Skill,
-  map: MapData,
-  vector: Vector,
-  unit: Unit,
-) {
+export function onPowerUnitDamageEffect(skill: Skill, map: MapData, vector: Vector, unit: Unit) {
   const damage = getSkillPowerDamage(skill);
   if (damage > 0) {
     let newUnit = unit.modifyHealth(-damage);
@@ -127,9 +104,7 @@ export function onPowerUnitDamageEffect(
     const count = isDead ? newUnit.count() : 0;
     return map.copy({
       teams: updatePlayers(map.teams, [
-        map
-          .getCurrentPlayer()
-          .modifyStatistics({ damage, destroyedUnits: count }),
+        map.getCurrentPlayer().modifyStatistics({ damage, destroyedUnits: count }),
         map.getPlayer(unit).modifyStatistics({ lostUnits: count }),
       ]),
       units: isDead ? map.units.delete(vector) : map.units.set(vector, newUnit),
@@ -139,11 +114,7 @@ export function onPowerUnitDamageEffect(
   return null;
 }
 
-export default function applyPower(
-  skill: Skill,
-  from: Vector | undefined,
-  map: MapData,
-) {
+export default function applyPower(skill: Skill, from: Vector | undefined, map: MapData) {
   const healTypes = getHealUnitTypes(skill);
   let player = map.getCurrentPlayer();
 
@@ -157,10 +128,7 @@ export default function applyPower(
         ),
         new Set(['left', 'top']),
       ),
-      new SizeVector(
-        Math.max(MinSize, map.size.width - 2),
-        Math.max(MinSize, map.size.height - 2),
-      ),
+      new SizeVector(Math.max(MinSize, map.size.width - 2), Math.max(MinSize, map.size.height - 2)),
       new Set(),
     );
   }
@@ -173,8 +141,7 @@ export default function applyPower(
   if (healTypes) {
     map = map.copy({
       units: map.units.map((unit) =>
-        map.matchesPlayer(player, unit) &&
-        matchesActiveType(healTypes, unit, null)
+        map.matchesPlayer(player, unit) && matchesActiveType(healTypes, unit, null)
           ? unit.modifyHealth(HealAmount)
           : unit,
       ),
@@ -183,18 +150,14 @@ export default function applyPower(
 
   if (skill === Skill.RecoverAirUnits) {
     map = map.copy({
-      units: map.units.merge(
-        getAirUnitsToRecover(map, player).map((unit) => unit.recover()),
-      ),
+      units: map.units.merge(getAirUnitsToRecover(map, player).map((unit) => unit.recover())),
     });
   }
 
   if (skill === Skill.BuyUnitCannon) {
     map = map.copy({
       units: map.units.map((unit) =>
-        unit.isUnfolded() &&
-        unit.isCompleted() &&
-        map.matchesPlayer(player, unit)
+        unit.isUnfolded() && unit.isCompleted() && map.matchesPlayer(player, unit)
           ? unit.recover()
           : unit,
       ),
@@ -214,9 +177,7 @@ export default function applyPower(
       units: map.units.map((unit) =>
         unit.info === Jeep && map.matchesPlayer(player, unit)
           ? unit.copy({
-              transports: unit.transports?.map((unit) =>
-                unit.copy({ health: MaxHealth }),
-              ),
+              transports: unit.transports?.map((unit) => unit.copy({ health: MaxHealth })),
             })
           : unit,
       ),
@@ -230,10 +191,7 @@ export default function applyPower(
       .map((unit) => unit.maybeConvert(conversion));
 
     map = map.copy({
-      units: map.units.merge(
-        map.units,
-        assignDeterministicUnitNames(map, newUnits),
-      ),
+      units: map.units.merge(map.units, assignDeterministicUnitNames(map, newUnits)),
     });
   }
 

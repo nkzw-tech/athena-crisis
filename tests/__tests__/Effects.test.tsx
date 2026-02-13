@@ -78,10 +78,7 @@ test('applies an effect after a unit moves and drops it', async () => {
         },
       ]),
     ],
-    [
-      'AttackUnit',
-      new Set<Effect>([{ actions: [{ from: vecC, type: 'CompleteUnit' }] }]),
-    ],
+    ['AttackUnit', new Set<Effect>([{ actions: [{ from: vecC, type: 'CompleteUnit' }] }])],
   ]);
 
   const [, gameActionResponse, newEffects] = await executeGameActions(
@@ -90,8 +87,7 @@ test('applies an effect after a unit moves and drops it', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       Move (2,3 → 3,2) { fuel: 25, completed: false, path: [2,2 → 3,2] }
       CharacterMessage { message: 'Rollin' Rollin' Rollin'', player: 'self', unitId: 5, variant: 1, silhouette: false }"
@@ -144,9 +140,7 @@ test('silently discard an effect if an action cannot be applied', async () => {
     effects,
   );
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `"Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }"`,
   );
 });
@@ -185,9 +179,7 @@ test('effects are also applied in the AI', async () => {
     effects,
   );
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     Move (3,3 → 2,1) { fuel: 36, completed: false, path: [3,2 → 2,2 → 2,1] }
@@ -208,10 +200,7 @@ test('creates a second unit every time a Flamethrower is created', async () => {
       .set(vecA, Barracks.create(player1))
       .set(vecB, Barracks.create(player1))
       .set(vecD, Barracks.create(player1)),
-    units: map.units.set(
-      vecC,
-      Pioneer.create(2, { behavior: AIBehavior.Stay }),
-    ),
+    units: map.units.set(vecC, Pioneer.create(2, { behavior: AIBehavior.Stay })),
   });
 
   const effects: Effects = new Map([
@@ -250,8 +239,7 @@ test('creates a second unit every time a Flamethrower is created', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "CreateUnit (1,1 → 2,1) { unit: Flamethrower { id: 15, health: 100, player: 1, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
       CreateUnit (1,1 → 1,1) { unit: Rocket Launcher { id: 3, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: true, skipBehaviorRotation: false }
       CreateUnit (2,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 1, fuel: 40, moved: true, name: 'Sam', completed: true }, free: false, skipBehaviorRotation: false }
@@ -292,14 +280,9 @@ test('spawns an additional unit', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = await executeGameActions(
-    initialMap,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
       Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
@@ -339,14 +322,9 @@ test('spawns a neutral unit', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = await executeGameActions(
-    initialMap,
-    [EndTurnAction()],
-    effects,
-  );
+  const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Casey' }], teams: null, buildings: [] }
       Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3] }
@@ -360,9 +338,7 @@ test('effects work for game start and end', async () => {
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
   const initialMap = map.copy({
-    units: map.units
-      .set(vecA, SmallTank.create(player1))
-      .set(vecC, Pioneer.create(2).setHealth(1)),
+    units: map.units.set(vecA, SmallTank.create(player1)).set(vecC, Pioneer.create(2).setHealth(1)),
   });
 
   const effects: Effects = new Map([
@@ -412,8 +388,7 @@ test('effects work for game start and end', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Start
       CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
       BeginGame
@@ -512,17 +487,11 @@ test('effects work when a player loses', async () => {
 
   const [, gameActionResponse] = await executeGameActions(
     initialMap,
-    [
-      StartAction(),
-      EndTurnAction(),
-      MoveAction(vecC, vecB),
-      AttackUnitAction(vecB, vecA),
-    ],
+    [StartAction(), EndTurnAction(), MoveAction(vecC, vecB), AttackUnitAction(vecB, vecA)],
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Start
       CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
       BeginGame
@@ -614,8 +583,7 @@ test('only one game end win effect is fired', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
       SetPlayer { player: 1 }
       CharacterMessage { message: 'Yay', player: 'self', unitId: 5, variant: 1, silhouette: false }
@@ -628,9 +596,7 @@ test('a unit spawns instead of ending the game', async () => {
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
   const initialMap = map.copy({
-    units: map.units
-      .set(vecA, SmallTank.create(player1))
-      .set(vecC, Pioneer.create(2).setHealth(1)),
+    units: map.units.set(vecA, SmallTank.create(player1)).set(vecC, Pioneer.create(2).setHealth(1)),
   });
 
   const effects: Effects = new Map([
@@ -656,8 +622,7 @@ test('a unit spawns instead of ending the game', async () => {
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
       AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
       Spawn { units: [1,1 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }"
@@ -701,8 +666,7 @@ test('spawns a new unit when a player loses their last unit at the beginning of 
     effects,
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Spawn { units: [2,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
       Move (2,3 → 2,1) { fuel: 28, completed: false, path: [2,2 → 2,1] }
@@ -765,13 +729,9 @@ test('triggers effects for actions generated by effects', async () => {
         ],
       ]),
     }),
-    map: [
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    ],
+    map: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     size: new SizeVector(5, 5),
-    units: map.units
-      .set(vecA, Pioneer.create(player1))
-      .set(vecD, Pioneer.create(2)),
+    units: map.units.set(vecA, Pioneer.create(player1)).set(vecD, Pioneer.create(2)),
   });
 
   const effects: Effects = new Map([
@@ -786,14 +746,9 @@ test('triggers effects for actions generated by effects', async () => {
     ],
   ]);
 
-  const [, gameActionResponse] = await executeGameActions(
-    mapA,
-    [MoveAction(vecA, vecB)],
-    effects,
-  );
+  const [, gameActionResponse] = await executeGameActions(mapA, [MoveAction(vecA, vecB)], effects);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Move (1,1 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
       OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1' ] }, objectiveId: 1, toPlayer: 1 }
       Spawn { units: [3,3 → Pioneer { id: 1, health: 100, player: 1, fuel: 40, name: 'Sam' }], teams: null, buildings: [] }

@@ -1,8 +1,4 @@
-import {
-  BuildingInfo,
-  getAllBuildings,
-  ResearchLab,
-} from '@deities/athena/info/Building.tsx';
+import { BuildingInfo, getAllBuildings, ResearchLab } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import getAttributeRange, {
@@ -11,10 +7,7 @@ import getAttributeRange, {
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -57,22 +50,14 @@ const vector = vec(1, 1);
 
 const buildings = getAllBuildings();
 
-const createableBuildings = buildings.filter(
-  ({ configuration: { canBeCreated } }) => canBeCreated,
-);
+const createableBuildings = buildings.filter(({ configuration: { canBeCreated } }) => canBeCreated);
 const extractCost = (info: BuildingInfo) => info.getCostFor(null);
 const costRange = getAttributeRange(
-  createableBuildings.filter(
-    (info) => info.getCostFor(null) < Number.POSITIVE_INFINITY,
-  ),
+  createableBuildings.filter((info) => info.getCostFor(null) < Number.POSITIVE_INFINITY),
   extractCost,
   minBy(createableBuildings, extractCost)?.getCostFor(null) || 0,
 );
-const defenseRange = getAttributeRange(
-  buildings,
-  ({ defense }) => defense,
-  0.01,
-);
+const defenseRange = getAttributeRange(buildings, ({ defense }) => defense, 0.01);
 
 export default memo(function BuildingCard({
   building,
@@ -129,9 +114,7 @@ export default memo(function BuildingCard({
           />
         </TilePreview>
         <VStack gap wrap>
-          <CardTitle style={{ color: getColor(building.player) }}>
-            {info.name}
-          </CardTitle>
+          <CardTitle style={{ color: getColor(building.player) }}>{info.name}</CardTitle>
           {getTranslatedEntityName(info.type)}
         </VStack>
       </Stack>
@@ -164,10 +147,7 @@ export default memo(function BuildingCard({
             <fbt desc="Label for defense">Defense</fbt>
           </Stack>
           <div>{info.defense}</div>
-          <Range
-            end
-            value={getAttributeRangeValue(defenseRange, info.defense)}
-          />
+          <Range end value={getAttributeRangeValue(defenseRange, info.defense)} />
           {limit > 0 ? (
             <>
               <Stack>
@@ -192,9 +172,7 @@ export default memo(function BuildingCard({
             <>
               <Stack>
                 <Icon icon={StopCapture} />
-                <fbt desc="Label for neutral only buildings">
-                  Not capturable
-                </fbt>
+                <fbt desc="Label for neutral only buildings">Not capturable</fbt>
               </Stack>
               <div />
               <div />
@@ -209,20 +187,14 @@ export default memo(function BuildingCard({
                 </div>
               </Stack>
               <div>{cost}</div>
-              <Range
-                end
-                invert
-                value={getAttributeRangeValue(costRange, cost)}
-              />
+              <Range end invert value={getAttributeRangeValue(costRange, cost)} />
             </>
           )}
           {unit?.isCapturing() && (
             <>
               <Stack>
                 <Icon icon={Flag} />
-                <fbt desc="Label for in progress capture (text has to be short)">
-                  Capture…
-                </fbt>
+                <fbt desc="Label for in progress capture (text has to be short)">Capture…</fbt>
               </Stack>
               <Stack alignCenter className={wideColumnStyle} end gap wrap>
                 <MiniPlayerIcon id={unit.player} />
@@ -248,12 +220,7 @@ export default memo(function BuildingCard({
           </CardInfoHeading>
           <p>{info.description}</p>
         </VStack>
-        <BuildableUnits
-          biome={biome}
-          building={building}
-          map={map}
-          player={player}
-        />
+        <BuildableUnits biome={biome} building={building} map={map} player={player} />
         {building.id === ResearchLab.id && building.skills?.size ? (
           <ResearchSkills player={player} skills={building.skills} />
         ) : null}
@@ -299,9 +266,7 @@ const PlaceOnTiles = memo(function PlaceOnTiles({
   return placeOn ? (
     <VStack between gap wrap>
       <CardInfoHeading player={player}>
-        <fbt desc="Headline for which tiles a building can be placed on">
-          Tiles
-        </fbt>
+        <fbt desc="Headline for which tiles a building can be placed on">Tiles</fbt>
       </CardInfoHeading>
       <TileBox>
         <InlineTileList biome={biome} size="tall" tiles={[...placeOn]} />

@@ -2,16 +2,8 @@ import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { css, cx } from '@emotion/css';
 import sprite from './lib/sprite.tsx';
 
-export default function Medal({
-  player,
-  zoom = 2,
-}: {
-  player: PlayerID;
-  zoom?: number;
-}) {
-  return (
-    <div className={cx(sprite('Medal', player), medalStyle)} style={{ zoom }} />
-  );
+export default function Medal({ player, zoom = 2 }: { player: PlayerID; zoom?: number }) {
+  return <div className={cx(sprite('Medal', player), medalStyle)} style={{ zoom }} />;
 }
 
 const medalStyle = css`

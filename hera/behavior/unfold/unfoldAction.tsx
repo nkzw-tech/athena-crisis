@@ -30,10 +30,7 @@ const unfoldAnimation = async (
               return {
                 animations: state.animations.delete(position),
                 map: state.map.copy({
-                  units: state.map.units.set(
-                    position,
-                    state.map.units.get(position)![type](),
-                  ),
+                  units: state.map.units.set(position, state.map.units.get(position)![type]()),
                 }),
               };
             },

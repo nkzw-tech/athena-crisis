@@ -12,9 +12,7 @@ export default async function objectiveAnimation(
   actions: Actions,
   newMap: MapData,
   state: State,
-  actionResponse:
-    | SecretDiscoveredActionResponse
-    | OptionalObjectiveActionResponse,
+  actionResponse: SecretDiscoveredActionResponse | OptionalObjectiveActionResponse,
 ): Promise<State> {
   const { requestFrame, update } = actions;
   const { map } = state;

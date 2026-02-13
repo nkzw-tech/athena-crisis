@@ -1,7 +1,4 @@
-import {
-  AnimationConfig,
-  MaxHealth,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -58,8 +55,7 @@ export default function NamedPosition({
                   between
                   gap={1}
                   style={{
-                    color:
-                      getHealthColor(unit.health) || applyVar('text-color'),
+                    color: getHealthColor(unit.health) || applyVar('text-color'),
                   }}
                 >
                   {unit.health}

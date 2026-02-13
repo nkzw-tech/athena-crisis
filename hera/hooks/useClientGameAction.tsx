@@ -2,15 +2,8 @@ import { Action } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { MutateActionResponseFnName } from '@deities/apollo/ActionResponseMutator.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
-import {
-  decodeEffects,
-  Effects,
-  encodeEffects,
-} from '@deities/apollo/Effects.tsx';
-import {
-  decodeActionResponse,
-  encodeAction,
-} from '@deities/apollo/EncodedActions.tsx';
+import { decodeEffects, Effects, encodeEffects } from '@deities/apollo/Effects.tsx';
+import { decodeActionResponse, encodeAction } from '@deities/apollo/EncodedActions.tsx';
 import { decodeGameState } from '@deities/apollo/GameState.tsx';
 import { computeVisibleEndTurnActionResponse } from '@deities/apollo/lib/computeVisibleActions.tsx';
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
@@ -19,16 +12,11 @@ import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
-import toClientGame, {
-  ClientGame,
-} from '@deities/hermes/game/toClientGame.tsx';
+import toClientGame, { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import captureException from '@deities/ui/lib/captureException.tsx';
 import { useCallback, useRef } from 'react';
 import gameActionWorker from '../workers/gameAction.tsx?worker';
-import {
-  ClientGameActionRequest,
-  ClientGameActionResponse,
-} from '../workers/Types.tsx';
+import { ClientGameActionRequest, ClientGameActionResponse } from '../workers/Types.tsx';
 
 const ActionError = (action: Action, map: MapData) =>
   new Error(
@@ -96,17 +84,10 @@ export default function useClientGameAction(
               mutateAction,
             ];
 
-            const [
-              encodedActionResponse,
-              plainMap,
-              encodedGameState,
-              encodedEffects,
-            ] = await new Promise<ClientGameActionResponse>(
-              (resolve, reject) => {
+            const [encodedActionResponse, plainMap, encodedGameState, encodedEffects] =
+              await new Promise<ClientGameActionResponse>((resolve, reject) => {
                 const { port1, port2 } = new MessageChannel();
-                port1.onmessage = (
-                  event: MessageEvent<ClientGameActionResponse | null>,
-                ) => {
+                port1.onmessage = (event: MessageEvent<ClientGameActionResponse | null>) => {
                   if (event.data) {
                     resolve(event.data);
                   } else {
@@ -115,8 +96,7 @@ export default function useClientGameAction(
                 };
                 port1.onmessageerror = reject;
                 getWorker().postMessage(message, [port2]);
-              },
-            );
+              });
             actionResponse = decodeActionResponse(encodedActionResponse);
             initialActiveMap = MapData.fromObject(plainMap);
             gameState = decodeGameState(encodedGameState);
@@ -128,45 +108,23 @@ export default function useClientGameAction(
           }
 
           if (actionResponse && initialActiveMap && gameState) {
-            const lastEntry = gameState?.at(-1) || [
-              actionResponse,
-              initialActiveMap,
-            ];
+            const lastEntry = gameState?.at(-1) || [actionResponse, initialActiveMap];
 
             if (onGameAction) {
-              gameState =
-                (await onGameAction(gameState, lastEntry[1], lastEntry[0])) ||
-                gameState;
+              gameState = (await onGameAction(gameState, lastEntry[1], lastEntry[0])) || gameState;
             }
 
-            setGame(
-              toClientGame(
-                game,
-                initialActiveMap,
-                gameState,
-                newEffects,
-                actionResponse,
-              ),
-            );
+            setGame(toClientGame(game, initialActiveMap, gameState, newEffects, actionResponse));
 
-            const hiddenLabels = getHiddenLabels(
-              lastEntry[1].config.objectives,
-            );
-            actionResponse = dropLabelsFromActionResponse(
-              actionResponse,
-              hiddenLabels,
-            );
+            const hiddenLabels = getHiddenLabels(lastEntry[1].config.objectives);
+            actionResponse = dropLabelsFromActionResponse(actionResponse, hiddenLabels);
 
             return decodeGameActionResponse(
               encodeGameActionResponse(
                 map,
                 initialActiveMap,
                 vision,
-                onGameEnd(
-                  gameState,
-                  newEffects || game.effects,
-                  currentViewer.id,
-                ),
+                onGameEnd(gameState, newEffects || game.effects, currentViewer.id),
                 null,
                 actionResponse?.type === 'EndTurn'
                   ? computeVisibleEndTurnActionResponse(

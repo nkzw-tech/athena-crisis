@@ -23,9 +23,7 @@ export const resizeEntities = <T extends Entity>(
   offsetY: number,
 ) =>
   entities
-    .mapKeys((vector) =>
-      new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY),
-    )
+    .mapKeys((vector) => new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY))
     .filter((_: unknown, vector: Vector) => size.contains(vector))
     .mapKeys((vector) => vec(vector.x, vector.y));
 
@@ -50,22 +48,17 @@ export default function resizeMap(
     return tiles;
   }, randomMap.map.slice());
 
-  const decorators = map.reduceEachDecorator(
-    (decorators, decorator, subVector) => {
-      subVector = subVector
-        .left(offsetX * DecoratorsPerSide)
-        .up(offsetY * DecoratorsPerSide);
-      return randomMap.contains(
-        new SpriteVector(
-          Math.floor((subVector.x - 1) / DecoratorsPerSide) + 1,
-          Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
-        ),
-      )
-        ? [...decorators, [subVector.x, subVector.y, decorator.id] as const]
-        : decorators;
-    },
-    [] as PlainEntitiesList<Decorator>,
-  );
+  const decorators = map.reduceEachDecorator((decorators, decorator, subVector) => {
+    subVector = subVector.left(offsetX * DecoratorsPerSide).up(offsetY * DecoratorsPerSide);
+    return randomMap.contains(
+      new SpriteVector(
+        Math.floor((subVector.x - 1) / DecoratorsPerSide) + 1,
+        Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
+      ),
+    )
+      ? [...decorators, [subVector.x, subVector.y, decorator.id] as const]
+      : decorators;
+  }, [] as PlainEntitiesList<Decorator>);
 
   const objectives = map.config.objectives.map((objective) =>
     objectiveHasVectors(objective)
@@ -73,9 +66,7 @@ export default function resizeMap(
           ...objective,
           vectors: new Set(
             [...objective.vectors]
-              .map((vector) =>
-                new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY),
-              )
+              .map((vector) => new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY))
               .filter((vector) => size.contains(vector))
               .map((vector) => vec(vector.x, vector.y)),
           ),

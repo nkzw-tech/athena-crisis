@@ -51,8 +51,7 @@ export default function useUserMap(
               [
                 player.id,
                 player.isHumanPlayer()
-                  ? nodes?.find((edge) => edge?.node?.id === player.userId)
-                      ?.node || undefined
+                  ? nodes?.find((edge) => edge?.node?.id === player.userId)?.node || undefined
                   : player.isBot()
                     ? botToUser(player)
                     : undefined,

@@ -8,10 +8,7 @@ export default async function sleep(
 ) {
   if (!Instant && AnimationDuration > 0) {
     await new Promise<void>((resolve) =>
-      scheduleTimer(
-        resolve,
-        AnimationDuration * (duration === 'short' ? 0.5 : 1.8),
-      ),
+      scheduleTimer(resolve, AnimationDuration * (duration === 'short' ? 0.5 : 1.8)),
     );
   }
 }

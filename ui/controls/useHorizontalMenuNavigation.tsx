@@ -12,9 +12,7 @@ export default function useHorizontalMenuNavigation(
   initial = -1,
 ): [selected: number, active: number, reset: () => void] {
   const [count, setCount] = useState(initialCount);
-  const [selected, setSelected] = useState(
-    isValid(count, initial) ? initial : -1,
-  );
+  const [selected, setSelected] = useState(isValid(count, initial) ? initial : -1);
   const [active, resetActive] = useAcceptNavigation(count, layer, selected);
 
   if (count !== initialCount) {

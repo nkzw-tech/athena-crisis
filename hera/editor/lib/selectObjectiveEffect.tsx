@@ -9,8 +9,7 @@ export default function selectObjectiveEffect(
   objective?: Objective,
 ): Partial<EditorState> {
   const isDefault = objective?.type === Criteria.Default;
-  const trigger =
-    !isDefault && objective?.optional ? 'OptionalObjective' : 'GameEnd';
+  const trigger = !isDefault && objective?.optional ? 'OptionalObjective' : 'GameEnd';
   const effectList = editor.effects.get(trigger);
   const objectiveIndex = isDefault ? 'win' : conditionIndex;
   const effect = effectList
@@ -38,10 +37,7 @@ export default function selectObjectiveEffect(
 
   const effects = effect
     ? editor.effects
-    : new Map([
-        ...editor.effects,
-        [trigger, new Set([...(effectList || []), newEffect])] as const,
-      ]);
+    : new Map([...editor.effects, [trigger, new Set([...(effectList || []), newEffect])] as const]);
 
   return {
     effects,

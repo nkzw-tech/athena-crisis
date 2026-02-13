@@ -13,10 +13,7 @@ import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
 import { memo, useCallback, useMemo, useRef } from 'react';
 
-export type ModeSelectButtonProps = Omit<
-  LinkProps,
-  'color' | 'onClick' | 'to'
-> &
+export type ModeSelectButtonProps = Omit<LinkProps, 'color' | 'onClick' | 'to'> &
   Partial<UsePressProps> & {
     active?: boolean;
     blur?: boolean;
@@ -108,11 +105,7 @@ export default memo(function ModeSelectButton(allProps: ModeSelectButtonProps) {
   useScrollIntoView(element, selected);
   useActive(!disabled && active, props?.onClick, to);
 
-  return to ? (
-    <Link ref={element} to={to} {...props} />
-  ) : (
-    <a ref={element} {...props} />
-  );
+  return to ? <Link ref={element} to={to} {...props} /> : <a ref={element} {...props} />;
 });
 
 const style = css`

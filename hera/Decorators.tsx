@@ -98,18 +98,9 @@ export default memo(function Decorators({
         }
 
         const render = (decorator: DecoratorInfo, vector: Vector) => {
-          const frame =
-            getFrame(decorator, 0, tick) || (clearableVectors.size ? 0 : null);
+          const frame = getFrame(decorator, 0, tick) || (clearableVectors.size ? 0 : null);
           if (frame != null) {
-            renderDecorator(
-              context,
-              image,
-              frame,
-              decorator,
-              vector,
-              size,
-              map.config.biome,
-            );
+            renderDecorator(context, image, frame, decorator, vector, size, map.config.biome);
           }
         };
 
@@ -125,12 +116,7 @@ export default memo(function Decorators({
 
   return (
     <div
-      className={cx(
-        style,
-        aboveFog && aboveFogStyle,
-        dim && dimStyle,
-        outline && outlineStyle,
-      )}
+      className={cx(style, aboveFog && aboveFogStyle, dim && dimStyle, outline && outlineStyle)}
       style={{
         height: map.size.height * size,
         width: map.size.width * size,

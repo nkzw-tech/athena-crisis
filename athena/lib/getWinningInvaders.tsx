@@ -12,9 +12,6 @@ export default function getWinningInvaders(
     ? map.active
         .map((id) => map.getPlayer(id))
         .filter(isHumanPlayer)
-        .filter(
-          ({ crystal }) =>
-            crystal === Crystal.Command || crystal === Crystal.Phantom,
-        )
+        .filter(({ crystal }) => crystal === Crystal.Command || crystal === Crystal.Phantom)
     : [];
 }

@@ -37,12 +37,7 @@ export default class Heal {
         : selectFallback(vector, state, actions);
     }
 
-    if (
-      selectedPosition &&
-      radius &&
-      unitB &&
-      vector.distance(selectedPosition) === 1
-    ) {
+    if (selectedPosition && radius && unitB && vector.distance(selectedPosition) === 1) {
       const currentPlayer = map.getCurrentPlayer();
       const cost = getHealCost(unitB, currentPlayer);
       if (map.getCurrentPlayer().funds >= cost) {
@@ -53,9 +48,7 @@ export default class Heal {
           );
           return {
             confirmAction: null,
-            ...(actionResponse.type === 'Heal'
-              ? healAction(actionResponse, state)
-              : null),
+            ...(actionResponse.type === 'Heal' ? healAction(actionResponse, state) : null),
           };
         };
 
@@ -100,18 +93,10 @@ export default class Heal {
   }
 
   component = ({ actions, state }: StateWithActions) => {
-    const {
-      animationConfig,
-      confirmAction,
-      map,
-      radius,
-      selectedPosition,
-      tileSize,
-      zIndex,
-    } = state;
+    const { animationConfig, confirmAction, map, radius, selectedPosition, tileSize, zIndex } =
+      state;
     const position = confirmAction?.position || state.position;
-    const unitB =
-      position && radius?.fields.has(position) && map.units.get(position);
+    const unitB = position && radius?.fields.has(position) && map.units.get(position);
     if (selectedPosition && unitB) {
       const currentPlayer = map.getCurrentPlayer();
       const cost = getHealCost(unitB, currentPlayer);
@@ -130,11 +115,7 @@ export default class Heal {
                 <FlyoutItem key="change">
                   <span>
                     {unitB.health}{' '}
-                    <span>
-                      +{' '}
-                      {Math.min(MaxHealth, unitB.health + HealAmount) -
-                        unitB.health}{' '}
-                    </span>
+                    <span>+ {Math.min(MaxHealth, unitB.health + HealAmount) - unitB.health} </span>
                     {' → '}
                     {Math.min(MaxHealth, unitB.health + HealAmount)}
                     <Icon className={iconStyle} icon={Heart} />
@@ -152,9 +133,7 @@ export default class Heal {
             width={map.size.width}
             zIndex={zIndex}
           />
-          {confirmAction && (
-            <ConfirmAction state={state} {...confirmAction} actions={actions} />
-          )}
+          {confirmAction && <ConfirmAction state={state} {...confirmAction} actions={actions} />}
         </>
       );
     }

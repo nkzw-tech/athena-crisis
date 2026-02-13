@@ -1,17 +1,9 @@
 import Vector from '@deities/athena/map/Vector.tsx';
-import {
-  Actions,
-  MapBehavior,
-  MapBehaviorConstructor,
-  State,
-  StateLike,
-} from '../Types.tsx';
+import { Actions, MapBehavior, MapBehaviorConstructor, State, StateLike } from '../Types.tsx';
 
 let _behaviorClass: MapBehaviorConstructor;
 
-export function resetBehavior(
-  defaultBehavior?: MapBehaviorConstructor | null,
-): StateLike {
+export function resetBehavior(defaultBehavior?: MapBehaviorConstructor | null): StateLike {
   return {
     additionalRadius: null,
     attackable: null,
@@ -24,9 +16,7 @@ export function resetBehavior(
     selectedPosition: null,
     selectedUnit: null,
     showCursor: true,
-    ...(defaultBehavior !== null
-      ? { behavior: new (defaultBehavior || _behaviorClass)() }
-      : null),
+    ...(defaultBehavior !== null ? { behavior: new (defaultBehavior || _behaviorClass)() } : null),
   };
 }
 

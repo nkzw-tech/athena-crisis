@@ -37,9 +37,7 @@ export function importErrorHandler(): { default: ComponentType<unknown> } {
               <Stack alignCenter center className={containerStyle} wrap>
                 <Box alignCenter center className={errorStyle} wrap>
                   <p>
-                    <fbt desc="Generic error message">
-                      Oops, something went wrong.
-                    </fbt>
+                    <fbt desc="Generic error message">Oops, something went wrong.</fbt>
                   </p>
                   <p>
                     <Reload />

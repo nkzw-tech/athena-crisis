@@ -18,11 +18,7 @@ export default function useZoom(
   const [zoom, _setZoom] = useState(() => {
     if (key) {
       const currentZoom = parseInteger(localStorage.getItem(getKey(key)) || '');
-      if (
-        currentZoom != null &&
-        currentZoom >= 1 &&
-        currentZoom <= (max || MAX_SCALE)
-      ) {
+      if (currentZoom != null && currentZoom >= 1 && currentZoom <= (max || MAX_SCALE)) {
         return currentZoom;
       }
     }

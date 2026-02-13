@@ -21,11 +21,7 @@ export default function CrystalIcon({
   const isInteractive = !!onClick;
   return (
     <div
-      className={cx(
-        crystalStyle,
-        isInteractive && SquareButtonStyle,
-        active && activeStyle,
-      )}
+      className={cx(crystalStyle, isInteractive && SquareButtonStyle, active && activeStyle)}
       style={{
         [vars.set('background-color')]: crystalToColor(crystal, 0.3),
         [vars.set('color')]: crystalToColor(crystal),

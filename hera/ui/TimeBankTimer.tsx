@@ -10,10 +10,7 @@ const Timer = ({
   setDuration: (fn: (duration: number) => number) => void;
 }) => {
   useEffect(() => {
-    const interval = setInterval(
-      () => setDuration((duration) => duration - 1),
-      1000,
-    );
+    const interval = setInterval(() => setDuration((duration) => duration - 1), 1000);
     return () => clearInterval(interval);
   }, [setDuration]);
 
@@ -21,9 +18,7 @@ const Timer = ({
 };
 
 export default function TimeBankTimer({ time: initialTime }: { time: number }) {
-  const [duration, setDuration] = useState(() =>
-    Math.floor((initialTime - dateNow()) / 1000),
-  );
+  const [duration, setDuration] = useState(() => Math.floor((initialTime - dateNow()) / 1000));
 
   return duration > 0 ? (
     <Timer duration={duration} setDuration={setDuration} />

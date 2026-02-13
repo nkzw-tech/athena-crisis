@@ -103,8 +103,8 @@ export default function ObjectiveCard({
           <fbt:plural count={campaigns.length} many="campaigns">
             campaign
           </fbt:plural>
-          . If you want to delete the objective, you must first change the
-          campaign objectives to no longer require this objective.
+          . If you want to delete the objective, you must first change the campaign objectives to no
+          longer require this objective.
         </fbt>
       ),
       title: (
@@ -129,16 +129,12 @@ export default function ObjectiveCard({
       gap={16}
       style={{
         backgroundImage:
-          hasPlayers && objective.players?.length
-            ? gradient(objective.players, 0.15)
-            : undefined,
+          hasPlayers && objective.players?.length ? gradient(objective.players, 0.15) : undefined,
       }}
       vertical
       wrap
     >
-      {canDelete && (
-        <Icon button className={deleteStyle} icon={Close} onClick={onDelete} />
-      )}
+      {canDelete && <Icon button className={deleteStyle} icon={Close} onClick={onDelete} />}
       <h2>
         <ObjectiveTitle id={id} objective={objective} />
       </h2>
@@ -158,10 +154,7 @@ export default function ObjectiveCard({
                       ...objective,
                       players: objective.players?.includes(id)
                         ? objective.players.filter((player) => player !== id)
-                        : sortBy(
-                            [...(objective.players || []), id],
-                            (id) => id,
-                          ),
+                        : sortBy([...(objective.players || []), id], (id) => id),
                     };
                     if (validate(newObjective)) {
                       onChange(newObjective);
@@ -273,8 +266,8 @@ export default function ObjectiveCard({
             {objective.hidden && hasLabel && objective.label?.size ? (
               <p className={lightStyle}>
                 <fbt desc="Description for secret objective labels">
-                  Labels for this objective are hidden from players unless they
-                  are used by a non-secret objective.
+                  Labels for this objective are hidden from players unless they are used by a
+                  non-secret objective.
                 </fbt>
               </p>
             ) : null}
@@ -285,18 +278,14 @@ export default function ObjectiveCard({
                 <label className={labelStyle}>
                   <Stack alignCenter gap>
                     <span className={labelWidthStyle}>
-                      <fbt desc="Label for optional objective checkbox">
-                        Optional
-                      </fbt>
+                      <fbt desc="Label for optional objective checkbox">Optional</fbt>
                     </span>
                     <input
                       checked={isOptional}
                       onChange={(event) =>
                         onChange({
                           ...objective,
-                          bonus: event.target.checked
-                            ? objective.bonus
-                            : undefined,
+                          bonus: event.target.checked ? objective.bonus : undefined,
                           optional: event.target.checked,
                         })
                       }
@@ -346,9 +335,7 @@ export default function ObjectiveCard({
                 <Stack alignCenter gap={16} wrap>
                   <SkillSelector
                     availableSkills={Skills}
-                    currentSkill={
-                      reward?.type === 'Skill' ? reward.skill : null
-                    }
+                    currentSkill={reward?.type === 'Skill' ? reward.skill : null}
                     onSelect={(skill) =>
                       onChange({
                         ...objective,
@@ -398,10 +385,7 @@ export default function ObjectiveCard({
                                   reward: { biome, type: 'Biome' },
                                 })
                               }
-                              selectedText={
-                                reward?.type === 'Biome' &&
-                                reward.biome === biome
-                              }
+                              selectedText={reward?.type === 'Biome' && reward.biome === biome}
                             >
                               {getTranslatedBiomeName(biome)}
                             </InlineLink>
@@ -413,10 +397,7 @@ export default function ObjectiveCard({
                           reward?.type === 'Keyart' ? (
                             <div className={cx(borderStyle, highlightStyle)}>
                               <fbt desc="Keyart unlock">
-                                Variant{' '}
-                                <fbt:param name="variant">
-                                  {reward.variant}
-                                </fbt:param>
+                                Variant <fbt:param name="variant">{reward.variant}</fbt:param>
                               </fbt>
                             </div>
                           ) : (
@@ -437,14 +418,10 @@ export default function ObjectiveCard({
                                   reward: { type: 'Keyart', variant },
                                 })
                               }
-                              selectedText={
-                                reward?.type === 'Keyart' &&
-                                reward.variant === variant
-                              }
+                              selectedText={reward?.type === 'Keyart' && reward.variant === variant}
                             >
                               <fbt desc="Keyart unlock">
-                                Variant{' '}
-                                <fbt:param name="variant">{variant}</fbt:param>
+                                Variant <fbt:param name="variant">{variant}</fbt:param>
                               </fbt>
                             </InlineLink>
                           ))}
@@ -455,15 +432,12 @@ export default function ObjectiveCard({
                           reward?.type === 'SkillSlot' ? (
                             <div className={cx(borderStyle, highlightStyle)}>
                               <fbt desc="SkillSlot unlock">
-                                Skill Slot{' '}
-                                <fbt:param name="slot">{reward.slot}</fbt:param>
+                                Skill Slot <fbt:param name="slot">{reward.slot}</fbt:param>
                               </fbt>
                             </div>
                           ) : (
                             <div className={borderStyle}>
-                              <fbt desc="Label to select a skillslot">
-                                Skill Slot
-                              </fbt>
+                              <fbt desc="Label to select a skillslot">Skill Slot</fbt>
                             </div>
                           )
                         }
@@ -479,14 +453,10 @@ export default function ObjectiveCard({
                                   reward: { slot, type: 'SkillSlot' },
                                 })
                               }
-                              selectedText={
-                                reward?.type === 'SkillSlot' &&
-                                reward.slot === slot
-                              }
+                              selectedText={reward?.type === 'SkillSlot' && reward.slot === slot}
                             >
                               <fbt desc="SkillSlot unlock">
-                                Skill Slot{' '}
-                                <fbt:param name="slot">{slot}</fbt:param>
+                                Skill Slot <fbt:param name="slot">{slot}</fbt:param>
                               </fbt>
                             </InlineLink>
                           ))}
@@ -497,34 +467,21 @@ export default function ObjectiveCard({
                           reward?.type === 'Crystal' ? (
                             <Stack
                               between
-                              className={cx(
-                                borderStyle,
-                                crystalBoxStyle,
-                                highlightStyle,
-                              )}
+                              className={cx(borderStyle, crystalBoxStyle, highlightStyle)}
                             >
                               <div className={crystalScaleStyle}>
                                 <CrystalIcon animate crystal={reward.crystal} />
                               </div>
-                              <div>
-                                {getTranslatedCrystalName(reward.crystal)}
-                              </div>
+                              <div>{getTranslatedCrystalName(reward.crystal)}</div>
                             </Stack>
                           ) : (
                             <div className={borderStyle}>
-                              <fbt desc="Label to select a crystal">
-                                Crystal
-                              </fbt>
+                              <fbt desc="Label to select a crystal">Crystal</fbt>
                             </div>
                           )
                         }
                       >
-                        <VStack
-                          between
-                          className={crystalSelectorStyle}
-                          gap
-                          wrap
-                        >
+                        <VStack between className={crystalSelectorStyle} gap wrap>
                           {Crystals.map((crystal) => (
                             <InlineLink
                               className={linkStyle}
@@ -536,8 +493,7 @@ export default function ObjectiveCard({
                                 })
                               }
                               selectedText={
-                                reward?.type === 'Crystal' &&
-                                reward.crystal === crystal
+                                reward?.type === 'Crystal' && reward.crystal === crystal
                               }
                             >
                               <Stack between gap>
@@ -555,9 +511,7 @@ export default function ObjectiveCard({
                       button
                       className={iconStyle}
                       icon={Close}
-                      onClick={() =>
-                        onChange({ ...objective, reward: undefined })
-                      }
+                      onClick={() => onChange({ ...objective, reward: undefined })}
                     />
                   )}
                 </Stack>
@@ -567,13 +521,11 @@ export default function ObjectiveCard({
                   <p>
                     {objective.type === Criteria.Default ? (
                       <fbt desc="Explanation in the map editor of how rewards work for the default objective">
-                        Players receive the reward for the default objective if
-                        they win in any way.
+                        Players receive the reward for the default objective if they win in any way.
                       </fbt>
                     ) : (
                       <fbt desc="Explanation in the map editor for how rewards work">
-                        Players receive the reward if they achieve this
-                        objective.
+                        Players receive the reward if they achieve this objective.
                       </fbt>
                     )}{' '}
                     {!tags.includes('reward') && (
@@ -592,17 +544,11 @@ export default function ObjectiveCard({
           )}
           <Stack between reverse wrap>
             <InlineLink onClick={selectEffect}>
-              {
-                <fbt desc="Button to define an effect for this objective">
-                  Effect
-                </fbt>
-              }
+              {<fbt desc="Button to define an effect for this objective">Effect</fbt>}
             </InlineLink>
             {objectiveHasVectors(objective) && (
               <InlineLink onClick={selectLocation}>
-                <fbt desc="Button to select objective location">
-                  Select Location
-                </fbt>
+                <fbt desc="Button to select objective location">Select Location</fbt>
               </InlineLink>
             )}
           </Stack>
@@ -613,10 +559,7 @@ export default function ObjectiveCard({
                   This objective is used in the{' '}
                   <fbt:list
                     items={campaigns.map(({ name, slug }) => (
-                      <InlineLink
-                        key={slug}
-                        to={getCampaignRoute(slug, 'edit')}
-                      >
+                      <InlineLink key={slug} to={getCampaignRoute(slug, 'edit')}>
                         {getCampaignTranslation(name)}
                       </InlineLink>
                     ))}

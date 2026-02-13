@@ -28,9 +28,7 @@ export default function renderFloatingTile(
     context.clearRect(targetX, targetY, size, size);
   }
 
-  const [modifier0, modifier1] = Array.isArray(modifier)
-    ? modifier
-    : [modifier];
+  const [modifier0, modifier1] = Array.isArray(modifier) ? modifier : [modifier];
 
   renderTile(
     context,

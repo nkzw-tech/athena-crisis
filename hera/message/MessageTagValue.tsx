@@ -82,10 +82,7 @@ export default function MessageTagValue({
           isMessage
           onRemove={onRemove}
           size="medium"
-          tag={getTranslatedFactionName(
-            playerDetails || emptyMap,
-            toPlayerID(value),
-          )}
+          tag={getTranslatedFactionName(playerDetails || emptyMap, toPlayerID(value))}
         />
       );
     case MessageTag.Comment:
@@ -96,13 +93,7 @@ export default function MessageTagValue({
     case MessageTag.Threat: {
       const vocabulary = TranslatedMessageVocabulary.get(tag)?.get(value)?.();
       return vocabulary ? (
-        <Tag
-          capitalize={isFirst}
-          isMessage
-          onRemove={onRemove}
-          size="medium"
-          tag={vocabulary}
-        />
+        <Tag capitalize={isFirst} isMessage onRemove={onRemove} size="medium" tag={vocabulary} />
       ) : (
         getTranslatedMessageTagName(tag)
       );

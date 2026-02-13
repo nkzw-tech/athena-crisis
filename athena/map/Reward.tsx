@@ -94,15 +94,11 @@ export function decodeReward([rewardType, ...rest]: EncodedReward): Reward {
   }
 }
 
-export function maybeEncodeReward(
-  reward: Reward | null | undefined,
-): EncodedReward | null {
+export function maybeEncodeReward(reward: Reward | null | undefined): EncodedReward | null {
   return reward ? encodeReward(reward) : null;
 }
 
-export function maybeDecodeReward(
-  reward: EncodedReward | null | undefined,
-): Reward | null {
+export function maybeDecodeReward(reward: EncodedReward | null | undefined): Reward | null {
   return reward ? decodeReward(reward) : null;
 }
 

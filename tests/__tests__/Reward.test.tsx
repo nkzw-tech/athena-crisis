@@ -111,11 +111,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     ],
   ]);
 
-  const [gameStateA] = await executeGameActions(
-    mapA,
-    [CaptureAction(vecA)],
-    effects,
-  );
+  const [gameStateA] = await executeGameActions(mapA, [CaptureAction(vecA)], effects);
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }
@@ -130,11 +126,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     teams: updatePlayer(map.teams, Bot.from(player1, 'Bot')),
   });
 
-  const [gameStateB] = await executeGameActions(
-    mapB,
-    [CaptureAction(vecA)],
-    effects,
-  );
+  const [gameStateB] = await executeGameActions(mapB, [CaptureAction(vecA)], effects);
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
     "Capture (1,1) { building: Barracks { id: 12, health: 100, player: 1 }, player: 2 }
@@ -154,11 +146,7 @@ test(`inserts 'ReceiveReward' action responses just before 'GameEnd'`, async () 
     ),
   });
 
-  const [gameStateC] = await executeGameActions(
-    mapC,
-    [CaptureAction(vecA)],
-    effects,
-  );
+  const [gameStateC] = await executeGameActions(mapC, [CaptureAction(vecA)], effects);
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }
@@ -247,11 +235,7 @@ test(`each skill is only received once`, async () => {
     ],
   ]);
 
-  const [gameState] = await executeGameActions(
-    currentMap,
-    [CaptureAction(vecA)],
-    effects,
-  );
+  const [gameState] = await executeGameActions(currentMap, [CaptureAction(vecA)], effects);
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
     "SetPlayer { player: 1 }

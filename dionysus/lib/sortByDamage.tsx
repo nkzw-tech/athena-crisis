@@ -21,8 +21,12 @@ export default function sortByDamage(
       ? (unitInfo) => -unitInfo.getCostFor(currentPlayer)
       : (unitInfo) => {
           const unitA = unitInfo.create(currentPlayer);
-          const [attackStatusEffect, flatDamageStatusEffect] =
-            getAttackStatusEffect(map, unitA, null, null);
+          const [attackStatusEffect, flatDamageStatusEffect] = getAttackStatusEffect(
+            map,
+            unitA,
+            null,
+            null,
+          );
           return -(
             opponentUnits.reduce<number>(
               (sum, [position, entityB]) =>

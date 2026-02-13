@@ -13,11 +13,7 @@ export default function getParentToMoveTo(
   const { info } = unit;
   const isLongRange = info.isLongRange();
   const player = map.getPlayer(unit);
-  if (
-    isLongRange &&
-    target &&
-    unit.canAttackAt(origin.distance(target.vector), player)
-  ) {
+  if (isLongRange && target && unit.canAttackAt(origin.distance(target.vector), player)) {
     return origin;
   }
 

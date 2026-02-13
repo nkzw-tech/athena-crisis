@@ -8,7 +8,6 @@ export default function sortByDepth<T>(
   return sortBy(
     next,
     (entry) =>
-      depthMap.get((Array.isArray(entry) ? entry[1] : entry)?.mapId) ||
-      Number.POSITIVE_INFINITY,
+      depthMap.get((Array.isArray(entry) ? entry[1] : entry)?.mapId) || Number.POSITIVE_INFINITY,
   );
 }

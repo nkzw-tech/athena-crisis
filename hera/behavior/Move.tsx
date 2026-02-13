@@ -37,10 +37,7 @@ const getCurrentMovementPath = (
   const { path } = radius;
   const last = path?.at(-1);
   if (path?.length && last?.distance(target) === 1) {
-    const maybePath =
-      attackable?.has(target) && !map.units.has(last)
-        ? path
-        : [...path, target];
+    const maybePath = attackable?.has(target) && !map.units.has(last) ? path : [...path, target];
     if (getPathCost(map, unit, from, maybePath) !== -1) {
       return maybePath;
     }
@@ -54,8 +51,7 @@ const getCurrentMovementPath = (
   ).path;
 };
 
-const getMoveAction = (map: MapData) =>
-  map.config.fog ? syncMoveAction : moveAction;
+const getMoveAction = (map: MapData) => (map.config.fog ? syncMoveAction : moveAction);
 
 const moveAndAttack = (
   actions: Actions,
@@ -71,8 +67,7 @@ const moveAndAttack = (
   const lastVector = path?.at(-1);
   const unitA = map.units.get(from)!;
   const shouldUseLastVector =
-    lastVector &&
-    unitA.canAttackAt(lastVector.distance(attackTarget), map.getPlayer(unitA));
+    lastVector && unitA.canAttackAt(lastVector.distance(attackTarget), map.getPlayer(unitA));
   const target = shouldUseLastVector ? lastVector : maybeTarget;
 
   return from.equals(target)
@@ -101,20 +96,9 @@ const moveAndAttack = (
             if (newUnit) {
               Promise.resolve().then(async () => {
                 if (!unitA.info.sprite.attackStance) {
-                  await sleep(
-                    actions.scheduleTimer,
-                    state.animationConfig,
-                    'short',
-                  );
+                  await sleep(actions.scheduleTimer, state.animationConfig, 'short');
                 }
-                attackAction(
-                  actions,
-                  target,
-                  newUnit,
-                  attackTarget,
-                  entityB,
-                  state,
-                );
+                attackAction(actions, target, newUnit, attackTarget, entityB, state);
               });
             }
             return {
@@ -123,8 +107,7 @@ const moveAndAttack = (
               selectedUnit: state.map.units.get(actionResponse.to),
             };
           },
-          (shouldUseLastVector && path) ||
-            getMovementPath(map, target, fields, null).path,
+          (shouldUseLastVector && path) || getMovementPath(map, target, fields, null).path,
           from,
           !!unitA.info.sprite.attackStance,
         ),
@@ -152,11 +135,7 @@ export default class Move {
 
                 const { info } = selectedUnit;
                 const range = info.isLongRange() && info.getRangeFor(player);
-                if (
-                  range &&
-                  info.canAttackAt(1, range) &&
-                  info.canAttackAt(2, range)
-                ) {
+                if (range && info.canAttackAt(1, range) && info.canAttackAt(2, range)) {
                   const parent = getParentToMoveTo(
                     map,
                     selectedUnit,
@@ -164,11 +143,7 @@ export default class Move {
                     field,
                     radius.fields,
                   );
-                  return (
-                    !parent ||
-                    parent.equals(selectedPosition) ||
-                    !map.units.has(parent)
-                  );
+                  return !parent || parent.equals(selectedPosition) || !map.units.has(parent);
                 }
               }
 
@@ -180,15 +155,8 @@ export default class Move {
   }
 
   enter(vector: Vector, state: State): StateLike | null {
-    const {
-      attackable,
-      currentViewer,
-      map,
-      radius,
-      selectedPosition,
-      selectedUnit,
-      vision,
-    } = state;
+    const { attackable, currentViewer, map, radius, selectedPosition, selectedUnit, vision } =
+      state;
     if (
       radius &&
       !radius.locked &&
@@ -209,20 +177,12 @@ export default class Move {
       // Do not add the building to the path if that's what we are attacking.
       const lastVector = path.length && path.at(-1);
       const skipLastVector =
-        lastVector &&
-        attackable?.has(lastVector) &&
-        !!map.buildings.get(lastVector);
+        lastVector && attackable?.has(lastVector) && !!map.buildings.get(lastVector);
 
       // If it's a long range unit, only show the path to the field furthest away from the unit.
       const field = attackable?.get(vector);
       if (field && !skipLastVector && selectedUnit.info.isLongRange()) {
-        const parent = getParentToMoveTo(
-          map,
-          selectedUnit,
-          selectedPosition,
-          field,
-          radius.fields,
-        );
+        const parent = getParentToMoveTo(map, selectedUnit, selectedPosition, field, radius.fields);
         if (parent?.equals(selectedPosition)) {
           path = [];
         } else {
@@ -243,10 +203,7 @@ export default class Move {
       return {
         radius: {
           ...radius,
-          path:
-            skipLastVector && !radius.fields.has(lastVector)
-              ? path.slice(0, -1)
-              : path,
+          path: skipLastVector && !radius.fields.has(lastVector) ? path.slice(0, -1) : path,
         },
       };
     }
@@ -297,13 +254,7 @@ export default class Move {
 
       if (attackable?.has(vector)) {
         const field = attackable.get(vector);
-        const parent = getParentToMoveTo(
-          map,
-          selectedUnit,
-          selectedPosition,
-          field,
-          radius.fields,
-        );
+        const parent = getParentToMoveTo(map, selectedUnit, selectedPosition, field, radius.fields);
         const moveToField = field || (parent ? RadiusItem(parent) : null);
         const entities = getAttackableEntities(vector, state);
         if (moveToField && parent && entities) {
@@ -407,14 +358,8 @@ export default class Move {
               (state, actionResponse) => {
                 const [target, newUnit] =
                   state.lastActionResponse?.type === 'Swap'
-                    ? [
-                        state.lastActionResponse.target,
-                        state.lastActionResponse.sourceUnit,
-                      ]
-                    : [
-                        actionResponse.to,
-                        state.map.units.get(actionResponse.to),
-                      ];
+                    ? [state.lastActionResponse.target, state.lastActionResponse.sourceUnit]
+                    : [actionResponse.to, state.map.units.get(actionResponse.to)];
 
                 return newUnit &&
                   !newUnit.isCompleted() &&
@@ -440,9 +385,7 @@ export default class Move {
               type === 'complete' ? true : undefined,
             );
 
-          const showComplete = selectedUnit.info.canAct(
-            map.getPlayer(selectedUnit),
-          );
+          const showComplete = selectedUnit.info.canAct(map.getPlayer(selectedUnit));
 
           return shouldConfirm
             ? {
@@ -493,17 +436,7 @@ export default class Move {
       (event: CustomEvent) => {
         if (position) {
           event.preventDefault();
-          update(
-            this.select(
-              position,
-              state,
-              actions,
-              false,
-              false,
-              false,
-              'complete',
-            ),
-          );
+          update(this.select(position, state, actions, false, false, false, 'complete'));
         }
       },
       [update, actions, position, state],
@@ -514,8 +447,7 @@ export default class Move {
 
     const onSelect = useCallback(
       (entity: Entity) => {
-        let to =
-          selectedAttackable && attackable?.get(selectedAttackable)?.parent;
+        let to = selectedAttackable && attackable?.get(selectedAttackable)?.parent;
 
         if (!to && !selectedUnit?.info.hasAbility(Ability.MoveAndAct)) {
           to = selectedPosition;
@@ -542,15 +474,7 @@ export default class Move {
           );
         }
       },
-      [
-        actions,
-        attackable,
-        radius,
-        selectedAttackable,
-        selectedPosition,
-        selectedUnit,
-        state,
-      ],
+      [actions, attackable, radius, selectedAttackable, selectedPosition, selectedUnit, state],
     );
 
     const lastVector = radius?.path?.at(-1);
@@ -574,9 +498,7 @@ export default class Move {
           origin={field || selectedPosition}
           state={state}
         />
-        {confirmAction && (
-          <ConfirmAction actions={actions} state={state} {...confirmAction} />
-        )}
+        {confirmAction && <ConfirmAction actions={actions} state={state} {...confirmAction} />}
         <TeleportIndicator
           state={state}
           unit={selectedUnit}

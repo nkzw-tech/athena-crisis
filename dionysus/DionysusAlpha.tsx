@@ -46,11 +46,7 @@ import needsSupply from '@deities/athena/lib/needsSupply.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
-import {
-  EntityType,
-  getEntityGroup,
-  getEntityInfoGroup,
-} from '@deities/athena/map/Entity.tsx';
+import { EntityType, getEntityGroup, getEntityInfoGroup } from '@deities/athena/map/Entity.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -114,33 +110,25 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
-    const potentialSkills: Array<
-      Readonly<{ charges: number; from: Vector | null; skill: Skill }>
-    > = [];
+    const potentialSkills: Array<Readonly<{ charges: number; from: Vector | null; skill: Skill }>> =
+      [];
     for (const skill of skills) {
       if (activeSkills.has(skill)) {
         continue;
       }
 
       const { charges, requiresTarget } = getSkillConfig(skill);
-      if (
-        charges != null &&
-        canActivatePower(player, skill) &&
-        shouldActivatePower(map, skill)
-      ) {
+      if (charges != null && canActivatePower(player, skill) && shouldActivatePower(map, skill)) {
         potentialSkills.push({
           charges,
-          from: requiresTarget
-            ? getActivatePowerTargetCluster(map, player.id)
-            : null,
+          from: requiresTarget ? getActivatePowerTargetCluster(map, player.id) : null,
           skill,
         } as const);
       }
     }
 
     if (potentialSkills.length) {
-      const { from, skill } =
-        randomEntry(potentialSkills) || potentialSkills[0];
+      const { from, skill } = randomEntry(potentialSkills) || potentialSkills[0];
       const currentMap = this.execute(map, ActivatePowerAction(skill, from));
       if (currentMap) {
         this.tryAttacking();
@@ -158,10 +146,7 @@ export default class DionysusAlpha extends BaseAI {
 
     const currentPlayer = map.getCurrentPlayer();
     const vision = this.getVision(map);
-    const labelsToPrioritize = getOpponentPriorityLabels(
-      map.config.objectives,
-      currentPlayer.id,
-    );
+    const labelsToPrioritize = getOpponentPriorityLabels(map.config.objectives, currentPlayer.id);
     let possibleAttacks = getPossibleAttacks(
       map,
       vision,
@@ -193,15 +178,11 @@ export default class DionysusAlpha extends BaseAI {
       let { from } = attackOption;
       const { entityB, parent, sabotage, to, unitA } = attackOption;
       if (
-        (unitA.info.isShortRange() ||
-          unitA.info.canAct(map.getPlayer(unitA))) &&
+        (unitA.info.isShortRange() || unitA.info.canAct(map.getPlayer(unitA))) &&
         from.distance(parent) >= 1
       ) {
         let isBlocked;
-        [currentMap, isBlocked] = this.executeMove(
-          currentMap,
-          MoveAction(from, parent),
-        );
+        [currentMap, isBlocked] = this.executeMove(currentMap, MoveAction(from, parent));
         if (isBlocked) {
           return currentMap;
         }
@@ -274,9 +255,7 @@ export default class DionysusAlpha extends BaseAI {
     const [from, unit] =
       map.units.findEntry(
         (unit) =>
-          unit.isCapturing() &&
-          !unit.isCompleted() &&
-          map.matchesPlayer(currentPlayer, unit),
+          unit.isCapturing() && !unit.isCompleted() && map.matchesPlayer(currentPlayer, unit),
       ) || [];
 
     return from && unit ? this.execute(map, CaptureAction(from)) : null;
@@ -302,14 +281,7 @@ export default class DionysusAlpha extends BaseAI {
         (shouldMove(unit) &&
           maxBy(
             filterMap(
-              moveable(
-                this.applyVision(map),
-                unit,
-                from,
-                undefined,
-                undefined,
-                true,
-              ),
+              moveable(this.applyVision(map), unit, from, undefined, undefined, true),
               ({ cost, vector }) => {
                 const building = map.buildings.get(vector);
                 const info = building?.info;
@@ -318,10 +290,7 @@ export default class DionysusAlpha extends BaseAI {
                   (vector.equals(from) || !map.units.has(vector))
                   ? {
                       to: vector,
-                      weight:
-                        getBuildingWeight(info) -
-                        cost +
-                        (map.isNeutral(building) ? 0 : 5),
+                      weight: getBuildingWeight(info) - cost + (map.isNeutral(building) ? 0 : 5),
                     }
                   : null;
               },
@@ -339,10 +308,7 @@ export default class DionysusAlpha extends BaseAI {
         continue;
       }
 
-      const [currentMap, isBlocked] = this.executeMove(
-        map,
-        MoveAction(from, to),
-      );
+      const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, to));
       if (isBlocked) {
         return currentMap;
       }
@@ -404,48 +370,39 @@ export default class DionysusAlpha extends BaseAI {
     const { parent, to } =
       (shouldMove(unit) &&
         maxBy(
-          [
-            ...moveable(
-              this.applyVision(map),
-              unit,
-              from,
-              undefined,
-              undefined,
-              true,
-            ),
-          ].flatMap(([, { cost, vector }]) => {
-            const vectors: Array<
-              Readonly<{ parent: Vector; to: Vector; weight: number }>
-            > = [];
-            if (vector.equals(from) || !map.units.has(vector)) {
-              for (const adjacent of vector.adjacent()) {
-                const unit = map.units.get(adjacent);
-                if (unit?.player === 0) {
-                  const { info } = unit;
-                  vectors.push({
-                    parent: vector,
-                    to: adjacent,
-                    weight:
-                      Math.max(
-                        info.defense +
-                          [...(info.attack?.weapons || [])]
-                            .flatMap(([, weapon]) => weapon.damage.values())
-                            .reduce((sum, [, damage]) => sum + damage, 0) -
-                          cost,
-                        0,
-                      ) *
-                      (unit.isBeingRescuedBy(currentPlayer.id)
-                        ? 100
-                        : unit.isBeingRescued() &&
-                            map.isOpponent(currentPlayer, unit.getRescuer()!)
-                          ? 10
-                          : 1),
-                  });
+          [...moveable(this.applyVision(map), unit, from, undefined, undefined, true)].flatMap(
+            ([, { cost, vector }]) => {
+              const vectors: Array<Readonly<{ parent: Vector; to: Vector; weight: number }>> = [];
+              if (vector.equals(from) || !map.units.has(vector)) {
+                for (const adjacent of vector.adjacent()) {
+                  const unit = map.units.get(adjacent);
+                  if (unit?.player === 0) {
+                    const { info } = unit;
+                    vectors.push({
+                      parent: vector,
+                      to: adjacent,
+                      weight:
+                        Math.max(
+                          info.defense +
+                            [...(info.attack?.weapons || [])]
+                              .flatMap(([, weapon]) => weapon.damage.values())
+                              .reduce((sum, [, damage]) => sum + damage, 0) -
+                            cost,
+                          0,
+                        ) *
+                        (unit.isBeingRescuedBy(currentPlayer.id)
+                          ? 100
+                          : unit.isBeingRescued() &&
+                              map.isOpponent(currentPlayer, unit.getRescuer()!)
+                            ? 10
+                            : 1),
+                    });
+                  }
                 }
               }
-            }
-            return vectors;
-          }),
+              return vectors;
+            },
+          ),
           (item) => item?.weight || Number.NEGATIVE_INFINITY,
         )) ||
       {};
@@ -461,10 +418,7 @@ export default class DionysusAlpha extends BaseAI {
       return this.execute(map, RescueAction(from, to));
     }
 
-    const [currentMap, isBlocked] = this.executeMove(
-      map,
-      MoveAction(from, parent),
-    );
+    const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, parent));
     if (isBlocked) {
       return currentMap;
     }
@@ -479,11 +433,7 @@ export default class DionysusAlpha extends BaseAI {
   }
 
   private _canBuildFundsBuildings: boolean | null = null;
-  private getCanBuildFundsBuildings(
-    map: MapData,
-    player: Player,
-    exampleVector: Vector,
-  ) {
+  private getCanBuildFundsBuildings(map: MapData, player: Player, exampleVector: Vector) {
     if (this._canBuildFundsBuildings === null) {
       const check = (vector: Vector) => {
         for (const building of getAllBuildings()) {
@@ -506,10 +456,7 @@ export default class DionysusAlpha extends BaseAI {
             return true;
           }
 
-          if (
-            !BuildableTiles.has(map.getTileInfo(vector)) ||
-            map.buildings.get(vector)
-          ) {
+          if (!BuildableTiles.has(map.getTileInfo(vector)) || map.buildings.get(vector)) {
             return false;
           }
 
@@ -540,11 +487,7 @@ export default class DionysusAlpha extends BaseAI {
     let _allowAnyBuilding: boolean | null = null;
     const getAllowAnyBuilding = () =>
       _allowAnyBuilding === null
-        ? (_allowAnyBuilding = hasUnitsOrProductionBuildings(
-            map,
-            currentPlayer,
-            'with-attack',
-          ))
+        ? (_allowAnyBuilding = hasUnitsOrProductionBuildings(map, currentPlayer, 'with-attack'))
         : _allowAnyBuilding;
 
     const shouldBuild = (info: BuildingInfo) =>
@@ -558,14 +501,7 @@ export default class DionysusAlpha extends BaseAI {
     const { info, to } =
       maxBy(
         filterMap(
-          moveable(
-            this.applyVision(map),
-            unit,
-            from,
-            undefined,
-            undefined,
-            true,
-          ),
+          moveable(this.applyVision(map), unit, from, undefined, undefined, true),
           (item) => {
             const tile = map.getTileInfo(item.vector);
             if (!BuildableTiles.has(tile)) {
@@ -573,10 +509,7 @@ export default class DionysusAlpha extends BaseAI {
             }
 
             const currentUnit = map.units.get(item.vector);
-            if (
-              map.buildings.has(item.vector) ||
-              (currentUnit && !from.equals(item.vector))
-            ) {
+            if (map.buildings.has(item.vector) || (currentUnit && !from.equals(item.vector))) {
               return null;
             }
 
@@ -612,22 +545,16 @@ export default class DionysusAlpha extends BaseAI {
                   : null;
             });
 
-            const productionBuildings =
-              buildingPartition.get('production') || [];
+            const productionBuildings = buildingPartition.get('production') || [];
             const fundBuildings = buildingPartition.get('funds') || [];
 
             const shouldBuildFundsBuilding =
-              productionBuildings.length &&
-              fundBuildings.length / 3 < productionBuildings.length;
+              productionBuildings.length && fundBuildings.length / 3 < productionBuildings.length;
 
-            const radarBuilding = buildingInfos.find((info) =>
-              info.hasBehavior(Behavior.Radar),
-            );
+            const radarBuilding = buildingInfos.find((info) => info.hasBehavior(Behavior.Radar));
             const shouldBuildRadar =
               radarBuilding &&
-              !userBuildings.some((building) =>
-                building.info.hasBehavior(Behavior.Radar),
-              ) &&
+              !userBuildings.some((building) => building.info.hasBehavior(Behavior.Radar)) &&
               map.reduceEachField(
                 (hasLightning, vector) =>
                   map.getTileInfo(vector) === Lightning ? true : hasLightning,
@@ -640,8 +567,7 @@ export default class DionysusAlpha extends BaseAI {
                     shouldBuildFundsBuilding
                       ? info.configuration.funds > 0
                       : info.configuration.funds === 0 &&
-                        !info.getAllBuildableUnits()[Symbol.iterator]().next()
-                          .done,
+                        !info.getAllBuildableUnits()[Symbol.iterator]().next().done,
                   ),
                 ) || buildingInfos[0];
 
@@ -651,9 +577,7 @@ export default class DionysusAlpha extends BaseAI {
                 to: item.vector,
                 weight:
                   -item.vector.distance(from) *
-                  (userBuildings.some((building) => building.info === info)
-                    ? 0.5
-                    : 1),
+                  (userBuildings.some((building) => building.info === info) ? 0.5 : 1),
               };
             }
             return null;
@@ -672,10 +596,7 @@ export default class DionysusAlpha extends BaseAI {
       }
 
       let isBlocked;
-      [currentMap, isBlocked] = this.executeMove(
-        currentMap,
-        MoveAction(from, to),
-      );
+      [currentMap, isBlocked] = this.executeMove(currentMap, MoveAction(from, to));
       if (isBlocked) {
         return currentMap;
       }
@@ -715,10 +636,7 @@ export default class DionysusAlpha extends BaseAI {
     const buyableSkills = [...building.skills].filter((skill) => {
       const { cost } = getSkillConfig(skill);
       return (
-        cost != null &&
-        cost > 0 &&
-        cost <= currentPlayer.funds &&
-        !currentPlayer.skills.has(skill)
+        cost != null && cost > 0 && cost <= currentPlayer.funds && !currentPlayer.skills.has(skill)
       );
     });
 
@@ -761,9 +679,7 @@ export default class DionysusAlpha extends BaseAI {
     );
 
     const playerUnits = [
-      ...map.units
-        .filter((unit) => map.matchesPlayer(unit, currentPlayer))
-        .values(),
+      ...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values(),
     ];
 
     const avoidNavalUnits =
@@ -777,10 +693,7 @@ export default class DionysusAlpha extends BaseAI {
         : unitInfos[0];
 
     const clusterMap = new Map<PlayerID | null, ReadonlyArray<Vector>>();
-    const getClusters = (
-      building: Building,
-      unitInfos: ReadonlyArray<UnitInfo>,
-    ) => {
+    const getClusters = (building: Building, unitInfos: ReadonlyArray<UnitInfo>) => {
       if (!clusterMap.has(building.label)) {
         const clusters = calculateClusters(
           map.size,
@@ -809,9 +722,7 @@ export default class DionysusAlpha extends BaseAI {
             (info) =>
               info.getCostFor(currentPlayer) <=
                 currentPlayer.funds /
-                  (map.round > 3 && !((map.round + 3) % 6)
-                    ? Math.min(buildings.size - 1, 3)
-                    : 1) &&
+                  (map.round > 3 && !((map.round + 3) % 6) ? Math.min(buildings.size - 1, 3) : 1) &&
               getDeployableVectors(map, info, vector, currentPlayer.id).length,
           ),
           buildCapabilities,
@@ -831,8 +742,7 @@ export default class DionysusAlpha extends BaseAI {
         // If the player only generates enough funds to build the same unit each turn,
         // and there are already enough of the same unit on the map, don't build any more.
         (unitInfos.length === 1 &&
-          unitInfos[0].getCostFor(currentPlayer) ===
-            calculateFunds(map, currentPlayer) &&
+          unitInfos[0].getCostFor(currentPlayer) === calculateFunds(map, currentPlayer) &&
           playerUnits.filter((unit) => unit.id === unitInfos[0].id).length >=
             Math.ceil((map.size.width * map.size.height) / 100))
       ) {
@@ -841,9 +751,7 @@ export default class DionysusAlpha extends BaseAI {
 
       const clusters = getClusters(building, unitInfos);
       if (!clusters.length) {
-        const unitInfo = minBy(unitInfos, (info) =>
-          info.getCostFor(currentPlayer),
-        );
+        const unitInfo = minBy(unitInfos, (info) => info.getCostFor(currentPlayer));
         if (!unitInfo) {
           continue;
         }
@@ -856,9 +764,8 @@ export default class DionysusAlpha extends BaseAI {
           .minBy((vector) => vector.distance(from));
         const to =
           newCluster &&
-          minBy(
-            getDeployableVectors(map, unitInfo, from, currentPlayer.id),
-            (vector) => vector.distance(newCluster),
+          minBy(getDeployableVectors(map, unitInfo, from, currentPlayer.id), (vector) =>
+            vector.distance(newCluster),
           );
         if (to) {
           const [item] = estimateClosestTarget(
@@ -873,11 +780,9 @@ export default class DionysusAlpha extends BaseAI {
         continue;
       }
 
-      const cluster =
-        minBy(clusters, (cluster) => from.distance(cluster)) || clusters[0];
+      const cluster = minBy(clusters, (cluster) => from.distance(cluster)) || clusters[0];
       const unitInfo = getBestUnit(
-        map.config.fog &&
-          (map.round === 3 || (map.round > 4 && !(map.round % 4)))
+        map.config.fog && (map.round === 3 || (map.round > 4 && !(map.round % 4)))
           ? getUnitInfosWithMaxVision(unitInfos)
           : sortByDamage(
               map,
@@ -891,9 +796,8 @@ export default class DionysusAlpha extends BaseAI {
               currentPlayer,
             ),
       );
-      const to = minBy(
-        getDeployableVectors(map, unitInfo, from, currentPlayer.id),
-        (vector) => vector.distance(cluster),
+      const to = minBy(getDeployableVectors(map, unitInfo, from, currentPlayer.id), (vector) =>
+        vector.distance(cluster),
       );
       if (to) {
         const [item, , isObstructed] = estimateClosestTarget(
@@ -910,16 +814,13 @@ export default class DionysusAlpha extends BaseAI {
           map.round <= 4 ||
           !isObstructed ||
           (isNaval(unitInfo) &&
-            (unitInfo.canTransportUnits() ||
-              unitInfo.hasAbility(Ability.Supply)))
+            (unitInfo.canTransportUnits() || unitInfo.hasAbility(Ability.Supply)))
         ) {
           combinations.push({
             from,
             to,
             unitInfo,
-            weight:
-              (item?.cost || 0) +
-              (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0),
+            weight: (item?.cost || 0) + (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0),
           });
         }
       }
@@ -961,12 +862,8 @@ export default class DionysusAlpha extends BaseAI {
         map.size,
         Array.from(
           new Set([
-            ...map.units
-              .filter((unit) => map.isOpponent(unit, currentPlayer))
-              .keys(),
-            ...map.buildings
-              .filter((building) => map.isOpponent(building, currentPlayer))
-              .keys(),
+            ...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).keys(),
+            ...map.buildings.filter((building) => map.isOpponent(building, currentPlayer)).keys(),
           ]),
         ),
       ),
@@ -1005,10 +902,7 @@ export default class DionysusAlpha extends BaseAI {
 
       if (
         target &&
-        unit.info.canAttackAt(
-          from.distance(target),
-          unit.info.getRangeFor(currentPlayer),
-        )
+        unit.info.canAttackAt(from.distance(target), unit.info.getRangeFor(currentPlayer))
       ) {
         const currentMap = this.execute(map, UnfoldAction(from));
         if (!currentMap) {
@@ -1025,21 +919,15 @@ export default class DionysusAlpha extends BaseAI {
   private move(map: MapData): MapData | null {
     const currentPlayer = map.getCurrentPlayer();
     const units = map.units.filter(
-      (unit) =>
-        shouldMove(unit) &&
-        !unit.isCapturing() &&
-        map.matchesPlayer(currentPlayer, unit),
+      (unit) => shouldMove(unit) && !unit.isCapturing() && map.matchesPlayer(currentPlayer, unit),
     );
 
-    const supplyEntry = units.findEntry((unit) =>
-      unit.info.abilities.has(Ability.Supply),
-    );
+    const supplyEntry = units.findEntry((unit) => unit.info.abilities.has(Ability.Supply));
     const [from, unit] =
       // Prioritize units with supply ability.
       (supplyEntry &&
-        map.units.filter(
-          (unit) => map.matchesPlayer(currentPlayer, unit) && needsSupply(unit),
-        ).size &&
+        map.units.filter((unit) => map.matchesPlayer(currentPlayer, unit) && needsSupply(unit))
+          .size &&
         supplyEntry) ||
       // In fog, move units with the highest vision first.
       (map.config.fog &&
@@ -1059,24 +947,17 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     const mapWithVision = this.applyVision(map);
-    const clusters = calculateClusters(
-      map.size,
-      getInterestingVectors(map, from, unit),
-    );
+    const clusters = calculateClusters(map.size, getInterestingVectors(map, from, unit));
 
-    const [target, radiusToTarget, isObstructed, realTarget] =
-      estimateClosestTarget(mapWithVision, unit, from, clusters);
+    const [target, radiusToTarget, isObstructed, realTarget] = estimateClosestTarget(
+      mapWithVision,
+      unit,
+      from,
+      clusters,
+    );
     const moveableRadius = moveable(mapWithVision, unit, from);
     let to =
-      target &&
-      findPathToTarget(
-        mapWithVision,
-        unit,
-        target,
-        moveableRadius,
-        radiusToTarget,
-        true,
-      );
+      target && findPathToTarget(mapWithVision, unit, target, moveableRadius, radiusToTarget, true);
     let currentMap: MapData | null = map,
       isBlocked;
 
@@ -1084,9 +965,7 @@ export default class DionysusAlpha extends BaseAI {
       !to ||
       isObstructed ||
       clusters.every(
-        (vector) =>
-          vector.distance(from!) >
-          unit.info.getRadiusFor(map.getPlayer(unit)) * 2.5,
+        (vector) => vector.distance(from!) > unit.info.getRadiusFor(map.getPlayer(unit)) * 2.5,
       )
     ) {
       for (const [vector] of moveableRadius) {
@@ -1103,10 +982,7 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     if (to) {
-      [currentMap, isBlocked] = this.executeMove(
-        currentMap,
-        MoveAction(from, to),
-      );
+      [currentMap, isBlocked] = this.executeMove(currentMap, MoveAction(from, to));
       if (isBlocked) {
         // Wipe away attack cache as the radius might have changed.
         this.tryAttacking();
@@ -1145,11 +1021,7 @@ export default class DionysusAlpha extends BaseAI {
     return this.actionsAfterMove(currentMap, to, realTarget);
   }
 
-  private maybeDropUnit(
-    currentMap: MapData,
-    position: Vector,
-    target?: Vector | null,
-  ) {
+  private maybeDropUnit(currentMap: MapData, position: Vector, target?: Vector | null) {
     if (!currentMap) {
       return null;
     }
@@ -1165,10 +1037,7 @@ export default class DionysusAlpha extends BaseAI {
       unit.transports.some(
         (transportedUnit) =>
           currentMap &&
-          unit.info.canDropFrom(
-            transportedUnit.info,
-            currentMap.getTileInfo(position),
-          ),
+          unit.info.canDropFrom(transportedUnit.info, currentMap.getTileInfo(position)),
       )
     ) {
       const isNaval = isNavalUnit(unit);
@@ -1177,10 +1046,7 @@ export default class DionysusAlpha extends BaseAI {
         const multiplier = isNaval ? 2.5 : 1.5;
         if (
           target.distance(position) >
-          transportedUnit.info.getRadiusFor(
-            currentMap.getPlayer(transportedUnit),
-          ) *
-            multiplier
+          transportedUnit.info.getRadiusFor(currentMap.getPlayer(transportedUnit)) * multiplier
         ) {
           continue;
         }
@@ -1191,19 +1057,13 @@ export default class DionysusAlpha extends BaseAI {
             .filter(
               (vector) =>
                 canDeploy(currentMap!, transportedUnit.info, vector, true) &&
-                unit.info.canDropFrom(
-                  transportedUnit.info,
-                  currentMap.getTileInfo(position),
-                ),
+                unit.info.canDropFrom(transportedUnit.info, currentMap.getTileInfo(position)),
             ),
           (vector) => vector.distance(target),
         );
 
         if (dropTo) {
-          const map = this.execute(
-            currentMap,
-            DropUnitAction(position, index, dropTo),
-          );
+          const map = this.execute(currentMap, DropUnitAction(position, index, dropTo));
           if (!map) {
             throw new Error('Error executing unit drop.');
           }
@@ -1218,11 +1078,7 @@ export default class DionysusAlpha extends BaseAI {
     return currentMap;
   }
 
-  private actionsAfterMove(
-    currentMap: MapData | null,
-    position: Vector,
-    target?: Vector | null,
-  ) {
+  private actionsAfterMove(currentMap: MapData | null, position: Vector, target?: Vector | null) {
     if (!currentMap) {
       return null;
     }
@@ -1252,12 +1108,8 @@ export default class DionysusAlpha extends BaseAI {
     if (
       unit &&
       unit.info.hasAbility(Ability.Supply) &&
-      getUnitsToRefill(
-        currentMap,
-        this.getVision(currentMap),
-        currentMap.getPlayer(unit),
-        position,
-      ).size > 0
+      getUnitsToRefill(currentMap, this.getVision(currentMap), currentMap.getPlayer(unit), position)
+        .size > 0
     ) {
       this.tryAttacking();
 
@@ -1333,8 +1185,7 @@ const canUnfold = (map: MapData, unit: Unit) =>
   !unit.isUnfolded() &&
   map.matchesPlayer(map.getCurrentPlayer(), unit);
 
-const shouldMove = (unit: Unit) =>
-  unit.canMove() && !unit.matchesBehavior(AIBehavior.Stay);
+const shouldMove = (unit: Unit) => unit.canMove() && !unit.matchesBehavior(AIBehavior.Stay);
 
 const filterMap = <T, K, V>(
   initialMap: ReadonlyMap<K, V>,
@@ -1351,8 +1202,7 @@ const filterMap = <T, K, V>(
 };
 
 const isNavalUnit = (unit: Unit) => getEntityGroup(unit) === 'naval';
-const isNaval = (entity: Readonly<{ type: EntityType }>) =>
-  getEntityInfoGroup(entity) === 'naval';
+const isNaval = (entity: Readonly<{ type: EntityType }>) => getEntityInfoGroup(entity) === 'naval';
 
 const shouldBuildNavalUnits = (
   map: MapData,
@@ -1369,16 +1219,10 @@ const shouldBuildNavalUnits = (
     return true;
   }
 
-  const opposingUnits = map.units.filter((unit) =>
-    map.isOpponent(unit, currentPlayer),
-  );
+  const opposingUnits = map.units.filter((unit) => map.isOpponent(unit, currentPlayer));
   const opposingNavalUnits = opposingUnits.filter(isNavalUnit).size;
-  return (
-    !opposingUnits.size ||
-    opposingNavalUnits / opposingUnits.size > playerNavalRatio - 0.2
-  );
+  return !opposingUnits.size || opposingNavalUnits / opposingUnits.size > playerNavalRatio - 0.2;
 };
 
 const hasTooManyOfType = (units: ReadonlyArray<Unit>, unitInfo: UnitInfo) =>
-  units.length > 10 &&
-  units.filter(({ id }) => id === unitInfo.id).length / units.length > 0.2;
+  units.length > 10 && units.filter(({ id }) => id === unitInfo.id).length / units.length > 0.2;

@@ -30,9 +30,7 @@ const mapA = withModifiers(
 
 // [!region mapB]
 const mapB = mapA.copy({
-  units: mapA.units
-    .set(vec(2, 1), Flamethrower.create(1))
-    .set(vec(3, 3), Infantry.create(2)),
+  units: mapA.units.set(vec(2, 1), Flamethrower.create(1)).set(vec(3, 3), Infantry.create(2)),
 });
 // [!endregion mapB]
 

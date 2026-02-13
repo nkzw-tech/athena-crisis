@@ -51,10 +51,7 @@ const extract = (files: Array<string>): ReadonlySet<Route> => {
     });
     traverse(ast, {
       JSXIdentifier(path: NodePath<JSXIdentifier>) {
-        if (
-          path.node.name === 'Route' &&
-          path.parentPath?.node?.type === 'JSXOpeningElement'
-        ) {
+        if (path.node.name === 'Route' && path.parentPath?.node?.type === 'JSXOpeningElement') {
           const attribute = path.parentPath
             .get('attributes')
             .find(
@@ -73,9 +70,7 @@ const extract = (files: Array<string>): ReadonlySet<Route> => {
               return;
             }
             if (!routePath.startsWith('/')) {
-              throw new Error(
-                `generate-routes: Route path '${routePath}' must start with '/'.`,
-              );
+              throw new Error(`generate-routes: Route path '${routePath}' must start with '/'.`);
             }
 
             routes.add(routePath);
@@ -129,13 +124,10 @@ const encodeUserRouteType = (
   return [userRoutes, mapRoutes, campaignRoutes];
 };
 
-const encodeTopLevelRouteNames = (
-  routes: ReadonlySet<Route>,
-): ReadonlySet<string> => {
+const encodeTopLevelRouteNames = (routes: ReadonlySet<Route>): ReadonlySet<string> => {
   const topLevelRoutes = new Set<string>();
   for (const route of routes) {
-    const topLevelRoute =
-      route.split('/')[route.startsWith('/:username') ? 2 : 1];
+    const topLevelRoute = route.split('/')[route.startsWith('/:username') ? 2 : 1];
     if (topLevelRoute?.length && !topLevelRoute.startsWith(':')) {
       topLevelRoutes.add(topLevelRoute);
     }
@@ -153,9 +145,7 @@ const writeRoutesFile = async (routes: ReadonlySet<Route>) => {
         `export type UserRoute = \`\${string}/\${UserMapRoute}\` | \`campaign/\${string}/\${UserCampaignRoute}\`${
           userRoutes.size ? ` | ${[...userRoutes].join('|')}` : ''
         };`,
-        `export const Route = new Set(${JSON.stringify([
-          ...encodeTopLevelRouteNames(routes),
-        ])});`,
+        `export const Route = new Set(${JSON.stringify([...encodeTopLevelRouteNames(routes)])});`,
       ]
     : [
         `export type Route = string;`,
@@ -164,10 +154,7 @@ const writeRoutesFile = async (routes: ReadonlySet<Route>) => {
         `export type UserRoute = string;`,
         `export const Route = new Set<string>();`,
       ];
-  writeFileSync(
-    routesFileName,
-    sign(await formatWithOxfmt(routesFileName, code.join('\n\n'))),
-  );
+  writeFileSync(routesFileName, sign(await formatWithOxfmt(routesFileName, code.join('\n\n'))));
 };
 
 await writeRoutesFile(extract(files));

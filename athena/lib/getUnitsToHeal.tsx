@@ -1,9 +1,5 @@
 import ImmutableMap from '@nkzw/immutable-map';
-import {
-  Skill,
-  VampireSkillHeal,
-  VampireSoldierMovementTypes,
-} from '../info/Skill.tsx';
+import { Skill, VampireSkillHeal, VampireSoldierMovementTypes } from '../info/Skill.tsx';
 import { HealAmount } from '../map/Configuration.tsx';
 import Player from '../map/Player.tsx';
 import Unit from '../map/Unit.tsx';
@@ -26,17 +22,10 @@ export default function getUnitsToHeal(
 
     const building = map.buildings.get(vector);
     let amount = 0;
-    if (
-      building &&
-      map.matchesPlayer(building, unit) &&
-      building.info.canHeal(unit.info)
-    ) {
+    if (building && map.matchesPlayer(building, unit) && building.info.canHeal(unit.info)) {
       amount += HealAmount;
     }
-    if (
-      hasVampireSkill &&
-      VampireSoldierMovementTypes.has(unit.info.movementType)
-    ) {
+    if (hasVampireSkill && VampireSoldierMovementTypes.has(unit.info.movementType)) {
       amount += VampireSkillHeal;
     }
 

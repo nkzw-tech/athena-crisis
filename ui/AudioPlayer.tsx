@@ -14,8 +14,7 @@ const storageKeys = {
 
 const pausedKey = '::AC::paused';
 
-const isMusic = (name: SoundName | SongName): name is SongName =>
-  Music.has(name as SongName);
+const isMusic = (name: SoundName | SongName): name is SongName => Music.has(name as SongName);
 
 class AudioPlayer {
   private readonly instances = new Map<SongName | SoundName, Howl>();
@@ -24,9 +23,7 @@ class AudioPlayer {
   private didPreload = false;
   private paused = parseInteger(localStorage.getItem(pausedKey) || '') === 1;
 
-  constructor(
-    private readonly music: ReadonlyMap<SongName | SoundName, string>,
-  ) {}
+  constructor(private readonly music: ReadonlyMap<SongName | SoundName, string>) {}
 
   preload() {
     if (!this.didPreload) {
@@ -58,9 +55,7 @@ class AudioPlayer {
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line no-console
       console.log(
-        `%caudio ›${
-          previousSong ? ` from '${previousSong}' to` : ''
-        } '${song}'.`,
+        `%caudio ›${previousSong ? ` from '${previousSong}' to` : ''} '${song}'.`,
         `color: #777;`,
       );
     }
@@ -85,12 +80,7 @@ class AudioPlayer {
     const reduceVolume = sound === 'Fireworks' || sound.startsWith('Talking/');
     const volume = getVolume('sound') * (reduceVolume ? 0.66 : 1);
 
-    if (
-      this.paused ||
-      rate <= 0 ||
-      rate === Number.POSITIVE_INFINITY ||
-      volume <= 0
-    ) {
+    if (this.paused || rate <= 0 || rate === Number.POSITIVE_INFINITY || volume <= 0) {
       return;
     }
 
@@ -237,9 +227,7 @@ class AudioPlayer {
 }
 
 const getVolume = (type: AudioVolumeType) => {
-  const volume = Number.parseFloat(
-    localStorage.getItem(storageKeys[type]) || '',
-  );
+  const volume = Number.parseFloat(localStorage.getItem(storageKeys[type]) || '');
   return Number.isFinite(volume) && volume >= 0 && volume <= 1 ? volume : 1;
 };
 

@@ -98,21 +98,13 @@ export class DryUnit {
       return new DryUnit(dryUnit, null, null);
     }
     const [health, ammo, statusEffect] = dryUnit;
-    return new DryUnit(
-      health,
-      ammo ? new Map(ammo) : null,
-      statusEffect || null,
-    );
+    return new DryUnit(health, ammo ? new Map(ammo) : null, statusEffect || null);
   }
 
   toJSON(): PlainDryUnit {
     const { ammo: a, health, statusEffect } = this;
     const ammo = a?.size ? [...a] : null;
-    return statusEffect
-      ? [health, ammo, statusEffect]
-      : ammo
-        ? [health, ammo]
-        : health;
+    return statusEffect ? [health, ammo, statusEffect] : ammo ? [health, ammo] : health;
   }
 
   format() {
@@ -121,9 +113,7 @@ export class DryUnit {
     return {
       health,
       ...ammo,
-      ...(statusEffect
-        ? { statusEffect: formatStatusEffect(statusEffect) }
-        : null),
+      ...(statusEffect ? { statusEffect: formatStatusEffect(statusEffect) } : null),
     };
   }
 }
@@ -190,9 +180,7 @@ export class TransportedUnit {
   }
 
   count(): number {
-    return (
-      1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0)
-    );
+    return 1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0);
   }
 
   hasValidBehavior() {
@@ -238,9 +226,7 @@ export class TransportedUnit {
 
     if (unit.transports?.length) {
       unit = unit.copy({
-        transports: unit.transports.map((unit) =>
-          unit.maybeConvert(conversion),
-        ),
+        transports: unit.transports.map((unit) => unit.maybeConvert(conversion)),
       });
     }
 
@@ -259,9 +245,7 @@ export class TransportedUnit {
     if (this.isLeader() && viewer === this.player) {
       return this.info.characterName;
     }
-    return (
-      (this.name != null && getUnitName(this.info.gender, this.name)) || null
-    );
+    return (this.name != null && getUnitName(this.info.gender, this.name)) || null;
   }
 
   isTransportingUnits(): this is {
@@ -303,9 +287,7 @@ export class TransportedUnit {
       });
     }
 
-    return unit.label != null && labels.has(unit.label)
-      ? unit.copy({ label: null })
-      : unit;
+    return unit.label != null && labels.has(unit.label) ? unit.copy({ label: null }) : unit;
   }
 
   toJSON(): PlainTransportedUnit {
@@ -512,18 +494,14 @@ export default class Unit extends Entity {
   }
 
   canAttackAt(distance: number, player: Player) {
-    return (
-      this.canAttack(player) &&
-      this.info.canAttackAt(distance, this.info.getRangeFor(player))
-    );
+    return this.canAttack(player) && this.info.canAttackAt(distance, this.info.getRangeFor(player));
   }
 
   canConvert(player: Player) {
     return (
       this.info.hasAbility(Ability.Convert) ||
       (this.info === Saboteur && player.activeSkills.has(Skill.Sabotage)) ||
-      (this.health < LowHealthZombieSkillConversion &&
-        player.skills.has(Skill.UnlockZombie))
+      (this.health < LowHealthZombieSkillConversion && player.skills.has(Skill.UnlockZombie))
     );
   }
 
@@ -531,15 +509,10 @@ export default class Unit extends Entity {
     const { primaryWeapon, weapons } = this.info.attack;
     if (weapons) {
       if (weapons.size === 1 && primaryWeapon) {
-        return weaponCanAttack(primaryWeapon, this.ammo, entity)
-          ? primaryWeapon
-          : null;
+        return weaponCanAttack(primaryWeapon, this.ammo, entity) ? primaryWeapon : null;
       }
 
-      for (const weapon of sortBy(
-        [...weapons.values()],
-        (weapon) => -weapon.getDamage(entity),
-      )) {
+      for (const weapon of sortBy([...weapons.values()], (weapon) => -weapon.getDamage(entity))) {
         if (weaponCanAttack(weapon, this.ammo, entity)) {
           return weapon;
         }
@@ -580,10 +553,7 @@ export default class Unit extends Entity {
 
   isFull() {
     const info = this.info;
-    return !!(
-      info.canTransportUnits() &&
-      (this.transports?.length || 0) >= info.transports.limit
-    );
+    return !!(info.canTransportUnits() && (this.transports?.length || 0) >= info.transports.limit);
   }
 
   isUnfolded() {
@@ -622,9 +592,7 @@ export default class Unit extends Entity {
   }
 
   fold(): this {
-    return this.capturing || this.unfolded
-      ? this.copy({ capturing: null, unfolded: null })
-      : this;
+    return this.capturing || this.unfolded ? this.copy({ capturing: null, unfolded: null }) : this;
   }
 
   setAmmo(ammo: Ammo | null): this {
@@ -658,9 +626,7 @@ export default class Unit extends Entity {
       });
     }
 
-    return unit.moved || unit.completed
-      ? unit.copy({ completed: null, moved: null })
-      : unit;
+    return unit.moved || unit.completed ? unit.copy({ completed: null, moved: null }) : unit;
   }
 
   complete(): this {
@@ -675,10 +641,7 @@ export default class Unit extends Entity {
   sabotage(): this {
     return this.copy({
       ammo: sabotageAmmo(this.ammo, this.info),
-      fuel: Math.max(
-        0,
-        this.fuel - Math.ceil(this.info.configuration.fuel * 0.33),
-      ),
+      fuel: Math.max(0, this.fuel - Math.ceil(this.info.configuration.fuel * 0.33)),
     });
   }
 
@@ -697,9 +660,7 @@ export default class Unit extends Entity {
   }
 
   maybeUpdateAIBehavior(): this {
-    return this.behavior === AIBehavior.Adaptive
-      ? this.setAIBehavior(AIBehavior.Attack)
-      : this;
+    return this.behavior === AIBehavior.Adaptive ? this.setAIBehavior(AIBehavior.Attack) : this;
   }
 
   load(unit: TransportedUnit): this {
@@ -712,9 +673,7 @@ export default class Unit extends Entity {
   drop(unit: TransportedUnit): this {
     let { transports } = this;
     if (transports) {
-      transports = transports.filter(
-        (transportedUnit) => transportedUnit !== unit,
-      );
+      transports = transports.filter((transportedUnit) => transportedUnit !== unit);
     }
     return this.copy({
       transports: transports == null || !transports.length ? null : transports,
@@ -742,9 +701,7 @@ export default class Unit extends Entity {
   }
 
   count(): number {
-    return (
-      1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0)
-    );
+    return 1 + (this.transports?.reduce((sum, unit) => sum + unit.count(), 0) || 0);
   }
 
   hasValidBehavior() {
@@ -791,9 +748,7 @@ export default class Unit extends Entity {
 
     if (unit.transports?.length) {
       unit = unit.copy({
-        transports: unit.transports.map((unit) =>
-          unit.maybeConvert(conversion),
-        ),
+        transports: unit.transports.map((unit) => unit.maybeConvert(conversion)),
       });
     }
 
@@ -812,9 +767,7 @@ export default class Unit extends Entity {
     if (this.isLeader() && viewer === this.player) {
       return this.info.characterName;
     }
-    return (
-      (this.name != null && getUnitName(this.info.gender, this.name)) || null
-    );
+    return (this.name != null && getUnitName(this.info.gender, this.name)) || null;
   }
 
   override setPlayer(player: PlayerID): this {
@@ -833,19 +786,12 @@ export default class Unit extends Entity {
     return unit.player !== player ? unit.copy({ player }) : unit;
   }
 
-  maybeSetPlayer(
-    player: PlayerID | null | undefined,
-    state: 'complete' | 'recover',
-  ): this {
-    return player != null && player !== this.player
-      ? this.setPlayer(player)[state]()
-      : this;
+  maybeSetPlayer(player: PlayerID | null | undefined, state: 'complete' | 'recover'): this {
+    return player != null && player !== this.player ? this.setPlayer(player)[state]() : this;
   }
 
   setStatusEffect(statusEffect: UnitStatusEffect | null): this {
-    return this.statusEffect !== statusEffect
-      ? this.copy({ statusEffect })
-      : this;
+    return this.statusEffect !== statusEffect ? this.copy({ statusEffect }) : this;
   }
 
   removeStatusEffect(): this {
@@ -892,9 +838,7 @@ export default class Unit extends Entity {
       });
     }
 
-    return unit.label != null && labels.has(unit.label)
-      ? unit.copy({ label: null })
-      : unit;
+    return unit.label != null && labels.has(unit.label) ? unit.copy({ label: null }) : unit;
   }
 
   activateShield(): this {
@@ -1050,16 +994,11 @@ const sabotageAmmo = (ammo: Ammo | null, info: UnitInfo) => {
   for (const [id, supply] of ammo) {
     newAmmo.set(
       id,
-      Math.max(
-        0,
-        supply - Math.ceil((info.attack.weapons?.get(id)?.supply || 3) * 0.33),
-      ),
+      Math.max(0, supply - Math.ceil((info.attack.weapons?.get(id)?.supply || 3) * 0.33)),
     );
   }
   return newAmmo;
 };
 
 const weaponCanAttack = (weapon: Weapon, ammo: Ammo | null, entity: Entity) =>
-  weapon &&
-  weapon.getDamage(entity) > 0 &&
-  (!weapon.supply || (ammo?.get(weapon.id) || 0) > 0);
+  weapon && weapon.getDamage(entity) > 0 && (!weapon.supply || (ammo?.get(weapon.id) || 0) > 0);

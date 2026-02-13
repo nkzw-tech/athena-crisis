@@ -7,8 +7,7 @@ import useInput from './useInput.tsx';
 export default function useBack(to: Route) {
   const { search } = useLocation();
   const navigate = useNavigate();
-  const backURL =
-    (new URLSearchParams(search).get('back') as Route | undefined) || null;
+  const backURL = (new URLSearchParams(search).get('back') as Route | undefined) || null;
 
   useInput(
     'cancel',

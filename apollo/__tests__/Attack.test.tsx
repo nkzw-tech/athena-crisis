@@ -18,11 +18,7 @@ import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
-import {
-  AttackUnitAction,
-  EndTurnAction,
-  HealAction,
-} from '../action-mutators/ActionMutators.tsx';
+import { AttackUnitAction, EndTurnAction, HealAction } from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
 
 const map = withModifiers(

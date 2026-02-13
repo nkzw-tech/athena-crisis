@@ -18,12 +18,7 @@ export type PlainDynamicPlayerID = PlayerID | -1 | -2 | -3;
 
 // This tuple must start with `0`.
 export const PlayerIDs = [0, 1, 2, 3, 4, 5, 6, 7] as const;
-export const DynamicPlayerIDs = new Set([
-  'self',
-  'team',
-  'opponent',
-  ...PlayerIDs,
-] as const);
+export const DynamicPlayerIDs = new Set(['self', 'team', 'opponent', ...PlayerIDs] as const);
 
 type BasePlainPlayerType = Readonly<{
   activeSkills: ReadonlyArray<Skill>;
@@ -56,10 +51,7 @@ type PlaceholderPlayerType = Readonly<{
   skills?: ReadonlyArray<Skill>;
 }>;
 
-export type PlainPlayer =
-  | PlainBotType
-  | PlainPlayerType
-  | PlaceholderPlayerType;
+export type PlainPlayer = PlainBotType | PlainPlayerType | PlaceholderPlayerType;
 
 export default abstract class Player {
   public readonly stats: PlayerStatistics;
@@ -123,33 +115,18 @@ export default abstract class Player {
     return this.copy({
       stats: {
         captured: Math.max(0, this.stats.captured + (stats.captured || 0)),
-        createdBuildings: Math.max(
-          0,
-          this.stats.createdBuildings + (stats.createdBuildings || 0),
-        ),
-        createdUnits: Math.max(
-          0,
-          this.stats.createdUnits + (stats.createdUnits || 0),
-        ),
+        createdBuildings: Math.max(0, this.stats.createdBuildings + (stats.createdBuildings || 0)),
+        createdUnits: Math.max(0, this.stats.createdUnits + (stats.createdUnits || 0)),
         damage: Math.max(0, this.stats.damage + (stats.damage || 0)),
         destroyedBuildings: Math.max(
           0,
           this.stats.destroyedBuildings + (stats.destroyedBuildings || 0),
         ),
-        destroyedUnits: Math.max(
-          0,
-          this.stats.destroyedUnits + (stats.destroyedUnits || 0),
-        ),
-        lostBuildings: Math.max(
-          0,
-          this.stats.lostBuildings + (stats.lostBuildings || 0),
-        ),
+        destroyedUnits: Math.max(0, this.stats.destroyedUnits + (stats.destroyedUnits || 0)),
+        lostBuildings: Math.max(0, this.stats.lostBuildings + (stats.lostBuildings || 0)),
         lostUnits: Math.max(0, this.stats.lostUnits + (stats.lostUnits || 0)),
         oneShots: Math.max(0, this.stats.oneShots + (stats.oneShots || 0)),
-        rescuedUnits: Math.max(
-          0,
-          this.stats.rescuedUnits + (stats.rescuedUnits || 0),
-        ),
+        rescuedUnits: Math.max(0, this.stats.rescuedUnits + (stats.rescuedUnits || 0)),
       },
     });
   }
@@ -293,8 +270,7 @@ export class Bot extends Player {
   }
 
   toJSON(): PlainBotType {
-    const { activeSkills, ai, charge, funds, id, misses, name, skills, stats } =
-      this;
+    const { activeSkills, ai, charge, funds, id, misses, name, skills, stats } = this;
     return {
       activeSkills: [...activeSkills],
       ai,
@@ -398,25 +374,12 @@ export class HumanPlayer extends Player {
   }
 
   override setTime(time: number | undefined): this {
-    return time !== this.time
-      ? this.copy({ time: time != null ? Math.max(0, time) : time })
-      : this;
+    return time !== this.time ? this.copy({ time: time != null ? Math.max(0, time) : time }) : this;
   }
 
   toJSON(): PlainPlayerType {
-    const {
-      activeSkills,
-      ai,
-      charge,
-      crystal,
-      funds,
-      id,
-      misses,
-      skills,
-      stats,
-      time,
-      userId,
-    } = this;
+    const { activeSkills, ai, charge, crystal, funds, id, misses, skills, stats, time, userId } =
+      this;
     return {
       activeSkills: [...activeSkills],
       ai,
@@ -470,9 +433,7 @@ export function toPlayerID(id: number): PlayerID {
   }
 }
 
-export function encodeDynamicPlayerID(
-  id: DynamicPlayerID,
-): PlainDynamicPlayerID {
+export function encodeDynamicPlayerID(id: DynamicPlayerID): PlainDynamicPlayerID {
   switch (id) {
     case 'self':
       return -1;
@@ -485,9 +446,7 @@ export function encodeDynamicPlayerID(
   }
 }
 
-export function decodeDynamicPlayerID(
-  id: PlainDynamicPlayerID,
-): DynamicPlayerID {
+export function decodeDynamicPlayerID(id: PlainDynamicPlayerID): DynamicPlayerID {
   switch (id) {
     case -1:
       return 'self';
@@ -522,11 +481,7 @@ export function isDynamicPlayerID(id: number | string): id is DynamicPlayerID {
 const preferHumanPlayers = (map: MapData, players: ReadonlyArray<Player>) => {
   const active = new Set(map.active);
   const activePlayers = players.filter(({ id }) => active.has(id));
-  return (
-    activePlayers.find((player) => isHumanPlayer(player)) ||
-    activePlayers[0] ||
-    players[0]
-  );
+  return activePlayers.find((player) => isHumanPlayer(player)) || activePlayers[0] || players[0];
 };
 
 export function resolveDynamicPlayerID(
@@ -551,9 +506,7 @@ export function resolveDynamicPlayerID(
       const team = map.maybeGetTeam(player);
       return preferHumanPlayers(
         map,
-        map
-          .getPlayers()
-          .filter(({ id, teamId }) => id > 0 && teamId !== team?.id),
+        map.getPlayers().filter(({ id, teamId }) => id > 0 && teamId !== team?.id),
       )!.id;
     }
     default:

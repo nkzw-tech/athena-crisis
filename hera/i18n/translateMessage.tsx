@@ -11,9 +11,7 @@ export default function translateMessage(
   // It's possible that a message is translated but was recently changed. If it dropped any params, `fbt` will throw an error.
   // In this case, fall back to the original message.
   try {
-    return (
-      CampaignMap[getMessageKey(action) as MessageKey]?.() || action.message
-    );
+    return CampaignMap[getMessageKey(action) as MessageKey]?.() || action.message;
   } catch {
     /* empty */
   }

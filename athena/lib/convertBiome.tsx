@@ -35,14 +35,11 @@ export default function convertBiome(map: MapData, biome: Biome) {
     writeTile(newMap, newModifiers, map.getTileIndex(vector), newTile, layer);
   });
 
-  map = verifyMap(
-    withModifiers(map.copy({ map: newMap, modifiers: newModifiers })),
-  );
+  map = verifyMap(withModifiers(map.copy({ map: newMap, modifiers: newModifiers })));
 
   return map.copy({
     units: map.units.filter(
-      (unit, vector) =>
-        map.getTileInfo(vector).getMovementCost(unit.info) !== -1,
+      (unit, vector) => map.getTileInfo(vector).getMovementCost(unit.info) !== -1,
     ),
   });
 }

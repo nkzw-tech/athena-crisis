@@ -2,12 +2,7 @@ import isPositiveInteger from '@nkzw/core/isPositiveInteger.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import {
-  PlayerID,
-  PlayerIDs,
-  PlayerIDSet,
-  toPlayerIDs,
-} from './map/Player.tsx';
+import { PlayerID, PlayerIDs, PlayerIDSet, toPlayerIDs } from './map/Player.tsx';
 import {
   EncodedReward,
   maybeDecodeReward,
@@ -187,9 +182,7 @@ type RescueAmountObjective = OptionalObjective &
     type: Criteria.RescueAmount;
   }>;
 
-export type ObjectivesWithVectors =
-  | EscortLabelObjective
-  | EscortAmountObjective;
+export type ObjectivesWithVectors = EscortLabelObjective | EscortAmountObjective;
 
 export type Objective =
   | Readonly<{
@@ -489,9 +482,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.DestroyLabel:
       return {
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         label: new Set(toPlayerIDs(objective[2])),
         optional: !!objective[5],
@@ -504,9 +495,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       return {
         amount: objective[2]!,
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         optional: !!objective[5],
         players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
@@ -516,9 +505,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.DefeatLabel:
       return {
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         label: new Set(toPlayerIDs(objective[2])),
         optional: !!objective[5],
@@ -529,9 +516,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.EscortLabel:
       return {
         bonus: objective[8] || undefined,
-        completed: objective[7]
-          ? new Set(toPlayerIDs(objective[7]))
-          : new Set(),
+        completed: objective[7] ? new Set(toPlayerIDs(objective[7])) : new Set(),
         hidden: !!objective[1],
         label: new Set(toPlayerIDs(objective[2])),
         optional: !!objective[6],
@@ -543,9 +528,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.Survival:
       return {
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         optional: !!objective[5],
         players: toPlayerIDs(objective[3]),
@@ -557,9 +540,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       return {
         amount: objective[2],
         bonus: objective[9] || undefined,
-        completed: objective[8]
-          ? new Set(toPlayerIDs(objective[8]))
-          : new Set(),
+        completed: objective[8] ? new Set(toPlayerIDs(objective[8])) : new Set(),
         hidden: !!objective[1],
         label: objective[5] ? new Set(toPlayerIDs(objective[5])) : undefined,
         optional: !!objective[7],
@@ -572,9 +553,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       return {
         amount: objective[2],
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         optional: !!objective[5],
         players: objective[3] ? toPlayerIDs(objective[3]) : undefined,
@@ -584,9 +563,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.RescueLabel:
       return {
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         label: new Set(toPlayerIDs(objective[2])),
         optional: !!objective[5],
@@ -598,9 +575,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
       return {
         amount: objective[2],
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         optional: !!objective[5],
         players: toPlayerIDs(objective[3]),
@@ -610,9 +585,7 @@ export function decodeObjective(objective: PlainObjective): Objective {
     case Criteria.DefeatOneLabel:
       return {
         bonus: objective[7] || undefined,
-        completed: objective[6]
-          ? new Set(toPlayerIDs(objective[6]))
-          : new Set(),
+        completed: objective[6] ? new Set(toPlayerIDs(objective[6])) : new Set(),
         hidden: !!objective[1],
         label: objective[2] ? new Set(toPlayerIDs(objective[2])) : new Set(),
         optional: !!objective[5],
@@ -646,12 +619,8 @@ export function decodeObjectives(objectives: PlainObjectives) {
   );
 }
 
-export function decodeLegacyWinConditions(
-  objectives: ReadonlyArray<PlainObjective>,
-): Objectives {
-  return ImmutableMap(
-    objectives.map((objective, index) => [index, decodeObjective(objective)]),
-  );
+export function decodeLegacyWinConditions(objectives: ReadonlyArray<PlainObjective>): Objectives {
+  return ImmutableMap(objectives.map((objective, index) => [index, decodeObjective(objective)]));
 }
 
 export function formatObjective(objective: Objective) {
@@ -715,17 +684,12 @@ export function objectiveHasAmounts(
   );
 }
 
-export function objectiveHasRounds(
-  objective: Objective,
-): objective is SurvivalObjective {
+export function objectiveHasRounds(objective: Objective): objective is SurvivalObjective {
   const { type } = objective;
   return type === Criteria.Survival;
 }
 
-export function getOpponentPriorityLabels(
-  objectives: Objectives,
-  player: PlayerID,
-) {
+export function getOpponentPriorityLabels(objectives: Objectives, player: PlayerID) {
   const labels = new Set<PlayerID>();
   for (const [, objective] of objectives) {
     if (!objectiveHasLabel(objective) || !objective.label?.size) {
@@ -780,11 +744,7 @@ const validatePlayers = (map: MapData, players: PlayerIDs) => {
 const validateAmount = (amount: number) =>
   isPositiveInteger(amount) && amount >= MIN_AMOUNT && amount <= MAX_AMOUNT;
 
-export function validateObjective(
-  map: MapData,
-  objective: Objective,
-  id: ObjectiveID,
-) {
+export function validateObjective(map: MapData, objective: Objective, id: ObjectiveID) {
   if (typeof id !== 'number' || !Number.isInteger(id)) {
     return false;
   }
@@ -811,9 +771,7 @@ export function validateObjective(
     case Criteria.RescueLabel:
       return (
         validateLabel(objective.label) &&
-        (objective.players?.length
-          ? validatePlayers(map, objective.players)
-          : true)
+        (objective.players?.length ? validatePlayers(map, objective.players) : true)
       );
     case Criteria.CaptureAmount:
     case Criteria.DefeatAmount:
@@ -821,17 +779,12 @@ export function validateObjective(
       if (!validateAmount(objective.amount)) {
         return false;
       }
-      return objective.players?.length
-        ? validatePlayers(map, objective.players)
-        : true;
+      return objective.players?.length ? validatePlayers(map, objective.players) : true;
     case Criteria.EscortLabel:
       if (![...objective.vectors].every(validateVector)) {
         return false;
       }
-      return (
-        validateLabel(objective.label) &&
-        validatePlayers(map, objective.players)
-      );
+      return validateLabel(objective.label) && validatePlayers(map, objective.players);
     case Criteria.Survival:
       if (
         !isPositiveInteger(objective.rounds) ||
@@ -845,9 +798,7 @@ export function validateObjective(
         return false;
       }
 
-      return objective.players.includes(map.active[0])
-        ? objective.rounds > 1
-        : true;
+      return objective.players.includes(map.active[0]) ? objective.rounds > 1 : true;
     case Criteria.EscortAmount:
       if (!validateAmount(objective.amount)) {
         return false;
@@ -866,9 +817,7 @@ export function validateObjective(
         return false;
       }
 
-      return objective.players?.length
-        ? validatePlayers(map, objective.players)
-        : true;
+      return objective.players?.length ? validatePlayers(map, objective.players) : true;
     default: {
       objective satisfies never;
       return false;
@@ -878,28 +827,18 @@ export function validateObjective(
 
 export function validateObjectives(map: MapData) {
   const { objectives } = map.config;
-  if (
-    objectives.size > 32 ||
-    objectives.filter(({ type }) => type === Criteria.Default).size > 1
-  ) {
+  if (objectives.size > 32 || objectives.filter(({ type }) => type === Criteria.Default).size > 1) {
     return false;
   }
 
-  if (
-    objectives.every(
-      (objective) => objective.type !== Criteria.Default && objective.optional,
-    )
-  ) {
+  if (objectives.every((objective) => objective.type !== Criteria.Default && objective.optional)) {
     return false;
   }
 
   return objectives.every(validateObjective.bind(null, map));
 }
 
-export function resetObjectives(
-  objectives: Objectives,
-  active: PlayerIDSet,
-): Objectives {
+export function resetObjectives(objectives: Objectives, active: PlayerIDSet): Objectives {
   return objectives.map((objective) =>
     objective.type === Criteria.Default || !objective.players
       ? { ...objective, completed: new Set() }
@@ -930,9 +869,7 @@ export function getHiddenLabels(objectives: Objectives): PlayerIDSet | null {
       for (const label of objective.label) {
         if (
           objective.hidden &&
-          (!objective.optional ||
-            !objective.completed ||
-            objective.completed.size < 1)
+          (!objective.optional || !objective.completed || objective.completed.size < 1)
         ) {
           labels.push(label);
         } else {
@@ -945,16 +882,11 @@ export function getHiddenLabels(objectives: Objectives): PlayerIDSet | null {
   return hiddenLabels.length ? new Set(hiddenLabels) : null;
 }
 
-export function getInitialObjective(
-  map: MapData,
-  criteria: Criteria,
-): Objective {
+export function getInitialObjective(map: MapData, criteria: Criteria): Objective {
   const hidden = false;
   const optional = false;
   const currentPlayer = map.getCurrentPlayer().id;
-  const players = [
-    (currentPlayer > 0 ? currentPlayer : map.active[0]) || PlayerIDs[1],
-  ];
+  const players = [(currentPlayer > 0 ? currentPlayer : map.active[0]) || PlayerIDs[1]];
   const label = new Set(players);
   switch (criteria) {
     case Criteria.Default:

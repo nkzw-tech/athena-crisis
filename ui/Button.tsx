@@ -76,13 +76,7 @@ export default memo(function Button({
   );
 
   return to ? (
-    <Link
-      className={className}
-      onClick={click}
-      ref={setRefs}
-      to={to}
-      {...props}
-    />
+    <Link className={className} onClick={click} ref={setRefs} to={to} {...props} />
   ) : (
     <a className={className} onClick={click} ref={ref} {...props} />
   );

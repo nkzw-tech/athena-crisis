@@ -6,8 +6,7 @@ export type VectorLike = Readonly<{
   y: number;
 }>;
 
-export const szudzik = (x: number, y: number) =>
-  x >= y ? x * x + x + y : y * y + x;
+export const szudzik = (x: number, y: number) => (x >= y ? x * x + x + y : y * y + x);
 
 export default abstract class Vector {
   protected id: string;
@@ -40,13 +39,7 @@ export default abstract class Vector {
 
   adjacent() {
     return (
-      this.vectors ||
-      (this.vectors = [
-        this.up(),
-        this.right(),
-        this.down(),
-        this.left(),
-      ] as const)
+      this.vectors || (this.vectors = [this.up(), this.right(), this.down(), this.left()] as const)
     );
   }
 
@@ -126,9 +119,7 @@ export function encodeVectorArray(vectors: ReadonlyArray<Vector>) {
   return vectors.flatMap((vector) => [vector.x, vector.y]);
 }
 
-export function decodeVectorArray(
-  array: ReadonlyArray<number>,
-): ReadonlyArray<Vector> {
+export function decodeVectorArray(array: ReadonlyArray<number>): ReadonlyArray<Vector> {
   const result = [];
   for (let i = 0; i < array.length; i += 2) {
     result.push(vec(array[i], array[i + 1]));

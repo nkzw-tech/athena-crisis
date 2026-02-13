@@ -5,13 +5,7 @@ import { css, cx } from '@emotion/css';
 import sprite from './lib/sprite.tsx';
 import Tick from './Tick.tsx';
 
-export default function Label({
-  entity,
-  hide,
-}: {
-  entity: Entity;
-  hide: boolean;
-}) {
+export default function Label({ entity, hide }: { entity: Entity; hide: boolean }) {
   return entity.label !== null ? (
     <div
       className={cx(

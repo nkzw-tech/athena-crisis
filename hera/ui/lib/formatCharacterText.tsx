@@ -31,9 +31,7 @@ export default function formatCharacterText(
           list(
             [...playerDetails]
               .filter(
-                ([playerID]) =>
-                  map.active.includes(playerID) &&
-                  map.isOpponent(playerID, player),
+                ([playerID]) => map.active.includes(playerID) && map.isOpponent(playerID, player),
               )
               .map(([playerID]) => getUserDisplayName(playerDetails, playerID)),
           ),
@@ -49,14 +47,8 @@ export default function formatCharacterText(
           ? id
           : (parseInteger(id) as PlayerID | null)
         : null;
-      const playerID =
-        dynamicPlayerID && resolveDynamicPlayerID(map, dynamicPlayerID, player);
-      return (
-        getTranslatedFactionName(
-          playerDetails,
-          playerID != null ? playerID : player,
-        ) || ''
-      );
+      const playerID = dynamicPlayerID && resolveDynamicPlayerID(map, dynamicPlayerID, player);
+      return getTranslatedFactionName(playerDetails, playerID != null ? playerID : player) || '';
     }),
     getGamepadType() || 'keyboard',
   ).trim();

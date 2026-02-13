@@ -4,10 +4,7 @@ import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
 
-export default function timeoutActionResponseMutator(
-  map: MapData,
-  actionResponse: ActionResponse,
-) {
+export default function timeoutActionResponseMutator(map: MapData, actionResponse: ActionResponse) {
   if (actionResponse.type === 'EndTurn') {
     const player = map.getCurrentPlayer();
     if (

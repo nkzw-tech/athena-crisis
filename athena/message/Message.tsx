@@ -7,11 +7,7 @@ import { mapUnits } from '../info/Unit.tsx';
 import { PlayerID, PlayerIDs, toPlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 
-export type MapMessageValue = readonly [
-  tag: number,
-  value: number,
-  player?: PlayerID,
-];
+export type MapMessageValue = readonly [tag: number, value: number, player?: PlayerID];
 
 export type PlainMapMessage = Readonly<{
   player: PlayerID;
@@ -19,19 +15,18 @@ export type PlainMapMessage = Readonly<{
   value: MapMessageValue;
 }>;
 
-type BasicMapMessage<T extends Vector | readonly [number, number]> =
-  PlainMapMessage &
-    Readonly<{
-      position: T;
-    }>;
+type BasicMapMessage<T extends Vector | readonly [number, number]> = PlainMapMessage &
+  Readonly<{
+    position: T;
+  }>;
 
 type NestedMessage = Readonly<{
   conjunction?: number;
   next?: PlainMapMessage;
 }>;
 
-export type MapMessage<T extends Vector | readonly [number, number]> =
-  BasicMapMessage<T> & NestedMessage;
+export type MapMessage<T extends Vector | readonly [number, number]> = BasicMapMessage<T> &
+  NestedMessage;
 
 export type EncodedMapMessage = MapMessage<readonly [number, number]>;
 
@@ -70,9 +65,7 @@ const entityMessageTags = new Set([
   MessageTag.Unit,
 ]);
 
-export function isValidMapMessageValue(
-  value: Partial<MapMessageValue>,
-): value is MapMessageValue {
+export function isValidMapMessageValue(value: Partial<MapMessageValue>): value is MapMessageValue {
   return value[0] != null && value[1] != null;
 }
 
@@ -148,21 +141,12 @@ const tiles = new Map(
   ),
 );
 
-export const MessageVocabulary = new Map<
-  MessageTag,
-  ReadonlyMap<number, string>
->([
+export const MessageVocabulary = new Map<MessageTag, ReadonlyMap<number, string>>([
   [MessageTag.Unit, new Map(mapUnits(({ id, name }) => [id, name]))],
   [MessageTag.Building, new Map(mapBuildings(({ id, name }) => [id, name]))],
   [MessageTag.Tile, tiles],
-  [
-    MessageTag.Faction,
-    new Map(PlayerIDs.slice(1).map((id) => [id, String(id)])),
-  ],
-  [
-    MessageTag.Skill,
-    new Map([...Skills].map((skill) => [skill, String(skill)])),
-  ],
+  [MessageTag.Faction, new Map(PlayerIDs.slice(1).map((id) => [id, String(id)]))],
+  [MessageTag.Skill, new Map([...Skills].map((skill) => [skill, String(skill)]))],
   [
     MessageTag.Threat,
     new Map([
@@ -271,22 +255,8 @@ export const MessageVocabulary = new Map<
 ]);
 
 export const MessageTemplate = new Map<number, MessageTemplateEntry>([
-  [
-    1,
-    [
-      'Attack {tag}',
-      [MessageTag.Unit, MessageTag.Building, MessageTag.Faction],
-      '!',
-    ],
-  ],
-  [
-    2,
-    [
-      'Defend {tag}',
-      [MessageTag.Unit, MessageTag.Building, MessageTag.Faction],
-      '!',
-    ],
-  ],
+  [1, ['Attack {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Faction], '!']],
+  [2, ['Defend {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Faction], '!']],
   [3, ['Capture {tag}', [MessageTag.Building], '!']],
 
   [
@@ -361,12 +331,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     12,
     [
       'If only I had {tag}',
-      [
-        MessageTag.Unit,
-        MessageTag.Building,
-        MessageTag.Skill,
-        MessageTag.Resource,
-      ],
+      [MessageTag.Unit, MessageTag.Building, MessageTag.Skill, MessageTag.Resource],
       '…',
     ],
   ],
@@ -374,12 +339,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     13,
     [
       '{tag} is vulnerable',
-      [
-        MessageTag.Unit,
-        MessageTag.Building,
-        MessageTag.Faction,
-        MessageTag.Strategy,
-      ],
+      [MessageTag.Unit, MessageTag.Building, MessageTag.Faction, MessageTag.Strategy],
       '.',
     ],
   ],
@@ -433,12 +393,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     19,
     [
       'We need more {tag}',
-      [
-        MessageTag.Unit,
-        MessageTag.Skill,
-        MessageTag.Resource,
-        MessageTag.Teamplay,
-      ],
+      [MessageTag.Unit, MessageTag.Skill, MessageTag.Resource, MessageTag.Teamplay],
       '.',
     ],
   ],
@@ -446,12 +401,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     20,
     [
       'This {tag} is key',
-      [
-        MessageTag.Building,
-        MessageTag.Skill,
-        MessageTag.Tile,
-        MessageTag.Strategy,
-      ],
+      [MessageTag.Building, MessageTag.Skill, MessageTag.Tile, MessageTag.Strategy],
       '.',
     ],
   ],
@@ -471,11 +421,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
   ],
   [
     22,
-    [
-      'Perfect spot for {tag}',
-      [MessageTag.Unit, MessageTag.Building, MessageTag.Strategy],
-      '.',
-    ],
+    ['Perfect spot for {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Strategy], '.'],
   ],
   [
     23,
@@ -508,14 +454,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
       '!',
     ],
   ],
-  [
-    25,
-    [
-      'Oops, {tag}',
-      [MessageTag.Faction, MessageTag.Comment, MessageTag.Social],
-      '!',
-    ],
-  ],
+  [25, ['Oops, {tag}', [MessageTag.Faction, MessageTag.Comment, MessageTag.Social], '!']],
   [
     26,
     [

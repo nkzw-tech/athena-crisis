@@ -15,13 +15,7 @@ import Medal from '../Medal.tsx';
 import CardTitle, { CardInfoHeading } from './CardTitle.tsx';
 import LeaderTitle from './LeaderTitle.tsx';
 
-export default memo(function LeaderCard({
-  unit,
-  viewer,
-}: {
-  unit: Unit;
-  viewer: PlayerID | null;
-}) {
+export default memo(function LeaderCard({ unit, viewer }: { unit: Unit; viewer: PlayerID | null }) {
   const [variant, setVariant] = useState(0);
   const { info, player } = unit;
 
@@ -50,19 +44,9 @@ export default memo(function LeaderCard({
                 <fbt desc="About unit leader headline">About</fbt>
               </CardInfoHeading>
             )}
-            <div
-              className={cx(
-                descriptionStyle,
-                player !== viewer && portraitOffsetStyle,
-              )}
-            >
+            <div className={cx(descriptionStyle, player !== viewer && portraitOffsetStyle)}>
               <div className={portraitContainerStyle}>
-                <Portrait
-                  animate
-                  player={player}
-                  unit={info}
-                  variant={variant}
-                />
+                <Portrait animate player={player} unit={info} variant={variant} />
               </div>
               {viewerIsPlayer ? <p>{info.characterDescription}</p> : null}
               <VStack between gap wrap>
@@ -72,10 +56,8 @@ export default memo(function LeaderCard({
                 <div className={descriptionStyle}>
                   <fbt desc="Explanation for leader buffs">
                     Leader units receive a{' '}
-                    <fbt:param name="buff">
-                      {LeaderStatusEffect * 100}
-                    </fbt:param>
-                    % attack and defense bonus.
+                    <fbt:param name="buff">{LeaderStatusEffect * 100}</fbt:param>% attack and
+                    defense bonus.
                   </fbt>
                 </div>
               </VStack>

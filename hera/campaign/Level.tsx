@@ -2,10 +2,7 @@ import { Scenario } from '@deities/apollo/Effects.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   hasPerformanceExpectation,
@@ -13,18 +10,9 @@ import {
 } from '@deities/athena/map/PlayerPerformance.tsx';
 import { Reward } from '@deities/athena/map/Reward.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
-  Criteria,
-  Objective,
-  ObjectiveID,
-  Objectives,
-} from '@deities/athena/Objectives.tsx';
+import { Criteria, Objective, ObjectiveID, Objectives } from '@deities/athena/Objectives.tsx';
 import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
-import {
-  ClientLevelID,
-  Level as LevelT,
-  PlainLevel,
-} from '@deities/hermes/Types.tsx';
+import { ClientLevelID, Level as LevelT, PlainLevel } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -66,11 +54,7 @@ import CrystalIcon from '../ui/CrystalIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import useEffectCharacters from './hooks/useEffectCharacters.tsx';
 import sortByDepth from './lib/sortByDepth.tsx';
-import {
-  CampaignEditorSaveState,
-  CampaignEditorSetMapFunction,
-  MapNode,
-} from './Types.tsx';
+import { CampaignEditorSaveState, CampaignEditorSetMapFunction, MapNode } from './Types.tsx';
 
 export default memo(function Level({
   depth = 0,
@@ -151,18 +135,11 @@ export default memo(function Level({
 
   const removeConnection = useCallback(
     (parentLevel: LevelT<ClientLevelID>) => {
-      const next: ReadonlyArray<ClientLevelID | [number, ClientLevelID]> =
-        parentLevel.next
-          ? parentLevel.next
-              .filter(
-                (entry) =>
-                  (Array.isArray(entry) ? entry[1] : entry).mapId !==
-                  level.mapId,
-              )
-              .map((entry) =>
-                Array.isArray(entry) ? [entry[0], entry[1].mapId] : entry.mapId,
-              )
-          : [];
+      const next: ReadonlyArray<ClientLevelID | [number, ClientLevelID]> = parentLevel.next
+        ? parentLevel.next
+            .filter((entry) => (Array.isArray(entry) ? entry[1] : entry).mapId !== level.mapId)
+            .map((entry) => (Array.isArray(entry) ? [entry[0], entry[1].mapId] : entry.mapId))
+        : [];
       return {
         ...parentLevel,
         next: next.length ? next : undefined,
@@ -180,8 +157,7 @@ export default memo(function Level({
   const rewardObjectives = [
     ...map.config.objectives
       .filter(
-        (objective): objective is Objective & Readonly<{ reward: Reward }> =>
-          !!objective.reward,
+        (objective): objective is Objective & Readonly<{ reward: Reward }> => !!objective.reward,
       )
       .values(),
   ];
@@ -203,9 +179,7 @@ export default memo(function Level({
               objective && objectiveId != null ? (
                 <ObjectiveTitle id={objectiveId} objective={objective} short />
               ) : (
-                depth > 0 && (
-                  <fbt desc="Short description for 'any objective'">Win</fbt>
-                )
+                depth > 0 && <fbt desc="Short description for 'any objective'">Win</fbt>
               )
             }
           >
@@ -215,13 +189,10 @@ export default memo(function Level({
                   className={objectiveSelectorItemStyle}
                   onClick={() => updateObjective(null)}
                   selectedText={
-                    objectiveId == null ||
-                    (objective && objective.type === Criteria.Default)
+                    objectiveId == null || (objective && objective.type === Criteria.Default)
                   }
                 >
-                  <fbt desc="Long description for 'any objective'">
-                    Win (in any way)
-                  </fbt>
+                  <fbt desc="Long description for 'any objective'">Win (in any way)</fbt>
                 </InlineLink>
                 {[
                   ...(objectives
@@ -283,11 +254,8 @@ export default memo(function Level({
                         removeConnection(parentLevel),
                         {
                           ...grandParentLevel,
-                          next: [...(grandParentLevel.next || []), level].map(
-                            (entry) =>
-                              Array.isArray(entry)
-                                ? [entry[0], entry[1].mapId]
-                                : entry.mapId,
+                          next: [...(grandParentLevel.next || []), level].map((entry) =>
+                            Array.isArray(entry) ? [entry[0], entry[1].mapId] : entry.mapId,
                           ),
                         },
                       ]);
@@ -340,14 +308,10 @@ export default memo(function Level({
                   )}
                   {performance.style != null && (
                     <Stack gap>
-                      <Icon
-                        className={performanceIconStyle}
-                        icon={Subscriptions}
-                      />
+                      <Icon className={performanceIconStyle} icon={Subscriptions} />
                       <span className={nowrapStyle}>
                         {PerformanceStyleTypeShortName[performance.style[0]]}{' '}
-                        <Comparator type={performance.style[0]} />{' '}
-                        {performance.style[1]}
+                        <Comparator type={performance.style[0]} /> {performance.style[1]}
                       </span>
                     </Stack>
                   )}
@@ -410,11 +374,7 @@ export default memo(function Level({
                         scenario={scenario}
                         setScenario={(scenario) => setScenario(scenario)}
                       />
-                      <Button
-                        onClick={() =>
-                          setMap(node.id, 'effects', { effects, scenario })
-                        }
-                      >
+                      <Button onClick={() => setMap(node.id, 'effects', { effects, scenario })}>
                         <Icon className={iconActiveStyle} icon={Edit} />
                       </Button>
                     </Stack>
@@ -436,11 +396,7 @@ export default memo(function Level({
                 onSelect={(result) => {
                   const next = toPlainLevelList(level.next);
                   if (
-                    next.some(
-                      (entry) =>
-                        (Array.isArray(entry) ? entry[1] : entry) ===
-                        result.value,
-                    )
+                    next.some((entry) => (Array.isArray(entry) ? entry[1] : entry) === result.value)
                   ) {
                     setSaveState({ id: 'duplicate' });
                     return '';
@@ -454,10 +410,7 @@ export default memo(function Level({
                   );
                   return '';
                 }}
-                placeholder={fbt(
-                  'Continue on…',
-                  'Placeholder text for adding a map to a level.',
-                )}
+                placeholder={fbt('Continue on…', 'Placeholder text for adding a map to a level.')}
               />
             </VStack>
           </VStack>
@@ -537,35 +490,18 @@ const MiniMap = memo(function MiniMap({
   );
 });
 
-const RewardDetail = ({
-  player,
-  reward,
-}: {
-  player: PlayerID;
-  reward: Reward;
-}) => {
+const RewardDetail = ({ player, reward }: { player: PlayerID; reward: Reward }) => {
   const { type: rewardType } = reward;
   switch (rewardType) {
     case 'Skill':
       return <SkillIcon skill={reward.skill} />;
     case 'UnitPortraits':
-      return (
-        <Portrait
-          clip
-          player={player}
-          scale={0.5}
-          unit={reward.unit}
-          variant={0}
-        />
-      );
+      return <Portrait clip player={player} scale={0.5} unit={reward.unit} variant={0} />;
     case 'Biome':
       return (
         <div>
           <fbt desc="Biome unlock">
-            <fbt:param name="biomeName">
-              {getTranslatedBiomeName(reward.biome)}
-            </fbt:param>{' '}
-            Biome
+            <fbt:param name="biomeName">{getTranslatedBiomeName(reward.biome)}</fbt:param> Biome
           </fbt>
         </div>
       );
@@ -573,8 +509,7 @@ const RewardDetail = ({
       return (
         <div>
           <fbt desc="Keyart unlock">
-            Keyart variant{' '}
-            <fbt:param name="variant">{reward.variant}</fbt:param>
+            Keyart variant <fbt:param name="variant">{reward.variant}</fbt:param>
           </fbt>
         </div>
       );

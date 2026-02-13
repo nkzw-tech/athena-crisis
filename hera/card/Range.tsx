@@ -31,11 +31,7 @@ const starIcon = (value: number, boundary: number) =>
   value >= boundary ? StarFullIcon : StarEmptyIcon;
 
 const halfStarIcon = (value: number, boundary: number) =>
-  value >= boundary
-    ? value >= boundary + 1
-      ? StarFullIcon
-      : StarHalfIcon
-    : StarEmptyIcon;
+  value >= boundary ? (value >= boundary + 1 ? StarFullIcon : StarHalfIcon) : StarEmptyIcon;
 
 export default memo(function Range({
   end,
@@ -55,20 +51,11 @@ export default memo(function Range({
   }
 
   const style = {
-    color:
-      colors[
-        (invertColors ? 6 - toValue(value) : toValue(value)) as AttributeRange
-      ],
+    color: colors[(invertColors ? 6 - toValue(value) : toValue(value)) as AttributeRange],
   };
 
   return (
-    <Stack
-      alignEnd
-      className={cx(
-        wide ? selectorContainerStyle : containerStyle,
-        end && endStyle,
-      )}
-    >
+    <Stack alignEnd className={cx(wide ? selectorContainerStyle : containerStyle, end && endStyle)}>
       <div className={rangeStyle} style={style}>
         {starIcon(value, 1)}
       </div>
@@ -131,8 +118,7 @@ export const RangeSelector = memo(function RangeSelector({
 }) {
   const [isActive, setIsActive] = useState(false);
   const [value, setValue] = useState<AttributeRangeWithZero>(initialValue || 0);
-  const color = (value: AttributeRange) =>
-    colors[invert ? ((6 - value) as AttributeRange) : value];
+  const color = (value: AttributeRange) => colors[invert ? ((6 - value) as AttributeRange) : value];
 
   return (
     <Stack

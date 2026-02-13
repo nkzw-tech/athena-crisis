@@ -9,19 +9,14 @@ import ClientComponent from '../playground/ClientComponent.tsx';
 
 <HomePage.Root>
   <a href="https://athenacrisis.com" className="LogoLink">
-    <img
-      alt="Athena Crisis logo"
-      src="./athena-crisis.svg"
-      style={{ width: '80%' }}
-    />
+    <img alt="Athena Crisis logo" src="./athena-crisis.svg" style={{ width: '80%' }} />
   </a>
   <HomePage.Tagline>Open Source Docs & Playground</HomePage.Tagline>
   <HomePage.Description>
-    Athena Crisis is a modern retro turn-based strategy game built from scratch
-    with JavaScript, React and CSS.
+    Athena Crisis is a modern retro turn-based strategy game built from scratch with JavaScript,
+    React and CSS.
     <div style={{ marginTop: '1em' }}>
-      [Read the
-      announcement](https://cpojer.net/posts/athena-crisis-open-source)
+      [Read the announcement](https://cpojer.net/posts/athena-crisis-open-source)
     </div>
   </HomePage.Description>
   <HomePage.Buttons>
@@ -36,7 +31,5 @@ import ClientComponent from '../playground/ClientComponent.tsx';
     </HomePage.Button>
   </HomePage.Buttons>
   <HomePage.Tagline>Try a demo of Athena Crisis!</HomePage.Tagline>
-  <ClientComponent
-    module={lazy(() => import('../playground/PlaygroundDemoGame.tsx'))}
-  />
+  <ClientComponent module={lazy(() => import('../playground/PlaygroundDemoGame.tsx'))} />
 </HomePage.Root>

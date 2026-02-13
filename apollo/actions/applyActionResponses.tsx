@@ -10,11 +10,7 @@ export default function applyActionResponses(
 ): MutableGameState {
   const gameState = [];
   for (const actionResponse of actionResponses) {
-    map = applyActionResponse(
-      map,
-      new Vision(map.currentPlayer),
-      actionResponse,
-    );
+    map = applyActionResponse(map, new Vision(map.currentPlayer), actionResponse);
     gameState.push([actionResponse, map] as const);
   }
   return gameState;

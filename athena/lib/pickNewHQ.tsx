@@ -46,12 +46,7 @@ export default function pickNewHQ(map: MapData, player: PlayerID | Player) {
           getVectorRadius(map, vector, 4).reduce((sum, vector) => {
             const unit = map.units.get(vector);
             return unit
-              ? sum +
-                  (map.matchesPlayer(unit, player)
-                    ? 2
-                    : map.matchesTeam(unit, player)
-                      ? 1
-                      : -2)
+              ? sum + (map.matchesPlayer(unit, player) ? 2 : map.matchesTeam(unit, player) ? 1 : -2)
               : sum;
           }, 0),
         ] as const,

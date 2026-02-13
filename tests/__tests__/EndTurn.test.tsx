@@ -4,12 +4,7 @@ import {
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Airbase, Shelter } from '@deities/athena/info/Building.tsx';
-import {
-  Helicopter,
-  Jetpack,
-  Pioneer,
-  SmallTank,
-} from '@deities/athena/info/Unit.tsx';
+import { Helicopter, Jetpack, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -29,13 +24,8 @@ const initialMap = withModifiers(
     config: {
       fog: true,
     },
-    map: [
-      1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1,
-    ],
-    modifiers: [
-      0, 0, 0, 56, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0,
-    ],
+    map: [1, 1, 1, 3, 2, 1, 1, 1, 3, 1, 1, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1],
+    modifiers: [0, 0, 0, 56, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     size: { height: 5, width: 5 },
     teams: [
       {
@@ -116,8 +106,9 @@ const initialMap = withModifiers(
 const player1 = HumanPlayer.from(initialMap.getPlayer(1), '1');
 
 test('supply works correctly for units when a turn ends in fog', async () => {
-  const [[[endTurnActionResponse], ...gameState], gameActionResponse] =
-    await executeGameActions(initialMap, [
+  const [[[endTurnActionResponse], ...gameState], gameActionResponse] = await executeGameActions(
+    initialMap,
+    [
       EndTurnAction(),
       MoveAction(vec(2, 5), vec(1, 5)),
       AttackUnitAction(vec(1, 5), vec(1, 4)),
@@ -126,12 +117,12 @@ test('supply works correctly for units when a turn ends in fog', async () => {
       MoveAction(vec(3, 4), vec(4, 3)),
       AttackUnitAction(vec(4, 3), vec(4, 2)),
       AttackUnitAction(vec(5, 2), vec(4, 2)),
-    ]);
+    ],
+  );
 
   expect(endTurnActionResponse.type).toBe('EndTurn');
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: [5,2], miss: false }
       HiddenMove { path: [2,5 → 1,5], completed: false, fuel: 49, unit: Humvee { id: 10, health: 100, player: 2, fuel: 50, ammo: [ [ 1, 7 ], [ 2, 5 ] ] } }
       AttackUnit (1,5 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 26, chargeB: 81 }
@@ -177,29 +168,17 @@ test('heal works correctly for units when placed on a campsite', async () => {
       .set(vecD, Helicopter.create(2).setFuel(1).setHealth(1))
       .set(vecE, Helicopter.create(2).setFuel(1)),
   });
-  const [gameState, gameActionResponse] = await executeGameActions(map, [
-    EndTurnAction(),
-  ]);
+  const [gameState, gameActionResponse] = await executeGameActions(map, [EndTurnAction()]);
 
-  expect(
-    snapshotEncodedActionResponse(gameActionResponse),
-  ).toMatchInlineSnapshot(
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `"EndTurn { current: { funds: 500, player: 1 }, next: { funds: 600, player: 2 }, round: 1, rotatePlayers: false, supply: [5,2], miss: false }"`,
   );
 
   const lastMap = gameState.at(-1)![1];
-  expect(lastMap.units.get(vecA)!.health).toBeGreaterThan(
-    map.units.get(vecA)!.health,
-  );
+  expect(lastMap.units.get(vecA)!.health).toBeGreaterThan(map.units.get(vecA)!.health);
   expect(lastMap.units.get(vecB)!.health).toBe(map.units.get(vecB)!.health);
   expect(lastMap.units.get(vecC)!.health).toBe(map.units.get(vecC)!.health);
-  expect(lastMap.units.get(vecD)!.health).toBeGreaterThan(
-    map.units.get(vecD)!.health,
-  );
-  expect(lastMap.units.get(vecD)!.fuel).toBeGreaterThan(
-    map.units.get(vecD)!.fuel,
-  );
-  expect(lastMap.units.get(vecE)!.fuel).toBeGreaterThan(
-    map.units.get(vecE)!.fuel,
-  );
+  expect(lastMap.units.get(vecD)!.health).toBeGreaterThan(map.units.get(vecD)!.health);
+  expect(lastMap.units.get(vecD)!.fuel).toBeGreaterThan(map.units.get(vecD)!.fuel);
+  expect(lastMap.units.get(vecE)!.fuel).toBeGreaterThan(map.units.get(vecE)!.fuel);
 });

@@ -1,10 +1,6 @@
 import { Campaign, Level, LevelMap } from './Types.tsx';
 
-function unrollLevel<T>(
-  level: Level<T>,
-  list: Array<Level<T>>,
-  seen = new Set<T>(),
-) {
+function unrollLevel<T>(level: Level<T>, list: Array<Level<T>>, seen = new Set<T>()) {
   if (!seen.has(level.mapId)) {
     seen.add(level.mapId);
     const { next } = level;

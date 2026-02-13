@@ -53,7 +53,5 @@ export function getBiomeName(biome: Biome): BiomeName {
 }
 
 export function toBiome(biome: string | undefined | null): Biome | undefined {
-  return biome && biome in biomeNameToEnum
-    ? biomeNameToEnum[biome as BiomeName]
-    : undefined;
+  return biome && biome in biomeNameToEnum ? biomeNameToEnum[biome as BiomeName] : undefined;
 }

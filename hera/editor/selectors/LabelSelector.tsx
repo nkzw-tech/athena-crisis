@@ -1,8 +1,4 @@
-import {
-  PlayerID,
-  PlayerIDs,
-  PlayerIDSet,
-} from '@deities/athena/map/Player.tsx';
+import { PlayerID, PlayerIDs, PlayerIDSet } from '@deities/athena/map/Player.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';

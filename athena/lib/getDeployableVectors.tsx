@@ -14,11 +14,6 @@ export default function getDeployableVectors(
   return vector
     .expand()
     .filter((vector) =>
-      canDeploy(
-        map,
-        unit,
-        vector,
-        map.getPlayer(player).skills.has(Skill.NoUnitRestrictions),
-      ),
+      canDeploy(map, unit, vector, map.getPlayer(player).skills.has(Skill.NoUnitRestrictions)),
     );
 }

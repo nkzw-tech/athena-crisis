@@ -14,9 +14,7 @@ export default function getChargeValue(
     if (!newEntity.isDead()) {
       return 0;
     }
-    let cost = isBuilding(newEntity)
-      ? newEntity.info.getCostFor(player)
-      : MinFunds;
+    let cost = isBuilding(newEntity) ? newEntity.info.getCostFor(player) : MinFunds;
 
     if (cost === Number.POSITIVE_INFINITY) {
       cost = MinFunds * 10;

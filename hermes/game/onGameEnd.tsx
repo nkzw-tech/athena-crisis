@@ -21,12 +21,7 @@ export default function onGameEnd(
   const { objective, toPlayer } = lastAction;
   const secretCondition = objective?.hidden ? objective : null;
   const secretGameState = secretCondition
-    ? [
-        [
-          { objective: secretCondition, toPlayer, type: 'SecretDiscovered' },
-          activeMap,
-        ] as const,
-      ]
+    ? [[{ objective: secretCondition, toPlayer, type: 'SecretDiscovered' }, activeMap] as const]
     : null;
 
   const effectGameState =
@@ -42,9 +37,7 @@ export default function onGameEnd(
     const adjustedGameState = [
       [{ player: currentPlayer, type: 'SetPlayer' }, lastMap] as const,
       ...(secretGameState || []),
-      ...effectGameState.map(
-        ([actionResponse, map]) => [actionResponse, map] as const,
-      ),
+      ...effectGameState.map(([actionResponse, map]) => [actionResponse, map] as const),
     ];
     const newGameState: MutableGameState = [];
     const subsetGameState = gameState.slice(0, -1);
@@ -72,14 +65,7 @@ export default function onGameEnd(
 
     return [
       ...newGameState,
-      [
-        lastAction,
-        applyActionResponse(
-          lastMap,
-          new Vision(lastMap.currentPlayer),
-          lastAction,
-        ),
-      ],
+      [lastAction, applyActionResponse(lastMap, new Vision(lastMap.currentPlayer), lastAction)],
     ];
   }
 

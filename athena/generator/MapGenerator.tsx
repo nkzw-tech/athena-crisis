@@ -48,19 +48,12 @@ import MapData, { SizeVector, TileMap } from '../MapData.tsx';
 import { moveable, MoveConfiguration } from '../Radius.tsx';
 import vec from './../map/vec.tsx';
 
-const minmax = (min: number, max: number, value: number) =>
-  Math.max(min, Math.min(max, value));
+const minmax = (min: number, max: number, value: number) => Math.max(min, Math.min(max, value));
 
 const isEdge = (vector: Vector, size: SizeVector) =>
-  vector.x === 1 ||
-  vector.x === size.width ||
-  vector.y === 1 ||
-  vector.y === size.height;
+  vector.x === 1 || vector.x === size.width || vector.y === 1 || vector.y === size.height;
 
-export function generateBuildings(
-  map: MapData,
-  biomes: ReadonlyArray<Biome> = Biomes,
-): MapData {
+export function generateBuildings(map: MapData, biomes: ReadonlyArray<Biome> = Biomes): MapData {
   let buildings = ImmutableMap<Vector, Building>();
   const tiles = map.map.slice();
   const { size } = map;
@@ -78,9 +71,7 @@ export function generateBuildings(
       !isEdge(vector, size) &&
       !isEdge(hq2Vector, size)
     ) {
-      buildings = buildings
-        .set(vector, HQ.create(1))
-        .set(hq2Vector, HQ.create(2));
+      buildings = buildings.set(vector, HQ.create(1)).set(hq2Vector, HQ.create(2));
       tiles[map.getTileIndex(vector)] = Plain.id;
       tiles[map.getTileIndex(hq2Vector)] = Plain.id;
       break;
@@ -104,8 +95,7 @@ export function generateBuildings(
       tiles[currentMap.getTileIndex(vector)] = Street.id;
     });
 
-    const center =
-      streetPath[Math.round(streetPath.length) / 2 - 1 + random(0, 1)];
+    const center = streetPath[Math.round(streetPath.length) / 2 - 1 + random(0, 1)];
     if (center && streetPath.length >= 3) {
       const [up, right, down, left] = center.adjacent();
       currentMap = map.copy({ map: tiles });
@@ -117,22 +107,10 @@ export function generateBuildings(
       ]).filter(isPresent);
       if (possibleRivers.length >= 2) {
         const [firstVector, secondVector] = possibleRivers;
-        const left = vec(
-          minmax(1, size.width, firstVector.x + random(-3, 3)),
-          1,
-        );
-        const right = vec(
-          minmax(1, size.width, firstVector.x + random(-3, 3)),
-          size.height,
-        );
-        const top = vec(
-          1,
-          minmax(1, size.height, firstVector.y + random(-3, 3)),
-        );
-        const bottom = vec(
-          size.width,
-          minmax(1, size.height, firstVector.y + random(-3, 3)),
-        );
+        const left = vec(minmax(1, size.width, firstVector.x + random(-3, 3)), 1);
+        const right = vec(minmax(1, size.width, firstVector.x + random(-3, 3)), size.height);
+        const top = vec(1, minmax(1, size.height, firstVector.y + random(-3, 3)));
+        const bottom = vec(size.width, minmax(1, size.height, firstVector.y + random(-3, 3)));
         const [, first, second] = minBy(
           [
             [vec(firstVector.x, 1), left, right],
@@ -181,10 +159,7 @@ export function generateBuildings(
             ...secondPath,
             ...(Math.abs(firstVector.x - secondVector.x) === 1 &&
             Math.abs(firstVector.y - secondVector.y) === 1
-              ? [
-                  vec(firstVector.x, secondVector.y),
-                  vec(secondVector.x, firstVector.y),
-                ].filter(
+              ? [vec(firstVector.x, secondVector.y), vec(secondVector.x, firstVector.y)].filter(
                   (vector) =>
                     isAccessible(currentMap, unit, vector) &&
                     !buildings.has(vector) &&
@@ -201,9 +176,7 @@ export function generateBuildings(
         [up.left(), up.right(), down.left(), down.right()].filter((vector) => {
           const index = currentMap.getTileIndex(vector);
           return (
-            currentMap.contains(vector) &&
-            tiles[index] !== Street.id &&
-            tiles[index] !== River.id
+            currentMap.contains(vector) && tiles[index] !== Street.id && tiles[index] !== River.id
           );
         }),
       )
@@ -218,30 +191,20 @@ export function generateBuildings(
           .adjacent()
           .map(
             (vector) =>
-              currentMap.contains(vector) &&
-              getTile(tiles[currentMap.getTileIndex(vector)], 0),
+              currentMap.contains(vector) && getTile(tiles[currentMap.getTileIndex(vector)], 0),
           );
 
         const shouldPlaceHorizontalBridge =
-          up === River.id &&
-          down === River.id &&
-          left === Street.id &&
-          right === Street.id;
+          up === River.id && down === River.id && left === Street.id && right === Street.id;
         if (
           shouldPlaceHorizontalBridge ||
-          (up === Street.id &&
-            down === Street.id &&
-            left === River.id &&
-            right === River.id)
+          (up === Street.id && down === Street.id && left === River.id && right === River.id)
         ) {
           tiles[index] = [River.id, Bridge.id];
           if (random(0, 1)) {
             buildings = buildings.set(
               vector,
-              (shouldPlaceHorizontalBridge
-                ? HorizontalBarrier
-                : VerticalBarrier
-              ).create(0),
+              (shouldPlaceHorizontalBridge ? HorizontalBarrier : VerticalBarrier).create(0),
             );
           }
         }
@@ -260,10 +223,7 @@ export function generateBuildings(
               .flatMap((vector: Vector) => vector.expandStar().slice(1)),
           ),
         ].filter(
-          (vector) =>
-            currentMap.contains(vector) &&
-            !vector.equals(start) &&
-            !vector.equals(end),
+          (vector) => currentMap.contains(vector) && !vector.equals(start) && !vector.equals(end),
         ),
       );
 
@@ -288,20 +248,14 @@ export function generateBuildings(
               : House;
 
           if (arrayIndex <= 5) {
-            buildings = buildings.set(
-              vector,
-              building.create(toPlayerID(playerId)),
-            );
+            buildings = buildings.set(vector, building.create(toPlayerID(playerId)));
           }
         }
       });
     }
   }
 
-  map = convertBiome(
-    copyMap(map.copy({ buildings }), tiles),
-    arrayShuffle(biomes)[0],
-  );
+  map = convertBiome(copyMap(map.copy({ buildings }), tiles), arrayShuffle(biomes)[0]);
   return validateMap(map, { has: () => false })[0] || map;
 }
 
@@ -310,8 +264,7 @@ export function generateSea(map: MapData): MapData {
     return map;
   }
 
-  const seaTile =
-    getBiomeStyle(map.config.biome).tileConversions?.get(Sea)?.id || Sea.id;
+  const seaTile = getBiomeStyle(map.config.biome).tileConversions?.get(Sea)?.id || Sea.id;
   const tiles = map.map.slice();
   if (random(0, 1)) {
     const queue: Array<Vector> = [];
@@ -323,15 +276,8 @@ export function generateSea(map: MapData): MapData {
             .adjacent()
             .slice(1)
             .filter((vector) => {
-              const tile =
-                map.contains(vector) &&
-                getTile(tiles[map.getTileIndex(vector)]);
-              return (
-                tile &&
-                tile !== River.id &&
-                tile !== Street.id &&
-                tile !== Bridge.id
-              );
+              const tile = map.contains(vector) && getTile(tiles[map.getTileIndex(vector)]);
+              return tile && tile !== River.id && tile !== Street.id && tile !== Bridge.id;
             }),
         );
       }
@@ -380,9 +326,7 @@ export function generateSea(map: MapData): MapData {
         (tile.type & TileTypes.Plain || tile.type & TileTypes.Forest) &&
         !map.buildings.has(vector) &&
         (vector.equals(initialVector) ||
-          vector
-            .adjacent()
-            .some((vector) => tiles[map.getTileIndex(vector)] === seaTile))
+          vector.adjacent().some((vector) => tiles[map.getTileIndex(vector)] === seaTile))
       ) {
         tiles[index] = seaTile;
       }
@@ -400,11 +344,7 @@ export function generateSea(map: MapData): MapData {
   map = copyMap(map, tiles);
   map.forEachField((vector) => {
     const index = map.getTileIndex(vector);
-    if (
-      !random(0, 4) &&
-      !map.buildings.has(vector) &&
-      canPlaceTile(map, vector, Reef)
-    ) {
+    if (!random(0, 4) && !map.buildings.has(vector) && canPlaceTile(map, vector, Reef)) {
       tiles[index] = [getTileInfo(tiles[index], 0).id, Reef.id];
       map = copyMap(map, tiles);
     }
@@ -413,11 +353,7 @@ export function generateSea(map: MapData): MapData {
   // These should be separate loops.
   map.forEachField((vector) => {
     const index = map.getTileIndex(vector);
-    if (
-      !random(0, 2) &&
-      !map.buildings.has(vector) &&
-      canPlaceTile(map, vector, Beach)
-    ) {
+    if (!random(0, 2) && !map.buildings.has(vector) && canPlaceTile(map, vector, Beach)) {
       tiles[index] = Beach.id;
       map = copyMap(map, tiles);
     }
@@ -458,11 +394,7 @@ export function generateRandomMap(
   });
 }
 
-export function generatePlainMap(
-  size: SizeVector,
-  biome?: Biome,
-  tile?: TileInfo,
-): MapData {
+export function generatePlainMap(size: SizeVector, biome?: Biome, tile?: TileInfo): MapData {
   const map: Array<number> = [];
   const length = size.width * size.height;
   for (let i = 0; i < length; i++) {

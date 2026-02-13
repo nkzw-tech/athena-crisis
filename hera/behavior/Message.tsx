@@ -27,10 +27,7 @@ export default class Message {
   }
 
   select(vector: Vector, state: State): StateLike | null {
-    if (
-      canPlaceMessage(state, vector) &&
-      state.selectedMessagePosition !== vector
-    ) {
+    if (canPlaceMessage(state, vector) && state.selectedMessagePosition !== vector) {
       AudioPlayer.playSound('UI/Put');
 
       return {

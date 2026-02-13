@@ -1,8 +1,4 @@
-import {
-  PlayerIDs,
-  PlayerIDSet,
-  toPlayerIDs,
-} from '@deities/athena/map/Player.tsx';
+import { PlayerIDs, PlayerIDSet, toPlayerIDs } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import isPresent from '@nkzw/core/isPresent.js';
@@ -10,11 +6,7 @@ import { Action, Actions, executeEffect } from './Action.tsx';
 import { ActionResponse, ActionResponseType } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
 import validateAction from './actions/validateAction.tsx';
-import {
-  Conditions,
-  evaluateCondition,
-  validateCondition,
-} from './Condition.tsx';
+import { Conditions, evaluateCondition, validateCondition } from './Condition.tsx';
 import {
   decodeActionID,
   decodeActions,
@@ -96,10 +88,7 @@ const handleDefaultEffects = (
   let gameState: GameStateWithEffects = [];
   if (actionResponse.type === 'Start') {
     return [[{ type: 'BeginGame' }, activeMap, effects]];
-  } else if (
-    actionResponse.type === 'ActivateCrystal' &&
-    actionResponse.player
-  ) {
+  } else if (actionResponse.type === 'ActivateCrystal' && actionResponse.player) {
     const currentPlayer = activeMap.getCurrentPlayer();
     for (const skill of currentPlayer.skills) {
       if (shouldActivateCrystalPower(currentPlayer, skill)) {
@@ -116,10 +105,7 @@ const handleDefaultEffects = (
           new Vision(currentPlayer.id),
           activatePowerActionResponse,
         );
-        gameState = [
-          ...gameState,
-          [activatePowerActionResponse, activeMap, effects],
-        ];
+        gameState = [...gameState, [activatePowerActionResponse, activeMap, effects]];
       }
     }
   }
@@ -172,12 +158,7 @@ export function applyEffects(
         (!players || players.has(activeMap.currentPlayer)) &&
         (!conditions?.length ||
           conditions.every((condition) =>
-            evaluateCondition(
-              previousMap,
-              activeMap,
-              actionResponse,
-              condition,
-            ),
+            evaluateCondition(previousMap, activeMap, actionResponse, condition),
           ))
       ) {
         if (occurrence === 'once') {
@@ -191,13 +172,9 @@ export function applyEffects(
           }
           effects = newEffects;
         }
-        gameState = [
-          ...gameState,
-          ...applyActions(activeMap, actionResponse, actions, effects),
-        ];
+        gameState = [...gameState, ...applyActions(activeMap, actionResponse, actions, effects)];
         const lastMap = gameState.at(-1)?.[1];
-        previousMap =
-          gameState.at(-2)?.[1] || (lastMap ? activeMap : previousMap);
+        previousMap = gameState.at(-2)?.[1] || (lastMap ? activeMap : previousMap);
         activeMap = lastMap || activeMap;
       }
     }
@@ -205,19 +182,13 @@ export function applyEffects(
 
   gameState = [
     ...gameState,
-    ...(handleDefaultEffects(previousMap, activeMap, effects, actionResponse) ||
-      []),
+    ...(handleDefaultEffects(previousMap, activeMap, effects, actionResponse) || []),
   ];
 
   return gameState?.length ? gameState : null;
 }
 
-function encodeEffect({
-  actions,
-  conditions,
-  occurrence,
-  players,
-}: Effect): EncodedEffect {
+function encodeEffect({ actions, conditions, occurrence, players }: Effect): EncodedEffect {
   return removeNull([
     encodeActions(actions),
     conditions?.map(encodeCondition) || null,
@@ -265,9 +236,7 @@ const filterActionsOnGameEnd = (trigger: EffectTrigger, { type }: Action) => {
     return true;
   }
 
-  return type === 'SpawnEffect' ||
-    type === 'IncreaseChargeEffect' ||
-    type === 'IncreaseFundsEffect'
+  return type === 'SpawnEffect' || type === 'IncreaseChargeEffect' || type === 'IncreaseFundsEffect'
     ? false
     : true;
 };
@@ -285,9 +254,7 @@ export function validateEffects(map: MapData, effects: Effects): Effects {
         .filter(isPresent)
         .filter(filterActionsOnGameEnd.bind(null, trigger));
 
-      const newConditions = conditions?.filter(
-        validateCondition.bind(null, map),
-      );
+      const newConditions = conditions?.filter(validateCondition.bind(null, map));
 
       if (newActions.length) {
         newEffectList.push({

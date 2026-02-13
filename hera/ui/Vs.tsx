@@ -4,9 +4,7 @@ import { css } from '@emotion/css';
 export default function Vs() {
   return (
     <div className={style}>
-      <fbt desc="Label for 'versus' in a list of players playing against each other">
-        vs.
-      </fbt>
+      <fbt desc="Label for 'versus' in a list of players playing against each other">vs.</fbt>
     </div>
   );
 }

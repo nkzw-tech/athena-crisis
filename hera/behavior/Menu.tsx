@@ -35,10 +35,7 @@ import Rescue from './Rescue.tsx';
 import Sabotage from './Sabotage.tsx';
 import unfoldAction from './unfold/unfoldAction.tsx';
 
-const completeAction = (
-  { optimisticAction, update }: Actions,
-  state: State,
-) => {
+const completeAction = ({ optimisticAction, update }: Actions, state: State) => {
   const { map, selectedPosition, vision } = state;
   if (selectedPosition) {
     update({
@@ -61,11 +58,7 @@ const UnfoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { navigationDirection, selectedPosition } = state;
   return selectedPosition && availableActions.has('unfold') ? (
     <ActionButton
-      label={
-        <fbt desc="Unfold button label (as short as possible, ideally one word)">
-          Unfold
-        </fbt>
-      }
+      label={<fbt desc="Unfold button label (as short as possible, ideally one word)">Unfold</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
         unfoldAction(
@@ -85,11 +78,7 @@ const FoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { navigationDirection, selectedPosition } = state;
   return selectedPosition && availableActions.has('fold') ? (
     <ActionButton
-      label={
-        <fbt desc="Fold button label (as short as possible, ideally one word)">
-          Fold
-        </fbt>
-      }
+      label={<fbt desc="Fold button label (as short as possible, ideally one word)">Fold</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
         unfoldAction(
@@ -105,10 +94,7 @@ const FoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
   ) : null;
 };
 
-const attackAction = (
-  { update }: Actions,
-  { attackable, selectedPosition }: State,
-) => {
+const attackAction = ({ update }: Actions, { attackable, selectedPosition }: State) => {
   if (selectedPosition) {
     update({
       attackable,
@@ -121,15 +107,8 @@ const attackAction = (
 const AttackButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('attack') ? (
     <ActionButton
-      hasShift={
-        availableActions.has('createBuildings') ||
-        availableActions.has('supply')
-      }
-      label={
-        <fbt desc="Attack button label (as short as possible, ideally one word)">
-          Attack
-        </fbt>
-      }
+      hasShift={availableActions.has('createBuildings') || availableActions.has('supply')}
+      label={<fbt desc="Attack button label (as short as possible, ideally one word)">Attack</fbt>}
       navigationDirection={state.navigationDirection}
       onClick={() => attackAction(actions, state)}
       type="attack"
@@ -148,11 +127,7 @@ const dropUnitAction = ({ update }: Actions, { selectedPosition }: State) => {
 const DropUnitButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('drop') ? (
     <ActionButton
-      label={
-        <fbt desc="Unload button label (as short as possible, ideally one word)">
-          Unload
-        </fbt>
-      }
+      label={<fbt desc="Unload button label (as short as possible, ideally one word)">Unload</fbt>}
       navigationDirection={state.navigationDirection}
       onClick={() => dropUnitAction(actions, state)}
       type="drop"
@@ -171,11 +146,7 @@ const buildAction = ({ update }: Actions, { selectedPosition }: State) => {
 const BuildButton = ({ actions, availableActions, state }: MenuItemProps) =>
   availableActions.has('createBuildings') ? (
     <ActionButton
-      label={
-        <fbt desc="Build button label (as short as possible, ideally one word)">
-          Build
-        </fbt>
-      }
+      label={<fbt desc="Build button label (as short as possible, ideally one word)">Build</fbt>}
       navigationDirection={state.navigationDirection}
       onClick={() => buildAction(actions, state)}
       shift={availableActions.has('attack')}
@@ -183,21 +154,9 @@ const BuildButton = ({ actions, availableActions, state }: MenuItemProps) =>
     />
   ) : null;
 
-const BuildTracksButton = ({
-  actions,
-  availableActions,
-  state,
-}: MenuItemProps) => {
-  const {
-    animations,
-    map,
-    navigationDirection,
-    selectedPosition,
-    selectedUnit,
-  } = state;
-  return selectedPosition &&
-    selectedUnit &&
-    availableActions.has('createTracks') ? (
+const BuildTracksButton = ({ actions, availableActions, state }: MenuItemProps) => {
+  const { animations, map, navigationDirection, selectedPosition, selectedUnit } = state;
+  return selectedPosition && selectedUnit && availableActions.has('createTracks') ? (
     <ActionButton
       label={
         <fbt desc="Build Tracks button label (as short as possible, ideally one or two words)">
@@ -235,9 +194,7 @@ const CaptureButton = ({ actions, availableActions, state }: MenuItemProps) => {
   return selectedPosition && availableActions.has('capture') ? (
     <ActionButton
       label={
-        <fbt desc="Capture button label (as short as possible, ideally one word)">
-          Capture
-        </fbt>
+        <fbt desc="Capture button label (as short as possible, ideally one word)">Capture</fbt>
       }
       navigationDirection={navigationDirection}
       onClick={() =>
@@ -259,10 +216,7 @@ const supplyAction = (
 ) => {
   const { selectedPosition } = state;
   if (selectedPosition) {
-    const actionResponse = optimisticAction(
-      state,
-      SupplyAction(selectedPosition),
-    );
+    const actionResponse = optimisticAction(state, SupplyAction(selectedPosition));
     update({
       ...resetBehavior(),
       ...animateSupply(state, sortByVectorKey(unitsToRefill), (state) => ({
@@ -275,26 +229,16 @@ const supplyAction = (
 };
 
 const SupplyButton = ({ actions, availableActions, state }: MenuItemProps) => {
-  const { map, navigationDirection, selectedPosition, selectedUnit, vision } =
-    state;
+  const { map, navigationDirection, selectedPosition, selectedUnit, vision } = state;
   return selectedPosition && selectedUnit && availableActions.has('supply') ? (
     <ActionButton
-      label={
-        <fbt desc="Supply button label (as short as possible, ideally one word)">
-          Supply
-        </fbt>
-      }
+      label={<fbt desc="Supply button label (as short as possible, ideally one word)">Supply</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
         supplyAction(
           actions,
           state,
-          getUnitsToRefill(
-            map,
-            vision,
-            map.getPlayer(selectedUnit),
-            selectedPosition,
-          ),
+          getUnitsToRefill(map, vision, map.getPlayer(selectedUnit), selectedPosition),
         )
       }
       shift={availableActions.has('attack')}
@@ -310,11 +254,7 @@ const HealButton = ({
 }: MenuItemProps) =>
   availableActions.has('heal') ? (
     <ActionButton
-      label={
-        <fbt desc="Heal button label (as short as possible, ideally one word)">
-          Heal
-        </fbt>
-      }
+      label={<fbt desc="Heal button label (as short as possible, ideally one word)">Heal</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
         update({
@@ -332,11 +272,7 @@ const RescueButton = ({
 }: MenuItemProps) =>
   availableActions.has('rescue') ? (
     <ActionButton
-      label={
-        <fbt desc="Rescue button label (as short as possible, ideally one word)">
-          Rescue
-        </fbt>
-      }
+      label={<fbt desc="Rescue button label (as short as possible, ideally one word)">Rescue</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
         update({
@@ -355,9 +291,7 @@ const SabotageButton = ({
   availableActions.has('sabotage') ? (
     <ActionButton
       label={
-        <fbt desc="Sabotage button label (as short as possible, ideally one word)">
-          Sabotage
-        </fbt>
+        <fbt desc="Sabotage button label (as short as possible, ideally one word)">Sabotage</fbt>
       }
       navigationDirection={navigationDirection}
       onClick={() =>
@@ -377,9 +311,7 @@ export default class Menu {
     const attackableFields =
       selectedPosition && selectedUnit
         ? new Map(
-            [
-              ...getAttackableEntitiesInRange(map, selectedPosition, vision),
-            ].filter(([vector]) =>
+            [...getAttackableEntitiesInRange(map, selectedPosition, vision)].filter(([vector]) =>
               selectedUnit.canAttackAt(
                 selectedPosition.distance(vector),
                 map.getPlayer(selectedUnit),
@@ -432,13 +364,7 @@ export default class Menu {
     const availableActions =
       selectedPosition &&
       selectedUnit &&
-      getAvailableUnitActions(
-        map,
-        selectedPosition,
-        selectedUnit,
-        vision,
-        attackable,
-      );
+      getAvailableUnitActions(map, selectedPosition, selectedUnit, vision, attackable);
 
     const complete = (event: CustomEvent) => {
       if (availableActions) {
@@ -451,9 +377,7 @@ export default class Menu {
     useInput('gamepad:tertiary', complete, 'menu');
 
     if (availableActions) {
-      const offset =
-        availableActions.has('attack') &&
-        attackable?.has(selectedPosition.up());
+      const offset = availableActions.has('attack') && attackable?.has(selectedPosition.up());
 
       return (
         <ActionWheel
@@ -465,69 +389,23 @@ export default class Menu {
         >
           <ActionButton
             label={
-              <fbt desc="Wait button label (as short as possible, ideally one word)">
-                Wait
-              </fbt>
+              <fbt desc="Wait button label (as short as possible, ideally one word)">Wait</fbt>
             }
             navigationDirection={navigationDirection}
             onClick={() => completeAction(actions, state)}
             type={offset ? 'completeOffset' : 'complete'}
           />
-          <AttackButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <BuildButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <BuildTracksButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <CaptureButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <FoldButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <HealButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <RescueButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <SabotageButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <SupplyButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <UnfoldButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
-          <DropUnitButton
-            actions={actions}
-            availableActions={availableActions}
-            state={state}
-          />
+          <AttackButton actions={actions} availableActions={availableActions} state={state} />
+          <BuildButton actions={actions} availableActions={availableActions} state={state} />
+          <BuildTracksButton actions={actions} availableActions={availableActions} state={state} />
+          <CaptureButton actions={actions} availableActions={availableActions} state={state} />
+          <FoldButton actions={actions} availableActions={availableActions} state={state} />
+          <HealButton actions={actions} availableActions={availableActions} state={state} />
+          <RescueButton actions={actions} availableActions={availableActions} state={state} />
+          <SabotageButton actions={actions} availableActions={availableActions} state={state} />
+          <SupplyButton actions={actions} availableActions={availableActions} state={state} />
+          <UnfoldButton actions={actions} availableActions={availableActions} state={state} />
+          <DropUnitButton actions={actions} availableActions={availableActions} state={state} />
         </ActionWheel>
       );
     }

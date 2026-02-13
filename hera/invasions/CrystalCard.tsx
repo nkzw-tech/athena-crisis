@@ -23,9 +23,7 @@ export default function CrystalCard({
   pageSize?: 'small' | 'large';
 }) {
   const [initialPageSize] = useState(pageSize);
-  const [showMore, setShowMore] = useState(
-    collapse ? pageSize === 'large' : false,
-  );
+  const [showMore, setShowMore] = useState(collapse ? pageSize === 'large' : false);
 
   return (
     <Stack alignCenter between gap={16}>
@@ -33,13 +31,9 @@ export default function CrystalCard({
         <CrystalSprite animate crystal={crystal} portal={active} />
       </div>
       <VStack gap wrap>
-        <div style={{ color: crystalToColor(crystal) }}>
-          {getTranslatedCrystalName(crystal)}
-        </div>
+        <div style={{ color: crystalToColor(crystal) }}>{getTranslatedCrystalName(crystal)}</div>
         <VStack between gap={4} wrap>
-          <p className={cx(!showMore && collapse && lineClamp)}>
-            {getCrystalDescription(crystal)}
-          </p>
+          <p className={cx(!showMore && collapse && lineClamp)}>{getCrystalDescription(crystal)}</p>
           {collapse && initialPageSize === 'small' && (
             <div>
               <InlineLink onClick={() => setShowMore((showMore) => !showMore)}>

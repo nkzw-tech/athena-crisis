@@ -1,12 +1,6 @@
-import {
-  decodeBuildings,
-  decodeUnits,
-} from '@deities/athena/map/Serialization.tsx';
+import { decodeBuildings, decodeUnits } from '@deities/athena/map/Serialization.tsx';
 import { decodeActionResponse } from '../EncodedActions.tsx';
-import {
-  EncodedGameActionResponseWithError,
-  GameActionResponse,
-} from '../Types.tsx';
+import { EncodedGameActionResponseWithError, GameActionResponse } from '../Types.tsx';
 
 export default function decodeGameActionResponse(
   response: EncodedGameActionResponseWithError,

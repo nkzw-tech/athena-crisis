@@ -33,10 +33,7 @@ export default function syncMoveAction(
   to: Vector,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (
-    state: State,
-    actionResponse: MoveActionResponse,
-  ) => StateLike | null,
+  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
   _path: ReadonlyArray<Vector> | null,
   // Here for compatibility with `moveAction`.
   _?: unknown,
@@ -81,10 +78,7 @@ export default function syncMoveAction(
   const [remoteAction] = action(state, MoveAction(from, to, path, complete));
   return {
     animations: addMoveAnimation(state.animations, {
-      endSound:
-        vision.isVisible(map, to) && map.units.get(to)
-          ? 'Unit/Load'
-          : undefined,
+      endSound: vision.isVisible(map, to) && map.units.get(to) ? 'Unit/Load' : undefined,
       from,
       onComplete: (state) => {
         // Only initiate the follow-up action after the partial move has completed.
@@ -98,8 +92,7 @@ export default function syncMoveAction(
             }
 
             const remainingPath =
-              actionResponse.path ||
-              getMovementPath(map, actionResponse.to, fields, null).path;
+              actionResponse.path || getMovementPath(map, actionResponse.to, fields, null).path;
 
             update(
               clientMoveAction(
@@ -123,16 +116,10 @@ export default function syncMoveAction(
                           ...state,
                           ...(complete
                             ? {
-                                map: completeUnit(
-                                  state.map,
-                                  state.vision,
-                                  actionResponse.to,
-                                ),
+                                map: completeUnit(state.map, state.vision, actionResponse.to),
                               }
                             : null),
-                          ...(blockedBy
-                            ? addBlockedAnimation(state, blockedBy)
-                            : null),
+                          ...(blockedBy ? addBlockedAnimation(state, blockedBy) : null),
                         },
                         actionResponse,
                       ),

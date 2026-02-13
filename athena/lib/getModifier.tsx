@@ -37,10 +37,7 @@ const makeTFn =
     const tileInfo = tile ? getTileInfo(tile) : null;
     // Tiles that are not isolated will verify that the tile group matches, otherwise
     // attempt to fall through to layer 0.
-    return tileInfo &&
-      _layer === undefined &&
-      !info.style.isolated &&
-      tileInfo.group !== info.group
+    return tileInfo && _layer === undefined && !info.style.isolated && tileInfo.group !== info.group
       ? map.getTileInfo(vector, 0)
       : tileInfo;
   };
@@ -155,12 +152,7 @@ export default function getModifier(
     }
   } else if (info === Plain || info === Window || info === Island) {
     const modulo = (vector.x + vector.y) % 3;
-    modifier =
-      modulo === 1
-        ? Modifier.Variant2
-        : modulo === 2
-          ? Modifier.Variant3
-          : Modifier.None;
+    modifier = modulo === 1 ? Modifier.Variant2 : modulo === 2 ? Modifier.Variant3 : Modifier.None;
   } else if (info === Wall || info === Forest3) {
     const modulo = (vector.x + vector.y) % 7;
     modifier =
@@ -177,11 +169,7 @@ export default function getModifier(
                 : modulo === 6
                   ? Modifier.Variant7
                   : Modifier.None;
-  } else if (
-    info === Reef ||
-    info === Weeds ||
-    info.type & TileTypes.ConstructionSite
-  ) {
+  } else if (info === Reef || info === Weeds || info.type & TileTypes.ConstructionSite) {
     const modulo = (vector.x + vector.y) % 4;
     modifier =
       modulo === 1
@@ -212,38 +200,28 @@ export default function getModifier(
     if (
       u?.style.crossesWith &&
       u.style.crossesWith & info.type &&
-      [
-        byGroup(map, u.group, up.left()),
-        byGroup(map, u.group, up.right()),
-      ].every(matchesAny(u))
+      [byGroup(map, u.group, up.left()), byGroup(map, u.group, up.right())].every(matchesAny(u))
     ) {
       u = t(up.up());
     }
     if (
       r?.style.crossesWith &&
       r.style.crossesWith & info.type &&
-      [byGroup(map, r.group, rp.up()), byGroup(map, r.group, rp.down())].every(
-        matchesAny(r),
-      )
+      [byGroup(map, r.group, rp.up()), byGroup(map, r.group, rp.down())].every(matchesAny(r))
     ) {
       r = t(rp.right());
     }
     if (
       d?.style.crossesWith &&
       d.style.crossesWith & info.type &&
-      [
-        byGroup(map, d.group, dp.left()),
-        byGroup(map, d.group, dp.right()),
-      ].every(matchesAny(d))
+      [byGroup(map, d.group, dp.left()), byGroup(map, d.group, dp.right())].every(matchesAny(d))
     ) {
       d = t(dp.down());
     }
     if (
       l?.style.crossesWith &&
       l.style.crossesWith & info.type &&
-      [byGroup(map, l.group, lp.up()), byGroup(map, l.group, lp.down())].every(
-        matchesAny(l),
-      )
+      [byGroup(map, l.group, lp.up()), byGroup(map, l.group, lp.down())].every(matchesAny(l))
     ) {
       l = t(lp.left());
     }
@@ -456,8 +434,7 @@ export default function getModifier(
       // Check if we need to use one of the tails.
     } else if (matchAll(d)) {
       modifier =
-        (info.group === TileTypes.Pier &&
-          !((t(up, 0)?.type || -1) & TileTypes.Sea)) ||
+        (info.group === TileTypes.Pier && !((t(up, 0)?.type || -1) & TileTypes.Sea)) ||
         (info === River && u && getWaterfallModifier(map, up, u, 0))
           ? Modifier.ConnectingTailUp
           : info.type & TileTypes.Bridge && d !== info
@@ -465,8 +442,7 @@ export default function getModifier(
             : Modifier.TailUp;
     } else if (matchAll(u)) {
       modifier =
-        (info.group === TileTypes.Pier &&
-          !((t(dp, 0)?.type || -1) & TileTypes.Sea)) ||
+        (info.group === TileTypes.Pier && !((t(dp, 0)?.type || -1) & TileTypes.Sea)) ||
         (info === River && d && getWaterfallModifier(map, dp, d, 0))
           ? Modifier.ConnectingTailDown
           : info.type & TileTypes.Bridge && u !== info
@@ -474,8 +450,7 @@ export default function getModifier(
             : Modifier.TailDown;
     } else if (matchAll(r)) {
       modifier =
-        (info.group === TileTypes.Pier &&
-          !((t(lp, 0)?.type || -1) & TileTypes.Sea)) ||
+        (info.group === TileTypes.Pier && !((t(lp, 0)?.type || -1) & TileTypes.Sea)) ||
         (info === River && l && getWaterfallModifier(map, lp, l, 0))
           ? Modifier.ConnectingTailLeft
           : info.type & TileTypes.Bridge && r !== info
@@ -483,8 +458,7 @@ export default function getModifier(
             : Modifier.TailLeft;
     } else if (matchAll(l)) {
       modifier =
-        (info.group === TileTypes.Pier &&
-          !((t(rp, 0)?.type || -1) & TileTypes.Sea)) ||
+        (info.group === TileTypes.Pier && !((t(rp, 0)?.type || -1) & TileTypes.Sea)) ||
         (info === River && r && getWaterfallModifier(map, rp, r, 0))
           ? Modifier.ConnectingTailRight
           : info.type & TileTypes.Bridge && l !== info
@@ -513,19 +487,13 @@ export default function getModifier(
     }
   }
 
-  if (
-    modifier == null &&
-    info.style.connectsWith &&
-    info.type & TileTypes.Bridge
-  ) {
+  if (modifier == null && info.style.connectsWith && info.type & TileTypes.Bridge) {
     if (
       [t(up, 0), t(dp, 0)].every(matchesAll(info.style.connectsWith)) ||
       [u, d].some(matchesAll(info.style.connectsWith))
     ) {
       modifier = Modifier.Vertical;
-    } else if (
-      [t(rp, 0), t(lp, 0)].every(matchesAll(info.style.connectsWith))
-    ) {
+    } else if ([t(rp, 0), t(lp, 0)].every(matchesAll(info.style.connectsWith))) {
       modifier = Modifier.Horizontal;
     }
   }
@@ -536,12 +504,7 @@ export default function getModifier(
     const rg = byGroup(map, info.style.crossesWith, rp);
     const ug = byGroup(map, info.style.crossesWith, up);
 
-    if (
-      [r, l].every(matchAny) &&
-      ug &&
-      info.style.crossesWith & ug.type &&
-      matchesAll(ug)(dg)
-    ) {
+    if ([r, l].every(matchAny) && ug && info.style.crossesWith & ug.type && matchesAll(ug)(dg)) {
       modifier = Modifier.HorizontalCrossing;
     } else if (
       [u, d].every(matchAny) &&
@@ -553,9 +516,7 @@ export default function getModifier(
     }
   }
 
-  return modifier != null && info.sprite.modifiers.has(modifier)
-    ? modifier
-    : Modifier.None;
+  return modifier != null && info.sprite.modifiers.has(modifier) ? modifier : Modifier.None;
 }
 
 export function getAllModifiers(map: MapData): ModifierMap {

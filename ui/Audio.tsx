@@ -3,9 +3,7 @@ import EmptyAAC from './Empty.aac';
 import EmptyOGG from './Empty.ogg';
 
 const useOGG =
-  !isIOS &&
-  !isSafari &&
-  document.createElement('audio').canPlayType('audio/ogg') === 'probably';
+  !isIOS && !isSafari && document.createElement('audio').canPlayType('audio/ogg') === 'probably';
 
 export const Sounds = useOGG
   ? new Map([

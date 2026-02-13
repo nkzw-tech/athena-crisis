@@ -1,12 +1,8 @@
 import { BuildingInfo } from '@deities/athena/info/Building.tsx';
 import { Plain, TileField, TileInfo } from '@deities/athena/info/Tile.tsx';
 
-export default function getAnyBuildingTileField(
-  building: BuildingInfo,
-): TileField {
-  const info = (
-    building.configuration.placeOn || building.configuration.editorPlaceOn
-  )
+export default function getAnyBuildingTileField(building: BuildingInfo): TileField {
+  const info = (building.configuration.placeOn || building.configuration.editorPlaceOn)
     .values()
     .next().value as TileInfo;
 

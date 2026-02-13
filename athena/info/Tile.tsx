@@ -16,17 +16,9 @@ export enum RenderType {
 
 const { Composite, Horizontal, Quarter, Vertical } = RenderType;
 
-type CompositeModifierValue = [
-  RenderType.Composite,
-  SpriteVector,
-  SpriteVector,
-];
+type CompositeModifierValue = [RenderType.Composite, SpriteVector, SpriteVector];
 
-type HorizontalModifierValue = [
-  RenderType.Horizontal,
-  SpriteVector,
-  SpriteVector,
-];
+type HorizontalModifierValue = [RenderType.Horizontal, SpriteVector, SpriteVector];
 type VerticalModifierValue = [RenderType.Vertical, SpriteVector, SpriteVector];
 
 type QuarterModifierValue = [
@@ -75,10 +67,11 @@ const composite = (
   return [modifier, [Composite, modifierValue, sprite]];
 };
 
-const horizontal = (
-  l: SpriteVector,
-  r: SpriteVector,
-): HorizontalModifierValue => [Horizontal, l, r.down(0.5)];
+const horizontal = (l: SpriteVector, r: SpriteVector): HorizontalModifierValue => [
+  Horizontal,
+  l,
+  r.down(0.5),
+];
 const vertical = (u: SpriteVector, d: SpriteVector): VerticalModifierValue => [
   Vertical,
   u,
@@ -90,13 +83,7 @@ const quarter = (
   ru: SpriteVector,
   ld: SpriteVector,
   rd: SpriteVector,
-): QuarterModifierValue => [
-  Quarter,
-  lu,
-  ru.right(0.5),
-  ld.down(0.5),
-  rd.right(0.5).down(0.5),
-];
+): QuarterModifierValue => [Quarter, lu, ru.right(0.5), ld.down(0.5), rd.right(0.5).down(0.5)];
 
 export class TileDecoratorInfo {
   // @ts-expect-error Add an invisible private prop to tell
@@ -204,11 +191,7 @@ export class TileInfo {
     return this.configuration.movement.get(movementType) || -1;
   }
 
-  getTransitionCost({
-    movementType,
-  }: {
-    movementType: MovementType;
-  }): TransitionCost {
+  getTransitionCost({ movementType }: { movementType: MovementType }): TransitionCost {
     return this.configuration.transitionCost?.get(movementType) || 0;
   }
 
@@ -463,10 +446,7 @@ export const Forest = new TileInfo(
     ]),
   },
   {
-    modifiers: new Map([
-      ...JoinableModifiers,
-      [Modifier.Single, sprite(-3, -1)],
-    ]),
+    modifiers: new Map([...JoinableModifiers, [Modifier.Single, sprite(-3, -1)]]),
     position: sprite(3, 19),
   },
   {
@@ -538,10 +518,7 @@ export const Mountain = new TileInfo(
   },
   {
     alternate: true,
-    modifiers: new Map([
-      ...JoinableModifiers,
-      [Modifier.Single, sprite(-3, -1)],
-    ]),
+    modifiers: new Map([...JoinableModifiers, [Modifier.Single, sprite(-3, -1)]]),
     position: sprite(3, 7),
   },
   { isolated: true },
@@ -684,11 +661,7 @@ export const Ruins = new TileInfo(
     position: sprite(2, 2),
   },
   {
-    decorator: new TileDecoratorInfo(
-      sprite(9, 0),
-      null,
-      new Set([Biome.Volcano]),
-    ),
+    decorator: new TileDecoratorInfo(sprite(9, 0), null, new Set([Biome.Volcano])),
     isolated: true,
   },
 );
@@ -925,10 +898,10 @@ export const Pier = new TileInfo(
   { fallback: Sea, isolated: true, layer: 1 },
 );
 
-export const ShipyardConstructionSiteDecorator = new TileDecoratorInfo(
-  sprite(7, 0),
-  { ...SeaAnimation, offset: 2 },
-);
+export const ShipyardConstructionSiteDecorator = new TileDecoratorInfo(sprite(7, 0), {
+  ...SeaAnimation,
+  offset: 2,
+});
 
 export const ShipyardConstructionSite = new TileInfo(
   15,
@@ -942,9 +915,7 @@ export const ShipyardConstructionSite = new TileInfo(
   {
     ...Pier.sprite,
     modifiers: new Map(
-      [...Pier.sprite.modifiers].map(([modifier]) =>
-        composite(Pier, modifier, sprite(4, 2)),
-      ),
+      [...Pier.sprite.modifiers].map(([modifier]) => composite(Pier, modifier, sprite(4, 2))),
     ),
   },
   {
@@ -1695,8 +1666,7 @@ export function getFloatingEdgeAnimation(modifier: Modifier, biome: Biome) {
 
 export type MaybeTileID = number | null | false;
 
-export const isSea = (tile: MaybeTileID) =>
-  !!(tile && isSeaTile(getTileInfo(tile)));
+export const isSea = (tile: MaybeTileID) => !!(tile && isSeaTile(getTileInfo(tile)));
 
 export const isSeaTile = (tile: TileInfo) => !!(tile.type & TileTypes.Sea);
 
@@ -1750,9 +1720,7 @@ const Tiles = [
 const tiles = sortBy(Tiles.slice(), ({ group }) => group);
 
 export const PlainTileGroup = new Set(
-  tiles.filter(
-    ({ id }) => !isSea(id) && id !== StormCloud.id && id !== Lightning.id,
-  ),
+  tiles.filter(({ id }) => !isSea(id) && id !== StormCloud.id && id !== Lightning.id),
 );
 export const SeaTileGroup = new Set(tiles.filter(({ id }) => isSea(id)));
 
@@ -1795,9 +1763,7 @@ export function getTileInfo(item: TileField, layer?: TileLayer): TileInfo {
   const tile = getTile(item, layer);
   const info = tile && Tiles[tile - 1];
   if (!info) {
-    throw new Error(
-      'Tile `' + item + '` on layer `' + layer + '` does not exist.',
-    );
+    throw new Error('Tile `' + item + '` on layer `' + layer + '` does not exist.');
   }
   return info;
 }
@@ -1814,10 +1780,7 @@ export function mapTiles<T>(fn: (tile: TileInfo) => T): Array<T> {
   return tiles.map(fn);
 }
 
-export function reduceTiles<T>(
-  fn: (accumulator: T, tile: TileInfo) => T,
-  initial: T,
-): T {
+export function reduceTiles<T>(fn: (accumulator: T, tile: TileInfo) => T, initial: T): T {
   return tiles.reduce(fn, initial);
 }
 

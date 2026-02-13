@@ -27,10 +27,7 @@ export default function animateSupply(
                   // This is order dependent as the `onComplete` callback in the last iteration
                   // might want to update the Map.
                   map: state.map.copy({
-                    units: state.map.units.set(
-                      position,
-                      state.map.units.get(position)!.refill(),
-                    ),
+                    units: state.map.units.set(position, state.map.units.get(position)!.refill()),
                   }),
                   ...animateSupply(state, remainingItems, onComplete),
                 }),

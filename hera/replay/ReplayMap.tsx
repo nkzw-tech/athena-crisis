@@ -6,12 +6,8 @@ import InfoBehavior from '../behavior/InfoBehavior.tsx';
 import useZoom from '../editor/hooks/useZoom.tsx';
 import ZoomButton from '../editor/lib/ZoomButton.tsx';
 import GameMap from '../GameMap.tsx';
-import useAnimationSpeed, {
-  AnimationSpeed,
-} from '../hooks/useAnimationSpeed.tsx';
-import useConfirmActionStyle, {
-  ConfirmActionStyle,
-} from '../hooks/useConfirmActionStyle.tsx';
+import useAnimationSpeed, { AnimationSpeed } from '../hooks/useAnimationSpeed.tsx';
+import useConfirmActionStyle, { ConfirmActionStyle } from '../hooks/useConfirmActionStyle.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import { PlayerDetail } from '../Types.tsx';

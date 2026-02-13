@@ -13,13 +13,7 @@ export default memo(function ActiveLink({
   to: Route;
 }) {
   const match = useMatch({ end: true, path: useResolvedPath(to).pathname });
-  return (
-    <Link
-      className={cx(match && highlightStyle, className)}
-      to={to}
-      {...props}
-    />
-  );
+  return <Link className={cx(match && highlightStyle, className)} to={to} {...props} />;
 });
 
 const highlightStyle = css`

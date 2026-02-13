@@ -15,10 +15,7 @@ const canBuildRadarStation = (map: MapData) => {
 
   for (let i = 0; i < map.map.length; i++) {
     const tile = getTileInfo(map.map[i]);
-    if (
-      tile === Lightning ||
-      canPlaceLightning(emptyMap, indexToVector(i, map.size.width))
-    ) {
+    if (tile === Lightning || canPlaceLightning(emptyMap, indexToVector(i, map.size.width))) {
       return true;
     }
   }
@@ -41,13 +38,11 @@ export default function canBuild(
   return !!(
     tile &&
     (isEditor || info.configuration.canBeCreated) &&
-    (info.canBeCreatedOn(tile) ||
-      (isEditor && info.editorCanBeCreatedOn(tile))) &&
+    (info.canBeCreatedOn(tile) || (isEditor && info.editorCanBeCreatedOn(tile))) &&
     !map.config.blocklistedBuildings.has(info.id) &&
     (info.configuration.limit === 0 ||
       map.buildings.filter(
-        (building) =>
-          building.id == info.id && map.matchesPlayer(building, player),
+        (building) => building.id == info.id && map.matchesPlayer(building, player),
       ).size < info.configuration.limit) &&
     !getBiomeBuildingRestrictions(map.config.biome).has(info)
   );

@@ -2,13 +2,7 @@ import { expect, test } from 'vitest';
 import { Barracks } from '../../info/Building.tsx';
 import { Skill } from '../../info/Skill.tsx';
 import { Sea } from '../../info/Tile.tsx';
-import {
-  Battleship,
-  Infantry,
-  Jeep,
-  PatrolShip,
-  Pioneer,
-} from '../../info/Unit.tsx';
+import { Battleship, Infantry, Jeep, PatrolShip, Pioneer } from '../../info/Unit.tsx';
 import vec from '../../map/vec.tsx';
 import MapData, { SizeVector } from '../../MapData.tsx';
 import canDeploy from '../canDeploy.tsx';
@@ -43,9 +37,7 @@ test('`canDeploy` ensures that units can only be created on valid fields', () =>
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(vecA, Barracks.create(1)),
     map: tileMap,
-    units: initialMap.units
-      .set(vecB, Pioneer.create(1))
-      .set(vecC, Jeep.create(1)),
+    units: initialMap.units.set(vecB, Pioneer.create(1)).set(vecC, Jeep.create(1)),
   });
 
   expect(canDeploy(map, Infantry, vecA, false)).toBeTruthy();

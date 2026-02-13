@@ -5,12 +5,7 @@ import {
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { SpawnPlatform } from '@deities/athena/info/Building.tsx';
-import {
-  Space,
-  Teleporter1,
-  Teleporter2,
-  Teleporter3,
-} from '@deities/athena/info/Tile.tsx';
+import { Space, Teleporter1, Teleporter2, Teleporter3 } from '@deities/athena/info/Tile.tsx';
 import {
   Flamethrower,
   Infantry,
@@ -86,62 +81,44 @@ test('swaps units in a clockwise rotation when entering a teleporter', async () 
     units: initialMap.units.set(v9, Flamethrower.create(1)),
   });
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    MoveAction(v9, v1),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [MoveAction(v9, v1)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,1) { fuel: 26, completed: false, path: [3,2 → 2,2 → 2,1 → 1,1] }
     Swap { source: 1,1, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 26, ammo: [ [ 1, 4 ] ], moved: true }, target: 5,1, targetUnit: null }"
   `);
 
-  const [, gameActionResponseB] = await executeGameActions(mapA, [
-    MoveAction(v9, v3),
-  ]);
+  const [, gameActionResponseB] = await executeGameActions(mapA, [MoveAction(v9, v3)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseB))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
     "Move (3,3 → 5,1) { fuel: 26, completed: false, path: [3,2 → 4,2 → 5,2 → 5,1] }
     Swap { source: 5,1, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 26, ammo: [ [ 1, 4 ] ], moved: true }, target: 5,5, targetUnit: null }"
   `);
 
-  const [, gameActionResponseC] = await executeGameActions(mapA, [
-    MoveAction(v9, v8),
-  ]);
+  const [, gameActionResponseC] = await executeGameActions(mapA, [MoveAction(v9, v8)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseC))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
     "Move (3,3 → 5,5) { fuel: 26, completed: false, path: [4,3 → 4,4 → 5,4 → 5,5] }
     Swap { source: 5,5, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 26, ammo: [ [ 1, 4 ] ], moved: true }, target: 1,5, targetUnit: null }"
   `);
 
-  const [, gameActionResponseD] = await executeGameActions(mapA, [
-    MoveAction(v9, v6),
-  ]);
+  const [, gameActionResponseD] = await executeGameActions(mapA, [MoveAction(v9, v6)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseD))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,5) { fuel: 26, completed: false, path: [3,4 → 3,5 → 2,5 → 1,5] }
     Swap { source: 1,5, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 26, ammo: [ [ 1, 4 ] ], moved: true }, target: 1,1, targetUnit: null }"
   `);
 
-  const [, gameActionResponseF] = await executeGameActions(mapA, [
-    MoveAction(v9, v2),
-  ]);
+  const [, gameActionResponseF] = await executeGameActions(mapA, [MoveAction(v9, v2)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseF))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseF)).toMatchInlineSnapshot(`
     "Move (3,3 → 3,1) { fuel: 28, completed: false, path: [3,2 → 3,1] }
     Swap { source: 3,1, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 28, ammo: [ [ 1, 4 ] ], moved: true }, target: 3,5, targetUnit: null }"
   `);
 
-  const [, gameActionResponseG] = await executeGameActions(mapA, [
-    MoveAction(v9, v7),
-  ]);
+  const [, gameActionResponseG] = await executeGameActions(mapA, [MoveAction(v9, v7)]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseG))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseG)).toMatchInlineSnapshot(`
     "Move (3,3 → 3,5) { fuel: 28, completed: false, path: [3,4 → 3,5] }
     Swap { source: 3,5, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 28, ammo: [ [ 1, 4 ] ], moved: true }, target: 3,1, targetUnit: null }"
   `);
@@ -167,8 +144,7 @@ test('swaps units in a clockwise rotation when entering a teleporter', async () 
     ],
   );
 
-  expect(snapshotEncodedActionResponse(gameActionResponseH))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseH)).toMatchInlineSnapshot(`
     "Move (3,3 → 1,1) { fuel: 26, completed: false, path: [3,2 → 2,2 → 2,1 → 1,1] }
     Swap { source: 1,1, sourceUnit: Flamethrower { id: 15, health: 100, player: 1, fuel: 26, ammo: [ [ 1, 4 ] ], moved: true }, target: 5,1, targetUnit: Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ] } }
     AttackUnit (5,1 → 4,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
@@ -221,10 +197,7 @@ test('does not crash the AI when accidentally teleporting away', async () => {
       Space.id,
       Space.id,
     ],
-    teams: updatePlayer(
-      initialMap.teams,
-      Bot.from(initialMap.getPlayer(2), 'AI'),
-    ),
+    teams: updatePlayer(initialMap.teams, Bot.from(initialMap.getPlayer(2), 'AI')),
     units: initialMap.units
       .set(v1, Infantry.create(1))
       .set(v2, Infantry.create(1))
@@ -232,12 +205,9 @@ test('does not crash the AI when accidentally teleporting away', async () => {
       .set(v4, Infantry.create(2)),
   });
 
-  const [, gameActionResponseA] = await executeGameActions(mapA, [
-    EndTurnAction(),
-  ]);
+  const [, gameActionResponseA] = await executeGameActions(mapA, [EndTurnAction()]);
 
-  expect(snapshotEncodedActionResponse(gameActionResponseA))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       Move (5,3 → 3,3) { fuel: 48, completed: false, path: [4,3 → 3,3] }
       Swap { source: 3,3, sourceUnit: Infantry { id: 2, health: 100, player: 2, fuel: 48, moved: true }, target: 1,3, targetUnit: null }

@@ -1,16 +1,10 @@
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
-import {
-  ActionResponse,
-  ReceiveRewardActionResponse,
-} from '@deities/apollo/ActionResponse.tsx';
+import { ActionResponse, ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import { GameTimerValue } from '@deities/apollo/lib/GameTimerValue.tsx';
-import {
-  GameActionResponse,
-  GameActionResponses,
-} from '@deities/apollo/Types.tsx';
+import { GameActionResponse, GameActionResponses } from '@deities/apollo/Types.tsx';
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
@@ -64,10 +58,7 @@ export type ClientMapMessage = MapMessage<Vector> &
     viewerLiked: boolean;
   }>;
 
-export type PartialClientMapMessage = Pick<
-  ClientMapMessage,
-  'id' | 'isValuable' | 'viewerLiked'
->;
+export type PartialClientMapMessage = Pick<ClientMapMessage, 'id' | 'isValuable' | 'viewerLiked'>;
 
 export type MessageMap = ReadonlyMap<Vector, ClientMapMessage>;
 
@@ -271,24 +262,16 @@ export type GameInfoState =
   | PlayerEffectInfoState;
 
 export type Actions = Readonly<{
-  action: (
-    state: State,
-    action: Action,
-  ) => [Promise<GameActionResponse>, MapData, ActionResponse];
+  action: (state: State, action: Action) => [Promise<GameActionResponse>, MapData, ActionResponse];
   clearTimer: ClearTimerFunction;
   optimisticAction: (state: State, action: Action) => ActionResponse;
   pauseReplay: () => Promise<void>;
-  processGameActionResponse: (
-    gameActionResponse: GameActionResponse,
-  ) => Promise<State>;
+  processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
   requestFrame: RequestFrameFunction;
   resetPosition: () => void;
   resumeReplay: () => Promise<void>;
   scheduleTimer: TimerFunction;
-  scrollIntoView: (
-    vectors: ReadonlyArray<Vector>,
-    force?: true,
-  ) => Promise<void>;
+  scrollIntoView: (vectors: ReadonlyArray<Vector>, force?: true) => Promise<void>;
   setEditorState: SetEditorStateFunction;
   showGameInfo: (gameInfoState: GameInfoState) => void;
   throwError: (error: Error) => void;

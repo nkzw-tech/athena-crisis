@@ -62,10 +62,7 @@ import { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
 import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
 
-export type MutateActionResponseFn = (
-  map: MapData,
-  action: ActionResponse,
-) => ActionResponse;
+export type MutateActionResponseFn = (map: MapData, action: ActionResponse) => ActionResponse;
 
 export type MoveAction = Readonly<{
   complete?: boolean;
@@ -276,10 +273,7 @@ function move(
     if (canLoad(map, unitB, unitA, to)) {
       return { from, fuel: unitA.fuel - cost, path, to, type: 'Move' } as const;
     }
-  } else if (
-    !map.buildings.has(to) ||
-    infoA.hasAbility(Ability.AccessBuildings)
-  ) {
+  } else if (!map.buildings.has(to) || infoA.hasAbility(Ability.AccessBuildings)) {
     return {
       ...(blockedBy || complete ? { completed: true } : null),
       from,
@@ -318,10 +312,8 @@ function _attackUnit(
         unitA,
         unitB,
         weapon,
-        tileInfoA.configuration.cover +
-          (map.buildings.has(vectorA) ? BuildingCover : 0),
-        tileInfoB.configuration.cover +
-          (map.buildings.has(vectorB) ? BuildingCover : 0),
+        tileInfoA.configuration.cover + (map.buildings.has(vectorA) ? BuildingCover : 0),
+        tileInfoB.configuration.cover + (map.buildings.has(vectorB) ? BuildingCover : 0),
         attackStatusEffect,
         getDefenseStatusEffect(map, unitB, tileInfoB),
         flatDamageStatusEffect,
@@ -364,8 +356,7 @@ function _attackBuilding(
       unitA,
       buildingB,
       weapon,
-      tileInfoA.configuration.cover +
-        (map.buildings.has(vectorA) ? BuildingCover : 0),
+      tileInfoA.configuration.cover + (map.buildings.has(vectorA) ? BuildingCover : 0),
       tileInfoB.configuration.cover + BuildingCover,
       attackStatusEffect,
       getDefenseStatusEffect(map, buildingB, tileInfoB),
@@ -418,11 +409,7 @@ function _counterAttack(
 const getChargeModifier = (player: Player) =>
   1 + (player.skills.has(Skill.Charge) ? ChargeSkillChargeMultiplier : 0);
 
-function attackUnit(
-  map: MapData,
-  vision: VisionT,
-  { from, to }: AttackUnitAction,
-) {
+function attackUnit(map: MapData, vision: VisionT, { from, to }: AttackUnitAction) {
   const unitA = map.units.get(from);
   const unitB = map.units.get(to);
   const playerA = unitA && map.getPlayer(unitA);
@@ -442,10 +429,7 @@ function attackUnit(
     }
 
     let [a, b] = _attackUnit(map, unitA, unitB, weaponA, from, to);
-    const counter =
-      unitB.player > 0
-        ? _counterAttack(map, a, b, from, to, unitB.health)
-        : null;
+    const counter = unitB.player > 0 ? _counterAttack(map, a, b, from, to, unitB.health) : null;
     if (counter) {
       [a, b] = counter;
     }
@@ -459,8 +443,7 @@ function attackUnit(
         (counter ? getChargeValue(unitA, playerA, a, chargeModifierA) : 0),
       chargeB:
         unitB.player > 0
-          ? playerB.charge +
-            getChargeValue(unitB, playerB, b, getChargeModifier(playerB))
+          ? playerB.charge + getChargeValue(unitB, playerB, b, getChargeModifier(playerB))
           : undefined,
       from,
       hasCounterAttack: !!counter,
@@ -475,11 +458,7 @@ function attackUnit(
   return null;
 }
 
-function attackBuilding(
-  map: MapData,
-  vision: VisionT,
-  { from, to }: AttackBuildingAction,
-) {
+function attackBuilding(map: MapData, vision: VisionT, { from, to }: AttackBuildingAction) {
   const unitA = map.units.get(from);
   const buildingB = map.buildings.get(to);
   if (!unitA || !buildingB) {
@@ -516,24 +495,16 @@ function attackBuilding(
     const playerC = unitC ? map.getPlayer(unitC) : undefined;
     const chargeB =
       buildingB.player > 0
-        ? playerB.charge +
-          getChargeValue(buildingB, playerB, b, getChargeModifier(playerB))
+        ? playerB.charge + getChargeValue(buildingB, playerB, b, getChargeModifier(playerB))
         : undefined;
     return {
       building: b.isDead() ? undefined : b,
-      chargeA: c
-        ? playerA.charge + getChargeValue(unitA, playerA, a, 0.5)
-        : undefined,
+      chargeA: c ? playerA.charge + getChargeValue(unitA, playerA, a, 0.5) : undefined,
       chargeB,
       chargeC:
         playerC && unitC
           ? (playerC.id === playerB.id ? chargeB || 0 : playerC.charge) +
-            getChargeValue(
-              unitC,
-              playerC,
-              c || unitC.setHealth(0),
-              getChargeModifier(playerC),
-            )
+            getChargeValue(unitC, playerC, c || unitC.setHealth(0), getChargeModifier(playerC))
           : undefined,
       from,
       hasCounterAttack: !!c,
@@ -577,8 +548,7 @@ function capture(map: MapData, { from }: CaptureAction) {
 
 function supply(map: MapData, vision: VisionT, { from }: SupplyAction) {
   const unit = map.units.get(from);
-  const unitsToSupply =
-    unit && getUnitsToRefill(map, vision, map.getPlayer(unit), from);
+  const unitsToSupply = unit && getUnitsToRefill(map, vision, map.getPlayer(unit), from);
   if (
     unit &&
     map.isCurrentPlayer(unit) &&
@@ -591,11 +561,7 @@ function supply(map: MapData, vision: VisionT, { from }: SupplyAction) {
   return null;
 }
 
-function createUnit(
-  map: MapData,
-  { from, id, to }: CreateUnitAction,
-  isEffect: boolean,
-) {
+function createUnit(map: MapData, { from, id, to }: CreateUnitAction, isEffect: boolean) {
   const building = map.buildings.get(from);
   const player = building && map.getPlayer(building);
   const unit = map.units.get(from);
@@ -673,8 +639,7 @@ function createBuilding(map: MapData, { from, id }: CreateBuildingAction) {
     unit.info.hasAbility(Ability.CreateBuildings) &&
     player.funds >= infoB.getCostFor(player) &&
     canBuild(map, infoB, unit.player, from) &&
-    (infoB.canBuildUnits() ||
-      hasUnitsOrProductionBuildings(map, player, 'with-attack'))
+    (infoB.canBuildUnits() || hasUnitsOrProductionBuildings(map, player, 'with-attack'))
   ) {
     return {
       building: infoB.create(unit.player, { label: unit.label }).complete(),
@@ -710,8 +675,7 @@ function canFold(map: MapData, position: Vector, type: 'fold' | 'unfold') {
     map.isCurrentPlayer(unit) &&
     !unit.isCompleted() &&
     unit.info.hasAbility(Ability.Unfold) &&
-    ((type === 'fold' && unit.isUnfolded()) ||
-      (type === 'unfold' && !unit.isUnfolded()))
+    ((type === 'fold' && unit.isUnfolded()) || (type === 'unfold' && !unit.isUnfolded()))
   );
 }
 
@@ -720,9 +684,7 @@ function fold(map: MapData, { from }: FoldAction) {
 }
 
 function unfold(map: MapData, { from }: UnfoldAction) {
-  return canFold(map, from, 'unfold')
-    ? ({ from, type: 'Unfold' } as const)
-    : null;
+  return canFold(map, from, 'unfold') ? ({ from, type: 'Unfold' } as const) : null;
 }
 
 function completeUnit(map: MapData, { from }: CompleteUnitAction) {
@@ -851,15 +813,12 @@ function spawnEffect(
   map: MapData,
   { buildings, player: dynamicPlayer, teams, units }: SpawnEffectAction,
 ) {
-  const player =
-    dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
+  const player = dynamicPlayer != null ? resolveDynamicPlayerID(map, dynamicPlayer) : null;
   let newBuildings = ImmutableMap<Vector, Building>();
   let newUnits = ImmutableMap<Vector, Unit>();
 
   for (const [vector, unit] of units) {
-    const deployVector = vector
-      .expand()
-      .find((vector) => canDeploy(map, unit.info, vector, true));
+    const deployVector = vector.expand().find((vector) => canDeploy(map, unit.info, vector, true));
 
     if (deployVector) {
       let newUnit = player != null ? unit.setPlayer(player) : unit;
@@ -882,9 +841,7 @@ function spawnEffect(
     const futureMap = map.copy({ units: map.units.merge(newUnits) });
 
     for (const [vector, building] of buildings) {
-      if (
-        couldSpawnBuilding(futureMap, vector, building.info, building.player)
-      ) {
+      if (couldSpawnBuilding(futureMap, vector, building.info, building.player)) {
         newBuildings = newBuildings.set(vector, building);
       }
     }
@@ -901,10 +858,7 @@ function spawnEffect(
     : null;
 }
 
-function characterMessageEffect(
-  map: MapData,
-  action: CharacterMessageEffectAction,
-) {
+function characterMessageEffect(map: MapData, action: CharacterMessageEffectAction) {
   return { ...action, type: 'CharacterMessage' } as const;
 }
 
@@ -960,11 +914,7 @@ function activateCrystal(
   }
 
   const player = map.getCurrentPlayer();
-  if (
-    player.isHumanPlayer() &&
-    player.crystal === null &&
-    crystal === Crystal.Power
-  ) {
+  if (player.isHumanPlayer() && player.crystal === null && crystal === Crystal.Power) {
     return {
       crystal,
       hq: hasHQ(map, player) ? undefined : pickNewHQ(map, player),
@@ -976,10 +926,7 @@ function activateCrystal(
   return null;
 }
 
-function increaseCharge(
-  map: MapData,
-  { charges, player }: IncreaseChargeEffectAction,
-) {
+function increaseCharge(map: MapData, { charges, player }: IncreaseChargeEffectAction) {
   if (charges > 0 && charges <= MaxCharges) {
     return {
       charges,
@@ -990,10 +937,7 @@ function increaseCharge(
   return null;
 }
 
-function increaseFunds(
-  map: MapData,
-  { funds, player }: IncreaseFundsEffectAction,
-) {
+function increaseFunds(map: MapData, { funds, player }: IncreaseFundsEffectAction) {
   if (funds > 0 && funds <= Number.MAX_SAFE_INTEGER) {
     return {
       funds,
@@ -1086,10 +1030,7 @@ function executeAction(
   }
 
   return actionResponse
-    ? ([
-        actionResponse,
-        applyActionResponse(map, vision, actionResponse),
-      ] as const)
+    ? ([actionResponse, applyActionResponse(map, vision, actionResponse)] as const)
     : null;
 }
 

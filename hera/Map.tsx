@@ -34,12 +34,7 @@ import {
   WeaponMap,
 } from './i18n/EntityMap.tsx';
 import injectTranslation from './i18n/injectTranslation.tsx';
-import {
-  Animation,
-  Animations,
-  isBuildingAnimation,
-  isUnitAnimation,
-} from './MapAnimations.tsx';
+import { Animation, Animations, isBuildingAnimation, isUnitAnimation } from './MapAnimations.tsx';
 import { getMessagePlayer } from './message/MapMessageContainer.tsx';
 import MessageTile from './MessageTile.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
@@ -58,21 +53,12 @@ import ErrorOverlay, { SpriteLoadError } from './ui/ErrorOverlay.tsx';
 import Unit from './Unit.tsx';
 
 injectTranslation(BuildingInfo, BuildingMap);
-injectTranslation(BuildingInfo, BuildingDescriptionMap, [
-  'description',
-  'internalDescription',
-]);
+injectTranslation(BuildingInfo, BuildingDescriptionMap, ['description', 'internalDescription']);
 injectTranslation(DecoratorInfo, DecoratorMap);
 injectTranslation(TileInfo, TileMap);
-injectTranslation(TileInfo, TileDescriptionMap, [
-  'description',
-  'internalDescription',
-]);
+injectTranslation(TileInfo, TileDescriptionMap, ['description', 'internalDescription']);
 injectTranslation(UnitInfo, UnitMap);
-injectTranslation(UnitInfo, UnitDescriptionMap, [
-  'description',
-  'internalDescription',
-]);
+injectTranslation(UnitInfo, UnitDescriptionMap, ['description', 'internalDescription']);
 injectTranslation(UnitInfo, UnitCharacterDescriptionMap, [
   'characterDescription',
   'internalCharacterDescription',
@@ -135,8 +121,7 @@ const MapComponent = ({
   const activeUnitTypes = map.getActiveUnitTypes();
 
   const canAttackEntity = (entity: Entity) =>
-    selectedUnit?.getAttackWeapon(entity) &&
-    map.isOpponent(selectedUnit, entity);
+    selectedUnit?.getAttackWeapon(entity) && map.isOpponent(selectedUnit, entity);
 
   return (
     <div className={cx(pixelatedStyle, paused && pausedStyle, className)}>
@@ -177,30 +162,21 @@ const MapComponent = ({
             if (building) {
               const up = vector.up();
               const hasUnitAbove =
-                (building.info.sprite.size === 'medium' ||
-                  building.info.sprite.size === 'tall') &&
+                (building.info.sprite.size === 'medium' || building.info.sprite.size === 'tall') &&
                 vision.isVisible(map, up) &&
                 (map.units.has(up) || extraUnits?.has(up));
               list.push(
                 <Building
                   absolute
-                  animation={
-                    isBuildingAnimation(animation) ? animation : undefined
-                  }
+                  animation={isBuildingAnimation(animation) ? animation : undefined}
                   animationConfig={animationConfig}
                   biome={map.config.biome}
                   building={building}
-                  fade={
-                    hasUnitAbove ||
-                    (radius && hasRadius && radius.fields.has(up))
-                  }
+                  fade={hasUnitAbove || (radius && hasRadius && radius.fields.has(up))}
                   highlight={!!(isSelected && selectedBuilding)}
                   isVisible={isVisible}
                   key={`b${vectorKey}`}
-                  maybeOutline={
-                    outline ||
-                    (hasRadius && radius?.type === RadiusType.Attackable)
-                  }
+                  maybeOutline={outline || (hasRadius && radius?.type === RadiusType.Attackable)}
                   outline={
                     !!(
                       outline &&
@@ -234,20 +210,14 @@ const MapComponent = ({
               list.push(
                 <MessageTile
                   absolute
-                  animation={
-                    animation?.type === 'new-message' ? animation : undefined
-                  }
+                  animation={animation?.type === 'new-message' ? animation : undefined}
                   distance={position ? vector.distance(position) : null}
                   isValuable={message.isValuable}
                   key={`m-${vectorKey}`}
                   onAnimationComplete={onAnimationComplete}
                   player={
                     playerDetails
-                      ? getMessagePlayer(
-                          message.user,
-                          message.player,
-                          playerDetails,
-                        )
+                      ? getMessagePlayer(message.user, message.player, playerDetails)
                       : message.player
                   }
                   position={vector}
@@ -281,17 +251,10 @@ const MapComponent = ({
 
             if (
               unit &&
-              (isVisible ||
-                animation?.type === 'move' ||
-                animation?.type === 'unitExplosion')
+              (isVisible || animation?.type === 'move' || animation?.type === 'unitExplosion')
             ) {
-              const outlineUnit =
-                outline && (!radius.focus || radius.focus === 'unit');
-              const power = matchesActiveType(
-                activeUnitTypes.get(unit.player),
-                unit,
-                vector,
-              );
+              const outlineUnit = outline && (!radius.focus || radius.focus === 'unit');
+              const power = matchesActiveType(activeUnitTypes.get(unit.player), unit, vector);
               list.push(
                 <Unit
                   absolute
@@ -302,11 +265,7 @@ const MapComponent = ({
                   customSprite={playerDetails
                     ?.get(unit.player)
                     ?.equippedUnitCustomizations.get(unit.id)}
-                  direction={
-                    animation?.type === 'explosion'
-                      ? animation.direction
-                      : undefined
-                  }
+                  direction={animation?.type === 'explosion' ? animation.direction : undefined}
                   firstPlayerID={map.getFirstPlayerID()}
                   getLayer={getLayer}
                   highlightStyle={
@@ -388,8 +347,7 @@ const pausedStyle = css`
 
 // Keep images in memory forever.
 const imageCache = [];
-let loaderPromise: Promise<{ default: typeof MemoizedMapComponent }> | null =
-  null;
+let loaderPromise: Promise<{ default: typeof MemoizedMapComponent }> | null = null;
 const load = () => {
   return (
     loaderPromise ||

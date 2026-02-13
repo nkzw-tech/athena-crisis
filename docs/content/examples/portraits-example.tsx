@@ -1,10 +1,5 @@
 import { preparePortraits } from '@deities/art/Sprites.tsx';
-import {
-  BazookaBear,
-  Flamethrower,
-  Jetpack,
-  Sniper,
-} from '@deities/athena/info/Unit.tsx';
+import { BazookaBear, Flamethrower, Jetpack, Sniper } from '@deities/athena/info/Unit.tsx';
 import Portrait from '@deities/hera/character/Portrait.tsx';
 import Stack from '@nkzw/stack';
 

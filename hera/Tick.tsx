@@ -1,7 +1,4 @@
-import {
-  AnimationSpeed,
-  type AnimationConfig,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationSpeed, type AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { ReactNode } from 'react';
@@ -22,12 +19,8 @@ export default function Tick({
       className={cx(animationStyle, className)}
       style={{
         animationPlayState: paused ? 'paused' : 'running',
-        [cssVar('animation-duration-30')]: `calc(${applyVar(
-          'animation-duration',
-        )} * 0.3)`,
-        [cssVar('animation-duration-70')]: `calc(${applyVar(
-          'animation-duration',
-        )} * 0.7)`,
+        [cssVar('animation-duration-30')]: `calc(${applyVar('animation-duration')} * 0.3)`,
+        [cssVar('animation-duration-70')]: `calc(${applyVar('animation-duration')} * 0.7)`,
         [cssVar('animation-duration')]: `${AnimationDuration}ms`,
         [cssVar('unit-animation-step')]: `${UnitAnimationStep}ms`,
         [cssVar('unit-move-duration')]: `${UnitMoveDuration}ms`,

@@ -27,9 +27,7 @@ const initialMap = withModifiers(
     config: {
       fog: true,
     },
-    map: [
-      1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1,
-    ],
+    map: [1, 8, 4, 8, 2, 8, 4, 4, 4, 8, 4, 4, 3, 4, 4, 8, 4, 4, 4, 8, 2, 8, 4, 8, 1],
     size: { height: 5, width: 5 },
     teams: [
       {
@@ -175,8 +173,7 @@ test('create building and create unit actions', async () => {
     EndTurn { current: { funds: 8450, player: 2 }, next: { funds: 8675, player: 1 }, round: 7, rotatePlayers: null, supply: null, miss: null }"
   `);
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 10000, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       CreateBuilding (5,2) { building: Barracks { id: 12, health: 100, player: 0 }, free: false }
       CreateBuilding (2,5) { building: Barracks { id: 12, health: 100, player: 0 }, free: false }

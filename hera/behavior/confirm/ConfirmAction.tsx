@@ -1,9 +1,6 @@
 import Vector from '@deities/athena/map/Vector.tsx';
 import { State, StateLike, StateWithActions } from '../../Types.tsx';
-import ActionWheel, {
-  ActionButton,
-  CancelActionButton,
-} from '../../ui/ActionWheel.tsx';
+import ActionWheel, { ActionButton, CancelActionButton } from '../../ui/ActionWheel.tsx';
 
 export type ConfirmProps = Readonly<{
   icon: 'attack' | 'heal' | 'move' | 'move-and-wait';
@@ -13,9 +10,7 @@ export type ConfirmProps = Readonly<{
 }>;
 
 const MoveAndWait = () => (
-  <fbt desc="Move & Wait button label (as short as possible, ideally one word)">
-    Move & Wait
-  </fbt>
+  <fbt desc="Move & Wait button label (as short as possible, ideally one word)">Move & Wait</fbt>
 );
 
 export default function ConfirmAction({
@@ -36,27 +31,18 @@ export default function ConfirmAction({
       tileSize={tileSize}
       zIndex={zIndex}
     >
-      <CancelActionButton
-        actions={actions}
-        navigationDirection={navigationDirection}
-      />
+      <CancelActionButton actions={actions} navigationDirection={navigationDirection} />
       <ActionButton
         icon={icon === 'move-and-wait' ? 'complete' : icon}
         label={
           icon === 'move-and-wait' ? (
             <MoveAndWait />
           ) : icon === 'attack' ? (
-            <fbt desc="Attack button label (as short as possible, ideally one word)">
-              Attack
-            </fbt>
+            <fbt desc="Attack button label (as short as possible, ideally one word)">Attack</fbt>
           ) : icon === 'heal' ? (
-            <fbt desc="Heal button label (as short as possible, ideally one word)">
-              Heal
-            </fbt>
+            <fbt desc="Heal button label (as short as possible, ideally one word)">Heal</fbt>
           ) : (
-            <fbt desc="Move button label (as short as possible, ideally one word)">
-              Move
-            </fbt>
+            <fbt desc="Move button label (as short as possible, ideally one word)">Move</fbt>
           )
         }
         navigationDirection={navigationDirection}

@@ -27,8 +27,7 @@ type SpawnConfiguration = Readonly<{
 
 const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
   [Skill.BuyUnitAlien]: {
-    matchBuilding: (building) =>
-      building.id === Barracks.id || building.id === HQ.id,
+    matchBuilding: (building) => building.id === Barracks.id || building.id === HQ.id,
     unitType: Alien,
   },
   [Skill.BuyUnitBazookaBear]: {
@@ -36,8 +35,7 @@ const spawnConfiguration: Partial<Record<Skill, SpawnConfiguration>> = {
     unitType: BazookaBear,
   },
   [Skill.BuyUnitBear]: {
-    matchBuilding: (building) =>
-      building.id === Shelter.id || building.id === HQ.id,
+    matchBuilding: (building) => building.id === Shelter.id || building.id === HQ.id,
     unitType: Bear,
   },
   [Skill.DragonSaboteur]: {
@@ -75,9 +73,7 @@ const getDeployVector = (
       (!unit || map.matchesTeam(unit, building))) ||
     (unit && matchUnit?.(unit) && map.matchesPlayer(unit, player))
   ) {
-    const deployVector = vector
-      .expand()
-      .find((vector) => canDeploy(map, unitType, vector, true));
+    const deployVector = vector.expand().find((vector) => canDeploy(map, unitType, vector, true));
     if (deployVector) {
       return deployVector;
     }
@@ -97,9 +93,7 @@ export default function powerSpawnUnits(
   const configuration = spawnConfiguration[skill];
   const { max, unitType } = configuration;
   const vectors = new Set([
-    ...map.buildings
-      .map((building) => map.matchesPlayer(building, player))
-      .keys(),
+    ...map.buildings.map((building) => map.matchesPlayer(building, player)).keys(),
     ...map.units.map((unit) => map.matchesPlayer(unit, player)).keys(),
   ]);
   let newUnits = ImmutableMap<Vector, Unit>();

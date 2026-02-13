@@ -39,9 +39,7 @@ export default function AddActionButton({
               })
             }
           >
-            <fbt desc="Button to add a new spawn action in the map editor">
-              Spawn Action
-            </fbt>
+            <fbt desc="Button to add a new spawn action in the map editor">Spawn Action</fbt>
           </InlineLink>
           <InlineLink
             onClick={() =>

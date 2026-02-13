@@ -6,8 +6,7 @@ export default function generateFrames(
   property: 'vertical' | 'horizontal',
 ): ReadonlyArray<CSSProperties> {
   const frames: Array<CSSProperties> = [];
-  const propertyName =
-    property === 'vertical' ? 'backgroundPositionY' : 'backgroundPositionX';
+  const propertyName = property === 'vertical' ? 'backgroundPositionY' : 'backgroundPositionX';
   for (let i = 0; i < frameCount; i++) {
     frames.push({
       [propertyName]: `${-i * spriteSize}px`,

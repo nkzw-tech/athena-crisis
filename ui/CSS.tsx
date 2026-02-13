@@ -7,28 +7,11 @@ import cssVar, { applyVar, initializeCSSVariables } from './cssVar.tsx';
 import getColor from './getColor.tsx';
 import pixelBorder from './pixelBorder.tsx';
 
-const koreanOrChinese = [
-  'AthenaLatin',
-  'ui-sans-serif',
-  'system-ui',
-  'sans-serif',
-];
-const russianOrUkrainian = [
-  'Athena',
-  'PressStart2P',
-  'ui-sans-serif',
-  'system-ui',
-  'sans-serif',
-];
+const koreanOrChinese = ['AthenaLatin', 'ui-sans-serif', 'system-ui', 'sans-serif'];
+const russianOrUkrainian = ['Athena', 'PressStart2P', 'ui-sans-serif', 'system-ui', 'sans-serif'];
 
 export const Fonts = {
-  ja_JP: [
-    'Athena',
-    'MadouFutoMaru',
-    'ui-sans-serif',
-    'system-ui',
-    'sans-serif',
-  ],
+  ja_JP: ['Athena', 'MadouFutoMaru', 'ui-sans-serif', 'system-ui', 'sans-serif'],
   ko_KR: koreanOrChinese,
   ru_RU: russianOrUkrainian,
   uk_UA: russianOrUkrainian,

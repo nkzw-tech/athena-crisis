@@ -26,17 +26,13 @@ export default async function receiveBiomeAnimation(
   actionResponse: ReceiveRewardActionResponse,
 ): Promise<State> {
   const { player } = actionResponse;
-  const biome =
-    actionResponse.reward.type === 'Biome' ? actionResponse.reward.biome : null;
+  const biome = actionResponse.reward.type === 'Biome' ? actionResponse.reward.biome : null;
 
   if (biome == null) {
     return state;
   }
 
-  const map = convertBiome(
-    withModifiers(generateRandomMap(new SizeVector(5, 5))),
-    biome,
-  );
+  const map = convertBiome(withModifiers(generateRandomMap(new SizeVector(5, 5))), biome);
   const tiles = [
     ...map.reduceEachField(
       (field, vector) => field.add(map.getTileInfo(vector)),
@@ -64,16 +60,12 @@ export default async function receiveBiomeAnimation(
                 key={variant}
                 style={{ position: 'relative' }}
                 transition={{
-                  delay:
-                    duration * 5 * (variant === 0 ? 1 : variant === 1 ? 0 : 2),
+                  delay: duration * 5 * (variant === 0 ? 1 : variant === 1 ? 0 : 2),
                   duration: duration * 10,
                   ease: [0.34, 1.56, 0.64, 1],
                 }}
               >
-                <InlineTileList
-                  biome={biome}
-                  tiles={[tiles[variant] || Plain]}
-                />
+                <InlineTileList biome={biome} tiles={[tiles[variant] || Plain]} />
               </motion.div>
             ))}
           </Stack>

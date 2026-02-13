@@ -39,14 +39,7 @@ export default function explodeUnits(
                       await scrollIntoView([position]);
                     }
 
-                    update(
-                      explodeUnits(
-                        actions,
-                        await update(null),
-                        remainingUnits,
-                        onComplete,
-                      ),
-                    );
+                    update(explodeUnits(actions, await update(null), remainingUnits, onComplete));
                   }, animationConfig.AnimationDuration);
 
                   return state;

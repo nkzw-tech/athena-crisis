@@ -2,10 +2,7 @@ import { getSkillAttackStatusEffects, Skill } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { Ability } from '../info/Unit.tsx';
 import { Crystal, CrystalAttackEffect } from '../invasions/Crystal.tsx';
-import {
-  LeaderStatusEffect,
-  MoraleStatusEffect,
-} from '../map/Configuration.tsx';
+import { LeaderStatusEffect, MoraleStatusEffect } from '../map/Configuration.tsx';
 import Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
@@ -32,19 +29,14 @@ export default function getAttackStatusEffect(
   if (vector) {
     for (const adjacent of vector.adjacent()) {
       const unit = map.units.get(adjacent);
-      if (
-        unit?.info.hasAbility(Ability.Morale) &&
-        map.matchesPlayer(unit, player)
-      ) {
+      if (unit?.info.hasAbility(Ability.Morale) && map.matchesPlayer(unit, player)) {
         unitEffect += MoraleStatusEffect;
       }
     }
   }
 
   const crystalEffect =
-    player.isHumanPlayer() && player.crystal === Crystal.Power
-      ? CrystalAttackEffect
-      : 0;
+    player.isHumanPlayer() && player.crystal === Crystal.Power ? CrystalAttackEffect : 0;
 
   return [
     Math.max(

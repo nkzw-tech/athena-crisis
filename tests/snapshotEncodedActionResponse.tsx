@@ -8,9 +8,7 @@ export default function snapshotEncodedActionResponse(
   return encodedGameActionResponse[1]
     ? formatActionResponses(
         decodeActionResponses(
-          encodedGameActionResponse[1].map(
-            ([actionResponse]) => actionResponse,
-          ),
+          encodedGameActionResponse[1].map(([actionResponse]) => actionResponse),
         ),
         {
           colors: false,

@@ -7,8 +7,7 @@ import MapData from '../../MapData.tsx';
 import determineUnitsToCreate from '../determineUnitsToCreate.tsx';
 import withModifiers from '../withModifiers.tsx';
 
-const format = (unitInfos: ReadonlyArray<UnitInfo>) =>
-  unitInfos.map((info) => info.name).sort();
+const format = (unitInfos: ReadonlyArray<UnitInfo>) => unitInfos.map((info) => info.name).sort();
 
 const size = 20;
 const map = withModifiers(
@@ -37,17 +36,8 @@ const getPlayerUnits = (map: MapData) => [
 ];
 
 test('`determineUnitsToCreate` builds Pioneers at the beginning of a game with Construction Sites', () => {
-  expect(
-    format(
-      determineUnitsToCreate(
-        map,
-        player1,
-        getPlayerUnits(map),
-        barrackUnits,
-        options,
-      ),
-    ),
-  ).toMatchInlineSnapshot(`
+  expect(format(determineUnitsToCreate(map, player1, getPlayerUnits(map), barrackUnits, options)))
+    .toMatchInlineSnapshot(`
     [
       "Flamethrower",
       "Infantry",
@@ -170,9 +160,7 @@ test('`determineUnitsToCreate` does not build supply units when there are units 
 test('`determineUnitsToCreate` builds transporters early in the game', () => {
   const currentMap = map.copy({
     round: 3,
-    units: map.units
-      .set(vec(1, 1), Infantry.create(1))
-      .set(vec(2, 1), Infantry.create(1)),
+    units: map.units.set(vec(1, 1), Infantry.create(1)).set(vec(2, 1), Infantry.create(1)),
   });
   expect(
     format(
@@ -260,17 +248,8 @@ test('`determineUnitsToCreate` does not build transporters all the time later in
       .set(vec(3, 1), Infantry.create(1)),
   });
 
-  expect(
-    format(
-      determineUnitsToCreate(
-        map1,
-        player1,
-        getPlayerUnits(map1),
-        factoryUnits,
-        options,
-      ),
-    ),
-  ).toMatchInlineSnapshot(`
+  expect(format(determineUnitsToCreate(map1, player1, getPlayerUnits(map1), factoryUnits, options)))
+    .toMatchInlineSnapshot(`
     [
       "APU",
       "Anti Air",
@@ -285,17 +264,8 @@ test('`determineUnitsToCreate` does not build transporters all the time later in
     ]
   `);
 
-  expect(
-    format(
-      determineUnitsToCreate(
-        map2,
-        player1,
-        getPlayerUnits(map2),
-        factoryUnits,
-        options,
-      ),
-    ),
-  ).toMatchInlineSnapshot(`
+  expect(format(determineUnitsToCreate(map2, player1, getPlayerUnits(map2), factoryUnits, options)))
+    .toMatchInlineSnapshot(`
     [
       "APU",
       "Anti Air",
@@ -310,34 +280,16 @@ test('`determineUnitsToCreate` does not build transporters all the time later in
     ]
   `);
 
-  expect(
-    format(
-      determineUnitsToCreate(
-        map3,
-        player1,
-        getPlayerUnits(map3),
-        factoryUnits,
-        options,
-      ),
-    ),
-  ).toMatchInlineSnapshot(`
+  expect(format(determineUnitsToCreate(map3, player1, getPlayerUnits(map3), factoryUnits, options)))
+    .toMatchInlineSnapshot(`
     [
       "Jeep",
       "Transport Train",
     ]
   `);
 
-  expect(
-    format(
-      determineUnitsToCreate(
-        map4,
-        player1,
-        getPlayerUnits(map4),
-        factoryUnits,
-        options,
-      ),
-    ),
-  ).toMatchInlineSnapshot(`
+  expect(format(determineUnitsToCreate(map4, player1, getPlayerUnits(map4), factoryUnits, options)))
+    .toMatchInlineSnapshot(`
     [
       "APU",
       "Anti Air",

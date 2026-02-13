@@ -31,8 +31,7 @@ const RUNS = 10;
 
 const Rounds = ({ results }: { results: ReadonlyArray<Result> }) => (
   <>
-    <fbt desc="Label for rounds">Rounds:</fbt>{' '}
-    {results.map(({ turns }) => turns).join(', ')}
+    <fbt desc="Label for rounds">Rounds:</fbt> {results.map(({ turns }) => turns).join(', ')}
   </>
 );
 
@@ -53,9 +52,7 @@ export default function EvaluationPanel({
       toTeamArray(dropInactivePlayers(state.map).teams),
     );
 
-    return currentMap
-      ? startGame(updateActivePlayers(currentMap, createBotWithName))
-      : null;
+    return currentMap ? startGame(updateActivePlayers(currentMap, createBotWithName)) : null;
   }, [state.map]);
 
   const onAction = useClientGameAction(game, setGame);
@@ -98,10 +95,7 @@ export default function EvaluationPanel({
               ...results,
               {
                 actionResponse,
-                turns:
-                  maybeEndTurnResponse?.type === 'EndTurn'
-                    ? maybeEndTurnResponse.round
-                    : 0,
+                turns: maybeEndTurnResponse?.type === 'EndTurn' ? maybeEndTurnResponse.round : 0,
               },
             ]);
           }
@@ -118,9 +112,8 @@ export default function EvaluationPanel({
   }, [game, onAction, runs, continueEvaluation]);
 
   const resultsByPlayer = results?.length
-    ? sortBy(
-        [...groupBy(results, ({ actionResponse: { toPlayer } }) => toPlayer)],
-        ([player]) => (player ? player : Number.POSITIVE_INFINITY),
+    ? sortBy([...groupBy(results, ({ actionResponse: { toPlayer } }) => toPlayer)], ([player]) =>
+        player ? player : Number.POSITIVE_INFINITY,
       )
     : null;
   const isEvaluating = !!currentMap && runs > 0;
@@ -143,17 +136,10 @@ export default function EvaluationPanel({
                       </Stack>
                       <VStack between gap wrap>
                         <Stack gap wrap>
-                          <fbt desc="Label for games that ended in a draw">
-                            Draw
-                          </fbt>
-                          :{' '}
+                          <fbt desc="Label for games that ended in a draw">Draw</fbt>:{' '}
                           <fbt desc="Number of draws">
                             <fbt:param name="draws">{results.length}</fbt:param>{' '}
-                            <fbt:plural
-                              count={results.length}
-                              many="draws"
-                              name="number of draws"
-                            >
+                            <fbt:plural count={results.length} many="draws" name="number of draws">
                               draw
                             </fbt:plural>
                           </fbt>
@@ -182,20 +168,13 @@ export default function EvaluationPanel({
                       <Stack gap wrap>
                         <List
                           items={winners.map(
-                            getTranslatedFactionName.bind(
-                              null,
-                              state.playerDetails,
-                            ),
+                            getTranslatedFactionName.bind(null, state.playerDetails),
                           )}
                         />
                         :{' '}
                         <fbt desc="Number of wins">
                           <fbt:param name="wins">{results.length}</fbt:param>{' '}
-                          <fbt:plural
-                            count={results.length}
-                            many="wins"
-                            name="number of wins"
-                          >
+                          <fbt:plural count={results.length} many="wins" name="number of wins">
                             win
                           </fbt:plural>
                         </fbt>
@@ -222,16 +201,15 @@ export default function EvaluationPanel({
             <p>
               <fbt desc="Explanation for map evaluation">
                 When you start an evaluation, bots will play this map{' '}
-                <fbt:param name="N">{RUNS}</fbt:param> times to determine a
-                winner. Keep in mind that small changes to a map can make a big
-                difference. Running an evaluation might take a while.
+                <fbt:param name="N">{RUNS}</fbt:param> times to determine a winner. Keep in mind
+                that small changes to a map can make a big difference. Running an evaluation might
+                take a while.
               </fbt>
             </p>
           ) : (
             <ErrorText>
               <fbt desc="Error text for invalid map">
-                This map is invalid. Please fix the map before starting an
-                evaluation.
+                This map is invalid. Please fix the map before starting an evaluation.
               </fbt>
             </ErrorText>
           )}

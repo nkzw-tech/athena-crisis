@@ -52,21 +52,10 @@ for (const info of SpaceShipBiome) {
   SpaceShipTileRestrictions.delete(info);
 }
 
-const VolcanoTileRestrictions = new Set([
-  ...SwampBiome,
-  ...SpaceShipBiome,
-  Island,
-  Iceberg,
-]);
+const VolcanoTileRestrictions = new Set([...SwampBiome, ...SpaceShipBiome, Island, Iceberg]);
 VolcanoTileRestrictions.delete(Weeds);
 
-const LunaTileRestrictions = new Set([
-  ...SwampBiome,
-  ...SpaceShipBiome,
-  Island,
-  Iceberg,
-  Forest2,
-]);
+const LunaTileRestrictions = new Set([...SwampBiome, ...SpaceShipBiome, Island, Iceberg, Forest2]);
 LunaTileRestrictions.delete(Forest3);
 
 const tileConversions = new Map([
@@ -127,12 +116,7 @@ const style = {
       [Island, Iceberg],
       [Weeds, Iceberg],
     ]),
-    tileRestrictions: new Set([
-      Island,
-      Weeds,
-      ...SwampBiome,
-      ...SpaceShipBiome,
-    ]),
+    tileRestrictions: new Set([Island, Weeds, ...SwampBiome, ...SpaceShipBiome]),
     waterSwap: new Map<HEX, HEX>([
       ['#13a6e2', '#088bed'],
       ['#1ab7eb', '#0f9ef6'],

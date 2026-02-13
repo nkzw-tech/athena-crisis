@@ -14,11 +14,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { memo, ReactElement, useCallback, useState } from 'react';
 import useCurrentGameTeams from '../hooks/useCurrentGameTeams.tsx';
 import { UserLike, UserLikeWithID } from '../hooks/useUserMap.tsx';
-import {
-  Animations,
-  hasCharacterMessage,
-  hasNotableAnimation,
-} from '../MapAnimations.tsx';
+import { Animations, hasCharacterMessage, hasNotableAnimation } from '../MapAnimations.tsx';
 import { Actions, GameInfoState } from '../Types.tsx';
 import getMaxCharge from './lib/getMaxCharge.tsx';
 import maybeFade from './lib/maybeFade.tsx';
@@ -44,11 +40,7 @@ export type GameCardProps = Readonly<{
   vision: VisionT;
 }>;
 
-type OptionalFields =
-  | 'hideIfNoCrystals'
-  | 'invasions'
-  | 'spectatorLink'
-  | 'useFactionNamesForBots';
+type OptionalFields = 'hideIfNoCrystals' | 'invasions' | 'spectatorLink' | 'useFactionNamesForBots';
 
 const TeamItem = ({
   animate,
@@ -165,10 +157,7 @@ export default memo(function CurrentGameCard({
   }) {
   const teams = useCurrentGameTeams(map, users);
   const [isExpanded, setIsExpanded] = useState(false);
-  const toggleExpanded = useCallback(
-    () => setIsExpanded((isExpanded) => !isExpanded),
-    [],
-  );
+  const toggleExpanded = useCallback(() => setIsExpanded((isExpanded) => !isExpanded), []);
   const players = map.getPlayers();
   const hasSkills = players.some(({ skills }) => skills.size > 0);
   const currentPlayer = map.getCurrentPlayer();
@@ -233,10 +222,7 @@ export default memo(function CurrentGameCard({
   );
 
   return inlineUI ? (
-    <div
-      className={inlineContainerStyle}
-      style={{ zIndex: isExpanded ? zIndex + 3 : zIndex - 1 }}
-    >
+    <div className={inlineContainerStyle} style={{ zIndex: isExpanded ? zIndex + 3 : zIndex - 1 }}>
       {content}
     </div>
   ) : (

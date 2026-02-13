@@ -22,9 +22,7 @@ export function useDialogNavigation<T>(
     (event?: CustomEvent) => {
       event?.preventDefault();
       const newState =
-        states && currentState !== -1
-          ? states.at((currentState + 1) % states.length)
-          : null;
+        states && currentState !== -1 ? states.at((currentState + 1) % states.length) : null;
       if (newState) {
         AudioPlayer.playSound('UI/Next');
         setPanel(newState);
@@ -36,8 +34,7 @@ export function useDialogNavigation<T>(
   const previous = useCallback(
     (event?: CustomEvent) => {
       event?.preventDefault();
-      const newState =
-        states && currentState !== -1 ? states.at(currentState - 1) : null;
+      const newState = states && currentState !== -1 ? states.at(currentState - 1) : null;
       if (newState) {
         AudioPlayer.playSound('UI/Previous');
         setPanel(newState);
@@ -132,10 +129,7 @@ export const DialogScrollContainer = ({
   return (
     <ScrollContainerWithNavigation
       className={scrollContainerStyle}
-      scrollContainerClassName={cx(
-        scrollStyle,
-        horizontalScroll && overflowXStyle,
-      )}
+      scrollContainerClassName={cx(scrollStyle, horizontalScroll && overflowXStyle)}
       {...props}
     >
       {children}

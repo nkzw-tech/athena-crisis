@@ -61,10 +61,7 @@ const play = async (map: MapData) => {
       await captureOne(
         lastMap.copy({
           config: lastMap.config.copy({ fog: false }),
-          teams: updatePlayer(
-            lastMap.teams,
-            HumanPlayer.from(player1, 'User-1'),
-          ),
+          teams: updatePlayer(lastMap.teams, HumanPlayer.from(player1, 'User-1')),
         }),
         'User-1',
       ),
@@ -78,13 +75,9 @@ const play = async (map: MapData) => {
     expect(actionResponse.type).toBe('GameEnd');
 
     const hasOffensiveAction =
-      gameState.some(
-        ([actionResponse]) => actionResponse.type === 'AttackUnit',
-      ) ||
+      gameState.some(([actionResponse]) => actionResponse.type === 'AttackUnit') ||
       (lastMap.round <= 5 &&
-        gameState.some(
-          ([actionResponse]) => actionResponse.type === 'Capture',
-        ));
+        gameState.some(([actionResponse]) => actionResponse.type === 'Capture'));
 
     if (!hasOffensiveAction) {
       // eslint-disable-next-line no-console
@@ -101,29 +94,18 @@ const play = async (map: MapData) => {
         gameState,
         null,
         initialActionResponse.type === 'EndTurn'
-          ? computeVisibleEndTurnActionResponse(
-              initialActionResponse,
-              map,
-              map,
-              vision,
-            )
+          ? computeVisibleEndTurnActionResponse(initialActionResponse, map, map, vision)
           : null,
         null,
       );
-      const { others, self } = decodeGameActionResponse(
-        encodedGameActionResponse,
-      );
+      const { others, self } = decodeGameActionResponse(encodedGameActionResponse);
 
       if (!self || !others) {
         throw new Error('Error executing game actions.');
       }
 
       let currentMap = vision.apply(map);
-      currentMap = applyActionResponse(
-        currentMap,
-        vision,
-        self.actionResponse!,
-      );
+      currentMap = applyActionResponse(currentMap, vision, self.actionResponse!);
       for (const { actionResponse, buildings, units } of others) {
         try {
           currentMap = updateVisibleEntities(
@@ -139,10 +121,7 @@ const play = async (map: MapData) => {
             `Error at`,
             await captureOne(
               currentMap.copy({
-                teams: updatePlayer(
-                  currentMap.teams,
-                  HumanPlayer.from(player1, 'User-1'),
-                ),
+                teams: updatePlayer(currentMap.teams, HumanPlayer.from(player1, 'User-1')),
               }),
               'User-1',
             ),

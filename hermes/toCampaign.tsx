@@ -34,9 +34,7 @@ export default function toCampaign<T>({
           return true;
         })
         .map((entry) =>
-          Array.isArray(entry)
-            ? [entry[0], getOrThrow(map, entry[1])]
-            : getOrThrow(map, entry),
+          Array.isArray(entry) ? [entry[0], getOrThrow(map, entry[1])] : getOrThrow(map, entry),
         );
     }
   }

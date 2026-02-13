@@ -31,10 +31,7 @@ export default async function addIncreaseValueAnimation(
         text: String(
           actionResponse.type === 'IncreaseCharge'
             ? fbt(
-                fbt.param(
-                  'player',
-                  getTranslatedFactionName(state.playerDetails, player),
-                ) +
+                fbt.param('player', getTranslatedFactionName(state.playerDetails, player)) +
                   ' received ' +
                   fbt.plural('one charge', actionResponse.charges, {
                     many: 'charges',
@@ -44,10 +41,7 @@ export default async function addIncreaseValueAnimation(
                 'Charge increased message',
               )
             : fbt(
-                fbt.param(
-                  'player',
-                  getTranslatedFactionName(state.playerDetails, player),
-                ) +
+                fbt.param('player', getTranslatedFactionName(state.playerDetails, player)) +
                   ' received ' +
                   fbt.plural('fund', actionResponse.funds, {
                     many: 'funds',

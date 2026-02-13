@@ -50,19 +50,11 @@ const completeUnit = ({ from }: { from: Vector }) =>
   }) as const;
 
 const supplyActionWithDefault =
-  (
-    defaultFn: (actionResponse: SupplyActionResponse) => ActionResponse | null,
-  ) =>
-  (
-    actionResponse: SupplyActionResponse,
-    map: MapData,
-    activeMap: MapData,
-    vision: VisionT,
-  ) => {
+  (defaultFn: (actionResponse: SupplyActionResponse) => ActionResponse | null) =>
+  (actionResponse: SupplyActionResponse, map: MapData, activeMap: MapData, vision: VisionT) => {
     const unit = map.units.get(actionResponse.from);
     return unit
-      ? getUnitsToRefill(map, vision, map.getPlayer(unit), actionResponse.from)
-          .size
+      ? getUnitsToRefill(map, vision, map.getPlayer(unit), actionResponse.from).size
         ? actionResponse
         : defaultFn(actionResponse)
       : null;
@@ -75,16 +67,13 @@ const filterUnits = (
 ) =>
   actionResponse.units
     ?.filter((_, vector) => vision.isVisible(activeMap, vector))
-    .sortBy((unit) =>
-      activeMap.matchesTeam(unit, vision.currentViewer) ? -1 : 1,
-    );
+    .sortBy((unit) => (activeMap.matchesTeam(unit, vision.currentViewer) ? -1 : 1));
 
 const getAttackWeapon = (
   map: MapData,
   from: Vector,
   entityB: Entity | undefined,
-): number | undefined =>
-  entityB && map.units.get(from)?.getAttackWeapon(entityB)?.id;
+): number | undefined => entityB && map.units.get(from)?.getAttackWeapon(entityB)?.id;
 
 type VisibleModifierAction<T> =
   | true
@@ -105,10 +94,7 @@ type VisibleModifier<T extends ActionResponse> =
       Target?: VisibleModifierAction<T>;
     };
 
-const VisibleActionModifiers: Record<
-  ActionResponse['type'],
-  VisibleModifier<never>
-> = {
+const VisibleActionModifiers: Record<ActionResponse['type'], VisibleModifier<never>> = {
   AbandonInvasion: true,
   ActivateCrystal: (
     actionResponse: ActivateCrystalActionResponse,
@@ -117,9 +103,7 @@ const VisibleActionModifiers: Record<
     vision: VisionT,
   ): ActivateCrystalActionResponse | null => {
     const { hq, ...baseActionResponse } = actionResponse;
-    return hq && vision.isVisible(map, hq)
-      ? actionResponse
-      : baseActionResponse;
+    return hq && vision.isVisible(map, hq) ? actionResponse : baseActionResponse;
   },
   ActivatePower: (
     actionResponse: ActivatePowerActionResponse,
@@ -189,23 +173,14 @@ const VisibleActionModifiers: Record<
       to,
       type: 'HiddenSourceAttackBuilding',
       unitC,
-      weapon: hasCounterAttack
-        ? getAttackWeapon(map, to, map.units.get(from))
-        : undefined,
+      weapon: hasCounterAttack ? getAttackWeapon(map, to, map.units.get(from)) : undefined,
     }),
   },
   AttackBuildingGameOver: true,
   AttackUnit: {
     Both: true,
     Source: (
-      {
-        chargeA,
-        from,
-        hasCounterAttack,
-        playerA,
-        to,
-        unitA,
-      }: AttackUnitActionResponse,
+      { chargeA, from, hasCounterAttack, playerA, to, unitA }: AttackUnitActionResponse,
       map: MapData,
       activeMap: MapData,
     ): HiddenTargetAttackUnitActionResponse => {
@@ -226,14 +201,7 @@ const VisibleActionModifiers: Record<
       };
     },
     Target: (
-      {
-        chargeB,
-        from,
-        hasCounterAttack,
-        playerB,
-        to,
-        unitB,
-      }: AttackUnitActionResponse,
+      { chargeB, from, hasCounterAttack, playerB, to, unitB }: AttackUnitActionResponse,
       map: MapData,
       activeMap: MapData,
     ): HiddenSourceAttackUnitActionResponse => {
@@ -250,9 +218,7 @@ const VisibleActionModifiers: Record<
         to,
         type: 'HiddenSourceAttackUnit',
         unitB,
-        weapon: hasCounterAttack
-          ? getAttackWeapon(map, to, map.units.get(from))
-          : undefined,
+        weapon: hasCounterAttack ? getAttackWeapon(map, to, map.units.get(from)) : undefined,
       };
     },
   },
@@ -261,13 +227,9 @@ const VisibleActionModifiers: Record<
   BeginTurnGameOver: true,
   BuySkill: true,
   Capture: {
-    Hidden: (
-      actionResponse: CaptureActionResponse,
-    ): null | CaptureActionResponse => {
+    Hidden: (actionResponse: CaptureActionResponse): null | CaptureActionResponse => {
       const { building } = actionResponse;
-      return building && building.info.configuration.attackStatusEffect
-        ? actionResponse
-        : null;
+      return building && building.info.configuration.attackStatusEffect ? actionResponse : null;
     },
     Source: true,
   },
@@ -378,8 +340,7 @@ const VisibleActionModifiers: Record<
 
     let path: Array<Vector> = [
       from,
-      ...(initialPath ||
-        getMovementPath(map, to, moveable(map, unit, from), null).path),
+      ...(initialPath || getMovementPath(map, to, moveable(map, unit, from), null).path),
     ];
     if (path.length <= 1 || path.every(isHidden)) {
       return null;
@@ -449,9 +410,7 @@ const VisibleActionModifiers: Record<
   ): SpawnActionResponse | null => {
     const { teams } = actionResponse;
     const units = filterUnits(activeMap, vision, actionResponse);
-    return units?.size || teams
-      ? { ...actionResponse, units: units || ImmutableMap() }
-      : null;
+    return units?.size || teams ? { ...actionResponse, units: units || ImmutableMap() } : null;
   },
   Start: true,
   Supply: {
@@ -534,19 +493,14 @@ export default function computeVisibleActions(
   vision: VisionT,
   gameState: GameState,
 ): ReadonlyArray<ActionResponseWithMapData> {
-  const hiddenLabels = getHiddenLabels(
-    (gameState?.at(-1)?.[1] || previousMap).config.objectives,
-  );
+  const hiddenLabels = getHiddenLabels((gameState?.at(-1)?.[1] || previousMap).config.objectives);
   const responses: Array<ActionResponseWithMapData> = [];
 
   for (const [actionResponse, activeMap] of gameState) {
     const hasFog = activeMap.config.fog;
     if (
       hasFog &&
-      (activeMap.isOpponent(
-        vision.currentViewer,
-        activeMap.getCurrentPlayer(),
-      ) ||
+      (activeMap.isOpponent(vision.currentViewer, activeMap.getCurrentPlayer()) ||
         actionResponse.type === 'Spawn')
     ) {
       const newActionResponse = processVisibleAction(
@@ -556,9 +510,7 @@ export default function computeVisibleActions(
         actionResponse,
       );
       if (newActionResponse) {
-        const items: Array<ActionResponseWithMapData> = Array.isArray(
-          newActionResponse,
-        )
+        const items: Array<ActionResponseWithMapData> = Array.isArray(newActionResponse)
           ? newActionResponse.map((actionResponse) => [actionResponse])
           : [[newActionResponse as ActionResponse]];
 
@@ -569,9 +521,7 @@ export default function computeVisibleActions(
         responses.push(...items);
       }
     } else {
-      responses.push(
-        hasFog ? [actionResponse, previousMap, activeMap] : [actionResponse],
-      );
+      responses.push(hasFog ? [actionResponse, previousMap, activeMap] : [actionResponse]);
     }
     previousMap = activeMap;
   }

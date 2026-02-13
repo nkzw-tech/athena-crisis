@@ -1,8 +1,5 @@
 import { CreateBuildingAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import {
-  ActionResponse,
-  CreateBuildingActionResponse,
-} from '@deities/apollo/ActionResponse.tsx';
+import { ActionResponse, CreateBuildingActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { BuildingInfo } from '@deities/athena/info/Building.tsx';
@@ -45,9 +42,7 @@ export function addCreateBuildingAnimation(
     animations: state.animations.set(from, {
       onComplete: (state) => {
         actions.requestFrame(async () =>
-          actions.update(
-            onComplete(await handleRemoteAction(actions, remoteAction)),
-          ),
+          actions.update(onComplete(await handleRemoteAction(actions, remoteAction))),
         );
 
         return {
@@ -59,11 +54,7 @@ export function addCreateBuildingAnimation(
         };
       },
       onCreate: (state) => {
-        const map = applyActionResponse(
-          state.map,
-          state.vision,
-          actionResponse,
-        );
+        const map = applyActionResponse(state.map, state.vision, actionResponse);
         return {
           map: map.copy({
             buildings: map.buildings.set(from, building.recover()),

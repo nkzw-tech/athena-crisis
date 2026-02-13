@@ -6,14 +6,7 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import { css, cx } from '@emotion/css';
 import parseInteger from '@nkzw/core/parseInteger.js';
-import {
-  memo,
-  RefObject,
-  TouchEvent,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import { memo, RefObject, TouchEvent, useCallback, useMemo, useRef } from 'react';
 import maskClassName, { MaskPointerClassName } from './lib/maskClassName.tsx';
 import toTransformOrigin from './lib/toTransformOrigin.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
@@ -25,18 +18,10 @@ enum Priority {
   High = 2,
 }
 
-type Offsets = [
-  top: number,
-  right: number,
-  down: number,
-  left: number,
-  priority: Priority,
-];
+type Offsets = [top: number, right: number, down: number, left: number, priority: Priority];
 
 export const parseVector = (target: EventTarget | null) => {
-  const maybeVector = (target as HTMLElement | null)?.getAttribute(
-    'data-vector',
-  );
+  const maybeVector = (target as HTMLElement | null)?.getAttribute('data-vector');
   if (maybeVector) {
     try {
       const [x, y] = maybeVector.split(',').map((value) => parseInteger(value));
@@ -61,8 +46,7 @@ const getOffsets = (
     return null;
   }
 
-  const hasRadius =
-    radius?.type !== RadiusType.Attack && radius?.fields.has(vector);
+  const hasRadius = radius?.type !== RadiusType.Attack && radius?.fields.has(vector);
 
   if (hasRadius) {
     return [4, 4, 4, 4, Priority.Low];
@@ -177,9 +161,7 @@ export default memo(function Mask({
   const onTouchMove = useCallback(
     (event: TouchEvent) => {
       const touch = event.touches[0];
-      const vector = parseVector(
-        document.elementFromPoint(touch.clientX, touch.clientY),
-      );
+      const vector = parseVector(document.elementFromPoint(touch.clientX, touch.clientY));
       if (vector) {
         enter(vector, undefined, 'move');
         if (lastVectors.current.at(-1) !== vector) {
@@ -193,10 +175,7 @@ export default memo(function Mask({
   const onTouchEnd = useCallback(() => {
     if (lastVectors.current.length >= 2) {
       const lastVector = lastVectors.current.at(-1)!;
-      if (
-        !radius?.locked &&
-        (radius?.fields.has(lastVector) || attackable?.has(lastVector))
-      ) {
+      if (!radius?.locked && (radius?.fields.has(lastVector) || attackable?.has(lastVector))) {
         select(lastVector);
       }
     }
@@ -209,15 +188,7 @@ export default memo(function Mask({
     let fields = map.mapFields<[Vector, Offsets]>((vector) => [
       vector,
       (expand &&
-        getOffsets(
-          map,
-          currentViewer,
-          vector,
-          radius,
-          attackable,
-          messages,
-          selectedPosition,
-        )) ||
+        getOffsets(map, currentViewer, vector, radius, attackable, messages, selectedPosition)) ||
         defaultOffsets,
     ]);
 
@@ -259,12 +230,7 @@ export default memo(function Mask({
         className={cx(maskStyle, MaskPointerClassName)}
         onContextMenu={(event) => {
           event.preventDefault();
-          cancel(
-            parseVector(event.target),
-            toTransformOrigin(event),
-            null,
-            false,
-          );
+          cancel(parseVector(event.target), toTransformOrigin(event), null, false);
         }}
         onTouchMove={onTouchMove}
         ref={ref}

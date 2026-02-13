@@ -20,8 +20,7 @@ import NullBehavior from '../NullBehavior.tsx';
 const isAttackAction = (
   actionResponse: ActionResponse | undefined,
 ): actionResponse is AttackUnitActionResponse | AttackBuildingActionResponse =>
-  actionResponse?.type === 'AttackUnit' ||
-  actionResponse?.type === 'AttackBuilding';
+  actionResponse?.type === 'AttackUnit' || actionResponse?.type === 'AttackBuilding';
 
 export default async function clientAttackAction(
   actions: Actions,
@@ -46,8 +45,7 @@ export default async function clientAttackAction(
   });
 
   const directions = getAttackDirection(from, to);
-  const hasCounterAttack =
-    isAttackAction(actionResponse) && actionResponse.hasCounterAttack;
+  const hasCounterAttack = isAttackAction(actionResponse) && actionResponse.hasCounterAttack;
   const previousUnitB = previousMap.units.get(to);
 
   const newUnitB = newMap.units.get(to);
@@ -59,9 +57,7 @@ export default async function clientAttackAction(
     attackStance: unitA.info.sprite.attackStance,
     damage:
       entityB.health -
-      (isDifferentUnitB
-        ? 0
-        : (entityIsBuilding ? newBuildingB : newUnitB)?.health || 0),
+      (isDifferentUnitB ? 0 : (entityIsBuilding ? newBuildingB : newUnitB)?.health || 0),
     directions,
     from,
     isBuilding: entityIsBuilding,
@@ -141,14 +137,7 @@ export default async function clientAttackAction(
     (!entityIsBuilding && (!newUnitB || isDifferentUnitB))
   ) {
     return await complete(
-      await explosionAnimation(
-        actions,
-        state,
-        newMap,
-        entityB,
-        to,
-        directions[1],
-      ),
+      await explosionAnimation(actions, state, newMap, entityB, to, directions[1]),
     );
   } else {
     return await complete(state);

@@ -18,8 +18,7 @@ export default function upgradeUnits(
         animations: animations.set(new AnimationKey(), {
           onComplete: (state) => ({
             animations: state.animations.set(position, {
-              onComplete: (state: State) =>
-                remainingUnits.length ? state : onComplete(state),
+              onComplete: (state: State) => (remainingUnits.length ? state : onComplete(state)),
               onUpgrade: () => {
                 requestFrame(async () => {
                   const newPosition = remainingUnits[0];

@@ -36,16 +36,9 @@ const renderBuildingShadow = (
   targetY: number,
   size: number,
 ) => {
-  const [x, y] = getBuildingSpritePosition(
-    building.info,
-    building.player,
-    biome,
-    isVisible,
-  );
+  const [x, y] = getBuildingSpritePosition(building.info, building.player, biome, isVisible);
   context.drawImage(
-    building.info.sprite.name === 'Structures'
-      ? tileset.structures
-      : tileset.buildings,
+    building.info.sprite.name === 'Structures' ? tileset.structures : tileset.buildings,
     x * size,
     (y + 1) * size,
     size,
@@ -89,14 +82,10 @@ export default function renderTile(
   const isPlain = info === Plain;
   const image = tileset.tiles;
   const { sprite } = info;
-  const offset = sprite.animation?.horizontal
-    ? { x: frame, y: 0 }
-    : { x: 0, y: frame };
+  const offset = sprite.animation?.horizontal ? { x: frame, y: 0 } : { x: 0, y: frame };
 
   const x = sprite.position.x;
-  const y =
-    sprite.position.y +
-    ((sprite.alternate && (vector.x + vector.y) % 3) === 0 ? 4 : 0);
+  const y = sprite.position.y + ((sprite.alternate && (vector.x + vector.y) % 3) === 0 ? 4 : 0);
   let modifier = sprite.modifiers.get(modifierId) || nullVector;
 
   if (

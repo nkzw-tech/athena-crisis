@@ -24,10 +24,7 @@ export default function MapMessageTemplate({
         const fragment = <Fragment key={index}>{replacement}</Fragment>;
         if (showPunctuation) {
           list.push(
-            <span
-              className={cx(inlineStyle, isFirst && firstLetterStyle)}
-              key={index}
-            >
+            <span className={cx(inlineStyle, isFirst && firstLetterStyle)} key={index}>
               {fragment}
               {punctuation}
             </span>,

@@ -1,14 +1,7 @@
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Reply from '@iconify-icons/pixelarticons/reply.js';
-import {
-  ReactNode,
-  RefCallback,
-  RefObject,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, RefCallback, RefObject, useCallback, useRef, useState } from 'react';
 import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
@@ -87,8 +80,7 @@ export function ScrollContainerWithNavigation({
 
       const onScroll = () => {
         const shouldShow =
-          element.scrollTop + element.clientHeight <
-          element.scrollHeight - DoubleSize;
+          element.scrollTop + element.clientHeight < element.scrollHeight - DoubleSize;
         if (shouldShow !== showArrow) {
           setShowArrow(shouldShow);
         }
@@ -140,13 +132,7 @@ export function ScrollContainerWithNavigation({
       <ScrollContainer className={scrollContainerClassName} ref={setRef}>
         {children}
       </ScrollContainer>
-      <div
-        className={cx(
-          scrollDownStyle,
-          scrollDownClassName,
-          showArrow && arrowVisibleStyle,
-        )}
-      >
+      <div className={cx(scrollDownStyle, scrollDownClassName, showArrow && arrowVisibleStyle)}>
         <div className={scrollDownIconStyle}>
           <Icon className={FadePulseStyle} icon={Reply} />
         </div>

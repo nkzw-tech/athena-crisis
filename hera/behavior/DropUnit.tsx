@@ -34,10 +34,7 @@ const getRadius = (
       .filter(
         (vector) =>
           canDeploy(map, transportedUnit.info, vector, true) &&
-          selectedUnit.info.canDropFrom(
-            transportedUnit.info,
-            map.getTileInfo(selectedPosition),
-          ),
+          selectedUnit.info.canDropFrom(transportedUnit.info, map.getTileInfo(selectedPosition)),
       )
       .map((vector) => [vector, RadiusItem(vector, 0, selectedPosition)]),
   );
@@ -84,12 +81,7 @@ export default class DropUnit {
 
   select(vector: Vector, state: State, actions: Actions) {
     const { radius, selectedPosition } = state;
-    if (
-      selectedPosition &&
-      this.dropUnit != null &&
-      radius &&
-      radius.fields.get(vector)
-    ) {
+    if (selectedPosition && this.dropUnit != null && radius && radius.fields.get(vector)) {
       const actionResponse = actions.optimisticAction(
         state,
         DropUnitAction(selectedPosition, this.dropUnit, vector),
@@ -209,8 +201,6 @@ export default class DropUnit {
       );
     }
 
-    return (
-      <TeleportIndicator state={state} unit={selectedUnit} vector={position} />
-    );
+    return <TeleportIndicator state={state} unit={selectedUnit} vector={position} />;
   };
 }

@@ -22,11 +22,7 @@ export default function usePlayerHasReward({
   unlockedSkillSlots: ReadonlyArray<number>;
 }) {
   return useCallback(
-    (
-      map: MapData,
-      playerID: PlayerID,
-      actionResponse: ReceiveRewardActionResponse,
-    ) => {
+    (map: MapData, playerID: PlayerID, actionResponse: ReceiveRewardActionResponse) => {
       const player = map.getPlayerByUserId(id);
       if (!player || player.id !== playerID) {
         return false;

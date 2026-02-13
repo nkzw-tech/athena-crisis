@@ -5,9 +5,7 @@ import {
 import { css } from '@emotion/css';
 
 export default function Comparator({ type }: { type: PerformanceStyleType }) {
-  return (
-    <span className={comparatorStyle}>{PerformanceStyleComparators[type]}</span>
-  );
+  return <span className={comparatorStyle}>{PerformanceStyleComparators[type]}</span>;
 }
 
 const comparatorStyle = css`

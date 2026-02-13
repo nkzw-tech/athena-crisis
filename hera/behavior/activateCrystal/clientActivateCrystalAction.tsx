@@ -14,9 +14,7 @@ export default async function clientActivateCrystalAction(
   let state = await update(null);
   const playerDetails = state.playerDetails.get(state.map.currentPlayer);
   const shouldShowMessage =
-    !!playerDetails &&
-    'redStars' in playerDetails &&
-    playerDetails.redStars === 0;
+    !!playerDetails && 'redStars' in playerDetails && playerDetails.redStars === 0;
 
   if (shouldShowMessage && actionResponse.crystal === Crystal.Power) {
     state = await update({

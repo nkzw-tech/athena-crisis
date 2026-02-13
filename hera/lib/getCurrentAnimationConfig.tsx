@@ -6,8 +6,5 @@ export default function getCurrentAnimationConfig(
   player: Player,
   animationSpeed: AnimationSpeed | undefined,
 ) {
-  return (
-    animationSpeed?.[player.isHumanPlayer() ? 'human' : 'regular'] ||
-    AnimationConfig
-  );
+  return animationSpeed?.[player.isHumanPlayer() ? 'human' : 'regular'] || AnimationConfig;
 }

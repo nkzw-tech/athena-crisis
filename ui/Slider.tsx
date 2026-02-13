@@ -8,12 +8,7 @@ export default memo(function Slider({
   invert,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & { invert?: boolean }) {
-  return (
-    <input
-      className={cx(sliderStyle, invert && invertStyle, className)}
-      {...props}
-    />
-  );
+  return <input className={cx(sliderStyle, invert && invertStyle, className)} {...props} />;
 });
 
 const sliderStyle = css`

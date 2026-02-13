@@ -66,9 +66,7 @@ export default function BiomeSelector({
     }
 
     const unlockedBiomes = new Set(user?.biomes);
-    return new Set(
-      [...UnlockableBiomes].filter((biome) => !unlockedBiomes.has(biome)),
-    );
+    return new Set([...UnlockableBiomes].filter((biome) => !unlockedBiomes.has(biome)));
   }, [hasContentRestrictions, user?.biomes]);
 
   useGridNavigation(

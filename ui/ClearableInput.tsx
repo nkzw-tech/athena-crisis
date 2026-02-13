@@ -1,12 +1,5 @@
 import { css, cx } from '@emotion/css';
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  memo,
-  MouseEvent,
-  RefObject,
-  useRef,
-} from 'react';
+import { DetailedHTMLProps, InputHTMLAttributes, memo, MouseEvent, RefObject, useRef } from 'react';
 
 export default memo(function ClearableInput({
   className,
@@ -14,10 +7,7 @@ export default memo(function ClearableInput({
   onClear,
   ref,
   ...props
-}: DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> & {
+}: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
   hidden?: boolean;
   onClear?: () => string;
   ref?: RefObject<HTMLInputElement | null>;

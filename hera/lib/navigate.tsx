@@ -13,13 +13,7 @@ export default function navigate(
   ],
 ) {
   const offset =
-    direction === 'up'
-      ? -columns
-      : direction === 'down'
-        ? columns
-        : direction === 'left'
-          ? -1
-          : 1;
+    direction === 'up' ? -columns : direction === 'down' ? columns : direction === 'left' ? -1 : 1;
 
   if (index != null && index > -1) {
     const nextIndex = index + offset;

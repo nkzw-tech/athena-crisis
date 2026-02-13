@@ -46,9 +46,7 @@ class Input {
   private readonly top = new EventTarget();
 
   fire<T extends EventName>(
-    ...args: Events[T] extends undefined
-      ? [type: T]
-      : [type: T, detail: Events[T]]
+    ...args: Events[T] extends undefined ? [type: T] : [type: T, detail: Events[T]]
   ) {
     const [type, detail] = args;
     const event = new CustomEvent(type, {
@@ -75,9 +73,7 @@ class Input {
   }
 
   fireWithPointerLock<T extends EventName>(
-    ...args: Events[T] extends undefined
-      ? [type: T]
-      : [type: T, detail: Events[T]]
+    ...args: Events[T] extends undefined ? [type: T] : [type: T, detail: Events[T]]
   ) {
     hidePointer();
     // @ts-expect-error

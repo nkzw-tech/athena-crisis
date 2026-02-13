@@ -11,10 +11,7 @@ export default function getUnitValue(unit: Unit, player: Player) {
   }
   if (unit.info === Zombie && player.skills.has(Skill.UnlockZombie)) {
     player = player.copy({
-      skills: new Set([
-        ...player.skills,
-        Skill.BuyUnitZombieDefenseDecreaseMajor,
-      ]),
+      skills: new Set([...player.skills, Skill.BuyUnitZombieDefenseDecreaseMajor]),
     });
   }
 

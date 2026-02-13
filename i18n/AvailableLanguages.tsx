@@ -13,7 +13,6 @@ const AvailableLanguages = new Map([
   ['uk_UA', 'Українська (Ukrainian)'],
 ] as const);
 
-export type AvailableLanguage =
-  typeof AvailableLanguages extends Map<infer K, unknown> ? K : never;
+export type AvailableLanguage = typeof AvailableLanguages extends Map<infer K, unknown> ? K : never;
 
 export default AvailableLanguages;

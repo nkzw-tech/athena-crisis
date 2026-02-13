@@ -120,11 +120,7 @@ test('status effects from leaders are applied', async () => {
 test('status effects from research labs are applied', async () => {
   const [, state1] = execute(map, vision, AttackUnitAction(fromA, toA))!;
   const [, state2] = execute(state1, vision, CaptureAction(vec(1, 1)))!;
-  const [, state3] = execute(
-    state2,
-    vision,
-    AttackUnitAction(vec(1, 2), vec(2, 2)),
-  )!;
+  const [, state3] = execute(state2, vision, AttackUnitAction(vec(1, 2), vec(2, 2)))!;
   const unitB = state3.units.get(toA)!;
   const unitC = state3.units.get(vec(2, 2))!;
   expect(unitB.health).toBeGreaterThan(unitC.health);
@@ -188,9 +184,7 @@ test('status effects from skills are applied', async () => {
     map.copy({
       teams: updatePlayer(
         map.teams,
-        map
-          .getPlayer(2)
-          .copy({ skills: new Set([Skill.DefenseIncreaseMinor]) }),
+        map.getPlayer(2).copy({ skills: new Set([Skill.DefenseIncreaseMinor]) }),
       ),
       units: map.units
         .set(fromA, SmallTank.create(1, options))
@@ -227,22 +221,14 @@ test('status effects from skills can increase and decrease attack or defense', a
     ),
   });
 
-  const [, defaultAttackAtoB] = execute(
-    initialMap,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, defaultAttackAtoB] = execute(initialMap, vision, AttackUnitAction(fromA, toA))!;
   const [, defaultAttackBtoA] = execute(
     initialMap.copy({ currentPlayer: 2 }),
     vision,
     AttackUnitAction(toA, fromA),
   )!;
 
-  const [, skillAttackAtoB] = execute(
-    initialMapWithSkills,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, skillAttackAtoB] = execute(initialMapWithSkills, vision, AttackUnitAction(fromA, toA))!;
   const [, skillAttackBtoA] = execute(
     initialMapWithSkills.copy({ currentPlayer: 2 }),
     vision,
@@ -269,9 +255,7 @@ test('status effects can increase defense on specific tiles', async () => {
   newMapB[map.getTileIndex(toA)] = Forest2.id;
   const initialMap = map.copy({
     map: newMapA,
-    units: map.units
-      .set(fromA, Infantry.create(1, options))
-      .set(toA, Saboteur.create(2, options)),
+    units: map.units.set(fromA, Infantry.create(1, options)).set(toA, Saboteur.create(2, options)),
   });
   const mapWithSkill = initialMap.copy({
     teams: updatePlayer(
@@ -291,17 +275,9 @@ test('status effects can increase defense on specific tiles', async () => {
     ),
   });
 
-  const [, defaultAttackAtoB] = execute(
-    initialMap,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, defaultAttackAtoB] = execute(initialMap, vision, AttackUnitAction(fromA, toA))!;
 
-  const [, skillAttackAtoB] = execute(
-    mapWithSkill,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, skillAttackAtoB] = execute(mapWithSkill, vision, AttackUnitAction(fromA, toA))!;
 
   const [, forestVariantAttackAtoB] = execute(
     mapWithForestVariant,
@@ -327,33 +303,21 @@ test('status effects can increase attack on specific tiles', async () => {
 
   const initialMap = map.copy({
     map: newMap,
-    units: map.units
-      .set(fromA, Infantry.create(1, options))
-      .set(toA, Saboteur.create(2, options)),
+    units: map.units.set(fromA, Infantry.create(1, options)).set(toA, Saboteur.create(2, options)),
   });
 
   const initialMapWithSkills = initialMap.copy({
     teams: updatePlayer(
       map.teams,
       map.getPlayer(1).copy({
-        activeSkills: new Set([
-          Skill.UnitRailDefenseIncreasePowerAttackIncrease,
-        ]),
+        activeSkills: new Set([Skill.UnitRailDefenseIncreasePowerAttackIncrease]),
       }),
     ),
   });
 
-  const [, defaultAttackAtoB] = execute(
-    initialMap,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, defaultAttackAtoB] = execute(initialMap, vision, AttackUnitAction(fromA, toA))!;
 
-  const [, skillAttackAtoB] = execute(
-    initialMapWithSkills,
-    vision,
-    AttackUnitAction(fromA, toA),
-  )!;
+  const [, skillAttackAtoB] = execute(initialMapWithSkills, vision, AttackUnitAction(fromA, toA))!;
 
   // A with skill has more attack than without.
   expect(skillAttackAtoB.units.get(toA)!.health).toBeLessThan(
@@ -367,23 +331,16 @@ test('status effects from skills may lower unit costs', async () => {
     skills: new Set([Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor]),
   });
 
-  expect(SmallTank.getCostFor(player)).toBeGreaterThan(
-    SmallTank.getCostFor(playerWithSkill),
-  );
+  expect(SmallTank.getCostFor(player)).toBeGreaterThan(SmallTank.getCostFor(playerWithSkill));
 
   const playerWithCannon = player.copy({
     skills: new Set([Skill.BuyUnitCannon]),
   });
-  expect(Cannon.getCostFor(player)).toBeGreaterThan(
-    Cannon.getCostFor(playerWithCannon),
-  );
+  expect(Cannon.getCostFor(player)).toBeGreaterThan(Cannon.getCostFor(playerWithCannon));
 
   // Skills can also be stacked.
   const playerWithCannonAndCostSkills = player.copy({
-    skills: new Set([
-      Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor,
-      Skill.BuyUnitCannon,
-    ]),
+    skills: new Set([Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor, Skill.BuyUnitCannon]),
   });
   expect(Cannon.getCostFor(playerWithCannon)).toBeGreaterThan(
     Cannon.getCostFor(playerWithCannonAndCostSkills),
@@ -425,13 +382,9 @@ test('skills can extend the range of units', async () => {
   const playerWithSkill = player.copy({ skills });
   const playerWithActiveSkill = player.copy({ activeSkills: skills, skills });
 
-  expect(SmallTank.getRadiusFor(player1)).toBeLessThan(
-    SmallTank.getRadiusFor(playerWithSkill),
-  );
+  expect(SmallTank.getRadiusFor(player1)).toBeLessThan(SmallTank.getRadiusFor(playerWithSkill));
 
-  expect(Pioneer.getRadiusFor(player1)).toEqual(
-    Pioneer.getRadiusFor(playerWithSkill),
-  );
+  expect(Pioneer.getRadiusFor(player1)).toEqual(Pioneer.getRadiusFor(playerWithSkill));
 
   expect(SmallTank.getRadiusFor(playerWithActiveSkill)).toBeGreaterThan(
     SmallTank.getRadiusFor(playerWithSkill),
@@ -443,10 +396,7 @@ test('activating a power adds the active status effect of a power', () => {
   const options = { name: generateUnitName(false) };
   const [, state1] = execute(
     map.copy({
-      teams: updatePlayer(
-        map.teams,
-        map.getPlayer(1).copy({ activeSkills: skills, skills }),
-      ),
+      teams: updatePlayer(map.teams, map.getPlayer(1).copy({ activeSkills: skills, skills })),
       units: map.units
         .set(fromA, SmallTank.create(1, options))
         .set(toA, SmallTank.create(2, options)),
@@ -481,17 +431,11 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
 
   // Player does not own this skill.
   expect(
-    execute(
-      mapA,
-      vision,
-      ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor, null),
-    ),
+    execute(mapA, vision, ActivatePowerAction(Skill.AttackIncreaseMajorDefenseDecreaseMajor, null)),
   ).toBe(null);
 
   // Player does not have enough charges.
-  expect(
-    execute(mapA, vision, ActivatePowerAction(Skill.AttackIncreaseMinor, null)),
-  ).toBe(null);
+  expect(execute(mapA, vision, ActivatePowerAction(Skill.AttackIncreaseMinor, null))).toBe(null);
 
   // Skill is already activated.
   expect(
@@ -499,9 +443,7 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
       mapA.copy({
         teams: updatePlayer(
           mapA.teams,
-          mapA
-            .getPlayer(1)
-            .copy({ activeSkills: skills, charge: Charge * MaxCharges }),
+          mapA.getPlayer(1).copy({ activeSkills: skills, charge: Charge * MaxCharges }),
         ),
       }),
       vision,
@@ -512,10 +454,7 @@ test(`cannot activate a skill that the player doesn't own or if the player doesn
   // It works when the player has enough charges:
   const [actionResponse] = execute(
     mapA.copy({
-      teams: updatePlayer(
-        mapA.teams,
-        mapA.getPlayer(1).copy({ charge: Charge * MaxCharges }),
-      ),
+      teams: updatePlayer(mapA.teams, mapA.getPlayer(1).copy({ charge: Charge * MaxCharges })),
     }),
     vision,
     ActivatePowerAction(Skill.AttackIncreaseMinor, null),
@@ -536,9 +475,7 @@ test('can enable some units and disable others', async () => {
   });
 
   expect(Zombie.getCostFor(player)).toBe(Number.POSITIVE_INFINITY);
-  expect(Zombie.getCostFor(playerWithSkill)).toBeLessThan(
-    Number.POSITIVE_INFINITY,
-  );
+  expect(Zombie.getCostFor(playerWithSkill)).toBeLessThan(Number.POSITIVE_INFINITY);
 
   expect(Pioneer.getCostFor(player)).toBeLessThan(Number.POSITIVE_INFINITY);
   expect(Pioneer.getCostFor(playerWithSkill)).toBe(Number.POSITIVE_INFINITY);
@@ -570,9 +507,7 @@ test('can modify the range of units using a skill', async () => {
   `);
 
   expect(Bar.getCostFor(player)).toBe(Number.POSITIVE_INFINITY);
-  expect(Bar.getCostFor(playerWithSkill)).toBeLessThan(
-    Number.POSITIVE_INFINITY,
-  );
+  expect(Bar.getCostFor(playerWithSkill)).toBeLessThan(Number.POSITIVE_INFINITY);
 });
 
 test('the counter attack skill makes counter attacks more powerful', () => {
@@ -581,10 +516,7 @@ test('the counter attack skill makes counter attacks more powerful', () => {
   const [, state1] = execute(map, vision, AttackUnitAction(fromA, toA))!;
   const [, state2] = execute(
     map.copy({
-      teams: updatePlayer(
-        map.teams,
-        map.getPlayer(2).copy({ activeSkills: skills, skills }),
-      ),
+      teams: updatePlayer(map.teams, map.getPlayer(2).copy({ activeSkills: skills, skills })),
       units: map.units
         .set(fromA, SmallTank.create(1, options))
         .set(toA, SmallTank.create(2, options)),
@@ -593,12 +525,8 @@ test('the counter attack skill makes counter attacks more powerful', () => {
     AttackUnitAction(fromA, toA),
   )!;
 
-  expect(state1.units.get(fromA)!.health).toBeGreaterThan(
-    state1.units.get(toA)!.health,
-  );
-  expect(state2.units.get(fromA)!.health).toEqual(
-    state2.units.get(toA)!.health,
-  );
+  expect(state1.units.get(fromA)!.health).toBeGreaterThan(state1.units.get(toA)!.health);
+  expect(state2.units.get(fromA)!.health).toEqual(state2.units.get(toA)!.health);
 });
 
 test('the commander skill makes leader units stronger', () => {
@@ -609,10 +537,7 @@ test('the commander skill makes leader units stronger', () => {
     units: map.units.set(fromA, SmallTank.create(1, options)),
   });
   const mapB = mapA.copy({
-    teams: updatePlayer(
-      map.teams,
-      map.getPlayer(1).copy({ activeSkills: skills }),
-    ),
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ activeSkills: skills })),
   });
   const [, state1] = execute(mapA, vision, AttackUnitAction(fromA, toA))!;
   const [, state2] = execute(mapB, vision, AttackUnitAction(fromA, toA))!;
@@ -631,9 +556,7 @@ test('unit prices always round up', () => {
     .getPlayer(1)
     .copy({ skills: new Set([...skills, Skill.AttackIncreaseMinor]) });
 
-  expect(Flamethrower.getCostFor(player)).toBeLessThan(
-    Flamethrower.getCostFor(playerWithOneSkill),
-  );
+  expect(Flamethrower.getCostFor(player)).toBeLessThan(Flamethrower.getCostFor(playerWithOneSkill));
 
   expect(Flamethrower.getCostFor(playerWithOneSkill)).toEqual(
     Flamethrower.getCostFor(playerWithTwoSkills),
@@ -643,9 +566,7 @@ test('unit prices always round up', () => {
 test('the Charge skill increases charge accumulation', async () => {
   const skills = new Set([Skill.Charge]);
   const mapA = map.copy({
-    units: map.units
-      .set(fromA, SmallTank.create(1))
-      .set(toA, SmallTank.create(2)),
+    units: map.units.set(fromA, SmallTank.create(1)).set(toA, SmallTank.create(2)),
   });
   const mapB = map.copy({
     teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
@@ -653,9 +574,7 @@ test('the Charge skill increases charge accumulation', async () => {
   const [, state1] = execute(mapA, vision, AttackUnitAction(fromA, toA))!;
   const [, state2] = execute(mapB, vision, AttackUnitAction(fromA, toA))!;
 
-  expect(state2.getPlayer(1).charge).toBeGreaterThan(
-    state1.getPlayer(1).charge,
-  );
+  expect(state2.getPlayer(1).charge).toBeGreaterThan(state1.getPlayer(1).charge);
 });
 
 test('defense cannot go negative', async () => {
@@ -666,22 +585,16 @@ test('defense cannot go negative', async () => {
   ]);
   const mapA = map.copy({
     teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
-    units: map.units
-      .set(fromA, SuperTank.create(1))
-      .set(toA, SmallTank.create(2)),
+    units: map.units.set(fromA, SuperTank.create(1)).set(toA, SmallTank.create(2)),
   });
 
-  expect(
-    getDefenseStatusEffect(mapA, mapA.units.get(fromA)!, null),
-  ).toBeGreaterThanOrEqual(0);
+  expect(getDefenseStatusEffect(mapA, mapA.units.get(fromA)!, null)).toBeGreaterThanOrEqual(0);
 });
 
 test('adds a shield when healing units with the shield skill', async () => {
   const skills = new Set([Skill.Shield]);
   const mapA = map.copy({
-    units: map.units
-      .set(fromA, Medic.create(1))
-      .set(toA, Infantry.create(1).setHealth(50)),
+    units: map.units.set(fromA, Medic.create(1)).set(toA, Infantry.create(1).setHealth(50)),
   });
 
   const [, resultMapA] = execute(mapA, vision, HealAction(fromA, toA))!;
@@ -698,21 +611,12 @@ test(`some skills require a target to be provided`, () => {
   const skills = new Set([Skill.BuyUnitDinosaur]);
   const from = vec(1, 1);
   const mapA = map.copy({
-    teams: updatePlayer(
-      map.teams,
-      map.getPlayer(1).copy({ charge: Charge * MaxCharges, skills }),
-    ),
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ charge: Charge * MaxCharges, skills })),
   });
 
-  expect(
-    execute(mapA, vision, ActivatePowerAction(Skill.BuyUnitDinosaur, null)),
-  ).toBe(null);
+  expect(execute(mapA, vision, ActivatePowerAction(Skill.BuyUnitDinosaur, null))).toBe(null);
 
-  const [actionResponse] = execute(
-    mapA,
-    vision,
-    ActivatePowerAction(Skill.BuyUnitDinosaur, from),
-  )!;
+  const [actionResponse] = execute(mapA, vision, ActivatePowerAction(Skill.BuyUnitDinosaur, from))!;
 
   expect(actionResponse.type).toBe('ActivatePower');
   if (actionResponse.type !== 'ActivatePower') {
@@ -725,19 +629,14 @@ test('some skills can recover unit costs', async () => {
   const skills = new Set([Skill.CostRecovery]);
   const mapA = map.copy({
     teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
-    units: map.units
-      .set(fromA, SmallTank.create(1).setHealth(5))
-      .set(toA, SmallTank.create(2)),
+    units: map.units.set(fromA, SmallTank.create(1).setHealth(5)).set(toA, SmallTank.create(2)),
   });
   const [, state1] = execute(mapA, vision, AttackUnitAction(fromA, toA))!;
 
   expect(state1.getPlayer(1).funds).toEqual(mapA.getPlayer(1).funds);
 
   const mapB = mapA.copy({
-    teams: updatePlayer(
-      map.teams,
-      map.getPlayer(1).copy({ activeSkills: skills }),
-    ),
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ activeSkills: skills })),
   });
 
   const [, state2] = execute(mapB, vision, AttackUnitAction(fromA, toA))!;
@@ -775,11 +674,7 @@ test('the `Field Research` skill increases the flat damage through labs', () => 
       .set(toA.down(), SmallTank.create(2)),
   });
 
-  const [actionResponseA] = execute(
-    mapA,
-    vision,
-    AttackUnitAction(fromA, toA.down()),
-  )!;
+  const [actionResponseA] = execute(mapA, vision, AttackUnitAction(fromA, toA.down()))!;
 
   if (actionResponseA.type !== 'AttackUnit') {
     throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);
@@ -791,11 +686,7 @@ test('the `Field Research` skill increases the flat damage through labs', () => 
     buildings: mapA.buildings.set(fromA, ResearchLab.create(1)),
   });
 
-  const [actionResponseB] = execute(
-    mapB,
-    vision,
-    AttackUnitAction(fromA, toA.down()),
-  )!;
+  const [actionResponseB] = execute(mapB, vision, AttackUnitAction(fromA, toA.down()))!;
 
   if (actionResponseB.type !== 'AttackUnit') {
     throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);
@@ -810,11 +701,7 @@ test('the `Field Research` skill increases the flat damage through labs', () => 
       .set(toB, ResearchLab.create(1)),
   });
 
-  const [actionResponseC] = execute(
-    mapC,
-    vision,
-    AttackUnitAction(fromA, toA.down()),
-  )!;
+  const [actionResponseC] = execute(mapC, vision, AttackUnitAction(fromA, toA.down()))!;
 
   if (actionResponseC.type !== 'AttackUnit') {
     throw new Error(`Expected 'actionResponse' type to be 'AttackUnit'.`);

@@ -1,18 +1,11 @@
 import isPresent from '@nkzw/core/isPresent.js';
-import {
-  ButtonResult,
-  createJoymap,
-  createQueryModule,
-  Joymap,
-  QueryModule,
-} from '@nkzw/joymap';
+import { ButtonResult, createJoymap, createQueryModule, Joymap, QueryModule } from '@nkzw/joymap';
 import { getCurrentScrollContainer } from '../ScrollContainer.tsx';
 import dynamicThrottle from './dynamicThrottle.tsx';
 import Input, { NavigationDirection } from './Input.tsx';
 import throttle from './throttle.tsx';
 
-const singlePress = (button?: ButtonResult) =>
-  !!(button?.pressed && button.justChanged);
+const singlePress = (button?: ButtonResult) => !!(button?.pressed && button.justChanged);
 
 const pressed = (button?: ButtonResult) => !!button?.pressed;
 const controller1 = createQueryModule();
@@ -53,9 +46,7 @@ const isSwitch = (() => {
 
     name = name.toLowerCase();
     const result =
-      name.includes('joy-con') ||
-      name.includes('nintendo') ||
-      name.includes('pro controller');
+      name.includes('joy-con') || name.includes('nintendo') || name.includes('pro controller');
     cache.set(name, result);
     return result;
   };
@@ -119,9 +110,7 @@ export default function setupGamePad() {
       Y,
     } = buttons;
 
-    const { A, B } = isSwitch(controller.getPadId())
-      ? { A: buttons.B, B: buttons.A }
-      : buttons;
+    const { A, B } = isSwitch(controller.getPadId()) ? { A: buttons.B, B: buttons.A } : buttons;
 
     if (needsThrottleReset) {
       if (
@@ -150,12 +139,7 @@ export default function setupGamePad() {
       direction.y = deltaY > 0.4 ? (Math.sign(y) as 1 | -1) : 0;
       if (direction.x && !direction.y && deltaX < 0.75 && deltaY > 0.25) {
         direction.y = Math.sign(y) as 1 | -1;
-      } else if (
-        direction.y &&
-        !direction.x &&
-        deltaY < 0.75 &&
-        deltaX > 0.25
-      ) {
+      } else if (direction.y && !direction.x && deltaY < 0.75 && deltaX > 0.25) {
         direction.x = Math.sign(x) as 1 | -1;
       }
     } else {
@@ -180,10 +164,7 @@ export default function setupGamePad() {
 
     const stickRight = controller.getStick('R');
     if (stickRight?.type === 'stick' && stickRight.pressed) {
-      getCurrentScrollContainer().scrollBy(
-        stickRight.value[0] * 16,
-        stickRight.value[1] * 16,
-      );
+      getCurrentScrollContainer().scrollBy(stickRight.value[0] * 16, stickRight.value[1] * 16);
       Input.fireWithPointerLock('point');
     }
 

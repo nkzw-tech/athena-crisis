@@ -15,8 +15,7 @@ export default function useDirectionalNavigation(
         event.preventDefault();
 
         const directionChange = event.detail;
-        const change =
-          directionChange.y < 0 ? -1 : directionChange.y > 0 ? 1 : null;
+        const change = directionChange.y < 0 ? -1 : directionChange.y > 0 ? 1 : null;
         if (change && select(change)) {
           AudioPlayer.playSound(change === -1 ? 'UI/Previous' : 'UI/Next');
         }

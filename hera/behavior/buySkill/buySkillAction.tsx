@@ -42,10 +42,7 @@ export default async function buySkillAction(
         text: String(
           isBuy
             ? fbt(
-                fbt.param(
-                  'player',
-                  getTranslatedFactionName(state.playerDetails, player),
-                ) +
+                fbt.param('player', getTranslatedFactionName(state.playerDetails, player)) +
                   ' bought the skill ' +
                   fbt.param('skill', name) +
                   '!',
@@ -53,20 +50,14 @@ export default async function buySkillAction(
               )
             : isPermanent
               ? fbt(
-                  fbt.param(
-                    'user',
-                    getUserDisplayName(state.playerDetails, player),
-                  ) +
+                  fbt.param('user', getUserDisplayName(state.playerDetails, player)) +
                     ' received the skill ' +
                     fbt.param('skill', name) +
                     '!',
                   'Receive reward message',
                 )
               : fbt(
-                  fbt.param(
-                    'player',
-                    getTranslatedFactionName(state.playerDetails, player),
-                  ) +
+                  fbt.param('player', getTranslatedFactionName(state.playerDetails, player)) +
                     ' temporarily received the skill ' +
                     fbt.param('skill', name) +
                     ' for this game!',

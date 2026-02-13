@@ -3,10 +3,7 @@ import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import Player, { isHumanPlayer } from '@deities/athena/map/Player.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 
-export default function shouldActivateCrystalPower(
-  player: Player,
-  skill: Skill,
-) {
+export default function shouldActivateCrystalPower(player: Player, skill: Skill) {
   const { activateOnInvasion } = getSkillConfig(skill);
   const crystal = isHumanPlayer(player) ? player.crystal : null;
 
@@ -20,10 +17,7 @@ export default function shouldActivateCrystalPower(
         return crystal !== Crystal.Command;
       default: {
         activateOnInvasion satisfies never;
-        throw new UnknownTypeError(
-          'shouldActivateCrystalPower',
-          activateOnInvasion,
-        );
+        throw new UnknownTypeError('shouldActivateCrystalPower', activateOnInvasion);
       }
     }
   }

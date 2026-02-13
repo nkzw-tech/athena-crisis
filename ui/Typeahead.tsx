@@ -50,8 +50,7 @@ export class TypeaheadDataSource<T> {
 
   addEntries(entries: ReadonlyArray<TypeaheadDataSourceEntry<T>>) {
     const uniqueEntries: Array<TypeaheadDataSourceEntry<T>> = [];
-    const intermediateEntryBuckets: Array<Array<TypeaheadDataSourceEntry<T>>> =
-      [];
+    const intermediateEntryBuckets: Array<Array<TypeaheadDataSourceEntry<T>>> = [];
 
     entries.forEach((entry) => {
       const value = entry.value;
@@ -163,10 +162,7 @@ export class TypeaheadDataSource<T> {
   }
 }
 
-function tokensMatch(
-  queryTokens: ReadonlyArray<string>,
-  entryTokens: ReadonlyArray<string>,
-) {
+function tokensMatch(queryTokens: ReadonlyArray<string>, entryTokens: ReadonlyArray<string>) {
   const numQueryTokens = queryTokens.length;
   const numEntryTokens = entryTokens.length;
   let checked = 0;
@@ -229,27 +225,19 @@ export default function Typeahead<T>({
   onBackspace?: () => void;
   onSelect?: (result: TypeaheadDataSourceEntry<T>) => string | void;
   placeholder?: string;
-  renderItem?: (
-    result: TypeaheadDataSourceEntry<T>,
-    isHighlighted?: boolean,
-  ) => ReactNode;
+  renderItem?: (result: TypeaheadDataSourceEntry<T>, isHighlighted?: boolean) => ReactNode;
   renderList?: (
     results: ReadonlyArray<TypeaheadDataSourceEntry<T>>,
     config: {
       isHighlighted: (index: number) => boolean;
       onSelect: (result: TypeaheadDataSourceEntry<T>) => void;
-      renderItem: (
-        result: TypeaheadDataSourceEntry<T>,
-        isHighlighted: boolean,
-      ) => ReactNode;
+      renderItem: (result: TypeaheadDataSourceEntry<T>, isHighlighted: boolean) => ReactNode;
       setHighlighted: (index: number) => void;
     },
   ) => ReactNode;
   resultClassName?: string;
 }) {
-  const [_results, setResults] = useState<
-    ReadonlyArray<TypeaheadDataSourceEntry<T>>
-  >([]);
+  const [_results, setResults] = useState<ReadonlyArray<TypeaheadDataSourceEntry<T>>>([]);
   const results = useMemo(
     () => _results.filter((result) => !ignoreList?.has(result.value)),
     [_results, ignoreList],
@@ -393,10 +381,7 @@ export default function Typeahead<T>({
   );
 
   useEffect(() => {
-    const queryCallback = (
-      value: string,
-      results: ReadonlyArray<TypeaheadDataSourceEntry<T>>,
-    ) => {
+    const queryCallback = (value: string, results: ReadonlyArray<TypeaheadDataSourceEntry<T>>) => {
       const currentValue = input.current?.value || '';
       if (
         document.activeElement !== input.current ||
@@ -427,9 +412,7 @@ export default function Typeahead<T>({
     const onClick = (event: MouseEvent) => {
       if (
         document.activeElement !== input.current &&
-        !(event.target as HTMLElement | undefined)?.closest(
-          `.${containerStyle}`,
-        )
+        !(event.target as HTMLElement | undefined)?.closest(`.${containerStyle}`)
       ) {
         hide();
       }
@@ -455,12 +438,7 @@ export default function Typeahead<T>({
 
   const [showEmptyResult, setShowEmptyResult] = useState(false);
   useEffect(() => {
-    if (
-      emptyResult &&
-      input.current?.value.length &&
-      !showEmptyResult &&
-      results.length === 0
-    ) {
+    if (emptyResult && input.current?.value.length && !showEmptyResult && results.length === 0) {
       const timer = setTimeout(() => setShowEmptyResult(true), 1000);
       return () => clearTimeout(timer);
     }
@@ -490,10 +468,7 @@ export default function Typeahead<T>({
       {results.length ? (
         (
           renderResults ||
-          ((
-            results,
-            { isHighlighted, onSelect, renderItem, setHighlighted },
-          ) => (
+          ((results, { isHighlighted, onSelect, renderItem, setHighlighted }) => (
             <ul
               className={cx(BoxStyle, resultStyle, resultClassName)}
               onPointerLeave={() => setHighlighted(-1)}

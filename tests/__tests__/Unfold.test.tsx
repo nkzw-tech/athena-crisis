@@ -47,14 +47,10 @@ test('unit can unfold and can change style', async () => {
   const from = vec(1, 1);
   const to = vec(3, 2);
   const initialMap: MapData | null = map.copy({
-    units: map.units
-      .set(from, Sniper.create(player1))
-      .set(to, Helicopter.create(player2)),
+    units: map.units.set(from, Sniper.create(player1)).set(to, Helicopter.create(player2)),
   });
 
-  expect(
-    initialMap.units.get(from)?.canAttackAt(from.distance(to), player1),
-  ).toBe(false);
+  expect(initialMap.units.get(from)?.canAttackAt(from.distance(to), player1)).toBe(false);
 
   const [gameState, gameActionResponse] = await executeGameActions(initialMap, [
     UnfoldAction(from),
@@ -81,8 +77,7 @@ test('unit can unfold and can change style', async () => {
     expect(screenshot).toMatchImageSnapshot();
   });
 
-  expect(snapshotEncodedActionResponse(gameActionResponse))
-    .toMatchInlineSnapshot(`
+  expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
       "Unfold (1,1)
       EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
       EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }

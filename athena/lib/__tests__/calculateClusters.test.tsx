@@ -4,11 +4,8 @@ import { SizeVector } from '../../MapData.tsx';
 import calculateClusters from '../calculateClusters.tsx';
 
 test('calculateClusters` removes nearby clusters when there is a low cluster count', () => {
-  expect(
-    [
-      ...calculateClusters(new SizeVector(10, 10), [vec(1, 1), vec(2, 2)]),
-    ].sort(),
-  ).toMatchInlineSnapshot(`
+  expect([...calculateClusters(new SizeVector(10, 10), [vec(1, 1), vec(2, 2)])].sort())
+    .toMatchInlineSnapshot(`
     [
       [
         1,

@@ -24,17 +24,9 @@ const transformVector = <T extends Action | Condition>(
   value: T,
   vector: Vector | null,
 ): Vector | null => {
-  if (
-    'from' in actionResponse &&
-    vector === RelativeVectors.Source &&
-    actionResponse.from
-  ) {
+  if ('from' in actionResponse && vector === RelativeVectors.Source && actionResponse.from) {
     return actionResponse.from;
-  } else if (
-    vector === RelativeVectors.Target &&
-    'to' in actionResponse &&
-    actionResponse.to
-  ) {
+  } else if (vector === RelativeVectors.Target && 'to' in actionResponse && actionResponse.to) {
     return actionResponse.to;
   }
 

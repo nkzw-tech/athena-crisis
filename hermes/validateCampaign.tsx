@@ -1,11 +1,7 @@
 import { Campaign, Level, LevelMap } from './Types.tsx';
 import unrollCampaign from './unrollCampaign.tsx';
 
-function detectCycle<T>(
-  level: Level<T>,
-  seen: Set<Level<T>>,
-  stack: Set<Level<T>>,
-) {
+function detectCycle<T>(level: Level<T>, seen: Set<Level<T>>, stack: Set<Level<T>>) {
   if (!seen.has(level)) {
     seen.add(level);
     stack.add(level);

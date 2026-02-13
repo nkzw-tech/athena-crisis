@@ -26,12 +26,9 @@ export async function hiddenSourceAttackAction(
   const { scheduleTimer, update } = actions;
   const { to, type } = actionResponse;
   const isDestroyedBuilding = type === 'HiddenDestroyedBuilding';
-  const isBuilding =
-    isDestroyedBuilding || type === 'HiddenSourceAttackBuilding';
+  const isBuilding = isDestroyedBuilding || type === 'HiddenSourceAttackBuilding';
   const initialMap = state.map;
-  const entityB = isBuilding
-    ? initialMap.buildings.get(to)
-    : initialMap.units.get(to);
+  const entityB = isBuilding ? initialMap.buildings.get(to) : initialMap.units.get(to);
   const newEntityB = isDestroyedBuilding
     ? null
     : isBuilding
@@ -44,9 +41,7 @@ export async function hiddenSourceAttackAction(
   });
 
   state = await attackFlashAnimation(actions, state, {
-    direction: isDestroyedBuilding
-      ? getAttackDirection(to, to)[0]
-      : actionResponse.direction,
+    direction: isDestroyedBuilding ? getAttackDirection(to, to)[0] : actionResponse.direction,
     hasAttackStance: false,
     position: to,
     type: isBuilding ? 'building' : 'unit',
@@ -75,8 +70,7 @@ export async function hiddenSourceAttackAction(
         applyHiddenState(state).map,
         entityB,
         to,
-        ('direction' in actionResponse && actionResponse.direction) ||
-          new AttackDirection('left'),
+        ('direction' in actionResponse && actionResponse.direction) || new AttackDirection('left'),
       ),
     );
   }
@@ -96,9 +90,7 @@ export async function hiddenSourceAttackAction(
               to,
               newUnitB
                 .maybeSetPlayer(
-                  actionResponse.type === 'HiddenSourceAttackUnit'
-                    ? actionResponse.playerB
-                    : null,
+                  actionResponse.type === 'HiddenSourceAttackUnit' ? actionResponse.playerB : null,
                   'recover',
                 )
                 .setAmmo(unitB.ammo),
@@ -115,10 +107,7 @@ export async function hiddenSourceAttackAction(
           style: unitB.isUnfolded() ? 'unfold' : null,
           to: null,
           variant: unitB.player,
-          weapon:
-            (weapon &&
-              previousMap.units.get(to)?.info.attack.weapons?.get(weapon)) ||
-            null,
+          weapon: (weapon && previousMap.units.get(to)?.info.attack.weapons?.get(weapon)) || null,
         });
 
         resolve({
@@ -137,19 +126,10 @@ export async function hiddenSourceAttackAction(
 export async function hiddenTargetAttackAction(
   actions: Actions,
   state: State,
-  actionResponse:
-    | HiddenTargetAttackUnitActionResponse
-    | HiddenTargetAttackBuildingActionResponse,
+  actionResponse: HiddenTargetAttackUnitActionResponse | HiddenTargetAttackBuildingActionResponse,
 ): Promise<State> {
   const initialMap = state.map;
-  const {
-    direction,
-    from,
-    hasCounterAttack,
-    type,
-    unitA: newUnitA,
-    weapon,
-  } = actionResponse;
+  const { direction, from, hasCounterAttack, type, unitA: newUnitA, weapon } = actionResponse;
   const isBuilding = type === 'HiddenTargetAttackBuilding';
   const to = isBuilding ? actionResponse.to : null;
   const building = to && isBuilding && initialMap.buildings.get(to);

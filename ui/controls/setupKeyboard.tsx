@@ -172,10 +172,7 @@ export default function setupKeyboard() {
     setup = true;
     document.addEventListener('keydown', keydownListener);
     document.addEventListener('keyup', keyupListener);
-    if (
-      process.env.NODE_ENV !== 'development' &&
-      !process.env.IS_LANDING_PAGE
-    ) {
+    if (process.env.NODE_ENV !== 'development' && !process.env.IS_LANDING_PAGE) {
       document.addEventListener('contextmenu', preventDefault);
     }
   }

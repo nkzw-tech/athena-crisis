@@ -17,17 +17,10 @@ export default function spawnBuildings(
       const { editorPlaceOn, placeOn } = building.info.configuration;
       const tiles = new Set([...(placeOn || []), ...editorPlaceOn]);
       if (!tiles.has(map.getTileInfo(vector))) {
-        writeTile(
-          tileMap,
-          modifiers,
-          map.getTileIndex(vector),
-          getFirstOrThrow(tiles),
-        );
+        writeTile(tileMap, modifiers, map.getTileIndex(vector), getFirstOrThrow(tiles));
       }
     }
-    return withModifiers(
-      map.copy({ buildings: map.buildings.merge(buildings), map: tileMap }),
-    );
+    return withModifiers(map.copy({ buildings: map.buildings.merge(buildings), map: tileMap }));
   }
 
   return map;

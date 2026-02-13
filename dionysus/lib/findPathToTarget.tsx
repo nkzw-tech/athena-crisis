@@ -26,10 +26,7 @@ export default function findPathToTarget(
     0;
 
   const isWithinOpponentAttackableArea = (vector: Vector) => {
-    if (
-      unit.matchesBehavior(AIBehavior.Defense) ||
-      unit.matchesBehavior(AIBehavior.Passive)
-    ) {
+    if (unit.matchesBehavior(AIBehavior.Defense) || unit.matchesBehavior(AIBehavior.Passive)) {
       return getAttackableArea(
         map,
         new Set(
@@ -45,8 +42,7 @@ export default function findPathToTarget(
   };
 
   let radius: number | null = null;
-  const getRadius = () =>
-    radius ?? (radius = unit.info.getRadiusFor(map.getPlayer(unit)));
+  const getRadius = () => radius ?? (radius = unit.info.getRadiusFor(map.getPlayer(unit)));
 
   const canAccess = (vector: Vector) =>
     moveableRadius.has(vector) &&
@@ -55,13 +51,8 @@ export default function findPathToTarget(
     (!to || vector.distance(to.vector) >= minimumDistance) &&
     !isWithinOpponentAttackableArea(vector);
 
-  const minByDistance = (
-    target: Vector,
-    filter: (vector: Vector) => boolean | undefined,
-  ) =>
-    minBy(moveableRadius.keys().filter(filter), (vector) =>
-      vector.distance(target),
-    );
+  const minByDistance = (target: Vector, filter: (vector: Vector) => boolean | undefined) =>
+    minBy(moveableRadius.keys().filter(filter), (vector) => vector.distance(target));
 
   while (target) {
     if (canAccess(target.vector)) {
@@ -70,8 +61,7 @@ export default function findPathToTarget(
         const hiddenTarget =
           minByDistance(
             targetVector,
-            (vector) =>
-              map.getTileInfo(vector).style.hidden && canAccess(vector),
+            (vector) => map.getTileInfo(vector).style.hidden && canAccess(vector),
           ) || target.vector;
 
         // Only hide if the distance to the hidden field isn't too large.
@@ -88,8 +78,7 @@ export default function findPathToTarget(
           minByDistance(
             targetVector,
             (vector) =>
-              unit.info.canDropFrom(Pioneer, map.getTileInfo(vector)) &&
-              canAccess(vector),
+              unit.info.canDropFrom(Pioneer, map.getTileInfo(vector)) && canAccess(vector),
           ) || target.vector;
 
         // Only consider the drop target if the distance to the final target isn't large.

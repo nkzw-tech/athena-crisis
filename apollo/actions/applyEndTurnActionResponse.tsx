@@ -5,11 +5,7 @@ import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { HealAmount } from '@deities/athena/map/Configuration.tsx';
-import {
-  HumanPlayer,
-  isHumanPlayer,
-  resolveDynamicPlayerID,
-} from '@deities/athena/map/Player.tsx';
+import { HumanPlayer, isHumanPlayer, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { EndTurnActionResponse } from '../ActionResponse.tsx';
 
@@ -17,10 +13,7 @@ export default function applyEndTurnActionResponse(
   map: MapData,
   { current, miss, next, rotatePlayers, round, supply }: EndTurnActionResponse,
 ): MapData {
-  const nextPlayer = map
-    .getPlayer(next.player)
-    .setFunds(next.funds)
-    .disableActiveSkills();
+  const nextPlayer = map.getPlayer(next.player).setFunds(next.funds).disableActiveSkills();
 
   let currentPlayer = map.getCurrentPlayer().setFunds(current.funds);
   if (miss) {
@@ -43,8 +36,7 @@ export default function applyEndTurnActionResponse(
     mapWithStatusEffects.units.reduce(
       (sum, unit, vector) =>
         sum +
-        (!supplyVectors.has(vector) &&
-        shouldRemoveUnit(map, vector, unit, nextPlayer.id)
+        (!supplyVectors.has(vector) && shouldRemoveUnit(map, vector, unit, nextPlayer.id)
           ? unit.count()
           : 0),
       0,
@@ -53,11 +45,9 @@ export default function applyEndTurnActionResponse(
   if (destroyedUnits > 0) {
     const mapB = map.copy({ teams });
     teams = updatePlayers(teams, [
-      mapB
-        .getPlayer(resolveDynamicPlayerID(map, 'opponent', nextPlayer.id))
-        .modifyStatistics({
-          destroyedUnits,
-        }),
+      mapB.getPlayer(resolveDynamicPlayerID(map, 'opponent', nextPlayer.id)).modifyStatistics({
+        destroyedUnits,
+      }),
       mapB.getPlayer(nextPlayer.id).modifyStatistics({
         lostUnits: destroyedUnits,
       }),
@@ -70,10 +60,9 @@ export default function applyEndTurnActionResponse(
       createBotWithName(temporaryMap.getPlayer(current.player)).copy({
         teamId: currentPlayer.teamId,
       }),
-      HumanPlayer.from(
-        temporaryMap.getPlayer(next.player),
-        currentPlayer.userId,
-      ).copy({ teamId: nextPlayer.teamId }),
+      HumanPlayer.from(temporaryMap.getPlayer(next.player), currentPlayer.userId).copy({
+        teamId: nextPlayer.teamId,
+      }),
     ]);
   }
 

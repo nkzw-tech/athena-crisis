@@ -8,11 +8,7 @@ import SelectEntity from '../ui/SelectEntity.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 
 export default abstract class AbstractSelectBehavior {
-  protected abstract onSelect(
-    vector: Vector,
-    state: State,
-    entity: Entity,
-  ): StateLike | null;
+  protected abstract onSelect(vector: Vector, state: State, entity: Entity): StateLike | null;
 
   protected abstract canSelectCandidates(
     state: State,
@@ -21,19 +17,13 @@ export default abstract class AbstractSelectBehavior {
   ): { building: Building | null; unit: Unit | null };
 
   select(vector: Vector, state: State, actions: Actions): StateLike | null {
-    const { map, selectedBuilding, selectedPosition, selectedUnit, vision } =
-      state;
+    const { map, selectedBuilding, selectedPosition, selectedUnit, vision } = state;
 
     if (!vision.isVisible(map, vector)) {
       return resetBehavior(state.initialBehaviorClass);
     }
 
-    if (
-      selectedBuilding &&
-      selectedUnit &&
-      selectedPosition &&
-      !selectedPosition.equals(vector)
-    ) {
+    if (selectedBuilding && selectedUnit && selectedPosition && !selectedPosition.equals(vector)) {
       return selectFallback(vector, state, actions);
     }
 
@@ -83,13 +73,7 @@ export default abstract class AbstractSelectBehavior {
   }
 
   component = ({ actions, state }: StateWithActions): ReactElement | null => {
-    return (
-      <BaseSelectComponent
-        actions={actions}
-        getState={this.getState}
-        state={state}
-      />
-    );
+    return <BaseSelectComponent actions={actions} getState={this.getState} state={state} />;
   };
 }
 
@@ -111,13 +95,11 @@ export function BaseSelectComponent({
     <SelectEntity
       actions={actions}
       onSelectBuilding={useCallback(
-        (position, building) =>
-          actions.update(getState(position, state, null, building, actions)),
+        (position, building) => actions.update(getState(position, state, null, building, actions)),
         [actions, getState, state],
       )}
       onSelectUnit={useCallback(
-        (position, unit) =>
-          actions.update(getState(position, state, unit, null, actions)),
+        (position, unit) => actions.update(getState(position, state, unit, null, actions)),
         [actions, getState, state],
       )}
       state={state}

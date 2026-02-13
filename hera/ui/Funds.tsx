@@ -1,12 +1,7 @@
 import Icon from '@deities/ui/Icon.tsx';
 import { css, cx } from '@emotion/css';
 import Coin from '@iconify-icons/pixelarticons/coin.js';
-import {
-  motion,
-  useMotionValueEvent,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import { motion, useMotionValueEvent, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const format = (number: number) => Math.round(number).toLocaleString();

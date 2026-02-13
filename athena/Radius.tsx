@@ -1,12 +1,6 @@
 import FastPriorityQueue from 'fastpriorityqueue';
 import { Skill } from './info/Skill.tsx';
-import {
-  Bridge,
-  Space,
-  TileInfo,
-  TileTypes,
-  TransitionCost,
-} from './info/Tile.tsx';
+import { Bridge, Space, TileInfo, TileTypes, TransitionCost } from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
 import canAccessBridge from './lib/canAccessBridge.tsx';
 import canLoad from './lib/canLoad.tsx';
@@ -20,11 +14,7 @@ import MapData from './MapData.tsx';
 type RadiusConfiguration = {
   getCost(map: MapData, unit: Unit, vector: Vector): number;
   getResourceValue(unit: Unit): number;
-  getTransitionCost(
-    info: UnitInfo,
-    current: TileInfo,
-    parent: TileInfo,
-  ): number;
+  getTransitionCost(info: UnitInfo, current: TileInfo, parent: TileInfo): number;
   isAccessible(map: MapData, unit: Unit, vector: Vector): boolean;
 };
 
@@ -34,11 +24,7 @@ export type RadiusItem = Readonly<{
   vector: Vector;
 }>;
 
-export const RadiusItem = (
-  vector: Vector,
-  cost: number = 0,
-  parent?: Vector | null,
-) => ({
+export const RadiusItem = (vector: Vector, cost: number = 0, parent?: Vector | null) => ({
   cost,
   parent: parent && !vector.equals(parent) ? parent : null,
   vector,
@@ -74,11 +60,7 @@ export const MoveConfiguration = {
       : -1;
   },
   getResourceValue: (unit: Unit) => unit.fuel,
-  getTransitionCost: (
-    info: UnitInfo,
-    current: TileInfo,
-    parent: TileInfo,
-  ): number => {
+  getTransitionCost: (info: UnitInfo, current: TileInfo, parent: TileInfo): number => {
     if (current.group === parent.group) {
       return 0;
     }
@@ -86,12 +68,10 @@ export const MoveConfiguration = {
     const parentCost = parent.getTransitionCost(info);
     const currentCost = current.getTransitionCost(info);
     const maybeCancelTransitionCost =
-      parentCost === TransitionCost.Cancel ||
-      currentCost === TransitionCost.Cancel;
+      parentCost === TransitionCost.Cancel || currentCost === TransitionCost.Cancel;
 
     if (maybeCancelTransitionCost) {
-      return (parentCost === TransitionCost.Cancel &&
-        currentCost === TransitionCost.Cancel) ||
+      return (parentCost === TransitionCost.Cancel && currentCost === TransitionCost.Cancel) ||
         (parent.group === Bridge.group && current.group === Bridge.group) ||
         (parent.group === Bridge.group && current !== Space) ||
         (current.group === Bridge.group && parent !== Space)
@@ -109,8 +89,7 @@ const VisionConfiguration = {
     map.maybeGetTileInfo(vector)?.configuration.vision || -1,
   getResourceValue: () => Number.POSITIVE_INFINITY,
   getTransitionCost: () => 0,
-  isAccessible: (map: MapData, unit: Unit, vector: Vector) =>
-    map.contains(vector),
+  isAccessible: (map: MapData, unit: Unit, vector: Vector) => map.contains(vector),
 } as const;
 
 function calculateRadius(
@@ -157,11 +136,7 @@ function calculateRadius(
       const nextCost =
         parentCost +
         cost +
-        getTransitionCost(
-          info,
-          map.getTileInfo(vector),
-          map.getTileInfo(currentVector),
-        );
+        getTransitionCost(info, map.getTileInfo(vector), map.getTileInfo(currentVector));
       const previousPath = paths.get(currentVector);
       if (
         nextCost <= radius &&
@@ -232,12 +207,7 @@ export function getPathCost(
     }
 
     totalCost +=
-      cost +
-      getTransitionCost(
-        info,
-        map.getTileInfo(vector),
-        map.getTileInfo(previousVector),
-      );
+      cost + getTransitionCost(info, map.getTileInfo(vector), map.getTileInfo(previousVector));
 
     if (totalCost > radius || totalCost > getResourceValue(unit)) {
       return -1;
@@ -259,18 +229,11 @@ export function visible(
   const vision =
     radius +
     (unit.isUnfolded() ? 2 : 0) +
-    (unit.info.type === EntityType.Soldier &&
-    map.getTileInfo(start).type & TileTypes.Mountain
+    (unit.info.type === EntityType.Soldier && map.getTileInfo(start).type & TileTypes.Mountain
       ? 1
       : 0);
 
-  const visible = calculateRadius(
-    map,
-    unit,
-    start,
-    vision,
-    VisionConfiguration,
-  );
+  const visible = calculateRadius(map, unit, start, vision, VisionConfiguration);
 
   const player = map.getPlayer(unit);
   const canSeeHiddenFields =
@@ -278,11 +241,7 @@ export function visible(
     player.activeSkills.has(Skill.UnitInfantryForestAttackAndDefenseIncrease);
 
   for (const [vector] of visible) {
-    if (
-      !canSeeHiddenFields &&
-      vector.distance(start) > 1 &&
-      map.getTileInfo(vector).style.hidden
-    ) {
+    if (!canSeeHiddenFields && vector.distance(start) > 1 && map.getTileInfo(vector).style.hidden) {
       visible.delete(vector);
     }
   }
@@ -348,11 +307,7 @@ export function attackable(
       if (map.contains(currentVector)) {
         attackable.set(
           currentVector,
-          RadiusItem(
-            currentVector,
-            map.getTileInfo(currentVector).configuration.cover,
-            start,
-          ),
+          RadiusItem(currentVector, map.getTileInfo(currentVector).configuration.cover, start),
         );
       }
     }
@@ -361,16 +316,13 @@ export function attackable(
       const moveable = calculateRadius(map, unit, start, radius);
       for (const [, parent] of moveable) {
         const parentCost =
-          optimize === 'cover'
-            ? -map.getTileInfo(parent.vector).configuration.cover
-            : parent.cost;
+          optimize === 'cover' ? -map.getTileInfo(parent.vector).configuration.cover : parent.cost;
         const unitB = map.units.get(parent.vector);
         // If there is a unit that you own, and it hasn't moved yet,
         // you can move it out of the way to make the fields around it attackable.
         if (
           unitB &&
-          ((unitB.hasMoved() && map.matchesPlayer(unitB, unit)) ||
-            !map.isOpponent(unitB, unit))
+          ((unitB.hasMoved() && map.matchesPlayer(unitB, unit)) || !map.isOpponent(unitB, unit))
         ) {
           continue;
         }
@@ -380,14 +332,8 @@ export function attackable(
           const vector = vectors[i];
           if (map.contains(vector)) {
             const itemB = attackable.get(vector);
-            if (
-              !itemB ||
-              (parentCost < itemB.cost && vector.distance(start) > 1)
-            ) {
-              attackable.set(
-                vector,
-                RadiusItem(vector, parentCost, parent.vector),
-              );
+            if (!itemB || (parentCost < itemB.cost && vector.distance(start) > 1)) {
+              attackable.set(vector, RadiusItem(vector, parentCost, parent.vector));
             }
           }
         }
@@ -409,10 +355,7 @@ export function attackable(
                   map.units.has(currentAttackable.parent) &&
                   !map.units.has(item.vector)))
             ) {
-              attackable.set(
-                vector,
-                RadiusItem(vector, item.cost, item.vector),
-              );
+              attackable.set(vector, RadiusItem(vector, item.cost, item.vector));
             }
           }
         }

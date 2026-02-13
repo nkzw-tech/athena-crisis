@@ -3,12 +3,7 @@ import {
   EndTurnAction,
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import {
-  Flamethrower,
-  Infantry,
-  Jeep,
-  RocketLauncher,
-} from '@deities/athena/info/Unit.tsx';
+import { Flamethrower, Infantry, Jeep, RocketLauncher } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -48,10 +43,7 @@ test('units can act after dropping them after one turn', async () => {
   expect(unitA.canMove()).toBe(false);
   expect(unitA.isCompleted()).toBe(true);
 
-  const [gameStateB] = await executeGameActions(lastMapA, [
-    EndTurnAction(),
-    EndTurnAction(),
-  ]);
+  const [gameStateB] = await executeGameActions(lastMapA, [EndTurnAction(), EndTurnAction()]);
 
   const lastMapB = gameStateB.at(-1)![1];
   const unitB = lastMapB.units.get(toA)!;

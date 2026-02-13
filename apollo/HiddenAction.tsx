@@ -178,13 +178,7 @@ function applyHiddenSourceAttackUnitAction(
 
 function applyHiddenSourceAttackBuildingAction(
   map: MapData,
-  {
-    building,
-    chargeB,
-    chargeC,
-    to,
-    unitC,
-  }: HiddenSourceAttackBuildingActionResponse,
+  { building, chargeB, chargeC, to, unitC }: HiddenSourceAttackBuildingActionResponse,
 ) {
   const existingBuilding = map.buildings.get(to);
   if (!existingBuilding) {
@@ -231,10 +225,7 @@ function applyHiddenSourceAttackBuildingAction(
   }
 
   return map.copy({
-    buildings: map.buildings.set(
-      to,
-      existingBuilding.setHealth(building.health),
-    ),
+    buildings: map.buildings.set(to, existingBuilding.setHealth(building.health)),
     units: existingUnit
       ? map.units.set(to, existingUnit.copy(unitC).maybeUpdateAIBehavior())
       : map.units,
@@ -243,13 +234,7 @@ function applyHiddenSourceAttackBuildingAction(
 
 function applyHiddenTargetAttackUnitAction(
   map: MapData,
-  {
-    chargeA,
-    from,
-    hasCounterAttack,
-    newPlayerA,
-    unitA,
-  }: HiddenTargetAttackUnitActionResponse,
+  { chargeA, from, hasCounterAttack, newPlayerA, unitA }: HiddenTargetAttackUnitActionResponse,
 ) {
   const unit = map.units.get(from);
   return unit

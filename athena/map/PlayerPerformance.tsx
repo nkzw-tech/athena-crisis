@@ -1,7 +1,5 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
-import hasBonusObjective, {
-  achievedOneBonusObjective,
-} from '../lib/hasBonusObjective.tsx';
+import hasBonusObjective, { achievedOneBonusObjective } from '../lib/hasBonusObjective.tsx';
 import MapData from '../MapData.tsx';
 import { PlayerID } from './Player.tsx';
 import { PlayerStatistics } from './PlayerStatistics.tsx';
@@ -29,10 +27,7 @@ export const PerformanceStyleComparators = {
   [PerformanceStyleType.OneShots]: Comparators['≥'],
 } as const;
 
-export const PerformanceStyleTypeShortName: Record<
-  PerformanceStyleType,
-  string
-> = {
+export const PerformanceStyleTypeShortName: Record<PerformanceStyleType, string> = {
   [PerformanceStyleType.CapturedBuildings]: 'C',
   [PerformanceStyleType.LostUnits]: 'LU',
   [PerformanceStyleType.OneShots]: 'OS',
@@ -66,21 +61,14 @@ export type PlainPlayerPerformance = [
 export function getPowerValue({ destroyedUnits, lostUnits }: PlayerStatistics) {
   return destroyedUnits === 0
     ? 0
-    : Math.floor(Math.max(0, Math.min(10, destroyedUnits / lostUnits)) * 100) /
-        100;
+    : Math.floor(Math.max(0, Math.min(10, destroyedUnits / lostUnits)) * 100) / 100;
 }
 
-export function getStyleValue(
-  style: PerformanceStyleType,
-  stats: PlayerStatistics,
-) {
+export function getStyleValue(style: PerformanceStyleType, stats: PlayerStatistics) {
   return stats[StatsValues[style]];
 }
 
-const achievedStyleMetric = (
-  [style, value]: PerformanceStyle,
-  stats: PlayerStatistics,
-) => {
+const achievedStyleMetric = ([style, value]: PerformanceStyle, stats: PlayerStatistics) => {
   const statsValue = stats[StatsValues[style]];
   const comparator = PerformanceStyleComparators[style];
   switch (comparator) {
@@ -107,19 +95,13 @@ export function evaluatePlayerPerformance(
     bonus: hasBonusObjective(map, playerId) ? achievedBonusObjective : null,
     pace: performance.pace != null ? map.round <= performance.pace : null,
     power: performance.power != null ? power >= performance.power : null,
-    style: performance.style
-      ? achievedStyleMetric(performance.style, player.stats)
-      : null,
+    style: performance.style ? achievedStyleMetric(performance.style, player.stats) : null,
   };
 }
 
 export function hasPerformanceExpectation(map: MapData) {
   const { performance } = map.config;
-  return (
-    performance.pace != null ||
-    performance.power != null ||
-    performance.style != null
-  );
+  return performance.pace != null || performance.power != null || performance.style != null;
 }
 
 export function getPerformanceExpectationCount(map: MapData, player: PlayerID) {
@@ -132,16 +114,11 @@ export function getPerformanceExpectationCount(map: MapData, player: PlayerID) {
   );
 }
 
-export function shouldEvaluatePlayerPerformance(
-  map: MapData,
-  playerId: PlayerID,
-) {
+export function shouldEvaluatePlayerPerformance(map: MapData, playerId: PlayerID) {
   return hasPerformanceExpectation(map) || hasBonusObjective(map, playerId);
 }
 
-export function decodePlayerPerformance(
-  performance: PlainPlayerPerformance,
-): PlayerPerformance {
+export function decodePlayerPerformance(performance: PlainPlayerPerformance): PlayerPerformance {
   return {
     bonus: performance[3],
     pace: performance[0],
@@ -150,15 +127,8 @@ export function decodePlayerPerformance(
   };
 }
 
-export function encodePlayerPerformance(
-  performance: PlayerPerformance,
-): PlainPlayerPerformance {
-  return [
-    performance.pace,
-    performance.power,
-    performance.style,
-    performance.bonus,
-  ];
+export function encodePlayerPerformance(performance: PlayerPerformance): PlainPlayerPerformance {
+  return [performance.pace, performance.power, performance.style, performance.bonus];
 }
 
 export function maybeDecodePlayerPerformance(result: string | undefined) {

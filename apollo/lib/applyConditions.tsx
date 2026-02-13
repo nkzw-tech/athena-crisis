@@ -16,21 +16,14 @@ export default function applyConditions(
 ): [GameState, Effects] {
   let gameState: GameStateWithEffects = [];
   const queue: Array<
-    readonly [
-      lastActionResponse: ActionResponse,
-      effects: Effects,
-      addToGameState: boolean,
-    ]
+    readonly [lastActionResponse: ActionResponse, effects: Effects, addToGameState: boolean]
   > = [[lastActionResponse, effects, false]];
 
   while (queue.length) {
     const previousMap = currentMap;
     const [actionResponse, _currentEffects, _addToGameState] = queue.shift()!;
     let currentEffects = _currentEffects;
-    if (
-      actionResponse.type === 'ActivatePower' &&
-      actionResponse.skill === Skill.HighTide
-    ) {
+    if (actionResponse.type === 'ActivatePower' && actionResponse.skill === Skill.HighTide) {
       effects = currentEffects = resizeEffects(
         resizeEffects(
           effects,
@@ -72,9 +65,7 @@ export default function applyConditions(
       effectGameState.some(
         ([actionResponse]) =>
           actionResponse.type === 'Spawn' &&
-          actionResponse.units.some((unit) =>
-            previousMap.matchesPlayer(unit, lostPlayer),
-          ),
+          actionResponse.units.some((unit) => previousMap.matchesPlayer(unit, lostPlayer)),
       )
     ) {
       queue.length = 0;
@@ -82,12 +73,7 @@ export default function applyConditions(
 
       // Reapply the same effects on a previous version of the game state in which the player has lost but
       // lose criteria (ie. building ownership) has not been updated yet.
-      effectGameState = applyEffects(
-        previousMap,
-        previousMap,
-        currentEffects,
-        actionResponse,
-      );
+      effectGameState = applyEffects(previousMap, previousMap, currentEffects, actionResponse);
       currentMap = previousMap;
     }
 
@@ -95,11 +81,7 @@ export default function applyConditions(
       gameState = [...gameState, [actionResponse, activeMap, currentEffects]];
     }
 
-    const objectiveState = applyObjectives(
-      previousMap,
-      activeMap,
-      actionResponse,
-    );
+    const objectiveState = applyObjectives(previousMap, activeMap, actionResponse);
 
     if (objectiveState?.length) {
       queue.push(
@@ -113,8 +95,7 @@ export default function applyConditions(
     if (effectGameState?.length) {
       queue.unshift(
         ...effectGameState.map(
-          ([actionResponse, , effects]) =>
-            [actionResponse, effects, true] as const,
+          ([actionResponse, , effects]) => [actionResponse, effects, true] as const,
         ),
       );
     }
@@ -122,9 +103,6 @@ export default function applyConditions(
 
   const lastEntry = gameState?.at(-1);
   return lastEntry
-    ? [
-        gameState.map(([actionResponse, map]) => [actionResponse, map]),
-        lastEntry[2],
-      ]
+    ? [gameState.map(([actionResponse, map]) => [actionResponse, map]), lastEntry[2]]
     : [[], effects];
 }

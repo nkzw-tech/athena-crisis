@@ -10,14 +10,7 @@ export const metadata: MapMetadata = {
       'GameEnd',
       new Set([
         {
-          actions: [
-            CharacterMessage(
-              2,
-              "Yes! That will do it! Let's get out of here!",
-              'self',
-              2,
-            ),
-          ],
+          actions: [CharacterMessage(2, "Yes! That will do it! Let's get out of here!", 'self', 2)],
           conditions: [{ type: 'GameEnd', value: 'win' }],
         },
         {
@@ -33,12 +26,7 @@ export const metadata: MapMetadata = {
         },
         {
           actions: [
-            CharacterMessage(
-              1,
-              'How about we just sail out of here?',
-              'self',
-              2,
-            ),
+            CharacterMessage(1, 'How about we just sail out of here?', 'self', 2),
             CharacterMessage(
               2,
               'That was a close call. Do you have any idea what is going on here?',
@@ -67,18 +55,8 @@ export const metadata: MapMetadata = {
               'What are you talking about {1.name}? We are surrounded and you think you got time to break the 4th wall? Bazooks!',
               'self',
             ),
-            CharacterMessage(
-              1,
-              'What!? How did we get overrun by enemies?',
-              'self',
-              1,
-            ),
-            CharacterMessage(
-              15,
-              "You aren't getting out of here. Get 'em!",
-              'opponent',
-              2,
-            ),
+            CharacterMessage(1, 'What!? How did we get overrun by enemies?', 'self', 1),
+            CharacterMessage(15, "You aren't getting out of here. Get 'em!", 'opponent', 2),
             CharacterMessage(
               1,
               "I'm not prepared for this. I don't even have any weapons.",

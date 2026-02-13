@@ -49,8 +49,6 @@ export default function getTurnState<
     state,
     lastActionResponse,
     turnEffects,
-    actionResponses.length
-      ? [...(recentActions || []), [actionResponses, effects]]
-      : recentActions,
+    actionResponses.length ? [...(recentActions || []), [actionResponses, effects]] : recentActions,
   ];
 }

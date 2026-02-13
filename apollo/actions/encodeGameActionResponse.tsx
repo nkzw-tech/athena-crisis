@@ -11,11 +11,7 @@ import { ActionResponse } from '../ActionResponse.tsx';
 import { encodeActionResponse } from '../EncodedActions.tsx';
 import computeVisibleActions from '../lib/computeVisibleActions.tsx';
 import getVisibleEntities from '../lib/getVisibleEntities.tsx';
-import {
-  EncodedGameActionResponse,
-  EncodedGameActionResponseItem,
-  GameState,
-} from '../Types.tsx';
+import { EncodedGameActionResponse, EncodedGameActionResponseItem, GameState } from '../Types.tsx';
 
 const removeActionedEntities = <T extends Unit | Building>(
   entities: ImmutableMap<Vector, T> | null,
@@ -43,25 +39,15 @@ const addVisibleEntities = (
   actionResponse: ActionResponse,
   labels: PlayerIDSet | null,
 ):
-  | [
-      PlainEntitiesList<PlainBuilding> | undefined,
-      PlainEntitiesList<PlainUnit> | undefined,
-    ]
+  | [PlainEntitiesList<PlainBuilding> | undefined, PlainEntitiesList<PlainUnit> | undefined]
   | null => {
   if (!previousMap.config.fog) {
     return null;
   }
 
-  const [buildings, units] = getVisibleEntities(
-    previousMap,
-    currentMap,
-    vision,
-    labels,
-  );
+  const [buildings, units] = getVisibleEntities(previousMap, currentMap, vision, labels);
   const actualBuildings =
-    actionResponse.type === 'Move'
-      ? buildings
-      : removeActionedEntities(buildings, actionResponse);
+    actionResponse.type === 'Move' ? buildings : removeActionedEntities(buildings, actionResponse);
   const actualUnits = removeActionedEntities(units, actionResponse);
   return [
     actualBuildings.size ? encodeEntities(actualBuildings) : undefined,
@@ -79,18 +65,10 @@ const encodeItem = (
   const encodedActionResponse = encodeActionResponse(actionResponse);
   const visible =
     previousMap && currentMap
-      ? addVisibleEntities(
-          previousMap,
-          currentMap,
-          vision,
-          actionResponse,
-          labels,
-        )
+      ? addVisibleEntities(previousMap, currentMap, vision, actionResponse, labels)
       : null;
 
-  return visible
-    ? [encodedActionResponse, ...visible]
-    : [encodedActionResponse];
+  return visible ? [encodedActionResponse, ...visible] : [encodedActionResponse];
 };
 
 export default function encodeGameActionResponse(
@@ -103,9 +81,7 @@ export default function encodeGameActionResponse(
   labels: PlayerIDSet | null,
 ) {
   const response: EncodedGameActionResponse = [
-    actionResponse
-      ? encodeItem(actionResponse, vision, clientMap, initialMap, labels)
-      : null,
+    actionResponse ? encodeItem(actionResponse, vision, clientMap, initialMap, labels) : null,
   ];
 
   if (gameState?.length) {

@@ -23,16 +23,11 @@ export default function calculateFunds(map: MapData, player: Player): number {
       map.config.multiplier *
       (1 +
         (PowerStationMultiplier +
-          (player.skills.has(Skill.UnlockPowerStation)
-            ? PowerStationSkillMultiplier
-            : 0)) *
+          (player.skills.has(Skill.UnlockPowerStation) ? PowerStationSkillMultiplier : 0)) *
           powerStations),
   );
 }
 
 export function calculateTotalPossibleFunds(map: MapData): number {
-  return map.buildings.reduce(
-    (sum, building) => sum + building.info.configuration.funds,
-    0,
-  );
+  return map.buildings.reduce((sum, building) => sum + building.info.configuration.funds, 0);
 }

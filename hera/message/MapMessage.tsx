@@ -1,14 +1,8 @@
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { toPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import {
-  MapMessage,
-  PlainMapMessage,
-} from '@deities/athena/message/Message.tsx';
+import { MapMessage, PlainMapMessage } from '@deities/athena/message/Message.tsx';
 import { ButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -24,16 +18,9 @@ import {
   TranslatedMessagePunctuation,
   TranslatedMessageTemplate,
 } from '../i18n/MessageMap.tsx';
-import {
-  Actions,
-  ClientMapMessage,
-  PartialClientMapMessage,
-  PlayerDetails,
-} from '../Types.tsx';
+import { Actions, ClientMapMessage, PartialClientMapMessage, PlayerDetails } from '../Types.tsx';
 import StarIcon from '../ui/StarIcon.tsx';
-import MapMessageContainer, {
-  getMessagePlayer,
-} from './MapMessageContainer.tsx';
+import MapMessageContainer, { getMessagePlayer } from './MapMessageContainer.tsx';
 import MapMessageTemplate from './MapMessageTemplate.tsx';
 import MessageTagValue from './MessageTagValue.tsx';
 
@@ -46,8 +33,7 @@ export function getMessageContent<
   isNext: boolean = false,
 ): ReactNode | null {
   const template = TranslatedMessageTemplate.get(message.template)?.();
-  const punctuation =
-    TranslatedMessagePunctuation.get(message.template)?.() || '.';
+  const punctuation = TranslatedMessagePunctuation.get(message.template)?.() || '.';
   if (!template) {
     return null;
   }
@@ -55,19 +41,11 @@ export function getMessageContent<
   const conjunction = 'conjunction' in message ? message.conjunction : null;
   const next = 'next' in message && message.next;
   const translatedConjunction =
-    (conjunction != null &&
-      TranslatedMessageConjunctions.get(conjunction)?.()) ||
-    null;
+    (conjunction != null && TranslatedMessageConjunctions.get(conjunction)?.()) || null;
 
   const nextMessage =
-    conjunction != null && next
-      ? getMessageContent(next, playerDetails, biome, true)
-      : null;
-  const hasNext = !!(
-    nextMessage &&
-    translatedConjunction &&
-    conjunction != null
-  );
+    conjunction != null && next ? getMessageContent(next, playerDetails, biome, true) : null;
+  const hasNext = !!(nextMessage && translatedConjunction && conjunction != null);
 
   const [tag, value, player] = message.value;
   const content = (
@@ -123,9 +101,7 @@ export default function MapMessageComponent({
   playerDetails: PlayerDetails;
   scale: number;
   shouldDelay: boolean;
-  toggleLikeMessage:
-    | ((id: string) => Promise<PartialClientMapMessage>)
-    | undefined;
+  toggleLikeMessage: ((id: string) => Promise<PartialClientMapMessage>) | undefined;
   update: Actions['update'];
   vector: Vector;
   zIndex: number;
@@ -161,49 +137,47 @@ export default function MapMessageComponent({
               </div>
             </Stack>
           )}
-          {toggleLikeMessage &&
-            currentUser &&
-            currentUser?.id !== message.user.id && (
-              <Stack
-                alignCenter
-                center
-                className={cx(
-                  viewerLiked &&
-                    (playerID === 2 || playerID === 7 || playerID === 3
-                      ? alternateLikedStyle
-                      : likedStyle),
-                  ButtonStyle,
-                )}
-                gap={4}
-                onClick={async () => {
-                  const [, result] = await Promise.all([
-                    update((state) => ({
-                      messages: new Map(state.messages).set(vector, {
-                        ...message,
-                        viewerLiked: !viewerLiked,
-                      }),
-                    })),
-                    await toggleLikeMessage(message.id),
-                  ] as const);
-
-                  await update((state) => ({
+          {toggleLikeMessage && currentUser && currentUser?.id !== message.user.id && (
+            <Stack
+              alignCenter
+              center
+              className={cx(
+                viewerLiked &&
+                  (playerID === 2 || playerID === 7 || playerID === 3
+                    ? alternateLikedStyle
+                    : likedStyle),
+                ButtonStyle,
+              )}
+              gap={4}
+              onClick={async () => {
+                const [, result] = await Promise.all([
+                  update((state) => ({
                     messages: new Map(state.messages).set(vector, {
                       ...message,
-                      ...result,
+                      viewerLiked: !viewerLiked,
                     }),
-                  }));
-                }}
-              >
-                <Icon className={cx(iconStyle, rotateUpStyle)} icon={Reply} />
-                <div>
-                  {viewerLiked ? (
-                    <fbt desc="Liked button">Liked</fbt>
-                  ) : (
-                    <fbt desc="Like button">Like</fbt>
-                  )}
-                </div>
-              </Stack>
-            )}
+                  })),
+                  await toggleLikeMessage(message.id),
+                ] as const);
+
+                await update((state) => ({
+                  messages: new Map(state.messages).set(vector, {
+                    ...message,
+                    ...result,
+                  }),
+                }));
+              }}
+            >
+              <Icon className={cx(iconStyle, rotateUpStyle)} icon={Reply} />
+              <div>
+                {viewerLiked ? (
+                  <fbt desc="Liked button">Liked</fbt>
+                ) : (
+                  <fbt desc="Like button">Like</fbt>
+                )}
+              </div>
+            </Stack>
+          )}
         </Stack>
       }
       isValuable={message.isValuable}
@@ -216,9 +190,7 @@ export default function MapMessageComponent({
       vector={vector}
       zIndex={zIndex}
     >
-      {message.isValuable && (
-        <StarIcon className={starStyle} size="small" type="achieved" />
-      )}
+      {message.isValuable && <StarIcon className={starStyle} size="small" type="achieved" />}
       {messageContent}
     </MapMessageContainer>
   ) : null;

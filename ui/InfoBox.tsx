@@ -4,12 +4,8 @@ import { HTMLAttributes } from 'react';
 import clipBorder from './clipBorder.tsx';
 import { applyVar } from './cssVar.tsx';
 
-export default function InfoBox(
-  props: HTMLAttributes<HTMLDivElement> & StackProps,
-) {
-  return (
-    <Stack {...props} between className={cx(props.className, boxStyle)} wrap />
-  );
+export default function InfoBox(props: HTMLAttributes<HTMLDivElement> & StackProps) {
+  return <Stack {...props} between className={cx(props.className, boxStyle)} wrap />;
 }
 
 const boxStyle = css`

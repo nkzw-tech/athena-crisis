@@ -16,10 +16,7 @@ import { Sprites } from 'athena-crisis:images';
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Portrait, { PortraitWidth } from '../character/Portrait.tsx';
-import {
-  BaseAnimationProps,
-  CharacterMessageAnimation,
-} from '../MapAnimations.tsx';
+import { BaseAnimationProps, CharacterMessageAnimation } from '../MapAnimations.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import formatCharacterText from './lib/formatCharacterText.tsx';
 import measureText from './lib/measureText.tsx';
@@ -83,13 +80,9 @@ const MessageComponent = ({
     formatCharacterText(text, unit, nameType, map, player, playerDetails),
   );
   const [currentLine, setCurrentLine] = useState(0);
-  const [clientWidth, setClientWidth] = useState<number>(
-    () => document.body.clientWidth,
-  );
+  const [clientWidth, setClientWidth] = useState<number>(() => document.body.clientWidth);
   const isLarge = clientWidth >= lg;
-  const [multiplier, width] = isLarge
-    ? [4, Math.min(clientWidth * 0.8, lg)]
-    : [2, clientWidth];
+  const [multiplier, width] = isLarge ? [4, Math.min(clientWidth * 0.8, lg)] : [2, clientWidth];
   const portraitScale = Math.max(2, multiplier) / 2;
   const lines = useMemo(
     () =>
@@ -112,9 +105,7 @@ const MessageComponent = ({
   const next = useCallback(
     (isComplete: boolean) => {
       const menuIsOpen =
-        document.documentElement.style.getPropertyValue(
-          cssVar('ui-is-scaled'),
-        ) === '1';
+        document.documentElement.style.getPropertyValue(cssVar('ui-is-scaled')) === '1';
       if (menuIsOpen) {
         return;
       }
@@ -257,10 +248,7 @@ const MessageComponent = ({
               {words.flatMap((word, wordIndex) => [
                 ...Array.from(word).map((letter, index) =>
                   animationComplete ? (
-                    <span
-                      className={letterStyle}
-                      key={`${currentLine}$${wordIndex}$${index}`}
-                    >
+                    <span className={letterStyle} key={`${currentLine}$${wordIndex}$${index}`}>
                       {letter}
                     </span>
                   ) : (
@@ -268,8 +256,7 @@ const MessageComponent = ({
                       className={letterStyle}
                       key={`${currentLine}$${wordIndex}$${index}`}
                       onAnimationComplete={
-                        wordIndex === words.length - 1 &&
-                        index === word.length - 1
+                        wordIndex === words.length - 1 && index === word.length - 1
                           ? () => {
                               AudioPlayer.stop(sound);
                               setCurrentComplete(true);
@@ -291,11 +278,7 @@ const MessageComponent = ({
                     <Icon className={iconAnimationStyle} icon={Forward} />
                   </span>
                 ) : (
-                  <motion.div
-                    className={iconStyle}
-                    key={currentLine}
-                    variants={child}
-                  >
+                  <motion.div className={iconStyle} key={currentLine} variants={child}>
                     <Icon className={iconAnimationStyle} icon={Forward} />
                   </motion.div>
                 ))}

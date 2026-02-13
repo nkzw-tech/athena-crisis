@@ -9,13 +9,7 @@ import { StateToStateLike, UpdateFunction } from '../Types.tsx';
 import Animation, { AnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
-export type ExplosionStyle =
-  | 'normal'
-  | 'building'
-  | 'land'
-  | 'air'
-  | 'naval'
-  | 'naval-death';
+export type ExplosionStyle = 'normal' | 'building' | 'land' | 'air' | 'naval' | 'naval-death';
 
 const spriteSize = 72;
 const frameCount = 20;
@@ -31,10 +25,7 @@ type ExplosionConfiguration = Readonly<{
   sprite?: SpriteVariant;
 }>;
 
-const animationStyle: Record<
-  Exclude<ExplosionStyle, 'building'>,
-  ExplosionConfiguration
-> = {
+const animationStyle: Record<Exclude<ExplosionStyle, 'building'>, ExplosionConfiguration> = {
   air: {
     cel: 2,
     explode: 3,
@@ -108,12 +99,7 @@ export default function Explosion({
         },
         [explode, onExplode, update],
       )}
-      position={
-        new SpriteVector(
-          (x - 1) * size - (spriteSize - size) / 2,
-          (y - offset) * size,
-        )
-      }
+      position={new SpriteVector((x - 1) * size - (spriteSize - size) / 2, (y - offset) * size)}
       rumble="explosion"
       rumbleDuration={frames.length * 0.5 * props.delay}
       size={spriteSize}

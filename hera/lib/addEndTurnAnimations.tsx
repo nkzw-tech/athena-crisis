@@ -5,17 +5,12 @@ import applyBeginTurnStatusEffects, {
 import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import getAllUnitsToRefill from '@deities/athena/lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from '@deities/athena/lib/getUnitsByPositions.tsx';
-import getUnitsToHeal, {
-  HealEntry,
-} from '@deities/athena/lib/getUnitsToHeal.tsx';
+import getUnitsToHeal, { HealEntry } from '@deities/athena/lib/getUnitsToHeal.tsx';
 import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
 import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
 import { HealAmount, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
-import Vector, {
-  sortByVectorKey,
-  sortVectors,
-} from '@deities/athena/map/Vector.tsx';
+import Vector, { sortByVectorKey, sortVectors } from '@deities/athena/map/Vector.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { fbt } from 'fbtee';
 import NullBehavior from '../behavior/NullBehavior.tsx';
@@ -33,10 +28,7 @@ const emptyUnitHealMap: ReadonlyMap<Vector, HealEntry> = new Map();
 
 const partitionUnitsToHeal = (
   units: ImmutableMap<Vector, HealEntry>,
-): [
-  unitsToHeal: ReadonlyMap<Vector, HealEntry>,
-  unitsToSupply: ReadonlyMap<Vector, Unit>,
-] => {
+): [unitsToHeal: ReadonlyMap<Vector, HealEntry>, unitsToSupply: ReadonlyMap<Vector, Unit>] => {
   const unitsToHeal = new Map<Vector, HealEntry>();
   const unitsToSupply = new Map<Vector, Unit>();
   for (const [vector, [unit, amount]] of units) {
@@ -53,10 +45,7 @@ export default function addEndTurnAnimations(
   actions: Actions,
   actionResponse: EndTurnActionResponse,
   state: State,
-  maybeExtraPositions:
-    | Promise<ReadonlyArray<Vector> | null>
-    | ReadonlyArray<Vector>
-    | null,
+  maybeExtraPositions: Promise<ReadonlyArray<Vector> | null> | ReadonlyArray<Vector> | null,
   onComplete: StateToStateLike,
 ) {
   const { requestFrame, update } = actions;
@@ -76,10 +65,7 @@ export default function addEndTurnAnimations(
           const { map, vision } = state;
           const newMap = isFake
             ? map
-            : applyBeginTurnStatusEffects(
-                subtractFuel(map, nextPlayer),
-                nextPlayer,
-              );
+            : applyBeginTurnStatusEffects(subtractFuel(map, nextPlayer), nextPlayer);
 
           const complete = (state: State) => {
             const { map } = state;
@@ -87,9 +73,7 @@ export default function addEndTurnAnimations(
               const player = map.maybeGetPlayer(nextPlayer);
               const availablePowerCount =
                 (player
-                  ? [...player.skills].filter((skill) =>
-                      canActivatePower(player, skill),
-                    ).length
+                  ? [...player.skills].filter((skill) => canActivatePower(player, skill)).length
                   : null) || 0;
               if (availablePowerCount > 0) {
                 state = {
@@ -114,8 +98,8 @@ export default function addEndTurnAnimations(
           const [unitsToHeal, unitsToRefill] = isFake
             ? [emptyUnitHealMap, emptyUnitMap]
             : partitionUnitsToHeal(
-                getUnitsToHeal(map, map.getPlayer(nextPlayer)).filter(
-                  (_, vector) => vision.isVisible(map, vector),
+                getUnitsToHeal(map, map.getPlayer(nextPlayer)).filter((_, vector) =>
+                  vision.isVisible(map, vector),
                 ),
               );
 
@@ -131,11 +115,7 @@ export default function addEndTurnAnimations(
           const unitsToSupply = new Map([
             ...(isFake
               ? emptyUnitMap
-              : getAllUnitsToRefill(
-                  newMap,
-                  vision,
-                  state.map.getPlayer(nextPlayer),
-                )),
+              : getAllUnitsToRefill(newMap, vision, state.map.getPlayer(nextPlayer))),
             ...(extraPositions ? getUnitsByPositions(map, extraPositions) : []),
             ...unitsToRefill,
           ]);
@@ -164,21 +144,13 @@ export default function addEndTurnAnimations(
 
           const animatePoisonedUnits = (state: State) =>
             poisonedUnits.size
-              ? animatePoison(
-                  state,
-                  sortByVectorKey(poisonedUnits),
-                  removeUnits,
-                )
+              ? animatePoison(state, sortByVectorKey(poisonedUnits), removeUnits)
               : removeUnits(state);
 
           await update(
             animateHeal(state, sortByVectorKey(unitsToHeal), (state) =>
               unitsToSupply.size
-                ? animateSupply(
-                    state,
-                    sortByVectorKey(unitsToSupply),
-                    animatePoisonedUnits,
-                  )
+                ? animateSupply(state, sortByVectorKey(unitsToSupply), animatePoisonedUnits)
                 : animatePoisonedUnits(state),
             ),
           );
@@ -193,10 +165,7 @@ export default function addEndTurnAnimations(
           'Round ' +
             fbt.param('round', round) +
             ', ' +
-            fbt.param(
-              'color',
-              getTranslatedFactionName(state.playerDetails, nextPlayer),
-            ),
+            fbt.param('color', getTranslatedFactionName(state.playerDetails, nextPlayer)),
           `The banner text for the beginning of a player's turn.`,
         ),
       ),

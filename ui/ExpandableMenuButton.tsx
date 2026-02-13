@@ -1,13 +1,7 @@
 import { css, cx } from '@emotion/css';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Stack, { VStack } from '@nkzw/stack';
-import {
-  ComponentProps,
-  ReactNode,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ComponentProps, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import clipBorder from './clipBorder.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
@@ -35,10 +29,7 @@ export default function ExpandableMenuButton({
   useLayoutEffect(() => {
     const element = ref.current;
     if (element) {
-      const timer = setTimeout(
-        () => setHeight(element.offsetHeight),
-        isExpanded ? duration : 0,
-      );
+      const timer = setTimeout(() => setHeight(element.offsetHeight), isExpanded ? duration : 0);
       return () => clearTimeout(timer);
     }
   }, [isExpanded]);
@@ -47,8 +38,7 @@ export default function ExpandableMenuButton({
     <MenuButton
       className={cx(baseStyle, isExpanded && cursorBaseStyle, className)}
       onClick={(event) => {
-        const isAnchor =
-          'nodeName' in event.target && event.target.nodeName === 'A';
+        const isAnchor = 'nodeName' in event.target && event.target.nodeName === 'A';
         if (!isExpanded && !isAnchor) {
           toggleExpanded();
         }
@@ -68,12 +58,7 @@ export default function ExpandableMenuButton({
         {children}
       </VStack>
       <div className={cx(iconContainerStyle, isExpanded && visibleStyle)}>
-        <Icon
-          button
-          className={iconStyle}
-          icon={Close}
-          onClick={toggleExpanded}
-        />
+        <Icon button className={iconStyle} icon={Close} onClick={toggleExpanded} />
       </div>
     </MenuButton>
   );

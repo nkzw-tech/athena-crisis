@@ -45,8 +45,7 @@ export default async function maybeReceiveChaosStarsAnimation(
                   key={index}
                   style={{ position: 'relative' }}
                   transition={{
-                    delay:
-                      duration * 2 * Math.abs(index - Math.floor(amount / 2)),
+                    delay: duration * 2 * Math.abs(index - Math.floor(amount / 2)),
                     duration: duration * 10,
                     ease: [0.34, 1.56, 0.64, 1],
                   }}
@@ -73,10 +72,7 @@ export default async function maybeReceiveChaosStarsAnimation(
         style: 'flashy',
         text: String(
           fbt(
-            fbt.param(
-              'user',
-              getUserDisplayName(state.playerDetails, currentViewer),
-            ) +
+            fbt.param('user', getUserDisplayName(state.playerDetails, currentViewer)) +
               ' received ' +
               fbt.param('amount', amount) +
               ' ' +

@@ -34,10 +34,7 @@ export default memo(function MessageTile({
   distance: number | null;
   highlight?: boolean;
   isValuable?: boolean;
-  onAnimationComplete?: (
-    position: Vector,
-    animation: NewMapMessageAnimation,
-  ) => void;
+  onAnimationComplete?: (position: Vector, animation: NewMapMessageAnimation) => void;
   player: PlayerID;
   position?: Vector;
   press?: boolean;
@@ -139,9 +136,7 @@ const baseStyle = css`
   ${vars.set('brightness', 1.05)}
   ${vars.set('saturation', 1)}
 
-  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply(
-    'saturation',
-  )});
+  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply('saturation')});
   pointer-events: none;
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0);
   transition:

@@ -3,13 +3,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import type { PlainMap, PlainMapConfig } from './map/PlainMap.tsx';
 import { Decorator, DecoratorInfo, getDecorator } from './info/Decorator.tsx';
 import { ActiveUnitTypes, getActiveUnitTypes, Skill } from './info/Skill.tsx';
-import {
-  getTile,
-  getTileInfo,
-  TileField,
-  TileInfo,
-  TileLayer,
-} from './info/Tile.tsx';
+import { getTile, getTileInfo, TileField, TileInfo, TileLayer } from './info/Tile.tsx';
 import applyBeginTurnStatusEffects from './lib/applyBeginTurnStatusEffects.tsx';
 import getAllUnitsToRefill from './lib/getAllUnitsToRefill.tsx';
 import getUnitsByPositions from './lib/getUnitsByPositions.tsx';
@@ -145,15 +139,9 @@ export class MapConfig {
       fog,
       multiplier,
       objectives: encodeObjectives(objectives),
-      ...(performance.pace != null ||
-      performance.power != null ||
-      performance.style != null
+      ...(performance.pace != null || performance.power != null || performance.style != null
         ? {
-            performance: [
-              performance.pace,
-              performance.power,
-              performance.style,
-            ],
+            performance: [performance.pace, performance.power, performance.style],
           }
         : null),
       initialCharge,
@@ -177,10 +165,7 @@ export class SizeVector {
   }
 
   toDecoratorSizeVector() {
-    return new SizeVector(
-      this.width * DecoratorsPerSide,
-      this.height * DecoratorsPerSide,
-    );
+    return new SizeVector(this.width * DecoratorsPerSide, this.height * DecoratorsPerSide);
   }
 
   toJSON() {
@@ -190,19 +175,14 @@ export class SizeVector {
 }
 
 const toPlayer = (object: AnyEntity): PlayerID =>
-  typeof object === 'number'
-    ? object
-    : object.type === 'entity'
-      ? object.player
-      : object.id;
+  typeof object === 'number' ? object : object.type === 'entity' ? object.player : object.id;
 
 export default class MapData {
   private players: Map<PlayerID, Player>;
   private playerToTeam: Map<PlayerID, number>;
   private _firstPlayer: PlayerID = 0;
   private _hasNeutralUnits: boolean | null = null;
-  private _activeUnitTypes: ReadonlyMap<PlayerID, ActiveUnitTypes> | null =
-    null;
+  private _activeUnitTypes: ReadonlyMap<PlayerID, ActiveUnitTypes> | null = null;
 
   constructor(
     public readonly map: TileMap,
@@ -217,9 +197,7 @@ export default class MapData {
     public readonly buildings: ImmutableMap<Vector, Building>,
     public readonly units: ImmutableMap<Vector, Unit>,
   ) {
-    this.players = new Map(
-      teams.flatMap((team) => team.players).sortBy(({ id }) => id),
-    );
+    this.players = new Map(teams.flatMap((team) => team.players).sortBy(({ id }) => id));
     this.playerToTeam = new Map(
       [...this.players].map(([id, player]) => {
         if (!this._firstPlayer) {
@@ -241,17 +219,11 @@ export default class MapData {
   }
 
   matchesTeam(objectA: AnyEntity, objectB: AnyEntity) {
-    return (
-      this.playerToTeam.get(toPlayer(objectA)) ===
-      this.playerToTeam.get(toPlayer(objectB))
-    );
+    return this.playerToTeam.get(toPlayer(objectA)) === this.playerToTeam.get(toPlayer(objectB));
   }
 
   isOpponent(objectA: AnyEntity, objectB: AnyEntity) {
-    return (
-      this.playerToTeam.get(toPlayer(objectA)) !==
-      this.playerToTeam.get(toPlayer(objectB))
-    );
+    return this.playerToTeam.get(toPlayer(objectA)) !== this.playerToTeam.get(toPlayer(objectB));
   }
 
   isNeutral(entityA: Entity) {
@@ -261,8 +233,7 @@ export default class MapData {
   isNonNeutralOpponent(objectA: AnyEntity, entityB: Entity) {
     return (
       entityB.player !== 0 &&
-      this.playerToTeam.get(toPlayer(objectA)) !==
-        this.playerToTeam.get(entityB.player)
+      this.playerToTeam.get(toPlayer(objectA)) !== this.playerToTeam.get(entityB.player)
     );
   }
 
@@ -277,10 +248,7 @@ export default class MapData {
     return (
       this._activeUnitTypes ||
       (this._activeUnitTypes = new Map(
-        this.getPlayers().map((player) => [
-          player.id,
-          getActiveUnitTypes(this, player),
-        ]),
+        this.getPlayers().map((player) => [player.id, getActiveUnitTypes(this, player)]),
       ))
     );
   }
@@ -290,9 +258,7 @@ export default class MapData {
   }
 
   getTile(vector: Vector, layer?: TileLayer) {
-    return this.contains(vector)
-      ? getTile(this.map[this.getTileIndex(vector)], layer)
-      : null;
+    return this.contains(vector) ? getTile(this.map[this.getTileIndex(vector)], layer) : null;
   }
 
   getTileInfo(vector: Vector, layer?: TileLayer) {
@@ -323,8 +289,7 @@ export default class MapData {
 
   getNextPlayer(): Player {
     return this.getPlayer(
-      this.active[this.active.indexOf(this.currentPlayer) + 1] ||
-        this.active[0],
+      this.active[this.active.indexOf(this.currentPlayer) + 1] || this.active[0],
     );
   }
 
@@ -371,15 +336,8 @@ export default class MapData {
   }
 
   maybeGetTeam(maybePlayer: PlayerOrPlayerID) {
-    const player =
-      typeof maybePlayer === 'number'
-        ? this.getPlayer(maybePlayer)
-        : maybePlayer;
-    return player
-      ? player.teamId === 0
-        ? nullTeam
-        : this.teams.get(player.teamId) || null
-      : null;
+    const player = typeof maybePlayer === 'number' ? this.getPlayer(maybePlayer) : maybePlayer;
+    return player ? (player.teamId === 0 ? nullTeam : this.teams.get(player.teamId) || null) : null;
   }
 
   isEndOfRound() {
@@ -402,19 +360,13 @@ export default class MapData {
     const units = getAllUnitsToRefill(map, new Vision(player.id), player);
     map = refillUnits(
       map,
-      extraPositions
-        ? new Map([...units, ...getUnitsByPositions(map, extraPositions)])
-        : units,
+      extraPositions ? new Map([...units, ...getUnitsByPositions(map, extraPositions)]) : units,
     );
 
     return map.copy({
       units: map.units
-        .filter(
-          (unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id),
-        )
-        .map((unit) =>
-          map.matchesPlayer(player, unit) ? unit.deactivateShield() : unit,
-        ),
+        .filter((unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id))
+        .map((unit) => (map.matchesPlayer(player, unit) ? unit.deactivateShield() : unit)),
     });
   }
 
@@ -429,10 +381,7 @@ export default class MapData {
     this.reduceEachField<void>((_, vector, index) => fn(vector, index), void 0);
   }
 
-  reduceEachField<T>(
-    fn: (value: T, vector: Vector, index: number) => T,
-    value: T,
-  ): T {
+  reduceEachField<T>(fn: (value: T, vector: Vector, index: number) => T, value: T): T {
     const { map, size } = this;
     for (let i = 0; i < map.length; i++) {
       value = fn.call(this, value, indexToVector(i, size.width), i);
@@ -441,17 +390,10 @@ export default class MapData {
   }
 
   forEachTile(
-    fn: (
-      vector: Vector,
-      tile: TileInfo,
-      layer: TileLayer,
-      modifier: number,
-      index: number,
-    ) => void,
+    fn: (vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number, index: number) => void,
   ) {
     this.reduceEachTile<void>(
-      (_, vector, tile, layer, modifier, index) =>
-        fn(vector, tile, layer, modifier, index),
+      (_, vector, tile, layer, modifier, index) => fn(vector, tile, layer, modifier, index),
       void 0,
     );
   }
@@ -509,10 +451,7 @@ export default class MapData {
   }
 
   forEachDecorator(fn: (decorator: DecoratorInfo, vector: Vector) => void) {
-    this.reduceEachDecorator<void>(
-      (_, decorator, vector) => fn(decorator, vector),
-      void 0,
-    );
+    this.reduceEachDecorator<void>((_, decorator, vector) => fn(decorator, vector), void 0);
   }
 
   reduceEachDecorator<T>(

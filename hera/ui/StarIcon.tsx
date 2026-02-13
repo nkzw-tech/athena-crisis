@@ -17,19 +17,14 @@ export default function StarIcon({
   starClassName?: string;
   type: 'achieved' | 'chaos' | 'missed';
 }) {
-  const dimensions =
-    TileSize * (size === 'small' ? 1 : size === 'medium' ? 2 : 3);
+  const dimensions = TileSize * (size === 'small' ? 1 : size === 'medium' ? 2 : 3);
 
   return (
     <div className={cx(relativeStyle, className)}>
       <Icon
         className={cx(
           starStyle,
-          type === 'achieved'
-            ? achievedStyle
-            : type === 'chaos'
-              ? chaosStyle
-              : missedStyle,
+          type === 'achieved' ? achievedStyle : type === 'chaos' ? chaosStyle : missedStyle,
           starClassName,
         )}
         height={dimensions}

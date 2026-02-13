@@ -17,10 +17,6 @@ export function userToRating({
   return { mu, sigma };
 }
 
-export function createRatings(user: {
-  id: number;
-  skillMu: number;
-  skillSigma: number;
-}): Ratings {
+export function createRatings(user: { id: number; skillMu: number; skillSigma: number }): Ratings {
   return new Map([[user.id, userToRating(user)]]);
 }

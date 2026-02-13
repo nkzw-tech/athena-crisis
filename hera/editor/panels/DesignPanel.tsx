@@ -2,25 +2,13 @@ import {
   mapBuildings,
   mapBuildingsWithContentRestriction,
 } from '@deities/athena/info/Building.tsx';
-import {
-  getAllTiles,
-  getTileInfo,
-  Plain,
-  TileInfo,
-} from '@deities/athena/info/Tile.tsx';
-import {
-  mapUnits,
-  mapUnitsWithContentRestriction,
-} from '@deities/athena/info/Unit.tsx';
+import { getAllTiles, getTileInfo, Plain, TileInfo } from '@deities/athena/info/Tile.tsx';
+import { mapUnits, mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import {
-  AnimationConfig,
-  DoubleSize,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -87,17 +75,17 @@ export default memo(function DesignPanel({
   const biomeUnitRestrictions = getBiomeUnitRestrictions(biome);
   const { alert } = useAlert();
   const tiles = useMemo(
-    () =>
-      getAllTiles().filter((tile) => !biomeStyle.tileRestrictions?.has(tile)),
+    () => getAllTiles().filter((tile) => !biomeStyle.tileRestrictions?.has(tile)),
     [biomeStyle.tileRestrictions],
   );
 
   const skills = useMemo(() => new Set(user.skills), [user.skills]);
   const buildings = useMemo(
     () =>
-      (hasContentRestrictions
-        ? mapBuildingsWithContentRestriction
-        : mapBuildings)((building) => building, skills)
+      (hasContentRestrictions ? mapBuildingsWithContentRestriction : mapBuildings)(
+        (building) => building,
+        skills,
+      )
         .filter((building) => currentPlayer.id !== 0 || !building.isHQ())
         .map((building) =>
           blocklistedBuildings.has(building.id)
@@ -122,13 +110,7 @@ export default memo(function DesignPanel({
             : unit.create(currentPlayer),
         skills,
       ).filter((unit) => !biomeUnitRestrictions?.has(unit.info.type)),
-    [
-      biomeUnitRestrictions,
-      blocklistedUnits,
-      currentPlayer,
-      hasContentRestrictions,
-      skills,
-    ],
+    [biomeUnitRestrictions, blocklistedUnits, currentPlayer, hasContentRestrictions, skills],
   );
 
   const [setRef, getColumns] = useColumns();
@@ -187,13 +169,10 @@ export default memo(function DesignPanel({
           tiles;
 
         const index =
-          (building &&
-            buildings.findIndex((entity) => building.id === entity.id)) ??
+          (building && buildings.findIndex((entity) => building.id === entity.id)) ??
           (unit && units.findIndex((entity) => unit.id === entity.id)) ??
           (tile && tiles.indexOf(tile)) ??
-          (selected?.eraseBuildings ||
-          selected?.eraseUnits ||
-          selected?.eraseTiles
+          (selected?.eraseBuildings || selected?.eraseUnits || selected?.eraseTiles
             ? list.length
             : null);
 
@@ -207,16 +186,12 @@ export default memo(function DesignPanel({
                 (index: number) => selectBuilding(buildings[index]),
                 () => setEditorState({ selected: { eraseBuildings: true } }),
                 (index: number, columns: number) => {
-                  const maybeFirstIndex =
-                    index + Math.ceil(tiles.length / columns) * columns;
-                  const maybeSecondIndex =
-                    index + Math.floor(tiles.length / columns) * columns;
+                  const maybeFirstIndex = index + Math.ceil(tiles.length / columns) * columns;
+                  const maybeSecondIndex = index + Math.floor(tiles.length / columns) * columns;
                   if (maybeFirstIndex === tiles.length) {
                     setEditorState({ selected: { eraseTiles: true } });
                   } else {
-                    selectTile(
-                      tiles[maybeFirstIndex] || tiles[maybeSecondIndex],
-                    );
+                    selectTile(tiles[maybeFirstIndex] || tiles[maybeSecondIndex]);
                   }
                 },
                 (index: number) => selectUnit(units[index]),
@@ -226,17 +201,13 @@ export default memo(function DesignPanel({
                   (index: number) => selectUnit(units[index]),
                   () => setEditorState({ selected: { eraseUnits: true } }),
                   (index: number, columns: number) => {
-                    const maybeFirstIndex =
-                      index + Math.ceil(buildings.length / columns) * columns;
+                    const maybeFirstIndex = index + Math.ceil(buildings.length / columns) * columns;
                     const maybeSecondIndex =
                       index + Math.floor(buildings.length / columns) * columns;
                     if (maybeFirstIndex === buildings.length) {
                       setEditorState({ selected: { eraseBuildings: true } });
                     } else {
-                      selectBuilding(
-                        buildings[maybeFirstIndex] ||
-                          buildings[maybeSecondIndex],
-                      );
+                      selectBuilding(buildings[maybeFirstIndex] || buildings[maybeSecondIndex]);
                     }
                   },
                   () => {},
@@ -291,9 +262,7 @@ export default memo(function DesignPanel({
             onLongPress={onLongPress}
             onSelect={(_, { tile }) => selectTile(tile)}
             selected={
-              tile
-                ? tiles.findIndex((currentTile) => currentTile.id === tile.id)
-                : undefined
+              tile ? tiles.findIndex((currentTile) => currentTile.id === tile.id) : undefined
             }
             tiles={tiles}
           >
@@ -329,20 +298,14 @@ export default memo(function DesignPanel({
             onLongPress={onLongPress}
             onSelect={(_, { building }) => selectBuilding(building)}
             selected={
-              building
-                ? buildings.findIndex((entity) => entity.id === building.id)
-                : undefined
+              building ? buildings.findIndex((entity) => entity.id === building.id) : undefined
             }
             size="tall"
-            tiles={buildings.map((building) =>
-              getTileInfo(getAnyBuildingTileField(building.info)),
-            )}
+            tiles={buildings.map((building) => getTileInfo(getAnyBuildingTileField(building.info)))}
           >
             <DeleteTile
               active={selected?.eraseBuildings}
-              onClick={() =>
-                setEditorState({ selected: { eraseBuildings: true } })
-              }
+              onClick={() => setEditorState({ selected: { eraseBuildings: true } })}
               scale={2}
               tall
               tileSize={TileSize}
@@ -354,11 +317,7 @@ export default memo(function DesignPanel({
             biome={biome}
             onLongPress={onLongPress}
             onSelect={(_, { unit }) => selectUnit(unit)}
-            selected={
-              unit
-                ? units.findIndex((entity) => entity.id === unit.id)
-                : undefined
-            }
+            selected={unit ? units.findIndex((entity) => entity.id === unit.id) : undefined}
             tiles={units.map((unit) => getAnyUnitTile(unit.info) || Plain)}
             units={units}
           >
@@ -444,11 +403,7 @@ export default memo(function DesignPanel({
                 }}
                 selected={drawingMode === 'horizontal-vertical'}
               >
-                <Icon
-                  height={32}
-                  icon={HorizontalVerticalDrawingMode}
-                  width={32}
-                />
+                <Icon height={32} icon={HorizontalVerticalDrawingMode} width={32} />
               </InlineLink>
             </VStack>
           </Box>

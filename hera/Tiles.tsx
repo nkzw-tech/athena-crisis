@@ -16,15 +16,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import useVisibilityState from '@nkzw/use-visibility-state';
-import {
-  Tiles0,
-  Tiles1,
-  Tiles2,
-  Tiles3,
-  Tiles4,
-  Tiles5,
-  Tiles6,
-} from 'athena-crisis:images';
+import { Tiles0, Tiles1, Tiles2, Tiles3, Tiles4, Tiles5, Tiles6 } from 'athena-crisis:images';
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
@@ -33,11 +25,7 @@ import renderTile from './render/renderTile.tsx';
 
 export type TileStyle = 'floating' | 'clip' | 'none';
 
-const clip = (
-  context: CanvasRenderingContext2D,
-  size: number,
-  map: MapData,
-) => {
+const clip = (context: CanvasRenderingContext2D, size: number, map: MapData) => {
   const {
     config: { biome },
     size: { height, width },
@@ -105,22 +93,20 @@ export default memo(function Tiles({
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    map.forEachTile(
-      (vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number) => {
-        renderTile(
-          context,
-          tileset,
-          map,
-          vision,
-          (!paused && getFrame(tile.sprite, modifier, currentTick)) || 0,
-          vector,
-          tile,
-          modifier,
-          size,
-          renderEntities,
-        );
-      },
-    );
+    map.forEachTile((vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number) => {
+      renderTile(
+        context,
+        tileset,
+        map,
+        vision,
+        (!paused && getFrame(tile.sprite, modifier, currentTick)) || 0,
+        vector,
+        tile,
+        modifier,
+        size,
+        renderEntities,
+      );
+    });
 
     const floatingTiles = new Map<Vector, ModifierField>();
     if (style === 'floating') {
@@ -158,19 +144,15 @@ export default memo(function Tiles({
         for (let i = 0; i < map.map.length; i++) {
           const vector = indexToVector(i, map.size.width);
           const tile =
-            map.buildings.get(vector)?.info === Shelter
-              ? Campsite
-              : map.getTileInfo(vector, 0);
+            map.buildings.get(vector)?.info === Shelter ? Campsite : map.getTileInfo(vector, 0);
           const modifier = map.getModifier(vector, 0);
           const frame = getFrame(tile.sprite, modifier, tick);
 
           const layer1Tile = map.getTile(vector, 1);
-          const layer1TileInfo =
-            layer1Tile != null ? getTileInfo(layer1Tile) : null;
+          const layer1TileInfo = layer1Tile != null ? getTileInfo(layer1Tile) : null;
 
           const renderLayer0 =
-            frame != null ||
-            (layer1TileInfo?.sprite?.animation && !tile.sprite.animation);
+            frame != null || (layer1TileInfo?.sprite?.animation && !tile.sprite.animation);
           if (renderLayer0) {
             renderTile(
               context,
@@ -186,10 +168,7 @@ export default memo(function Tiles({
             );
           }
 
-          if (
-            layer1TileInfo &&
-            (renderLayer0 || layer1TileInfo?.sprite.animation)
-          ) {
+          if (layer1TileInfo && (renderLayer0 || layer1TileInfo?.sprite.animation)) {
             const layer1Modifier = map.getModifier(vector, 1);
             renderTile(
               context,

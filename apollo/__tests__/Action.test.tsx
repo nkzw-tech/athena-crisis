@@ -1,21 +1,6 @@
-import {
-  Factory,
-  House,
-  RadarStation,
-} from '@deities/athena/info/Building.tsx';
-import {
-  ConstructionSite,
-  Lightning,
-  Plain,
-  StormCloud,
-} from '@deities/athena/info/Tile.tsx';
-import {
-  APU,
-  Flamethrower,
-  Jeep,
-  Pioneer,
-  SmallTank,
-} from '@deities/athena/info/Unit.tsx';
+import { Factory, House, RadarStation } from '@deities/athena/info/Building.tsx';
+import { ConstructionSite, Lightning, Plain, StormCloud } from '@deities/athena/info/Tile.tsx';
+import { APU, Flamethrower, Jeep, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -53,15 +38,13 @@ test('supplying surrounding units', () => {
   const from = vec(2, 2);
   const to = vec(3, 2);
   const map = initialMap.copy({
-    units: initialMap.units
-      .set(from, Jeep.create(1))
-      .set(to, SmallTank.create(1).setFuel(1)),
+    units: initialMap.units.set(from, Jeep.create(1)).set(to, SmallTank.create(1).setFuel(1)),
   });
   const [response, newMap] = execute(map, vision, SupplyAction(from))!;
 
-  expect(
-    formatActionResponse(response, { colors: false }),
-  ).toMatchInlineSnapshot('"Supply (2,2) { player: 1 }"');
+  expect(formatActionResponse(response, { colors: false })).toMatchInlineSnapshot(
+    '"Supply (2,2) { player: 1 }"',
+  );
 
   const newUnit = newMap.units.get(to)!;
   expect(newUnit).not.toEqual(map.units.get(to));
@@ -73,15 +56,9 @@ test('creating units', () => {
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(to, Factory.create(1)),
   });
-  const [response, newMap] = execute(
-    map,
-    vision,
-    CreateUnitAction(to, APU.id, to),
-  )!;
+  const [response, newMap] = execute(map, vision, CreateUnitAction(to, APU.id, to))!;
 
-  expect(
-    formatActionResponse(response, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(response, { colors: false })).toMatchInlineSnapshot(
     '"CreateUnit (2,2 → 2,2) { unit: APU { id: 4, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 6 ] ], moved: true, name: \'Nora\', completed: true }, free: false, skipBehaviorRotation: false }"',
   );
 
@@ -93,9 +70,7 @@ test('creating units', () => {
     units: initialMap.units.set(to, APU.create(2)),
   });
 
-  expect(
-    execute(secondMap, vision, CreateUnitAction(to, APU.id, to.left())),
-  ).toBe(null);
+  expect(execute(secondMap, vision, CreateUnitAction(to, APU.id, to.left()))).toBe(null);
 });
 
 test('creating units with a friendly player on the building', () => {
@@ -121,15 +96,9 @@ test('creating units with a friendly player on the building', () => {
     buildings: initialMap.buildings.set(to, Factory.create(1)),
     units: initialMap.units.set(to, APU.create(3)),
   });
-  const [response] = execute(
-    map,
-    vision,
-    CreateUnitAction(to, APU.id, to.left()),
-  )!;
+  const [response] = execute(map, vision, CreateUnitAction(to, APU.id, to.left()))!;
 
-  expect(
-    formatActionResponse(response, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(response, { colors: false })).toMatchInlineSnapshot(
     '"CreateUnit (2,2 → 1,2) { unit: APU { id: 4, health: 100, player: 1, fuel: 40, ammo: [ [ 1, 6 ] ], moved: true, name: \'Nora\', completed: true }, free: false, skipBehaviorRotation: false }"',
   );
 });
@@ -142,15 +111,9 @@ test('creating buildings', () => {
     units: initialMap.units.set(vecA, Pioneer.create(1)),
   });
 
-  const [responseA] = execute(
-    map,
-    vision,
-    CreateBuildingAction(vecA, Factory.id),
-  )!;
+  const [responseA] = execute(map, vision, CreateBuildingAction(vecA, Factory.id))!;
 
-  expect(
-    formatActionResponse(responseA, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(responseA, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: Factory { id: 3, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
@@ -164,9 +127,7 @@ test('creating buildings', () => {
     CreateBuildingAction(vecA, House.id),
   )!;
 
-  expect(
-    formatActionResponse(responseB, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(responseB, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: House { id: 2, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
@@ -196,36 +157,22 @@ test('Radar Stations are only available if Lightning can be placed', () => {
   const mapA = map.copy({
     map: tilesA,
   });
-  const [responseC] = execute(
-    mapA,
-    vision,
-    CreateBuildingAction(vecA, RadarStation.id),
-  )!;
+  const [responseC] = execute(mapA, vision, CreateBuildingAction(vecA, RadarStation.id))!;
 
-  expect(
-    formatActionResponse(responseC, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(responseC, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
-  expect(
-    execute(map, vision, CreateBuildingAction(vecA, RadarStation.id)),
-  ).toBe(null);
+  expect(execute(map, vision, CreateBuildingAction(vecA, RadarStation.id))).toBe(null);
 
   const tilesB = tilesA.slice();
   tilesB[5] = [Plain.id, Lightning.id];
   const mapB = map.copy({
     map: tilesA,
   });
-  const [responseD] = execute(
-    mapB,
-    vision,
-    CreateBuildingAction(vecA, RadarStation.id),
-  )!;
+  const [responseD] = execute(mapB, vision, CreateBuildingAction(vecA, RadarStation.id))!;
 
-  expect(
-    formatActionResponse(responseD, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(responseD, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 
@@ -237,9 +184,7 @@ test('Radar Stations are only available if Lightning can be placed', () => {
     CreateBuildingAction(vecA, RadarStation.id),
   )!;
 
-  expect(
-    formatActionResponse(responseE, { colors: false }),
-  ).toMatchInlineSnapshot(
+  expect(formatActionResponse(responseE, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
 });

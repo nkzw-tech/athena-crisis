@@ -44,14 +44,7 @@ import groupBy from '@nkzw/core/groupBy.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import Stack, { VStack } from '@nkzw/stack';
-import {
-  memo,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { memo, ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import BuildingCard from '../card/BuildingCard.tsx';
 import LeaderCard from '../card/LeaderCard.tsx';
 import LeaderTitle from '../card/LeaderTitle.tsx';
@@ -79,11 +72,7 @@ import { SkillContainer, SkillIcon } from './SkillDialog.tsx';
 
 type GameDialogState = Pick<
   State,
-  | 'currentViewer'
-  | 'playerDetails'
-  | 'gameInfoState'
-  | 'lastActionResponse'
-  | 'map'
+  'currentViewer' | 'playerDetails' | 'gameInfoState' | 'lastActionResponse' | 'map'
 >;
 
 type MapInfoPanelState = Readonly<
@@ -108,47 +97,45 @@ const MapInfoPanel = memo(function MapInfoPanel({
   playerDetails: PlayerDetails;
 }) {
   const unit = info.unit;
-  const { building, tile } =
-    info.type === 'map-info' ? info : { building: null, tile: null };
-  const { buildingState, leaderState, states, tileState, unitState } =
-    useMemo(() => {
-      const unitState = unit
-        ? ({
-            type: 'unit',
-            unit,
-          } as const)
-        : null;
-      const leaderState = unit?.isLeader()
-        ? ({
-            type: 'leader',
-            unit,
-          } as const)
-        : null;
-      const buildingState = building
-        ? ({
-            building,
-            type: 'building',
-          } as const)
-        : null;
-      const tileState = tile
-        ? ({
-            tile,
-            type: 'tile',
-          } as const)
-        : null;
+  const { building, tile } = info.type === 'map-info' ? info : { building: null, tile: null };
+  const { buildingState, leaderState, states, tileState, unitState } = useMemo(() => {
+    const unitState = unit
+      ? ({
+          type: 'unit',
+          unit,
+        } as const)
+      : null;
+    const leaderState = unit?.isLeader()
+      ? ({
+          type: 'leader',
+          unit,
+        } as const)
+      : null;
+    const buildingState = building
+      ? ({
+          building,
+          type: 'building',
+        } as const)
+      : null;
+    const tileState = tile
+      ? ({
+          tile,
+          type: 'tile',
+        } as const)
+      : null;
 
-      if (info.type === 'leader-info' && leaderState) {
-        const states: ReadonlyArray<MapInfoPanelState> = [leaderState];
-        return { leaderState, states };
-      }
-      const states: ReadonlyArray<MapInfoPanelState> = [
-        unitState,
-        leaderState,
-        buildingState,
-        tileState,
-      ].filter(isPresent);
-      return { buildingState, leaderState, states, tileState, unitState };
-    }, [unit, building, tile, info.type]);
+    if (info.type === 'leader-info' && leaderState) {
+      const states: ReadonlyArray<MapInfoPanelState> = [leaderState];
+      return { leaderState, states };
+    }
+    const states: ReadonlyArray<MapInfoPanelState> = [
+      unitState,
+      leaderState,
+      buildingState,
+      tileState,
+    ].filter(isPresent);
+    return { buildingState, leaderState, states, tileState, unitState };
+  }, [unit, building, tile, info.type]);
   const [panel, setPanel] = useState<MapInfoPanelState>(
     unitState || leaderState || buildingState || tileState || { type: 'none' },
   );
@@ -184,12 +171,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
           ) : panel.type === 'leader' ? (
             <LeaderCard {...info} {...panel} viewer={currentViewer} />
           ) : panel.type === 'building' ? (
-            <BuildingCard
-              map={map}
-              playerDetails={playerDetails}
-              {...info}
-              {...panel}
-            />
+            <BuildingCard map={map} playerDetails={playerDetails} {...info} {...panel} />
           ) : panel.type === 'tile' ? (
             <TileCard
               map={map}
@@ -202,26 +184,17 @@ const MapInfoPanel = memo(function MapInfoPanel({
       </DialogScrollContainer>
       <DialogTabBar>
         {unitState && (
-          <DialogTab
-            highlight={panel.type === 'unit'}
-            onClick={() => setPanel(unitState)}
-          >
+          <DialogTab highlight={panel.type === 'unit'} onClick={() => setPanel(unitState)}>
             <fbt desc="Label for unit tab">Unit</fbt>
           </DialogTab>
         )}
         {leaderState && (
-          <DialogTab
-            highlight={panel.type === 'leader'}
-            onClick={() => setPanel(leaderState)}
-          >
+          <DialogTab highlight={panel.type === 'leader'} onClick={() => setPanel(leaderState)}>
             <LeaderTitle gender={leaderState.unit.info.gender} />
           </DialogTab>
         )}
         {buildingState && (
-          <DialogTab
-            highlight={panel.type === 'building'}
-            onClick={() => setPanel(buildingState)}
-          >
+          <DialogTab highlight={panel.type === 'building'} onClick={() => setPanel(buildingState)}>
             {buildingState.building.info.isStructure() ? (
               <fbt desc="Label for structure tab">Structure</fbt>
             ) : (
@@ -230,10 +203,7 @@ const MapInfoPanel = memo(function MapInfoPanel({
           </DialogTab>
         )}
         {tileState && (
-          <DialogTab
-            highlight={panel.type === 'tile'}
-            onClick={() => setPanel(tileState)}
-          >
+          <DialogTab highlight={panel.type === 'tile'} onClick={() => setPanel(tileState)}>
             <fbt desc="Label for field tab">Field</fbt>
           </DialogTab>
         )}
@@ -264,18 +234,13 @@ const MapPerformance = ({
     return null;
   }
 
-  const currentPlayer =
-    currentViewer != null && map.maybeGetPlayer(currentViewer);
+  const currentPlayer = currentViewer != null && map.maybeGetPlayer(currentViewer);
   const { performance } = map.config;
-  const evaluation = currentPlayer
-    ? evaluatePlayerPerformance(map, currentPlayer.id)
-    : null;
+  const evaluation = currentPlayer ? evaluatePlayerPerformance(map, currentPlayer.id) : null;
 
   const hasPowerChallenge = performance.power != null;
   const hasAchievedPowerChallenge =
-    performance.power != null &&
-    evaluation != null &&
-    evaluation.power === true;
+    performance.power != null && evaluation != null && evaluation.power === true;
   const powerNeed =
     currentPlayer && hasPowerChallenge && !hasAchievedPowerChallenge
       ? Math.ceil(currentPlayer.stats.lostUnits * performance.power) -
@@ -309,17 +274,10 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap wrap>
               <Icon icon={Pace} />
-              <div className={maybeHideStyle}>
-                {getTranslatedPerformanceTypeName('pace')}
-              </div>
+              <div className={maybeHideStyle}>{getTranslatedPerformanceTypeName('pace')}</div>
             </Stack>
             <div className={alignCenter}>{performance.pace}</div>
-            <div
-              className={cx(
-                alignCenter,
-                evaluation?.pace ? achievedStyle : failedStyle,
-              )}
-            >
+            <div className={cx(alignCenter, evaluation?.pace ? achievedStyle : failedStyle)}>
               {currentPlayer ? map.round : null}
             </div>
           </>
@@ -328,16 +286,11 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap wrap>
               <Icon icon={Zap} />
-              <div className={maybeHideStyle}>
-                {getTranslatedPerformanceTypeName('power')}
-              </div>
+              <div className={maybeHideStyle}>{getTranslatedPerformanceTypeName('power')}</div>
             </Stack>
             <div className={alignCenter}>{performance.power}</div>
             <div
-              className={cx(
-                alignCenter,
-                hasAchievedPowerChallenge ? achievedStyle : failedStyle,
-              )}
+              className={cx(alignCenter, hasAchievedPowerChallenge ? achievedStyle : failedStyle)}
             >
               {currentPlayer ? getPowerValue(currentPlayer.stats) : null}
             </div>
@@ -347,23 +300,14 @@ const MapPerformance = ({
           <>
             <Stack alignCenter gap wrap>
               <Icon icon={Subscriptions} />
-              <div className={maybeHideStyle}>
-                {getTranslatedPerformanceTypeName('style')}
-              </div>
+              <div className={maybeHideStyle}>{getTranslatedPerformanceTypeName('style')}</div>
             </Stack>
             <div className={alignCenter}>
               {getTranslatedPerformanceStyleTypeName(performance.style[0])}{' '}
               <Comparator type={performance.style[0]} /> {performance.style[1]}
             </div>
-            <div
-              className={cx(
-                alignCenter,
-                evaluation?.style ? achievedStyle : failedStyle,
-              )}
-            >
-              {currentPlayer
-                ? getStyleValue(performance.style[0], currentPlayer.stats)
-                : null}
+            <div className={cx(alignCenter, evaluation?.style ? achievedStyle : failedStyle)}>
+              {currentPlayer ? getStyleValue(performance.style[0], currentPlayer.stats) : null}
             </div>
           </>
         )}
@@ -438,13 +382,10 @@ const GameInfoPanel = memo(function GameInfoPanel({
     config: { objectives },
   } = map;
 
-  const player =
-    currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
+  const player = currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
   const canEndGameNow = player?.id === map.getCurrentPlayer().id || !isPvP(map);
   const canAbandon =
-    player?.isHumanPlayer() &&
-    player.crystal != null &&
-    player.crystal !== Crystal.Power;
+    player?.isHumanPlayer() && player.crystal != null && player.crystal !== Crystal.Power;
   const hasEnded = lastActionResponse?.type === 'GameEnd';
   const canEndGame = canEndGameNow && !hasEnded && endGame;
   const [panel, setPanel] = useState<symbol | string>(objectivesPanel);
@@ -476,8 +417,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
       <>
         {canAbandon ? (
           <fbt desc="Confirmation dialog to abandon (give up) a map.">
-            Are you sure you want to abandon this map? You will not receive any
-            Chaos Stars.
+            Are you sure you want to abandon this map? You will not receive any Chaos Stars.
           </fbt>
         ) : (
           <fbt desc="Confirmation dialog to give up.">
@@ -521,14 +461,11 @@ const GameInfoPanel = memo(function GameInfoPanel({
 
   const visibleConditions = objectives.filter(({ hidden }) => !hidden);
   const partition = groupBy(visibleConditions, ([, objective]) =>
-    objective.type === Criteria.Default || !objective.optional
-      ? 'required'
-      : 'optional',
+    objective.type === Criteria.Default || !objective.optional ? 'required' : 'optional',
   );
   const requiredObjectives = partition.get('required');
   const optionalObjectives = partition.get('optional');
-  const Component =
-    typeof panel === 'string' && gameInfoState.panels?.get(panel)?.content;
+  const Component = typeof panel === 'string' && gameInfoState.panels?.get(panel)?.content;
 
   return (
     <>
@@ -557,9 +494,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
                     Complete any objective to win the game.
                   </fbt>
                 ) : (
-                  <fbt desc="Objectives are all secret">
-                    Objectives for this game are secret.
-                  </fbt>
+                  <fbt desc="Objectives are all secret">Objectives for this game are secret.</fbt>
                 )}
               </p>
               {requiredObjectives?.map(([id, objective]) => (
@@ -597,10 +532,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
         )}
       </DialogScrollContainer>
       <DialogTabBar>
-        <DialogTab
-          highlight={panel === objectivesPanel}
-          onClick={() => setPanel(objectivesPanel)}
-        >
+        <DialogTab highlight={panel === objectivesPanel} onClick={() => setPanel(objectivesPanel)}>
           {panel !== objectivesPanel && (
             <div className={shortStyle}>
               <Icon icon={Trophy} />
@@ -611,23 +543,15 @@ const GameInfoPanel = memo(function GameInfoPanel({
           </div>
         </DialogTab>
         {gameInfoState.panels &&
-          [...gameInfoState.panels].map(
-            ([panelName, { shortTitle, title }]) => {
-              const isSelected = panel === panelName;
-              return (
-                <DialogTab
-                  highlight={isSelected}
-                  key={panelName}
-                  onClick={() => setPanel(panelName)}
-                >
-                  {!isSelected && (
-                    <div className={shortStyle}>{shortTitle}</div>
-                  )}
-                  <div className={cx(!isSelected && longStyle)}>{title}</div>
-                </DialogTab>
-              );
-            },
-          )}
+          [...gameInfoState.panels].map(([panelName, { shortTitle, title }]) => {
+            const isSelected = panel === panelName;
+            return (
+              <DialogTab highlight={isSelected} key={panelName} onClick={() => setPanel(panelName)}>
+                {!isSelected && <div className={shortStyle}>{shortTitle}</div>}
+                <div className={cx(!isSelected && longStyle)}>{title}</div>
+              </DialogTab>
+            );
+          })}
         {!hasEnded && endGame && (
           <DialogTab
             disabled={!canEndGameNow}
@@ -774,9 +698,7 @@ const GamePlayerEffectDialog = ({
     () => [
       ...(skills?.map((skill, index) => (
         <DialogTab
-          highlight={
-            currentItem.type === 'Skill' && currentItem.skill === skill
-          }
+          highlight={currentItem.type === 'Skill' && currentItem.skill === skill}
           isIcon
           key={`skill-${index}`}
           onClick={() => setCurrentItem({ skill, type: 'Skill' })}
@@ -786,9 +708,7 @@ const GamePlayerEffectDialog = ({
       )) || []),
       ...(crystals?.map((crystal, index) => (
         <DialogTab
-          highlight={
-            currentItem.type === 'Crystal' && currentItem.crystal === crystal
-          }
+          highlight={currentItem.type === 'Crystal' && currentItem.crystal === crystal}
           isIcon
           key={`crystal-${index}`}
           onClick={() => setCurrentItem({ crystal, type: 'Crystal' })}
@@ -801,25 +721,16 @@ const GamePlayerEffectDialog = ({
   );
 
   const currentSkill = currentItem.type === 'Skill' ? currentItem.skill : null;
-  const currentCrystal =
-    currentItem.type === 'Crystal' ? currentItem.crystal : null;
+  const currentCrystal = currentItem.type === 'Crystal' ? currentItem.crystal : null;
 
   return (
-    <Dialog
-      onClose={onClose}
-      size={currentSkill ? 'small' : 'medium'}
-      transformOrigin={origin}
-    >
+    <Dialog onClose={onClose} size={currentSkill ? 'small' : 'medium'} transformOrigin={origin}>
       {currentSkill != null ? (
         <SkillContainer
           actionName={actionName}
           allowTouch={false}
           availableSkills={new Set([currentSkill])}
-          canAction={
-            canAction
-              ? (skill) => canAction({ skill, type: 'Skill' })
-              : undefined
-          }
+          canAction={canAction ? (skill) => canAction({ skill, type: 'Skill' }) : undefined}
           currentSkill={currentSkill}
           focus
           onAction={action ? onSkillAction : undefined}
@@ -831,13 +742,8 @@ const GamePlayerEffectDialog = ({
             <InfoBox gap vertical>
               <p>
                 <fbt desc="Number of current available charges">
-                  You currently have{' '}
-                  <fbt:param name="charges">{charges}</fbt:param>{' '}
-                  <fbt:plural
-                    count={charges}
-                    many="charges"
-                    name="number of charges"
-                  >
+                  You currently have <fbt:param name="charges">{charges}</fbt:param>{' '}
+                  <fbt:plural count={charges} many="charges" name="number of charges">
                     charge
                   </fbt:plural>
                   . Your charge bar fills up through attacks during battle.
@@ -949,10 +855,7 @@ const CrystalContainer = ({
           )}
         </h2>
         <div
-          className={cx(
-            crystalBoxStyle,
-            selected === 0 && crystalSelectedBoxStyle,
-          )}
+          className={cx(crystalBoxStyle, selected === 0 && crystalSelectedBoxStyle)}
           onClick={onClick}
           onPointerDown={(event) => {
             isPointerRef.current = event.pointerType === 'touch';
@@ -966,9 +869,7 @@ const CrystalContainer = ({
             <p>
               <fbt desc="Number of current available crystals">
                 You currently have{' '}
-                <fbt:param name="crystals">
-                  {crystalMap.get(crystal) || 0}
-                </fbt:param>{' '}
+                <fbt:param name="crystals">{crystalMap.get(crystal) || 0}</fbt:param>{' '}
                 <fbt:plural
                   count={crystalMap.get(crystal) || 0}
                   many="crystals"
@@ -985,8 +886,7 @@ const CrystalContainer = ({
           <InfoBox style={{ backgroundColor: getColor('orange', 0.3) }}>
             <p>
               <fbt desc="Explanation for invasion mechanics">
-                This game turns into a realtime game after activating the Power
-                Crystal.
+                This game turns into a realtime game after activating the Power Crystal.
               </fbt>
             </p>
           </InfoBox>
@@ -1035,10 +935,7 @@ export default memo(function GameDialog({
   return gameInfoState ? (
     <Portal>
       {gameInfoState.type === 'player-effect' ? (
-        <GamePlayerEffectDialog
-          gameInfoState={gameInfoState}
-          onClose={onClose}
-        />
+        <GamePlayerEffectDialog gameInfoState={gameInfoState} onClose={onClose} />
       ) : (
         <Dialog onClose={onClose} transformOrigin={gameInfoState.origin}>
           <GameDialogPanel
