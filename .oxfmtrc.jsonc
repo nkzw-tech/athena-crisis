@@ -1,0 +1,48 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "printWidth": 80,
+  "experimentalSortImports": {
+    "newlinesBetween": false,
+  },
+  "experimentalSortPackageJson": {
+    "sortScripts": true,
+  },
+  "ignorePatterns": [
+    "ares/.enum_manifest.json",
+    "ares/.src_manifest.json",
+    "ares/**/__generated__",
+    "ares/src/generated/",
+    "ares/translations/",
+    "artemis/graphql/schema.graphql",
+    "artemis/prisma/athena-prisma-client/",
+    "artemis/prisma/migrations/",
+    "artemis/prisma/pothos-types.ts",
+    "coverage",
+    "dist/",
+    "electron/out/",
+    "git-hooks/",
+    "halting-problem-failure.json",
+    "mobile/android",
+    "mobile/ios",
+    "patches/",
+    "pnpm-lock.yaml",
+    "source_strings.json",
+    "ui/music",
+    "ui/sounds",
+    "vite.config.ts.timestamp*",
+
+    // Codegen
+    "apollo/EncodedActions.tsx",
+    "apollo/FormatActions.tsx",
+    "apollo/Routes.tsx",
+    "artemis/graphql/schemaImportMap.tsx",
+    "hera/i18n/CampaignMap.tsx",
+    "hera/i18n/EntityMap.tsx",
+    "hermes/CampaignMapName.tsx",
+    "i18n/Entities.ts",
+
+    // Codegen but checked-in
+    "hera/render/Images.tsx",
+  ],
+}

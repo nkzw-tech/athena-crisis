@@ -1,11 +1,11 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import { writeFileSync } from 'node:fs';
-import { join, posix, sep } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import toSlug from '@deities/apollo/lib/toSlug.tsx';
 import chalk from 'chalk';
 import { globSync } from 'glob';
-import { format } from 'prettier';
+import { writeFileSync } from 'node:fs';
+import { join, posix, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { format } from 'oxfmt';
 import sign from './lib/sign.tsx';
 
 console.log(chalk.bold('› Generating campaign names...'));
@@ -16,6 +16,19 @@ const globs: ReadonlyArray<string> = [
   './fixtures/map/*.tsx',
 ];
 const outputFile = join(root, './hermes/CampaignMapName.tsx');
+const formatWithOxfmt = async (filePath: string, sourceText: string) => {
+  const { code, errors } = await format(filePath, sourceText, {
+    singleQuote: true,
+  });
+  if (errors.length) {
+    throw new Error(
+      `generate-campaign-names: Failed to format '${filePath}' with oxfmt:\n${errors
+        .map(({ message }) => message)
+        .join('\n')}`,
+    );
+  }
+  return code;
+};
 
 const maps = (
   await Promise.all(
@@ -31,14 +44,11 @@ const maps = (
 writeFileSync(
   outputFile,
   sign(
-    await format(
+    await formatWithOxfmt(
+      outputFile,
       `export type CampaignMapName = ${maps
         .map((name) => `'${name}'`)
         .join(' | ')};`,
-      {
-        filepath: outputFile,
-        singleQuote: true,
-      },
     ),
   ),
 );

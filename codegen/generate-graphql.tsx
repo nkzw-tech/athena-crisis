@@ -1,9 +1,9 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import { writeFileSync } from 'node:fs';
-import { join, posix, relative, sep } from 'node:path';
 import chalk from 'chalk';
 import { globSync } from 'glob';
-import { format } from 'prettier';
+import { writeFileSync } from 'node:fs';
+import { join, posix, relative, sep } from 'node:path';
+import { format } from 'oxfmt';
 import isOpenSource from '../infra/isOpenSource.tsx';
 import sign from './lib/sign.tsx';
 
@@ -12,6 +12,19 @@ console.log(chalk.bold('› Generating GraphQL schema import map...'));
 const root = process.cwd();
 const path = join(root, 'artemis/graphql');
 const outputFile = join(path, 'schemaImportMap.tsx');
+const formatWithOxfmt = async (filePath: string, sourceText: string) => {
+  const { code, errors } = await format(filePath, sourceText, {
+    singleQuote: true,
+  });
+  if (errors.length) {
+    throw new Error(
+      `generate-graphql: Failed to format '${filePath}' with oxfmt:\n${errors
+        .map(({ message }) => message)
+        .join('\n')}`,
+    );
+  }
+  return code;
+};
 
 const files = (
   await Promise.all(
@@ -25,12 +38,9 @@ if (files.length) {
   writeFileSync(
     outputFile,
     sign(
-      await format(
+      await formatWithOxfmt(
+        outputFile,
         `${files.map((name) => `import './${name}.tsx';`).join('\n')}`,
-        {
-          filepath: outputFile,
-          singleQuote: true,
-        },
       ),
     ),
   );

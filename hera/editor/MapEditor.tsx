@@ -1206,9 +1206,8 @@ export default function MapEditor({
             >
               {hasSaved ? (
                 <fbt desc="Text after saving a map">
-                  Map
-                  &quot;<fbt:param name="mapName">{mapName}</fbt:param>&quot;
-                  was saved.
+                  Map &quot;<fbt:param name="mapName">{mapName}</fbt:param>
+                  &quot; was saved.
                 </fbt>
               ) : (
                 <ErrorText>

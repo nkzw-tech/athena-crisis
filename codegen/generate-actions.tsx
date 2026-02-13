@@ -1,6 +1,4 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { parse } from '@babel/parser';
 import { NodePath } from '@babel/traverse';
 import {
@@ -12,7 +10,9 @@ import {
 import groupBy from '@nkzw/core/groupBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
-import { format } from 'prettier';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { format } from 'oxfmt';
 import sign from './lib/sign.tsx';
 import traverse from './lib/traverse.tsx';
 
@@ -30,6 +30,19 @@ const files = [
   './apollo/Objective.tsx',
   './apollo/HiddenAction.tsx',
 ];
+const formatWithOxfmt = async (filePath: string, sourceText: string) => {
+  const { code, errors } = await format(filePath, sourceText, {
+    singleQuote: true,
+  });
+  if (errors.length) {
+    throw new Error(
+      `generate-actions: Failed to format '${filePath}' with oxfmt:\n${errors
+        .map(({ message }) => message)
+        .join('\n')}`,
+    );
+  }
+  return code;
+};
 
 const customEncoderReferences = new Set([
   'ChaosStars',
@@ -988,7 +1001,8 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
       ]),
     ]);
   }
-  const actionMapOutput = await format(
+  const actionMapOutput = await formatWithOxfmt(
+    stableActionMapFileName,
     JSON.stringify(
       sortBy(
         Array.from(newActionMap).map(
@@ -997,10 +1011,6 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         ([, [id]]) => id,
       ),
     ),
-    {
-      filepath: stableActionMapFileName,
-      parser: 'json',
-    },
   );
 
   const newConditionMap = new Map<string, [number, ReadonlySet<string>]>();
@@ -1011,7 +1021,8 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
     ]);
   }
 
-  const conditionMapOutput = await format(
+  const conditionMapOutput = await formatWithOxfmt(
+    stableConditionMapFileName,
     JSON.stringify(
       sortBy(
         Array.from(newConditionMap).map(
@@ -1020,22 +1031,12 @@ const write = async (extractedTypes: ReadonlyArray<ExtractedType>) => {
         ([, [id]]) => id,
       ),
     ),
-    {
-      filepath: stableConditionMapFileName,
-      parser: 'json',
-    },
   );
   const encodedActionsOutput = sign(
-    await format(code.join('\n'), {
-      filepath: encodedActionsFileName,
-      singleQuote: true,
-    }),
+    await formatWithOxfmt(encodedActionsFileName, code.join('\n')),
   );
   const formatActionsOutput = sign(
-    await format(formatCode.join('\n'), {
-      filepath: formatActionsFileName,
-      singleQuote: true,
-    }),
+    await formatWithOxfmt(formatActionsFileName, formatCode.join('\n')),
   );
 
   writeFileSync(stableActionMapFileName, actionMapOutput);

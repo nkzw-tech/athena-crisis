@@ -1,7 +1,7 @@
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';

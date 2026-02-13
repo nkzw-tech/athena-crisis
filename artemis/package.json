@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "description": "Artemis, goddess of the hunt, wild animals and wilderness.",
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/nkzw-tech/athena-crisis.git"
   },
-  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.988.0",
@@ -52,9 +52,9 @@
     "json-stable-stringify": "^1.3.0",
     "node-pushnotifications": "^5.0.0",
     "openskill": "^4.1.0",
+    "oxfmt": "^0.32.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "prettier": "4.0.0-alpha.12",
     "resend": "6.9.2",
     "socket.io": "^4.8.3",
     "stripe": "^20.3.1",

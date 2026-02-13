@@ -691,8 +691,8 @@ const DisabledSkillDialog = ({ onClose }: { onClose: () => void }) => {
                 with the{' '}
                 <fbt:param name="crystalName">
                   {getTranslatedCrystalName(Crystal.Power)}
-                </fbt:param>.
-                They currently have fewer unlocked skill slots than you.
+                </fbt:param>
+                . They currently have fewer unlocked skill slots than you.
               </fbt>
             </p>
           </InfoBox>

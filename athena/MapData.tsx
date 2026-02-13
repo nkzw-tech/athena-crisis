@@ -1,5 +1,6 @@
 import sortBy from '@nkzw/core/sortBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
+import type { PlainMap, PlainMapConfig } from './map/PlainMap.tsx';
 import { Decorator, DecoratorInfo, getDecorator } from './info/Decorator.tsx';
 import { ActiveUnitTypes, getActiveUnitTypes, Skill } from './info/Skill.tsx';
 import {
@@ -22,7 +23,6 @@ import { Biome } from './map/Biome.tsx';
 import Building from './map/Building.tsx';
 import { DecoratorsPerSide } from './map/Configuration.tsx';
 import Entity from './map/Entity.tsx';
-import type { PlainMap, PlainMapConfig } from './map/PlainMap.tsx';
 import Player, {
   HumanPlayer,
   PlayerID,

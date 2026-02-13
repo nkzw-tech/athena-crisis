@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import { SoundName } from '@deities/athena/info/Music.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import type { ReactNode } from 'react';
 import { Animations } from '../MapAnimations.tsx';
 import { StateToStateLike } from '../Types.tsx';
 import { FlyoutColor } from '../ui/Flyout.tsx';

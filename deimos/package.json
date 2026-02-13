@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "description": "Deimos is the personification of fear. He is the son of Ares and Aphrodite. Deimos served to represent the feelings of dread and terror that befell those before a battle.",
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/nkzw-tech/athena-crisis.git"
   },
-  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "dependencies": {
     "@deities/apollo": "workspace:*",

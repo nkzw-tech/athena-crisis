@@ -276,7 +276,8 @@ const UnitRange = ({
           />
         ))}
         name="list"
-      />.
+      />
+      .
     </fbt>
   ) : null;
 
@@ -433,7 +434,8 @@ const UnitCosts = ({
           />
         ))}
         name="list"
-      />.
+      />
+      .
     </fbt>
     {canBuildBar(costs) ? (
       <>
@@ -464,7 +466,8 @@ const UnitBlocks = ({
         <UnitName color={color} key={index} unit={getUnitInfoOrThrow(unit)} />
       ))}
       name="list"
-    />.
+    />
+    .
   </fbt>
 );
 
@@ -574,8 +577,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           Counter attacks are{' '}
           <fbt:param name="raisedCounterAttack">
             {RaisedCounterAttack * 100}
-          </fbt:param>%
-          as effective as initial attacks instead of
+          </fbt:param>
+          % as effective as initial attacks instead of
           <fbt:param name="counterAttack">{CounterAttack * 100}</fbt:param>%.
         </fbt>
       );
@@ -597,8 +600,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           building provides an extra{' '}
           <fbt:param name="value">
             {PowerStationSkillMultiplier * 100}
-          </fbt:param>%
-          funds increase.
+          </fbt:param>
+          % funds increase.
         </fbt>
       );
     case Skill.VampireHeal:
@@ -630,7 +633,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           Increases charge accumulation speed by
           <fbt:param name="value">
             {ChargeSkillChargeMultiplier * 100}
-          </fbt:param>%.
+          </fbt:param>
+          %.
         </fbt>
       );
     case Skill.DragonSaboteur:
@@ -715,7 +719,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           at each
           <fbt:param name="buildingName">
             <BuildingName building={Bar} color={color} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.BuyUnitBear:
@@ -732,7 +737,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           and{' '}
           <fbt:param name="buildingNameB">
             <BuildingName building={HQ} color={color} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.BuyUnitAcidBomber:
@@ -741,7 +747,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Increases damage to poisoned units by{' '}
           <fbt:param name="value">
             {PoisonSkillPowerDamageMultiplier * 100}
-          </fbt:param>%.
+          </fbt:param>
+          %.
         </fbt>
       );
     case Skill.BuyUnitAlien:
@@ -758,7 +765,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           and{' '}
           <fbt:param name="buildingNameB">
             <BuildingName building={HQ} color={color} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.BuyUnitOctopus:
@@ -788,11 +796,12 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           into{' '}
           <fbt:param name="toUnitName">
             <UnitName color={color} unit={InfernoJetpack} />
-          </fbt:param>.
-          Spawns 3{' '}
+          </fbt:param>
+          . Spawns 3{' '}
           <fbt:param name="unitNameB">
             <UnitName color={color} unit={InfernoJetpack} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.UnlockZombie:
@@ -809,7 +818,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           into{' '}
           <fbt:param name="toUnitName">
             <UnitName color={color} unit={Zombie} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.UnlockPowerStation:
@@ -870,8 +880,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Attacks are increased by{' '}
           <fbt:param name="percentage">
             {ChargeSkillChargeMultiplier * 100}
-          </fbt:param>%
-          for each available charge.
+          </fbt:param>
+          % for each available charge.
         </fbt>
       );
     case Skill.DragonSaboteur:
@@ -904,7 +914,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
           Fully heals all units carried by
           <fbt:param name="convertedUnitName">
             <UnitName color={color} unit={Jeep} />
-          </fbt:param>.
+          </fbt:param>
+          .
         </fbt>
       );
     case Skill.CostRecovery:

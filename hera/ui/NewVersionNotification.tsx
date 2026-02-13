@@ -76,7 +76,8 @@ export default function NewVersionNotification({
                   {...linkProps}
                 >
                   download the new version
-                </a>.
+                </a>
+                .
               </fbt>
             </p>
           </VStack>

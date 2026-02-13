@@ -102,7 +102,8 @@ const ObjectiveText = ({
             name="number of buildings"
           >
             building
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     case Criteria.DefeatOneLabel:
@@ -141,7 +142,8 @@ const ObjectiveText = ({
             name="number of units"
           >
             unit
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     case Criteria.EscortLabel:
@@ -171,7 +173,8 @@ const ObjectiveText = ({
             name="number of rounds"
           >
             round
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     case Criteria.EscortAmount:
@@ -208,7 +211,8 @@ const ObjectiveText = ({
             name="number of units"
           >
             unit
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     case Criteria.RescueAmount:
@@ -245,7 +249,8 @@ const ObjectiveText = ({
             name="number of units"
           >
             unit
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     case Criteria.RescueLabel:
@@ -290,7 +295,8 @@ const ObjectiveText = ({
             name="number of buildings"
           >
             building
-          </fbt:plural>.
+          </fbt:plural>
+          .
         </fbt>
       );
     default: {
@@ -312,7 +318,8 @@ const CompletedConditionText = ({
       Completed by{' '}
       <fbt:param name="players">
         <PlayerList playerDetails={playerDetails} players={players} />
-      </fbt:param>.
+      </fbt:param>
+      .
     </fbt>
   </div>
 );

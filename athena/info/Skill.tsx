@@ -1,16 +1,16 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import type Unit from '../map/Unit.tsx';
+import type MapData from '../MapData.tsx';
+import type { UnitInfo } from './Unit.tsx';
 import getAirUnitsToRecover from '../lib/getAirUnitsToRecover.tsx';
 import { Charge } from '../map/Configuration.tsx';
 import Entity, { EntityType, isUnit, isUnitInfo } from '../map/Entity.tsx';
 import Player from '../map/Player.tsx';
-import type Unit from '../map/Unit.tsx';
 import Vector from '../map/Vector.tsx';
-import type MapData from '../MapData.tsx';
 import { BuildingInfo } from './Building.tsx';
 import BuildingID from './BuildingID.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
 import { TileInfo, TileType, TileTypes } from './Tile.tsx';
-import type { UnitInfo } from './Unit.tsx';
 import UnitID from './UnitID.tsx';
 
 export enum Skill {

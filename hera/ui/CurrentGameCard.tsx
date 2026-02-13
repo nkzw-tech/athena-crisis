@@ -1,7 +1,7 @@
 import type Player from '@deities/athena/map/Player.tsx';
-import { PlayerID } from '@deities/athena/map/Player.tsx';
 import type Team from '@deities/athena/map/Team.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
+import { PlayerID } from '@deities/athena/map/Player.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import Portal from '@deities/ui/Portal.tsx';

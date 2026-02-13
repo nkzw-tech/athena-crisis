@@ -1,3 +1,4 @@
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { prepareSprites } from '@deities/art/Sprites.tsx';
 import { BuildingInfo } from '@deities/athena/info/Building.tsx';
 import { DecoratorInfo } from '@deities/athena/info/Decorator.tsx';
@@ -6,7 +7,6 @@ import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import BuildingT from '@deities/athena/map/Building.tsx';
-import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
 import UnitT from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';

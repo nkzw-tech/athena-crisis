@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import {
   EncodedGameActionResponse,
   GameState,
 } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import playwright, { Browser, Page } from 'playwright';
 
 const APP_PORT = 3001;

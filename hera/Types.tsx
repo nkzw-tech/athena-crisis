@@ -1,3 +1,5 @@
+import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { Action, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
 import {
   ActionResponse,
@@ -15,7 +17,6 @@ import { SpriteVariant } from '@deities/athena/info/SpriteVariants.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -25,7 +26,6 @@ import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
-import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { ConfirmProps } from './behavior/confirm/ConfirmAction.tsx';
 import { EditorState, SetEditorStateFunction } from './editor/Types.tsx';
 import { GameUser, UserLikeWithID } from './hooks/useUserMap.tsx';

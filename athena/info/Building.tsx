@@ -1,12 +1,12 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import type Building from '../map/Building.tsx';
+import type { ID } from '../MapData.tsx';
 import { AIBehavior } from '../map/AIBehavior.tsx';
 import { Biome } from '../map/Biome.tsx';
-import type Building from '../map/Building.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
 import { EntityType } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
-import type { ID } from '../MapData.tsx';
 import BuildingID from './BuildingID.tsx';
 import { getBuildingCost, hasUnlockedBuilding, Skill } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';

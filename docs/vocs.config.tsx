@@ -1,6 +1,6 @@
-import { readFileSync } from 'node:fs';
 import babelPluginEmotion from '@emotion/babel-plugin';
 import react from '@vitejs/plugin-react';
+import { readFileSync } from 'node:fs';
 import React from 'react';
 import { defineConfig } from 'vocs';
 import presets from '../infra/babelPresets.tsx';

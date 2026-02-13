@@ -1,5 +1,5 @@
-import { join } from 'node:path';
 import dotenv from 'dotenv';
+import { join } from 'node:path';
 import { defineConfig } from 'vitest/config';
 import createResolver from './infra/createResolver.tsx';
 

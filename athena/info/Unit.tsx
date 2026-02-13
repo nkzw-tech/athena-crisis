@@ -1,11 +1,12 @@
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
+import type Unit from '../map/Unit.tsx';
+import type { TileInfo } from './Tile.tsx';
 import formatText from '../lib/formatText.tsx';
 import { AIBehavior } from '../map/AIBehavior.tsx';
 import { MaxHealth } from '../map/Configuration.tsx';
 import Entity, { EntityType } from '../map/Entity.tsx';
 import Player, { PlayerID } from '../map/Player.tsx';
 import SpriteVector from '../map/SpriteVector.tsx';
-import type Unit from '../map/Unit.tsx';
 import { ID } from '../MapData.tsx';
 import { AttackSprite } from './AttackSprite.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
@@ -18,7 +19,6 @@ import {
   Skill,
 } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
-import type { TileInfo } from './Tile.tsx';
 import TileID from './TileID.tsx';
 import UnitID from './UnitID.tsx';
 

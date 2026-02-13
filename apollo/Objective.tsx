@@ -1,9 +1,9 @@
+import type Player from '@deities/athena/map/Player.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
-import type Player from '@deities/athena/map/Player.tsx';
 import { Bot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {

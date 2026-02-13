@@ -1,5 +1,5 @@
-import { isLinux, isWindows } from '../Browser.tsx';
 import type { EventName } from './Input.tsx';
+import { isLinux, isWindows } from '../Browser.tsx';
 import { GamepadType } from './setupGamePad.tsx';
 
 type ButtonNames = Exclude<

@@ -1,4 +1,3 @@
-import { stripVTControlCharacters } from 'node:util';
 import { ToggleLightningAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { RadarStation } from '@deities/athena/info/Building.tsx';
 import { Lightning, StormCloud } from '@deities/athena/info/Tile.tsx';
@@ -8,6 +7,7 @@ import { Charge } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { stripVTControlCharacters } from 'node:util';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';

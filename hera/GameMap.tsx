@@ -1,3 +1,4 @@
+import type MapData from '@deities/athena/MapData.tsx';
 import { Action, execute } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
@@ -27,7 +28,6 @@ import {
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
-import type MapData from '@deities/athena/MapData.tsx';
 import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';

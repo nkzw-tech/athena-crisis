@@ -505,8 +505,8 @@ export default function MapEditorSettingsPanel({
                           showCount="no"
                         >
                           won game
-                        </fbt:plural>,{' '}
-                        <fbt:param name="lost">{metrics.lost}</fbt:param>{' '}
+                        </fbt:plural>
+                        , <fbt:param name="lost">{metrics.lost}</fbt:param>{' '}
                         <fbt:plural
                           count={metrics.lost}
                           many="lost games"
@@ -514,7 +514,8 @@ export default function MapEditorSettingsPanel({
                           showCount="no"
                         >
                           lost game
-                        </fbt:plural>,{' '}
+                        </fbt:plural>
+                        ,{' '}
                         <fbt:param name="winRatio">
                           {(metrics.won / (metrics.won + metrics.lost)).toFixed(
                             2,

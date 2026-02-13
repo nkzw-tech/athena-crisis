@@ -1,5 +1,5 @@
-import { join } from 'node:path';
 import fbteePreset from '@nkzw/babel-preset-fbtee';
+import { join } from 'node:path';
 import fbtCommon from '../i18n/Common.ts';
 import isOpenSource from './isOpenSource.tsx';
 

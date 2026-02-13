@@ -1,10 +1,10 @@
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import deities from '@deities/eslint-plugin';
 import nkzw from '@nkzw/eslint-config';
 import fbtee from '@nkzw/eslint-plugin-fbtee';
 import findWorkspaces from '@nkzw/find-workspaces';
 import workspaces from 'eslint-plugin-workspaces';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 export default [
   ...nkzw,

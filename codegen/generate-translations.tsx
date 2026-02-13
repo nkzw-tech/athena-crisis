@@ -1,7 +1,4 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import { writeFileSync } from 'node:fs';
-import { basename, extname, join, posix, sep } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import {
   GameEndCondition,
   OptionalObjectiveCondition,
@@ -31,7 +28,10 @@ import parseInteger from '@nkzw/core/parseInteger.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
 import { globSync } from 'glob';
-import { format } from 'prettier';
+import { writeFileSync } from 'node:fs';
+import { basename, extname, join, posix, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { format } from 'oxfmt';
 import isOpenSource from '../infra/isOpenSource.tsx';
 import sign from './lib/sign.tsx';
 
@@ -55,6 +55,20 @@ const COMMON_OUTPUT_FILE = join(root, 'i18n/Entities.ts');
 const ENTITY_MAP_OUTPUT_FILE = join(root, 'hera/i18n/EntityMap.tsx');
 const CAMPAIGN_MAP_OUTPUT_FILE = join(root, 'hera/i18n/CampaignMap.tsx');
 const MESSAGE_MAP_OUTPUT_FILE = join(root, 'hera/i18n/MessageMap.tsx');
+const formatWithOxfmt = async (filePath: string, sourceText: string) => {
+  const { code, errors } = await format(filePath, sourceText, {
+    experimentalSortImports: { newlinesBetween: false },
+    singleQuote: true,
+  });
+  if (errors.length) {
+    throw new Error(
+      `generate-translations: Failed to format '${filePath}' with oxfmt:\n${errors
+        .map(({ message }) => message)
+        .join('\n')}`,
+    );
+  }
+  return code;
+};
 
 console.log(chalk.bold('› Generating translations...'));
 
@@ -402,20 +416,18 @@ for (const [id, [message, , punctuation]] of MessageTemplate) {
   );
 }
 
-const plugins = ['@ianvs/prettier-plugin-sort-imports'];
-
 writeFileSync(
   COMMON_OUTPUT_FILE,
-  await format(sign(`export default {${common.join(',\n')}};`), {
-    filepath: COMMON_OUTPUT_FILE,
-    plugins,
-    singleQuote: true,
-  }),
+  await formatWithOxfmt(
+    COMMON_OUTPUT_FILE,
+    sign(`export default {${common.join(',\n')}};`),
+  ),
 );
 
 writeFileSync(
   ENTITY_MAP_OUTPUT_FILE,
-  await format(
+  await formatWithOxfmt(
+    ENTITY_MAP_OUTPUT_FILE,
     sign(
       [
         `import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';`,
@@ -423,17 +435,13 @@ writeFileSync(
         ...entities,
       ].join('\n'),
     ),
-    {
-      filepath: ENTITY_MAP_OUTPUT_FILE,
-      plugins,
-      singleQuote: true,
-    },
   ),
 );
 
 writeFileSync(
   CAMPAIGN_MAP_OUTPUT_FILE,
-  await format(
+  await formatWithOxfmt(
+    CAMPAIGN_MAP_OUTPUT_FILE,
     sign(
       [
         `import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';`,
@@ -444,17 +452,13 @@ writeFileSync(
         `}`,
       ].join('\n'),
     ),
-    {
-      filepath: CAMPAIGN_MAP_OUTPUT_FILE,
-      plugins,
-      singleQuote: true,
-    },
   ),
 );
 
 writeFileSync(
   MESSAGE_MAP_OUTPUT_FILE,
-  await format(
+  await formatWithOxfmt(
+    MESSAGE_MAP_OUTPUT_FILE,
     sign(
       [
         `import { fbt } from 'fbtee';`,
@@ -472,11 +476,6 @@ writeFileSync(
         `]);`,
       ].join('\n'),
     ),
-    {
-      filepath: MESSAGE_MAP_OUTPUT_FILE,
-      plugins,
-      singleQuote: true,
-    },
   ),
 );
 

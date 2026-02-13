@@ -1,4 +1,3 @@
-import { writeFileSync } from 'node:fs';
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
@@ -23,6 +22,7 @@ import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import chalk from 'chalk';
+import { writeFileSync } from 'node:fs';
 import { expect, test } from 'vitest';
 import { printGameState } from '../printGameState.tsx';
 import { captureOne } from '../screenshot.tsx';

@@ -1,11 +1,11 @@
 #!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { parse } from '@babel/parser';
 import { NodePath } from '@babel/traverse';
 import { JSXIdentifier } from '@babel/types';
 import chalk from 'chalk';
-import { format } from 'prettier';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { format } from 'oxfmt';
 import isOpenSource from '../infra/isOpenSource.tsx';
 import sign from './lib/sign.tsx';
 import traverse from './lib/traverse.tsx';
@@ -15,6 +15,19 @@ console.log(chalk.bold('› Generating routes...'));
 const root = process.cwd();
 const routesFileName = join(root, './apollo/Routes.tsx');
 const files = ['./ares/src/ui/Main.tsx'];
+const formatWithOxfmt = async (filePath: string, sourceText: string) => {
+  const { code, errors } = await format(filePath, sourceText, {
+    singleQuote: true,
+  });
+  if (errors.length) {
+    throw new Error(
+      `generate-routes: Failed to format '${filePath}' with oxfmt:\n${errors
+        .map(({ message }) => message)
+        .join('\n')}`,
+    );
+  }
+  return code;
+};
 
 type Route = string;
 
@@ -153,12 +166,7 @@ const writeRoutesFile = async (routes: ReadonlySet<Route>) => {
       ];
   writeFileSync(
     routesFileName,
-    sign(
-      await format(code.join('\n\n'), {
-        filepath: routesFileName,
-        singleQuote: true,
-      }),
-    ),
+    sign(await formatWithOxfmt(routesFileName, code.join('\n\n'))),
   );
 };
 

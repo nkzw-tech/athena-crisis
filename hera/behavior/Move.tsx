@@ -1,9 +1,9 @@
+import type Entity from '@deities/athena/map/Entity.tsx';
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getParentToMoveTo from '@deities/athena/lib/getParentToMoveTo.tsx';
 import getPathFields from '@deities/athena/lib/getPathFields.tsx';
-import type Entity from '@deities/athena/map/Entity.tsx';
 import isPlayable from '@deities/athena/map/isPlayable.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';

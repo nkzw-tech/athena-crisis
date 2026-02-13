@@ -1,7 +1,7 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
+    "oxc.oxc-vscode",
     "styled-components.vscode-styled-components",
     "sysoev.vscode-open-in-github",
     "usernamehw.errorlens",

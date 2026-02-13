@@ -74,8 +74,8 @@ export default memo(function LeaderCard({
                     Leader units receive a{' '}
                     <fbt:param name="buff">
                       {LeaderStatusEffect * 100}
-                    </fbt:param>%
-                    attack and defense bonus.
+                    </fbt:param>
+                    % attack and defense bonus.
                   </fbt>
                 </div>
               </VStack>

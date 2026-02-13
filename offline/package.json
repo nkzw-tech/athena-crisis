@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "description": "Offline single file page.",
+  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/nkzw-tech/athena-crisis.git"
   },
-  "author": "Christoph Nakazawa <christoph.pojer@gmail.com>",
   "type": "module",
   "devDependencies": {
     "@capacitor/core": "^8.1.0",

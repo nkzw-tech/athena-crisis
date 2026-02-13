@@ -19,7 +19,8 @@ export default function Reload({ reload = _reload }: { reload?: () => void }) {
           Tap here to{' '}
           <InlineLink inline onClick={reload} {...linkProps}>
             reload the game
-          </InlineLink>.
+          </InlineLink>
+          .
         </fbt>
       )}
     </>
