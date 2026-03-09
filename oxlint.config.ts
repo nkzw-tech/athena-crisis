@@ -19,6 +19,7 @@ export default defineConfig({
     node: true,
   },
   extends: [nkzw],
+  plugins: ['react-compiler'],
   ignorePatterns: [
     'ares/vite.config.ts.timestamp-*',
     'artemis/prisma/athena-prisma-client/*',
@@ -129,6 +130,7 @@ export default defineConfig({
   rules: {
     ...deities.configs.strict.rules,
     ...fbtee.configs.recommended.rules,
+    'react-compiler/react-compiler-rule': 'warn',
     '@typescript-eslint/array-type': ['error', { default: 'generic' }],
     '@typescript-eslint/no-restricted-imports': [
       'error',
