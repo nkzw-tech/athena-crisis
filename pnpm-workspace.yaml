@@ -40,6 +40,7 @@ onlyBuiltDependencies:
 overrides:
   react@^18.0.0: 19.0.0-rc.1
   rollup@^2.0.0: ^4.16.4
+  oxlint@^1.50.0: npm:oxlint-react-compiler-experimental@0.0.6
 
 patchedDependencies:
   cordova-plugin-purchase: patches/cordova-plugin-purchase.patch
