@@ -7,7 +7,7 @@ settings:
 overrides:
   react@^18.0.0: 19.0.0-rc.1
   rollup@^2.0.0: ^4.16.4
-  oxlint@^1.50.0: npm:oxlint-react-compiler-experimental@0.0.1
+  oxlint@^1.50.0: npm:oxlint-react-compiler-experimental@0.0.6
 
 patchedDependencies:
   cordova-plugin-purchase:
@@ -41,7 +41,7 @@ importers:
         version: 1.1.0
       '@nkzw/oxlint-config':
         specifier: ^1.0.1
-        version: 1.0.1(@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(oxlint-react-compiler-experimental@0.0.1)(typescript@5.9.3)
+        version: 1.0.1(@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(oxlint-react-compiler-experimental@0.0.6)(typescript@5.9.3)
       '@nkzw/pothos-locate':
         specifier: ^1.0.0
         version: 1.0.0
@@ -100,8 +100,8 @@ importers:
         specifier: ^0.35.0
         version: 0.35.0
       oxlint:
-        specifier: npm:oxlint-react-compiler-experimental@0.0.1
-        version: oxlint-react-compiler-experimental@0.0.1
+        specifier: npm:oxlint-react-compiler-experimental@0.0.6
+        version: oxlint-react-compiler-experimental@0.0.6
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.13)(@types/node@25.3.0)(typescript@5.9.3)
@@ -8261,15 +8261,12 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  oxlint-react-compiler-experimental@0.0.1:
-    resolution: {integrity: sha512-B/CxKqJrSOOWGvR/CMJ538ysWU0MvueJ8CavkvE0j6Rie5wokiNw+emVdtfsVHSMUmNmD/DXmOGnREIlKytiAw==}
+  oxlint-react-compiler-experimental@0.0.6:
+    resolution: {integrity: sha512-ulekp7Q3LMg6ngevdKS8v8adrXzM761eZ1TzpkJ/FgCwWTAi6/1QougVfNe1HVm4/O+pqjWWDiT8XwXZMIz0MA==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [darwin]
     hasBin: true
-    peerDependencies:
-      oxlint-tsgolint: '>=0.15.0'
-    peerDependenciesMeta:
-      oxlint-tsgolint:
-        optional: true
 
   p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==}
@@ -12409,14 +12406,14 @@ snapshots:
 
   '@nkzw/joymap@4.0.2': {}
 
-  '@nkzw/oxlint-config@1.0.1(@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(oxlint-react-compiler-experimental@0.0.1)(typescript@5.9.3)':
+  '@nkzw/oxlint-config@1.0.1(@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(oxlint-react-compiler-experimental@0.0.6)(typescript@5.9.3)':
     dependencies:
       '@nkzw/eslint-plugin': 2.0.0(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-no-only-tests: 3.3.0
       eslint-plugin-perfectionist: 5.6.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-unused-imports: 4.4.1(@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))
-      oxlint: oxlint-react-compiler-experimental@0.0.1
+      oxlint: oxlint-react-compiler-experimental@0.0.6
     transitivePeerDependencies:
       - '@typescript-eslint/eslint-plugin'
       - eslint
@@ -15005,7 +15002,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.19.11
+      '@types/node': 25.3.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
     optional: true
@@ -19305,7 +19302,7 @@ snapshots:
       '@oxfmt/binding-win32-ia32-msvc': 0.35.0
       '@oxfmt/binding-win32-x64-msvc': 0.35.0
 
-  oxlint-react-compiler-experimental@0.0.1: {}
+  oxlint-react-compiler-experimental@0.0.6: {}
 
   p-limit@3.1.0:
     dependencies:
