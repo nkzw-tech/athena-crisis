@@ -4,6 +4,7 @@ import { HTMLAttributes } from 'react';
 import Breakpoints from './Breakpoints.tsx';
 
 export default function AdaptiveStack({
+  className,
   reverse,
   vertical,
   ...props
@@ -11,7 +12,7 @@ export default function AdaptiveStack({
   return (
     <Stack
       {...props}
-      className={cx(adaptiveStyle, reverse && vertical && adaptiveVerticalReverseStyle)}
+      className={cx(adaptiveStyle, reverse && vertical && adaptiveVerticalReverseStyle, className)}
       vertical={vertical}
     />
   );
