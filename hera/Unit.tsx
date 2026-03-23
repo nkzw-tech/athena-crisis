@@ -1009,7 +1009,8 @@ const dimFlipStyle = css`
       z-index: calc(${vars.apply('z-index')} + 1);
       opacity: 1;
     }
-  `} 1.5s steps(1) infinite;
+  `}
+    1.5s steps(1) infinite;
 `;
 
 const neutralStyle = css`
@@ -1027,8 +1028,7 @@ const spriteStyle = css`
 `;
 
 const baseUnitStyle = css`
-  filter: brightness(${vars.apply('brightness')})
-    saturate(${vars.apply('saturation')});
+  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply('saturation')});
 `;
 
 const shadowStyle = css`
@@ -1036,24 +1036,21 @@ const shadowStyle = css`
 `;
 
 const maybeOutlineStyle = css`
-  filter: brightness(${vars.apply('brightness')})
-    saturate(${vars.apply('saturation')})
+  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply('saturation')})
     drop-shadow(
       ${vars.apply('drop-shadow-size')} ${vars.apply('drop-shadow-size')} 0px
         ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      calc(-1 * ${vars.apply('drop-shadow-size')})
-        calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
+      calc(-1 * ${vars.apply('drop-shadow-size')}) calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
         ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      calc(-1 * ${vars.apply('drop-shadow-size')})
-        ${vars.apply('drop-shadow-size')} 0px ${vars.apply('drop-shadow-color')}
+      calc(-1 * ${vars.apply('drop-shadow-size')}) ${vars.apply('drop-shadow-size')} 0px
+        ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      ${vars.apply('drop-shadow-size')}
-        calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
+      ${vars.apply('drop-shadow-size')} calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
         ${vars.apply('drop-shadow-color')}
     );
 `;
@@ -1068,7 +1065,8 @@ const brightnessAnimationStyle = css`
       filter: brightness(calc(${vars.apply('brightness')} + 0.5))
         saturate(${vars.apply('saturation')});
     }
-  `} 1.5s ease-in-out infinite;
+  `}
+    1.5s ease-in-out infinite;
 `;
 
 const brightnessAnimationOutlineStyle = css`
@@ -1117,7 +1115,8 @@ const brightnessAnimationOutlineStyle = css`
             ${vars.apply('drop-shadow-color')}
         );
     }
-  `} 1.5s ease-in-out infinite;
+  `}
+    1.5s ease-in-out infinite;
 `;
 
 const completedStyle = css`
@@ -1339,7 +1338,8 @@ const poisonStyle = css`
       background-position-y: -286px;
       opacity: 0;
     }
-  `} 6s steps(11) infinite;
+  `}
+    6s steps(11) infinite;
 
   background-image: url(${Sprites.Poison});
   height: 26px;
@@ -1357,7 +1357,8 @@ const shieldStyle = css`
     100% {
       background-position-y: -640px;
     }
-  `} 6s steps(20) infinite;
+  `}
+    6s steps(20) infinite;
 
   background-image: url(${Sprites.Shield});
   filter: saturate(${vars.apply('saturation')});

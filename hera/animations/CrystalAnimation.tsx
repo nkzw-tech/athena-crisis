@@ -76,7 +76,8 @@ const circleStyle = css`
     100% {
       opacity: 0;
     }
-  `} 1500ms forwards;
+  `}
+    1500ms forwards;
 
   transform-origin: center center;
   background-color: #111;

@@ -77,7 +77,8 @@ export const FadePulseStyle = css`
     50% {
       opacity: 0.5;
     }
-    `} 3s infinite;
+    `}
+    3s infinite;
 `;
 
 export const PulseStyle = css`
@@ -88,5 +89,6 @@ export const PulseStyle = css`
     50% {
       transform: scaleX(1.05) scaleY(1.02);
     }
-    `} 1.5s infinite;
+    `}
+    1.5s infinite;
 `;

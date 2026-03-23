@@ -39,7 +39,8 @@ export default function useBackgroundAnimation() {
           100% {
             transform: translate3d(${x - offset}px, ${y + offset}px, 0);
           }
-        `} 10s linear infinite;
+        `}
+        10s linear infinite;
     `;
     element.classList.add(animate);
     return () => {

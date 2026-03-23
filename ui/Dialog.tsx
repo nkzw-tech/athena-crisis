@@ -236,8 +236,7 @@ const sizes = {
     ${Breakpoints.sm} {
       height: min(480px, 46vh);
       top: calc(
-        ${applyVar('safe-area-top')} +
-          max(${DoubleSize * 2.2}px, calc(50vh - max(20vh, 210px)))
+        ${applyVar('safe-area-top')} + max(${DoubleSize * 2.2}px, calc(50vh - max(20vh, 210px)))
       );
       width: min(90vw, 600px);
     }

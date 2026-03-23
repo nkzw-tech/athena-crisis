@@ -238,32 +238,28 @@ const baseBuildingStyle = css`
   
   filter: brightness(${vars.apply('brightness')})
     saturate(${vars.apply('saturation')});
-  transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0)
-    skewX(${vars.apply('skew')});
+  transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) skewX(${vars.apply('skew')});
   transition:
     filter calc(${applyVar('animation-duration')} / 2) ease-in-out,
     opacity calc(${applyVar('animation-duration')} / 2) ease-in-out;
 `;
 
 const maybeOutlineStyle = css`
-  filter: brightness(${vars.apply('brightness')})
-    saturate(${vars.apply('saturation')})
+  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply('saturation')})
     drop-shadow(
       ${vars.apply('drop-shadow-size')} ${vars.apply('drop-shadow-size')} 0px
         ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      calc(-1 * ${vars.apply('drop-shadow-size')})
-        calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
+      calc(-1 * ${vars.apply('drop-shadow-size')}) calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
         ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      calc(-1 * ${vars.apply('drop-shadow-size')})
-        ${vars.apply('drop-shadow-size')} 0px ${vars.apply('drop-shadow-color')}
+      calc(-1 * ${vars.apply('drop-shadow-size')}) ${vars.apply('drop-shadow-size')} 0px
+        ${vars.apply('drop-shadow-color')}
     )
     drop-shadow(
-      ${vars.apply('drop-shadow-size')}
-        calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
+      ${vars.apply('drop-shadow-size')} calc(-1 * ${vars.apply('drop-shadow-size')}) 0px
         ${vars.apply('drop-shadow-color')}
     );
 `;

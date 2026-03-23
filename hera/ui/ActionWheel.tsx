@@ -649,7 +649,8 @@ const topRightStyle = css`
       right: 3px;
       top: 3px;
     }
-  `} 250ms 1 ease-in-out 40ms forwards;
+  `}
+    250ms 1 ease-in-out 40ms forwards;
 
   align-items: end;
   height: ${size - 3}px;

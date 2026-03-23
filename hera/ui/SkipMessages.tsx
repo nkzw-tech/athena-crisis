@@ -112,5 +112,6 @@ export const pulseStyle = css`
     60% {
       opacity: 0;
     }
-  `} ${MessageSkipDuration / 3}ms 1 forwards;
+  `}
+    ${MessageSkipDuration / 3}ms 1 forwards;
 `;

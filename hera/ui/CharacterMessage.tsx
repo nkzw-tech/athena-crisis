@@ -366,11 +366,7 @@ const backgroundStyle = css`
   inset: 0;
   mask-image:
     url('${Sprites.Noise}'),
-    linear-gradient(
-      to bottom right,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(0, 0, 0, 0.9) 50%
-    );
+    linear-gradient(to bottom right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.9) 50%);
   position: absolute;
 `;
 
@@ -397,7 +393,8 @@ const iconStyle = css`
 `;
 
 const iconAnimationStyle = css`
-  animation: 2s infinite ${keyframes`
+  animation: 2s infinite
+    ${keyframes`
     0%, 30% {
       opacity: 1;
     }

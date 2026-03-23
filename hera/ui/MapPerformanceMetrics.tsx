@@ -471,8 +471,8 @@ const achievedAnimationStyle = css`
     100% {
       transform: scale(1) rotate(0deg);
     }
-  `} ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms
-    forwards;
+  `}
+    ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms forwards;
 `;
 
 const achievedStarAnimationStyle = css`
@@ -490,8 +490,8 @@ const achievedStarAnimationStyle = css`
     100% {
       color: ${applyVar('color-gold')};
     }
-  `} ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms
-    forwards;
+  `}
+    ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms forwards;
 `;
 
 const missedAnimationStyle = css`
@@ -504,8 +504,8 @@ const missedAnimationStyle = css`
       opacity: 1;
       transform: scale(1);
     }
-  `} ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) ${starDuration}ms
-    forwards;
+  `}
+    ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) ${starDuration}ms forwards;
   color: #433612;
   opacity: 0;
   transform: scale(0);
@@ -526,8 +526,8 @@ const summaryStarStyle = css`
       opacity: 1;
       transform: translate3d(0, 0, 0);
     }
-  `} ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) ${starDuration}ms
-    forwards;
+  `}
+    ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) ${starDuration}ms forwards;
 
   opacity: 0;
   position: relative;
@@ -570,7 +570,8 @@ const fadeStyle = css`
     100% {
       opacity: 1;
     }
-  `} ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) 300ms forwards;
+  `}
+    ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) 300ms forwards;
   opacity: 0;
 `;
 
@@ -611,7 +612,8 @@ const previousStarStyle = css`
       opacity: 1;
       transform: translate3d(0, 0, 0);
     }
-  `} ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) 0ms forwards;
+  `}
+    ${starDuration / 2}ms 1 cubic-bezier(0.34, 1.1, 0.64, 1) 0ms forwards;
 
   opacity: 0;
   position: relative;

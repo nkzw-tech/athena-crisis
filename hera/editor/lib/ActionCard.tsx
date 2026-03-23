@@ -628,26 +628,16 @@ const portraitSelectorStyle = css`
 const bottomPortraitSelectorStyle = css`
   ${Breakpoints.lg} {
     transform-origin: center center;
-    left: calc(
-      (${vars.apply('portraits')} - 1) * -50% -
-        (${vars.apply('portraits')} * 4px)
-    );
-    right: calc(
-      (${vars.apply('portraits')} - 1) * -50% -
-        (${vars.apply('portraits')} * 4px)
-    );
+    left: calc((${vars.apply('portraits')} - 1) * -50% - (${vars.apply('portraits')} * 4px));
+    right: calc((${vars.apply('portraits')} - 1) * -50% - (${vars.apply('portraits')} * 4px));
   }
 `;
 
 const portraitWithManyVariantsStyle = css`
   ${Breakpoints.lg} {
-    left: calc(
-      (${vars.apply('portraits')} - 4) * -50% -
-        ((${vars.apply('portraits')} - 3) * 4px)
-    );
+    left: calc((${vars.apply('portraits')} - 4) * -50% - ((${vars.apply('portraits')} - 3) * 4px));
     right: calc(
-      (${vars.apply('portraits')} - 2) * -100% -
-        ((${vars.apply('portraits')} + 3) * 4px)
+      (${vars.apply('portraits')} - 2) * -100% - ((${vars.apply('portraits')} + 3) * 4px)
     );
   }
 `;

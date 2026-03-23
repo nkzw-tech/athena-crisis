@@ -62,7 +62,8 @@ const activeStyle = css`
     75% {
       ${pixelBorder(vars.apply('color'), 3)}
     }
-  `} 4s infinite;
+  `}
+    4s infinite;
 `;
 
 const innerCrystalStyle = css`

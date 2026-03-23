@@ -63,7 +63,8 @@ const baseStyle = css`
     100% {
       background-position-x: -104px;
     }
-  `} 720ms steps(4) infinite;
+  `}
+    720ms steps(4) infinite;
 `;
 
 const colors = {

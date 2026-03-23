@@ -145,11 +145,7 @@ const backgroundStyle = css`
   inset: 0;
   mask-image:
     url('${Sprites.Noise}'),
-    linear-gradient(
-      to bottom right,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0.7) 50%
-    );
+    linear-gradient(to bottom right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 50%);
   position: absolute;
   z-index: 1;
 `;

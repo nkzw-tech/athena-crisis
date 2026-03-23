@@ -251,11 +251,7 @@ const backgroundStyle = css`
   inset: -720px;
   mask-image:
     url('${Sprites.Noise}'),
-    linear-gradient(
-      to bottom right,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0.7) 50%
-    );
+    linear-gradient(to bottom right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 50%);
   position: absolute;
 `;
 
@@ -268,7 +264,8 @@ const backgroundAnimationStyle = {
     100% {
       transform: translate3d(-72px, 72px, 0);
     }
-  `} 5s linear infinite;
+  `}
+      5s linear infinite;
   `,
 
   right: css`
@@ -279,7 +276,8 @@ const backgroundAnimationStyle = {
     100% {
       transform: translate3d(72px, 72px, 0);
     }
-  `} 5s linear infinite;
+  `}
+      5s linear infinite;
   `,
 
   up: css`
@@ -290,7 +288,8 @@ const backgroundAnimationStyle = {
     100% {
       transform: translate3d(0, -72px, 0);
     }
-    `} 5s linear infinite;
+    `}
+      5s linear infinite;
   `,
 };
 
@@ -303,7 +302,8 @@ const flashyBackgroundStyle = {
     100% {
       transform: translate3d(-360px, 0, 0);
     }
-  `} 3s linear infinite;
+  `}
+      3s linear infinite;
   `,
 
   right: css`
@@ -314,7 +314,8 @@ const flashyBackgroundStyle = {
     100% {
       transform: translate3d(360px, 0, 0);
     }
-  `} 3s linear infinite;
+  `}
+      3s linear infinite;
   `,
 
   up: css`
@@ -325,7 +326,8 @@ const flashyBackgroundStyle = {
     100% {
       transform: translate3d(0, -360px, 0);
     }
-    `} 3s linear infinite;
+    `}
+      3s linear infinite;
   `,
 };
 

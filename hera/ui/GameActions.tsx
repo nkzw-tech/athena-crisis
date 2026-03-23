@@ -755,13 +755,13 @@ const buttonStyle = css`
   z-index: calc(${applyVar('inset-z')} + 2);
 
   bottom: calc(
-    ${applyVar('safe-area-bottom')} +
-      (${vars.apply('bottom-offset')} * ${size - 6}px) + ${applyVar('inset')}
+    ${applyVar('safe-area-bottom')} + (${vars.apply('bottom-offset')} * ${size - 6}px) +
+      ${applyVar('inset')}
   );
   ${Breakpoints.height.xs} {
     bottom: calc(
-      ${applyVar('safe-area-bottom')} +
-        (${vars.apply('bottom-offset')} * ${size - 4}px) + ${applyVar('inset')}
+      ${applyVar('safe-area-bottom')} + (${vars.apply('bottom-offset')} * ${size - 4}px) +
+        ${applyVar('inset')}
     );
   }
 `;

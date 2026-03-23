@@ -403,7 +403,8 @@ const colors: Record<RadiusType, string> = {
       100% {
         transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) scale(0.9, 0.9);
       }
-    `} ease-in-out 2s infinite alternate;
+    `}
+      ease-in-out 2s infinite alternate;
   `,
   [RadiusType.Move]: css`
     ${vars.set('color', '19, 19, 209')}
@@ -460,7 +461,8 @@ const animateStyle = css`
     100% {
       mask-position: 0% 0%;
     }
-  `} linear 40s infinite;
+  `}
+    linear 40s infinite;
 `;
 
 const border = {

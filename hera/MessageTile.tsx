@@ -158,5 +158,6 @@ const pressStyle = css`
     100% {
       transform: scale(1);
     }
-  `} 300ms 1;
+  `}
+    300ms 1;
 `;

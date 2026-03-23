@@ -10,8 +10,8 @@
   },
   "type": "module",
   "devDependencies": {
-    "@capacitor/core": "^8.1.0",
+    "@capacitor/core": "^8.2.0",
     "vite-plugin-minify": "^2.1.0",
-    "vite-plugin-singlefile": "^2.3.0"
+    "vite-plugin-singlefile": "^2.3.2"
   }
 }

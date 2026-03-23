@@ -47,7 +47,8 @@ const dotStyle = css`
         transform: translate3d(0, 3px, 0);
       }
       50% { transform: translate3d(0, -7px, 0); }
-    `} 1.5s infinite;
+    `}
+    1.5s infinite;
 
   &:nth-child(1) {
     animation-delay: 0s;

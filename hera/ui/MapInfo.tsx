@@ -321,8 +321,7 @@ const style = css`
       gap: 24px;
       left: ${left};
       right: calc(
-        ${applyVar('inset')} + ${applyVar('mouse-position-right')} +
-          env(safe-area-inset-right)
+        ${applyVar('inset')} + ${applyVar('mouse-position-right')} + env(safe-area-inset-right)
       );
       flex-direction: row;
     }

@@ -528,7 +528,8 @@ const rainbowStyle = css`
     75% {
       transform: translate3d(0, -2px, 0);
     }
-  `} 1.5s infinite ease-in-out;
+  `}
+      1.5s infinite ease-in-out;
 `;
 
 const widePlayerInfoStyle = css`
@@ -544,9 +545,7 @@ const textStyle = css`
 `;
 
 const wideStyle = css`
-  max-width: calc(
-    min(calc(440px - ${vars.apply('items')} * ${TileSize}px), 100vw) - 128px
-  );
+  max-width: calc(min(calc(440px - ${vars.apply('items')} * ${TileSize}px), 100vw) - 128px);
 `;
 
 const marginLeftStyle = css`
