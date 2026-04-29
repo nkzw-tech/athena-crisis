@@ -716,6 +716,33 @@ export function getOpponentPriorityLabels(objectives: Objectives, player: Player
   return labels;
 }
 
+export function getSelfPriorityLabels(objectives: Objectives, player: PlayerID) {
+  const labels = new Set<PlayerID>();
+  for (const [, objective] of objectives) {
+    if (!objectiveHasLabel(objective) || !objective.label?.size) {
+      continue;
+    }
+
+    const { label, players, type } = objective;
+    if (
+      ((type === Criteria.EscortAmount ||
+        type === Criteria.EscortLabel ||
+        type === Criteria.RescueLabel) &&
+        (!players?.length || players.includes(player))) ||
+      ((type === Criteria.DefeatLabel ||
+        type === Criteria.DestroyLabel ||
+        type === Criteria.DefeatOneLabel) &&
+        players?.length &&
+        !players.includes(player))
+    ) {
+      for (const player of label) {
+        labels.add(player);
+      }
+    }
+  }
+  return labels;
+}
+
 const validateLabel = (label: PlayerIDSet) => {
   if (!label.size) {
     return false;
