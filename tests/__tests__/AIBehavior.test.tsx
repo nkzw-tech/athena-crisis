@@ -14,6 +14,7 @@ import {
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import {
   Airfield,
+  Beach,
   ConstructionSite,
   Forest,
   Plain,
@@ -30,14 +31,17 @@ import {
   Flamethrower,
   HeavyArtillery,
   HeavyTank,
+  Hovercraft,
   Humvee,
   Infantry,
   Jetpack,
+  Medic,
   Pioneer,
   Saboteur,
   SmallTank,
   Sniper,
   SuperTank,
+  SupportShip,
   TransportHelicopter,
   XFighter,
   Zombie,
@@ -1184,5 +1188,147 @@ test('creates production buildings in the space biome despite not having access 
     CreateBuilding (5,5) { building: Spawn Platform { id: 19, health: 100, player: 2, completed: true }, free: null }
     CompleteUnit (5,3)
     EndTurn { current: { funds: 850, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});
+
+test('AI will prioritize healing own units with labels associated with objectives', async () => {
+  const map = initialMap.copy({
+    config: initialMap.config.copy({
+      objectives: ImmutableMap([
+        [0, { hidden: false, type: Criteria.Default }],
+        [
+          1,
+          {
+            hidden: false,
+            label: new Set([1]),
+            optional: false,
+            players: [2],
+            reward: null,
+            type: Criteria.EscortLabel,
+            vectors: new Set([vec(3, 1)]),
+          },
+        ],
+      ]),
+    }),
+    units: initialMap.units
+      .set(vec(1, 2), FighterJet.create(1))
+      .set(vec(2, 1), Infantry.create(2).setHealth(50))
+      .set(vec(2, 3), Infantry.create(2, { label: 1 }).setHealth(50))
+      .set(vec(3, 2), Medic.create(2)),
+  });
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Move (3,2 → 3,3) { fuel: 79, completed: null, path: [3,3] }
+    Heal (3,3 → 2,3)
+    Move (2,1 → 1,1) { fuel: 49, completed: null, path: [1,1] }
+    Move (2,3 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1] }
+    GameEnd { objective: { hidden: false, label: [ 1 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '3,1' ] }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
+  `);
+});
+
+test('AI will prioritize healing own units currently transporting other units', async () => {
+  const tileMap = Array(3 * 3).fill(Sea.id);
+  tileMap[3] = Plain.id;
+  tileMap[6] = Beach.id;
+
+  const map = withModifiers(
+    initialMap.copy({
+      config: initialMap.config.copy({ fog: false }),
+      map: tileMap,
+      units: initialMap.units
+        .set(vec(1, 1), Hovercraft.create(2).setHealth(50))
+        .set(vec(1, 2), Infantry.create(2))
+        .set(vec(1, 3), Hovercraft.create(2).setHealth(80))
+        .set(vec(2, 2), SupportShip.create(2))
+        .set(vec(3, 1), Hovercraft.create(2).setHealth(50))
+        .set(vec(3, 3), FighterJet.create(1)),
+    }),
+  );
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Move (2,2 → 2,1) { fuel: 88, completed: null, path: [2,1] }
+    Heal (2,1 → 3,1)
+    Move (1,2 → 1,3) { fuel: 49, completed: null, path: [1,3] }
+    CompleteUnit (1,1)
+    CompleteUnit (3,1)
+    CompleteUnit (1,3)
+    EndTurn { current: { funds: 840, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+
+  const lastMapA = gameStateA!.at(-1)![1];
+  const [, , gameStateB] = await executeGameAction(
+    lastMapA,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
+    "Heal (2,1 → 1,1)
+    CompleteUnit (1,1)
+    CompleteUnit (3,1)
+    CompleteUnit (1,3)
+    EndTurn { current: { funds: 680, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});
+
+test('AI will limit healing to maintain an economic reserve', async () => {
+  const initialMap = withModifiers(
+    MapData.createMap({
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      size: {
+        height: 3,
+        width: 3,
+      },
+      teams: [
+        { id: 1, name: '', players: [{ funds: 0, id: 1, userId: '1' }] },
+        { id: 2, name: '', players: [{ funds: 400, id: 2, name: 'Bot' }] },
+      ],
+    }),
+  );
+
+  const map = withModifiers(
+    initialMap.copy({
+      buildings: initialMap.buildings.set(vec(1, 1), House.create(2)),
+      units: initialMap.units
+        .set(vec(1, 1), Medic.create(2).setHealth(50))
+        .set(vec(1, 2), Medic.create(2).setHealth(50))
+        .set(vec(2, 1), Medic.create(2).setHealth(50))
+        .set(vec(2, 2), Medic.create(2).setHealth(50))
+        .set(vec(3, 3), FighterJet.create(1)),
+    }),
+  );
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Heal (1,1 → 2,1)
+    Heal (1,2 → 1,1)
+    Move (2,1 → 3,2) { fuel: 78, completed: null, path: [3,1 → 3,2] }
+    CompleteUnit (2,2)
+    EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
