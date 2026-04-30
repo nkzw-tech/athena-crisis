@@ -1,3 +1,7 @@
+import { MinFunds } from '@deities/athena/info/Building.tsx';
+import calculateFunds, {
+  calculateTotalPossibleFunds,
+} from '@deities/athena/lib/calculateFunds.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -5,11 +9,15 @@ import { getSelfPriorityLabels } from '@deities/athena/Objectives.tsx';
 
 export default function getHealingWeight(map: MapData, unit: Unit) {
   const currentPlayer = map.getCurrentPlayer();
-  const injuryFactor = Math.pow((100 - unit.health) / 100, 2);
-  const healCost = getHealCost(unit, currentPlayer);
   const labelsToPrioritize = getSelfPriorityLabels(map.config.objectives, currentPlayer.id);
 
-  if (healCost > currentPlayer.funds / 2 && currentPlayer.funds - healCost > 100) {
+  const injuryFactor = Math.pow((100 - unit.health) / 100, 2);
+  const healCost = getHealCost(unit, currentPlayer);
+  const playerIncome = calculateFunds(map, currentPlayer);
+  const maxMapIncome = calculateTotalPossibleFunds(map);
+  const minSavings = playerIncome > 0 ? MinFunds * 2 : maxMapIncome > 0 ? MinFunds * 4 : MinFunds;
+
+  if (currentPlayer.funds - healCost <= minSavings) {
     return undefined;
   }
 
