@@ -1246,7 +1246,7 @@ test('AI will prioritize healing own units currently transporting other units', 
       units: initialMap.units
         .set(vec(1, 1), Hovercraft.create(2).setHealth(50))
         .set(vec(1, 2), Infantry.create(2))
-        .set(vec(1, 3), Hovercraft.create(2).setHealth(80))
+        .set(vec(1, 3), Hovercraft.create(2).setHealth(50))
         .set(vec(2, 2), SupportShip.create(2))
         .set(vec(3, 1), Hovercraft.create(2).setHealth(50))
         .set(vec(3, 3), FighterJet.create(1)),
@@ -1281,7 +1281,8 @@ test('AI will prioritize healing own units currently transporting other units', 
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "Heal (2,1 → 1,1)
+    "Move (2,1 → 2,3) { fuel: 85, completed: null, path: [2,2 → 2,3] }
+    Heal (2,3 → 1,3)
     CompleteUnit (1,1)
     CompleteUnit (3,1)
     CompleteUnit (1,3)
