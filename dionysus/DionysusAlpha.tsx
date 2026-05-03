@@ -10,6 +10,7 @@ import {
   CreateUnitAction,
   DropUnitAction,
   FoldAction,
+  HealAction,
   MoveAction,
   RescueAction,
   SabotageAction,
@@ -45,7 +46,7 @@ import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProduct
 import needsSupply from '@deities/athena/lib/needsSupply.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { Charge } from '@deities/athena/map/Configuration.tsx';
+import { Charge, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { EntityType, getEntityGroup, getEntityInfoGroup } from '@deities/athena/map/Entity.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -63,6 +64,7 @@ import estimateClosestTarget from './lib/estimateClosestTarget.tsx';
 import findPathToTarget from './lib/findPathToTarget.tsx';
 import getAttackableUnitsWithinRadius from './lib/getAttackableUnitsWithinRadius.tsx';
 import getBuildingWeight from './lib/getBuildingWeight.tsx';
+import getHealingWeight from './lib/getHealingWeight.tsx';
 import getInterestingVectors from './lib/getInterestingVectors.tsx';
 import getInterestingVectorsByAbilities from './lib/getInterestingVectorsByAbilities.tsx';
 import getPossibleAttacks from './lib/getPossibleAttacks.tsx';
@@ -90,6 +92,7 @@ export default class DionysusAlpha extends BaseAI {
       this.finishRescue(map) ||
       this.toggleLightning(map) ||
       this.rescue(map) ||
+      this.healUnit(map) ||
       this.attack(map) ||
       this.capture(map) ||
       this.fold(map) ||
@@ -1176,6 +1179,71 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     return this.execute(map, CompleteBuildingAction(from));
+  }
+
+  private healUnit(map: MapData): MapData | null {
+    const currentPlayer = map.getCurrentPlayer();
+    const entry = map.units.findEntry(
+      (unit) =>
+        !unit.isCompleted() &&
+        unit.info.hasAbility(Ability.Heal) &&
+        map.matchesPlayer(currentPlayer, unit),
+    );
+
+    if (!entry) {
+      return null;
+    }
+
+    const [from, unit] = entry;
+    const { parent, to } =
+      (shouldMove(unit) &&
+        maxBy(
+          [...moveable(this.applyVision(map), unit, from, undefined, undefined, true)].flatMap(
+            ([, { cost, vector }]) => {
+              const vectors: Array<Readonly<{ parent: Vector; to: Vector; weight: number }>> = [];
+              if (vector.equals(from) || !map.units.has(vector)) {
+                for (const adjacent of vector.adjacent()) {
+                  const targetUnit = map.units.get(adjacent);
+                  const healingWeight = targetUnit && getHealingWeight(map, targetUnit);
+                  const validVector =
+                    healingWeight &&
+                    map.matchesPlayer(unit, targetUnit) &&
+                    targetUnit.health < MaxHealth &&
+                    unit.info.configuration.healTypes?.has(targetUnit.info.type);
+                  if (validVector) {
+                    vectors.push({
+                      parent: vector,
+                      to: adjacent,
+                      weight: healingWeight * 10 - cost,
+                    });
+                  }
+                }
+              }
+              return vectors;
+            },
+          ),
+          (item) => item?.weight || Number.NEGATIVE_INFINITY,
+        )) ||
+      {};
+
+    if (!to || !parent) {
+      return null;
+    }
+
+    if (parent.equals(from)) {
+      return this.execute(map, HealAction(parent, to));
+    }
+
+    const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, parent));
+    if (isBlocked) {
+      return currentMap;
+    }
+
+    if (!currentMap) {
+      throw new Error('Error executing unit move.');
+    }
+
+    return this.execute(currentMap, HealAction(parent, to));
   }
 }
 
