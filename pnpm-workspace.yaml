@@ -19,6 +19,20 @@ packages:
   - ui
   - zeus
 
+allowBuilds:
+  '@firebase/util': false
+  '@playwright/browser-chromium': true
+  '@prisma/engines': true
+  '@sentry/cli': true
+  '@swc/core': true
+  bufferutil: true
+  canvas: false
+  esbuild: true
+  prisma: true
+  protobufjs: true
+  unrs-resolver: true
+  utf-8-validate: true
+
 ignorePatchFailures: false
 
 ignoredBuiltDependencies:

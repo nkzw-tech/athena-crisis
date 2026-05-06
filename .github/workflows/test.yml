@@ -39,7 +39,7 @@ jobs:
         uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
-          version: 10.*
+          version: 11.*
           run_install: false
 
       - name: Get pnpm store directory
