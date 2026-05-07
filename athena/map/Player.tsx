@@ -72,7 +72,9 @@ export default abstract class Player {
   }
 
   modifyFunds(change: number): this {
-    return this.copy({ funds: Math.max(0, this.funds + change) });
+    return this.copy({
+      funds: Math.max(0, Math.min(Number.MAX_SAFE_INTEGER, this.funds + change)),
+    });
   }
 
   setFunds(funds: number): this {

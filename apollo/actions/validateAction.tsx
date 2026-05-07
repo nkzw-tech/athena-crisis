@@ -130,7 +130,7 @@ const validateIncreaseCharge = (action: IncreaseChargeEffectAction) => {
     return null;
   }
 
-  return charges > 0 && charges <= MaxCharges ? action : null;
+  return Number.isInteger(charges) && charges > 0 && charges <= MaxCharges ? action : null;
 };
 
 const validateIncreaseFunds = (action: IncreaseFundsEffectAction) => {
@@ -139,7 +139,7 @@ const validateIncreaseFunds = (action: IncreaseFundsEffectAction) => {
     return null;
   }
 
-  return funds > 0 && funds <= Number.MAX_SAFE_INTEGER ? action : null;
+  return Number.isSafeInteger(funds) && funds > 0 ? action : null;
 };
 
 export default function validateAction(map: MapData, action: Action) {

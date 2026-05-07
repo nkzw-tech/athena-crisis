@@ -8,6 +8,7 @@ import {
   Pioneer,
   SmallTank,
 } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -19,9 +20,9 @@ import {
   MoveAction,
   SupplyAction,
 } from '../action-mutators/ActionMutators.tsx';
-import { execute } from '../Action.tsx';
+import { execute, executeEffect } from '../Action.tsx';
 import executeGameAction, { AIRegistryT } from '../actions/executeGameAction.tsx';
-import { Effects } from '../Effects.tsx';
+import { Effects, validateEffects } from '../Effects.tsx';
 import { formatActionResponse } from '../FormatActions.tsx';
 
 const initialMap = withModifiers(
@@ -146,6 +147,76 @@ test('does not invoke AI after onEndTurn ends the game', async () => {
 
   expect(aiCalls).toBe(0);
   expect(gameState?.at(-1)?.[0].type).toBe('GameEnd');
+});
+
+test('economy effects require safe integer values', () => {
+  const effects = validateEffects(
+    initialMap,
+    new Map([
+      [
+        'Start',
+        new Set([
+          {
+            actions: [
+              { funds: 0.5, player: 1, type: 'IncreaseFundsEffect' } as const,
+              {
+                funds: Number.MAX_SAFE_INTEGER + 1,
+                player: 1,
+                type: 'IncreaseFundsEffect',
+              } as const,
+              { charges: 0.5, player: 1, type: 'IncreaseChargeEffect' } as const,
+              { charges: 1, player: 1, type: 'IncreaseChargeEffect' } as const,
+              {
+                funds: Number.MAX_SAFE_INTEGER,
+                player: 1,
+                type: 'IncreaseFundsEffect',
+              } as const,
+            ],
+          },
+        ]),
+      ],
+    ]),
+  );
+
+  expect([...effects.get('Start')!][0].actions).toEqual([
+    { charges: 1, player: 1, type: 'IncreaseChargeEffect' },
+    {
+      funds: Number.MAX_SAFE_INTEGER,
+      player: 1,
+      type: 'IncreaseFundsEffect',
+    },
+  ]);
+
+  expect(
+    executeEffect(initialMap, vision, {
+      funds: 0.5,
+      player: 1,
+      type: 'IncreaseFundsEffect',
+    }),
+  ).toBe(null);
+  expect(
+    executeEffect(initialMap, vision, {
+      charges: 0.5,
+      player: 1,
+      type: 'IncreaseChargeEffect',
+    }),
+  ).toBe(null);
+});
+
+test('fund increases are capped at the maximum safe integer', () => {
+  const map = initialMap.copy({
+    teams: updatePlayer(
+      initialMap.teams,
+      initialMap.getPlayer(1).setFunds(Number.MAX_SAFE_INTEGER - 5),
+    ),
+  });
+  const [, newMap] = executeEffect(map, map.createVisionObject(player1), {
+    funds: 10,
+    player: 1,
+    type: 'IncreaseFundsEffect',
+  })!;
+
+  expect(newMap.getPlayer(1).funds).toBe(Number.MAX_SAFE_INTEGER);
 });
 
 test('supplying surrounding units', () => {

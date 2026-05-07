@@ -936,7 +936,7 @@ function activateCrystal(
 }
 
 function increaseCharge(map: MapData, { charges, player }: IncreaseChargeEffectAction) {
-  if (charges > 0 && charges <= MaxCharges) {
+  if (Number.isInteger(charges) && charges > 0 && charges <= MaxCharges) {
     return {
       charges,
       player: resolveDynamicPlayerID(map, player),
@@ -947,7 +947,7 @@ function increaseCharge(map: MapData, { charges, player }: IncreaseChargeEffectA
 }
 
 function increaseFunds(map: MapData, { funds, player }: IncreaseFundsEffectAction) {
-  if (funds > 0 && funds <= Number.MAX_SAFE_INTEGER) {
+  if (Number.isSafeInteger(funds) && funds > 0) {
     return {
       funds,
       player: resolveDynamicPlayerID(map, player),

@@ -5,7 +5,7 @@ import Vector from '../map/Vector.tsx';
 import MapData, { PlayerOrPlayerID } from '../MapData.tsx';
 import canPlaceLightning from './canPlaceLightning.tsx';
 import getBiomeBuildingRestrictions from './getBiomeBuildingRestrictions.tsx';
-import indexToVector from './indexToSpriteVector.tsx';
+import indexToVector from './indexToVector.tsx';
 
 const canBuildRadarStation = (map: MapData) => {
   const emptyMap = map.copy({
