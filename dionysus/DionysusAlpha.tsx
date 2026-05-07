@@ -1216,6 +1216,7 @@ export default class DionysusAlpha extends BaseAI {
                 const healingWeight = targetUnit && getHealingWeight(map, targetUnit);
                 const validVector =
                   healingWeight &&
+                  !adjacent.equals(from) &&
                   map.matchesPlayer(unit, targetUnit) &&
                   targetUnit.health < MaxHealth &&
                   unit.info.configuration.healTypes?.has(targetUnit.info.type);

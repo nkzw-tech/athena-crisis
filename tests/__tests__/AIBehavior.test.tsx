@@ -1,5 +1,5 @@
 import { EndTurnAction, MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
+import executeGameAction, { executeAIAction } from '@deities/apollo/actions/executeGameAction.tsx';
 import {
   Airbase,
   Bar,
@@ -117,6 +117,41 @@ test('attempt to attack new units when they are revealed after a move', async ()
     AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 74 }, unitB: DryUnit { health: 45 }, chargeA: 88, chargeB: 110 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
+});
+
+test('AI does not move healers to heal themselves', () => {
+  const from = vec(2, 2);
+  const map = withModifiers(
+    MapData.createMap({
+      currentPlayer: 1,
+      map: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      size: {
+        height: 3,
+        width: 3,
+      },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 500, id: 1, name: 'Bot' }],
+        },
+        {
+          id: 2,
+          name: '',
+          players: [{ funds: 500, id: 2, userId: 'User-2' }],
+        },
+      ],
+      units: [[from.x, from.y, Medic.create(1).setHealth(20).toJSON()]],
+    }),
+  );
+
+  const [gameState] = executeAIAction(map, AIRegistry, new Map());
+
+  expect(gameState.map(([actionResponse]) => actionResponse.type)).toEqual([
+    'CompleteUnit',
+    'EndTurn',
+  ]);
+  expect(gameState.at(-1)![1].units.get(from)?.health).toBe(20);
 });
 
 test('attempt to attack new units when they are revealed after creating a unit', async () => {
