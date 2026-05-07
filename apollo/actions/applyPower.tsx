@@ -101,10 +101,11 @@ export function onPowerUnitDamageEffect(skill: Skill, map: MapData, vector: Vect
       isDead = false;
     }
 
+    const actualDamage = unit.health - newUnit.health;
     const count = isDead ? newUnit.count() : 0;
     return map.copy({
       teams: updatePlayers(map.teams, [
-        map.getCurrentPlayer().modifyStatistics({ damage, destroyedUnits: count }),
+        map.getCurrentPlayer().modifyStatistics({ damage: actualDamage, destroyedUnits: count }),
         map.getPlayer(unit).modifyStatistics({ lostUnits: count }),
       ]),
       units: isDead ? map.units.delete(vector) : map.units.set(vector, newUnit),
