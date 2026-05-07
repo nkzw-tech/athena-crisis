@@ -20,6 +20,7 @@
     "build:splash": "rm -rf ./dist/deimos && pnpm vite build --outDir ../dist/deimos -c ./deimos/vite.config.ts ./deimos/ && pnpm build:docs",
     "build:steam-i18n": "rm -rf ./dist/steami18n && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./ares/scripts/translateStorepage.js",
     "codegen": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./codegen/generate-all.tsx",
+    "copybara": "java -jar tooling/copybara.jar copy.bara.sky push",
     "dev": "cd docs && pnpm dev",
     "dev:all": "npm-run-all --parallel dev:client dev:server",
     "dev:client": "./ares/ares.tsx",
