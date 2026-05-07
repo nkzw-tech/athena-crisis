@@ -207,12 +207,13 @@ export default function applyActionResponse(
             ? units.delete(to)
             : units;
 
+      const lostUnitC = !!(originalUnitC && !building);
       const lostUnitsA =
         unitA && originalUnitA && units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
-      const lostUnitsC = originalUnitC && !unitC ? originalUnitC.count() : 0;
-      const oneShotC = originalUnitC && originalUnitC.health >= MaxHealth && !unitC ? 1 : 0;
+      const lostUnitsC = lostUnitC ? originalUnitC.count() : 0;
+      const oneShotC = lostUnitC && originalUnitC.health >= MaxHealth ? 1 : 0;
       const oneShotA = originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
 
       // Update `playerA` and `playerB` first, then update `playerC` which might equal `playerB`.
@@ -245,7 +246,7 @@ export default function applyActionResponse(
           : null;
 
       if (actualPlayerC) {
-        actualPlayerC = maybeRecoverUnitCost(!unitC, actualPlayerC, originalUnitC);
+        actualPlayerC = maybeRecoverUnitCost(lostUnitC, actualPlayerC, originalUnitC);
       }
 
       return map.copy({
@@ -260,7 +261,7 @@ export default function applyActionResponse(
                       ? Math.max(0, originalUnitA.health - (unitA?.health || 0))
                       : 0,
                   destroyedUnits: lostUnitsA,
-                  lostUnits: unitC ? 0 : originalUnitC?.count() || 1,
+                  lostUnits: lostUnitsC,
                   oneShots: oneShotA,
                 })
                 .maybeSetCharge(chargeC),

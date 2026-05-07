@@ -48,3 +48,21 @@ test('units do not disappear when a building is attacked and there is no counter
   );
   expect(mapState4.units.get(to2)).toBeUndefined();
 });
+
+test('non-countering units on surviving buildings are not counted as destroyed', () => {
+  const from = vec(2, 1);
+  const to = vec(1, 1);
+  const vision = map.createVisionObject(player1);
+  const [, resultMap] = execute(map, vision, AttackBuildingAction(from, to))!;
+  const [, resultMapWithoutUnit] = execute(
+    map.copy({ units: map.units.delete(to) }),
+    vision,
+    AttackBuildingAction(from, to),
+  )!;
+
+  expect(resultMap.buildings.has(to)).toBe(true);
+  expect(resultMap.units.get(to)).toEqual(Pioneer.create(2));
+  expect(resultMap.getPlayer(1).stats.destroyedUnits).toBe(0);
+  expect(resultMap.getPlayer(2).stats.lostUnits).toBe(0);
+  expect(resultMap.getPlayer(2).charge).toBe(resultMapWithoutUnit.getPlayer(2).charge);
+});

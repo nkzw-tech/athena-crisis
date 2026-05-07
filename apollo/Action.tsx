@@ -504,7 +504,7 @@ function attackBuilding(map: MapData, vision: VisionT, { from, to }: AttackBuild
       chargeA: c ? playerA.charge + getChargeValue(unitA, playerA, a, 0.5) : undefined,
       chargeB,
       chargeC:
-        playerC && unitC
+        playerC && unitC && (c || b.isDead())
           ? (playerC.id === playerB.id ? chargeB || 0 : playerC.charge) +
             getChargeValue(unitC, playerC, c || unitC.setHealth(0), getChargeModifier(playerC))
           : undefined,
