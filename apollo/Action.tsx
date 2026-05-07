@@ -261,7 +261,7 @@ function move(
   }
 
   const cost = initialPath?.length
-    ? getPathCost(mapWithVision, unitA, from, initialPath)
+    ? getPathCost(mapWithVision, unitA, from, path)
     : radiusItem.cost;
 
   if (cost === -1) {

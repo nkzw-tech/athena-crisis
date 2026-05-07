@@ -1,6 +1,13 @@
 import { Factory, House, RadarStation } from '@deities/athena/info/Building.tsx';
 import { ConstructionSite, Lightning, Plain, StormCloud } from '@deities/athena/info/Tile.tsx';
-import { APU, Flamethrower, Jeep, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
+import {
+  APU,
+  Flamethrower,
+  Infantry,
+  Jeep,
+  Pioneer,
+  SmallTank,
+} from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -8,6 +15,7 @@ import { expect, test } from 'vitest';
 import {
   CreateBuildingAction,
   CreateUnitAction,
+  MoveAction,
   SupplyAction,
 } from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
@@ -33,6 +41,52 @@ const initialMap = withModifiers(
 );
 const player1 = initialMap.getPlayer(1);
 const vision = initialMap.createVisionObject(player1);
+
+test('moving into a hidden unit only subtracts fuel for the actual path', () => {
+  const from = vec(1, 1);
+  const to = vec(5, 1);
+  const expectedTo = vec(3, 1);
+  const map = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: true,
+      },
+      map: Array(6).fill(1),
+      size: { height: 1, width: 6 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 0, id: 1, userId: '1' }],
+        },
+        {
+          id: 2,
+          name: '',
+          players: [{ funds: 0, id: 2, userId: '2' }],
+        },
+      ],
+      units: [
+        [1, 1, SmallTank.create(1).toJSON()],
+        [4, 1, Infantry.create(2).toJSON()],
+      ],
+    }),
+  );
+  const path = [vec(2, 1), expectedTo, vec(4, 1), to];
+  const [response, newMap] = execute(
+    map,
+    map.createVisionObject(player1),
+    MoveAction(from, to, path),
+  )!;
+
+  expect(response).toMatchObject({
+    completed: true,
+    fuel: SmallTank.configuration.fuel - 2,
+    path: [vec(2, 1), expectedTo],
+    to: expectedTo,
+    type: 'Move',
+  });
+  expect(newMap.units.get(expectedTo)?.fuel).toBe(SmallTank.configuration.fuel - 2);
+});
 
 test('supplying surrounding units', () => {
   const from = vec(2, 2);
