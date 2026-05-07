@@ -19,8 +19,8 @@ export type PlainPlayerStatistics = [
   destroyedBuildings: number,
   destroyedUnits: number,
   lostBuildings: number,
-  rescuedUnits: number,
   lostUnits: number,
+  rescuedUnits: number,
   oneShots: number,
 ];
 
