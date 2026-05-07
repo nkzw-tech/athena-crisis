@@ -6,7 +6,7 @@ import {
   MoveAction,
   StartAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Effect, Effects } from '@deities/apollo/Effects.tsx';
+import { Effect, Effects, validateEffects } from '@deities/apollo/Effects.tsx';
 import { RelativeVectors } from '@deities/apollo/lib/transformEffectValue.tsx';
 import Spawn from '@deities/apollo/Spawn.tsx';
 import { Barracks } from '@deities/athena/info/Building.tsx';
@@ -19,7 +19,8 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
-import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
+import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
@@ -47,6 +48,59 @@ const map = withModifiers(
   }),
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
+
+test('validates spawn effects with new teams', () => {
+  const player3 = new Bot(3, 'Bot 3', 3, 500, undefined, new Set(), new Set(), 0, null, 0);
+  const effects: Effects = new Map([
+    [
+      'Start',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              teams: ImmutableMap([[3, new Team(3, '', ImmutableMap([[3, player3]]))]]),
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vec(2, 2), Pioneer.create(3)]]),
+            },
+          ],
+        },
+      ]),
+    ],
+  ]);
+
+  const action = [...validateEffects(map, effects).get('Start')!][0].actions[0];
+  expect(action.type).toBe('SpawnEffect');
+  expect(action.type === 'SpawnEffect' && action.teams?.has(3)).toBe(true);
+});
+
+test('filters invalid units from spawn effects', () => {
+  const validPosition = vec(2, 2);
+  const invalidPosition = vec(3, 3);
+  const effects: Effects = new Map([
+    [
+      'Start',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              type: 'SpawnEffect',
+              units: ImmutableMap([
+                [validPosition, Pioneer.create(1)],
+                [invalidPosition, Pioneer.create(1).copy({ fuel: -1 })],
+              ]),
+            },
+          ],
+        },
+      ]),
+    ],
+  ]);
+
+  const action = [...validateEffects(map, effects).get('Start')!][0].actions[0];
+  expect(action.type).toBe('SpawnEffect');
+  expect(action.type === 'SpawnEffect' && [...action.units]).toEqual([
+    [validPosition, Pioneer.create(1)],
+  ]);
+});
 
 test('applies an effect after a unit moves and drops it', async () => {
   const vecA = vec(1, 1);

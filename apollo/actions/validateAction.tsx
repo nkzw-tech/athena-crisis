@@ -39,32 +39,61 @@ const validateCharacterMessage = (action: CharacterMessageEffectAction) => {
   return { ...action, message };
 };
 
+const isValidPlayerID = (id: number) => {
+  try {
+    toPlayerID(id);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const isValidSpawnUnit = (unit: ReturnType<SpawnEffectAction['units']['get']>) => {
+  if (!unit) {
+    return false;
+  }
+
+  try {
+    return validateUnit(unit, new Map());
+  } catch {
+    return false;
+  }
+};
+
+const validateSpawnTeams = (map: MapData, teams: SpawnEffectAction['teams']) =>
+  teams?.filter((team, teamID) => {
+    if (!isValidPlayerID(teamID) || team.id !== teamID || !team.players.size) {
+      return false;
+    }
+
+    for (const [playerID, player] of team.players) {
+      if (!isValidPlayerID(playerID) || player.id !== playerID || player.teamId !== teamID) {
+        return false;
+      }
+
+      const maybePlayer = map.maybeGetPlayer(playerID);
+      if (maybePlayer && (maybePlayer.type === player.type || maybePlayer.teamId !== teamID)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
 const validateSpawnEffect = (map: MapData, action: SpawnEffectAction) => {
   const { player, teams, units: initialUnits } = action;
   if (player != null && !isDynamicPlayerID(player)) {
     return null;
   }
 
-  const units = initialUnits.map((unit) => unit.removeLeader());
-  if (!units.size || !units.some((unit) => validateUnit(unit, new Map()))) {
+  const units = initialUnits.map((unit) => unit.removeLeader()).filter(isValidSpawnUnit);
+  if (!units.size) {
     return null;
   }
 
-  if (
-    teams != null &&
-    teams.size > 0 &&
-    teams.every(
-      ({ id, players }) =>
-        !!toPlayerID(id) &&
-        !map.maybeGetTeam(id) &&
-        players.size > 0 &&
-        players.every((player) => !!toPlayerID(player.id) && !map.maybeGetPlayer(player.id)),
-    )
-  ) {
-    return null;
-  }
+  const validTeams = validateSpawnTeams(map, teams);
 
-  return { ...action, units };
+  return { ...action, teams: validTeams?.size ? validTeams : undefined, units };
 };
 
 const validateActivateCrystal = (action: ActivateCrystalAction) => {
