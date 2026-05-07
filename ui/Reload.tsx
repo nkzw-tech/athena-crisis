@@ -5,7 +5,7 @@ import InlineLink, { useInlineLink } from './InlineLink.tsx';
 const _reload = () => location.reload();
 
 export default function Reload({ reload = _reload }: { reload?: () => void }) {
-  const { className, ...linkProps } = useInlineLink();
+  const { className: _className, ...linkProps } = useInlineLink();
   const [showGamepadDescription] = useState(() => hasGamepad());
 
   return (

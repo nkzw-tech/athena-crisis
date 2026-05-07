@@ -119,7 +119,7 @@ export default class BuySkills {
                 detail={String(cost)}
                 disabled={isDisabled}
                 entityCount={entityCount}
-                icon={(highlight) => (
+                icon={() => (
                   <>
                     <div className={skillIconStyle}>
                       <SkillIcon disabled={isDisabled} hideDialog skill={skill} />

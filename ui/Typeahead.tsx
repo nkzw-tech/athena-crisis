@@ -338,6 +338,8 @@ export default function Typeahead<T>({
     'dialog',
   );
 
+  const [showEmptyResult, setShowEmptyResult] = useState(false);
+
   const onKeydown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
       setShowEmptyResult(false);
@@ -436,7 +438,6 @@ export default function Typeahead<T>({
     }
   }, [initialValue]);
 
-  const [showEmptyResult, setShowEmptyResult] = useState(false);
   useEffect(() => {
     if (emptyResult && input.current?.value.length && !showEmptyResult && results.length === 0) {
       const timer = setTimeout(() => setShowEmptyResult(true), 1000);
@@ -489,12 +490,16 @@ export default function Typeahead<T>({
               ))}
             </ul>
           ))
-        )(results, {
-          isHighlighted: (index: number) => index === highlightedIndex,
-          onSelect: handleSelection,
-          renderItem,
-          setHighlighted: setHighlightedIndex,
-        })
+        )(
+          results,
+          // oxlint-disable-next-line react-hooks-js/refs
+          {
+            isHighlighted: (index: number) => index === highlightedIndex,
+            onSelect: handleSelection,
+            renderItem,
+            setHighlighted: setHighlightedIndex,
+          },
+        )
       ) : showEmptyResult ? (
         <ul className={cx(BoxStyle, resultStyle, resultClassName)}>
           <li className={cx(resultItemStyle, ellipsis)}>{emptyResult}</li>
