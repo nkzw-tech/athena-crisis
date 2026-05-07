@@ -200,7 +200,7 @@ function applyHiddenSourceAttackBuildingAction(
     });
   }
 
-  const existingUnit = unitC && map.units.get(to);
+  const existingUnit = map.units.get(to);
   if (!building) {
     return map.copy({
       buildings: map.buildings.delete(to),
@@ -226,9 +226,10 @@ function applyHiddenSourceAttackBuildingAction(
 
   return map.copy({
     buildings: map.buildings.set(to, existingBuilding.setHealth(building.health)),
-    units: existingUnit
-      ? map.units.set(to, existingUnit.copy(unitC).maybeUpdateAIBehavior())
-      : map.units,
+    units:
+      existingUnit && unitC
+        ? map.units.set(to, existingUnit.copy(unitC).maybeUpdateAIBehavior())
+        : map.units,
   });
 }
 

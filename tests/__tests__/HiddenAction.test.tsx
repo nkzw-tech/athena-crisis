@@ -5,7 +5,9 @@ import {
   CreateUnitAction,
   EndTurnAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
+import { UpAttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { HeavyArtillery, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
@@ -204,6 +206,32 @@ test('destroy hidden building', async () => {
       expect(screenshot).toMatchImageSnapshot();
     },
   );
+});
+
+test('destroying a hidden building also tracks unit losses on that field', () => {
+  const to = vec(4, 5);
+  const newMap = map.copy({
+    buildings: map.buildings.set(to, House.create(2).setHealth(1)),
+    units: map.units.set(to, Pioneer.create(2)),
+  });
+
+  const resultMap = applyActionResponse(newMap, newMap.createVisionObject(player1), {
+    building: undefined,
+    chargeB: 50,
+    chargeC: 75,
+    direction: UpAttackDirection,
+    hasCounterAttack: false,
+    playerC: 2,
+    to,
+    type: 'HiddenSourceAttackBuilding',
+    unitC: undefined,
+  });
+
+  expect(resultMap.buildings.has(to)).toBe(false);
+  expect(resultMap.units.has(to)).toBe(false);
+  expect(resultMap.getPlayer(2).stats.lostBuildings).toBe(1);
+  expect(resultMap.getPlayer(2).stats.lostUnits).toBe(1);
+  expect(resultMap.getPlayer(2).charge).toBe(75);
 });
 
 test('do not attempt attacking a building via long-range', async () => {
