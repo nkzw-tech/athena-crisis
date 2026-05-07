@@ -1333,3 +1333,50 @@ test('AI will limit healing to maintain an economic reserve', async () => {
     EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
+
+test('AI will heal with units that cannot move', async () => {
+  const map = initialMap.copy({
+    units: initialMap.units
+      .set(vec(1, 1), Medic.create(2, { behavior: AIBehavior.Stay }))
+      .set(vec(1, 2), Infantry.create(2).setHealth(50))
+      .set(vec(3, 3), FighterJet.create(1)),
+  });
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Heal (1,1 → 1,2)
+    Move (1,2 → 2,3) { fuel: 48, completed: true, path: [1,3 → 2,3] }
+    EndTurn { current: { funds: 920, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});
+
+test('AI will keep looking for healers when the first healer has no target', async () => {
+  const map = initialMap.copy({
+    units: initialMap.units
+      .set(vec(1, 1), Medic.create(2, { behavior: AIBehavior.Stay }))
+      .set(vec(2, 2), Medic.create(2, { behavior: AIBehavior.Stay }))
+      .set(vec(2, 3), Infantry.create(2).setHealth(50))
+      .set(vec(3, 3), FighterJet.create(1)),
+  });
+
+  const [, , gameStateA] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+  );
+
+  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
+    "Heal (2,2 → 2,3)
+    Move (2,3 → 3,2) { fuel: 48, completed: null, path: [2,2 → 3,2] }
+    EndTurn { current: { funds: 920, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
+});

@@ -1183,67 +1183,77 @@ export default class DionysusAlpha extends BaseAI {
 
   private healUnit(map: MapData): MapData | null {
     const currentPlayer = map.getCurrentPlayer();
-    const entry = map.units.findEntry(
-      (unit) =>
-        !unit.isCompleted() &&
-        unit.info.hasAbility(Ability.Heal) &&
-        map.matchesPlayer(currentPlayer, unit),
-    );
+    let mapWithVision: MapData | null = null;
 
-    if (!entry) {
-      return null;
-    }
+    for (const [from, unit] of map.units) {
+      if (
+        unit.isCompleted() ||
+        !unit.info.hasAbility(Ability.Heal) ||
+        !map.matchesPlayer(currentPlayer, unit)
+      ) {
+        continue;
+      }
 
-    const [from, unit] = entry;
-    const { parent, to } =
-      (shouldMove(unit) &&
+      const fields: ReadonlyMap<Vector, Readonly<{ cost: number; vector: Vector }>> = shouldMove(
+        unit,
+      )
+        ? moveable(
+            mapWithVision || (mapWithVision = this.applyVision(map)),
+            unit,
+            from,
+            undefined,
+            undefined,
+            true,
+          )
+        : new Map([[from, { cost: 0, vector: from }]]);
+      const { parent, to } =
         maxBy(
-          [...moveable(this.applyVision(map), unit, from, undefined, undefined, true)].flatMap(
-            ([, { cost, vector }]) => {
-              const vectors: Array<Readonly<{ parent: Vector; to: Vector; weight: number }>> = [];
-              if (vector.equals(from) || !map.units.has(vector)) {
-                for (const adjacent of vector.adjacent()) {
-                  const targetUnit = map.units.get(adjacent);
-                  const healingWeight = targetUnit && getHealingWeight(map, targetUnit);
-                  const validVector =
-                    healingWeight &&
-                    map.matchesPlayer(unit, targetUnit) &&
-                    targetUnit.health < MaxHealth &&
-                    unit.info.configuration.healTypes?.has(targetUnit.info.type);
-                  if (validVector) {
-                    vectors.push({
-                      parent: vector,
-                      to: adjacent,
-                      weight: healingWeight * 10 - cost,
-                    });
-                  }
+          [...fields].flatMap(([, { cost, vector }]) => {
+            const vectors: Array<Readonly<{ parent: Vector; to: Vector; weight: number }>> = [];
+            if (vector.equals(from) || !map.units.has(vector)) {
+              for (const adjacent of vector.adjacent()) {
+                const targetUnit = map.units.get(adjacent);
+                const healingWeight = targetUnit && getHealingWeight(map, targetUnit);
+                const validVector =
+                  healingWeight &&
+                  map.matchesPlayer(unit, targetUnit) &&
+                  targetUnit.health < MaxHealth &&
+                  unit.info.configuration.healTypes?.has(targetUnit.info.type);
+                if (validVector) {
+                  vectors.push({
+                    parent: vector,
+                    to: adjacent,
+                    weight: healingWeight * 10 - cost,
+                  });
                 }
               }
-              return vectors;
-            },
-          ),
+            }
+            return vectors;
+          }),
           (item) => item?.weight || Number.NEGATIVE_INFINITY,
-        )) ||
-      {};
+        ) || {};
 
-    if (!to || !parent) {
-      return null;
+      if (!to || !parent) {
+        continue;
+      }
+
+      if (parent.equals(from)) {
+        return this.execute(map, HealAction(parent, to));
+      }
+
+      const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, parent));
+      if (isBlocked) {
+        return currentMap;
+      }
+
+      if (!currentMap) {
+        throw new Error('Error executing unit move.');
+      }
+
+      return this.execute(currentMap, HealAction(parent, to));
     }
 
-    if (parent.equals(from)) {
-      return this.execute(map, HealAction(parent, to));
-    }
-
-    const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, parent));
-    if (isBlocked) {
-      return currentMap;
-    }
-
-    if (!currentMap) {
-      throw new Error('Error executing unit move.');
-    }
-
-    return this.execute(currentMap, HealAction(parent, to));
+    return null;
   }
 }
 
