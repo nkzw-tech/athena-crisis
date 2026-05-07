@@ -149,7 +149,7 @@ export default abstract class Player {
 
   abstract copy(_: {
     activeSkills?: ReadonlySet<Skill>;
-    ai?: number;
+    ai?: number | null;
     charge?: number;
     funds?: number;
     id?: PlayerID;
@@ -181,7 +181,7 @@ export class PlaceholderPlayer extends Player {
     skills,
     teamId,
   }: {
-    ai?: number | undefined;
+    ai?: number | null;
     funds?: number;
     id?: PlayerID;
     skills?: ReadonlySet<Skill>;
@@ -191,7 +191,7 @@ export class PlaceholderPlayer extends Player {
       id ?? this.id,
       teamId ?? this.teamId,
       funds ?? this.funds,
-      ai ?? this.ai,
+      ai !== undefined ? (ai ?? undefined) : this.ai,
       skills ?? this.skills,
     ) as this;
   }
@@ -245,7 +245,7 @@ export class Bot extends Player {
     teamId,
   }: {
     activeSkills?: ReadonlySet<Skill>;
-    ai?: number | undefined;
+    ai?: number | null;
     charge?: number;
     funds?: number;
     id?: PlayerID;
@@ -260,7 +260,7 @@ export class Bot extends Player {
       name ?? this.name,
       teamId ?? this.teamId,
       funds ?? this.funds,
-      ai ?? this.ai,
+      ai !== undefined ? (ai ?? undefined) : this.ai,
       skills ?? this.skills,
       activeSkills ?? this.activeSkills,
       charge ?? this.charge,
@@ -337,7 +337,7 @@ export class HumanPlayer extends Player {
     userId,
   }: {
     activeSkills?: ReadonlySet<Skill>;
-    ai?: number;
+    ai?: number | null;
     charge?: number;
     crystal?: Crystal | null;
     funds?: number;
@@ -354,14 +354,14 @@ export class HumanPlayer extends Player {
       userId ?? this.userId,
       teamId ?? this.teamId,
       funds ?? this.funds,
-      ai ?? this.ai,
+      ai !== undefined ? (ai ?? undefined) : this.ai,
       skills ?? this.skills,
       activeSkills ?? this.activeSkills,
       charge ?? this.charge,
       stats ?? this.stats,
       misses ?? this.misses,
-      crystal ?? this.crystal,
-      time ?? this.time,
+      crystal !== undefined ? crystal : this.crystal,
+      time !== undefined ? time : this.time,
     ) as this;
   }
 
@@ -374,7 +374,8 @@ export class HumanPlayer extends Player {
   }
 
   override setTime(time: number | undefined): this {
-    return time !== this.time ? this.copy({ time: time != null ? Math.max(0, time) : time }) : this;
+    const nextTime = time != null ? Math.max(0, time) : null;
+    return nextTime !== this.time ? this.copy({ time: nextTime }) : this;
   }
 
   toJSON(): PlainPlayerType {

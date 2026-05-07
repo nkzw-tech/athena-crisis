@@ -160,8 +160,8 @@ export default class Building extends Entity {
       player ?? this.player,
       completed !== undefined ? completed : this.completed,
       label !== undefined ? label : this.label,
-      behaviors ?? this.behaviors,
-      skills ?? this.skills,
+      behaviors !== undefined ? behaviors : this.behaviors,
+      skills !== undefined ? skills : this.skills,
     ) as this;
   }
 
