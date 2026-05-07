@@ -26,21 +26,25 @@ export default function applyEndTurnActionResponse(
     ...(supply || []),
     ...unitsToHeal.filter(([, amount]) => amount >= HealAmount).keys(),
   ]);
-  const mapWithStatusEffects = applyBeginTurnStatusEffects(
-    subtractFuel(map, nextPlayer),
+  const units = map.units.merge(
+    unitsToHeal.map(([unit, amount]) => {
+      unit = unit.modifyHealth(amount).removeStatusEffect();
+      return amount >= HealAmount ? unit.refill() : unit;
+    }),
+  );
+  const mapBeforeRemovingUnits = applyBeginTurnStatusEffects(
+    subtractFuel(map.copy({ units }), nextPlayer),
     nextPlayer,
   );
-  const destroyedUnits =
-    map.units.size -
-    mapWithStatusEffects.units.size +
-    mapWithStatusEffects.units.reduce(
-      (sum, unit, vector) =>
-        sum +
-        (!supplyVectors.has(vector) && shouldRemoveUnit(map, vector, unit, nextPlayer.id)
-          ? unit.count()
-          : 0),
-      0,
-    );
+  const destroyedUnits = mapBeforeRemovingUnits.units.reduce(
+    (sum, unit, vector) =>
+      sum +
+      (!supplyVectors.has(vector) &&
+      shouldRemoveUnit(mapBeforeRemovingUnits, vector, unit, nextPlayer.id)
+        ? unit.count()
+        : 0),
+    0,
+  );
 
   if (destroyedUnits > 0) {
     const mapB = map.copy({ teams });
@@ -71,12 +75,7 @@ export default function applyEndTurnActionResponse(
       currentPlayer: nextPlayer.id,
       round,
       teams,
-      units: map.units.merge(
-        unitsToHeal.map(([unit, amount]) => {
-          unit = unit.modifyHealth(amount).removeStatusEffect();
-          return amount >= HealAmount ? unit.refill() : unit;
-        }),
-      ),
+      units,
     })
     .recover(currentPlayer)
     .refill(nextPlayer, supplyVectors);

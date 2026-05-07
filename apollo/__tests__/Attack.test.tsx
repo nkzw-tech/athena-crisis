@@ -1,4 +1,5 @@
 import { ResearchLab, Shelter } from '@deities/athena/info/Building.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import {
   Alien,
   Brute,
@@ -101,6 +102,34 @@ test('Alien units poison opponents on attack', async () => {
   )!;
 
   expect(stateC.units.get(vecB)?.statusEffect).toBeNull();
+});
+
+test('poisoned units that heal at begin turn are not counted as destroyed', () => {
+  const position = vec(1, 1);
+  const mapA = withModifiers(
+    MapData.createMap({
+      currentPlayer: 2,
+      map: [1],
+      size: { height: 1, width: 1 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 0, id: 1, skills: [Skill.VampireHeal], userId: '1' }],
+        },
+        { id: 2, name: '', players: [{ funds: 0, id: 2, userId: '2' }] },
+      ],
+      units: [
+        [1, 1, Infantry.create(1).setHealth(15).setStatusEffect(UnitStatusEffect.Poison).toJSON()],
+      ],
+    }),
+  );
+
+  const [, stateA] = execute(mapA, mapA.createVisionObject(2), EndTurnAction())!;
+
+  expect(stateA.units.get(position)?.health).toBe(25);
+  expect(stateA.getPlayer(1).stats.lostUnits).toBe(0);
+  expect(stateA.getPlayer(2).stats.destroyedUnits).toBe(0);
 });
 
 test('shields absorb damage for one attack', async () => {
