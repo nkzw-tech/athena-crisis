@@ -728,7 +728,11 @@ function message(_: MapData, { message, player }: MessageAction) {
 
 function toggleLightning(map: MapData, { from, to }: ToggleLightningAction) {
   const building = map.buildings.get(from);
-  const tile = map.contains(to) && map.getTileInfo(to);
+  if (!map.contains(to)) {
+    return null;
+  }
+
+  const tile = map.getTileInfo(to);
 
   if (
     from.equals(to) ||

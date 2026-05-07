@@ -10,6 +10,7 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { Charge } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
@@ -19,6 +20,7 @@ import {
   EndTurnAction,
   MoveAction,
   SupplyAction,
+  ToggleLightningAction,
 } from '../action-mutators/ActionMutators.tsx';
 import { execute, executeEffect } from '../Action.tsx';
 import executeGameAction, { AIRegistryT } from '../actions/executeGameAction.tsx';
@@ -372,4 +374,14 @@ test('Radar Stations are only available if Lightning can be placed', () => {
   expect(formatActionResponse(responseE, { colors: false })).toMatchInlineSnapshot(
     `"CreateBuilding (1,1) { building: Radar Station { id: 10, health: 100, player: 1, completed: true }, free: null }"`,
   );
+});
+
+test('lightning cannot be toggled outside of the map', () => {
+  const from = vec(2, 2);
+  const map = initialMap.copy({
+    buildings: initialMap.buildings.set(from, RadarStation.create(1)),
+    teams: updatePlayer(initialMap.teams, player1.setCharge(Charge)),
+  });
+
+  expect(execute(map, vision, ToggleLightningAction(from, vec(4, 2)))).toBe(null);
 });
