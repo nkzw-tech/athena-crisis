@@ -10,6 +10,7 @@ import { Effect, Effects, validateEffects } from '@deities/apollo/Effects.tsx';
 import { RelativeVectors } from '@deities/apollo/lib/transformEffectValue.tsx';
 import Spawn from '@deities/apollo/Spawn.tsx';
 import { Barracks, House } from '@deities/athena/info/Building.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import {
   Flamethrower,
   Helicopter,
@@ -17,8 +18,11 @@ import {
   RocketLauncher,
   SmallTank,
 } from '@deities/athena/info/Unit.tsx';
+import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
+import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -130,6 +134,95 @@ test('filters invalid buildings from spawn effects', () => {
   expect(action.type === 'SpawnEffect' && [...action.buildings!]).toEqual([
     [validPosition, House.create(1)],
   ]);
+});
+
+test('transforms relative building spawn effect vectors', async () => {
+  const vecA = vec(1, 1);
+  const vecB = vec(2, 2);
+  const initialMap = map.copy({
+    units: map.units.set(vecA, Pioneer.create(1)).set(vec(3, 3), Pioneer.create(2)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'Move',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              buildings: ImmutableMap([[RelativeVectors.Target, House.create(1)]]),
+              type: 'SpawnEffect',
+              units: ImmutableMap(),
+            },
+          ],
+        },
+      ]),
+    ],
+  ]);
+
+  const [gameState] = await executeGameActions(initialMap, [MoveAction(vecA, vecB)], effects);
+  const lastMap = gameState.at(-1)![1];
+
+  expect(lastMap.buildings.get(vecB)?.id).toBe(House.id);
+});
+
+test('resizes pending effect coordinates after High Tide changes the map size', async () => {
+  const originalUnit = vec(4, 4);
+  const originalSpawnUnit = vec(5, 4);
+  const originalSpawnBuilding = vec(5, 5);
+  const resizedUnit = vec(3, 3);
+  const resizedSpawnUnit = vec(4, 3);
+  const resizedSpawnBuilding = vec(4, 4);
+  const highTidePlayer = HumanPlayer.from(map.getPlayer(1), '1').copy({
+    charge: Charge * MaxCharges,
+    crystal: Crystal.Power,
+    skills: new Set([Skill.HighTide]),
+  });
+  const initialMap = map.copy({
+    map: Array(7 * 7).fill(1),
+    size: new SizeVector(7, 7),
+    teams: updatePlayer(map.teams, highTidePlayer),
+    units: map.units.set(originalUnit, SmallTank.create(1)).set(vec(6, 4), SmallTank.create(2)),
+  });
+
+  const effects: Effects = new Map([
+    [
+      'ActivatePower',
+      new Set<Effect>([
+        {
+          actions: [{ from: originalUnit, type: 'CompleteUnit' }],
+          conditions: [
+            {
+              from: originalUnit,
+              target: [SmallTank.id],
+              type: 'UnitEquals',
+            },
+          ],
+        },
+        {
+          actions: [
+            {
+              buildings: ImmutableMap([[originalSpawnBuilding, House.create(1)]]),
+              type: 'SpawnEffect',
+              units: ImmutableMap([[originalSpawnUnit, Pioneer.create(1)]]),
+            },
+          ],
+        },
+      ]),
+    ],
+  ]);
+
+  const [gameState] = await executeGameActions(
+    initialMap,
+    [{ skill: Skill.HighTide, type: 'ActivatePower' }],
+    effects,
+  );
+  const lastMap = gameState.at(-1)![1];
+
+  expect(lastMap.units.get(resizedUnit)?.isCompleted()).toBe(true);
+  expect(lastMap.units.get(resizedSpawnUnit)?.id).toBe(Pioneer.id);
+  expect(lastMap.buildings.get(resizedSpawnBuilding)?.id).toBe(House.id);
+  expect(lastMap.buildings.has(originalSpawnBuilding)).toBe(false);
 });
 
 test('applies an effect after a unit moves and drops it', async () => {

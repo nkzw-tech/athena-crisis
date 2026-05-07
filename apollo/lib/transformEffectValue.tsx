@@ -1,14 +1,15 @@
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import getDeployableVectors from '@deities/athena/lib/getDeployableVectors.tsx';
+import Building from '@deities/athena/map/Building.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import randomEntry from '@nkzw/core/randomEntry.js';
 import ImmutableMap from '@nkzw/immutable-map';
-import { Action, SpawnEffectAction } from '../Action.tsx';
+import type { Action, SpawnEffectAction } from '../Action.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
-import { Condition } from '../Condition.tsx';
+import type { Condition } from '../Condition.tsx';
 
 type Mutable<T> = { -readonly [Key in keyof T]: T[Key] };
 
@@ -57,6 +58,22 @@ const isMutableSpawnEffect = (
   value: Mutable<Action | Condition>,
 ): value is Mutable<SpawnEffectAction> => value.type === 'SpawnEffect';
 
+const transformEntities = <T extends Unit | Building>(
+  map: MapData,
+  actionResponse: ActionResponse,
+  value: Action | Condition,
+  entities: ImmutableMap<Vector, T>,
+): ImmutableMap<Vector, T> => {
+  let newEntities = ImmutableMap<Vector, T>();
+  for (const [vector, entity] of entities) {
+    const newVector = transformVector(map, actionResponse, value, vector);
+    if (newVector) {
+      newEntities = newEntities.set(newVector, entity);
+    }
+  }
+  return newEntities;
+};
+
 export default function transformEffectValue<T extends Action | Condition>(
   map: MapData,
   actionResponse: ActionResponse,
@@ -74,12 +91,9 @@ export default function transformEffectValue<T extends Action | Condition>(
   }
 
   if (value.type === 'SpawnEffect' && isMutableSpawnEffect(newValue)) {
-    newValue.units = ImmutableMap<Vector, Unit>();
-    for (const [vector, unit] of value.units) {
-      const newVector = transformVector(map, actionResponse, value, vector);
-      if (newVector) {
-        newValue.units = newValue.units.set(newVector, unit);
-      }
+    newValue.units = transformEntities(map, actionResponse, value, value.units);
+    if (value.buildings) {
+      newValue.buildings = transformEntities(map, actionResponse, value, value.buildings);
     }
   }
 
