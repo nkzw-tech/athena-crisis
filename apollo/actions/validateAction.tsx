@@ -1,11 +1,11 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
 import { Crystals } from '@deities/athena/invasions/Crystal.tsx';
-import { validateUnit } from '@deities/athena/lib/validateMap.tsx';
+import { validateBuilding, validateUnit } from '@deities/athena/lib/validateMap.tsx';
 import { Biomes } from '@deities/athena/map/Biome.tsx';
 import { MaxCharges, MaxMessageLength } from '@deities/athena/map/Configuration.tsx';
 import { isDynamicPlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import {
+import type {
   Action,
   ActivateCrystalAction,
   CharacterMessageEffectAction,
@@ -60,6 +60,20 @@ const isValidSpawnUnit = (unit: ReturnType<SpawnEffectAction['units']['get']>) =
   }
 };
 
+export const isValidSpawnBuilding = (
+  building: ReturnType<NonNullable<SpawnEffectAction['buildings']>['get']>,
+) => {
+  if (!building) {
+    return false;
+  }
+
+  try {
+    return validateBuilding(building);
+  } catch {
+    return false;
+  }
+};
+
 const validateSpawnTeams = (map: MapData, teams: SpawnEffectAction['teams']) =>
   teams?.filter((team, teamID) => {
     if (!isValidPlayerID(teamID) || team.id !== teamID || !team.players.size) {
@@ -81,19 +95,25 @@ const validateSpawnTeams = (map: MapData, teams: SpawnEffectAction['teams']) =>
   });
 
 const validateSpawnEffect = (map: MapData, action: SpawnEffectAction) => {
-  const { player, teams, units: initialUnits } = action;
+  const { buildings: initialBuildings, player, teams, units: initialUnits } = action;
   if (player != null && !isDynamicPlayerID(player)) {
     return null;
   }
 
   const units = initialUnits.map((unit) => unit.removeLeader()).filter(isValidSpawnUnit);
-  if (!units.size) {
+  const buildings = initialBuildings?.filter(isValidSpawnBuilding);
+  if (!units.size && !buildings?.size) {
     return null;
   }
 
   const validTeams = validateSpawnTeams(map, teams);
 
-  return { ...action, teams: validTeams?.size ? validTeams : undefined, units };
+  return {
+    ...action,
+    buildings: buildings?.size ? buildings : undefined,
+    teams: validTeams?.size ? validTeams : undefined,
+    units,
+  };
 };
 
 const validateActivateCrystal = (action: ActivateCrystalAction) => {

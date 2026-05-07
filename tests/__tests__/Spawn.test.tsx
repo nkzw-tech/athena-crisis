@@ -111,6 +111,20 @@ test('spawns units and adds new players', async () => {
   expect(gameActionResponseScreenshot).toMatchImageSnapshot();
 });
 
+test('spawns buildings and adds new building owners', () => {
+  const position = vec(3, 3);
+  const gameStateEntry = executeEffect(map, map.createVisionObject(player1), {
+    buildings: ImmutableMap([[position, House.create(3)]]),
+    type: 'SpawnEffect',
+    units: ImmutableMap(),
+  } as const);
+
+  expect(gameStateEntry).not.toBeNull();
+  const newMap = gameStateEntry![1];
+  expect(newMap.buildings.get(position)?.player).toBe(3);
+  expect(newMap.maybeGetPlayer(3)).toBeTruthy();
+});
+
 test('spawns new units at adjacent fields if necessary', async () => {
   const vecA = vec(1, 1);
   const vecB = vec(3, 3);

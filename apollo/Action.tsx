@@ -46,6 +46,7 @@ import {
   MinDamage,
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
+import type Entity from '@deities/athena/map/Entity.tsx';
 import Player, {
   DynamicPlayerID,
   PlayerID,
@@ -60,6 +61,7 @@ import { VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
+import { isValidSpawnBuilding } from './actions/validateAction.tsx';
 import getActivatePowerActionResponse from './lib/getActivatePowerActionResponse.tsx';
 
 export type MutateActionResponseFn = (map: MapData, action: ActionResponse) => ActionResponse;
@@ -841,13 +843,20 @@ function spawnEffect(
     const futureMap = map.copy({ units: map.units.merge(newUnits) });
 
     for (const [vector, building] of buildings) {
-      if (couldSpawnBuilding(futureMap, vector, building.info, building.player)) {
+      if (
+        isValidSpawnBuilding(building) &&
+        couldSpawnBuilding(futureMap, vector, building.info, building.player)
+      ) {
         newBuildings = newBuildings.set(vector, building);
       }
     }
   }
 
-  teams = maybeCreatePlayers(map, teams, newUnits);
+  teams = maybeCreatePlayers(
+    map,
+    teams,
+    ImmutableMap<Vector, Entity>([...newUnits, ...newBuildings]),
+  );
   return newUnits.size || newBuildings.size || teams
     ? ({
         buildings: newBuildings,

@@ -9,7 +9,7 @@ import {
 import { Effect, Effects, validateEffects } from '@deities/apollo/Effects.tsx';
 import { RelativeVectors } from '@deities/apollo/lib/transformEffectValue.tsx';
 import Spawn from '@deities/apollo/Spawn.tsx';
-import { Barracks } from '@deities/athena/info/Building.tsx';
+import { Barracks, House } from '@deities/athena/info/Building.tsx';
 import {
   Flamethrower,
   Helicopter,
@@ -99,6 +99,36 @@ test('filters invalid units from spawn effects', () => {
   expect(action.type).toBe('SpawnEffect');
   expect(action.type === 'SpawnEffect' && [...action.units]).toEqual([
     [validPosition, Pioneer.create(1)],
+  ]);
+});
+
+test('filters invalid buildings from spawn effects', () => {
+  const validPosition = vec(2, 2);
+  const invalidPosition = vec(3, 3);
+  const effects: Effects = new Map([
+    [
+      'Start',
+      new Set<Effect>([
+        {
+          actions: [
+            {
+              buildings: ImmutableMap([
+                [validPosition, House.create(1)],
+                [invalidPosition, House.create(1).setHealth(0)],
+              ]),
+              type: 'SpawnEffect',
+              units: ImmutableMap([[vec(1, 1), Pioneer.create(1)]]),
+            },
+          ],
+        },
+      ]),
+    ],
+  ]);
+
+  const action = [...validateEffects(map, effects).get('Start')!][0].actions[0];
+  expect(action.type).toBe('SpawnEffect');
+  expect(action.type === 'SpawnEffect' && [...action.buildings!]).toEqual([
+    [validPosition, House.create(1)],
   ]);
 });
 

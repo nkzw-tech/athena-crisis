@@ -117,7 +117,7 @@ const validEntity = (entity: Entity | TransportedUnit): boolean => {
   return entity.health >= 1 && entity.health <= MaxHealth;
 };
 
-const validateBuilding = (building: Building) => {
+export const validateBuilding = (building: Building) => {
   const isNeutral = building.player === 0;
   if ((building.info.isStructure() && !isNeutral) || (building.info.isHQ() && isNeutral)) {
     return false;
