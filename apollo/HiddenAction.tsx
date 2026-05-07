@@ -107,7 +107,7 @@ function applyHiddenMoveAction(
 
   if (unit && vision.isVisible(map, to)) {
     const unitB = units.get(to);
-    const newUnit = fuel ? unit.move().setFuel(fuel) : unit.move();
+    const newUnit = fuel != null ? unit.move().setFuel(fuel) : unit.move();
     return map.copy({
       units: units.set(
         to,

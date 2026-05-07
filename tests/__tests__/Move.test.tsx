@@ -62,6 +62,18 @@ test('can only move when there is enough fuel', () => {
   expect(execute(map, vision, MoveAction(vec(2, 1), vec(2, 4)))).toBeNull();
 });
 
+test('applies zero fuel from hidden moves', () => {
+  const from = vec(2, 1);
+  const to = vec(3, 1);
+  const newMap = applyActionResponse(map, vision, {
+    fuel: 0,
+    path: [from, to],
+    type: 'HiddenMove',
+  });
+
+  expect(newMap.units.get(to)!.fuel).toBe(0);
+});
+
 test('transporters receive the correct unit in fog', async () => {
   const from = vec(3, 3);
   const to = vec(3, 2);
