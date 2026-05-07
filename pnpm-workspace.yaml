@@ -28,28 +28,13 @@ allowBuilds:
   bufferutil: true
   canvas: false
   esbuild: true
+  farmhash: true
   prisma: true
   protobufjs: true
   unrs-resolver: true
   utf-8-validate: true
 
 ignorePatchFailures: false
-
-ignoredBuiltDependencies:
-  - '@firebase/util'
-  - '@sentry/cli'
-  - protobufjs
-
-onlyBuiltDependencies:
-  - '@playwright/browser-chromium'
-  - '@prisma/engines'
-  - '@swc/core'
-  - bufferutil
-  - esbuild
-  - farmhash
-  - prisma
-  - unrs-resolver
-  - utf-8-validate
 
 overrides:
   react@^18.0.0: 19.0.0-rc.1
