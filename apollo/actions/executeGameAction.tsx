@@ -86,7 +86,7 @@ export default async function executeGameAction(
   // eslint-disable-next-line prefer-const
   let [gameState, newEffects] = applyConditions(map, effects, actionResponse);
   let lastMap = gameState.at(-1)?.[1] || activeMap;
-  const hasEnded = gameHasEnded(gameState);
+  let hasEnded = gameHasEnded(gameState);
 
   if (
     onEndTurn &&
@@ -97,6 +97,7 @@ export default async function executeGameAction(
     if (endTurnGameState?.length) {
       gameState = [...gameState, ...endTurnGameState];
       lastMap = gameState.at(-1)![1]!;
+      hasEnded = gameHasEnded(gameState);
     }
   }
 

@@ -15,10 +15,13 @@ import { expect, test } from 'vitest';
 import {
   CreateBuildingAction,
   CreateUnitAction,
+  EndTurnAction,
   MoveAction,
   SupplyAction,
 } from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
+import executeGameAction, { AIRegistryT } from '../actions/executeGameAction.tsx';
+import { Effects } from '../Effects.tsx';
 import { formatActionResponse } from '../FormatActions.tsx';
 
 const initialMap = withModifiers(
@@ -86,6 +89,63 @@ test('moving into a hidden unit only subtracts fuel for the actual path', () => 
     type: 'Move',
   });
   expect(newMap.units.get(expectedTo)?.fuel).toBe(SmallTank.configuration.fuel - 2);
+});
+
+test('does not invoke AI after onEndTurn ends the game', async () => {
+  let aiCalls = 0;
+  class TestAI {
+    constructor(private readonly effects: Effects) {}
+
+    act() {
+      aiCalls++;
+      return null;
+    }
+
+    retrieveEffects() {
+      return this.effects;
+    }
+
+    retrieveGameState() {
+      return [];
+    }
+  }
+
+  const map = MapData.createMap({
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [{ funds: 0, id: 1, userId: '1' }],
+      },
+      {
+        id: 2,
+        name: '',
+        players: [{ ai: 0, funds: 0, id: 2, name: 'Bot' }],
+      },
+    ],
+  });
+  const AIRegistry: AIRegistryT = new Map([
+    [
+      0,
+      {
+        class: TestAI,
+        name: 'TestAI',
+        published: true,
+      },
+    ],
+  ]);
+  const [, , gameState] = await executeGameAction(
+    map,
+    map.createVisionObject(player1),
+    new Map(),
+    EndTurnAction(),
+    AIRegistry,
+    undefined,
+    async (map) => [[{ type: 'GameEnd' }, map]],
+  );
+
+  expect(aiCalls).toBe(0);
+  expect(gameState?.at(-1)?.[0].type).toBe('GameEnd');
 });
 
 test('supplying surrounding units', () => {
