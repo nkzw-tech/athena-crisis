@@ -641,6 +641,22 @@ test('power damage statistics record actual damage dealt', () => {
   expect(resultMap.getPlayer(2).stats.lostUnits).toBe(1);
 });
 
+test('power damage statistics record self damage and losses', () => {
+  const skills = new Set([Skill.BuyUnitDinosaur]);
+  const from = vec(1, 1);
+  const mapA = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ charge: Charge * MaxCharges, skills })),
+    units: map.units.filter(() => false).set(toA, SmallTank.create(1).setHealth(5)),
+  });
+
+  const [, resultMap] = execute(mapA, vision, ActivatePowerAction(Skill.BuyUnitDinosaur, from))!;
+
+  expect(resultMap.units.has(toA)).toBe(false);
+  expect(resultMap.getPlayer(1).stats.damage).toBe(5);
+  expect(resultMap.getPlayer(1).stats.destroyedUnits).toBe(1);
+  expect(resultMap.getPlayer(1).stats.lostUnits).toBe(1);
+});
+
 test('some skills can recover unit costs', async () => {
   const skills = new Set([Skill.CostRecovery]);
   const mapA = map.copy({
