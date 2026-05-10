@@ -1,10 +1,13 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { executeEffect } from '@deities/apollo/Action.tsx';
+import { SpawnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
 import { Effect, Effects } from '@deities/apollo/Effects.tsx';
+import computeVisibleActions from '@deities/apollo/lib/computeVisibleActions.tsx';
+import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { GameState } from '@deities/apollo/Types.tsx';
-import { House } from '@deities/athena/info/Building.tsx';
+import { Barracks, House } from '@deities/athena/info/Building.tsx';
 import {
   Bomber,
   FighterJet,
@@ -13,9 +16,11 @@ import {
   Pioneer,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
-import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { Bot, HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
+import type Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
+import type Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
@@ -42,6 +47,23 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const team1 = map.getTeam(player1);
+const player3 = new Bot(3, 'Invader', 3, 500, undefined, new Set(), new Set(), 0, null, 0);
+const team3 = ImmutableMap<PlayerID, Team>([[3, new Team(3, '', ImmutableMap([[3, player3]]))]]);
+
+const applyVisibleSpawn = (spawnAction: SpawnActionResponse) => {
+  const vision = map.createVisionObject(player1);
+  const serverMap = applyActionResponse(map, vision, spawnAction);
+  const visibleAction = computeVisibleActions(map, vision, [[spawnAction, serverMap]]).at(0)?.[0];
+  if (!visibleAction) {
+    throw new Error('Expected a visible action.');
+  }
+
+  return updateVisibleEntities(
+    applyActionResponse(vision.apply(map), vision, visibleAction),
+    vision,
+    {},
+  );
+};
 
 test('spawns units and adds new players', async () => {
   const vision = map.createVisionObject(player1);
@@ -111,7 +133,7 @@ test('spawns units and adds new players', async () => {
   expect(gameActionResponseScreenshot).toMatchImageSnapshot();
 });
 
-test('spawns buildings and adds new building owners', () => {
+test('spawns non-production buildings as neutral without adding new owners', () => {
   const position = vec(3, 3);
   const gameStateEntry = executeEffect(map, map.createVisionObject(player1), {
     buildings: ImmutableMap([[position, House.create(3)]]),
@@ -120,9 +142,112 @@ test('spawns buildings and adds new building owners', () => {
   } as const);
 
   expect(gameStateEntry).not.toBeNull();
+  const actionResponse = gameStateEntry![0];
+  const newMap = gameStateEntry![1];
+  expect(actionResponse.type).toBe('Spawn');
+  expect(actionResponse.type === 'Spawn' && actionResponse.teams).toBeUndefined();
+  expect(newMap.buildings.get(position)?.player).toBe(0);
+  expect(newMap.maybeGetPlayer(3)).toBeUndefined();
+  expect(newMap.active).not.toContain(3);
+});
+
+test('spawns production buildings and adds new building owners', () => {
+  const position = vec(3, 3);
+  const gameStateEntry = executeEffect(map, map.createVisionObject(player1), {
+    buildings: ImmutableMap([[position, Barracks.create(3)]]),
+    type: 'SpawnEffect',
+    units: ImmutableMap(),
+  } as const);
+
+  expect(gameStateEntry).not.toBeNull();
   const newMap = gameStateEntry![1];
   expect(newMap.buildings.get(position)?.player).toBe(3);
   expect(newMap.maybeGetPlayer(3)).toBeTruthy();
+  expect(newMap.active).toContain(3);
+});
+
+test('keeps hidden spawned players active in fog', () => {
+  const hiddenPosition = vec(5, 5);
+  const vision = map.createVisionObject(player1);
+  expect(vision.isVisible(map, hiddenPosition)).toBe(false);
+
+  const spawnAction = {
+    teams: team3,
+    type: 'Spawn',
+    units: ImmutableMap([[hiddenPosition, Pioneer.create(3)]]),
+  } as const;
+  const serverMap = applyActionResponse(map, vision, spawnAction);
+  const visibleAction = computeVisibleActions(map, vision, [[spawnAction, serverMap]]).at(0)?.[0];
+
+  expect(visibleAction?.type).toBe('Spawn');
+  expect(visibleAction?.type === 'Spawn' && visibleAction.units.size).toBe(0);
+
+  const clientMap = applyVisibleSpawn(spawnAction);
+  expect(clientMap.maybeGetPlayer(3)).toBeTruthy();
+  expect(clientMap.units.has(hiddenPosition)).toBe(false);
+  expect(clientMap.active).toContain(3);
+});
+
+test('keeps spawned buildings visible as neutral in fog while preserving player activity', () => {
+  const hiddenPosition = vec(5, 5);
+  const vision = map.createVisionObject(player1);
+  expect(vision.isVisible(map, hiddenPosition)).toBe(false);
+
+  const clientMap = applyVisibleSpawn({
+    buildings: ImmutableMap([[hiddenPosition, Barracks.create(3)]]),
+    teams: team3,
+    type: 'Spawn',
+    units: ImmutableMap<Vector, Unit>(),
+  } as const);
+
+  const building = clientMap.buildings.get(hiddenPosition);
+  expect(building?.info).toBe(Barracks);
+  expect(building?.player).toBe(0);
+  expect(clientMap.active).toContain(3);
+});
+
+test('does not activate hidden players with only non-production spawned buildings', () => {
+  const hiddenPosition = vec(5, 5);
+  const vision = map.createVisionObject(player1);
+  expect(vision.isVisible(map, hiddenPosition)).toBe(false);
+  const gameStateEntry = executeEffect(map, vision, {
+    buildings: ImmutableMap([[hiddenPosition, House.create(3)]]),
+    type: 'SpawnEffect',
+    units: ImmutableMap(),
+  } as const);
+
+  expect(gameStateEntry).not.toBeNull();
+  const actionResponse = gameStateEntry![0];
+  expect(actionResponse.type).toBe('Spawn');
+  expect(actionResponse.type === 'Spawn' && actionResponse.teams).toBeUndefined();
+
+  const clientMap = applyVisibleSpawn(actionResponse as SpawnActionResponse);
+
+  const building = clientMap.buildings.get(hiddenPosition);
+  expect(building?.info).toBe(House);
+  expect(building?.player).toBe(0);
+  expect(clientMap.maybeGetPlayer(3)).toBeUndefined();
+  expect(clientMap.active).not.toContain(3);
+});
+
+test('keeps hidden spawned players active when their entities are discovered later', () => {
+  const hiddenPosition = vec(5, 5);
+  const discoveredPosition = vec(3, 1);
+  const vision = map.createVisionObject(player1);
+  expect(vision.isVisible(map, hiddenPosition)).toBe(false);
+  expect(vision.isVisible(map, discoveredPosition)).toBe(true);
+
+  const clientMap = applyVisibleSpawn({
+    teams: team3,
+    type: 'Spawn',
+    units: ImmutableMap([[hiddenPosition, Pioneer.create(3)]]),
+  } as const);
+  const discoveredMap = updateVisibleEntities(clientMap, vision, {
+    units: ImmutableMap([[discoveredPosition, Pioneer.create(3)]]),
+  });
+
+  expect(discoveredMap.units.get(discoveredPosition)?.player).toBe(3);
+  expect(discoveredMap.active).toContain(3);
 });
 
 test('spawns new units at adjacent fields if necessary', async () => {

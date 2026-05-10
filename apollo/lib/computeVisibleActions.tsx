@@ -408,9 +408,11 @@ const VisibleActionModifiers: Record<ActionResponse['type'], VisibleModifier<nev
     activeMap: MapData,
     vision: VisionT,
   ): SpawnActionResponse | null => {
-    const { teams } = actionResponse;
+    const { buildings, teams } = actionResponse;
     const units = filterUnits(activeMap, vision, actionResponse);
-    return units?.size || teams ? { ...actionResponse, units: units || ImmutableMap() } : null;
+    return units?.size || buildings?.size || teams
+      ? { ...actionResponse, units: units || ImmutableMap() }
+      : null;
   },
   Start: true,
   Supply: {

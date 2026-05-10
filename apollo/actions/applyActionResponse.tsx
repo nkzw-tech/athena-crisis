@@ -453,7 +453,14 @@ export default function applyActionResponse(
         mergeTeams(map, teams).copy({ units: map.units.merge(units) }),
         buildings,
       );
-      return newMap.copy({ active: getActivePlayers(newMap, map.active) });
+      return newMap.copy({
+        active: getActivePlayers(
+          newMap,
+          teams
+            ? [...map.active, ...[...teams.values()].flatMap(({ players }) => [...players.keys()])]
+            : map.active,
+        ),
+      });
     }
     case 'ToggleLightning': {
       const { from, player: playerID, to } = actionResponse;

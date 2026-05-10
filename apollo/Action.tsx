@@ -856,10 +856,20 @@ function spawnEffect(
     }
   }
 
-  teams = maybeCreatePlayers(
-    map,
-    teams,
-    ImmutableMap<Vector, Entity>([...newUnits, ...newBuildings]),
+  const playerCreatingEntities = ImmutableMap<Vector, Entity>([
+    ...newUnits,
+    ...newBuildings.filter((building) => building.info.canBuildUnits()),
+  ]);
+  teams = maybeCreatePlayers(map, teams, playerCreatingEntities);
+
+  const activePlayers = new Set(map.active);
+  for (const [, entity] of playerCreatingEntities) {
+    activePlayers.add(entity.player);
+  }
+  newBuildings = newBuildings.map((building) =>
+    building.player !== 0 && !activePlayers.has(building.player)
+      ? building.neutralize(map.config.biome)
+      : building,
   );
   return newUnits.size || newBuildings.size || teams
     ? ({
