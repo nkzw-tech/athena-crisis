@@ -1,21 +1,24 @@
 import { Campaign, Level } from './Types.tsx';
 
-function unrollLevel<T>(level: Level<T>, map: Map<T, number>, seen = new Set<T>(), depth = 1) {
+function unrollLevel<T>(level: Level<T>, map: Map<T, number>, active = new Set<T>(), depth = 1) {
+  if (active.has(level.mapId)) {
+    return;
+  }
+
+  const currentDepth = map.get(level.mapId);
+  if (currentDepth != null && currentDepth >= depth) {
+    return;
+  }
+
   map.set(level.mapId, depth);
 
-  if (!seen.has(level.mapId)) {
-    seen.add(level.mapId);
-    const { next } = level;
-    if (next) {
-      for (const entry of next) {
-        unrollLevel(Array.isArray(entry) ? entry[1] : entry, map, seen, depth + 1);
-      }
+  const { next } = level;
+  if (next) {
+    active.add(level.mapId);
+    for (const entry of next) {
+      unrollLevel(Array.isArray(entry) ? entry[1] : entry, map, active, depth + 1);
     }
-
-    const currentDepth = map.get(level.mapId);
-    if (!currentDepth || currentDepth < depth) {
-      map.set(level.mapId, depth);
-    }
+    active.delete(level.mapId);
   }
 }
 
