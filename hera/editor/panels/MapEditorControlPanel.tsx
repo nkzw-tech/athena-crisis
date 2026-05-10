@@ -478,7 +478,7 @@ const Sidebar = ({
       <Stack between className={boxShadowStyle} flex1>
         <Box alignCenter between className={toolbarStyle} flex1 gap={16}>
           {primary}
-          {secondary.length && (
+          {secondary.length > 0 && (
             <Dropdown
               className={moreContainerStyle}
               dropdownClassName={moreStyle}
