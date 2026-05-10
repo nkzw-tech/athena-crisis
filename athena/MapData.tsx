@@ -541,7 +541,7 @@ export default class MapData {
         config.performance
           ? {
               pace: config.performance[0] || null,
-              power: config.performance[1] || null,
+              power: config.performance[1] ?? null,
               style: config.performance[2] || null,
             }
           : { pace: null, power: null, style: null },
