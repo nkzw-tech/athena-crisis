@@ -44,7 +44,7 @@ type App = Omit<NativeApp, 'copyToClipboard'> &
     getCurrentAppVersion: () => string | null;
     getLatestAppVersion: () => string;
     setNavigationHandler: (_navigate: Navigate) => void;
-    writeToClipboard: (text: string | (() => Promise<string>)) => void;
+    writeToClipboard: (text: string | (() => Promise<string>)) => Promise<boolean>;
   }>;
 
 export type InitializeData = Readonly<{
@@ -139,21 +139,22 @@ export const App: App = {
         document.documentElement.requestFullscreen();
       }
     }),
-  writeToClipboard: (text: string | (() => Promise<string>)) => {
-    const promise = typeof text === 'string' ? Promise.resolve(text) : text();
-    if (app?.copyToClipboard) {
-      promise.then(app.copyToClipboard);
-      return;
-    }
-
+  writeToClipboard: async (text: string | (() => Promise<string>)) => {
     try {
-      navigator.clipboard.write([
+      const value = typeof text === 'string' ? text : await text();
+      if (app?.copyToClipboard) {
+        app.copyToClipboard(value);
+        return true;
+      }
+
+      await navigator.clipboard.write([
         new ClipboardItem({
-          'text/plain': promise.then((text) => new Blob([text], { type: 'text/plain' })),
+          'text/plain': new Blob([value], { type: 'text/plain' }),
         }),
       ]);
+      return true;
     } catch {
-      /* empty */
+      return false;
     }
   },
 };
