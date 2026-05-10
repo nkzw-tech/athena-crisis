@@ -986,7 +986,7 @@ export default function MapEditor({
                   <div>
                     <InlineLink
                       className={ellipsis}
-                      to={`/campagin-editor-new/${mapObject.slug}` as Route}
+                      to={`/campaign-editor-new/${mapObject.slug}` as Route}
                     >
                       <fbt desc="Link to create a new campaign">
                         Create a new campaign from this map
