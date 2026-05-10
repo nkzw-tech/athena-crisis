@@ -12,6 +12,7 @@ patchedDependencies:
   cordova-plugin-purchase: 6757c0a0700524c429907184edcfbf6829596f60b9f998fca46e1f0e4e4c94ec
   howler: 1ff69a94d8cbdcf70941e3460b2eff5fe59593ec94a2c98d1fadf9fff959eeaa
   require-in-the-middle: e4adb810f1326bc6500b220f23eb01796af0e4d51871e5bb68205b37ffd99ef8
+  vocs: 7f60be757a4324819a71b4a8c2836c7f4a3f0f341a4696a3b866d3bdd395f102
 
 importers:
 
@@ -690,7 +691,7 @@ importers:
         version: 19.2.5(react@19.2.5)
       vocs:
         specifier: ^1.4.1
-        version: 1.4.1(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-macros@3.1.0)(esbuild@0.28.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react-router-dom@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(terser@5.46.2)(typescript@5.9.3)
+        version: 1.4.1(patch_hash=7f60be757a4324819a71b4a8c2836c7f4a3f0f341a4696a3b866d3bdd395f102)(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-macros@3.1.0)(esbuild@0.28.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react-router-dom@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(terser@5.46.2)(typescript@5.9.3)
 
   eslint-plugin: {}
 
@@ -21787,7 +21788,7 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vocs@1.4.1(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-macros@3.1.0)(esbuild@0.28.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react-router-dom@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(terser@5.46.2)(typescript@5.9.3):
+  vocs@1.4.1(patch_hash=7f60be757a4324819a71b4a8c2836c7f4a3f0f341a4696a3b866d3bdd395f102)(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-macros@3.1.0)(esbuild@0.28.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react-router-dom@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(terser@5.46.2)(typescript@5.9.3):
     dependencies:
       '@floating-ui/react': 0.27.19(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@hono/node-server': 1.19.14(hono@4.12.17)
