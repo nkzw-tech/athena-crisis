@@ -21,7 +21,6 @@ import canPlaceDecorator from './canPlaceDecorator.tsx';
 import canPlaceTile from './canPlaceTile.tsx';
 import filterByBiomeRestriction from './filterByBiomeRestriction.tsx';
 import getActivePlayers from './getActivePlayers.tsx';
-import indexToVector from './indexToVector.tsx';
 import validateTeams, { TeamsList } from './validateTeams.tsx';
 import withModifiers from './withModifiers.tsx';
 
@@ -254,8 +253,9 @@ export default function validateMap(
   );
 
   if (
-    map.map.some(
-      (tile, index) => !canPlaceTile(map, indexToVector(index, width), getTileInfo(tile)),
+    map.reduceEachTile(
+      (invalid, vector, tile) => invalid || !canPlaceTile(map, vector, tile),
+      false,
     )
   ) {
     return [null, 'invalid-tiles'];
