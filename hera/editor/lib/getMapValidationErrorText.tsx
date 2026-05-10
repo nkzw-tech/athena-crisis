@@ -29,7 +29,7 @@ export default function getValidationErrorText(error?: ErrorReason) {
       'Map validation error',
     ),
     'invalid-size': fbt(
-      'There is a problem with this map. The size of the map is not valid',
+      'There is a problem with this map. The size of the map is not valid.',
       'Map validation error',
     ),
     'invalid-teams': fbt(
