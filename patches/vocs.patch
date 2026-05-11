@@ -2,7 +2,7 @@ diff --git a/_lib/vite/prerender.js b/_lib/vite/prerender.js
 index 431b2c7e0d01c718f54e480fda1d5d8b92ca7b14..4f0a202707ba6e7a329a6b91dc7c1f943105e7e5 100644
 --- a/_lib/vite/prerender.js
 +++ b/_lib/vite/prerender.js
-@@ -14,7 +14,9 @@ export async function prerender({ logger, outDir }) {
+@@ -14,7 +14,8 @@ export async function prerender({ logger, outDir }) {
      const routes = getRoutes(resolve(rootDir, 'pages'));
      // Prerender each route.
      for (const route of routes) {
@@ -16,7 +16,7 @@ diff --git a/_lib/app/index.server.js b/_lib/app/index.server.js
 index 66cf92c50b47459433f7c8b0dd8874c90c3670c0..78384045bf6ee4a07f4c816258d07f825b32c123 100644
 --- a/_lib/app/index.server.js
 +++ b/_lib/app/index.server.js
-@@ -7,14 +7,15 @@ import { routes } from './routes.js';
+@@ -8,9 +8,12 @@ import { routes } from './routes.js';
  import { createFetchRequest } from './utils/createFetchRequest.js';
  export async function prerender(location) {
      const unwrappedRoutes = (await Promise.all(routes.map(async (route) => {
@@ -30,20 +30,11 @@ index 66cf92c50b47459433f7c8b0dd8874c90c3670c0..78384045bf6ee4a07f4c816258d07f82
              return null;
          const element = route.lazy ? (await route.lazy()).element : route.element;
          return {
-@@ -22,7 +23,7 @@ export async function prerender(location) {
-             element,
-         };
-     }))).filter(Boolean);
--    const { config } = await resolveVocsConfig();
-+    const { config } = await resolveVocsConfig();
-     const { basePath } = config;
-     return (_jsx(ConfigProvider, { config: config, children: _jsx(NuqsAdapter, { children: _jsx(StaticRouter, { location: location, basename: basePath, children: _jsx(Routes, { children: unwrappedRoutes.map((route) => (_jsx(Route, { path: route.path, element: route.element }, route.path))) }) }) }) }));
- }
 diff --git a/vite/prerender.tsx b/vite/prerender.tsx
 index cbf92e8f51f1e3145728fb759766a4dcaa6d4988..6feb67409d219a06512391add2fb8ad93d824f1b 100644
 --- a/vite/prerender.tsx
 +++ b/vite/prerender.tsx
-@@ -23,7 +23,9 @@ export async function prerender({ logger, outDir }: PrerenderParameters) {
+@@ -23,7 +23,8 @@ export async function prerender({ logger, outDir }: PrerenderParameters) {
  
    // Prerender each route.
    for (const route of routes) {

@@ -28,11 +28,11 @@
     "@nkzw/use-visibility-state": "^1.0.4",
     "@types/react": "^19.2.14",
     "dunkel-theme": "^1.7.1",
-    "fbtee": "^1.7.4",
+    "fbtee": "^1.7.5",
     "framer-motion": "^12.38.0",
     "licht-theme": "^1.7.1",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "vocs": "^1.4.1"
   }
 }

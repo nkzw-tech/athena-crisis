@@ -21,10 +21,10 @@
     "@nkzw/stack": "^2.3.2",
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
-    "fbtee": "^1.7.4",
+    "fbtee": "^1.7.5",
     "framer-motion": "^12.38.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-error-boundary": "^6.1.1"
   },
   "devDependencies": {
