@@ -221,12 +221,18 @@ export default function validateMap(
         invalidReason = 'invalid-tiles';
       }
 
+      if (Array.isArray(field) && field.length !== 2) {
+        invalidReason = 'invalid-tiles';
+      }
+
+      if (Array.isArray(modifierField) && modifierField.length !== 2) {
+        invalidReason = 'invalid-tiles';
+      }
+
       if (
         Array.isArray(field) &&
         Array.isArray(modifierField) &&
-        (field.length !== modifierField.length ||
-          field.length === 1 * 1 ||
-          modifierField.length === 1 * 1)
+        field.length !== modifierField.length
       ) {
         invalidReason = 'invalid-tiles';
       }

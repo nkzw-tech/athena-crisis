@@ -31,3 +31,22 @@ test('validates every layer of layered map tiles', () => {
 
   expect(validateMap(mapWithUnits, AIRegistry)).toEqual([null, 'invalid-tiles']);
 });
+
+test('rejects layered map tiles with more than two layers', () => {
+  const map = MapData.createMap({
+    map: [[DeepSea.id, StormCloud.id, StormCloud.id] as unknown as [number, number]],
+    size: { height: 1, width: 1 },
+  });
+
+  expect(validateMap(map, AIRegistry)).toEqual([null, 'invalid-tiles']);
+});
+
+test('rejects layered map modifiers with more than two layers', () => {
+  const map = MapData.createMap({
+    map: [[DeepSea.id, StormCloud.id]],
+    modifiers: [[0, 0, 0] as unknown as [number, number]],
+    size: { height: 1, width: 1 },
+  });
+
+  expect(validateMap(map, AIRegistry)).toEqual([null, 'invalid-tiles']);
+});
