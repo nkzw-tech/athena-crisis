@@ -76,6 +76,10 @@ let navigate = (url: Route) => {};
 const app = typeof $__AC__ !== 'undefined' ? window.$__AC__ : null;
 const emptyFunction = () => {};
 const emptyFalseFunction = () => Promise.resolve(false);
+const urlToRoute = (url: string) => {
+  const { hash, pathname, search } = new URL(url);
+  return `${pathname}${search}${hash}` as Route;
+};
 
 window.$__AC__R = {
   message: <T extends RemoteCallMessageName>(name: T, data: RemoteCallMessage[T]) => {
@@ -83,8 +87,7 @@ window.$__AC__R = {
       case 'pushState':
         if (data.url) {
           try {
-            const route = new URL(data.url).pathname as Route;
-            navigate?.(route);
+            navigate?.(urlToRoute(data.url));
           } catch (error) {
             captureException(
               new Error(`Remote 'pushState' call: Invalid URL: ${data.url}`, {
@@ -125,7 +128,7 @@ export const App: App = {
     navigate = _navigate;
     const initialURL = App.getInitialURL();
     if (initialURL) {
-      navigate(initialURL.replace('https://app.athenacrisis.com', '') as Route);
+      navigate(urlToRoute(initialURL));
     }
   },
   showFloatingGamepadTextInput: app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
