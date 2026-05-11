@@ -72,13 +72,22 @@ declare global {
   var $__AC__R: RemoteCallInterface;
 }
 
-let navigate = (url: Route) => {};
+let navigate: Navigate | null = null;
+let pendingRoute: Route | null = null;
 const app = typeof $__AC__ !== 'undefined' ? window.$__AC__ : null;
 const emptyFunction = () => {};
 const emptyFalseFunction = () => Promise.resolve(false);
 const urlToRoute = (url: string) => {
   const { hash, pathname, search } = new URL(url);
   return `${pathname}${search}${hash}` as Route;
+};
+const navigateOrQueue = (url: string) => {
+  const route = urlToRoute(url);
+  if (navigate) {
+    navigate(route);
+  } else {
+    pendingRoute = route;
+  }
 };
 
 window.$__AC__R = {
@@ -87,7 +96,7 @@ window.$__AC__R = {
       case 'pushState':
         if (data.url) {
           try {
-            navigate?.(urlToRoute(data.url));
+            navigateOrQueue(data.url);
           } catch (error) {
             captureException(
               new Error(`Remote 'pushState' call: Invalid URL: ${data.url}`, {
@@ -128,7 +137,19 @@ export const App: App = {
     navigate = _navigate;
     const initialURL = App.getInitialURL();
     if (initialURL) {
-      navigate(urlToRoute(initialURL));
+      try {
+        pendingRoute = urlToRoute(initialURL);
+      } catch (error) {
+        captureException(
+          new Error(`Initial URL: Invalid URL: ${initialURL}`, {
+            cause: error,
+          }),
+        );
+      }
+    }
+    if (pendingRoute) {
+      _navigate(pendingRoute);
+      pendingRoute = null;
     }
   },
   showFloatingGamepadTextInput: app?.showFloatingGamepadTextInput ?? emptyFalseFunction,
