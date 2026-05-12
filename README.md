@@ -33,7 +33,7 @@ Athena Crisis requires [Node.js](https://nodejs.org/en/download/package-manager)
 
 ```bash
 pnpm install && pnpm dev:setup
-pnpm dev
+pnpm dev:docs
 ```
 
 Visit [localhost:3003](http://localhost:3003/) to see the docs page.
