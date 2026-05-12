@@ -72,6 +72,29 @@ import {
   UpdateCampaignFunction,
 } from './Types.tsx';
 
+const getMapSearch = (mapId?: ClientLevelID | null) => {
+  const params = new URLSearchParams();
+  if (mapId) {
+    params.set('map', mapId);
+  }
+  params.sort();
+  return params.toString();
+};
+
+const updateMapSearch = (mapId?: ClientLevelID | null) => {
+  const params = new URLSearchParams(window.location.search);
+  params.sort();
+  const search = params.toString();
+  const newSearch = getMapSearch(mapId);
+  if (newSearch !== search) {
+    window.history.pushState(
+      {},
+      '',
+      window.location.pathname + `${newSearch ? `?${newSearch}` : ``}`,
+    );
+  }
+};
+
 export default function CampaignEditor({
   addMap,
   campaign: data,
@@ -107,6 +130,7 @@ export default function CampaignEditor({
 }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { alert } = useAlert();
 
   const [, startTransition] = useTransition();
   const { slug } = data;
@@ -167,6 +191,11 @@ export default function CampaignEditor({
     map: initialMapId ? maps.get(initialMapId) : undefined,
     mode: 'settings',
   }));
+  const campaignEditorStateRef = useRef(campaignEditorState);
+
+  useEffect(() => {
+    campaignEditorStateRef.current = campaignEditorState;
+  }, [campaignEditorState]);
 
   const showMapEditor = !!(campaignEditorState.map || campaignEditorState.createMap);
 
@@ -259,6 +288,20 @@ export default function CampaignEditor({
     [startTransition],
   );
 
+  const syncMapFromURL = useCallback(
+    (map: MapNode | undefined) => {
+      setOrigin('');
+      setCampaignEditorState({
+        createMap: undefined,
+        map,
+        mapEditorEffects: undefined,
+        mapEditorMode: undefined,
+        mapEditorScenario: undefined,
+      });
+    },
+    [setCampaignEditorState],
+  );
+
   const setMap: CampaignEditorSetMapFunction = useCallback(
     (mapId, mode, options) => {
       const node = maps.get(mapId);
@@ -280,6 +323,37 @@ export default function CampaignEditor({
     [maps, navigate, pathname, setCampaignEditorState],
   );
 
+  useEffect(() => {
+    const sync = () => {
+      const params = new URLSearchParams(window.location.search);
+      const mapId = params.get('map') as ClientLevelID | null;
+      const map = mapId ? maps.get(mapId) : undefined;
+      const state = campaignEditorStateRef.current;
+      const currentMapId = state.map?.id || null;
+      const nextMapId = map?.id || null;
+
+      if (mapHasChanges && (state.createMap || currentMapId !== nextMapId)) {
+        alert({
+          onAccept: () => {
+            setMapHasChanges(false);
+            syncMapFromURL(map);
+          },
+          onCancel: () => updateMapSearch(currentMapId),
+          text: fbt(
+            `Your map has unsaved changes. Are you sure you want to close the map editor?`,
+            'Prompt to confirm closing the map editor.',
+          ),
+        });
+        return;
+      }
+
+      syncMapFromURL(map);
+    };
+
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, [alert, mapHasChanges, maps, syncMapFromURL]);
+
   useMusic('hestias-serenade');
   usePlayMusic(campaignEditorState.map?.id);
 
@@ -295,7 +369,6 @@ export default function CampaignEditor({
     [addMap, mapDataSource, setCampaignEditorState],
   );
 
-  const { alert } = useAlert();
   const closeMap = useCallback(() => {
     const close = () => {
       setMapHasChanges(false);
@@ -369,23 +442,7 @@ export default function CampaignEditor({
   }, [saveState, setSaveState]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.sort();
-    const search = params.toString();
-
-    const newParams = new URLSearchParams();
-    if (campaignEditorState?.map?.id) {
-      newParams.set('map', campaignEditorState?.map?.id);
-    }
-    newParams.sort();
-    const newSearch = newParams.toString();
-    if (newSearch !== search) {
-      window.history.pushState(
-        {},
-        '',
-        window.location.pathname + `${newSearch ? `?${newSearch}` : ``}`,
-      );
-    }
+    updateMapSearch(campaignEditorState?.map?.id);
   }, [campaignEditorState?.map?.id]);
 
   const [hasCopied, setHasCopied] = useState(false);
