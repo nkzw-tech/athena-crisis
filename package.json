@@ -29,6 +29,7 @@
     "dev:setup": "pnpm dev:prisma-generate && pnpm relay && pnpm codegen && pnpm fbtee",
     "dev:update-deps": "rm -rf pnpm-lock.yaml node_modules/ **/node_modules && pnpm dev:setup",
     "fbtee": "cd ares && if [ -d src ]; then pnpm fbt; else exit 0; fi",
+    "fbtee:prepare": "fbtee prepare-translations --source-strings source_strings.json --output-dir ares/translations --locales de_DE fr_FR ja_JP pl_PL ru_RU zh_CN es_ES it_IT ko_KR pt_BR uk_UA",
     "format": "oxfmt --write .",
     "lint": "oxlint .",
     "lint:format": "oxfmt --check .",
