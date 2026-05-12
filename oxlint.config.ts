@@ -66,6 +66,7 @@ export default defineConfig({
         '{codegen,infra,scripts}/**/*.tsx',
         'artemis/{prisma,scripts}/**/*.tsx',
         'artemis/artemis.tsx',
+        'electron/scripts/**/*.ts',
       ],
       rules: {
         'no-console': 'off',
