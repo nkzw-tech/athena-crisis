@@ -206,6 +206,34 @@ test('keeps spawned buildings visible as neutral in fog while preserving player 
   expect(clientMap.active).toContain(3);
 });
 
+test('neutralizes hidden spawned buildings in visible spawn actions', () => {
+  const hiddenPosition = vec(5, 5);
+  const visiblePosition = vec(3, 1);
+  const vision = map.createVisionObject(player1);
+  expect(vision.isVisible(map, hiddenPosition)).toBe(false);
+  expect(vision.isVisible(map, visiblePosition)).toBe(true);
+
+  const spawnAction = {
+    buildings: ImmutableMap([
+      [hiddenPosition, Barracks.create(3)],
+      [visiblePosition, Barracks.create(3)],
+    ]),
+    teams: team3,
+    type: 'Spawn',
+    units: ImmutableMap<Vector, Unit>(),
+  } as const;
+  const serverMap = applyActionResponse(map, vision, spawnAction);
+  const visibleAction = computeVisibleActions(map, vision, [[spawnAction, serverMap]]).at(0)?.[0];
+
+  expect(visibleAction?.type).toBe('Spawn');
+  expect(
+    visibleAction?.type === 'Spawn' && visibleAction.buildings?.get(hiddenPosition)?.player,
+  ).toBe(0);
+  expect(
+    visibleAction?.type === 'Spawn' && visibleAction.buildings?.get(visiblePosition)?.player,
+  ).toBe(3);
+});
+
 test('does not activate hidden players with only non-production spawned buildings', () => {
   const hiddenPosition = vec(5, 5);
   const vision = map.createVisionObject(player1);

@@ -408,10 +408,13 @@ const VisibleActionModifiers: Record<ActionResponse['type'], VisibleModifier<nev
     activeMap: MapData,
     vision: VisionT,
   ): SpawnActionResponse | null => {
-    const { buildings, teams } = actionResponse;
+    const { teams } = actionResponse;
     const units = filterUnits(activeMap, vision, actionResponse);
+    const buildings = actionResponse.buildings?.map((building, vector) =>
+      vision.isVisible(activeMap, vector) ? building : building.hide(activeMap.config.biome),
+    );
     return units?.size || buildings?.size || teams
-      ? { ...actionResponse, units: units || ImmutableMap() }
+      ? { ...actionResponse, buildings, units: units || ImmutableMap() }
       : null;
   },
   Start: true,
