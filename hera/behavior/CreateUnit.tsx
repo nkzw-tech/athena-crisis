@@ -30,7 +30,11 @@ import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.t
 import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
+import ActionWheel, {
+  actionWheelInfoIconStyle,
+  ActionWheelFunds,
+  LargeActionButton,
+} from '../ui/ActionWheel.tsx';
 import UnitTile from '../Unit.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import createUnitAction from './createUnit/createUnitAction.tsx';
@@ -228,7 +232,7 @@ export default class CreateUnit {
                       </div>
                     )}
                     <Icon
-                      className={infoIconStyle}
+                      className={actionWheelInfoIconStyle}
                       icon={Info}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -307,13 +311,6 @@ const leaderIconStyle = css`
   position: absolute;
   right: 1px;
   top: 1px;
-`;
-
-const infoIconStyle = css`
-  color: ${applyVar('text-color-light')};
-  bottom: 1px;
-  position: absolute;
-  right: 0;
 `;
 
 const descriptionStyle = css`

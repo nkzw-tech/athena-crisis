@@ -2,16 +2,18 @@ import { filterBuildings } from '@deities/athena/info/Building.tsx';
 import canBuild from '@deities/athena/lib/canBuild.tsx';
 import hasUnitsOrProductionBuildings from '@deities/athena/lib/hasUnitsOrProductionBuildings.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
-import { css } from '@emotion/css';
 import sortBy from '@nkzw/core/sortBy.js';
 import BuildingTile from '../Building.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { StateWithActions } from '../Types.tsx';
-import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
+import ActionWheel, {
+  actionWheelInfoIconStyle,
+  ActionWheelFunds,
+  LargeActionButton,
+} from '../ui/ActionWheel.tsx';
 import FlashFlyout from '../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../ui/Flyout.tsx';
 import { selectFallback } from './Behavior.tsx';
@@ -97,7 +99,7 @@ export default class CreateBuilding {
                       size={tileSize}
                     />
                     <Icon
-                      className={infoIconStyle}
+                      className={actionWheelInfoIconStyle}
                       icon={Info}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -139,10 +141,3 @@ export default class CreateBuilding {
     return null;
   }
 }
-
-const infoIconStyle = css`
-  color: ${applyVar('text-color-light')};
-  bottom: 1px;
-  position: absolute;
-  right: 0;
-`;

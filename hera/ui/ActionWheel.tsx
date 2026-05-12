@@ -777,3 +777,12 @@ const centerIconStyle = css`
   height: 16px;
   width: 16px;
 `;
+
+export const actionWheelInfoIconStyle = css`
+  bottom: 1px;
+  color: ${applyVar('text-color-light')};
+  height: 8px;
+  position: absolute;
+  right: 0;
+  width: 8px;
+`;

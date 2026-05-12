@@ -13,7 +13,11 @@ import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, { ActionWheelFunds, LargeActionButton } from '../ui/ActionWheel.tsx';
+import ActionWheel, {
+  actionWheelInfoIconStyle,
+  ActionWheelFunds,
+  LargeActionButton,
+} from '../ui/ActionWheel.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import buySkillAction from './buySkill/buySkillAction.tsx';
@@ -125,7 +129,7 @@ export default class BuySkills {
                       <SkillIcon disabled={isDisabled} hideDialog skill={skill} />
                     </div>
                     <Icon
-                      className={infoIconStyle}
+                      className={actionWheelInfoIconStyle}
                       icon={Info}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -168,11 +172,4 @@ export default class BuySkills {
 const skillIconStyle = css`
   color: ${applyVar('text-color')};
   transform: scale(0.5);
-`;
-
-const infoIconStyle = css`
-  color: ${applyVar('text-color-light')};
-  bottom: 1px;
-  position: absolute;
-  right: 0;
 `;
