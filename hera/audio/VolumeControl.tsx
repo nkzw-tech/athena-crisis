@@ -34,7 +34,7 @@ export default function VolumeControl({
   useEffect(() => {
     const audioPlayerIsPaused = AudioPlayer.isPaused();
     if (isPaused != audioPlayerIsPaused) {
-      requestIdleCallback(() => setPaused(audioPlayerIsPaused));
+      (window.requestIdleCallback || requestAnimationFrame)(() => setPaused(audioPlayerIsPaused));
     }
   }, undefined);
 
