@@ -23,6 +23,7 @@ type OnClickFn = () => void;
 export default memo(function Button({
   active,
   className: initialClassName,
+  disabled,
   onClick,
   ref,
   selected,
@@ -31,6 +32,7 @@ export default memo(function Button({
 }: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick'> & {
   active?: boolean;
   children?: ReactNode;
+  disabled?: boolean;
   onClick?: OnClickFn;
   ref?: RefCallback<HTMLAnchorElement> | RefObject<HTMLAnchorElement | null>;
   selected?: boolean;
@@ -39,16 +41,20 @@ export default memo(function Button({
   const element = useRef<HTMLAnchorElement | null>(null);
 
   const click = useCallback(() => {
-    AudioPlayer.playSound('UI/Accept');
-    onClick?.();
-  }, [onClick]);
+    if (!disabled) {
+      AudioPlayer.playSound('UI/Accept');
+      onClick?.();
+    }
+  }, [disabled, onClick]);
 
   const onActive = useCallback(() => {
-    click();
-    if (!to && props.href) {
-      window.open(props.href);
+    if (!disabled) {
+      click();
+      if (!to && props.href) {
+        window.open(props.href);
+      }
     }
-  }, [click, props.href, to]);
+  }, [click, disabled, props.href, to]);
 
   const setRefs = useCallback(
     (anchorElement: HTMLAnchorElement | null) => {
@@ -63,7 +69,7 @@ export default memo(function Button({
   );
 
   useScrollIntoView(element, selected);
-  useActive(active, onActive, to);
+  useActive(!disabled && active, onActive, to);
 
   const className = cx(
     'link',
@@ -73,9 +79,11 @@ export default memo(function Button({
     selected && 'hover',
     !active && selected && PulseStyle,
     active && 'active',
+    disabled && disabledStyle,
+    disabled && 'disabled',
   );
 
-  return to ? (
+  return to && !disabled ? (
     <Link className={className} onClick={click} ref={setRefs} to={to} {...props} />
   ) : (
     <a className={className} onClick={click} ref={ref} {...props} />
@@ -92,17 +100,17 @@ export const SquareButtonStyle = css`
     color 150ms ease,
     transform 150ms ease;
 
-  &.hover,
-  &:hover {
+  &:not(.disabled).hover,
+  &:not(.disabled):hover {
     transform: scale(1.05);
   }
 
-  &.active,
-  &:active {
+  &:not(.disabled).active,
+  &:not(.disabled):active {
     transform: scale(0.95);
   }
 
-  &.active:hover {
+  &:not(.disabled).active:hover {
     transform: scale(1);
   }
 `;
@@ -118,17 +126,17 @@ export const ButtonStyle = css`
     color 150ms ease,
     transform 150ms ease;
 
-  &.hover,
-  &:hover {
+  &:not(.disabled).hover,
+  &:not(.disabled):hover {
     transform: scaleX(1.05) scaleY(1.02);
   }
 
-  &.active,
-  &:active {
+  &:not(.disabled).active,
+  &:not(.disabled):active {
     transform: scaleX(0.95) scaleY(0.98);
   }
 
-  &.active:hover {
+  &:not(.disabled).active:hover {
     transform: scaleX(1) scaleY(1);
   }
 `;
@@ -148,14 +156,19 @@ const style = css`
     ${clipBorder()}
   }
 
-  &.hover {
+  &:not(.disabled).hover {
     ${pixelBorder(undefined, 2)}
   }
 
-  &.hover,
-  &:hover,
-  &.active,
-  &.active:hover {
+  &:not(.disabled).hover,
+  &:not(.disabled):hover,
+  &:not(.disabled).active,
+  &:not(.disabled).active:hover {
     color: ${applyVar('text-color-active')};
   }
+`;
+
+const disabledStyle = css`
+  color: ${applyVar('text-color-light')};
+  opacity: 0.7;
 `;
