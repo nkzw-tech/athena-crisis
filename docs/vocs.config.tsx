@@ -119,7 +119,7 @@ export default defineConfig({
     {
       items: [
         {
-          link: 'https://nkzw.tech',
+          link: 'https://nakazawa.tech',
           text: 'Nakazawa Tech',
         },
       ],
