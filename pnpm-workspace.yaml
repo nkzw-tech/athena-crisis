@@ -28,7 +28,6 @@ allowBuilds:
   bufferutil: true
   canvas: false
   esbuild: true
-  farmhash: true
   prisma: true
   protobufjs: true
   unrs-resolver: true
