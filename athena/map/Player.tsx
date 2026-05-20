@@ -1,6 +1,7 @@
 import { Skill } from '../info/Skill.tsx';
 import { Crystal } from '../invasions/Crystal.tsx';
 import MapData from '../MapData.tsx';
+import BitSet, { PlainBitSet } from './BitSet.tsx';
 import { Charge, MaxCharges } from './Configuration.tsx';
 import {
   encodePlayerStatistics,
@@ -27,6 +28,7 @@ type BasePlainPlayerType = Readonly<{
   funds: number;
   id: PlayerID;
   misses: number | undefined;
+  seen?: PlainBitSet;
   skills: ReadonlyArray<Skill> | undefined;
   stats: PlainPlayerStatistics | null;
 }>;
@@ -48,6 +50,7 @@ type PlaceholderPlayerType = Readonly<{
   ai?: number;
   funds: number;
   id: PlayerID;
+  seen?: PlainBitSet;
   skills?: ReadonlyArray<Skill>;
 }>;
 
@@ -67,6 +70,7 @@ export default abstract class Player {
     public readonly charge: number,
     stats: PlayerStatistics | null,
     public readonly misses: number,
+    public readonly seen: BitSet,
   ) {
     this.stats = stats || InitialPlayerStatistics;
   }
@@ -156,6 +160,7 @@ export default abstract class Player {
     funds?: number;
     id?: PlayerID;
     misses?: number;
+    seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
     teamId?: PlayerID;
@@ -172,20 +177,23 @@ export class PlaceholderPlayer extends Player {
     funds: number,
     ai: number | undefined,
     skills: ReadonlySet<Skill>,
+    seen: BitSet = new BitSet(),
   ) {
-    super(id, teamId, funds, ai, skills, new Set(), 0, null, 0);
+    super(id, teamId, funds, ai, skills, new Set(), 0, null, 0, seen);
   }
 
   copy({
     ai,
     funds,
     id,
+    seen,
     skills,
     teamId,
   }: {
     ai?: number | null;
     funds?: number;
     id?: PlayerID;
+    seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     teamId?: PlayerID;
   }): this {
@@ -195,12 +203,13 @@ export class PlaceholderPlayer extends Player {
       funds ?? this.funds,
       ai !== undefined ? (ai ?? undefined) : this.ai,
       skills ?? this.skills,
+      seen ?? this.seen,
     ) as this;
   }
 
   toJSON(): PlaceholderPlayerType {
-    const { ai, funds, id, skills } = this;
-    return { ai, funds, id, skills: [...skills] };
+    const { ai, funds, id, seen, skills } = this;
+    return { ai, funds, id, ...(seen.size ? { seen: seen.toJSON() } : null), skills: [...skills] };
   }
 
   static from(player: Player): PlaceholderPlayer {
@@ -212,6 +221,7 @@ export class PlaceholderPlayer extends Player {
           player.funds,
           player.isBot() ? player.ai : undefined,
           player.skills,
+          player.seen,
         );
   }
 }
@@ -230,8 +240,9 @@ export class Bot extends Player {
     charge: number,
     stats: PlayerStatistics | null,
     misses: number,
+    seen: BitSet = new BitSet(),
   ) {
-    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen);
   }
 
   copy({
@@ -242,6 +253,7 @@ export class Bot extends Player {
     id,
     misses,
     name,
+    seen,
     skills,
     stats,
     teamId,
@@ -253,6 +265,7 @@ export class Bot extends Player {
     id?: PlayerID;
     misses?: number;
     name?: string;
+    seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
     teamId?: PlayerID;
@@ -268,11 +281,12 @@ export class Bot extends Player {
       charge ?? this.charge,
       stats ?? this.stats,
       misses ?? this.misses,
+      seen ?? this.seen,
     ) as this;
   }
 
   toJSON(): PlainBotType {
-    const { activeSkills, ai, charge, funds, id, misses, name, skills, stats } = this;
+    const { activeSkills, ai, charge, funds, id, misses, name, seen, skills, stats } = this;
     return {
       activeSkills: [...activeSkills],
       ai,
@@ -281,6 +295,7 @@ export class Bot extends Player {
       id,
       misses,
       name,
+      ...(seen.size ? { seen: seen.toJSON() } : null),
       skills: [...skills],
       stats: encodePlayerStatistics(stats),
     };
@@ -300,6 +315,7 @@ export class Bot extends Player {
           player.charge,
           player.stats,
           player.misses,
+          player.seen,
         );
   }
 }
@@ -320,8 +336,9 @@ export class HumanPlayer extends Player {
     misses: number,
     public readonly crystal: Crystal | null,
     public readonly time: number | null,
+    seen: BitSet = new BitSet(),
   ) {
-    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen);
   }
 
   copy({
@@ -332,6 +349,7 @@ export class HumanPlayer extends Player {
     funds,
     id,
     misses,
+    seen,
     skills,
     stats,
     teamId,
@@ -345,6 +363,7 @@ export class HumanPlayer extends Player {
     funds?: number;
     id?: PlayerID;
     misses?: number;
+    seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
     teamId?: PlayerID;
@@ -364,6 +383,7 @@ export class HumanPlayer extends Player {
       misses ?? this.misses,
       crystal !== undefined ? crystal : this.crystal,
       time !== undefined ? time : this.time,
+      seen ?? this.seen,
     ) as this;
   }
 
@@ -381,8 +401,20 @@ export class HumanPlayer extends Player {
   }
 
   toJSON(): PlainPlayerType {
-    const { activeSkills, ai, charge, crystal, funds, id, misses, skills, stats, time, userId } =
-      this;
+    const {
+      activeSkills,
+      ai,
+      charge,
+      crystal,
+      funds,
+      id,
+      misses,
+      seen,
+      skills,
+      stats,
+      time,
+      userId,
+    } = this;
     return {
       activeSkills: [...activeSkills],
       ai,
@@ -391,6 +423,7 @@ export class HumanPlayer extends Player {
       funds,
       id,
       misses,
+      ...(seen.size ? { seen: seen.toJSON() } : null),
       skills: [...skills],
       stats: encodePlayerStatistics(stats),
       time: time != null ? time : undefined,
@@ -415,6 +448,7 @@ export class HumanPlayer extends Player {
           player.misses,
           isHumanPlayer ? player.crystal : null,
           isHumanPlayer ? player.time : null,
+          player.seen,
         );
   }
 }

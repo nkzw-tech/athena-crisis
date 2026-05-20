@@ -143,6 +143,7 @@ const MapComponent = ({
             const unit = map.units.get(vector);
             const extraUnit = extraUnits?.get(vector);
             const vectorKey = String(vector);
+            const isExplored = vision.isExplored(map, vector);
             const isVisible = vision.isVisible(map, vector);
             const isSelected = selectedPosition?.equals(vector);
             const hasRadius = radius?.fields.has(vector);
@@ -159,7 +160,7 @@ const MapComponent = ({
                   (attackable?.has(vector) && !hasRadius))
               );
 
-            if (building) {
+            if (building && isExplored) {
               const up = vector.up();
               const hasUnitAbove =
                 (building.info.sprite.size === 'medium' || building.info.sprite.size === 'tall') &&
@@ -193,20 +194,22 @@ const MapComponent = ({
               );
             }
 
-            list.push(
-              <TileDecorators
-                getLayer={getLayer}
-                isVisible={isVisible}
-                key={`d${vectorKey}`}
-                map={map}
-                radius={radius}
-                tileSize={tileSize}
-                vector={vector}
-                vision={vision}
-              />,
-            );
+            if (isExplored) {
+              list.push(
+                <TileDecorators
+                  getLayer={getLayer}
+                  isVisible={isVisible}
+                  key={`d${vectorKey}`}
+                  map={map}
+                  radius={radius}
+                  tileSize={tileSize}
+                  vector={vector}
+                  vision={vision}
+                />,
+              );
+            }
 
-            if (message) {
+            if (message && isExplored) {
               list.push(
                 <MessageTile
                   absolute

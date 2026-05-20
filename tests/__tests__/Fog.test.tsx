@@ -13,12 +13,15 @@ import {
   Sniper,
   TransportHelicopter,
 } from '@deities/athena/info/Unit.tsx';
+import updateSeen from '@deities/athena/lib/updateSeen.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
+import { StandardFog, Visibility } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
@@ -302,4 +305,134 @@ test(`hidden labels are dropped from buildings and units`, async () => {
 
   printGameState('Last State', screenshot);
   expect(screenshot).toMatchImageSnapshot();
+});
+
+test('exploration fog keeps previously seen fields in regular fog after moving', async () => {
+  const from = vec(1, 1);
+  const to = vec(4, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: Array(25).fill(1),
+        size: { height: 5, width: 5 },
+        units: [[1, 1, Pioneer.create(1).toJSON()]],
+      }),
+    ),
+  );
+
+  expect(initialMap.createVisionObject(1).getVisibility(initialMap, vec(5, 5))).toBe(
+    Visibility.Unexplored,
+  );
+
+  const [gameState] = await executeGameActions(initialMap, [MoveAction(from, to)]);
+  const finalMap = gameState.at(-1)![1];
+  const vision = finalMap.createVisionObject(1);
+
+  expect(vision.getVisibility(finalMap, from)).toBe(Visibility.Fog);
+  expect(vision.getVisibility(finalMap, to)).toBe(Visibility.Visible);
+  expect(vision.getVisibility(finalMap, vec(5, 1))).toBe(Visibility.Visible);
+  expect(vision.getVisibility(finalMap, vec(5, 5))).toBe(Visibility.Unexplored);
+  expect(finalMap.getPlayer(1).seen.has(finalMap.getTileIndex(from))).toBe(true);
+  expect(finalMap.getPlayer(1).seen.has(finalMap.getTileIndex(vec(5, 1)))).toBe(true);
+});
+
+test('exploration fog is shared by players on the same team', async () => {
+  const from = vec(1, 1);
+  const to = vec(4, 1);
+  const teamMap = MapData.createMap({
+    active: [1, 2, 3],
+    config: {
+      fog: Fog.Exploration,
+    },
+    map: Array(25).fill(1),
+    size: { height: 5, width: 5 },
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [
+          { funds: 0, id: 1, userId: '1' },
+          { funds: 0, id: 3, userId: '3' },
+        ],
+      },
+      {
+        id: 2,
+        name: '',
+        players: [{ funds: 0, id: 2, userId: '2' }],
+      },
+    ],
+    units: [[1, 1, Pioneer.create(1).toJSON()]],
+  });
+  const initialMap = updateSeen(withModifiers(teamMap));
+
+  const [gameState] = await executeGameActions(initialMap, [MoveAction(from, to)]);
+  const finalMap = gameState.at(-1)![1];
+  const teammateVision = finalMap.createVisionObject(3);
+  const opponentVision = finalMap.createVisionObject(2);
+
+  expect(finalMap.getPlayer(3).seen.has(finalMap.getTileIndex(vec(5, 1)))).toBe(true);
+  expect(teammateVision.getVisibility(finalMap, from)).toBe(Visibility.Fog);
+  expect(teammateVision.getVisibility(finalMap, to)).toBe(Visibility.Visible);
+  expect(opponentVision.getVisibility(finalMap, vec(5, 1))).toBe(Visibility.Unexplored);
+});
+
+test('exploration fog does not serialize opponent seen tiles in fogged state', () => {
+  const teamMap = MapData.createMap({
+    active: [1, 2, 3],
+    config: {
+      fog: Fog.Exploration,
+    },
+    map: Array(25).fill(1),
+    size: { height: 5, width: 5 },
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [
+          { funds: 0, id: 1, userId: '1' },
+          { funds: 0, id: 3, userId: '3' },
+        ],
+      },
+      {
+        id: 2,
+        name: '',
+        players: [{ funds: 0, id: 2, userId: '2' }],
+      },
+    ],
+    units: [
+      [1, 1, Pioneer.create(1).toJSON()],
+      [5, 5, Pioneer.create(2).toJSON()],
+    ],
+  });
+  const initialMap = updateSeen(withModifiers(teamMap));
+  const foggedJSON = initialMap.createVisionObject(1).apply(initialMap).toJSON();
+  const [teamA, teamB] = foggedJSON.teams;
+
+  expect(teamA?.players[0]?.seen).toBeDefined();
+  expect(teamA?.players[1]?.seen).toBeDefined();
+  expect(teamB?.players[0]?.seen).toBeUndefined();
+});
+
+test('standard fog vision treats exploration fog tiles as explored for editor previews', () => {
+  const editorMap = withModifiers(
+    MapData.createMap({
+      buildings: [[1, 1, House.create(1).toJSON()]],
+      config: {
+        fog: Fog.Exploration,
+      },
+      map: Array(25).fill(1),
+      size: { height: 5, width: 5 },
+      units: [[1, 1, Pioneer.create(1).toJSON()]],
+    }),
+  );
+  const regularVision = editorMap.createVisionObject(1);
+  const editorVision = new StandardFog(1);
+
+  expect(regularVision.isVisible(editorMap, vec(1, 1))).toBe(true);
+  expect(regularVision.isExplored(editorMap, vec(1, 1))).toBe(false);
+  expect(editorVision.getVisibility(editorMap, vec(1, 1))).toBe(Visibility.Visible);
+  expect(editorVision.getVisibility(editorMap, vec(5, 5))).toBe(Visibility.Fog);
 });

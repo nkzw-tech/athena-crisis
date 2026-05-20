@@ -3,6 +3,7 @@ import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { House } from '@deities/athena/info/Building.tsx';
 import { Forest } from '@deities/athena/info/Tile.tsx';
 import { AntiAir, APU, Infantry } from '@deities/athena/info/Unit.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
@@ -94,7 +95,7 @@ test('units will hide in hidden fields in fog', async () => {
 
   // Without fog the unit will move further.
   const [, , secondGameState] = await executeGameAction(
-    map.copy({ config: map.config.copy({ fog: false }) }),
+    map.copy({ config: map.config.copy({ fog: Fog.None }) }),
     map.createVisionObject(player1),
     new Map(),
     EndTurnAction(),

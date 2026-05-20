@@ -840,7 +840,7 @@ export default function MapEditor({
         confirmActionStyle={confirmActionStyle}
         currentUserId={user.id}
         dangerouslyApplyExternalState={
-          actAsEveryPlayer && map.config.fog && game?.lastAction?.type === 'EndTurn'
+          actAsEveryPlayer && !!map.config.fog && game?.lastAction?.type === 'EndTurn'
         }
         events={eventEmitter}
         fogStyle={fogStyle}

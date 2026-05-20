@@ -1,3 +1,4 @@
+import updateSeen from '@deities/athena/lib/updateSeen.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { Action, execute, MutateActionResponseFn } from '../Action.tsx';
@@ -40,7 +41,9 @@ export function executeAIAction(
     while (activeMap) {
       activeMap = ai.act(activeMap);
     }
-    const aiGameState = ai.retrieveGameState();
+    const aiGameState = ai
+      .retrieveGameState()
+      .map(([actionResponse, map]) => [actionResponse, updateSeen(map)] as const);
     effects = ai.retrieveEffects();
     gameState = gameState.concat(aiGameState);
 
@@ -83,9 +86,11 @@ export default async function executeGameAction(
     return [null, null, null, null];
   }
   const [actionResponse, activeMap] = actionResult;
+  const visibleActiveMap = updateSeen(activeMap);
   // eslint-disable-next-line prefer-const
   let [gameState, newEffects] = applyConditions(map, effects, actionResponse);
-  let lastMap = gameState.at(-1)?.[1] || activeMap;
+  gameState = gameState.map(([actionResponse, map]) => [actionResponse, updateSeen(map)] as const);
+  let lastMap = gameState.at(-1)?.[1] || visibleActiveMap;
   let hasEnded = gameHasEnded(gameState);
 
   if (
@@ -95,7 +100,12 @@ export default async function executeGameAction(
   ) {
     const endTurnGameState = await onEndTurn(lastMap);
     if (endTurnGameState?.length) {
-      gameState = [...gameState, ...endTurnGameState];
+      gameState = [
+        ...gameState,
+        ...endTurnGameState.map(
+          ([actionResponse, map]) => [actionResponse, updateSeen(map)] as const,
+        ),
+      ];
       lastMap = gameState.at(-1)![1]!;
       hasEnded = gameHasEnded(gameState);
     }
@@ -104,7 +114,7 @@ export default async function executeGameAction(
   const shouldInvokeAI = !!(AIRegistry && !hasEnded && lastMap.getCurrentPlayer().isBot());
   return [
     actionResponse,
-    activeMap,
+    visibleActiveMap,
     ...((shouldInvokeAI && executeAIAction(lastMap, AIRegistry, newEffects, gameState)) || [
       gameState,
       newEffects,

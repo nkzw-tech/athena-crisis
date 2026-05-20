@@ -7,6 +7,14 @@ import { PerformanceStyle } from './PlayerPerformance.tsx';
 import { PlainTeams } from './Team.tsx';
 import { PlainUnit } from './Unit.tsx';
 
+export enum Fog {
+  None = 0,
+  Standard = 1,
+  Exploration = 2,
+}
+
+export type PlainFog = boolean | Fog.None | Fog.Standard | Fog.Exploration;
+
 export type PlainEntitiesList<T> = ReadonlyArray<readonly [x: number, y: number, entity: T]>;
 
 type LegacyWinConditions = ReadonlyArray<PlainObjective>;
@@ -16,7 +24,7 @@ export type PlainMapConfig = Readonly<{
   blocklistedBuildings: ReadonlyArray<number>;
   blocklistedSkills?: ReadonlyArray<number>;
   blocklistedUnits: ReadonlyArray<number>;
-  fog: boolean;
+  fog: PlainFog;
   initialCharge: number | undefined;
   multiplier: number;
   objectives?: PlainObjectives;

@@ -1,5 +1,6 @@
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import demo1, { metadata as metadata1 } from '@deities/hermes/map-fixtures/demo-1.tsx';
 import demo2, { metadata as metadata2 } from '@deities/hermes/map-fixtures/demo-2.tsx';
 import randomEntry from '@nkzw/core/randomEntry.js';
@@ -18,7 +19,7 @@ const [map, metadata] = randomEntry([
 const currentDemoMap = convertBiome(
   map.copy({
     config: map.config.copy({
-      fog: randomEntry([true, false, false, false, false]) || false,
+      fog: randomEntry([Fog.Standard, Fog.None, Fog.None, Fog.None, Fog.None]) || Fog.None,
     }),
   }),
   biome,

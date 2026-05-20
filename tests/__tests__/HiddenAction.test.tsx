@@ -12,6 +12,7 @@ import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { HeavyArtillery, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -160,7 +161,7 @@ test('create building and create unit actions', async () => {
     `);
 
   const initialState = await captureOne(
-    map.copy({ config: map.config.copy({ fog: false }) }),
+    map.copy({ config: map.config.copy({ fog: Fog.None }) }),
     player1.userId,
   );
   printGameState('Base State', initialState);

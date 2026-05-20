@@ -19,6 +19,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
@@ -60,7 +61,7 @@ const play = async (map: MapData) => {
       `${gameState.length} Actions`,
       await captureOne(
         lastMap.copy({
-          config: lastMap.config.copy({ fog: false }),
+          config: lastMap.config.copy({ fog: Fog.None }),
           teams: updatePlayer(lastMap.teams, HumanPlayer.from(player1, 'User-1')),
         }),
         'User-1',
@@ -206,4 +207,4 @@ test('AI plays on a random map and the game terminates', () => play(randomMap));
 // Currently a game in the fog is not guaranteed to terminate because the AI
 // might not have enough visiblity.
 test('AI plays on a random map in fog and the game terminates', () =>
-  play(randomMap.copy({ config: randomMap.config.copy({ fog: true }) })));
+  play(randomMap.copy({ config: randomMap.config.copy({ fog: Fog.Standard }) })));

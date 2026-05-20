@@ -8,6 +8,7 @@ import { AnimationConfig, InstantAnimationConfig } from '@deities/athena/map/Con
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { Visibility } from '@deities/athena/Vision.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -712,17 +713,7 @@ export function MapAnimations({
   getLayer,
   scale,
   skipBanners,
-  state: {
-    animationConfig,
-    animations,
-    map: {
-      config: { biome },
-      size: { width },
-    },
-    playerDetails,
-    tileSize,
-    zIndex,
-  },
+  state: { animationConfig, animations, map, playerDetails, tileSize, vision, zIndex },
 }: {
   actions: Actions;
   animationComplete: (position: Vector, animation: Animation) => void;
@@ -733,9 +724,19 @@ export function MapAnimations({
 }) {
   const animationsWithTransitions: Array<ReactElement> = [];
   const mainAnimations: Array<ReactElement> = [];
+  const {
+    config: { biome },
+    size: { width },
+  } = map;
   animations.forEach((animation, position) => {
     const { type } = animation;
     if (type === 'fold' || type === 'move' || type === 'unfold' || type === 'unitExplosion') {
+      return;
+    }
+    if (
+      type === 'explosion' &&
+      vision.getVisibility(map, animation.position || position) === Visibility.Unexplored
+    ) {
       return;
     }
 

@@ -1,6 +1,7 @@
+import { Fog as FogType } from '@deities/athena/map/PlainMap.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import { css, cx } from '@emotion/css';
 import { memo, useLayoutEffect, useRef } from 'react';
@@ -24,6 +25,7 @@ export default memo(function CanvasFog({
   const offset = 8;
   const mainRef = useRef<HTMLCanvasElement>(null);
   const darkRef = useRef<HTMLCanvasElement>(null);
+  const shroudRef = useRef<HTMLCanvasElement>(null);
   useLayoutEffect(() => {
     const canvas = mainRef.current;
     if (!canvas) {
@@ -40,7 +42,7 @@ export default memo(function CanvasFog({
     }
 
     map.forEachField((vector: Vector) => {
-      if (vision.isVisible(map, vector)) {
+      if (vision.getVisibility(map, vector) === Visibility.Visible) {
         context.clearRect(
           offset + (vector.x - 1) * size,
           offset + (vector.y - 1) * size,
@@ -55,6 +57,18 @@ export default memo(function CanvasFog({
       const darkContext = darkCanvas.getContext('2d')!;
       darkContext.clearRect(0, 0, darkCanvas.width, darkCanvas.height);
       darkContext.drawImage(canvas, 0, 0);
+    }
+
+    const shroudCanvas = map.config.fog === FogType.Exploration ? shroudRef.current : null;
+    if (shroudCanvas) {
+      const shroudContext = shroudCanvas.getContext('2d')!;
+      shroudContext.clearRect(0, 0, shroudCanvas.width, shroudCanvas.height);
+      shroudContext.fillStyle = 'rgba(0, 0, 0, 1)';
+      map.forEachField((vector: Vector) => {
+        if (vision.getVisibility(map, vector) === Visibility.Unexplored) {
+          shroudContext.fillRect((vector.x - 1) * size, (vector.y - 1) * size, size, size);
+        }
+      });
     }
   }, [fogStyle, map, size, vision]);
 
@@ -94,6 +108,17 @@ export default memo(function CanvasFog({
         }}
         width={map.size.width * size + offset * 2}
       />
+      {map.config.fog === FogType.Exploration && (
+        <canvas
+          className={shroudCanvasStyle}
+          height={map.size.height * size}
+          ref={shroudRef}
+          style={{
+            zIndex: 3,
+          }}
+          width={map.size.width * size}
+        />
+      )}
     </div>
   );
 });
@@ -126,6 +151,12 @@ const darkenCanvasStyle = css`
   mix-blend-mode: multiply;
   opacity: 0.25;
   position: absolute;
+`;
+
+const shroudCanvasStyle = css`
+  left: 0;
+  position: absolute;
+  top: 0;
 `;
 
 const blurStyle = css`

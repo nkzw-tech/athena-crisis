@@ -2,6 +2,9 @@ import { expect, test } from 'vitest';
 import map from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
 import { Pioneer } from '../info/Unit.tsx';
 import canDeploy from '../lib/canDeploy.tsx';
+import updatePlayer from '../lib/updatePlayer.tsx';
+import BitSet from '../map/BitSet.tsx';
+import { Fog } from '../map/PlainMap.tsx';
 import MapData from '../MapData.tsx';
 import vec from './../map/vec.tsx';
 
@@ -14,6 +17,36 @@ test('serializing to JSON', () => {
 
   expect(JSON.parse(json)).toEqual(map.toJSON());
   expect(newMap).toEqual(map);
+});
+
+test('serializing exploration fog state', () => {
+  const exploredMap = map.copy({
+    config: map.config.copy({ fog: Fog.Exploration }),
+    teams: updatePlayer(map.teams, player1.copy({ seen: new BitSet().add(0).add(32) })),
+  });
+  const json = JSON.stringify(exploredMap);
+  const newMap = MapData.fromJSON(json);
+
+  expect(JSON.parse(json).config.fog).toBe(Fog.Exploration);
+  expect(JSON.parse(json).teams[0].players[0].seen).toEqual([1, 1]);
+  expect(newMap.config.fog).toBe(Fog.Exploration);
+  expect(newMap.getPlayer(1).seen.has(0)).toBe(true);
+  expect(newMap.getPlayer(1).seen.has(32)).toBe(true);
+});
+
+test('deserializing legacy boolean fog values', () => {
+  const legacyMap = map.toJSON();
+
+  const fogMap = MapData.fromObject({ ...legacyMap, config: { ...legacyMap.config, fog: true } });
+  const noFogMap = MapData.fromObject({
+    ...legacyMap,
+    config: { ...legacyMap.config, fog: false },
+  });
+
+  expect(fogMap.config.fog).toBe(Fog.Standard);
+  expect(fogMap.toJSON().config.fog).toBe(Fog.Standard);
+  expect(noFogMap.config.fog).toBe(Fog.None);
+  expect(noFogMap.toJSON().config.fog).toBe(Fog.None);
 });
 
 test('allow entity lookups through vectors', () => {

@@ -8,6 +8,7 @@ import { Biomes } from '../map/Biome.tsx';
 import Building from '../map/Building.tsx';
 import { DecoratorsPerSide, MaxCharges, MaxHealth, MaxSize } from '../map/Configuration.tsx';
 import Entity from '../map/Entity.tsx';
+import { Fog } from '../map/PlainMap.tsx';
 import Player, { PlaceholderPlayer, PlayerID, toPlayerID } from '../map/Player.tsx';
 import { PerformanceStyleTypes } from '../map/PlayerPerformance.tsx';
 import Team, { toTeamArray } from '../map/Team.tsx';
@@ -50,7 +51,7 @@ const validateMapConfig = (map: MapData) => {
     seedCapital,
   } = config;
 
-  if (typeof fog !== 'boolean') {
+  if (fog !== Fog.None && fog !== Fog.Standard && fog !== Fog.Exploration) {
     return false;
   }
 

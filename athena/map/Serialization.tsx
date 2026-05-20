@@ -2,6 +2,7 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { Decorator } from '../info/Decorator.tsx';
 import getDecoratorIndex from '../lib/getDecoratorIndex.tsx';
 import MapData, { DecoratorMap, SizeVector } from '../MapData.tsx';
+import BitSet from './BitSet.tsx';
 import Building, { PlainBuilding } from './Building.tsx';
 import { DecoratorsPerSide } from './Configuration.tsx';
 import Entity from './Entity.tsx';
@@ -60,6 +61,7 @@ export function decodePlayers(
               player.misses || 0,
               player.crystal ?? null,
               player.time ?? null,
+              BitSet.fromJSON(player.seen),
             )
           : 'name' in player
             ? new Bot(
@@ -73,8 +75,16 @@ export function decodePlayers(
                 player.charge || 0,
                 decodePlayerStatistics(player.stats),
                 player.misses || 0,
+                BitSet.fromJSON(player.seen),
               )
-            : new PlaceholderPlayer(playerID, teamId, player.funds, player.ai, skills),
+            : new PlaceholderPlayer(
+                playerID,
+                teamId,
+                player.funds,
+                player.ai,
+                skills,
+                BitSet.fromJSON(player.seen),
+              ),
       );
     }),
   );

@@ -1,3 +1,4 @@
+import updateSeen from '@deities/athena/lib/updateSeen.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -20,7 +21,7 @@ export default function updateVisibleEntities(
     return currentMap;
   }
 
-  const map = vision.apply(currentMap);
+  const map = vision.apply(updateSeen(currentMap));
   return map.copy({
     buildings: buildings ? map.buildings.merge(buildings) : map.buildings,
     units: units ? map.units.merge(units) : map.units,

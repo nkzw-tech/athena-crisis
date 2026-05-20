@@ -17,6 +17,7 @@ import {
   MaxSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import { Fog as FogConfig } from '@deities/athena/map/PlainMap.tsx';
 import { PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -24,6 +25,7 @@ import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { objectiveHasVectors } from '@deities/athena/Objectives.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
+import { StandardFog, Visibility } from '@deities/athena/Vision.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { isIOS } from '@deities/ui/Browser.tsx';
 import Input, { NavigationDirection } from '@deities/ui/controls/Input.tsx';
@@ -109,7 +111,13 @@ const getVision = (
   map: MapData,
   currentViewer: PlayerID | null,
   spectatorCodes: ReadonlyArray<string> | undefined,
-) => map.createVisionObject(getClientViewer(map, currentViewer, spectatorCodes));
+  isEditor: boolean,
+) => {
+  const viewer = getClientViewer(map, currentViewer, spectatorCodes);
+  return isEditor && map.config.fog === FogConfig.Exploration
+    ? new StandardFog(viewer)
+    : map.createVisionObject(viewer);
+};
 
 const behaviorWithHighlightedFields = new Set([
   'base',
@@ -212,7 +220,7 @@ const getInitialState = (props: Props) => {
           ? new baseBehavior()
           : new BaseBehavior();
 
-  const vision = getVision(map, currentViewer, spectatorCodes);
+  const vision = getVision(map, currentViewer, spectatorCodes, isEditor);
   const newState = {
     additionalRadius: null,
     animationConfig: getCurrentAnimationConfig(map.getCurrentPlayer(), props.animationSpeed),
@@ -393,7 +401,12 @@ export default class GameMap extends Component<Props, State> {
           ? { lastActionResponse: props.lastActionResponse }
           : null),
         map: props.editor ? props.map : dropLabels(props.map),
-        vision: getVision(props.map, (newState || state).currentViewer, props.spectatorCodes),
+        vision: getVision(
+          props.map,
+          (newState || state).currentViewer,
+          props.spectatorCodes,
+          !!props.editor,
+        ),
       };
     }
 
@@ -859,6 +872,7 @@ export default class GameMap extends Component<Props, State> {
                 newState.map || this.state.map,
                 newState.currentViewer || this.state.currentViewer,
                 this.props.spectatorCodes,
+                !!this.props.editor,
               ),
             };
           }
@@ -1507,20 +1521,29 @@ export default class GameMap extends Component<Props, State> {
 
     const unit = vector && map.units.get(vector);
     const building = vector && map.buildings.get(vector);
-    const tile = vector && map.getTileInfo(vector);
+    const visibility = vector ? vision.getVisibility(map, vector) : Visibility.Unexplored;
+    const isUnexplored = visibility === Visibility.Unexplored;
+    if (isUnexplored) {
+      return;
+    }
+    const tile = vector && !isUnexplored && map.getTileInfo(vector);
     if (unit || building || tile) {
       if (behavior?.type === 'base') {
         behavior.clearTimers?.(this._actions.clearTimer);
       }
       AudioPlayer.playSound('UI/LongPress');
       this._showGameInfo({
-        building: vision.isVisible(map, vector) ? building : building?.hide(map.config.biome, true),
+        building: isUnexplored
+          ? undefined
+          : vision.isVisible(map, vector)
+            ? building
+            : building?.hide(map.config.biome, true),
         decorators: getDecoratorsAtField(map, vector),
         modifierField: map.modifiers[map.getTileIndex(vector)],
         origin,
         tile,
         type: 'map-info',
-        unit: vision.isVisible(map, vector) ? unit : null,
+        unit: isUnexplored || !vision.isVisible(map, vector) ? null : unit,
         vector,
       });
     }

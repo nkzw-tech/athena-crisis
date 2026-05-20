@@ -51,6 +51,7 @@ import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AIBehavior } from '@deities/athena/map/AIBehavior.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
@@ -217,7 +218,7 @@ test('A unit with `stay` behavior will never move or fold', async () => {
   const from = vec(2, 1);
   const to = vec(3, 3);
   const map = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(from, Sniper.create(2, { behavior: AIBehavior.Stay }))
       .set(to, Pioneer.create(1)),
@@ -257,7 +258,7 @@ test('A unit with `stay` behavior will never move or fold', async () => {
   `);
 
   const thirdMap = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units.set(from, Sniper.create(2, { behavior: AIBehavior.Stay }).unfold()),
   });
 
@@ -282,7 +283,7 @@ test('A unit with `stay` behavior will never move, but it might attack, build or
   const vecE = vec(3, 1);
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(vecD, House.create(1)),
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(vecA, SmallTank.create(2, { behavior: AIBehavior.Stay }))
       .set(vecB, SmallTank.create(2, { behavior: AIBehavior.Stay }))
@@ -320,7 +321,7 @@ test('A unit with `adaptive` behavior will change to `attack` behavior after eng
   const vecB = vec(2, 3);
   const vecC = vec(3, 3);
   const map = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(vecA, SmallTank.create(2, { behavior: AIBehavior.Stay }))
       .set(vecB, SmallTank.create(2, { behavior: AIBehavior.Adaptive }))
@@ -365,7 +366,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', async (
       ),
     config: initialMap.config.copy({
       blocklistedBuildings: new Set([RepairShop.id]),
-      fog: false,
+      fog: Fog.None,
     }),
     units: initialMap.units.set(vecC, SmallTank.create(1)),
   });
@@ -411,7 +412,7 @@ test('AI behavior will not use `Stay` on units that do not have an attack', asyn
         behaviors: new Set([AIBehavior.Stay, AIBehavior.Adaptive]),
       }),
     ),
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     map: initialMap.map.map(() => 1),
     units: initialMap.units.set(vecC, SmallTank.create(1)),
   });
@@ -460,7 +461,7 @@ test('AI will not attempt to create a unit it cannot deploy', async () => {
   const vecC = vec(3, 3);
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(vecA, Factory.create(2)),
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units.set(vecC, SmallTank.create(1)),
   });
 
@@ -501,7 +502,7 @@ test('AI will not attack if the damage is too low', async () => {
   const vecA = vec(1, 2);
   const vecB = vec(3, 3);
   const map = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units.set(vecA, Infantry.create(2)).set(vecB, HeavyTank.create(1)),
   });
 
@@ -543,7 +544,7 @@ test('AI will prefer to rescue over capture', async () => {
   const vecD = vec(2, 3);
   const map = initialMap.copy({
     buildings: initialMap.buildings.set(vecC, HQ.create(1)),
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(vecA, Saboteur.create(2))
       .set(vecB, HeavyTank.create(0))
@@ -585,7 +586,7 @@ test('AI is able to sabotage other units', async () => {
   const vecB = vec(3, 3);
   const vecC = vec(2, 3);
   const map = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(vecA, Saboteur.create(2))
       .set(vecB, SuperTank.create(1))
@@ -612,7 +613,7 @@ test('AI will prefer attacks over sabotage against weaker units', async () => {
   const vecB = vec(3, 3);
   const vecC = vec(2, 3);
   const map = initialMap.copy({
-    config: initialMap.config.copy({ fog: false }),
+    config: initialMap.config.copy({ fog: Fog.None }),
     units: initialMap.units
       .set(vecA, Saboteur.create(2))
       .set(vecB, Infantry.create(1))
@@ -721,7 +722,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   const mapWithOpponentShips = withModifiers(
     initialMap.copy({
       buildings: initialMap.buildings.set(vecA, Shipyard.create(2)),
-      config: initialMap.config.copy({ fog: false }),
+      config: initialMap.config.copy({ fog: Fog.None }),
       map: seaTileMap,
       size: new SizeVector(5, 5),
       teams,
@@ -732,7 +733,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   const mapWithoutOpponentShips = withModifiers(
     initialMap.copy({
       buildings: initialMap.buildings.set(vecA, Shipyard.create(2)).set(vecC, Factory.create(2)),
-      config: initialMap.config.copy({ fog: false }),
+      config: initialMap.config.copy({ fog: Fog.None }),
       map: tileMap,
       size: new SizeVector(5, 5),
       teams,
@@ -1276,7 +1277,7 @@ test('AI will prioritize healing own units currently transporting other units', 
 
   const map = withModifiers(
     initialMap.copy({
-      config: initialMap.config.copy({ fog: false }),
+      config: initialMap.config.copy({ fog: Fog.None }),
       map: tileMap,
       units: initialMap.units
         .set(vec(1, 1), Hovercraft.create(2).setHealth(50))

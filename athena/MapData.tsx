@@ -16,7 +16,12 @@ import { Biome } from './map/Biome.tsx';
 import Building from './map/Building.tsx';
 import { DecoratorsPerSide } from './map/Configuration.tsx';
 import Entity from './map/Entity.tsx';
-import type { PlainMap, PlainMapConfig } from './map/PlainMap.tsx';
+import {
+  Fog as FogConfig,
+  type PlainFog,
+  type PlainMap,
+  type PlainMapConfig,
+} from './map/PlainMap.tsx';
 import Player, {
   HumanPlayer,
   PlayerID,
@@ -75,8 +80,12 @@ const nullPlayer = new HumanPlayer(
   0,
   null,
   null,
+  undefined,
 );
 const nullTeam = new Team(0, 'null', ImmutableMap([[0, nullPlayer]]));
+
+const normalizeFog = (fog: PlainFog): FogConfig =>
+  fog === true ? FogConfig.Standard : fog === false ? FogConfig.None : fog;
 
 export class MapConfig {
   constructor(
@@ -85,7 +94,7 @@ export class MapConfig {
     public readonly blocklistedBuildings: ReadonlySet<ID>,
     public readonly blocklistedSkills: ReadonlySet<Skill>,
     public readonly blocklistedUnits: ReadonlySet<ID>,
-    public readonly fog: boolean,
+    public readonly fog: FogConfig,
     public readonly biome: Biome,
     public readonly objectives: Objectives,
     public readonly performance: PerformanceExpectation,
@@ -531,7 +540,7 @@ export default class MapData {
         new Set(config.blocklistedBuildings),
         new Set(config.blocklistedSkills),
         new Set(config.blocklistedUnits),
-        config.fog,
+        normalizeFog(config.fog),
         config.biome,
         config.objectives
           ? decodeObjectives(config.objectives)
@@ -580,7 +589,7 @@ export default class MapData {
         biome: Biome.Grassland,
         blocklistedBuildings: [],
         blocklistedUnits: [],
-        fog: false,
+        fog: FogConfig.None,
         initialCharge: 0,
         multiplier: 1,
         seedCapital: 0,

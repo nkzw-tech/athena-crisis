@@ -9,6 +9,7 @@ import {
   MinSize,
   TileSize,
 } from '@deities/athena/map/Configuration.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import {
   PerformanceStyle,
   PerformanceStyleComparators,
@@ -142,12 +143,12 @@ export default function MapEditorSettingsPanel({
           <label>
             <Stack alignCenter between gap wrap>
               <input
-                checked={config.fog}
+                checked={config.fog === Fog.Standard}
                 onChange={() =>
                   update({
                     map: map.copy({
                       config: config.copy({
-                        fog: !config.fog,
+                        fog: config.fog === Fog.Standard ? Fog.None : Fog.Standard,
                       }),
                     }),
                   })
@@ -159,6 +160,28 @@ export default function MapEditorSettingsPanel({
               </span>
             </Stack>
           </label>
+          {isAdmin && (
+            <label>
+              <Stack alignCenter between gap wrap>
+                <input
+                  checked={config.fog === Fog.Exploration}
+                  onChange={() =>
+                    update({
+                      map: map.copy({
+                        config: config.copy({
+                          fog: config.fog === Fog.Exploration ? Fog.Standard : Fog.Exploration,
+                        }),
+                      }),
+                    })
+                  }
+                  type="checkbox"
+                />
+                <span>
+                  <fbt desc="Label for veil fog">Veil</fbt>
+                </span>
+              </Stack>
+            </label>
+          )}
           <VStack between gap wrap>
             <label>
               <Stack alignCenter between gap wrap>

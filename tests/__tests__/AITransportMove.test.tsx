@@ -3,6 +3,7 @@ import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { Beach, Sea } from '@deities/athena/info/Tile.tsx';
 import { Bomber, HeavyTank, Hovercraft, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -120,7 +121,7 @@ test('AI will hop between islands if necessary', async () => {
   const vecC = vec(5, 5);
   const map = withModifiers(
     initialMap.copy({
-      config: initialMap.config.copy({ fog: false }),
+      config: initialMap.config.copy({ fog: Fog.None }),
       units: initialMap.units
         .set(vecA, SmallTank.create(1))
         .set(vecB, Hovercraft.create(2))
@@ -156,7 +157,7 @@ test('AI will hop between islands if necessary', async () => {
   `);
 
   // Now try with fog:
-  const fogGameState = await execute(map.copy({ config: map.config.copy({ fog: true }) }));
+  const fogGameState = await execute(map.copy({ config: map.config.copy({ fog: Fog.Standard }) }));
 
   expect(snapshotGameState(fogGameState)).toMatchInlineSnapshot(`
     "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5] }

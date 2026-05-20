@@ -27,6 +27,7 @@ import {
 import indexToVector from '@deities/athena/lib/indexToSpriteVector.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { Fog as FogConfig } from '@deities/athena/map/PlainMap.tsx';
 import { Bot, HumanPlayer } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
@@ -425,7 +426,7 @@ test('tracks statistics for players of the same team in fog', async () => {
   const vecD = vec(3, 3);
   const initialMap = applyActionResponse(
     map.copy({
-      config: map.config.copy({ fog: true }),
+      config: map.config.copy({ fog: FogConfig.Standard }),
       units: map.units
         .set(vecA, Sniper.create(player1))
         .set(vecC, HeavyArtillery.create(player2))
