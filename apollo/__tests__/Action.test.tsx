@@ -1,7 +1,8 @@
 import { Factory, House, RadarStation } from '@deities/athena/info/Building.tsx';
-import { ConstructionSite, Lightning, Plain, StormCloud } from '@deities/athena/info/Tile.tsx';
+import { ConstructionSite, Lightning, Plain, Sea, StormCloud } from '@deities/athena/info/Tile.tsx';
 import {
   APU,
+  Artillery,
   Flamethrower,
   Infantry,
   Jeep,
@@ -11,8 +12,10 @@ import {
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Charge } from '@deities/athena/map/Configuration.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { Visibility, type VisionT } from '@deities/athena/Vision.tsx';
 import { expect, test } from 'vitest';
 import {
   CreateBuildingAction,
@@ -92,6 +95,84 @@ test('moving into a hidden unit only subtracts fuel for the actual path', () => 
     type: 'Move',
   });
   expect(newMap.units.get(expectedTo)?.fuel).toBe(SmallTank.configuration.fuel - 2);
+});
+
+test('regular fog rejects moves blocked on the first hidden path tile', () => {
+  const from = vec(1, 1);
+  const blockedBy = vec(2, 1);
+  const map = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: true,
+      },
+      map: [Plain.id, Plain.id],
+      size: { height: 1, width: 2 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 0, id: 1, userId: '1' }],
+        },
+        {
+          id: 2,
+          name: '',
+          players: [{ funds: 0, id: 2, userId: '2' }],
+        },
+      ],
+      units: [
+        [1, 1, SmallTank.create(1).toJSON()],
+        [2, 1, Infantry.create(2).toJSON()],
+      ],
+    }),
+  );
+  const hiddenVision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: () => Visibility.Fog,
+    isExplored: () => true,
+    isVisible: () => false,
+  };
+
+  expect(execute(map, hiddenVision, MoveAction(from, blockedBy, [blockedBy]))).toBeNull();
+});
+
+test('exploration fog completes a move blocked on the first unexplored path tile', () => {
+  const from = vec(1, 1);
+  const blockedBy = vec(2, 1);
+  const map = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: Fog.Exploration,
+      },
+      map: [Plain.id, Sea.id],
+      size: { height: 1, width: 2 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 0, id: 1, userId: '1' }],
+        },
+      ],
+      units: [[1, 1, Artillery.create(1).toJSON()]],
+    }),
+  );
+  const veilVision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: () => Visibility.Unexplored,
+    isExplored: () => false,
+    isVisible: () => false,
+  };
+  const [response, newMap] = execute(map, veilVision, MoveAction(from, blockedBy, [blockedBy]))!;
+
+  expect(response).toMatchObject({
+    completed: true,
+    fuel: Artillery.configuration.fuel,
+    path: [],
+    to: from,
+    type: 'Move',
+  });
+  expect(newMap.units.get(from)?.isCompleted()).toBe(true);
 });
 
 test('does not invoke AI after onEndTurn ends the game', async () => {

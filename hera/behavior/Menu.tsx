@@ -15,7 +15,6 @@ import { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import { CreateTracksCost } from '@deities/athena/map/Configuration.tsx';
 import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
-import { moveable } from '@deities/athena/Radius.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { fbt } from 'fbtee';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
@@ -31,6 +30,7 @@ import createTracksAction from './createTracks/createTracksAction.tsx';
 import DropUnit from './DropUnit.tsx';
 import Heal from './Heal.tsx';
 import Move from './Move.tsx';
+import getMoveableFields from './move/getMoveableFields.tsx';
 import Rescue from './Rescue.tsx';
 import Sabotage from './Sabotage.tsx';
 import unfoldAction from './unfold/unfoldAction.tsx';
@@ -335,7 +335,7 @@ export default class Menu {
   select(vector: Vector, state: State, actions: Actions): StateLike | null {
     const { map, selectedPosition, selectedUnit, vision } = state;
     if (selectedPosition?.equals(vector) && selectedUnit?.isCapturing()) {
-      const fields = moveable(vision.apply(map), selectedUnit, vector);
+      const fields = getMoveableFields(map, vision, selectedUnit, vector);
       return fields?.size
         ? {
             behavior: new Move(),

@@ -11,10 +11,16 @@ import vec from './map/vec.tsx';
 import Vector from './map/Vector.tsx';
 import MapData from './MapData.tsx';
 
-type RadiusConfiguration = {
+export type RadiusConfiguration = {
   getCost(map: MapData, unit: Unit, vector: Vector): number;
   getResourceValue(unit: Unit): number;
-  getTransitionCost(info: UnitInfo, current: TileInfo, parent: TileInfo): number;
+  getTransitionCost(
+    info: UnitInfo,
+    current: TileInfo,
+    parent: TileInfo,
+    currentVector: Vector,
+    parentVector: Vector,
+  ): number;
   isAccessible(map: MapData, unit: Unit, vector: Vector): boolean;
 };
 
@@ -136,7 +142,13 @@ function calculateRadius(
       const nextCost =
         parentCost +
         cost +
-        getTransitionCost(info, map.getTileInfo(vector), map.getTileInfo(currentVector));
+        getTransitionCost(
+          info,
+          map.getTileInfo(currentVector),
+          map.getTileInfo(vector),
+          currentVector,
+          vector,
+        );
       const previousPath = paths.get(currentVector);
       if (
         nextCost <= radius &&
@@ -207,7 +219,14 @@ export function getPathCost(
     }
 
     totalCost +=
-      cost + getTransitionCost(info, map.getTileInfo(vector), map.getTileInfo(previousVector));
+      cost +
+      getTransitionCost(
+        info,
+        map.getTileInfo(vector),
+        map.getTileInfo(previousVector),
+        vector,
+        previousVector,
+      );
 
     if (totalCost > radius || totalCost > getResourceValue(unit)) {
       return -1;

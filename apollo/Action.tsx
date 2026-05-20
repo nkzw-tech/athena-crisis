@@ -47,6 +47,7 @@ import {
   RaisedCounterAttack,
 } from '@deities/athena/map/Configuration.tsx';
 import type Entity from '@deities/athena/map/Entity.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import Player, {
   DynamicPlayerID,
   PlayerID,
@@ -57,7 +58,7 @@ import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
 import applyActionResponse from './actions/applyActionResponse.tsx';
@@ -224,6 +225,35 @@ export type Action =
 
 export type Actions = ReadonlyArray<Action>;
 
+function followExplorationMovementPath(
+  map: MapData,
+  mapWithVision: MapData,
+  unit: Unit,
+  from: Vector,
+  path: ReadonlyArray<Vector>,
+  vision: VisionT,
+): { blockedBy: Vector | null; path: ReadonlyArray<Vector> } | null {
+  const validPath: Array<Vector> = [];
+
+  for (const vector of path) {
+    const isHidden = !vision.isVisible(map, vector);
+    if (isHidden && map.units.has(vector)) {
+      return { blockedBy: vector, path: validPath };
+    }
+
+    const nextPath = [...validPath, vector];
+    if (getPathCost(mapWithVision, unit, from, nextPath) === -1) {
+      return vision.getVisibility(map, vector) === Visibility.Unexplored
+        ? { blockedBy: vector, path: validPath }
+        : null;
+    }
+
+    validPath.push(vector);
+  }
+
+  return { blockedBy: null, path: validPath };
+}
+
 function move(
   map: MapData,
   vision: VisionT,
@@ -247,13 +277,32 @@ function move(
 
   const infoA = unitA.info;
   const fields = moveable(mapWithVision, unitA, from);
-  const { blockedBy, path } = initialPath?.length
-    ? followMovementPath(map, initialPath, vision)
+  const isExplorationPath = !!initialPath?.length && map.config.fog === Fog.Exploration;
+  const movementPath = initialPath?.length
+    ? isExplorationPath
+      ? followExplorationMovementPath(map, mapWithVision, unitA, from, initialPath, vision)
+      : followMovementPath(map, initialPath, vision)
     : getMovementPath(map, to, fields, vision);
+  if (!movementPath) {
+    return null;
+  }
+
+  const { blockedBy, path } = movementPath;
   if (blockedBy) {
     const lastItem = path.at(-1);
     if (!lastItem) {
-      return null;
+      if (!isExplorationPath || vision.getVisibility(map, blockedBy) !== Visibility.Unexplored) {
+        return null;
+      }
+
+      return {
+        completed: true,
+        from,
+        fuel: unitA.fuel,
+        path,
+        to: from,
+        type: 'Move',
+      } as const;
     }
     to = lastItem;
   }

@@ -7,7 +7,7 @@ import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import isPlayable from '@deities/athena/map/isPlayable.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { attackable, moveable } from '@deities/athena/Radius.tsx';
+import { attackable } from '@deities/athena/Radius.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, ClearTimerFunction, State, StateLike, StateWithActions } from '../Types.tsx';
 import AbstractSelectBehavior, { BaseSelectComponent } from './AbstractSelectBehavior.tsx';
@@ -16,6 +16,7 @@ import BuySkills from './BuySkills.tsx';
 import CreateUnit from './CreateUnit.tsx';
 import Menu from './Menu.tsx';
 import Move from './Move.tsx';
+import getMoveableFields from './move/getMoveableFields.tsx';
 import Radar from './Radar.tsx';
 import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
@@ -100,7 +101,7 @@ export default class Base extends AbstractSelectBehavior {
       const player = map.getPlayer(entity);
       const fields =
         !entity.hasMoved() && !entity.isUnfolded() && (!entity.isCapturing() || !entityIsPlayable)
-          ? moveable(vision.apply(map), entity, vector)
+          ? getMoveableFields(map, vision, entity, vector)
           : null;
       if (
         fields?.size ||

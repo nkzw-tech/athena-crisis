@@ -4,9 +4,13 @@ import {
   EndTurnAction,
   MoveAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
+import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { House, HQ } from '@deities/athena/info/Building.tsx';
+import { Mountain, Plain, Sea } from '@deities/athena/info/Tile.tsx';
 import {
   APU,
+  Artillery,
   Helicopter,
   Infantry,
   Pioneer,
@@ -21,9 +25,11 @@ import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import { StandardFog, Visibility } from '@deities/athena/Vision.tsx';
+import { moveable } from '@deities/athena/Radius.tsx';
+import { StandardFog, Visibility, type VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
+import getMoveableFields from '../../hera/behavior/move/getMoveableFields.tsx';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
 import { captureGameActionResponse } from '../screenshot.tsx';
@@ -377,6 +383,159 @@ test('exploration fog is shared by players on the same team', async () => {
   expect(teammateVision.getVisibility(finalMap, from)).toBe(Visibility.Fog);
   expect(teammateVision.getVisibility(finalMap, to)).toBe(Visibility.Visible);
   expect(opponentVision.getVisibility(finalMap, vec(5, 1))).toBe(Visibility.Unexplored);
+});
+
+test('exploration fog movement planning does not reveal unexplored terrain constraints', () => {
+  const from = vec(1, 1);
+  const hiddenMountain = vec(3, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Plain.id, Mountain.id, Plain.id, Plain.id],
+        size: { height: 1, width: 5 },
+        units: [[1, 1, Artillery.create(1).toJSON()]],
+      }),
+    ),
+  );
+  const vision = initialMap.createVisionObject(1);
+  const unit = initialMap.units.get(from)!;
+
+  expect(vision.getVisibility(initialMap, hiddenMountain)).toBe(Visibility.Unexplored);
+  expect(moveable(vision.apply(initialMap), unit, from).has(hiddenMountain)).toBe(false);
+  expect(getMoveableFields(initialMap, vision, unit, from).has(hiddenMountain)).toBe(true);
+});
+
+test('exploration fog keeps move-and-act units available after a valid move into the veil', () => {
+  const from = vec(1, 1);
+  const to = vec(4, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: Array(5).fill(Plain.id),
+        size: { height: 1, width: 5 },
+        units: [[1, 1, Artillery.create(1).toJSON()]],
+      }),
+    ),
+  );
+  const path = [vec(2, 1), vec(3, 1), to];
+  const result = execute(initialMap, initialMap.createVisionObject(1), MoveAction(from, to, path));
+
+  expect(result).not.toBeNull();
+  const [actionResponse, newMap] = result!;
+  expect(actionResponse).toMatchObject({
+    fuel: Artillery.configuration.fuel - 3,
+    path,
+    to,
+    type: 'Move',
+  });
+  expect(actionResponse).not.toHaveProperty('completed');
+  expect(newMap.units.get(to)?.hasMoved()).toBe(true);
+  expect(newMap.units.get(to)?.isCompleted()).toBe(false);
+});
+
+test('exploration fog stops a theoretical move at hidden terrain blockers', () => {
+  const from = vec(1, 1);
+  const expectedTo = vec(2, 1);
+  const blockedBy = vec(3, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Plain.id, Sea.id, Plain.id, Plain.id],
+        size: { height: 1, width: 5 },
+        units: [[1, 1, Artillery.create(1).toJSON()]],
+      }),
+    ),
+  );
+  const vision = initialMap.createVisionObject(1);
+  const path = [expectedTo, blockedBy, vec(4, 1)];
+  const result = execute(initialMap, vision, MoveAction(from, vec(4, 1), path));
+
+  expect(vision.getVisibility(initialMap, blockedBy)).toBe(Visibility.Unexplored);
+  expect(result).not.toBeNull();
+  const [actionResponse, newMap] = result!;
+  expect(actionResponse).toMatchObject({
+    completed: true,
+    fuel: Artillery.configuration.fuel - 1,
+    path: [expectedTo],
+    to: expectedTo,
+    type: 'Move',
+  });
+  expect(newMap.units.get(expectedTo)?.isCompleted()).toBe(true);
+});
+
+test('exploration fog rejects crafted moves over explored fogged terrain blockers', () => {
+  const from = vec(1, 1);
+  const blockedBy = vec(3, 1);
+  const initialMap = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: Fog.Exploration,
+      },
+      map: [Plain.id, Plain.id, Sea.id, Plain.id, Plain.id],
+      size: { height: 1, width: 5 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [
+            {
+              funds: 0,
+              id: 1,
+              seen: [1 << 2],
+              userId: '1',
+            },
+          ],
+        },
+      ],
+      units: [[1, 1, Artillery.create(1).toJSON()]],
+    }),
+  );
+  const vision = initialMap.createVisionObject(1);
+
+  expect(vision.getVisibility(initialMap, blockedBy)).toBe(Visibility.Fog);
+  expect(
+    execute(initialMap, vision, MoveAction(from, vec(4, 1), [vec(2, 1), blockedBy, vec(4, 1)])),
+  ).toBeNull();
+});
+
+test('exploration fog visible updates tolerate entities whose team accumulator is missing', () => {
+  const map = MapData.createMap({
+    buildings: [[1, 1, House.create(1).toJSON()]],
+    config: {
+      fog: Fog.Exploration,
+    },
+    map: [Plain.id],
+    size: { height: 1, width: 1 },
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [{ funds: 0, id: 1, userId: '1' }],
+      },
+    ],
+  });
+  const player = map.getPlayer(1).copy({ teamId: 2 });
+  const clientMap = map.copy({
+    teams: ImmutableMap([[1, new Team(1, '', ImmutableMap([[1, player]]))]]),
+  });
+  const vision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: () => Visibility.Visible,
+    isExplored: () => true,
+    isVisible: () => true,
+  };
+
+  expect(() => updateVisibleEntities(clientMap, vision, {})).not.toThrow();
 });
 
 test('exploration fog does not serialize opponent seen tiles in fogged state', () => {

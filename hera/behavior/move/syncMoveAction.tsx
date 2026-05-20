@@ -2,6 +2,7 @@ import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
@@ -21,7 +22,9 @@ const completeUnit = (map: MapData, vision: VisionT, from: Vector) =>
 
 const addBlockedAnimation = (state: State, blockedBy: Vector) => ({
   animations: addFlashAnimation(state.animations, {
-    children: `${state.map.units.get(blockedBy)?.info.name}!`,
+    children: state.map.units.get(blockedBy)
+      ? `${state.map.units.get(blockedBy)!.info.name}!`
+      : 'Blocked!',
     color: 'error',
     position: blockedBy,
   }),
@@ -54,7 +57,29 @@ export default function syncMoveAction(
   // If every step is visible, fall back to the optimistic move.
   const partialPosition = initialPath.at(-1);
   if (!partialPosition) {
-    return state;
+    if (map.config.fog !== Fog.Exploration) {
+      return state;
+    }
+
+    const { action, processGameActionResponse, throwError, update } = actions;
+    const [remoteAction, newMap] = action(state, MoveAction(from, to, path, complete));
+    remoteAction
+      .then(async (gameActionResponse) => {
+        const actionResponse = gameActionResponse.self?.actionResponse;
+        if (actionResponse?.type !== 'Move') {
+          throw new Error(
+            `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
+          );
+        }
+
+        update(onComplete(await processGameActionResponse(gameActionResponse), actionResponse));
+      })
+      .catch(throwError);
+    return {
+      behavior: new NullBehavior(),
+      map: newMap,
+      radius: null,
+    };
   }
 
   if (partialPosition === path.at(-1)) {

@@ -38,16 +38,18 @@ export default function updateSeen(map: MapData): MapData {
   for (const vector of map.units.keySeq()) {
     const unit = map.units.get(vector)!;
     const teamId = map.maybeGetPlayer(unit.player)?.teamId;
-    if (teamId != null) {
-      seenByTeam.set(teamId, seenByTeam.get(teamId)!.addAll(visibleTileIndexes(map, unit, vector)));
+    const seen = teamId != null && seenByTeam.get(teamId);
+    if (seen) {
+      seenByTeam.set(teamId, seen.addAll(visibleTileIndexes(map, unit, vector)));
     }
   }
 
   for (const vector of map.buildings.keySeq()) {
     const building = map.buildings.get(vector)!;
     const teamId = map.maybeGetPlayer(building.player)?.teamId;
-    if (teamId != null) {
-      seenByTeam.set(teamId, seenByTeam.get(teamId)!.addAll(expandedTileIndexes(map, vector)));
+    const seen = teamId != null && seenByTeam.get(teamId);
+    if (seen) {
+      seenByTeam.set(teamId, seen.addAll(expandedTileIndexes(map, vector)));
     }
   }
 

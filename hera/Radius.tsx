@@ -7,7 +7,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx, keyframes } from '@emotion/css';
 import { motion } from 'framer-motion';
@@ -49,6 +49,7 @@ const Item = memo(function Item({
   position,
   size,
   type,
+  unexplored,
 }: {
   biome: Biome;
   dim?: boolean | null;
@@ -58,6 +59,7 @@ const Item = memo(function Item({
   position: Vector;
   size: number;
   type: RadiusType;
+  unexplored?: boolean;
 }) {
   const borderStyles = [];
   if (type !== RadiusType.Attackable) {
@@ -107,9 +109,11 @@ const Item = memo(function Item({
         opposite && oppositeMaskStyle,
         ...borderStyles,
         dim && dimStyle,
-        type === RadiusType.Attack && (biome === Biome.Volcano || biome === Biome.Luna)
-          ? alternateAttackStyle
-          : colors[type],
+        unexplored
+          ? unexploredMoveStyle
+          : type === RadiusType.Attack && (biome === Biome.Volcano || biome === Biome.Luna)
+            ? alternateAttackStyle
+            : colors[type],
         isEffect && radialMaskStyle,
         isEscort && animateStyle,
       )}
@@ -257,6 +261,9 @@ export default memo(function Radius({
           position={vector}
           size={size}
           type={type}
+          unexplored={
+            type === RadiusType.Move && vision.getVisibility(map, vector) === Visibility.Unexplored
+          }
         />
       ))}
       {showCircle || arrowPath ? (
@@ -335,6 +342,7 @@ const itemStyle = css`
   pointer-events: none;
   position: absolute;
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0);
+  will-change: opacity, transform;
 `;
 
 const oppositeMaskStyle = css`
@@ -415,6 +423,11 @@ const colors: Record<RadiusType, string> = {
 
 const alternateAttackStyle = css`
   ${vars.set('color', '255, 215, 0')}
+`;
+
+const unexploredMoveStyle = css`
+  ${vars.set('color', '170, 178, 188')}
+  ${vars.set('opacity', 0.72)}
 `;
 
 const animationStyle = css`
