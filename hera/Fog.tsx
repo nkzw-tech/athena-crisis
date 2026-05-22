@@ -1,4 +1,5 @@
 import { Fog as FogType } from '@deities/athena/map/PlainMap.tsx';
+import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
@@ -201,9 +202,43 @@ const drawVeilNoise = (
   }
 };
 
+const drawShroudEdgeFade = (
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  offset: number,
+) => {
+  const fadeSize = offset / 2;
+  if (fadeSize <= 0) {
+    return;
+  }
+
+  context.save();
+  context.globalCompositeOperation = 'destination-in';
+
+  const horizontalGradient = context.createLinearGradient(0, 0, width, 0);
+  horizontalGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  horizontalGradient.addColorStop(fadeSize / width, 'rgba(0, 0, 0, 1)');
+  horizontalGradient.addColorStop(1 - fadeSize / width, 'rgba(0, 0, 0, 1)');
+  horizontalGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  context.fillStyle = horizontalGradient;
+  context.fillRect(0, 0, width, height);
+
+  const verticalGradient = context.createLinearGradient(0, 0, 0, height);
+  verticalGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  verticalGradient.addColorStop(fadeSize / height, 'rgba(0, 0, 0, 1)');
+  verticalGradient.addColorStop(1 - fadeSize / height, 'rgba(0, 0, 0, 1)');
+  verticalGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  context.fillStyle = verticalGradient;
+  context.fillRect(0, 0, width, height);
+
+  context.restore();
+};
+
 const drawVeilEdges = (
   context: CanvasRenderingContext2D,
   map: MapData,
+  offset: number,
   size: number,
   vision: VisionT,
 ) => {
@@ -215,8 +250,8 @@ const drawVeilEdges = (
       return;
     }
 
-    const x = (vector.x - 1) * size;
-    const y = (vector.y - 1) * size;
+    const x = offset + (vector.x - 1) * size;
+    const y = offset + (vector.y - 1) * size;
     const edges: Array<
       [
         edgeX: number,
@@ -312,13 +347,14 @@ const drawVeilEdges = (
 const drawExplorationShroud = (
   canvas: HTMLCanvasElement,
   map: MapData,
+  offset: number,
   size: number,
   vision: VisionT,
   scale: number,
 ) => {
   const context = canvas.getContext('2d')!;
-  const width = map.size.width * size;
-  const height = map.size.height * size;
+  const width = map.size.width * size + offset * 2;
+  const height = map.size.height * size + offset * 2;
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.imageSmoothingEnabled = true;
@@ -329,9 +365,26 @@ const drawExplorationShroud = (
   map.forEachField((vector: Vector) => {
     if (vision.getVisibility(map, vector) === Visibility.Unexplored) {
       hasUnexploredFields = true;
-      path.rect((vector.x - 1) * size, (vector.y - 1) * size, size, size);
+      path.rect(offset + (vector.x - 1) * size, offset + (vector.y - 1) * size, size, size);
     }
   });
+
+  for (let x = 0; x <= map.size.width + 1; x++) {
+    for (let y = 0; y <= map.size.height + 1; y++) {
+      if (map.contains(vec(x, y))) {
+        continue;
+      }
+
+      const closestVector = vec(
+        Math.max(1, Math.min(map.size.width, x)),
+        Math.max(1, Math.min(map.size.height, y)),
+      );
+      if (vision.getVisibility(map, closestVector) === Visibility.Unexplored) {
+        hasUnexploredFields = true;
+        path.rect(offset + (x - 1) * size, offset + (y - 1) * size, size, size);
+      }
+    }
+  }
 
   if (!hasUnexploredFields) {
     return;
@@ -369,7 +422,8 @@ const drawExplorationShroud = (
   drawVeilNoise(context, width, height, size);
   context.restore();
 
-  drawVeilEdges(context, map, size, vision);
+  drawVeilEdges(context, map, offset, size, vision);
+  drawShroudEdgeFade(context, width, height, offset);
   context.setTransform(1, 0, 0, 1, 0, 0);
 };
 
@@ -485,7 +539,7 @@ export default memo(function CanvasFog({
 
     const shroudCanvas = map.config.fog === FogType.Exploration ? shroudRef.current : null;
     if (shroudCanvas) {
-      drawExplorationShroud(shroudCanvas, map, size, vision, shroudScale);
+      drawExplorationShroud(shroudCanvas, map, offset, size, vision, shroudScale);
     }
   }, [fogStyle, map, offset, shroudScale, size, vision]);
 
@@ -535,14 +589,16 @@ export default memo(function CanvasFog({
         <canvas
           className={shroudCanvasStyle}
           data-fog-layer="shroud"
-          height={map.size.height * size * shroudScale}
+          height={canvasHeight * shroudScale}
           ref={shroudRef}
           style={{
-            height: map.size.height * size,
-            width: map.size.width * size,
+            height: canvasHeight,
+            left: -offset,
+            top: -offset,
+            width: canvasWidth,
             zIndex: 3,
           }}
-          width={map.size.width * size * shroudScale}
+          width={canvasWidth * shroudScale}
         />
       )}
     </div>

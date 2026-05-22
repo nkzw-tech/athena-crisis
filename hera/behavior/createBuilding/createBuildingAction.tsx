@@ -5,6 +5,7 @@ import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { BuildingInfo } from '@deities/athena/info/Building.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
+import { Visibility } from '@deities/athena/Vision.tsx';
 import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import handleRemoteAction from '../handleRemoteAction.tsx';
@@ -38,6 +39,18 @@ export function addCreateBuildingAnimation(
   }
 
   const { building, from } = actionResponse;
+  if (state.vision.getVisibility(state.map, from) === Visibility.Unexplored) {
+    actions.requestFrame(async () =>
+      actions.update(onComplete(await handleRemoteAction(actions, remoteAction))),
+    );
+
+    return {
+      map: newMap,
+      position: from,
+      ...resetBehavior(NullBehavior),
+    };
+  }
+
   return {
     animations: state.animations.set(from, {
       onComplete: (state) => {

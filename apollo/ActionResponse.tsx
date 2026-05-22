@@ -16,6 +16,7 @@ export type MoveActionResponse = Readonly<{
   completed?: boolean;
   from: Vector;
   fuel: number;
+  movementExhausted?: boolean;
   path?: ReadonlyArray<Vector>;
   to: Vector;
   type: 'Move';

@@ -1,5 +1,8 @@
 [
-  ["Move", [0, ["type", "from", "to", "complete", "fuel", "completed", "path"]]],
+  [
+    "Move",
+    [0, ["type", "from", "to", "complete", "fuel", "completed", "path", "movementExhausted"]]
+  ],
   [
     "AttackUnit",
     [

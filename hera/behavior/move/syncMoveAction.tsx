@@ -7,6 +7,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
+import { fbs } from 'fbtee';
 import addFlashAnimation from '../../lib/addFlashAnimation.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
@@ -24,9 +25,20 @@ const addBlockedAnimation = (state: State, blockedBy: Vector) => ({
   animations: addFlashAnimation(state.animations, {
     children: state.map.units.get(blockedBy)
       ? `${state.map.units.get(blockedBy)!.info.name}!`
-      : 'Blocked!',
+      : fbs('Blocked!', 'Text shown when a unit is blocked during movement.'),
     color: 'error',
     position: blockedBy,
+  }),
+});
+
+const addMovementExhaustedAnimation = (state: State, position: Vector) => ({
+  animations: addFlashAnimation(state.animations, {
+    children: fbs(
+      'Movement exhausted',
+      'Text shown when a unit stops early because its movement range is exhausted.',
+    ),
+    color: 'error',
+    position,
   }),
 });
 
@@ -130,9 +142,11 @@ export default function syncMoveAction(
                 fields,
                 state,
                 (state) => {
-                  const blockedBy = !actionResponse.to.equals(to)
+                  const interruptedAt = !actionResponse.to.equals(to)
                     ? path[path.indexOf(actionResponse.to) + 1]
                     : null;
+                  const blockedBy =
+                    interruptedAt && !actionResponse.movementExhausted ? interruptedAt : null;
                   const complete = actionResponse.completed || !!blockedBy;
                   requestFrame(() => {
                     update(
@@ -145,6 +159,9 @@ export default function syncMoveAction(
                               }
                             : null),
                           ...(blockedBy ? addBlockedAnimation(state, blockedBy) : null),
+                          ...(interruptedAt && actionResponse.movementExhausted
+                            ? addMovementExhaustedAnimation(state, actionResponse.to)
+                            : null),
                         },
                         actionResponse,
                       ),

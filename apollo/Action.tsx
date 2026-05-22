@@ -57,7 +57,7 @@ import { Teams } from '@deities/athena/map/Team.tsx';
 import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
+import { getPathCost, MoveConfiguration, moveable } from '@deities/athena/Radius.tsx';
 import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { ActionResponse } from './ActionResponse.tsx';
@@ -232,8 +232,16 @@ function followExplorationMovementPath(
   from: Vector,
   path: ReadonlyArray<Vector>,
   vision: VisionT,
-): { blockedBy: Vector | null; path: ReadonlyArray<Vector> } | null {
+): {
+  blockedBy: Vector | null;
+  movementExhausted?: boolean;
+  path: ReadonlyArray<Vector>;
+} | null {
   const validPath: Array<Vector> = [];
+  const ignoreMovementBudget = {
+    ...MoveConfiguration,
+    getResourceValue: () => Number.POSITIVE_INFINITY,
+  };
 
   for (const vector of path) {
     const isHidden = !vision.isVisible(map, vector);
@@ -243,9 +251,24 @@ function followExplorationMovementPath(
 
     const nextPath = [...validPath, vector];
     if (getPathCost(mapWithVision, unit, from, nextPath) === -1) {
-      return vision.getVisibility(map, vector) === Visibility.Unexplored
+      const isUnexplored = vision.getVisibility(map, vector) === Visibility.Unexplored;
+      if (!isUnexplored) {
+        return null;
+      }
+
+      const pathCostIgnoringMovementBudget = getPathCost(
+        mapWithVision,
+        unit,
+        from,
+        nextPath,
+        Number.POSITIVE_INFINITY,
+        ignoreMovementBudget,
+      );
+
+      return pathCostIgnoringMovementBudget === -1 ||
+        pathCostIgnoringMovementBudget === Number.POSITIVE_INFINITY
         ? { blockedBy: vector, path: validPath }
-        : null;
+        : { blockedBy: null, movementExhausted: true, path: validPath };
     }
 
     validPath.push(vector);
@@ -288,10 +311,15 @@ function move(
   }
 
   const { blockedBy, path } = movementPath;
-  if (blockedBy) {
+  const movementExhausted =
+    'movementExhausted' in movementPath ? movementPath.movementExhausted : false;
+  if (blockedBy || movementExhausted) {
     const lastItem = path.at(-1);
     if (!lastItem) {
-      if (!isExplorationPath || vision.getVisibility(map, blockedBy) !== Visibility.Unexplored) {
+      if (
+        !isExplorationPath ||
+        (blockedBy && vision.getVisibility(map, blockedBy) !== Visibility.Unexplored)
+      ) {
         return null;
       }
 
@@ -299,6 +327,7 @@ function move(
         completed: true,
         from,
         fuel: unitA.fuel,
+        ...(movementExhausted ? { movementExhausted: true } : null),
         path,
         to: from,
         type: 'Move',
@@ -326,9 +355,10 @@ function move(
     }
   } else if (!map.buildings.has(to) || infoA.hasAbility(Ability.AccessBuildings)) {
     return {
-      ...(blockedBy || complete ? { completed: true } : null),
+      ...(blockedBy || movementExhausted || complete ? { completed: true } : null),
       from,
       fuel: unitA.fuel - cost,
+      ...(movementExhausted ? { movementExhausted: true } : null),
       path,
       to,
       type: 'Move',

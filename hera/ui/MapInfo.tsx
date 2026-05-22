@@ -8,7 +8,7 @@ import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ModifierField, SizeVector } from '@deities/athena/MapData.tsx';
-import { VisionT } from '@deities/athena/Vision.tsx';
+import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
 import cssVar, { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
@@ -244,7 +244,12 @@ export default memo(function MapInfo({
     return null;
   }
 
-  const isVisible = vision.isVisible(map, position);
+  const visibility = vision.getVisibility(map, position);
+  if (visibility === Visibility.Unexplored) {
+    return null;
+  }
+
+  const isVisible = visibility === Visibility.Visible;
   const index = map.getTileIndex(position);
 
   const content = (

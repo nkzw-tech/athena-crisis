@@ -1,9 +1,20 @@
 import { Factory, House, RadarStation } from '@deities/athena/info/Building.tsx';
-import { ConstructionSite, Lightning, Plain, Sea, StormCloud } from '@deities/athena/info/Tile.tsx';
+import {
+  ConstructionSite,
+  Forest,
+  Lightning,
+  Path,
+  Plain,
+  Sea,
+  Space,
+  StormCloud,
+} from '@deities/athena/info/Tile.tsx';
 import {
   APU,
   Artillery,
   Flamethrower,
+  Helicopter,
+  Humvee,
   Infantry,
   Jeep,
   Pioneer,
@@ -172,6 +183,87 @@ test('exploration fog completes a move blocked on the first unexplored path tile
     to: from,
     type: 'Move',
   });
+  expect(newMap.units.get(from)?.isCompleted()).toBe(true);
+});
+
+test('exploration fog does not mark moves stopped by movement cost as blocked', () => {
+  const from = vec(1, 1);
+  const to = vec(6, 1);
+  const expectedTo = vec(5, 1);
+  const map = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: Fog.Exploration,
+      },
+      map: [Plain.id, Forest.id, Forest.id, Forest.id, Forest.id, Plain.id],
+      size: { height: 1, width: 6 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 0, id: 1, userId: '1' }],
+        },
+      ],
+      units: [[1, 1, Humvee.create(1).toJSON()]],
+    }),
+  );
+  const veilVision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: () => Visibility.Unexplored,
+    isExplored: () => false,
+    isVisible: () => false,
+  };
+  const movementCost = Humvee.getRadiusFor(map.getPlayer(1));
+  const path = [vec(2, 1), vec(3, 1), vec(4, 1), expectedTo, to];
+  const [response, newMap] = execute(map, veilVision, MoveAction(from, to, path))!;
+
+  expect(response).toMatchObject({
+    completed: true,
+    fuel: Humvee.configuration.fuel - movementCost,
+    movementExhausted: true,
+    path: [vec(2, 1), vec(3, 1), vec(4, 1), expectedTo],
+    to: expectedTo,
+    type: 'Move',
+  });
+  expect(newMap.units.get(expectedTo)?.fuel).toBe(Humvee.configuration.fuel - movementCost);
+});
+
+test('exploration fog treats infinite transition costs as blocked', () => {
+  const from = vec(1, 1);
+  const blockedBy = vec(2, 1);
+  const map = MapData.createMap({
+    config: {
+      fog: Fog.Exploration,
+    },
+    map: [Path.id, Space.id],
+    size: { height: 1, width: 2 },
+    teams: [
+      {
+        id: 1,
+        name: '',
+        players: [{ funds: 0, id: 1, userId: '1' }],
+      },
+    ],
+    units: [[1, 1, Helicopter.create(1).toJSON()]],
+  });
+  const veilVision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: () => Visibility.Unexplored,
+    isExplored: () => false,
+    isVisible: () => false,
+  };
+  const [response, newMap] = execute(map, veilVision, MoveAction(from, blockedBy, [blockedBy]))!;
+
+  expect(response).toMatchObject({
+    completed: true,
+    fuel: Helicopter.configuration.fuel,
+    path: [],
+    to: from,
+    type: 'Move',
+  });
+  expect(response).not.toHaveProperty('movementExhausted');
   expect(newMap.units.get(from)?.isCompleted()).toBe(true);
 });
 
