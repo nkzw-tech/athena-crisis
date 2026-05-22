@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
 import { DetailedHTMLProps, InputHTMLAttributes, memo, MouseEvent, RefObject, useRef } from 'react';
+import Input from './Input.tsx';
 
 export default memo(function ClearableInput({
   className,
@@ -9,13 +10,15 @@ export default memo(function ClearableInput({
   ...props
 }: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
   hidden?: boolean;
+  invalid?: boolean;
   onClear?: () => string;
   ref?: RefObject<HTMLInputElement | null>;
+  validateOnBlur?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className={containerStyle}>
-      <input
+      <Input
         {...props}
         className={cx(clearableStyle, className)}
         ref={(element) => {

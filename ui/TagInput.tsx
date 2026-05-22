@@ -1,6 +1,7 @@
 import { css, cx } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { useMemo, useRef } from 'react';
+import { inputStyle as baseInputStyle } from './Input.tsx';
 import { TagListInternal } from './TagList.tsx';
 import Typeahead, { TypeaheadDataSource, TypeaheadDataSourceEntry } from './Typeahead.tsx';
 
@@ -26,7 +27,7 @@ export default function TagInput<T>({
   return (
     <Stack
       alignCenter
-      className={cx('fake-input', fakeInputStyle)}
+      className={cx(baseInputStyle, fakeInputStyle)}
       gap
       onClick={() => inputRef.current?.focus()}
       stretch
@@ -67,18 +68,16 @@ const inputStyle = css`
 `;
 
 const resetStyle = css`
-  html body & {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    display: inline-block;
-    margin: -3px 0 0 4px;
-    padding: 2px;
-    width: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: inline-block;
+  margin: -3px 0 0 4px;
+  padding: 2px;
+  width: 100%;
 
-    &:focus {
-      box-shadow: none;
-    }
+  &:focus {
+    box-shadow: none;
   }
 `;
 

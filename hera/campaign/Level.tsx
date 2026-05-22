@@ -15,6 +15,7 @@ import toPlainLevelList from '@deities/hermes/toPlainLevelList.tsx';
 import { ClientLevelID, Level as LevelT, PlainLevel } from '@deities/hermes/Types.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
@@ -24,7 +25,7 @@ import Link from '@deities/ui/Link.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import TagList from '@deities/ui/TagList.tsx';
 import Typeahead, { TypeaheadDataSource } from '@deities/ui/Typeahead.tsx';
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import ArrowLeftBox from '@iconify-icons/pixelarticons/arrow-left-box.js';
 import Close from '@iconify-icons/pixelarticons/close.js';
 import Edit from '@iconify-icons/pixelarticons/edit.js';
@@ -317,13 +318,7 @@ export default memo(function Level({
                   )}
                   {hasBonusObjective(map, map.active[0]) && (
                     <Stack alignCenter gap>
-                      <input
-                        checked
-                        className={cx('disabled', 'checkmark')}
-                        disabled
-                        type="checkbox"
-                      />{' '}
-                      B
+                      <Checkbox checked checkmark className="disabled" disabled /> B
                     </Stack>
                   )}
                 </Stack>

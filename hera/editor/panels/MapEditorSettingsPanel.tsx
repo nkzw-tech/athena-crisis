@@ -18,11 +18,14 @@ import {
 } from '@deities/athena/map/PlayerPerformance.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
+import FormButton from '@deities/ui/FormButton.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import Input from '@deities/ui/Input.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Select from '@deities/ui/Select.tsx';
 import Tag from '@deities/ui/Tag.tsx';
@@ -142,7 +145,7 @@ export default function MapEditorSettingsPanel({
         <Stack between gap wrap>
           <label>
             <Stack alignCenter between gap wrap>
-              <input
+              <Checkbox
                 checked={config.fog === Fog.Standard}
                 onChange={() =>
                   update({
@@ -153,7 +156,6 @@ export default function MapEditorSettingsPanel({
                     }),
                   })
                 }
-                type="checkbox"
               />
               <span>
                 <fbt desc="Label for fog">Fog</fbt>
@@ -163,7 +165,7 @@ export default function MapEditorSettingsPanel({
           {isAdmin && (
             <label>
               <Stack alignCenter between gap wrap>
-                <input
+                <Checkbox
                   checked={config.fog === Fog.Exploration}
                   onChange={() =>
                     update({
@@ -174,7 +176,6 @@ export default function MapEditorSettingsPanel({
                       }),
                     })
                   }
-                  type="checkbox"
                 />
                 <span>
                   <fbt desc="Label for veil fog">Veil</fbt>
@@ -261,7 +262,7 @@ export default function MapEditorSettingsPanel({
             <label>
               <Stack alignCenter between gap>
                 <span>{getTranslatedPerformanceTypeName('power')}</span>
-                <input
+                <Input
                   disabled={!canEditPerformance}
                   min={0}
                   onChange={({ target: { value } }) =>
@@ -331,12 +332,7 @@ export default function MapEditorSettingsPanel({
               </Stack>
             </label>
             <Stack alignCenter gap>
-              <input
-                checked={hasBonus}
-                className={cx('disabled', hasBonus && 'checkmark')}
-                disabled
-                type="checkbox"
-              />
+              <Checkbox checked={hasBonus} checkmark={hasBonus} className="disabled" disabled />
               <InlineLink onClick={() => setEditorState({ mode: 'objectives' })}>
                 <fbt desc="Label for a map's bonus objective">Bonus Objective</fbt>
               </InlineLink>
@@ -558,7 +554,7 @@ export default function MapEditorSettingsPanel({
               />
             </Stack>
           </label>
-          <button
+          <FormButton
             onClick={() => {
               const size = new SizeVector(
                 Math.max(MinSize, Math.min(MaxSize, width)),
@@ -568,9 +564,10 @@ export default function MapEditorSettingsPanel({
               setWidth(size.width);
               resize(size, new Set(['bottom', 'right']));
             }}
+            type="button"
           >
             <fbt desc="Map resize button">Resize</fbt>
-          </button>
+          </FormButton>
         </Stack>
       </Box>
       <Box between gap vertical wrap>
@@ -579,9 +576,8 @@ export default function MapEditorSettingsPanel({
             <h2>
               <fbt desc="Map name label">Name</fbt>
             </h2>
-            <input
+            <Input
               className={inputStyle}
-              onBlur={(event) => event.target.classList.add('validate')}
               onChange={(event) => setMapName(event.target.value)}
               placeholder={String(fbt('map name', 'placeholder for map name'))}
               required

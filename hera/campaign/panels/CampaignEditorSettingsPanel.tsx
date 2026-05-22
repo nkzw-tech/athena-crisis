@@ -5,8 +5,10 @@ import Box from '@deities/ui/Box.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
+import Input from '@deities/ui/Input.tsx';
 import Tag from '@deities/ui/Tag.tsx';
 import TagInput from '@deities/ui/TagInput.tsx';
+import Textarea from '@deities/ui/Textarea.tsx';
 import { TypeaheadDataSource, TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
 import Stack, { VStack } from '@nkzw/stack';
@@ -69,9 +71,8 @@ export default function CampaignEditorSettingsPanel({
             <h2>
               <fbt desc="Campaign name label">Campaign Name</fbt>
             </h2>
-            <input
+            <Input
               className={inputStyle}
-              onBlur={(event) => event.target.classList.add('validate')}
               onChange={(event) => setCampaignName(event.target.value)}
               placeholder={String(fbt('campaign name', 'placeholder for campaign name'))}
               required
@@ -127,7 +128,7 @@ export default function CampaignEditorSettingsPanel({
         <h2>
           <fbt desc="Label for campaign description">Description</fbt>
         </h2>
-        <textarea
+        <Textarea
           className={descriptionStyle}
           onChange={(event) => setDescription(event.target.value)}
           value={description}

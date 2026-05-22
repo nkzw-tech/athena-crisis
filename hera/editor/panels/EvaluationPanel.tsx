@@ -9,6 +9,7 @@ import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import Box from '@deities/ui/Box.tsx';
 import ErrorText from '@deities/ui/ErrorText.tsx';
+import FormButton from '@deities/ui/FormButton.tsx';
 import Spinner from '@deities/ui/Spinner.tsx';
 import { css } from '@emotion/css';
 import groupBy from '@nkzw/core/groupBy.js';
@@ -192,9 +193,9 @@ export default function EvaluationPanel({
             <fbt desc="Headline for evaluation a map">Evaluate this Map</fbt>
           </h2>
           <Stack gap={16} wrap>
-            <button disabled={isEvaluating} onClick={startEvaluation}>
+            <FormButton disabled={isEvaluating} onClick={startEvaluation} type="button">
               <fbt desc="Button to start an evaluation">Start evaluation</fbt>
-            </button>
+            </FormButton>
             {isEvaluating && <Spinner />}
           </Stack>
           {currentMap ? (

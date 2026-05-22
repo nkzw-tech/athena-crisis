@@ -12,10 +12,13 @@ export default memo(function Slider({
 });
 
 const sliderStyle = css`
+  -webkit-appearance: none;
   -webkit-user-drag: none;
   background: hsla(0, 0%, 0%, 0);
+  border: none;
   box-shadow: none;
   display: block;
+  outline: none;
   margin: 0;
   padding: 1px 0;
 

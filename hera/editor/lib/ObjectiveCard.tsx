@@ -16,6 +16,7 @@ import {
   objectiveHasVectors,
 } from '@deities/athena/Objectives.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import Form from '@deities/ui/Form.tsx';
@@ -190,7 +191,7 @@ export default function ObjectiveCard({
                   <fbt desc="Label for objective amount">Amount</fbt>
                 </span>
                 <NumberInput
-                  className={rounds == null ? 'invalid' : undefined}
+                  invalid={amount == null}
                   max={MAX_AMOUNT}
                   min={MIN_AMOUNT}
                   onChange={({ target: { value } }) => {
@@ -220,7 +221,7 @@ export default function ObjectiveCard({
                   <fbt desc="Label for objective rounds">Rounds</fbt>
                 </span>
                 <NumberInput
-                  className={rounds == null ? 'invalid' : undefined}
+                  invalid={rounds == null}
                   max={MAX_ROUNDS}
                   min={MIN_ROUNDS}
                   onChange={({ target: { value } }) => {
@@ -251,7 +252,7 @@ export default function ObjectiveCard({
                 <span className={labelWidthStyle}>
                   <fbt desc="Label for secret objective checkbox">Secret</fbt>
                 </span>
-                <input
+                <Checkbox
                   checked={objective.hidden}
                   onChange={(event) =>
                     onChange({
@@ -259,7 +260,6 @@ export default function ObjectiveCard({
                       hidden: event.target.checked,
                     })
                   }
-                  type="checkbox"
                 />
               </Stack>
             </label>
@@ -280,7 +280,7 @@ export default function ObjectiveCard({
                     <span className={labelWidthStyle}>
                       <fbt desc="Label for optional objective checkbox">Optional</fbt>
                     </span>
-                    <input
+                    <Checkbox
                       checked={isOptional}
                       onChange={(event) =>
                         onChange({
@@ -289,7 +289,6 @@ export default function ObjectiveCard({
                           optional: event.target.checked,
                         })
                       }
-                      type="checkbox"
                     />
                   </Stack>
                 </label>
@@ -310,7 +309,7 @@ export default function ObjectiveCard({
                           Bonus
                         </fbt>
                       </span>
-                      <input
+                      <Checkbox
                         checked={objective.bonus === 1}
                         onChange={(event) =>
                           onChange({
@@ -318,7 +317,6 @@ export default function ObjectiveCard({
                             bonus: event.target.checked ? 1 : undefined,
                           })
                         }
-                        type="checkbox"
                       />
                     </Stack>
                   </label>

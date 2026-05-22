@@ -18,6 +18,7 @@ import useDirectionalNavigation from './controls/useDirectionalNavigation.tsx';
 import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import ellipsis from './ellipsis.tsx';
+import Input from './Input.tsx';
 
 type QueryCallback<T> = (
   value: string,
@@ -204,6 +205,7 @@ export default function Typeahead<T>({
   ignoreList,
   initialValue,
   inputClassName,
+  inputInvalid,
   inputRef,
   onBackspace,
   onSelect,
@@ -221,6 +223,7 @@ export default function Typeahead<T>({
   ignoreList?: ReadonlySet<string>;
   initialValue?: string;
   inputClassName?: string;
+  inputInvalid?: boolean;
   inputRef?: RefObject<HTMLInputElement | undefined>;
   onBackspace?: () => void;
   onSelect?: (result: TypeaheadDataSourceEntry<T>) => string | void;
@@ -447,20 +450,21 @@ export default function Typeahead<T>({
 
   return (
     <div className={containerStyle}>
-      <input
+      <Input
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
         autoFocus={autoFocus}
         className={cx(inputStyle, inputClassName)}
+        invalid={inputInvalid}
         onFocus={onFocus}
         onInput={onInput}
         onKeyDown={onKeydown}
         placeholder={placeholder}
-        ref={(element: HTMLInputElement) => {
-          input.current = element;
+        ref={(element: HTMLInputElement | null) => {
+          input.current = element || undefined;
           if (inputRef) {
-            inputRef.current = element;
+            inputRef.current = element || undefined;
           }
         }}
         spellCheck="false"

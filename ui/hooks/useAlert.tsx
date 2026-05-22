@@ -17,6 +17,7 @@ import useBlockInput from '../controls/useBlockInput.tsx';
 import useHorizontalMenuNavigation from '../controls/useHorizontalMenuNavigation.tsx';
 import useInput from '../controls/useInput.tsx';
 import { applyVar } from '../cssVar.tsx';
+import FormButton from '../FormButton.tsx';
 import getColor from '../getColor.tsx';
 import pixelBorder from '../pixelBorder.tsx';
 import Portal from '../Portal.tsx';
@@ -144,23 +145,25 @@ const Alert = ({
 
               <Stack {...(showCancel ? null : { end: true })} between reverse={isWindows} wrap>
                 {showCancel && (
-                  <button
+                  <FormButton
                     className={cx(selected === 0 && cx('focus', PulseStyle))}
                     onClick={cancel}
+                    type="button"
                   >
                     <fbt desc="Button to cancel a dialog">Cancel</fbt>
-                  </button>
+                  </FormButton>
                 )}
-                <button
+                <FormButton
                   className={cx(
                     acceptStyle,
                     buttonColor === 'red' && redStyle,
                     !disableAccept && selected === (showCancel ? 1 : 0) && cx('focus', PulseStyle),
                   )}
                   onClick={accept}
+                  type="button"
                 >
                   {acceptText}
-                </button>
+                </FormButton>
               </Stack>
             </VStack>
           </div>

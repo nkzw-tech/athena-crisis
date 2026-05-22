@@ -19,6 +19,7 @@ import {
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
@@ -26,6 +27,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import InfoBox from '@deities/ui/InfoBox.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
+import Textarea from '@deities/ui/Textarea.tsx';
 import { css, cx } from '@emotion/css';
 import ChevronDown from '@iconify-icons/pixelarticons/chevron-down.js';
 import ChevronUp from '@iconify-icons/pixelarticons/chevron-up.js';
@@ -299,7 +301,7 @@ export default memo(function ActionCard({
               {canChange && (
                 <label>
                   <Stack alignCenter gap>
-                    <input
+                    <Checkbox
                       checked={!!action.silhouette}
                       onChange={
                         canChange
@@ -310,7 +312,6 @@ export default memo(function ActionCard({
                               })
                           : undefined
                       }
-                      type="checkbox"
                     />
                     <span>
                       <fbt desc="Label for silhouette checkbox">Silhouette</fbt>
@@ -322,7 +323,7 @@ export default memo(function ActionCard({
             <TopBarIcons first={first} index={index} last={last} onChange={onChange} />
           </Stack>
           {canChange ? (
-            <textarea
+            <Textarea
               className={cx(textareaStyle, heightStyle)}
               maxLength={MaxMessageLength}
               onBlur={() => setAnimate(false)}
@@ -697,16 +698,14 @@ const headlineStyle = css`
 `;
 
 const textareaStyle = css`
-  html body & {
-    background: none;
-    box-shadow: none;
-    line-height: 1.4em;
-    margin: 0;
-    padding: 0;
+  background: none;
+  box-shadow: none;
+  line-height: 1.4em;
+  margin: 0;
+  padding: 0;
 
-    &:focus {
-      box-shadow: none;
-    }
+  &:focus {
+    box-shadow: none;
   }
 `;
 

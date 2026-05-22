@@ -10,6 +10,7 @@ import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
@@ -356,7 +357,7 @@ export default function EntityPanel({
               {entity.player > 0 && (
                 <label>
                   <Stack alignCenter gap wrap>
-                    <input checked={entity.isLeader()} onChange={toggleLeader} type="checkbox" />
+                    <Checkbox checked={entity.isLeader()} onChange={toggleLeader} />
                     <span>
                       <fbt desc="Label for changing the leader unit">Leader</fbt>
                     </span>
@@ -365,7 +366,7 @@ export default function EntityPanel({
               )}
               <label>
                 <Stack alignCenter gap wrap>
-                  <input checked={!!entity.shield} onChange={toggleShield} type="checkbox" />
+                  <Checkbox checked={!!entity.shield} onChange={toggleShield} />
                   <span>
                     <fbt desc="Label for activating a shield">Shield</fbt>
                   </span>
