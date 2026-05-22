@@ -171,7 +171,7 @@ export default function MapEditorSettingsPanel({
                     update({
                       map: map.copy({
                         config: config.copy({
-                          fog: config.fog === Fog.Exploration ? Fog.Standard : Fog.Exploration,
+                          fog: config.fog === Fog.Exploration ? Fog.None : Fog.Exploration,
                         }),
                       }),
                     })
