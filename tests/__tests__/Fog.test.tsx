@@ -32,7 +32,11 @@ import { expect, test } from 'vitest';
 import getMoveableFields from '../../hera/behavior/move/getMoveableFields.tsx';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
-import { captureGameActionResponse } from '../screenshot.tsx';
+import {
+  captureGameActionResponse,
+  captureOne,
+  getMainFogCanvasAlphaSummary,
+} from '../screenshot.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
 
 const map = withModifiers(
@@ -61,6 +65,59 @@ const map = withModifiers(
   }),
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
+
+test('hard fog keeps the soft edge fade on floating maps', async () => {
+  const boundaryMap = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: true,
+      },
+      map: Array(81).fill(Plain.id),
+      size: { height: 9, width: 9 },
+      teams: [
+        {
+          id: 1,
+          name: '',
+          players: [{ funds: 500, id: 1, userId: '1' }],
+        },
+      ],
+      units: [[5, 5, Pioneer.create(1).toJSON()]],
+    }),
+  );
+  const hardScreenshot = await captureOne(boundaryMap, player1.userId, {
+    fogStyle: 'hard',
+    style: 'floating',
+  });
+  const hardAlpha = await getMainFogCanvasAlphaSummary();
+  const softScreenshot = await captureOne(boundaryMap, player1.userId, {
+    fogStyle: 'soft',
+    style: 'floating',
+  });
+  const softAlpha = await getMainFogCanvasAlphaSummary();
+
+  expect(hardAlpha).toMatchInlineSnapshot(`
+    {
+      "fogStyle": "hard",
+      "height": 264,
+      "innerUniqueAlphaCount": 2,
+      "uniqueAlphaCount": 107,
+      "width": 264,
+    }
+  `);
+  expect(softAlpha).toMatchInlineSnapshot(`
+    {
+      "fogStyle": "soft",
+      "height": 264,
+      "innerUniqueAlphaCount": 235,
+      "uniqueAlphaCount": 243,
+      "width": 264,
+    }
+  `);
+  expect(hardScreenshot).not.toEqual(softScreenshot);
+
+  printGameState('Hard Fog', hardScreenshot);
+  expect(hardScreenshot).toMatchImageSnapshot();
+});
 
 test('units that will be supplied by a hidden adjacent supply unit are not destroyed on the client', async () => {
   const initialMap: MapData | null = map.copy({

@@ -64,6 +64,8 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
   const maps = useMemo(() => url.searchParams.getAll('map[]'), [url.searchParams]);
   const viewers = url.searchParams.getAll('viewer[]');
   const gameActionResponses = url.searchParams.getAll('gameActionResponse[]');
+  const fogStyle = url.searchParams.get('fogStyle') === 'hard' ? 'hard' : 'soft';
+  const style = url.searchParams.get('style') === 'floating' ? 'floating' : 'none';
   const eventEmitters = useMemo(() => maps.map(() => new EventTarget()), [maps]);
 
   initializeHasRendered(gameActionResponses);
@@ -104,7 +106,14 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
             }
             return (
               <div key={index}>
-                <div className={inlineStyle} data-testid={`map-${index}`}>
+                <div
+                  className={inlineStyle}
+                  data-fog-style={fogStyle}
+                  data-map-height={map.size.height}
+                  data-map-style={style}
+                  data-map-width={map.size.width}
+                  data-testid={`map-${index}`}
+                >
                   <GameMap
                     animationSpeed={animationSpeed}
                     autoPanning={false}
@@ -112,14 +121,14 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
                     confirmActionStyle="never"
                     currentUserId={viewers[index]}
                     events={eventEmitters?.[index]}
-                    fogStyle="soft"
+                    fogStyle={fogStyle}
                     map={map}
                     paused
                     playerDetails={new Map()}
                     scale={1}
                     scroll={false}
                     showCursor={false}
-                    style="none"
+                    style={style}
                     tilted={false}
                   />
                 </div>

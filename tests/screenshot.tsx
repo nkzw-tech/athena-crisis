@@ -8,10 +8,16 @@ import playwright, { Browser, Page } from 'playwright';
 const APP_PORT = 3001;
 const BASE_URL = `http://localhost:${APP_PORT}/display.html`;
 
+type CaptureOptions = {
+  fogStyle?: 'hard' | 'soft';
+  style?: 'floating' | 'none';
+};
+
 const getURL = (
   maps: ReadonlyArray<MapData>,
   viewers: string | ReadonlyArray<string>,
   gameActionResponse?: ReadonlyArray<EncodedGameActionResponse>,
+  options?: CaptureOptions,
 ) =>
   `${BASE_URL}?${maps
     .map((map) => 'map[]=' + encodeURIComponent(JSON.stringify(map)))
@@ -21,6 +27,8 @@ const getURL = (
     gameActionResponse
       ?.map((response) => '&gameActionResponse[]=' + encodeURIComponent(JSON.stringify(response)))
       .join('') || ''
+  }${options?.fogStyle ? '&fogStyle=' + encodeURIComponent(options.fogStyle) : ''}${
+    options?.style ? '&style=' + encodeURIComponent(options.style) : ''
   }`;
 
 let instance: Browser | null;
@@ -33,6 +41,7 @@ export async function capture(
   maps: ReadonlyArray<MapData>,
   viewers: string | ReadonlyArray<string>,
   gameActionResponses?: ReadonlyArray<EncodedGameActionResponse>,
+  options?: CaptureOptions,
 ): Promise<ReadonlyArray<Image>> {
   if (!instance) {
     instance = await playwright.chromium.connect(
@@ -40,7 +49,7 @@ export async function capture(
     );
   }
 
-  const url = getURL(maps, viewers, gameActionResponses);
+  const url = getURL(maps, viewers, gameActionResponses, options);
   // Uncomment to view the screenshot URL in the terminal. Unfortunately the
   // long URLs don't currently work with `terminal-link` in iTerm2.
   // console.log(url);
@@ -53,11 +62,19 @@ export async function capture(
   } else {
     await page.evaluate(`window.renderMap(${JSON.stringify(url)});`);
   }
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)));
 
   const screenshots = [];
   // Serially process screenshots to avoid race condtions.
   for (let index = 0; index < maps.length; index++) {
     const selector = `[data-testid="map-${index}"]`;
+    if (options?.fogStyle || options?.style) {
+      await page.waitForSelector(
+        `${selector}${options.fogStyle ? `[data-fog-style="${options.fogStyle}"]` : ''}${
+          options.style ? `[data-map-style="${options.style}"]` : ''
+        }`,
+      );
+    }
     if (gameActionResponses?.[index]) {
       await page.waitForFunction(`window.MapHasRendered[${index}] === true`);
     }
@@ -70,8 +87,58 @@ export async function capture(
   return screenshots;
 }
 
-export async function captureOne(map: MapData, viewers: string): Promise<Image> {
-  return (await capture([map], viewers))[0];
+export async function captureOne(
+  map: MapData,
+  viewers: string,
+  options?: CaptureOptions,
+): Promise<Image> {
+  return (await capture([map], viewers, undefined, options))[0];
+}
+
+export async function getMainFogCanvasAlphaSummary() {
+  if (!page) {
+    throw new Error('Cannot inspect fog canvas before capturing a map.');
+  }
+
+  return page.evaluate(() => {
+    const canvases = Array.from(
+      document.querySelectorAll<HTMLCanvasElement>('canvas[data-fog-layer="saturation"]'),
+    );
+    const canvas = canvases[0];
+    if (!canvas || !canvases.length) {
+      return null;
+    }
+    const mapElement = canvas.closest<HTMLElement>('[data-map-width]');
+    const mapWidth = Number(mapElement?.dataset.mapWidth || 0);
+    const mapHeight = Number(mapElement?.dataset.mapHeight || 0);
+    const offsetX = mapWidth ? canvas.width / (mapWidth + 2) : 0;
+    const offsetY = mapHeight ? canvas.height / (mapHeight + 2) : 0;
+    const canvasData = canvases.map(
+      (canvas) => canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data,
+    );
+    const getAlpha = (index: number) =>
+      Math.round(
+        (1 - canvasData.reduce((transparent, data) => transparent * (1 - data[index] / 255), 1)) *
+          255,
+      );
+    const alphaValues = new Set<number>();
+    const innerAlphaValues = new Set<number>();
+    for (let index = 3; index < canvasData[0].length; index += 4) {
+      alphaValues.add(getAlpha(index));
+    }
+    for (let y = offsetY; y < canvas.height - offsetY; y++) {
+      for (let x = offsetX; x < canvas.width - offsetX; x++) {
+        innerAlphaValues.add(getAlpha((y * canvas.width + x) * 4 + 3));
+      }
+    }
+    return {
+      fogStyle: canvas.dataset.fogStyle,
+      height: canvas.height,
+      innerUniqueAlphaCount: innerAlphaValues.size,
+      uniqueAlphaCount: alphaValues.size,
+      width: canvas.width,
+    };
+  });
 }
 
 export async function captureGameActionResponse(
