@@ -86,7 +86,8 @@ const checkboxStyle = css`
     }
 
     &:hover:not(:checked):not(.disabled):not(:disabled):before {
-      color: ${applyVar('text-color-light')};
+      color: ${applyVar('text-color')};
+      opacity: 0.35;
     }
   }
 `;
