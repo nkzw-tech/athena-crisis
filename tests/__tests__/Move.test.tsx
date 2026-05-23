@@ -54,7 +54,7 @@ const vision = map.createVisionObject(player1);
 test('unit gets blocked by another unit in the fog', () => {
   const [actionResponse] = execute(map, vision, MoveAction(vec(1, 2), vec(4, 2)))!;
   expect(formatActionResponse(actionResponse, { colors: false })).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,2) { fuel: 38, completed: true, path: [2,2 → 3,2] }"`,
+    `"Move (1,2 → 3,2) { fuel: 38, completed: true, path: [2,2 → 3,2], movementExhausted: null }"`,
   );
 });
 
@@ -156,10 +156,10 @@ test('transporters can be loaded even if they are completed', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      CompleteUnit (3,2)
-      Move (3,3 → 3,2) { fuel: 39, completed: false, path: [3,2] }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    CompleteUnit (3,2)
+    Move (3,3 → 3,2) { fuel: 39, completed: false, path: [3,2], movementExhausted: false }"
+  `);
 });
 
 test('units use the correct amount of fuel with custom paths', () => {
@@ -169,7 +169,7 @@ test('units use the correct amount of fuel with custom paths', () => {
   });
   const [actionResponseA] = execute(mapA, vision, MoveAction(vec(1, 2), vec(3, 1)))!;
   expect(formatActionResponse(actionResponseA, { colors: false })).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1] }"`,
+    `"Move (1,2 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1], movementExhausted: null }"`,
   );
 
   const [actionResponseB] = execute(
@@ -178,7 +178,7 @@ test('units use the correct amount of fuel with custom paths', () => {
     MoveAction(vec(1, 2), vec(3, 1), [vec(2, 2), vec(2, 3), vec(3, 3), vec(3, 2), vec(3, 1)]),
   )!;
   expect(formatActionResponse(actionResponseB, { colors: false })).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,1) { fuel: 45, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2 → 3,1] }"`,
+    `"Move (1,2 → 3,1) { fuel: 45, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2 → 3,1], movementExhausted: null }"`,
   );
 });
 
@@ -196,7 +196,7 @@ test('units can be loaded into transporters', () => {
     MoveAction(from, to, [vec(2, 2), vec(2, 3), vec(3, 3), to]),
   )!;
   expect(formatActionResponse(actionResponseA, { colors: false })).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,2) { fuel: 26, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2] }"`,
+    `"Move (1,2 → 3,2) { fuel: 26, completed: null, path: [2,2 → 2,3 → 3,3 → 3,2], movementExhausted: null }"`,
   );
 
   const mapB = mapA.copy({

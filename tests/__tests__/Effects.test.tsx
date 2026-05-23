@@ -265,10 +265,10 @@ test('applies an effect after a unit moves and drops it', async () => {
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,3 → 3,2) { fuel: 25, completed: false, path: [2,2 → 3,2] }
-      CharacterMessage { message: 'Rollin' Rollin' Rollin'', player: 'self', unitId: 5, variant: 1, silhouette: false }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,3 → 3,2) { fuel: 25, completed: false, path: [2,2 → 3,2], movementExhausted: false }
+    CharacterMessage { message: 'Rollin' Rollin' Rollin'', player: 'self', unitId: 5, variant: 1, silhouette: false }"
+  `);
 
   expect(newEffects).toMatchInlineSnapshot(`
     Map {
@@ -318,7 +318,7 @@ test('silently discard an effect if an action cannot be applied', async () => {
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
-    `"Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }"`,
+    `"Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }"`,
   );
 });
 
@@ -359,8 +359,8 @@ test('effects are also applied in the AI', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Move (3,3 → 2,1) { fuel: 36, completed: false, path: [3,2 → 2,2 → 2,1] }
-    Move (2,1 → 3,3) { fuel: 33, completed: false, path: [3,1 → 3,2 → 3,3] }
+    Move (3,3 → 2,1) { fuel: 36, completed: false, path: [3,2 → 2,2 → 2,1], movementExhausted: false }
+    Move (2,1 → 3,3) { fuel: 33, completed: false, path: [3,1 → 3,2 → 3,3], movementExhausted: false }
     EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
   `,
   );
@@ -460,13 +460,13 @@ test('spawns an additional unit', async () => {
   const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
-      Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
-      AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      CompleteUnit (1,3)
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
+    Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1], movementExhausted: false }
+    AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    CompleteUnit (1,3)
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 });
 
 test('spawns a neutral unit', async () => {
@@ -502,12 +502,12 @@ test('spawns a neutral unit', async () => {
   const [, gameActionResponse] = await executeGameActions(initialMap, [EndTurnAction()], effects);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Casey' }], teams: null, buildings: [] }
-      Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3] }
-      Rescue (2,3 → 3,3) { player: 2, name: null }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [3,3 → Flamethrower { id: 15, health: 100, player: 0, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Casey' }], teams: null, buildings: [] }
+    Move (1,3 → 2,3) { fuel: 39, completed: false, path: [2,3], movementExhausted: false }
+    Rescue (2,3 → 3,3) { player: 2, name: null }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 });
 
 test('effects work for game start and end', async () => {
@@ -566,16 +566,16 @@ test('effects work for game start and end', async () => {
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Start
-      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
-      BeginGame
-      Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
-      AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
-      AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
-      SetPlayer { player: 1 }
-      CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1, silhouette: false }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
-    `);
+    "Start
+    CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
+    BeginGame
+    Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
+    AttackUnitGameOver { fromPlayer: 2, toPlayer: 1 }
+    SetPlayer { player: 1 }
+    CharacterMessage { message: 'I win again!', player: 'self', unitId: 5, variant: 1, silhouette: false }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 1, chaosStars: null }"
+  `);
 
   expect(newEffects?.get('Start')).toMatchInlineSnapshot(`
     Set {
@@ -669,17 +669,17 @@ test('effects work when a player loses', async () => {
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Start
-      CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
-      BeginGame
-      EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1] }
-      AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
-      AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      SetPlayer { player: 1 }
-      CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2, silhouette: false }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
-    `);
+    "Start
+    CharacterMessage { message: 'Let's go!', player: 'self', unitId: 5, variant: 0, silhouette: false }
+    BeginGame
+    EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (3,3 → 2,1) { fuel: 27, completed: false, path: [3,2 → 2,2 → 2,1], movementExhausted: false }
+    AttackUnit (2,1 → 1,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
+    AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
+    SetPlayer { player: 1 }
+    CharacterMessage { message: 'Oh no.', player: 'self', unitId: 5, variant: 2, silhouette: false }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
+  `);
 });
 
 test('only one game end win effect is fired', async () => {
@@ -800,10 +800,10 @@ test('a unit spawns instead of ending the game', async () => {
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3] }
-      AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
-      Spawn { units: [1,1 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 27, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
+    Spawn { units: [1,1 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }"
+  `);
 
   expect(newEffects?.get('AttackUnitGameOver')).toBeUndefined();
 });
@@ -844,13 +844,13 @@ test('spawns a new unit when a player loses their last unit at the beginning of 
   );
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Spawn { units: [2,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
-      Move (2,3 → 2,1) { fuel: 28, completed: false, path: [2,2 → 2,1] }
-      AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 67, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 6 ] ] }, chargeA: 172, chargeB: 123 }
-      CreateUnit (1,3 → 1,2) { unit: Rocket Launcher { id: 3, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: false, skipBehaviorRotation: false }
-      EndTurn { current: { funds: 200, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "EndTurn { current: { funds: 10000, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Spawn { units: [2,3 → Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], name: 'Yuki' }], teams: null, buildings: [] }
+    Move (2,3 → 2,1) { fuel: 28, completed: false, path: [2,2 → 2,1], movementExhausted: false }
+    AttackUnit (2,1 → 1,1) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 67, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 67, ammo: [ [ 1, 6 ] ] }, chargeA: 172, chargeB: 123 }
+    CreateUnit (1,3 → 1,2) { unit: Rocket Launcher { id: 3, health: 100, player: 2, fuel: 40, ammo: [ [ 1, 4 ] ], moved: true, name: 'Davide', completed: true }, free: false, skipBehaviorRotation: false }
+    EndTurn { current: { funds: 200, player: 2 }, next: { funds: 10000, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 
   expect(newEffects?.get('BeginTurnGameOver')).toBeUndefined();
 
@@ -926,9 +926,9 @@ test('triggers effects for actions generated by effects', async () => {
   const [, gameActionResponse] = await executeGameActions(mapA, [MoveAction(vecA, vecB)], effects);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Move (1,1 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1' ] }, objectiveId: 1, toPlayer: 1 }
-      Spawn { units: [3,3 → Pioneer { id: 1, health: 100, player: 1, fuel: 40, name: 'Sam' }], teams: null, buildings: [] }
-      GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,3' ] }, objectiveId: 2, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1' ] }, objectiveId: 1, toPlayer: 1 }
+    Spawn { units: [3,3 → Pioneer { id: 1, health: 100, player: 1, fuel: 40, name: 'Sam' }], teams: null, buildings: [] }
+    GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,3' ] }, objectiveId: 2, toPlayer: 1, chaosStars: null }"
+  `);
 });

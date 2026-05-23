@@ -114,7 +114,7 @@ test('attempt to attack new units when they are revealed after a move', async ()
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
-    "Move (1,1 → 3,2) { fuel: 47, completed: null, path: [2,1 → 2,2 → 3,2] }
+    "Move (1,1 → 3,2) { fuel: 47, completed: null, path: [2,1 → 2,2 → 3,2], movementExhausted: null }
     AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 74 }, unitB: DryUnit { health: 45 }, chargeA: 88, chargeB: 110 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -395,7 +395,7 @@ test('AI behavior from buildings carries over in a round-robin fashion', async (
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
     "AttackUnit (2,1 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: DryUnit { health: 14, ammo: [ [ 1, 7 ] ] }, chargeA: 106, chargeB: 322 }
-    Move (2,3 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
+    Move (2,3 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1], movementExhausted: null }
     CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CreateUnit (1,3 → 2,3) { unit: Pioneer { id: 1, health: 100, player: 2, fuel: 40, moved: true, name: 'Sam', completed: true, behavior: 1 }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 50, player: 2 }, next: { funds: 0, player: 1 }, round: 3, rotatePlayers: null, supply: null, miss: null }"
@@ -515,7 +515,7 @@ test('AI will not attack if the damage is too low', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,2 → 3,2) { fuel: 48, completed: null, path: [2,2 → 3,2] }
+    "Move (1,2 → 3,2) { fuel: 48, completed: null, path: [2,2 → 3,2], movementExhausted: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -530,7 +530,7 @@ test('AI will not attack if the damage is too low', async () => {
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "Move (1,2 → 2,3) { fuel: 48, completed: null, path: [1,3 → 2,3] }
+    "Move (1,2 → 2,3) { fuel: 48, completed: null, path: [1,3 → 2,3], movementExhausted: null }
     AttackUnit (2,3 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100 }, unitB: null, chargeA: 1, chargeB: 3 }
     AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
     GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
@@ -560,7 +560,7 @@ test('AI will prefer to rescue over capture', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
+    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2], movementExhausted: null }
     Rescue (3,2 → 3,3) { player: 2, name: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -602,7 +602,7 @@ test('AI is able to sabotage other units', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
+    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2], movementExhausted: null }
     Sabotage (3,2 → 3,3)
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -629,7 +629,7 @@ test('AI will prefer attacks over sabotage against weaker units', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2] }
+    "Move (1,2 → 3,2) { fuel: 38, completed: null, path: [2,2 → 3,2], movementExhausted: null }
     AttackUnit (3,2 → 3,3) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 76 }, unitB: DryUnit { health: 54 }, chargeA: 96, chargeB: 92 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -695,7 +695,7 @@ test('AI keeps attacking even if one unit gets blocked', async () => {
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,1 → 2,1) { fuel: 48, completed: true, path: [2,1] }
+    "Move (1,1 → 2,1) { fuel: 48, completed: true, path: [2,1], movementExhausted: null }
     CreateUnit (2,4 → 2,3) { unit: Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
     AttackUnit (5,5 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 70 }, chargeA: 19, chargeB: 60 }
     EndTurn { current: { funds: 600, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -788,7 +788,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   );
 
   expect(snapshotGameState(gameStateC)).toMatchInlineSnapshot(`
-    "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
+    "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3], movementExhausted: null }
     AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 66, ammo: [ [ 1, 4 ] ] }, chargeA: 112, chargeB: 340 }
     CreateUnit (3,1 → 3,1) { unit: Heavy Artillery { id: 12, health: 100, player: 2, fuel: 15, ammo: [ [ 1, 4 ] ], moved: true, name: 'Joey', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 150, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -803,7 +803,7 @@ test('AI does not keep building naval units if the opponent does not have any na
   );
 
   expect(snapshotGameState(gameStateD)).toMatchInlineSnapshot(`
-    "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3] }
+    "Move (3,3 → 1,3) { fuel: 27, completed: null, path: [2,3 → 1,3], movementExhausted: null }
     AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 4 ] ] }, unitB: DryUnit { health: 66, ammo: [ [ 1, 4 ] ] }, chargeA: 112, chargeB: 340 }
     CreateUnit (1,1 → 2,1) { unit: Frigate { id: 29, health: 100, player: 2, fuel: 60, ammo: [ [ 1, 8 ] ], moved: true, name: 'Thomas', completed: true }, free: false, skipBehaviorRotation: false }
     EndTurn { current: { funds: 400, player: 2 }, next: { funds: 800, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -831,7 +831,7 @@ test('AI will prefer funds generating buildings over factories if it has no inco
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }
+    "Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1], movementExhausted: null }
     CreateBuilding (3,1) { building: House { id: 2, health: 100, player: 2, completed: true }, free: null }
     CompleteUnit (2,2)
     EndTurn { current: { funds: 100, player: 2 }, next: { funds: 200, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -875,7 +875,7 @@ test('AI will create factories if it has no income and cannot build funds genera
   ).toBe(true);
 
   expect(snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)])).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
+    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1], movementExhausted: null }"`,
   );
 
   const [, , gameStateB] = await executeGameAction(
@@ -895,7 +895,7 @@ test('AI will create factories if it has no income and cannot build funds genera
   ).toBe(true);
 
   expect(snapshotGameState([gameStateA![0], ...gameStateA!.slice(2, -1)])).toMatchInlineSnapshot(
-    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1] }"`,
+    `"Move (1,2 → 3,1) { fuel: 37, completed: null, path: [2,2 → 3,2 → 3,1], movementExhausted: null }"`,
   );
 });
 
@@ -946,7 +946,7 @@ test('AI will move onto escort vectors even if it is a long-range unit', async (
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4] }
+    "Move (5,1 → 5,4) { fuel: 36, completed: null, path: [5,2 → 5,3 → 5,4], movementExhausted: null }
     GameEnd { objective: { hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '5,4' ] }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
   `);
 });
@@ -999,7 +999,7 @@ test('AI will prioritize units with labels associated with objectives', async ()
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,1 → 5,4) { fuel: 42, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4 → 5,4] }
+    "Move (1,1 → 5,4) { fuel: 42, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4 → 5,4], movementExhausted: null }
     AttackUnit (5,4 → 5,5) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 66, chargeB: 200 }
     GameEnd { objective: { hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '1,1' ] }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
   `);
@@ -1109,9 +1109,9 @@ test('skills will only be activated if there are enough units that can be acted 
     AttackUnit (2,3 → 2,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 7 ] ] }, unitB: DryUnit { health: 45, ammo: [ [ 1, 7 ] ] }, chargeA: 7808, chargeB: 604 }
     AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 7 ] ] }, unitB: null, chargeA: 7889, chargeB: 851 }
     ActivatePower () { skill: 24, units: null, free: null }
-    Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1] }
+    Move (1,2 → 3,1) { fuel: 46, completed: null, path: [2,2 → 2,1 → 3,1], movementExhausted: null }
     AttackUnit (3,1 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 95, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 24, ammo: [ [ 1, 6 ] ] }, chargeA: 454, chargeB: 966 }
-    Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2] }
+    Move (2,3 → 2,2) { fuel: 48, completed: null, path: [2,2], movementExhausted: null }
     AttackUnit (2,2 → 3,2) { hasCounterAttack: true, playerA: 2, playerB: 1, unitA: DryUnit { health: 85, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 8, ammo: [ [ 1, 5 ] ] }, chargeA: 510, chargeB: 1054 }
     AttackUnit (3,3 → 3,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 90, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 524, chargeB: 1098 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -1131,12 +1131,12 @@ test('skills will only be activated if there are enough units that can be acted 
 
   // Ignore the power activation message.
   expect(snapshotGameState(gameStateD ? gameStateD.slice(1) : null)).toMatchInlineSnapshot(`
-      "ActivatePower () { skill: 24, units: null, free: null }
-      CompleteUnit (1,2)
-      Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3] }
-      Move (3,3 → 2,3) { fuel: 48, completed: null, path: [2,3] }
-      EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
-    `);
+    "ActivatePower () { skill: 24, units: null, free: null }
+    CompleteUnit (1,2)
+    Move (2,3 → 1,3) { fuel: 48, completed: null, path: [1,3], movementExhausted: null }
+    Move (3,3 → 2,3) { fuel: 48, completed: null, path: [2,3], movementExhausted: null }
+    EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
+  `);
 });
 
 test('activates skills where the unit ratio does not matter', async () => {
@@ -1220,7 +1220,7 @@ test('creates production buildings in the space biome despite not having access 
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (3,5 → 5,5) { fuel: 38, completed: null, path: [4,5 → 5,5] }
+    "Move (3,5 → 5,5) { fuel: 38, completed: null, path: [4,5 → 5,5], movementExhausted: null }
     CreateBuilding (5,5) { building: Spawn Platform { id: 19, health: 100, player: 2, completed: true }, free: null }
     CompleteUnit (5,3)
     EndTurn { current: { funds: 850, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
@@ -1262,10 +1262,10 @@ test('AI will prioritize healing own units with labels associated with objective
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (3,2 → 3,3) { fuel: 79, completed: null, path: [3,3] }
+    "Move (3,2 → 3,3) { fuel: 79, completed: null, path: [3,3], movementExhausted: null }
     Heal (3,3 → 2,3)
-    Move (2,1 → 1,1) { fuel: 49, completed: null, path: [1,1] }
-    Move (2,3 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1] }
+    Move (2,1 → 1,1) { fuel: 49, completed: null, path: [1,1], movementExhausted: null }
+    Move (2,3 → 3,1) { fuel: 47, completed: null, path: [2,2 → 2,1 → 3,1], movementExhausted: null }
     GameEnd { objective: { hidden: false, label: [ 1 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '3,1' ] }, objectiveId: 1, toPlayer: 2, chaosStars: null }"
   `);
 });
@@ -1298,9 +1298,9 @@ test('AI will prioritize healing own units currently transporting other units', 
   );
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (2,2 → 2,1) { fuel: 88, completed: null, path: [2,1] }
+    "Move (2,2 → 2,1) { fuel: 88, completed: null, path: [2,1], movementExhausted: null }
     Heal (2,1 → 3,1)
-    Move (1,2 → 1,3) { fuel: 49, completed: null, path: [1,3] }
+    Move (1,2 → 1,3) { fuel: 49, completed: null, path: [1,3], movementExhausted: null }
     CompleteUnit (1,1)
     CompleteUnit (3,1)
     CompleteUnit (1,3)
@@ -1317,7 +1317,7 @@ test('AI will prioritize healing own units currently transporting other units', 
   );
 
   expect(snapshotGameState(gameStateB)).toMatchInlineSnapshot(`
-    "Move (2,1 → 2,3) { fuel: 85, completed: null, path: [2,2 → 2,3] }
+    "Move (2,1 → 2,3) { fuel: 85, completed: null, path: [2,2 → 2,3], movementExhausted: null }
     Heal (2,3 → 1,3)
     CompleteUnit (1,1)
     CompleteUnit (3,1)
@@ -1364,7 +1364,7 @@ test('AI will limit healing to maintain an economic reserve', async () => {
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Heal (1,1 → 2,1)
     Heal (1,2 → 1,1)
-    Move (2,1 → 3,2) { fuel: 78, completed: null, path: [3,1 → 3,2] }
+    Move (2,1 → 3,2) { fuel: 78, completed: null, path: [3,1 → 3,2], movementExhausted: null }
     CompleteUnit (2,2)
     EndTurn { current: { funds: 300, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -1388,7 +1388,7 @@ test('AI will heal with units that cannot move', async () => {
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Heal (1,1 → 1,2)
-    Move (1,2 → 2,3) { fuel: 48, completed: true, path: [1,3 → 2,3] }
+    Move (1,2 → 2,3) { fuel: 48, completed: true, path: [1,3 → 2,3], movementExhausted: null }
     EndTurn { current: { funds: 920, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -1412,7 +1412,7 @@ test('AI will keep looking for healers when the first healer has no target', asy
 
   expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
     "Heal (2,2 → 2,3)
-    Move (2,3 → 3,2) { fuel: 48, completed: null, path: [2,2 → 3,2] }
+    Move (2,3 → 3,2) { fuel: 48, completed: null, path: [2,2 → 3,2], movementExhausted: null }
     EndTurn { current: { funds: 920, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });

@@ -70,7 +70,7 @@ test('carries labels forward when creating buildings or units', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(
     `
-    "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1] }
+    "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
     CreateUnit (1,1 → 1,1) { unit: Infantry { id: 2, health: 100, player: 1, fuel: 50, moved: true, name: 'Valentin', completed: true, label: 1 }, free: false, skipBehaviorRotation: false }
     CreateBuilding (2,1) { building: Factory { id: 3, health: 100, player: 1, completed: true, label: 3 }, free: false }
     EndTurn { current: { funds: 4550, player: 1 }, next: { funds: 5000, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
@@ -97,10 +97,10 @@ test('does not lose labels when transporting units', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      DropUnit (2,1 → 1,1) { index: 0 }
-      EndTurn { current: { funds: 5000, player: 1 }, next: { funds: 5000, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "Move (1,1 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    DropUnit (2,1 → 1,1) { index: 0 }
+    EndTurn { current: { funds: 5000, player: 1 }, next: { funds: 5000, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }"
+  `);
 
   expect(gameState.at(-1)?.[1].units.get(from)?.label).toBe(3);
 });

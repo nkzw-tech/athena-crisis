@@ -1263,14 +1263,14 @@ test('defeat with label and a unit hiding inside of another', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2] }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 73, chargeB: 221 }
-      AttackUnit (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 82, chargeB: 249 }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [ 1 ], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 73, chargeB: 221 }
+    AttackUnit (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 82, chargeB: 249 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 4, 2 ], optional: false, players: [ 1 ], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1286,14 +1286,14 @@ test('defeat with label and a unit hiding inside of another', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2] }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 73, chargeB: 221 }
-      AttackUnit (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 82, chargeB: 249 }
-      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [ 1 ], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
-    `);
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 1,2) { fuel: 39, completed: false, path: [1,2], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    AttackUnit (1,1 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 73, chargeB: 221 }
+    AttackUnit (2,2 → 1,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 82, chargeB: 249 }
+    OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 4, 2 ], optional: true, players: [ 1 ], reward: null, type: 3 }, objectiveId: 0, toPlayer: 1 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1347,13 +1347,13 @@ test('win by survival', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
-      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [ 1 ], reward: null, rounds: 3, type: 5 }, objectiveId: 0, toPlayer: 1 }
-      Move (1,1 → 2,1) { fuel: 29, completed: false, path: [2,1] }"
-    `);
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 3, rotatePlayers: false, supply: null, miss: false }
+    OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [ 1 ], reward: null, rounds: 3, type: 5 }, objectiveId: 0, toPlayer: 1 }
+    Move (1,1 → 2,1) { fuel: 29, completed: false, path: [2,1], movementExhausted: false }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1516,10 +1516,10 @@ test('escort units', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1531,10 +1531,10 @@ test('escort units', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1572,9 +1572,9 @@ test('escort units by label without having units with that label (fails)', async
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1586,8 +1586,8 @@ test('escort units by label without having units with that label (fails)', async
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }"
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }"
   `);
 });
 
@@ -1627,11 +1627,11 @@ test('escort units (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1] }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1], movementExhausted: false }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1644,11 +1644,11 @@ test('escort units (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1] }
-      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    Move (2,1 → 3,1) { fuel: 59, completed: false, path: [3,1], movementExhausted: false }
+    OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1683,7 +1683,7 @@ test('escort units by amount (transport)', async () => {
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
-    "Move (1,1 → 1,2) { fuel: 59, completed: false, path: [1,2] }
+    "Move (1,1 → 1,2) { fuel: 59, completed: false, path: [1,2], movementExhausted: false }
     GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '1,2' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
   `,
   );
@@ -1729,15 +1729,15 @@ test('escort units by drop (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      DropUnit (2,1 → 2,2) { index: 0 }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      DropUnit (2,1 → 3,1) { index: 0 }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    DropUnit (2,1 → 2,2) { index: 0 }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    DropUnit (2,1 → 3,1) { index: 0 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1754,15 +1754,15 @@ test('escort units by drop (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      DropUnit (2,1 → 2,2) { index: 0 }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      DropUnit (2,1 → 3,1) { index: 0 }
-      OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    DropUnit (2,1 → 2,2) { index: 0 }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    DropUnit (2,1 → 3,1) { index: 0 }
+    OptionalObjective { objective: { bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 1 ], optional: true, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1806,12 +1806,12 @@ test('escort units by label fails', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1825,11 +1825,11 @@ test('escort units by label fails', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1876,14 +1876,14 @@ test('escort units by label fails (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 40, chargeB: 121 }
-      Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2] }
-      AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 49, chargeB: 149 }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 40, chargeB: 121 }
+    Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2], movementExhausted: false }
+    AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 49, chargeB: 149 }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 4, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1899,13 +1899,13 @@ test('escort units by label fails (transport)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 40, chargeB: 121 }
-      Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2] }
-      AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 49, chargeB: 149 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 40, chargeB: 121 }
+    Move (1,3 → 2,2) { fuel: 28, completed: false, path: [1,2 → 2,2], movementExhausted: false }
+    AttackUnit (2,2 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ] ] }, unitB: null, chargeA: 49, chargeB: 149 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -1943,10 +1943,10 @@ test('escort units by amount', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -1958,10 +1958,10 @@ test('escort units by amount', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -2022,10 +2022,10 @@ test('escort units by amount (label)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = mapA.copy({
     config: mapA.config.copy({
@@ -2071,13 +2071,13 @@ test('escort units by amount (label)', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1] }
-      OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,2 → 3,3) { fuel: 37, completed: false, path: [2,2 → 3,2 → 3,3] }
-      OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 2 ], reward: null, type: 6, vectors: [ '3,3', '3,2' ] }, objectiveId: 1, toPlayer: 2 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 3,1) { fuel: 38, completed: false, path: [2,1 → 3,1], movementExhausted: false }
+    OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 1 }, hidden: false, label: [ 2 ], optional: true, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 1 }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,2 → 3,3) { fuel: 37, completed: false, path: [2,2 → 3,2 → 3,3], movementExhausted: false }
+    OptionalObjective { objective: { amount: 1, bonus: undefined, completed: Set(1) { 2 }, hidden: false, label: [ 1 ], optional: true, players: [ 2 ], reward: null, type: 6, vectors: [ '3,3', '3,2' ] }, objectiveId: 1, toPlayer: 2 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -2122,12 +2122,12 @@ test('escort units by amount with label fails', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
-      GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }
+    GameEnd { objective: { amount: 2, bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 1 ], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '3,1', '2,3' ] }, objectiveId: 0, toPlayer: 2, chaosStars: null }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -2141,11 +2141,11 @@ test('escort units by amount with label fails', async () => {
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
+  `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
@@ -2228,12 +2228,12 @@ test('escort units by amount does not fail when enough units are remaining', asy
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
-      AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
+    AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -2248,8 +2248,8 @@ test('escort units by amount does not fail when enough units are remaining', asy
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 1 }
     AttackUnit (1,3 → 1,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 0, chargeB: 2 }"
@@ -2295,11 +2295,11 @@ test('escort units by amount does not fail when the player has more units left',
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-      Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
-    `);
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
+  `);
 
   const mapWithOptionalObjectives = optional(mapA);
 
@@ -2313,8 +2313,8 @@ test('escort units by amount does not fail when the player has more units left',
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3] }
-    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1] }
+    "Move (1,1 → 2,3) { fuel: 37, completed: false, path: [2,1 → 2,2 → 2,3], movementExhausted: false }
+    Move (2,2 → 2,1) { fuel: 39, completed: false, path: [2,1], movementExhausted: false }
     EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
     AttackUnit (3,1 → 2,1) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 33, chargeB: 100 }"
   `);
@@ -2789,20 +2789,20 @@ test('optional objectives should not be triggered multiple times for the same pl
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
-      AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
-      OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
-      AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
-      OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3] }
-      AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
-      Move (1,2 → 1,4) { fuel: 28, completed: false, path: [1,3 → 1,4] }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1596, chargeB: 1596 }"
-    `);
+    "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
+    OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1 }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
+    AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
+    OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 2 }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3], movementExhausted: false }
+    AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
+    Move (1,2 → 1,4) { fuel: 28, completed: false, path: [1,3 → 1,4], movementExhausted: false }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1596, chargeB: 1596 }"
+  `);
 });
 
 test('optional objectives should not end the game, but non-optional one should when both exist', async () => {
@@ -2860,20 +2860,20 @@ test('optional objectives should not end the game, but non-optional one should w
   ]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(`
-      "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
-      AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
-      OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 1, toPlayer: 1 }
-      EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
-      AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
-      OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 1, toPlayer: 2 }
-      EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3] }
-      AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
-      Move (1,2 → 1,4) { fuel: 28, completed: false, path: [1,3 → 1,4] }
-      AttackUnit (1,4 → 2,4) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1328, chargeB: 1864 }
-      GameEnd { objective: { amount: 4, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
-    `);
+    "AttackUnit (1,1 → 2,1) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 132, chargeB: 400 }
+    AttackUnit (1,2 → 2,2) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 264, chargeB: 800 }
+    OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(1) { 1 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 1, toPlayer: 1 }
+    EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    AttackUnit (2,3 → 1,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 932, chargeB: 664 }
+    AttackUnit (2,4 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 3 ] ] }, unitB: null, chargeA: 1064, chargeB: 1064 }
+    OptionalObjective { objective: { amount: 2, bonus: undefined, completed: Set(2) { 1, 2 }, hidden: false, optional: true, players: [], reward: null, type: 9 }, objectiveId: 1, toPlayer: 2 }
+    EndTurn { current: { funds: 500, player: 2 }, next: { funds: 500, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    Move (1,1 → 1,3) { fuel: 28, completed: false, path: [1,2 → 1,3], movementExhausted: false }
+    AttackUnit (1,3 → 2,3) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1196, chargeB: 1464 }
+    Move (1,2 → 1,4) { fuel: 28, completed: false, path: [1,3 → 1,4], movementExhausted: false }
+    AttackUnit (1,4 → 2,4) { hasCounterAttack: false, playerA: 1, playerB: 2, unitA: DryUnit { health: 100, ammo: [ [ 1, 2 ] ] }, unitB: null, chargeA: 1328, chargeB: 1864 }
+    GameEnd { objective: { amount: 4, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [], reward: null, type: 9 }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
+  `);
 });
 
 test('optional objectives are processed before game end responses', async () => {
@@ -3162,11 +3162,11 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   expect(snapshotEncodedActionResponse(gameActionResponseA)).toMatchInlineSnapshot(
     `
     "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3], movementExhausted: false }
     AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
     CompleteUnit (5,1)
     EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3], movementExhausted: false }
     EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
     EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
     GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 10 }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
@@ -3193,16 +3193,16 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const [, gameActionResponseB] = await executeGameActions(mapB, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseB)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
-      AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
-      CompleteUnit (5,1)
-      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
-      EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 3 }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3], movementExhausted: false }
+    AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
+    CompleteUnit (5,1)
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3], movementExhausted: false }
+    EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 4 ], reward: null, type: 3 }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
+  `);
 
   const mapC = mapA.copy({
     config: mapA.config.copy({
@@ -3225,16 +3225,16 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const [, gameActionResponseC] = await executeGameActions(mapC, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseC)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
-      AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
-      CompleteUnit (5,1)
-      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
-      EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '4,1' ] }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3], movementExhausted: false }
+    AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
+    CompleteUnit (5,1)
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3], movementExhausted: false }
+    EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    GameEnd { objective: { bonus: undefined, completed: Set(0) {}, hidden: false, label: [ 2 ], optional: false, players: [ 2 ], reward: null, type: 4, vectors: [ '4,1' ] }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
+  `);
 
   const mapD = mapA.copy({
     config: mapA.config.copy({
@@ -3256,16 +3256,16 @@ test('poison at the begin of a turn properly fires objectives', async () => {
   const [, gameActionResponseD] = await executeGameActions(mapD, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponseD)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3] }
-      AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
-      CompleteUnit (5,1)
-      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3] }
-      EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
-      GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 4 ], reward: null, type: 9 }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (1,3 → 2,3) { fuel: 59, completed: false, path: [2,3], movementExhausted: false }
+    AttackUnit (2,3 → 2,4) { hasCounterAttack: true, playerA: 2, playerB: 4, unitA: DryUnit { health: 20, ammo: [ [ 1, 5 ] ], statusEffect: 'Poison' }, unitB: DryUnit { health: 69 }, chargeA: 171, chargeB: 186 }
+    CompleteUnit (5,1)
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 0, player: 4 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (2,4 → 3,3) { fuel: 18, completed: false, path: [3,4 → 3,3], movementExhausted: false }
+    EndTurn { current: { funds: 0, player: 4 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 2, rotatePlayers: false, supply: null, miss: false }
+    GameEnd { objective: { amount: 1, bonus: undefined, completed: Set(0) {}, hidden: false, optional: false, players: [ 4 ], reward: null, type: 9 }, objectiveId: 1, toPlayer: 4, chaosStars: null }"
+  `);
 });
 
 test('counter attack triggers objectives correctly', async () => {

@@ -143,8 +143,8 @@ test('AI will hop between islands if necessary', async () => {
   const gameState = await execute(map);
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
-    "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5] }
-    Move (4,5 → 2,2) { fuel: 54, completed: null, path: [4,4 → 3,4 → 3,3 → 3,2 → 2,2] }
+    "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5], movementExhausted: null }
+    Move (4,5 → 2,2) { fuel: 54, completed: null, path: [4,4 → 3,4 → 3,3 → 3,2 → 2,2], movementExhausted: null }
     DropUnit (2,2 → 2,1) { index: 0 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -160,8 +160,8 @@ test('AI will hop between islands if necessary', async () => {
   const fogGameState = await execute(map.copy({ config: map.config.copy({ fog: Fog.Standard }) }));
 
   expect(snapshotGameState(fogGameState)).toMatchInlineSnapshot(`
-    "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5] }
-    Move (4,5 → 2,2) { fuel: 54, completed: null, path: [4,4 → 3,4 → 3,3 → 3,2 → 2,2] }
+    "Move (5,5 → 4,5) { fuel: 24, completed: null, path: [4,5], movementExhausted: null }
+    Move (4,5 → 2,2) { fuel: 54, completed: null, path: [4,4 → 3,4 → 3,3 → 3,2 → 2,2], movementExhausted: null }
     DropUnit (2,2 → 2,1) { index: 0 }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
@@ -182,12 +182,12 @@ test('transporters do not stick to opposing naval units when loaded with other u
   const [gameState, gameActionResponse] = await executeGameActions(map, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4] }
-      Move (6,4 → 2,1) { fuel: 52, completed: false, path: [5,4 → 4,4 → 4,3 → 3,3 → 3,2 → 3,1 → 2,1] }
-      DropUnit (2,1 → 2,2) { index: 0 }
-      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4], movementExhausted: false }
+    Move (6,4 → 2,1) { fuel: 52, completed: false, path: [5,4 → 4,4 → 4,3 → 3,3 → 3,2 → 3,1 → 2,1], movementExhausted: false }
+    DropUnit (2,1 → 2,2) { index: 0 }
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 
   const screenshot = await captureOne(gameState.at(-1)![1], player1.userId);
   printGameState('Last State', screenshot);
@@ -205,12 +205,12 @@ test('transporters do not stick to opposing air units on sea when loaded with ot
   const [gameState, gameActionResponse] = await executeGameActions(mapA, [EndTurnAction()]);
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
-      Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4] }
-      Move (6,4 → 2,1) { fuel: 52, completed: false, path: [6,3 → 5,3 → 5,2 → 4,2 → 4,1 → 3,1 → 2,1] }
-      DropUnit (2,1 → 2,2) { index: 0 }
-      EndTurn { current: { funds: 0, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
-    `);
+    "EndTurn { current: { funds: 0, player: 1 }, next: { funds: 0, player: 2 }, round: 1, rotatePlayers: false, supply: null, miss: false }
+    Move (7,4 → 6,4) { fuel: 49, completed: false, path: [6,4], movementExhausted: false }
+    Move (6,4 → 2,1) { fuel: 52, completed: false, path: [6,3 → 5,3 → 5,2 → 4,2 → 4,1 → 3,1 → 2,1], movementExhausted: false }
+    DropUnit (2,1 → 2,2) { index: 0 }
+    EndTurn { current: { funds: 0, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: false, supply: null, miss: false }"
+  `);
 
   const screenshot = await captureOne(gameState.at(-1)![1], player1.userId);
   printGameState('Last State', screenshot);

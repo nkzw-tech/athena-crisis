@@ -123,17 +123,17 @@ test('supply works correctly for units when a turn ends in fog', async () => {
   expect(endTurnActionResponse.type).toBe('EndTurn');
 
   expect(snapshotEncodedActionResponse(gameActionResponse)).toMatchInlineSnapshot(`
-      "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: [5,2], miss: false }
-      HiddenMove { path: [2,5 → 1,5], completed: false, fuel: 49, unit: Humvee { id: 10, health: 100, player: 2, fuel: 50, ammo: [ [ 1, 7 ], [ 2, 5 ] ] } }
-      AttackUnit (1,5 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 26, chargeB: 81 }
-      HiddenMove { path: [2,3 → 1,3], completed: false, fuel: 49, unit: Humvee { id: 10, health: 100, player: 2, fuel: 50, ammo: [ [ 1, 7 ], [ 2, 5 ] ] } }
-      AttackUnit (1,3 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: null, chargeA: 32, chargeB: 100 }
-      Move (3,4 → 4,3) { fuel: 48, completed: false, path: [4,4 → 4,3] }
-      AttackUnit (4,3 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 58, chargeB: 181 }
-      AttackUnit (5,2 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: null, chargeA: 64, chargeB: 200 }
-      AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
-      GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
-    `);
+    "EndTurn { current: { funds: 500, player: 1 }, next: { funds: 500, player: 2 }, round: 1, rotatePlayers: false, supply: [5,2], miss: false }
+    HiddenMove { path: [2,5 → 1,5], completed: false, fuel: 49, unit: Humvee { id: 10, health: 100, player: 2, fuel: 50, ammo: [ [ 1, 7 ], [ 2, 5 ] ] } }
+    AttackUnit (1,5 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 26, chargeB: 81 }
+    HiddenMove { path: [2,3 → 1,3], completed: false, fuel: 49, unit: Humvee { id: 10, health: 100, player: 2, fuel: 50, ammo: [ [ 1, 7 ], [ 2, 5 ] ] } }
+    AttackUnit (1,3 → 1,4) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: null, chargeA: 32, chargeB: 100 }
+    Move (3,4 → 4,3) { fuel: 48, completed: false, path: [4,4 → 4,3], movementExhausted: false }
+    AttackUnit (4,3 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: DryUnit { health: 19 }, chargeA: 58, chargeB: 181 }
+    AttackUnit (5,2 → 4,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100, ammo: [ [ 1, 6 ], [ 2, 5 ] ] }, unitB: null, chargeA: 64, chargeB: 200 }
+    AttackUnitGameOver { fromPlayer: 1, toPlayer: 2 }
+    GameEnd { objective: null, objectiveId: null, toPlayer: 2, chaosStars: null }"
+  `);
 
   const initialState = await captureOne(initialMap, player1.userId);
   printGameState('Base State', initialState);

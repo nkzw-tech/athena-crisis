@@ -11,10 +11,18 @@ import MapData from '@deities/athena/MapData.tsx';
 import { Visibility, type VisionT } from '@deities/athena/Vision.tsx';
 import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
+import { setupLocaleContext } from 'fbtee';
 import { expect, test } from 'vitest';
 import syncMoveAction from '../../hera/behavior/move/syncMoveAction.tsx';
 import { type Actions, type State, type StateLike } from '../../hera/Types.tsx';
 import snapshotGameState from '../snapshotGameState.tsx';
+
+setupLocaleContext({
+  availableLanguages: new Map(),
+  clientLocales: [],
+  loadLocale: () => Promise.resolve({}),
+  translations: {},
+});
 
 const rawMap = MapData.createMap({
   config: {
@@ -95,7 +103,7 @@ test('units will hide in hidden fields in fog', async () => {
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
-    "Move (1,1 → 4,1) { fuel: 25, completed: null, path: [2,1 → 3,1 → 4,1] }
+    "Move (1,1 → 4,1) { fuel: 25, completed: null, path: [2,1 → 3,1 → 4,1], movementExhausted: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 
@@ -109,7 +117,7 @@ test('units will hide in hidden fields in fog', async () => {
   );
 
   expect(snapshotGameState(secondGameState)).toMatchInlineSnapshot(`
-    "Move (1,1 → 5,1) { fuel: 24, completed: null, path: [2,1 → 3,1 → 4,1 → 5,1] }
+    "Move (1,1 → 5,1) { fuel: 24, completed: null, path: [2,1 → 3,1 → 4,1 → 5,1], movementExhausted: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
@@ -128,7 +136,7 @@ test('does not hide in hidden fields too far from the target', async () => {
   );
 
   expect(snapshotGameState(gameState)).toMatchInlineSnapshot(`
-    "Move (1,1 → 4,4) { fuel: 24, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4] }
+    "Move (1,1 → 4,4) { fuel: 24, completed: null, path: [1,2 → 1,3 → 1,4 → 2,4 → 3,4 → 4,4], movementExhausted: null }
     EndTurn { current: { funds: 1000, player: 2 }, next: { funds: 100, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
 });
