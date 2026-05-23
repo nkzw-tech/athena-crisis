@@ -14,7 +14,7 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
-import Reply from '@deities/ui/icons/Reply.tsx';
+import Movement from '@deities/ui/icons/Movement.tsx';
 import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import { css } from '@emotion/css';
@@ -255,7 +255,7 @@ export default class CreateUnit {
                         </div>
                       </Stack>
                       <Stack alignCenter gap={2}>
-                        <Icon className={iconStyle} horizontalFlip icon={Reply} />
+                        <Icon className={iconStyle} horizontalFlip icon={Movement} />
                         <div>{unit.getRadiusFor(currentPlayer)}</div>
                       </Stack>
                       <Stack alignCenter gap={2}>

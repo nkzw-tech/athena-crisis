@@ -52,8 +52,8 @@ import DropUnit from '@deities/ui/icons/DropUnit.tsx';
 import Flag from '@deities/ui/icons/Flag.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
+import Movement from '@deities/ui/icons/Movement.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
-import Reply from '@deities/ui/icons/Reply.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Sabotage from '@deities/ui/icons/Sabotage.tsx';
 import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
@@ -222,7 +222,7 @@ export default memo(function UnitCard({
           <div>{defense}</div>
           <Range end value={getAttributeRangeValue(defenseRange, defense)} />
           <Stack>
-            <Icon horizontalFlip icon={Reply} />
+            <Icon horizontalFlip icon={Movement} />
             <fbt desc="Label for movement radius">Movement</fbt>
           </Stack>
           <div>{radius}</div>

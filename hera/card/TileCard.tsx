@@ -23,7 +23,7 @@ import clipBorder from '@deities/ui/clipBorder.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Hidden from '@deities/ui/icons/Hidden.tsx';
-import Reply from '@deities/ui/icons/Reply.tsx';
+import Movement from '@deities/ui/icons/Movement.tsx';
 import { css } from '@emotion/css';
 import groupBy from '@nkzw/core/groupBy.js';
 import isPresent from '@nkzw/core/isPresent.js';
@@ -89,7 +89,7 @@ export default memo(function TileCard({
           {tile.isInaccessible() ? (
             <>
               <Stack>
-                <Icon horizontalFlip icon={Reply} />
+                <Icon horizontalFlip icon={Movement} />
                 <fbt desc="Label for movement">Movement</fbt>
               </Stack>
               <div>
