@@ -86,10 +86,15 @@ export default function MessageTagValue({
         />
       );
     case MessageTag.Comment:
+    case MessageTag.Emotion:
+    case MessageTag.Lore:
+    case MessageTag.Prediction:
     case MessageTag.Resource:
     case MessageTag.Social:
     case MessageTag.Strategy:
     case MessageTag.Teamplay:
+    case MessageTag.Taunt:
+    case MessageTag.Vibe:
     case MessageTag.Threat: {
       const vocabulary = TranslatedMessageVocabulary.get(tag)?.get(value)?.();
       return vocabulary ? (

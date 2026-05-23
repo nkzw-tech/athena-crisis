@@ -26,6 +26,16 @@ export default function getTranslatedMessageTagName(tag: MessageTag) {
       return fbt('Skill', 'Message tag for skill');
     case MessageTag.Faction:
       return fbt('Faction', 'Message tag for faction');
+    case MessageTag.Emotion:
+      return fbt('Emotion', 'Message tag for emotion');
+    case MessageTag.Lore:
+      return fbt('Lore', 'Message tag for lore');
+    case MessageTag.Taunt:
+      return fbt('Taunt', 'Message tag for taunt');
+    case MessageTag.Prediction:
+      return fbt('Prediction', 'Message tag for prediction');
+    case MessageTag.Vibe:
+      return fbt('Vibe', 'Message tag for vibe');
     default: {
       tag satisfies never;
       throw new UnknownTypeError('getTranslatedMessageTagName', tag);
