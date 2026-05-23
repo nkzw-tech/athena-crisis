@@ -1,8 +1,8 @@
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
-import Close from '@iconify-icons/pixelarticons/close.js';
 import Stack from '@nkzw/stack';
 import { motion } from 'framer-motion';
+import Close from 'pixelarticons/svg/close.svg';
 import { ComponentProps, ReactNode, useCallback } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import Breakpoints from './Breakpoints.tsx';

@@ -1,5 +1,5 @@
 export default {
-  body: `<path fill="currentColor" d="M2 2H0v2h2zM24 14h-2v4h2zM2 10h-6v4h6zM20 14H0v2h20zM18 16H2v2h16zM14 18H6v2h8zM14 2H4v2h10zM4 4h-6v2h6zM24 8h-4v2h4zM18 8H2v2h16zM22 4H12v2h10zM22 6H-2v2h24zM20 2h-4v2h4zM20 0H10v2h10V0ZM10 0H0v2h10V0ZM4 12H2v2h2zM16 10H4v2h12zM24 10h-6v2h6zM24 12H14v2h10zM4 20H0v2h4zM16 22H4v2h12zM20 20h-4v2h4zM22 18h-2v2h2z"/>`,
+  body: `<path d="M13 22h-2v-2H3v-2h2v-2h2v-2H5v-2h2v-2h2V8H7V6h2V4h2V2h2v2h2v2h2v2h-2v2h2v2h2v2h-2v2h2v2h2v2h-8v2Z" fill="currentColor"/>`,
   height: 24,
   width: 24,
 };

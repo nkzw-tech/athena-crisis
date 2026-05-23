@@ -1,6 +1,6 @@
 import Icon from '@deities/ui/Icon.tsx';
+import Coin from '@deities/ui/icons/Coin.tsx';
 import { css, cx } from '@emotion/css';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
 import { motion, useMotionValueEvent, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 

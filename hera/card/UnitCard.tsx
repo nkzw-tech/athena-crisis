@@ -46,32 +46,32 @@ import getColor from '@deities/ui/getColor.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
 import Icon, { SVGIcon } from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
+import Buildings from '@deities/ui/icons/Buildings.tsx';
+import Coin from '@deities/ui/icons/Coin.tsx';
 import DropUnit from '@deities/ui/icons/DropUnit.tsx';
+import Flag from '@deities/ui/icons/Flag.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
+import Reply from '@deities/ui/icons/Reply.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Sabotage from '@deities/ui/icons/Sabotage.tsx';
+import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import { css } from '@emotion/css';
-import Buildings from '@iconify-icons/pixelarticons/buildings.js';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
-import Flag from '@iconify-icons/pixelarticons/flag.js';
-import Unfold from '@iconify-icons/pixelarticons/flatten.js';
-import Repeat from '@iconify-icons/pixelarticons/repeat.js';
-import Reply from '@iconify-icons/pixelarticons/reply.js';
-import Shield from '@iconify-icons/pixelarticons/shield.js';
-import Visible from '@iconify-icons/pixelarticons/visible.js';
-import Volume from '@iconify-icons/pixelarticons/volume-3.js';
-import WarningBox from '@iconify-icons/pixelarticons/warning-box.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import minBy from '@nkzw/core/minBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
+import Visible from 'pixelarticons/svg/eye.svg';
+import Unfold from 'pixelarticons/svg/flatten.svg';
+import Repeat from 'pixelarticons/svg/repeat.svg';
+import WarningBox from 'pixelarticons/svg/square-alert.svg';
+import Volume from 'pixelarticons/svg/volume-3.svg';
 import { memo, ReactNode, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import useUnitState from '../hooks/useUnitState.tsx';
@@ -216,7 +216,7 @@ export default memo(function UnitCard({
           </div>
           <div />
           <Stack>
-            <Icon icon={Shield} />
+            <Icon icon={ShieldSolid} />
             <fbt desc="Label for defense">Defense</fbt>
           </Stack>
           <div>{defense}</div>

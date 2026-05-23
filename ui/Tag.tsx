@@ -1,6 +1,6 @@
 import { Route } from '@deities/apollo/Routes.tsx';
 import { css, cx } from '@emotion/css';
-import Close from '@iconify-icons/pixelarticons/close.js';
+import Close from 'pixelarticons/svg/close.svg';
 import { ButtonStyle } from './Button.tsx';
 import clipBorder from './clipBorder.tsx';
 import useActive from './controls/useActive.tsx';

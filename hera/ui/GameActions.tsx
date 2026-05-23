@@ -15,19 +15,19 @@ import { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import Attack from '@deities/ui/icons/BullseyeArrow.tsx';
 import CreateMessage from '@deities/ui/icons/CreateMessage.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
+import Next from '@deities/ui/icons/Reply.tsx';
+import EndTurn from '@deities/ui/icons/ReplyAll.tsx';
 import Undo from '@deities/ui/icons/Undo.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { PulseStyle, RainbowPulseStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
-import Attack from '@iconify-icons/pixelarticons/bullseye-arrow.js';
-import Close from '@iconify-icons/pixelarticons/close.js';
-import Download from '@iconify-icons/pixelarticons/download.js';
-import Forward from '@iconify-icons/pixelarticons/forward.js';
-import EndTurn from '@iconify-icons/pixelarticons/reply-all.js';
-import Next from '@iconify-icons/pixelarticons/reply.js';
+import Close from 'pixelarticons/svg/close.svg';
+import Download from 'pixelarticons/svg/download.svg';
+import Forward from 'pixelarticons/svg/forward.svg';
 import {
   MouseEvent,
   ReactNode,
@@ -524,8 +524,19 @@ const UndoButton = ({
     >
       {canUndoAction && (
         <>
-          <Icon button icon={Close} onClick={() => setIsExpanded(false)} />
-          <Icon button horizontalFlip icon={Undo} onClick={() => undo('Turn')} />
+          <Icon
+            button
+            className={cx(closeIconStyle, undoOptionIconStyle)}
+            icon={Close}
+            onClick={() => setIsExpanded(false)}
+          />
+          <Icon
+            button
+            className={cx(undoTurnIconStyle, undoOptionIconStyle)}
+            horizontalFlip
+            icon={Undo}
+            onClick={() => undo('Turn')}
+          />
         </>
       )}
       <Icon
@@ -818,12 +829,32 @@ const expandStyle = css`
   }
 `;
 
+const undoOptionIconStyle = css`
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease 220ms;
+`;
+
+const undoTurnIconStyle = css`
+  box-sizing: content-box;
+  color: ${applyVar('text-color')};
+  height: ${size}px;
+  position: absolute;
+  right: ${size * 2}px;
+  top: 0;
+`;
+
 const undoExpandStyle = css`
   color: ${applyVar('text-color')};
   transition:
     width 300ms ease,
     color 150ms ease 150ms;
   width: 148px;
+
+  .${undoOptionIconStyle} {
+    opacity: 1;
+    pointer-events: auto;
+  }
 `;
 
 const iconStyle = css`

@@ -14,16 +14,16 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
+import Reply from '@deities/ui/icons/Reply.tsx';
+import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import { css } from '@emotion/css';
-import More from '@iconify-icons/pixelarticons/more-horizontal.js';
-import Reply from '@iconify-icons/pixelarticons/reply.js';
-import Shield from '@iconify-icons/pixelarticons/shield.js';
-import Visible from '@iconify-icons/pixelarticons/visible.js';
 import getFirst from '@nkzw/core/getFirst.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
+import Visible from 'pixelarticons/svg/eye.svg';
+import More from 'pixelarticons/svg/more-horizontal.svg';
 import { MouseEvent, useCallback, useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
@@ -249,7 +249,7 @@ export default class CreateUnit {
                     </Stack>
                     <Stack center className={detailSyle} gap={4}>
                       <Stack alignCenter gap={2}>
-                        <Icon className={iconStyle} horizontalFlip icon={Shield} />
+                        <Icon className={iconStyle} horizontalFlip icon={ShieldSolid} />
                         <div>
                           {Math.floor(unit.defense * getDefenseStatusEffect(map, entity, null))}
                         </div>
@@ -262,7 +262,7 @@ export default class CreateUnit {
                         <Icon className={iconHalfStyle} icon={Supply} />
                         <div>{unit.configuration.fuel}</div>
                       </Stack>
-                      {map.config.fog && (
+                      {map.config.fog !== 0 && (
                         <Stack alignCenter gap={2}>
                           <Icon className={iconHalfStyle} icon={Visible} />
                           <div>{unit.configuration.vision}</div>

@@ -4,8 +4,8 @@ import Icon from '@deities/ui/Icon.tsx';
 import { useInlineLink } from '@deities/ui/InlineLink.tsx';
 import Reload from '@deities/ui/Reload.tsx';
 import { css } from '@emotion/css';
-import Close from '@iconify-icons/pixelarticons/close.js';
 import { VStack } from '@nkzw/stack';
+import Close from 'pixelarticons/svg/close.svg';
 import { useCallback, useState } from 'react';
 import Notification from './Notification.tsx';
 

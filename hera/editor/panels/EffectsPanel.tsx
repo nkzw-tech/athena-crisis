@@ -11,11 +11,11 @@ import Icon from '@deities/ui/Icon.tsx';
 import Magic from '@deities/ui/icons/Magic.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import { css, cx } from '@emotion/css';
-import Plus from '@iconify-icons/pixelarticons/plus.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import Stack, { VStack } from '@nkzw/stack';
+import Plus from 'pixelarticons/svg/plus.svg';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { DrawerPosition } from '../../drawer/Drawer.tsx';
 import { UserWithUnlocks } from '../../hooks/useUserMap.tsx';
@@ -361,5 +361,5 @@ const fitContentStyle = css`
 
 const flexStyle = css`
   display: inline-flex;
-  gap: 4px;
+  gap: 8px;
 `;

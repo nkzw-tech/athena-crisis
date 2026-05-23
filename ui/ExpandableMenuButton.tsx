@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css';
-import Close from '@iconify-icons/pixelarticons/close.js';
 import Stack, { VStack } from '@nkzw/stack';
+import Close from 'pixelarticons/svg/close.svg';
 import { ComponentProps, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import clipBorder from './clipBorder.tsx';
 import { applyVar } from './cssVar.tsx';

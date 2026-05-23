@@ -1,5 +1,5 @@
 export default {
-  body: `<path d="M4 13v-2h10v2z" fill="currentColor"/><path d="M8 17V7h2v10H8Z" fill="currentColor"/><path d="M6 15V9h6v6H6ZM16 9V3h2v6h-2Z" fill="currentColor"/><path d="M14 7V5h6v2h-6ZM15 21v-6h2v6h-2Z" fill="currentColor"/><path d="M13 19v-2h6v2h-6Z" fill="currentColor"/>`,
+  body: `<path d="M5 19h2v2H5v2H3v-2H1v-2h2v-2h2v2Zm8-14h2v4h4v2h4v2h-4v2h-4v4h-2v4h-2v-4H9v-4H5v-2H1v-2h4V9h4V5h2V1h2v4Zm8-2h2v2h-2v2h-2V5h-2V3h2V1h2v2Z" fill="currentColor"/>`,
   height: 24,
   width: 24,
 };

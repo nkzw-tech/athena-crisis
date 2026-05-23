@@ -165,9 +165,6 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
-      '@iconify-icons/pixelarticons':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@nkzw/core':
         specifier: ^1.3.1
         version: 1.3.1
@@ -207,6 +204,9 @@ importers:
       p-limit:
         specifier: ^7.3.0
         version: 7.3.0
+      pixelarticons:
+        specifier: ^2.1.1
+        version: 2.1.1(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -736,9 +736,6 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
-      '@iconify-icons/pixelarticons':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@nkzw/core':
         specifier: ^1.3.1
         version: 1.3.1
@@ -766,6 +763,9 @@ importers:
       framer-motion:
         specifier: ^12.38.0
         version: 12.38.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      pixelarticons:
+        specifier: ^2.1.1
+        version: 2.1.1(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -923,9 +923,6 @@ importers:
       '@emotion/css':
         specifier: ^11.13.5
         version: 11.13.5
-      '@iconify-icons/pixelarticons':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@nkzw/core':
         specifier: ^1.3.1
         version: 1.3.1
@@ -947,6 +944,9 @@ importers:
       howler:
         specifier: ^2.2.4
         version: 2.2.4(patch_hash=1ff69a94d8cbdcf70941e3460b2eff5fe59593ec94a2c98d1fadf9fff959eeaa)
+      pixelarticons:
+        specifier: ^2.1.1
+        version: 2.1.1(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -2476,9 +2476,6 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
-
-  '@iconify-icons/pixelarticons@1.2.5':
-    resolution: {integrity: sha512-cpj2tKX/5lW+rtKW0Vi7uAAo1Ld2NA+IMtD1cDxi7RCbZbpXGK4QbTQwNF8SUD8Trp4BX/EXQ1EHGUSi+7JahQ==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -4497,6 +4494,7 @@ packages:
   '@smithy/core@3.24.0':
     resolution: {integrity: sha512-rZ5YfycIXX6puoGjthnDiMpUgtKNOq3c7CndQYkCNYQTv26AiCrZQOJPy7ANSfZ6Okk3UvCRnmO1OYWlLnYZgg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to incompatibility with Node.js 18 in some environments https://github.com/smithy-lang/smithy-typescript/issues/2022
 
   '@smithy/credential-provider-imds@4.3.0':
     resolution: {integrity: sha512-5gi+28FH+RurB2+tcRH1CK7KiLJ0dVnabjWLY3DgeFLiU45dbyrsq7NOYvMUcHgu9LVZH5F7G+Qk1GdXF0y6jg==}
@@ -8717,6 +8715,12 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
+  pixelarticons@2.1.1:
+    resolution: {integrity: sha512-YKEBRASDrJV3TkQIyQ254hsKP6HK23ZC2OuQIiByeEplxnJMncjw/p8W9GYMfqYFN4Tp/rK/ZRvKzdLA45V3yw==}
+    hasBin: true
+    peerDependencies:
+      react: 19.0.0-rc.1
+
   pixelmatch@5.3.0:
     resolution: {integrity: sha512-o8mkY4E/+LNUf6LzX96ht6k6CEDi65k9G2rjMtBe9Oo+VPKSvl+0GKHuH/AlG+GA5LPG/i5hrekkxUc3s2HU+Q==}
     hasBin: true
@@ -12629,10 +12633,6 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
-
-  '@iconify-icons/pixelarticons@1.2.5':
-    dependencies:
-      '@iconify/types': 2.0.0
 
   '@iconify/types@2.0.0': {}
 
@@ -19834,6 +19834,10 @@ snapshots:
   picomatch@4.0.4: {}
 
   pidtree@0.6.0: {}
+
+  pixelarticons@2.1.1(react@19.2.6):
+    dependencies:
+      react: 19.2.6
 
   pixelmatch@5.3.0:
     dependencies:

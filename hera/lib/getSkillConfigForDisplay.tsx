@@ -1,42 +1,54 @@
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
 import { SVGIcon } from '@deities/ui/Icon.tsx';
+import AggressiveStance from '@deities/ui/icons/AggressiveStance.tsx';
 import Alien from '@deities/ui/icons/Alien.tsx';
+import DropHalf from '@deities/ui/icons/BloodMoon.tsx';
 import Bubble from '@deities/ui/icons/Bubble.tsx';
+import Bullseye from '@deities/ui/icons/Bullseye.tsx';
+import BullseyeArrow from '@deities/ui/icons/BullseyeArrow.tsx';
+import Charge from '@deities/ui/icons/Charge.tsx';
+import Coin from '@deities/ui/icons/Coin.tsx';
 import Crosshair from '@deities/ui/icons/Crosshair.tsx';
+import Dinosaur from '@deities/ui/icons/Dinosaur.tsx';
+import RadioSignal from '@deities/ui/icons/Drone.tsx';
 import Fire from '@deities/ui/icons/Fire.tsx';
 import Flask from '@deities/ui/icons/Flask.tsx';
 import Glasses from '@deities/ui/icons/Glasses.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
+import SuperTank from '@deities/ui/icons/LabelAltMultiple.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
 import Octopus from '@deities/ui/icons/Octopus.tsx';
 import Ogre from '@deities/ui/icons/Ogre.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
 import Poison from '@deities/ui/icons/Poison.tsx';
+import Receipt from '@deities/ui/icons/Receipt.tsx';
+import SabotageIcon from '@deities/ui/icons/Sabotage.tsx';
+import Seafarer from '@deities/ui/icons/Seafarer.tsx';
 import Seatbelt from '@deities/ui/icons/Seatbelt.tsx';
+import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
+import Ship from '@deities/ui/icons/Ship.tsx';
 import { SkillIconBorderStyle } from '@deities/ui/icons/SkillBorder.tsx';
 import Skull from '@deities/ui/icons/Skull.tsx';
 import Tide from '@deities/ui/icons/Tide.tsx';
 import Track from '@deities/ui/icons/Track.tsx';
+import Trash from '@deities/ui/icons/Trash.tsx';
 import Tree from '@deities/ui/icons/Tree.tsx';
+import Ungroup from '@deities/ui/icons/Ungroup.tsx';
+import ZapOn from '@deities/ui/icons/ZapOn.tsx';
 import Zombie from '@deities/ui/icons/Zombie.tsx';
-import Charge from '@iconify-icons/pixelarticons/ac.js';
-import BullseyeArrow from '@iconify-icons/pixelarticons/bullseye-arrow.js';
-import Bullseye from '@iconify-icons/pixelarticons/bullseye.js';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
-import Dinosaur from '@iconify-icons/pixelarticons/downasaur.js';
-import DropHalf from '@iconify-icons/pixelarticons/drop-half.js';
-import SuperTank from '@iconify-icons/pixelarticons/label-alt-multiple.js';
-import Loader from '@iconify-icons/pixelarticons/loader.js';
-import RadioSignal from '@iconify-icons/pixelarticons/radio-signal.js';
-import Repeat from '@iconify-icons/pixelarticons/repeat.js';
-import Shield from '@iconify-icons/pixelarticons/shield.js';
-import Ship from '@iconify-icons/pixelarticons/ship.js';
-import SpeedSlow from '@iconify-icons/pixelarticons/speed-slow.js';
-import Ungroup from '@iconify-icons/pixelarticons/ungroup.js';
-import Zap from '@iconify-icons/pixelarticons/zap.js';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import { fbt } from 'fbtee';
+import Angry from 'pixelarticons/svg/angry.svg';
+import Balloon from 'pixelarticons/svg/balloon.svg';
+import Gps2 from 'pixelarticons/svg/gps-2.svg';
+import Gps from 'pixelarticons/svg/gps.svg';
+import Loader from 'pixelarticons/svg/loader.svg';
+import Redo from 'pixelarticons/svg/redo.svg';
+import Repeat from 'pixelarticons/svg/repeat.svg';
+import Robot from 'pixelarticons/svg/robot.svg';
+import Scissors from 'pixelarticons/svg/scissors.svg';
+import Sword from 'pixelarticons/svg/sword.svg';
 
 type SkillConfig = Readonly<{
   alpha?: number;
@@ -62,7 +74,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'up',
         colors: 'blue',
-        icon: Shield,
+        icon: ShieldSolid,
         name: fbt('Defense Up', 'Skill name'),
       };
     case Skill.AttackIncreaseMajorDefenseDecreaseMajor:
@@ -70,7 +82,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.3,
         borderStyle: 'up2x',
         colors: ['red', 'blue'],
-        icon: Crosshair,
+        icon: AggressiveStance,
         name: fbt('Aggressive Stance', 'Skill name'),
       };
     case Skill.BuyUnitCannon:
@@ -86,7 +98,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'up2x',
         colors: ['green', 'blue'],
-        icon: Coin,
+        icon: Angry,
         name: fbt('Brutal Call', 'Skill name'),
       };
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
@@ -94,7 +106,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'down',
         colors: 'purple',
-        icon: Coin,
+        icon: Scissors,
         name: fbt('Cheap Trick', 'Skill name'),
       };
     case Skill.UnitAbilitySniperImmediateAction:
@@ -102,7 +114,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'fold',
         colors: 'orange',
-        icon: Crosshair,
+        icon: Gps2,
         name: fbt('Maximum Sniper', 'Skill name'),
       };
     case Skill.MovementIncreaseGroundUnitDefenseDecrease:
@@ -126,7 +138,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.5,
         borderStyle: 'up2x',
         colors: ['orange', 'purple'],
-        icon: Crosshair,
+        icon: Robot,
         name: fbt('Super APU', 'Skill name'),
       };
     case Skill.BuyUnitZombieDefenseDecreaseMajor:
@@ -150,7 +162,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.3,
         borderStyle: 'up',
         colors: 'red',
-        icon: Crosshair,
+        icon: Sword,
         name: fbt('Fierce Assault', 'Skill name'),
       };
     case Skill.HealVehiclesAttackDecrease:
@@ -158,7 +170,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.15,
         borderStyle: 'down',
         colors: 'pink',
-        icon: Heart,
+        icon: Trash,
         name: fbt('Junkyard Scraps', 'Skill name'),
       };
     case Skill.ArtilleryRangeIncrease:
@@ -190,7 +202,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 1,
         borderStyle: 'full',
         colors: 'orange',
-        icon: Crosshair,
+        icon: Redo,
         name: fbt('Super Counter', 'Skill name'),
       };
     case Skill.AttackAndDefenseDecreaseEasy:
@@ -198,7 +210,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.1,
         borderStyle: 'down',
         colors: 'pink',
-        icon: SpeedSlow,
+        icon: Balloon,
         name: fbt('Easy Mode', 'Skill name'),
       };
     case Skill.UnitInfantryForestAttackAndDefenseIncrease:
@@ -286,7 +298,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.3,
         borderStyle: 'coin',
         colors: 'purple',
-        icon: Repeat,
+        icon: SabotageIcon,
         name: fbt('Sneaky Sabotage', 'Skill name'),
       };
     case Skill.SpawnUnitInfernoJetpack:
@@ -311,7 +323,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.5,
         borderStyle: 'up2x',
         colors: 'orange',
-        icon: Zap,
+        icon: ZapOn,
         name: fbt('More Power', 'Skill name'),
       };
     case Skill.BuyUnitDragon:
@@ -391,7 +403,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.3,
         borderStyle: 'up2x',
         colors: 'red',
-        icon: Ship,
+        icon: Seafarer,
         name: fbt('Seafarer', 'Skill name'),
       };
     case Skill.XFighterAttackIncrase:
@@ -407,7 +419,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.5,
         borderStyle: 'up',
         colors: 'orange',
-        icon: Coin,
+        icon: Receipt,
         name: fbt('Insurance Claims', 'Skill name'),
       };
     case Skill.UnlockScientist:
@@ -423,7 +435,7 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         alpha: 0.3,
         borderStyle: 'up2x',
         colors: 'blue',
-        icon: Ungroup,
+        icon: Gps,
         name: fbt('Locked On', 'Skill name'),
       };
     case Skill.BuyUnitDroneBomber:

@@ -36,13 +36,13 @@ import PrimaryExpandableMenuButton from '@deities/ui/PrimaryExpandableMenuButton
 import ScrollContainer from '@deities/ui/ScrollContainer.tsx';
 import { TypeaheadDataSource, TypeaheadDataSourceEntry } from '@deities/ui/Typeahead.tsx';
 import { css } from '@emotion/css';
-import Check from '@iconify-icons/pixelarticons/check.js';
-import Close from '@iconify-icons/pixelarticons/close.js';
-import Copy from '@iconify-icons/pixelarticons/copy.js';
-import DialogueIcon from '@iconify-icons/pixelarticons/message-text.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { AnimatePresence, motion } from 'framer-motion';
+import Check from 'pixelarticons/svg/check.svg';
+import Close from 'pixelarticons/svg/close.svg';
+import Copy from 'pixelarticons/svg/copy.svg';
+import DialogueIcon from 'pixelarticons/svg/message-text.svg';
 import {
   ComponentType,
   useCallback,

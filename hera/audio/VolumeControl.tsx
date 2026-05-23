@@ -9,8 +9,8 @@ import Volume2Icon from '@deities/ui/icons/Volume2.tsx';
 import VolumeXIcon from '@deities/ui/icons/VolumeX.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
-import Volume3Icon from '@iconify-icons/pixelarticons/volume-3.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
+import Volume3Icon from 'pixelarticons/svg/volume-3.svg';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 export default function VolumeControl({

@@ -16,16 +16,16 @@ import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
-import Magic from '@deities/ui/icons/Magic.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
-import Heart from '@iconify-icons/pixelarticons/heart.js';
 import isPresent from '@nkzw/core/isPresent.js';
 import parseInteger from '@nkzw/core/parseInteger.js';
 import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
+import CPU from 'pixelarticons/svg/cpu.svg';
+import Heart from 'pixelarticons/svg/heart.svg';
 import { ChangeEvent, Fragment, RefObject, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
@@ -380,7 +380,7 @@ export default function EntityPanel({
             !entity.info.getAllBuildableUnits()[Symbol.iterator]().next().done)) && (
           <Box className={fitContentStyle} gap={16} vertical wrap>
             <Stack alignCenter wrap>
-              <Icon className={iconStyle} icon={Magic} />
+              <Icon className={iconStyle} icon={CPU} />
               {isUnit(entity) ? (
                 <fbt desc="Label for AI behavior">AI Behavior</fbt>
               ) : (

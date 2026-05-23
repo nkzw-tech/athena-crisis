@@ -7,10 +7,11 @@ import { ButtonStyle } from '@deities/ui/Button.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import Like from '@deities/ui/icons/Like.tsx';
+import LikeOn from '@deities/ui/icons/LikeOn.tsx';
 import { css, cx } from '@emotion/css';
-import Reply from '@iconify-icons/pixelarticons/reply.js';
-import Trash from '@iconify-icons/pixelarticons/trash.js';
 import Stack from '@nkzw/stack';
+import Trash from 'pixelarticons/svg/trash.svg';
 import { ReactNode, RefObject } from 'react';
 import { UserLikeWithID } from '../hooks/useUserMap.tsx';
 import {
@@ -168,7 +169,7 @@ export default function MapMessageComponent({
                 }));
               }}
             >
-              <Icon className={cx(iconStyle, rotateUpStyle)} icon={Reply} />
+              <Icon className={iconStyle} icon={viewerLiked ? LikeOn : Like} />
               <div>
                 {viewerLiked ? (
                   <fbt desc="Liked button">Liked</fbt>
@@ -208,10 +209,6 @@ const rightPaddingStyle = css`
 const iconStyle = css`
   height: ${TileSize}px;
   width: ${TileSize}px;
-`;
-
-const rotateUpStyle = css`
-  transform: rotate(90deg);
 `;
 
 const likedStyle = css`

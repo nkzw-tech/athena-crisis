@@ -1,10 +1,9 @@
 import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
-import CloseIcon from '@iconify-icons/pixelarticons/close.js';
-import DragAndDrop from '@iconify-icons/pixelarticons/drag-and-drop.js';
-import MenuIcon from '@iconify-icons/pixelarticons/menu.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { motion } from 'framer-motion';
+import CloseIcon from 'pixelarticons/svg/close.svg';
+import MenuIcon from 'pixelarticons/svg/menu.svg';
 import {
   createContext,
   ReactNode,
@@ -26,6 +25,7 @@ import { useFullscreen } from './hooks/useFullScreen.tsx';
 import Icon from './Icon.tsx';
 import ExitFullscreen from './icons/ExitFullscreen.tsx';
 import Fullscreen from './icons/Fullscreen.tsx';
+import DragAndDrop from './icons/Move.tsx';
 import MenuButton from './MenuButton.tsx';
 import Portal from './Portal.tsx';
 

@@ -24,9 +24,9 @@ import {
   RegularDrawingMode,
   VerticalDrawingMode,
 } from '@deities/ui/icons/DrawingMode.tsx';
+import Fill from '@deities/ui/icons/FillHalf.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import { css, cx } from '@emotion/css';
-import Fill from '@iconify-icons/pixelarticons/fill-half.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import { memo, useCallback, useMemo } from 'react';

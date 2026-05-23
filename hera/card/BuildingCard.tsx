@@ -14,19 +14,19 @@ import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
+import Buildings from '@deities/ui/icons/Buildings.tsx';
+import CloseBox from '@deities/ui/icons/CloseBox.tsx';
+import Coin from '@deities/ui/icons/Coin.tsx';
+import Flag from '@deities/ui/icons/Flag.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import Label from '@deities/ui/icons/Label.tsx';
+import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import StopCapture from '@deities/ui/icons/StopCapture.tsx';
 import { css } from '@emotion/css';
-import Buildings from '@iconify-icons/pixelarticons/buildings.js';
-import CloseBox from '@iconify-icons/pixelarticons/close-box.js';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
-import Flag from '@iconify-icons/pixelarticons/flag.js';
-import Reload from '@iconify-icons/pixelarticons/reload.js';
-import Shield from '@iconify-icons/pixelarticons/shield.js';
 import minBy from '@nkzw/core/minBy.js';
 import ImmutableMap from '@nkzw/immutable-map';
 import Stack, { VStack } from '@nkzw/stack';
+import Reload from 'pixelarticons/svg/reload.svg';
 import { memo, useMemo } from 'react';
 import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
@@ -143,7 +143,7 @@ export default memo(function BuildingCard({
             </>
           ) : null}
           <Stack>
-            <Icon icon={Shield} />
+            <Icon icon={ShieldSolid} />
             <fbt desc="Label for defense">Defense</fbt>
           </Stack>
           <div>{info.defense}</div>

@@ -15,6 +15,7 @@ import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import Icon, { SVGIcon } from '@deities/ui/Icon.tsx';
+import Coin from '@deities/ui/icons/Coin.tsx';
 import Question from '@deities/ui/icons/Question.tsx';
 import SkillBorder, {
   SkillBorderIcons,
@@ -26,7 +27,6 @@ import InlineLink from '@deities/ui/InlineLink.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { RainbowStyle, SquarePulseStyle } from '@deities/ui/PulseStyle.tsx';
 import { css, cx } from '@emotion/css';
-import Coin from '@iconify-icons/pixelarticons/coin.js';
 import groupBy from '@nkzw/core/groupBy.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { Sprites } from 'athena-crisis:images';

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import reactCompiler from 'babel-plugin-react-compiler';
 import presets from '../infra/babelPresets.tsx';
 import createResolver from '../infra/createResolver.tsx';
+import pixelarticonsPlugin from '../infra/pixelarticonsPlugin.ts';
 
 const root = process.cwd();
 
@@ -11,6 +12,7 @@ export default {
     'process.env.IS_LANDING_PAGE': `0`,
   },
   plugins: [
+    pixelarticonsPlugin(),
     react({
       babel: {
         plugins: [reactCompiler, babelPluginEmotion],
