@@ -16,6 +16,8 @@ const ShroudBaseColor = '#070910';
 const ShroudEdgeColor = '#172033';
 const ShroudHighlightColor = 'rgba(112, 137, 176, 0.16)';
 const ShroudShadowColor = 'rgba(4, 6, 11, 0.58)';
+const ShroudAnimationDuration = 36_000;
+const ShroudAnimationFrameInterval = 1000 / 12;
 
 const getShroudScale = () =>
   typeof window === 'undefined' ? 1 : Math.max(1, Math.ceil(window.devicePixelRatio || 1));
@@ -148,20 +150,23 @@ const drawVeilStreaks = (
   width: number,
   height: number,
   size: number,
+  phase = 0,
 ) => {
+  const sway = Math.sin(phase * Math.PI * 2);
   context.lineCap = 'round';
   context.strokeStyle = ShroudHighlightColor;
   context.lineWidth = Math.max(2, size * 0.14);
 
   for (let offset = -height; offset < width + height; offset += size * 1.65) {
     context.beginPath();
-    context.moveTo(offset, 0);
+    const animatedOffset = offset + sway * size * 0.24;
+    context.moveTo(animatedOffset, 0);
     context.bezierCurveTo(
-      offset + height * 0.2,
+      animatedOffset + height * 0.2,
       height * 0.34,
-      offset + height * 0.58,
+      animatedOffset + height * 0.58,
       height * 0.66,
-      offset + height * 0.82,
+      animatedOffset + height * 0.82,
       height,
     );
     context.stroke();
@@ -172,13 +177,14 @@ const drawVeilStreaks = (
 
   for (let offset = -height; offset < width + height; offset += size * 2.2) {
     context.beginPath();
-    context.moveTo(offset + size * 0.7, height);
+    const animatedOffset = offset - sway * size * 0.18;
+    context.moveTo(animatedOffset + size * 0.7, height);
     context.bezierCurveTo(
-      offset + height * 0.12,
+      animatedOffset + height * 0.12,
       height * 0.72,
-      offset + height * 0.4,
+      animatedOffset + height * 0.4,
       height * 0.3,
-      offset + height * 0.66,
+      animatedOffset + height * 0.66,
       0,
     );
     context.stroke();
@@ -190,13 +196,16 @@ const drawVeilNoise = (
   width: number,
   height: number,
   size: number,
+  phase = 0,
 ) => {
   const count = Math.ceil((width * height) / (size * size)) * 5;
+  const driftX = Math.sin(phase * Math.PI * 2) * size * 0.18;
+  const driftY = (Math.cos(phase * Math.PI * 2) - 1) * size * 0.12;
   context.fillStyle = 'rgba(167, 190, 220, 0.12)';
 
   for (let index = 0; index < count; index++) {
-    const x = Math.floor(pseudoRandom(index + 1) * width);
-    const y = Math.floor(pseudoRandom(index + count + 3) * height);
+    const x = Math.floor((pseudoRandom(index + 1) * width + driftX + width) % width);
+    const y = Math.floor((pseudoRandom(index + count + 3) * height + driftY + height) % height);
     const particleSize = pseudoRandom(index + count * 2 + 5) > 0.72 ? 2 : 1;
     context.fillRect(x, y, particleSize, particleSize);
   }
@@ -351,6 +360,7 @@ const drawExplorationShroud = (
   size: number,
   vision: VisionT,
   scale: number,
+  phase = 0,
 ) => {
   const context = canvas.getContext('2d')!;
   const width = map.size.width * size + offset * 2;
@@ -418,8 +428,8 @@ const drawExplorationShroud = (
   context.fillStyle = radialGradient;
   context.fillRect(0, 0, width, height);
 
-  drawVeilStreaks(context, width, height, size);
-  drawVeilNoise(context, width, height, size);
+  drawVeilStreaks(context, width, height, size, phase);
+  drawVeilNoise(context, width, height, size, phase);
   context.restore();
 
   drawVeilEdges(context, map, offset, size, vision);
@@ -501,6 +511,7 @@ const drawFog = (
 export default memo(function CanvasFog({
   fogStyle,
   map,
+  paused,
   style,
   tileSize: size,
   vision,
@@ -508,6 +519,7 @@ export default memo(function CanvasFog({
 }: {
   fogStyle?: 'soft' | 'hard';
   map: MapData;
+  paused?: boolean;
   style: TileStyle;
   tileSize: number;
   vision: VisionT;
@@ -540,8 +552,33 @@ export default memo(function CanvasFog({
     const shroudCanvas = map.config.fog === FogType.Exploration ? shroudRef.current : null;
     if (shroudCanvas) {
       drawExplorationShroud(shroudCanvas, map, offset, size, vision, shroudScale);
+
+      if (!paused && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+        let animationFrame: number;
+        let lastDraw = 0;
+        const start = performance.now();
+        const drawAnimatedShroud = (time: number) => {
+          if (time - lastDraw >= ShroudAnimationFrameInterval) {
+            drawExplorationShroud(
+              shroudCanvas,
+              map,
+              offset,
+              size,
+              vision,
+              shroudScale,
+              ((time - start) % ShroudAnimationDuration) / ShroudAnimationDuration,
+            );
+            lastDraw = time;
+          }
+
+          animationFrame = requestAnimationFrame(drawAnimatedShroud);
+        };
+        animationFrame = requestAnimationFrame(drawAnimatedShroud);
+
+        return () => cancelAnimationFrame(animationFrame);
+      }
     }
-  }, [fogStyle, map, offset, shroudScale, size, vision]);
+  }, [fogStyle, map, offset, paused, shroudScale, size, vision]);
 
   if (!map.config.fog) {
     return null;

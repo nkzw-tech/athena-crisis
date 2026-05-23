@@ -327,6 +327,7 @@ const MapComponent = ({
       <Fog
         fogStyle={fogStyle}
         map={map}
+        paused={paused}
         style={style}
         tileSize={tileSize}
         vision={vision}
