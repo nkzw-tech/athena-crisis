@@ -18,9 +18,26 @@ const ShroudHighlightColor = 'rgba(112, 137, 176, 0.16)';
 const ShroudShadowColor = 'rgba(4, 6, 11, 0.58)';
 const ShroudAnimationDuration = 36_000;
 const ShroudAnimationFrameInterval = 1000 / 12;
+const MistAnimationDuration = 30_000;
+const MistAnimationFrameInterval = 1000 / 12;
+const MistScale = 1;
+
+type MistLayerCache = Readonly<{
+  height: number;
+  layerCanvases: readonly [HTMLCanvasElement, HTMLCanvasElement];
+  width: number;
+}>;
+
+type MistCache = Readonly<{
+  layers: MistLayerCache;
+  maskCanvas: HTMLCanvasElement;
+}>;
 
 const getShroudScale = () =>
   typeof window === 'undefined' ? 1 : Math.max(1, Math.ceil(window.devicePixelRatio || 1));
+
+const getMistAnimationPhase = (time: number, start: number) =>
+  (time - start) / MistAnimationDuration;
 
 const blurAlpha = (
   source: Uint8ClampedArray,
@@ -437,6 +454,207 @@ const drawExplorationShroud = (
   context.setTransform(1, 0, 0, 1, 0, 0);
 };
 
+const getMistVisibility = (map: MapData, vector: Vector, vision: VisionT) => {
+  const visibility = vision.getVisibility(map, vector);
+  return (
+    visibility === Visibility.Fog ||
+    (map.config.fog !== FogType.Exploration && visibility === Visibility.Unexplored)
+  );
+};
+
+const getMistPath = (map: MapData, offset: number, size: number, vision: VisionT) => {
+  const path = new Path2D();
+  let hasFogFields = false;
+
+  map.forEachField((vector: Vector) => {
+    if (getMistVisibility(map, vector, vision)) {
+      hasFogFields = true;
+      path.rect(offset + (vector.x - 1) * size, offset + (vector.y - 1) * size, size, size);
+    }
+  });
+
+  return hasFogFields ? path : null;
+};
+
+const drawMistCloud = (
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  seed: number,
+  alpha: number,
+) => {
+  const lobes = [
+    [-0.34, 0.08, 0.34, 0.56],
+    [-0.13, -0.06, 0.44, 0.72],
+    [0.12, -0.08, 0.48, 0.78],
+    [0.35, 0.08, 0.36, 0.58],
+    [0, 0.15, 0.62, 0.44],
+  ] as const;
+
+  context.save();
+  context.translate(x, y);
+  context.rotate((pseudoRandom(seed + 7) - 0.5) * 0.24);
+  context.filter = `blur(${Math.max(1, Math.round(width * 0.025))}px)`;
+  context.globalCompositeOperation = 'screen';
+
+  for (const [offsetX, offsetY, radiusX, radiusY] of lobes) {
+    const brightness = 0.75 + pseudoRandom(seed + offsetX * 173 + offsetY * 211) * 0.5;
+    const lobeAlpha = alpha * brightness;
+    const lobeX = offsetX * width + (pseudoRandom(seed + offsetX * 100) - 0.5) * width * 0.08;
+    const lobeY = offsetY * height + (pseudoRandom(seed + offsetY * 100) - 0.5) * height * 0.12;
+    const xRadius = radiusX * width;
+    const yRadius = radiusY * height;
+    const gradient = context.createRadialGradient(lobeX, lobeY, 0, lobeX, lobeY, xRadius);
+    gradient.addColorStop(0, `rgba(255, 255, 255, ${lobeAlpha})`);
+    gradient.addColorStop(0.62, `rgba(238, 246, 255, ${lobeAlpha * 0.48})`);
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    context.fillStyle = gradient;
+    context.beginPath();
+    context.ellipse(lobeX, lobeY, xRadius, yRadius, 0, 0, Math.PI * 2);
+    context.fill();
+  }
+
+  context.restore();
+};
+
+const renderMistLayer = (
+  canvas: HTMLCanvasElement,
+  map: MapData,
+  offset: number,
+  size: number,
+  scale: number,
+  variant: 0 | 1,
+) => {
+  const context = canvas.getContext('2d')!;
+  const width = map.size.width * size + offset * 2;
+  const height = map.size.height * size + offset * 2;
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.imageSmoothingEnabled = true;
+  context.setTransform(scale, 0, 0, scale, 0, 0);
+
+  const step = size * (variant === 0 ? 2.35 : 2.7);
+  const columnCount = Math.ceil(width / step) + 1;
+  const rowCount = Math.ceil(height / step) + 1;
+
+  for (let row = -1; row < rowCount; row++) {
+    for (let column = -1; column < columnCount; column++) {
+      const seed =
+        (column + 11 + variant * 19) * 271 +
+        (row + 17 + variant * 23) * 421 +
+        map.size.width * 13 +
+        map.size.height;
+      if (pseudoRandom(seed + 1) < (variant === 0 ? 0.16 : 0.28)) {
+        continue;
+      }
+
+      const cloudWidth =
+        size *
+        (variant === 0
+          ? 1.45 + pseudoRandom(seed + 3) * 0.6
+          : 1.15 + pseudoRandom(seed + 3) * 0.45);
+      const cloudHeight = cloudWidth * (0.34 + pseudoRandom(seed + 4) * 0.16);
+      const x =
+        column * step +
+        pseudoRandom(seed + 5) * step -
+        size +
+        (pseudoRandom(seed + 9) - 0.5) * size * 0.3;
+      const y = row * step + pseudoRandom(seed + 6) * step - size;
+      drawMistCloud(
+        context,
+        x,
+        y,
+        cloudWidth,
+        cloudHeight,
+        seed,
+        (variant === 0 ? 0.06 : 0.045) + pseudoRandom(seed + 8) * (variant === 0 ? 0.06 : 0.045),
+      );
+    }
+  }
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+};
+
+const createMistLayerCache = (
+  map: MapData,
+  offset: number,
+  size: number,
+  scale: number,
+): MistLayerCache => {
+  const height = Math.ceil((map.size.height * size + offset * 2) * scale);
+  const width = Math.ceil((map.size.width * size + offset * 2) * scale);
+  const layerCanvases = [
+    document.createElement('canvas'),
+    document.createElement('canvas'),
+  ] as const;
+  layerCanvases.forEach((layerCanvas, variant) => {
+    layerCanvas.height = height;
+    layerCanvas.width = width;
+    renderMistLayer(layerCanvas, map, offset, size, scale, variant as 0 | 1);
+  });
+
+  return { height, layerCanvases, width };
+};
+
+const createMistMask = (
+  map: MapData,
+  offset: number,
+  size: number,
+  vision: VisionT,
+  scale: number,
+): HTMLCanvasElement | null => {
+  const path = getMistPath(map, offset, size, vision);
+  if (!path) {
+    return null;
+  }
+
+  const height = Math.ceil((map.size.height * size + offset * 2) * scale);
+  const width = Math.ceil((map.size.width * size + offset * 2) * scale);
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.height = height;
+  maskCanvas.width = width;
+
+  const maskContext = maskCanvas.getContext('2d')!;
+  maskContext.imageSmoothingEnabled = true;
+  maskContext.setTransform(scale, 0, 0, scale, 0, 0);
+  maskContext.save();
+  maskContext.filter = `blur(${Math.max(3, Math.round(size * 0.2))}px)`;
+  maskContext.fillStyle = 'black';
+  maskContext.fill(path);
+  maskContext.restore();
+  maskContext.setTransform(1, 0, 0, 1, 0, 0);
+
+  return maskCanvas;
+};
+
+const drawMist = (canvas: HTMLCanvasElement, cache: MistCache | null, size: number, phase = 0) => {
+  const context = canvas.getContext('2d')!;
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!cache) {
+    return false;
+  }
+
+  const phaseRadians = phase * Math.PI * 2;
+  const firstX = Math.sin(phaseRadians) * size * 0.34;
+  const firstY = Math.cos(phaseRadians * 0.8) * size * 0.18;
+  const secondX = Math.sin(phaseRadians * 0.7 + Math.PI) * size * 0.26;
+  const secondY = Math.cos(phaseRadians * 0.55 + Math.PI * 0.3) * size * 0.14;
+
+  context.imageSmoothingEnabled = true;
+  context.globalCompositeOperation = 'source-over';
+  context.drawImage(cache.layers.layerCanvases[0], firstX, firstY);
+  context.drawImage(cache.layers.layerCanvases[1], secondX, secondY);
+  context.globalCompositeOperation = 'destination-in';
+  context.drawImage(cache.maskCanvas, 0, 0);
+  context.globalCompositeOperation = 'source-over';
+
+  return true;
+};
+
 const drawFog = (
   canvas: HTMLCanvasElement,
   bufferCanvas: HTMLCanvasElement,
@@ -528,6 +746,14 @@ export default memo(function CanvasFog({
   const offset = size;
   const mainRef = useRef<HTMLCanvasElement>(null);
   const darkRef = useRef<HTMLCanvasElement>(null);
+  const mistLayerCacheRef = useRef<MistLayerCache | null>(null);
+  const mistPhaseRef = useRef(pseudoRandom(size));
+  const mistStartRef = useRef(
+    typeof performance === 'undefined'
+      ? 0
+      : performance.now() - mistPhaseRef.current * MistAnimationDuration,
+  );
+  const mistRef = useRef<HTMLCanvasElement>(null);
   const shroudRef = useRef<HTMLCanvasElement>(null);
   const bufferRef = useRef<HTMLCanvasElement>(null);
   const shroudScale = getShroudScale();
@@ -550,33 +776,70 @@ export default memo(function CanvasFog({
     copyCanvas(canvas, darkRef.current);
 
     const shroudCanvas = map.config.fog === FogType.Exploration ? shroudRef.current : null;
+    const mistCanvas = mistRef.current;
+    const mistWidth = Math.ceil((map.size.width * size + offset * 2) * MistScale);
+    const mistHeight = Math.ceil((map.size.height * size + offset * 2) * MistScale);
+    const mistLayerCache =
+      mistCanvas &&
+      (mistLayerCacheRef.current?.width !== mistWidth ||
+        mistLayerCacheRef.current.height !== mistHeight)
+        ? (mistLayerCacheRef.current = createMistLayerCache(map, offset, size, MistScale))
+        : mistLayerCacheRef.current;
+    const mistMask = mistCanvas ? createMistMask(map, offset, size, vision, MistScale) : null;
+    const mistCache =
+      mistLayerCache && mistMask ? { layers: mistLayerCache, maskCanvas: mistMask } : null;
+    const now = performance.now();
+    const initialMistPhase = !paused
+      ? getMistAnimationPhase(now, mistStartRef.current)
+      : mistPhaseRef.current;
+    if (paused) {
+      mistStartRef.current = now - initialMistPhase * MistAnimationDuration;
+    }
+    const hasAnimatedMist = mistCanvas
+      ? drawMist(mistCanvas, mistCache, size, initialMistPhase)
+      : false;
+    if (hasAnimatedMist) {
+      mistPhaseRef.current = initialMistPhase;
+    }
+
     if (shroudCanvas) {
       drawExplorationShroud(shroudCanvas, map, offset, size, vision, shroudScale);
+    }
 
-      if (!paused && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-        let animationFrame: number;
-        let lastDraw = 0;
-        const start = performance.now();
-        const drawAnimatedShroud = (time: number) => {
-          if (time - lastDraw >= ShroudAnimationFrameInterval) {
-            drawExplorationShroud(
-              shroudCanvas,
-              map,
-              offset,
-              size,
-              vision,
-              shroudScale,
-              ((time - start) % ShroudAnimationDuration) / ShroudAnimationDuration,
-            );
-            lastDraw = time;
-          }
+    if (!paused && (shroudCanvas || hasAnimatedMist)) {
+      let animationTimer: number;
+      let lastShroudDraw = 0;
+      let lastMistDraw = 0;
+      const start = performance.now();
+      const frameInterval = Math.min(ShroudAnimationFrameInterval, MistAnimationFrameInterval);
+      const drawAnimatedFog = () => {
+        const time = performance.now();
 
-          animationFrame = requestAnimationFrame(drawAnimatedShroud);
-        };
-        animationFrame = requestAnimationFrame(drawAnimatedShroud);
+        if (shroudCanvas && time - lastShroudDraw >= ShroudAnimationFrameInterval) {
+          drawExplorationShroud(
+            shroudCanvas,
+            map,
+            offset,
+            size,
+            vision,
+            shroudScale,
+            ((time - start) % ShroudAnimationDuration) / ShroudAnimationDuration,
+          );
+          lastShroudDraw = time;
+        }
 
-        return () => cancelAnimationFrame(animationFrame);
-      }
+        if (mistCanvas && hasAnimatedMist && time - lastMistDraw >= MistAnimationFrameInterval) {
+          const mistPhase = getMistAnimationPhase(time, mistStartRef.current);
+          drawMist(mistCanvas, mistCache, size, mistPhase);
+          mistPhaseRef.current = mistPhase;
+          lastMistDraw = time;
+        }
+
+        animationTimer = window.setTimeout(drawAnimatedFog, frameInterval);
+      };
+      animationTimer = window.setTimeout(drawAnimatedFog, frameInterval);
+
+      return () => clearTimeout(animationTimer);
     }
   }, [fogStyle, map, offset, paused, shroudScale, size, vision]);
 
@@ -622,6 +885,20 @@ export default memo(function CanvasFog({
         }}
         width={canvasWidth}
       />
+      <canvas
+        className={mistCanvasStyle}
+        data-fog-layer="mist"
+        height={canvasHeight * MistScale}
+        ref={mistRef}
+        style={{
+          height: canvasHeight,
+          left: -offset,
+          top: -offset,
+          width: canvasWidth,
+          zIndex: zIndex + 1,
+        }}
+        width={canvasWidth * MistScale}
+      />
       {map.config.fog === FogType.Exploration && (
         <canvas
           className={shroudCanvasStyle}
@@ -666,6 +943,13 @@ const darkenCanvasStyle = css`
 
 const hardCanvasStyle = css`
   image-rendering: pixelated;
+`;
+
+const mistCanvasStyle = css`
+  image-rendering: auto;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  position: absolute;
 `;
 
 const shroudCanvasStyle = css`
