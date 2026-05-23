@@ -7,21 +7,6 @@ import MapData from '@deities/athena/MapData.tsx';
 export const metadata: MapMetadata = {
   effects: new Map<EffectTrigger, EffectList>([
     [
-      'GameEnd',
-      new Set([
-        {
-          actions: [
-            CharacterMessage(1, 'Phew, that was a close call.', 'self'),
-            CharacterMessage(5, "All troops retreat. We'll be back soon enough!", 'opponent', 2),
-            CharacterMessage(1, 'Wait, who are you?? Why are you doing this?', 'self', 1),
-            CharacterMessage(2, 'They are gone kid…', 'self'),
-            CharacterMessage(15, "We need to find {14.name}. She'll know what's up.", 'self'),
-          ],
-          conditions: [{ type: 'GameEnd', value: 'win' }],
-        },
-      ]),
-    ],
-    [
       'Start',
       new Set([
         {
@@ -46,6 +31,21 @@ export const metadata: MapMetadata = {
               'self',
             ),
           ],
+        },
+      ]),
+    ],
+    [
+      'GameEnd',
+      new Set([
+        {
+          actions: [
+            CharacterMessage(1, 'Phew, that was a close call.', 'self'),
+            CharacterMessage(5, "All troops retreat. We'll be back soon enough!", 'opponent', 2),
+            CharacterMessage(1, 'Wait, who are you?? Why are you doing this?', 'self', 1),
+            CharacterMessage(2, 'They are gone kid…', 'self'),
+            CharacterMessage(15, "We need to find {14.name}. She'll know what's up.", 'self'),
+          ],
+          conditions: [{ type: 'GameEnd', value: 'win' }],
         },
       ]),
     ],
@@ -115,17 +115,18 @@ export default withModifiers(
     ],
     config: {
       biome: 0,
-      blocklistedBuildings: [10, 11, 16, 17],
+      blocklistedBuildings: [16, 17],
       blocklistedSkills: [],
       blocklistedUnits: [4, 8, 11, 12, 14, 16, 26, 27, 28, 29, 30, 31, 32, 33, 37],
-      fog: false,
+      fog: 0,
+      initialCharge: 0,
       multiplier: 1,
       objectives: [[0, [0, 0, null]]],
       performance: [3, 5, [0, 2]],
       seedCapital: 1000,
     },
     decorators: [
-      [34, 15, 61],
+      [33, 15, 61],
       [66, 15, 98],
       [36, 16, 52],
       [63, 16, 70],
@@ -449,6 +450,17 @@ export default withModifiers(
         },
       ],
       [
+        11,
+        10,
+        {
+          a: [[1, 4]],
+          g: 30,
+          h: 100,
+          i: 15,
+          p: 1,
+        },
+      ],
+      [
         7,
         4,
         {
@@ -493,6 +505,17 @@ export default withModifiers(
         },
       ],
       [
+        15,
+        5,
+        {
+          a: [[1, 7]],
+          g: 30,
+          h: 100,
+          i: 5,
+          p: 1,
+        },
+      ],
+      [
         13,
         5,
         {
@@ -520,6 +543,7 @@ export default withModifiers(
           g: 50,
           h: 100,
           i: 2,
+          n: -21,
           p: 1,
         },
       ],

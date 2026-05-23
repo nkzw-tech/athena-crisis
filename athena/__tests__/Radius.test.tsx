@@ -375,7 +375,6 @@ test('calculate the moveable radius', () => {
   ).toEqual(
     [
       vec(13, 7),
-      vec(15, 5),
       vec(14, 6),
       vec(15, 6),
       vec(14, 7),
@@ -446,14 +445,6 @@ test('calculate the moveable radius', () => {
         ],
         [
           15,
-          3,
-        ],
-        [
-          15,
-          4,
-        ],
-        [
-          15,
           5,
         ],
         [
@@ -478,10 +469,6 @@ test('calculate the moveable radius', () => {
         ],
         [
           16,
-          4,
-        ],
-        [
-          16,
           5,
         ],
         [
@@ -499,10 +486,6 @@ test('calculate the moveable radius', () => {
         [
           16,
           9,
-        ],
-        [
-          17,
-          5,
         ],
         [
           17,
@@ -1726,10 +1709,6 @@ test('calculate the moveable radius for multiple units in the same location', ()
         [
           15,
           4,
-        ],
-        [
-          15,
-          5,
         ],
         [
           4,

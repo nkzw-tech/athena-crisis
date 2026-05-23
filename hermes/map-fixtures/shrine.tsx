@@ -79,7 +79,7 @@ export const metadata: MapMetadata = {
     ],
   ]),
   name: 'Shrine',
-  tags: ['campaign', '1', 'reward'],
+  tags: ['campaign', '1', 'reward', 'no-messages'],
   teamPlay: false,
 };
 
@@ -110,12 +110,13 @@ export default withModifiers(
       biome: 0,
       blocklistedBuildings: [2, 10, 11, 17],
       blocklistedSkills: [],
-      blocklistedUnits: [4, 6, 7, 11, 12, 14, 16, 26, 37],
-      fog: false,
+      blocklistedUnits: [4, 6, 7, 8, 11, 12, 13, 14, 16, 26, 27, 28, 29, 30, 31, 32, 33, 37],
+      fog: 0,
+      initialCharge: 0,
       multiplier: 1,
       objectives: [
-        [0, [0, 0]],
-        [1, [1, 0, [1], [1], null, 0, []]],
+        [0, [0, 0, [0, 1]]],
+        [1, [1, 0, [1], [1], [0, 2], 0, [], null]],
       ],
       performance: [2, 3, [2, 1]],
       seedCapital: 500,
