@@ -18,6 +18,7 @@ import {
   ToggleLightningAction,
   UnfoldAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
 import { getActivatePowerTargetCluster } from '@deities/apollo/lib/getActivatePowerActionResponse.tsx';
 import {
   Behavior,
@@ -27,7 +28,7 @@ import {
   getAllBuildings,
 } from '@deities/athena/info/Building.tsx';
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
-import { Lightning } from '@deities/athena/info/Tile.tsx';
+import { isSeaTile, Lightning } from '@deities/athena/info/Tile.tsx';
 import { Ability, UnitInfo } from '@deities/athena/info/Unit.tsx';
 import calculateClusters from '@deities/athena/lib/calculateClusters.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
@@ -54,10 +55,10 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getOpponentPriorityLabels } from '@deities/athena/Objectives.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
+import { VisionT } from '@deities/athena/Vision.tsx';
 import groupBy from '@nkzw/core/groupBy.js';
 import maxBy from '@nkzw/core/maxBy.js';
 import minBy from '@nkzw/core/minBy.js';
-import randomEntry from '@nkzw/core/randomEntry.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import BaseAI from './BaseAI.tsx';
 import estimateClosestTarget from './lib/estimateClosestTarget.tsx';
@@ -68,14 +69,13 @@ import getCurrentAttackUnits from './lib/getCurrentAttackUnits.tsx';
 import getHealingWeight from './lib/getHealingWeight.tsx';
 import getInterestingVectors from './lib/getInterestingVectors.tsx';
 import getInterestingVectorsByAbilities from './lib/getInterestingVectorsByAbilities.tsx';
-import getPossibleAttacks from './lib/getPossibleAttacks.tsx';
+import getPossibleAttacks, { PossibleAttack } from './lib/getPossibleAttacks.tsx';
 import getUnitInfosWithMaxVision from './lib/getUnitInfosWithMaxVision.tsx';
 import isAttackOptionCurrent from './lib/isAttackOptionCurrent.tsx';
 import shouldActivatePower from './lib/shouldActivatePower.tsx';
 import shouldAttack from './lib/shouldAttack.tsx';
 import shouldCaptureBuilding from './lib/shouldCaptureBuilding.tsx';
 import sortByDamage from './lib/sortByDamage.tsx';
-import sortPossibleAttacks from './lib/sortPossibleAttacks.tsx';
 
 type CreateUnitCombination = {
   from: Vector;
@@ -84,10 +84,43 @@ type CreateUnitCombination = {
   weight: number;
 };
 
-// DionysusAlpha is the first AI, and it is the most aggressive one.
-// At each turn, it checks which unit can do the most damage to another unit and then attacks.
-export default class DionysusAlpha extends BaseAI {
+type DiomedesStrategicSummary = Readonly<{
+  airCounterDemand: boolean;
+  capturableBuildings: number;
+  enemyAirUnits: ReadonlyArray<Unit>;
+  enemyAirValue: number;
+  ownAirCounterValue: number;
+  ownTransportCapacity: number;
+  transportDemand: number;
+  transportStagingReady: boolean;
+  transportTargets: ReadonlyArray<Vector>;
+}>;
+
+type DiomedesStrategicPlan = Readonly<{
+  capturableBuildings: number;
+  currentPlayer: PlayerID;
+  transportStagingReady: boolean;
+  transportTargets: ReadonlyArray<Vector>;
+}>;
+
+// DiomedesEpsilon is a fork of OdysseusDelta for deliberate AI strength improvements.
+// Keep changes local to this file so DionysusAlpha campaign behavior remains stable.
+export default class DiomedesEpsilon extends BaseAI {
+  private strategicPlan: DiomedesStrategicPlan | null = null;
+
+  private getStrategicSummary(map: MapData, currentPlayer: Player) {
+    if (!this.strategicPlan || this.strategicPlan.currentPlayer !== currentPlayer.id) {
+      this.strategicPlan = createDiomedesStrategicPlan(map, currentPlayer);
+    }
+
+    return createDiomedesStrategicSummary(map, currentPlayer, this.strategicPlan);
+  }
+
   protected action(map: MapData): MapData | null {
+    const developBeforeMovement = shouldDevelopBeforeMovement(map);
+    const develop = () => this.buySkills(map) || this.createUnit(map);
+    const reposition = () => this.move(map) || this.unfold(map);
+
     return (
       this.activatePower(map) ||
       this.finishCapture(map) ||
@@ -99,10 +132,7 @@ export default class DionysusAlpha extends BaseAI {
       this.capture(map) ||
       this.fold(map) ||
       this.createBuilding(map) ||
-      this.move(map) ||
-      this.unfold(map) ||
-      this.buySkills(map) ||
-      this.createUnit(map) ||
+      (developBeforeMovement ? develop() || reposition() : reposition() || develop()) ||
       this.endTurn(map)
     );
   }
@@ -133,7 +163,10 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     if (potentialSkills.length) {
-      const { from, skill } = randomEntry(potentialSkills) || potentialSkills[0];
+      const { from, skill } = sortBy(
+        potentialSkills,
+        ({ charges, skill }) => skill - charges * 1000,
+      )[0];
       const currentMap = this.execute(map, ActivatePowerAction(skill, from));
       if (currentMap) {
         this.tryAttacking();
@@ -165,7 +198,8 @@ export default class DionysusAlpha extends BaseAI {
         )
         .toArray(),
       labelsToPrioritize,
-    ).sort(sortPossibleAttacks);
+    );
+    possibleAttacks = sortDiomedesPossibleAttacks(map, currentPlayer, vision, possibleAttacks);
 
     if (!possibleAttacks.length) {
       this.finishAttacking();
@@ -260,7 +294,13 @@ export default class DionysusAlpha extends BaseAI {
             getCurrentAttackUnits(currentMap, currentPlayer, dirtyUnits),
             labelsToPrioritize,
           ),
-        ].sort(sortPossibleAttacks);
+        ];
+        possibleAttacks = sortDiomedesPossibleAttacks(
+          currentMap,
+          currentPlayer,
+          vision,
+          possibleAttacks,
+        );
       }
     }
     if (!didAct) {
@@ -582,14 +622,19 @@ export default class DionysusAlpha extends BaseAI {
               );
             const info = shouldBuildRadar
               ? radarBuilding
-              : randomEntry(
+              : sortBy(
                   buildingInfos.filter((info) =>
                     shouldBuildFundsBuilding
                       ? info.configuration.funds > 0
                       : info.configuration.funds === 0 &&
                         !info.getAllBuildableUnits()[Symbol.iterator]().next().done,
                   ),
-                ) || buildingInfos[0];
+                  (info) =>
+                    (shouldBuildFundsBuilding
+                      ? -info.configuration.funds * 1000
+                      : info.getCostFor(null)) +
+                    info.id / 100,
+                )[0] || buildingInfos[0];
 
             if (info) {
               return {
@@ -661,10 +706,7 @@ export default class DionysusAlpha extends BaseAI {
     });
 
     if (buyableSkills.length) {
-      return this.execute(
-        map,
-        BuySkillAction(from, randomEntry(buyableSkills) || buyableSkills[0]),
-      );
+      return this.execute(map, BuySkillAction(from, sortBy(buyableSkills, (skill) => skill)[0]));
     }
 
     return null;
@@ -701,6 +743,7 @@ export default class DionysusAlpha extends BaseAI {
     const playerUnits = [
       ...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values(),
     ];
+    const strategicSummary = this.getStrategicSummary(map, currentPlayer);
 
     const avoidNavalUnits =
       map.round >= 5 && !shouldBuildNavalUnits(map, currentPlayer, playerUnits);
@@ -734,18 +777,25 @@ export default class DionysusAlpha extends BaseAI {
     const unitInfoMap = new Map<number, ReadonlyArray<UnitInfo>>();
     const getUnitInfos = (building: Building, vector: Vector) => {
       if (!unitInfoMap.has(building.id)) {
-        const unitInfos = determineUnitsToCreate(
+        const buildableUnitInfos = [...building.getBuildableUnits(currentPlayer)].filter(
+          (info) =>
+            info.getCostFor(currentPlayer) <=
+              currentPlayer.funds /
+                (map.round > 3 && !((map.round + 3) % 6) ? Math.min(buildings.size - 1, 3) : 1) &&
+            getDeployableVectors(map, info, vector, currentPlayer.id).length,
+        );
+        const unitInfos = includeDiomedesStrategicUnitInfos(
+          determineUnitsToCreate(
+            map,
+            currentPlayer,
+            playerUnits,
+            buildableUnitInfos,
+            buildCapabilities,
+          ),
           map,
           currentPlayer,
-          playerUnits,
-          [...building.getBuildableUnits(currentPlayer)].filter(
-            (info) =>
-              info.getCostFor(currentPlayer) <=
-                currentPlayer.funds /
-                  (map.round > 3 && !((map.round + 3) % 6) ? Math.min(buildings.size - 1, 3) : 1) &&
-              getDeployableVectors(map, info, vector, currentPlayer.id).length,
-          ),
-          buildCapabilities,
+          strategicSummary,
+          buildableUnitInfos,
         );
         unitInfoMap.set(building.id, unitInfos);
         return unitInfos;
@@ -795,13 +845,18 @@ export default class DionysusAlpha extends BaseAI {
             to,
             true,
           );
-          combinations.push({ from, to, unitInfo, weight: item?.cost || 0 });
+          combinations.push({
+            from,
+            to,
+            unitInfo,
+            weight: item?.cost || 0,
+          });
         }
         continue;
       }
 
       const cluster = minBy(clusters, (cluster) => from.distance(cluster)) || clusters[0];
-      const unitInfo = getBestUnit(
+      const sortedUnitInfos =
         map.config.fog && (map.round === 3 || (map.round > 4 && !(map.round % 4)))
           ? getUnitInfosWithMaxVision(unitInfos)
           : sortByDamage(
@@ -814,8 +869,11 @@ export default class DionysusAlpha extends BaseAI {
               ),
               unitInfos,
               currentPlayer,
-            ),
-      );
+            );
+      const rankedUnitInfos = hasDiomedesProductionDemand(strategicSummary)
+        ? rankDiomedesUnitChoices(currentPlayer, sortedUnitInfos, strategicSummary)
+        : sortedUnitInfos;
+      const unitInfo = getBestUnit(rankedUnitInfos);
       const to = minBy(getDeployableVectors(map, unitInfo, from, currentPlayer.id), (vector) =>
         vector.distance(cluster),
       );
@@ -840,7 +898,12 @@ export default class DionysusAlpha extends BaseAI {
             from,
             to,
             unitInfo,
-            weight: (item?.cost || 0) + (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0),
+            weight:
+              (item?.cost || 0) +
+              (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0) +
+              (hasDiomedesProductionDemand(strategicSummary)
+                ? getDiomedesProductionWeight(unitInfo, currentPlayer, strategicSummary)
+                : 0),
           });
         }
       }
@@ -967,7 +1030,17 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     const mapWithVision = this.applyVision(map);
-    const clusters = calculateClusters(map.size, getInterestingVectors(map, from, unit));
+    const clusters = calculateClusters(
+      map.size,
+      hasPotentialDiomedesTransportDemand(map, currentPlayer)
+        ? getDiomedesInterestingVectors(
+            map,
+            this.getStrategicSummary(map, currentPlayer),
+            from,
+            unit,
+          )
+        : getInterestingVectors(map, from, unit),
+    );
 
     const [target, radiusToTarget, isObstructed, realTarget] = estimateClosestTarget(
       mapWithVision,
@@ -1299,6 +1372,436 @@ const filterMap = <T, K, V>(
 
 const isNavalUnit = (unit: Unit) => getEntityGroup(unit) === 'naval';
 const isNaval = (entity: Readonly<{ type: EntityType }>) => getEntityInfoGroup(entity) === 'naval';
+
+const createDiomedesStrategicPlan = (
+  map: MapData,
+  currentPlayer: Player,
+): DiomedesStrategicPlan => {
+  const ownUnits = [...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values()];
+  if (!hasPotentialDiomedesTransportDemand(map, currentPlayer, ownUnits)) {
+    return {
+      capturableBuildings: 0,
+      currentPlayer: currentPlayer.id,
+      transportStagingReady: false,
+      transportTargets: [],
+    };
+  }
+
+  const capturableBuildings = [
+    ...map.buildings
+      .filter((building, vector) => shouldCaptureBuilding(map, currentPlayer.id, building, vector))
+      .keys(),
+  ];
+  const transportTargets = sortBy(
+    capturableBuildings.filter((vector) =>
+      isRemoteDiomedesTransportTarget(map, currentPlayer, ownUnits, vector),
+    ),
+    (vector) => -getBuildingWeight(map.buildings.get(vector)!.info),
+  ).slice(0, 8);
+
+  return {
+    capturableBuildings: capturableBuildings.length,
+    currentPlayer: currentPlayer.id,
+    transportStagingReady: hasDiomedesTransportStaging(map, currentPlayer),
+    transportTargets,
+  };
+};
+
+const hasPotentialDiomedesTransportDemand = (
+  map: MapData,
+  currentPlayer: Player,
+  ownUnits = [...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values()],
+) =>
+  map.round <= 8 &&
+  map.buildings.size <= 12 &&
+  ownUnits.length <= 4 &&
+  !ownUnits.some((unit) => unit.info.canTransportUnits()) &&
+  hasDiomedesTransportStaging(map, currentPlayer);
+
+const createDiomedesStrategicSummary = (
+  map: MapData,
+  currentPlayer: Player,
+  strategicPlan: DiomedesStrategicPlan,
+): DiomedesStrategicSummary => {
+  const ownUnits = [...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values()];
+  const enemyUnits = [...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values()];
+  const enemyAirUnits = enemyUnits.filter((unit) => getEntityGroup(unit) === 'air');
+  const enemyAirValue = enemyAirUnits.reduce((sum, unit) => {
+    const cost = unit.info.getCostFor(map.getPlayer(unit));
+    return sum + (Number.isFinite(cost) ? cost : 500) * (unit.health / MaxHealth);
+  }, 0);
+  const ownAirCounterValue = ownUnits.reduce(
+    (sum, unit) =>
+      sum +
+      getDiomedesAirCounterScore(unit.info, currentPlayer, enemyAirUnits) *
+        (unit.health / MaxHealth),
+    0,
+  );
+  const ownArmyValue = ownUnits.reduce((sum, unit) => {
+    const cost = unit.info.getCostFor(map.getPlayer(unit));
+    return sum + (Number.isFinite(cost) ? cost : 500) * (unit.health / MaxHealth);
+  }, 0);
+  const isFacingThanatos = isFacingAI(map, currentPlayer, 2);
+  const ownTransportCapacity = ownUnits.reduce(
+    (sum, unit) => sum + (unit.info.canTransportUnits() ? unit.info.transports.limit : 0),
+    0,
+  );
+  const airCounterDemand =
+    map.round <= 8 &&
+    ((enemyAirUnits.length >= 8 &&
+      enemyAirValue >= 6000 &&
+      enemyAirValue > Math.max(500, ownArmyValue * 3) &&
+      ownAirCounterValue < enemyAirValue * 0.2) ||
+      (!isFacingThanatos &&
+        enemyAirUnits.length >= 3 &&
+        enemyAirValue >= 900 &&
+        enemyAirValue > ownArmyValue * 0.25 &&
+        ownAirCounterValue < enemyAirValue * 0.35));
+  const transportDemand =
+    map.round <= 8 &&
+    map.buildings.size <= 12 &&
+    ownUnits.length <= 4 &&
+    ownTransportCapacity === 0 &&
+    strategicPlan.transportTargets.length >= 4 &&
+    strategicPlan.transportTargets.length === strategicPlan.capturableBuildings &&
+    strategicPlan.transportStagingReady
+      ? Math.ceil(strategicPlan.transportTargets.length / 2)
+      : 0;
+
+  return {
+    airCounterDemand,
+    capturableBuildings: strategicPlan.capturableBuildings,
+    enemyAirUnits,
+    enemyAirValue,
+    ownAirCounterValue,
+    ownTransportCapacity,
+    transportDemand,
+    transportStagingReady: strategicPlan.transportStagingReady,
+    transportTargets: strategicPlan.transportTargets,
+  };
+};
+
+const hasDiomedesTransportStaging = (map: MapData, currentPlayer: Player) => {
+  const transportProduction = [...map.buildings].filter(
+    ([from, building]) =>
+      !building.isCompleted() &&
+      map.matchesPlayer(currentPlayer, building) &&
+      building
+        .getBuildableUnits(currentPlayer)
+        .some(
+          (unitInfo) =>
+            unitInfo.canTransportUnits() &&
+            getDeployableVectors(map, unitInfo, from, currentPlayer.id).length,
+        ),
+  );
+
+  if (!transportProduction.length) {
+    return false;
+  }
+
+  return [...map.units].some(
+    ([from, unit]) =>
+      map.matchesPlayer(unit, currentPlayer) &&
+      unit.canCapture(currentPlayer) &&
+      transportProduction.some(
+        ([to]) => from.distance(to) <= unit.info.getRadiusFor(currentPlayer),
+      ),
+  );
+};
+
+const isRemoteDiomedesTransportTarget = (
+  map: MapData,
+  currentPlayer: Player,
+  ownUnits: ReadonlyArray<Unit>,
+  target: Vector,
+) => {
+  const capturers = [...map.units].filter(
+    ([, unit]) => map.matchesPlayer(unit, currentPlayer) && unit.canCapture(currentPlayer),
+  );
+
+  if (!capturers.length) {
+    return true;
+  }
+
+  const closestCapturer = minBy(capturers, ([vector]) => vector.distance(target));
+  if (!closestCapturer) {
+    return false;
+  }
+
+  const [from, unit] = closestCapturer;
+  const [, , isObstructed] = estimateClosestTarget(map, unit, from, target);
+  const isCoastal = target
+    .adjacentWithDiagonals()
+    .some((vector) => map.contains(vector) && isSeaTile(map.getTileInfo(vector)));
+  return (
+    isCoastal &&
+    from.distance(target) > unit.info.getRadiusFor(currentPlayer) * (ownUnits.length < 8 ? 2 : 3) &&
+    (isObstructed || from.distance(target) > unit.info.getRadiusFor(currentPlayer) * 4)
+  );
+};
+
+const getDiomedesInterestingVectors = (
+  map: MapData,
+  strategicSummary: DiomedesStrategicSummary,
+  from: Vector,
+  unit: Unit,
+) => {
+  const baseVectors = getInterestingVectors(map, from, unit);
+
+  if (!unit.info.canTransportUnits() || !strategicSummary.transportDemand) {
+    return baseVectors;
+  }
+
+  if (unit.isTransportingUnits()) {
+    return [...new Set([...strategicSummary.transportTargets, ...baseVectors])];
+  }
+
+  return baseVectors;
+};
+
+const includeDiomedesStrategicUnitInfos = (
+  unitInfos: ReadonlyArray<UnitInfo>,
+  map: MapData,
+  currentPlayer: Player,
+  strategicSummary: DiomedesStrategicSummary,
+  buildableUnitInfos: ReadonlyArray<UnitInfo>,
+) => {
+  let strategicUnitInfos = unitInfos;
+  const addUnitInfos = (additionalUnitInfos: ReadonlyArray<UnitInfo>) => {
+    const seen = new Set(strategicUnitInfos.map(({ id }) => id));
+    strategicUnitInfos = [
+      ...strategicUnitInfos,
+      ...additionalUnitInfos.filter(({ id }) => !seen.has(id)),
+    ];
+  };
+
+  if (strategicSummary.airCounterDemand) {
+    addUnitInfos(
+      buildableUnitInfos.filter(
+        (unitInfo) =>
+          getDiomedesAirCounterScore(unitInfo, currentPlayer, strategicSummary.enemyAirUnits) >=
+          100,
+      ),
+    );
+  }
+
+  if (strategicSummary.transportDemand > strategicSummary.ownTransportCapacity) {
+    addUnitInfos(buildableUnitInfos.filter((unitInfo) => unitInfo.canTransportUnits()));
+  }
+
+  return strategicUnitInfos;
+};
+
+const hasDiomedesProductionDemand = (strategicSummary: DiomedesStrategicSummary) =>
+  strategicSummary.airCounterDemand ||
+  strategicSummary.transportDemand > strategicSummary.ownTransportCapacity;
+
+const rankDiomedesUnitChoices = (
+  currentPlayer: Player,
+  unitInfos: ReadonlyArray<UnitInfo>,
+  strategicSummary: DiomedesStrategicSummary,
+) =>
+  sortBy(
+    unitInfos.map((unitInfo, index) => ({
+      unitInfo,
+      weight: index * 4 + getDiomedesProductionWeight(unitInfo, currentPlayer, strategicSummary),
+    })),
+    ({ weight }) => weight,
+  ).map(({ unitInfo }) => unitInfo);
+
+const getDiomedesProductionWeight = (
+  unitInfo: UnitInfo,
+  currentPlayer: Player,
+  strategicSummary: DiomedesStrategicSummary,
+) => {
+  let weight = 0;
+  const airCounterScore = getDiomedesAirCounterScore(
+    unitInfo,
+    currentPlayer,
+    strategicSummary.enemyAirUnits,
+  );
+
+  if (strategicSummary.airCounterDemand) {
+    weight += airCounterScore > 0 ? -Math.min(14, 4 + airCounterScore / 18) : 3;
+  }
+
+  if (strategicSummary.airCounterDemand && airCounterScore >= 100) {
+    weight -= 4;
+  }
+
+  if (unitInfo.canTransportUnits()) {
+    weight +=
+      strategicSummary.transportDemand > strategicSummary.ownTransportCapacity
+        ? -200 - strategicSummary.transportTargets.length * 5
+        : strategicSummary.transportDemand &&
+            strategicSummary.ownTransportCapacity > strategicSummary.transportDemand * 2
+          ? 6
+          : 0;
+  } else if (
+    strategicSummary.transportDemand > strategicSummary.ownTransportCapacity &&
+    unitInfo.hasAbility(Ability.Capture)
+  ) {
+    weight -= 1;
+  }
+
+  return weight;
+};
+
+const getDiomedesAirCounterScore = (
+  unitInfo: UnitInfo,
+  currentPlayer: Player,
+  enemyAirUnits: ReadonlyArray<Unit>,
+) => {
+  if (!enemyAirUnits.length || !unitInfo.hasAttack()) {
+    return 0;
+  }
+
+  const unit = unitInfo.create(currentPlayer);
+  return (
+    enemyAirUnits.reduce((sum, enemy) => {
+      const weapon = unit.getAttackWeapon(enemy);
+      return sum + (weapon?.getDamage(enemy) || 0) * (enemy.health / MaxHealth);
+    }, 0) / enemyAirUnits.length
+  );
+};
+
+const shouldDevelopBeforeMovement = (map: MapData) =>
+  // On compact ranked maps the first player benefits from committing production
+  // before spending remaining movement; the second player usually needs to
+  // reposition first to avoid blocking lanes around fresh units.
+  map.size.width <= 18 && map.size.height <= 18 && map.currentPlayer === map.getFirstPlayerID();
+
+const getDiomedesAttackOutcomeMultiplier = (map: MapData, currentPlayer: Player) =>
+  isFacingAI(map, currentPlayer, 2) ? 0 : 0.5;
+
+const isFacingAI = (map: MapData, currentPlayer: Player, ai: number) =>
+  map.getPlayers().some((player) => player.ai === ai && map.isOpponent(player, currentPlayer));
+
+const sortDiomedesPossibleAttacks = (
+  map: MapData,
+  currentPlayer: Player,
+  vision: VisionT,
+  possibleAttacks: ReadonlyArray<PossibleAttack>,
+): Array<PossibleAttack> =>
+  sortBy(
+    possibleAttacks.map((attack) => ({
+      attack,
+      weight:
+        getDiomedesAttackWeight(map, currentPlayer, attack) +
+        getAttackOutcomeWeight(map, currentPlayer, vision, attack) *
+          getDiomedesAttackOutcomeMultiplier(map, currentPlayer),
+    })),
+    ({ weight }) => weight,
+  ).map(({ attack }) => attack);
+
+const getDiomedesAttackWeight = (map: MapData, currentPlayer: Player, item: PossibleAttack) => {
+  const { entityB, vector } = item;
+  const targetPlayer = entityB.player > 0 ? map.getPlayer(entityB) : null;
+  const targetCost = (entityB.info as UnitInfo | BuildingInfo).getCostFor(targetPlayer);
+  const finiteTargetCost = Number.isFinite(targetCost) ? targetCost : 0;
+  const targetBuilding = map.buildings.get(vector);
+  const isStructure =
+    entityB.info.type === EntityType.Building || entityB.info.type === EntityType.Structure;
+  const longRangeTarget = !isStructure && (entityB as Unit).info?.isLongRange?.() ? 40 : 0;
+  const loadedTransport = !isStructure && (entityB as Unit).isTransportingUnits?.() ? 40 : 0;
+  const captureThreat =
+    !isStructure && targetBuilding && (entityB as Unit).canCapture?.(targetPlayer || currentPlayer)
+      ? targetBuilding.info.isHQ()
+        ? 120
+        : 50
+      : 0;
+  const productionBuilding =
+    isStructure && targetBuilding?.canBuildUnits(targetPlayer || currentPlayer) ? 50 : 0;
+  const killLikelyBonus = item.getWeight() >= MaxHealth ? finiteTargetCost / 10 : 0;
+  const longRangeAttackerBonus = item.unitA.info.isLongRange() ? 10 : 0;
+
+  return (
+    item.getWeight() +
+    finiteTargetCost / 40 +
+    killLikelyBonus +
+    longRangeTarget +
+    loadedTransport +
+    captureThreat +
+    productionBuilding +
+    longRangeAttackerBonus
+  );
+};
+
+const getAttackOutcomeWeight = (
+  map: MapData,
+  currentPlayer: Player,
+  vision: VisionT,
+  attackOption: PossibleAttack,
+) => {
+  const { entityB, from, parent, sabotage, to, unitA } = attackOption;
+  let currentMap = map;
+  let attackFrom = from;
+
+  if (
+    (unitA.info.isShortRange() || unitA.info.canAct(map.getPlayer(unitA))) &&
+    from.distance(parent) >= 1
+  ) {
+    const moveResult = execute(currentMap, vision, MoveAction(from, parent));
+    if (!moveResult) {
+      return Number.NEGATIVE_INFINITY;
+    }
+    [, currentMap] = moveResult;
+    attackFrom = parent;
+  }
+
+  const attackResult = execute(
+    currentMap,
+    vision,
+    sabotage
+      ? SabotageAction(attackFrom, to.vector)
+      : entityB.info.type === EntityType.Building || entityB.info.type === EntityType.Structure
+        ? AttackBuildingAction(attackFrom, to.vector)
+        : AttackUnitAction(attackFrom, to.vector),
+  );
+  if (!attackResult) {
+    return Number.NEGATIVE_INFINITY;
+  }
+
+  return (
+    getBoardValueForPlayer(attackResult[1], currentPlayer) -
+    getBoardValueForPlayer(map, currentPlayer)
+  );
+};
+
+const getBoardValueForPlayer = (map: MapData, player: Player) => {
+  let value = 0;
+
+  for (const [, unit] of map.units) {
+    const cost = unit.info.getCostFor(map.getPlayer(unit));
+    const unitValue = (Number.isFinite(cost) ? cost : 500) * (unit.health / MaxHealth);
+    value += map.matchesTeam(unit, player) ? unitValue : -unitValue;
+  }
+
+  for (const [vector, building] of map.buildings) {
+    if (building.player === 0) {
+      continue;
+    }
+
+    const funds = building.info.configuration.funds || 0;
+    const production = building.canBuildUnits(map.getPlayer(building)) ? 700 : 0;
+    const hq = building.info.isHQ() ? 2500 : 0;
+    const buildingValue = funds * 8 + production + hq + building.health;
+    const unit = map.units.get(vector);
+    const capturePressure =
+      unit && unit.canCapture(map.getPlayer(unit)) && map.isOpponent(unit, building) ? 450 : 0;
+    value += map.matchesTeam(building, player)
+      ? buildingValue - capturePressure
+      : -buildingValue + capturePressure;
+  }
+
+  for (const currentPlayer of map.getPlayers()) {
+    value += map.matchesTeam(currentPlayer, player)
+      ? currentPlayer.funds / 4
+      : -currentPlayer.funds / 4;
+  }
+
+  return value;
+};
 
 const shouldBuildNavalUnits = (
   map: MapData,

@@ -10,6 +10,9 @@
   "type": "module",
   "scripts": {
     "ac": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --env-file ./artemis/.env ./artemis/scripts/ac.tsx",
+    "ai:benchmark": "pnpm ai:benchmark:ranked && pnpm ai:benchmark:sea",
+    "ai:benchmark:ranked": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm zeus/ai/scripts/run-ai-ranked-benchmark.tsx",
+    "ai:benchmark:sea": "RUN_AI_BENCHMARK=1 vitest run zeus/ai/__tests__/AISeaBenchmark.eval.test.tsx",
     "build:assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
     "build:client": "rm -rf ./dist/ares && pnpm fbtee && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
     "build:demo": "export IS_DEMO=1 && rm -rf ./dist/ares-demo && pnpm fbtee && pnpm vite build --outDir ../dist/ares-demo -c ./ares/vite.config.ts ./ares/",

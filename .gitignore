@@ -21,6 +21,7 @@ mobile/dist/
 source_strings.json
 tests/testSetup
 tsconfig.tsbuildinfo
+zeus/ai/output/
 
 # Codegen
 apollo/EncodedActions.tsx

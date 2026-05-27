@@ -18,6 +18,7 @@ import {
   ToggleLightningAction,
   UnfoldAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
 import { getActivatePowerTargetCluster } from '@deities/apollo/lib/getActivatePowerActionResponse.tsx';
 import {
   Behavior,
@@ -54,10 +55,10 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getOpponentPriorityLabels } from '@deities/athena/Objectives.tsx';
 import { moveable } from '@deities/athena/Radius.tsx';
+import { VisionT } from '@deities/athena/Vision.tsx';
 import groupBy from '@nkzw/core/groupBy.js';
 import maxBy from '@nkzw/core/maxBy.js';
 import minBy from '@nkzw/core/minBy.js';
-import randomEntry from '@nkzw/core/randomEntry.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import BaseAI from './BaseAI.tsx';
 import estimateClosestTarget from './lib/estimateClosestTarget.tsx';
@@ -68,14 +69,13 @@ import getCurrentAttackUnits from './lib/getCurrentAttackUnits.tsx';
 import getHealingWeight from './lib/getHealingWeight.tsx';
 import getInterestingVectors from './lib/getInterestingVectors.tsx';
 import getInterestingVectorsByAbilities from './lib/getInterestingVectorsByAbilities.tsx';
-import getPossibleAttacks from './lib/getPossibleAttacks.tsx';
+import getPossibleAttacks, { PossibleAttack } from './lib/getPossibleAttacks.tsx';
 import getUnitInfosWithMaxVision from './lib/getUnitInfosWithMaxVision.tsx';
 import isAttackOptionCurrent from './lib/isAttackOptionCurrent.tsx';
 import shouldActivatePower from './lib/shouldActivatePower.tsx';
 import shouldAttack from './lib/shouldAttack.tsx';
 import shouldCaptureBuilding from './lib/shouldCaptureBuilding.tsx';
 import sortByDamage from './lib/sortByDamage.tsx';
-import sortPossibleAttacks from './lib/sortPossibleAttacks.tsx';
 
 type CreateUnitCombination = {
   from: Vector;
@@ -84,10 +84,14 @@ type CreateUnitCombination = {
   weight: number;
 };
 
-// DionysusAlpha is the first AI, and it is the most aggressive one.
-// At each turn, it checks which unit can do the most damage to another unit and then attacks.
-export default class DionysusAlpha extends BaseAI {
+// OdysseusDelta is a fork of DionysusAlpha for deliberate AI strength improvements.
+// Keep changes local to this file so DionysusAlpha campaign behavior remains stable.
+export default class OdysseusDelta extends BaseAI {
   protected action(map: MapData): MapData | null {
+    const developBeforeMovement = shouldDevelopBeforeMovement(map);
+    const develop = () => this.buySkills(map) || this.createUnit(map);
+    const reposition = () => this.move(map) || this.unfold(map);
+
     return (
       this.activatePower(map) ||
       this.finishCapture(map) ||
@@ -99,10 +103,7 @@ export default class DionysusAlpha extends BaseAI {
       this.capture(map) ||
       this.fold(map) ||
       this.createBuilding(map) ||
-      this.move(map) ||
-      this.unfold(map) ||
-      this.buySkills(map) ||
-      this.createUnit(map) ||
+      (developBeforeMovement ? develop() || reposition() : reposition() || develop()) ||
       this.endTurn(map)
     );
   }
@@ -133,7 +134,10 @@ export default class DionysusAlpha extends BaseAI {
     }
 
     if (potentialSkills.length) {
-      const { from, skill } = randomEntry(potentialSkills) || potentialSkills[0];
+      const { from, skill } = sortBy(
+        potentialSkills,
+        ({ charges, skill }) => skill - charges * 1000,
+      )[0];
       const currentMap = this.execute(map, ActivatePowerAction(skill, from));
       if (currentMap) {
         this.tryAttacking();
@@ -165,7 +169,8 @@ export default class DionysusAlpha extends BaseAI {
         )
         .toArray(),
       labelsToPrioritize,
-    ).sort(sortPossibleAttacks);
+    );
+    possibleAttacks = sortOdysseusPossibleAttacks(map, currentPlayer, vision, possibleAttacks);
 
     if (!possibleAttacks.length) {
       this.finishAttacking();
@@ -260,7 +265,13 @@ export default class DionysusAlpha extends BaseAI {
             getCurrentAttackUnits(currentMap, currentPlayer, dirtyUnits),
             labelsToPrioritize,
           ),
-        ].sort(sortPossibleAttacks);
+        ];
+        possibleAttacks = sortOdysseusPossibleAttacks(
+          currentMap,
+          currentPlayer,
+          vision,
+          possibleAttacks,
+        );
       }
     }
     if (!didAct) {
@@ -295,37 +306,101 @@ export default class DionysusAlpha extends BaseAI {
       return null;
     }
 
-    // Find a unit that can capture a building based on weight.
-    for (const [from, unit] of units) {
-      const { to } =
-        (shouldMove(unit) &&
-          maxBy(
-            filterMap(
-              moveable(this.applyVision(map), unit, from, undefined, undefined, true),
-              ({ cost, vector }) => {
-                const building = map.buildings.get(vector);
-                const info = building?.info;
-                return info &&
-                  map.isOpponent(unit, building) &&
-                  (vector.equals(from) || !map.units.has(vector))
-                  ? {
-                      to: vector,
-                      weight: getBuildingWeight(info) - cost + (map.isNeutral(building) ? 0 : 5),
-                    }
-                  : null;
-              },
-            ),
-            (item) => item?.weight || Number.NEGATIVE_INFINITY,
-          )) ||
-        {};
+    if (shouldPreferLocalCapture(map)) {
+      for (const [from, unit] of units) {
+        const { to } =
+          (shouldMove(unit) &&
+            maxBy(
+              filterMap(
+                moveable(this.applyVision(map), unit, from, undefined, undefined, true),
+                ({ cost, vector }) => {
+                  const building = map.buildings.get(vector);
+                  const info = building?.info;
+                  return info &&
+                    map.isOpponent(unit, building) &&
+                    (vector.equals(from) || !map.units.has(vector))
+                    ? {
+                        to: vector,
+                        weight: getBuildingWeight(info) - cost + (map.isNeutral(building) ? 0 : 5),
+                      }
+                    : null;
+                },
+              ),
+              (item) => item?.weight || Number.NEGATIVE_INFINITY,
+            )) ||
+          {};
 
-      if (!to || to.equals(from)) {
-        const building = map.buildings.get(from);
-        if (building && map.isOpponent(unit, building)) {
-          return this.execute(map, CaptureAction(from));
+        if (!to || to.equals(from)) {
+          const building = map.buildings.get(from);
+          if (building && map.isOpponent(unit, building)) {
+            return this.execute(map, CaptureAction(from));
+          }
+
+          continue;
         }
 
-        continue;
+        const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, to));
+        if (isBlocked) {
+          return currentMap;
+        }
+        if (!currentMap) {
+          throw new Error('Error executing unit move.');
+        }
+        return this.execute(currentMap, CaptureAction(to));
+      }
+
+      return null;
+    }
+
+    const mapWithVision = this.applyVision(map);
+    const capture = maxBy(
+      [...units].flatMap(([from, unit]) => {
+        const candidates: Array<
+          Readonly<{ from: Vector; to: Vector; unit: Unit; weight: number }>
+        > = [];
+        const building = map.buildings.get(from);
+        if (building && map.isOpponent(unit, building)) {
+          candidates.push({
+            from,
+            to: from,
+            unit,
+            weight: getOdysseusCaptureWeight(map, currentPlayer, building, from, 0) + 100,
+          });
+        }
+
+        if (shouldMove(unit)) {
+          for (const [, { cost, vector }] of moveable(
+            mapWithVision,
+            unit,
+            from,
+            undefined,
+            undefined,
+            true,
+          )) {
+            const building = map.buildings.get(vector);
+            if (
+              building &&
+              map.isOpponent(unit, building) &&
+              (vector.equals(from) || !map.units.has(vector))
+            ) {
+              candidates.push({
+                from,
+                to: vector,
+                unit,
+                weight: getOdysseusCaptureWeight(map, currentPlayer, building, vector, cost),
+              });
+            }
+          }
+        }
+        return candidates;
+      }),
+      (item) => item?.weight || Number.NEGATIVE_INFINITY,
+    );
+
+    if (capture) {
+      const { from, to } = capture;
+      if (to.equals(from)) {
+        return this.execute(map, CaptureAction(from));
       }
 
       const [currentMap, isBlocked] = this.executeMove(map, MoveAction(from, to));
@@ -582,14 +657,19 @@ export default class DionysusAlpha extends BaseAI {
               );
             const info = shouldBuildRadar
               ? radarBuilding
-              : randomEntry(
+              : sortBy(
                   buildingInfos.filter((info) =>
                     shouldBuildFundsBuilding
                       ? info.configuration.funds > 0
                       : info.configuration.funds === 0 &&
                         !info.getAllBuildableUnits()[Symbol.iterator]().next().done,
                   ),
-                ) || buildingInfos[0];
+                  (info) =>
+                    (shouldBuildFundsBuilding
+                      ? -info.configuration.funds * 1000
+                      : info.getCostFor(null)) +
+                    info.id / 100,
+                )[0] || buildingInfos[0];
 
             if (info) {
               return {
@@ -661,10 +741,7 @@ export default class DionysusAlpha extends BaseAI {
     });
 
     if (buyableSkills.length) {
-      return this.execute(
-        map,
-        BuySkillAction(from, randomEntry(buyableSkills) || buyableSkills[0]),
-      );
+      return this.execute(map, BuySkillAction(from, sortBy(buyableSkills, (skill) => skill)[0]));
     }
 
     return null;
@@ -802,19 +879,25 @@ export default class DionysusAlpha extends BaseAI {
 
       const cluster = minBy(clusters, (cluster) => from.distance(cluster)) || clusters[0];
       const unitInfo = getBestUnit(
-        map.config.fog && (map.round === 3 || (map.round > 4 && !(map.round % 4)))
-          ? getUnitInfosWithMaxVision(unitInfos)
-          : sortByDamage(
-              map,
-              getAttackableUnitsWithinRadius(
+        rankOdysseusUnitChoices(
+          map,
+          currentPlayer,
+          playerUnits,
+          map.config.fog && (map.round === 3 || (map.round > 4 && !(map.round % 4)))
+            ? getUnitInfosWithMaxVision(unitInfos)
+            : sortByDamage(
                 map,
-                cluster,
-                // Look at a radius roughly correlated with map size.
-                Math.max(3, Math.ceil((map.size.width + map.size.height) / 6)),
+                getAttackableUnitsWithinRadius(
+                  map,
+                  cluster,
+                  // Look at a radius roughly correlated with map size.
+                  Math.max(3, Math.ceil((map.size.width + map.size.height) / 6)),
+                ),
+                unitInfos,
+                currentPlayer,
               ),
-              unitInfos,
-              currentPlayer,
-            ),
+          cluster,
+        ),
       );
       const to = minBy(getDeployableVectors(map, unitInfo, from, currentPlayer.id), (vector) =>
         vector.distance(cluster),
@@ -840,7 +923,10 @@ export default class DionysusAlpha extends BaseAI {
             from,
             to,
             unitInfo,
-            weight: (item?.cost || 0) + (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0),
+            weight:
+              (item?.cost || 0) +
+              (avoidNavalUnits && isNaval(unitInfo) ? 10 : 0) +
+              getOdysseusProductionWeight(map, currentPlayer, playerUnits, unitInfo, cluster),
           });
         }
       }
@@ -999,6 +1085,18 @@ export default class DionysusAlpha extends BaseAI {
           to = vector;
         }
       }
+    }
+
+    if (to && realTarget && !map.units.has(to)) {
+      to = chooseOdysseusMove(
+        mapWithVision,
+        currentPlayer,
+        unit,
+        from,
+        to,
+        moveableRadius,
+        realTarget,
+      );
     }
 
     if (to) {
@@ -1299,6 +1397,323 @@ const filterMap = <T, K, V>(
 
 const isNavalUnit = (unit: Unit) => getEntityGroup(unit) === 'naval';
 const isNaval = (entity: Readonly<{ type: EntityType }>) => getEntityInfoGroup(entity) === 'naval';
+
+const rankOdysseusUnitChoices = (
+  map: MapData,
+  currentPlayer: Player,
+  playerUnits: ReadonlyArray<Unit>,
+  unitInfos: ReadonlyArray<UnitInfo>,
+  cluster: Vector,
+) =>
+  sortBy(
+    unitInfos.map((unitInfo, index) => ({
+      unitInfo,
+      weight:
+        index * 4 + getOdysseusProductionWeight(map, currentPlayer, playerUnits, unitInfo, cluster),
+    })),
+    ({ weight }) => weight,
+  ).map(({ unitInfo }) => unitInfo);
+
+const getOdysseusProductionWeight = (
+  map: MapData,
+  currentPlayer: Player,
+  playerUnits: ReadonlyArray<Unit>,
+  unitInfo: UnitInfo,
+  cluster: Vector,
+) => {
+  const ownUnits = Math.max(1, playerUnits.length);
+  const sameTypeRatio = playerUnits.filter((unit) => unit.id === unitInfo.id).length / ownUnits;
+  const ownLongRangeUnits = playerUnits.filter((unit) => unit.info.isLongRange()).length;
+  const enemyUnits = [...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values()];
+  const enemyLongRangeUnits = enemyUnits.filter((unit) => unit.info.isLongRange()).length;
+  const enemyTransports = enemyUnits.filter((unit) => unit.isTransportingUnits()).length;
+  const mapArea = map.size.width * map.size.height;
+  const capturableBuildings = map.buildings.filter((building, vector) =>
+    shouldCaptureBuilding(map, currentPlayer.id, building, vector),
+  );
+
+  let weight = 0;
+
+  if (sameTypeRatio > 0.22 && ownUnits > 8) {
+    weight += 4;
+  }
+
+  if (map.round <= 8 && unitInfo.hasAbility(Ability.Capture) && capturableBuildings.size > 3) {
+    weight -=
+      cluster.distance(
+        minBy(capturableBuildings.keySeq(), (vector) => vector.distance(cluster)) || cluster,
+      ) >
+      unitInfo.getRadiusFor(currentPlayer) * 2
+        ? 1
+        : 3;
+  }
+
+  if (
+    mapArea >= 400 &&
+    unitInfo.isLongRange() &&
+    ownLongRangeUnits < Math.max(1, Math.ceil(ownUnits / 7))
+  ) {
+    weight -= 3;
+  }
+
+  if (enemyLongRangeUnits && unitInfo.isShortRange() && unitInfo.getRadiusFor(currentPlayer) >= 4) {
+    weight -= 2;
+  }
+
+  if (enemyTransports && unitInfo.hasAttack() && !unitInfo.isLongRange()) {
+    weight -= 1;
+  }
+
+  if (
+    map.round > 6 &&
+    !unitInfo.hasAttack() &&
+    !unitInfo.hasAbility(Ability.Capture) &&
+    !unitInfo.canTransportUnits()
+  ) {
+    weight += 5;
+  }
+
+  return weight;
+};
+
+const chooseOdysseusMove = (
+  map: MapData,
+  currentPlayer: Player,
+  unit: Unit,
+  from: Vector,
+  to: Vector,
+  moveableRadius: ReadonlyMap<Vector, Readonly<{ cost: number; vector: Vector }>>,
+  target: Vector,
+) => {
+  const currentThreat = getOdysseusThreat(map, currentPlayer, unit, to);
+  if (currentThreat < 12) {
+    return to;
+  }
+
+  const currentDistance = to.distance(target);
+  const currentScore = getOdysseusMoveScore(map, currentPlayer, unit, to, target);
+  let best = to;
+  let bestScore = currentScore;
+
+  for (const [vector] of moveableRadius) {
+    if (!vector.equals(from) && map.units.has(vector)) {
+      continue;
+    }
+
+    const distance = vector.distance(target);
+    if (distance > currentDistance + 2) {
+      continue;
+    }
+
+    const score = getOdysseusMoveScore(map, currentPlayer, unit, vector, target);
+    if (score < bestScore - 3) {
+      best = vector;
+      bestScore = score;
+    }
+  }
+
+  return best;
+};
+
+const getOdysseusMoveScore = (
+  map: MapData,
+  currentPlayer: Player,
+  unit: Unit,
+  vector: Vector,
+  target: Vector,
+) => vector.distance(target) * 3 + getOdysseusThreat(map, currentPlayer, unit, vector) * 2;
+
+const getOdysseusThreat = (map: MapData, currentPlayer: Player, unit: Unit, vector: Vector) => {
+  let threat = 0;
+
+  for (const [enemyVector, enemy] of map.units) {
+    if (!map.isOpponent(enemy, currentPlayer) || !enemy.info.hasAttack()) {
+      continue;
+    }
+
+    const enemyPlayer = map.getPlayer(enemy);
+    const radius = enemy.info.getRadiusFor(enemyPlayer);
+    const distance = enemyVector.distance(vector);
+    const range = enemy.info.getRangeFor(enemyPlayer);
+    const canThreaten = enemy.info.isShortRange()
+      ? distance <= radius + 1
+      : !!range && distance <= radius + range[1] && distance >= Math.max(1, range[0] - radius);
+
+    if (canThreaten) {
+      const cost = enemy.info.getCostFor(enemyPlayer);
+      threat += (Number.isFinite(cost) ? cost / 100 : 5) * (enemy.health / MaxHealth);
+
+      if (unit.info.isLongRange() || unit.canCapture(currentPlayer)) {
+        threat += 5;
+      }
+    }
+  }
+
+  return threat;
+};
+
+const shouldPreferLocalCapture = (map: MapData) =>
+  map.size.width <= 18 && map.size.height <= 18 && map.buildings.size > 40;
+
+const getOdysseusCaptureWeight = (
+  map: MapData,
+  currentPlayer: Player,
+  building: Building,
+  vector: Vector,
+  cost: number,
+) => {
+  const info = building.info;
+  const contestedBonus =
+    map.units.some((unit, unitVector) => {
+      if (!map.isOpponent(unit, currentPlayer) || !unit.canCapture(map.getPlayer(unit))) {
+        return false;
+      }
+      return unitVector.distance(vector) <= unit.info.getRadiusFor(map.getPlayer(unit)) + 1;
+    }) && map.isNeutral(building)
+      ? 20
+      : 0;
+
+  return (
+    getBuildingWeight(info) -
+    cost +
+    (map.isNeutral(building) ? 0 : 8) +
+    (info.isHQ() ? 300 : 0) +
+    (info.canBuildUnits() ? 40 : 0) +
+    info.configuration.funds / 5 +
+    contestedBonus
+  );
+};
+
+const shouldDevelopBeforeMovement = (map: MapData) =>
+  // On compact ranked maps the first player benefits from committing production
+  // before spending remaining movement; the second player usually needs to
+  // reposition first to avoid blocking lanes around fresh units.
+  map.size.width <= 18 && map.size.height <= 18 && map.currentPlayer === map.getFirstPlayerID();
+
+const sortOdysseusPossibleAttacks = (
+  map: MapData,
+  currentPlayer: Player,
+  vision: VisionT,
+  possibleAttacks: ReadonlyArray<PossibleAttack>,
+): Array<PossibleAttack> =>
+  sortBy(
+    possibleAttacks.map((attack) => ({
+      attack,
+      weight:
+        getOdysseusAttackWeight(map, currentPlayer, attack) +
+        getAttackOutcomeWeight(map, currentPlayer, vision, attack) * 0.25,
+    })),
+    ({ weight }) => weight,
+  ).map(({ attack }) => attack);
+
+const getOdysseusAttackWeight = (map: MapData, currentPlayer: Player, item: PossibleAttack) => {
+  const { entityB, vector } = item;
+  const targetPlayer = entityB.player > 0 ? map.getPlayer(entityB) : null;
+  const targetCost = (entityB.info as UnitInfo | BuildingInfo).getCostFor(targetPlayer);
+  const finiteTargetCost = Number.isFinite(targetCost) ? targetCost : 0;
+  const targetBuilding = map.buildings.get(vector);
+  const isStructure =
+    entityB.info.type === EntityType.Building || entityB.info.type === EntityType.Structure;
+  const longRangeTarget = !isStructure && (entityB as Unit).info?.isLongRange?.() ? 40 : 0;
+  const loadedTransport = !isStructure && (entityB as Unit).isTransportingUnits?.() ? 40 : 0;
+  const captureThreat =
+    !isStructure && targetBuilding && (entityB as Unit).canCapture?.(targetPlayer || currentPlayer)
+      ? targetBuilding.info.isHQ()
+        ? 120
+        : 50
+      : 0;
+  const productionBuilding =
+    isStructure && targetBuilding?.canBuildUnits(targetPlayer || currentPlayer) ? 50 : 0;
+  const killLikelyBonus = item.getWeight() >= MaxHealth ? finiteTargetCost / 10 : 0;
+  const longRangeAttackerBonus = item.unitA.info.isLongRange() ? 10 : 0;
+
+  return (
+    item.getWeight() +
+    finiteTargetCost / 40 +
+    killLikelyBonus +
+    longRangeTarget +
+    loadedTransport +
+    captureThreat +
+    productionBuilding +
+    longRangeAttackerBonus
+  );
+};
+
+const getAttackOutcomeWeight = (
+  map: MapData,
+  currentPlayer: Player,
+  vision: VisionT,
+  attackOption: PossibleAttack,
+) => {
+  const { entityB, from, parent, sabotage, to, unitA } = attackOption;
+  let currentMap = map;
+  let attackFrom = from;
+
+  if (
+    (unitA.info.isShortRange() || unitA.info.canAct(map.getPlayer(unitA))) &&
+    from.distance(parent) >= 1
+  ) {
+    const moveResult = execute(currentMap, vision, MoveAction(from, parent));
+    if (!moveResult) {
+      return Number.NEGATIVE_INFINITY;
+    }
+    [, currentMap] = moveResult;
+    attackFrom = parent;
+  }
+
+  const attackResult = execute(
+    currentMap,
+    vision,
+    sabotage
+      ? SabotageAction(attackFrom, to.vector)
+      : entityB.info.type === EntityType.Building || entityB.info.type === EntityType.Structure
+        ? AttackBuildingAction(attackFrom, to.vector)
+        : AttackUnitAction(attackFrom, to.vector),
+  );
+  if (!attackResult) {
+    return Number.NEGATIVE_INFINITY;
+  }
+
+  return (
+    getBoardValueForPlayer(attackResult[1], currentPlayer) -
+    getBoardValueForPlayer(map, currentPlayer)
+  );
+};
+
+const getBoardValueForPlayer = (map: MapData, player: Player) => {
+  let value = 0;
+
+  for (const [, unit] of map.units) {
+    const cost = unit.info.getCostFor(map.getPlayer(unit));
+    const unitValue = (Number.isFinite(cost) ? cost : 500) * (unit.health / MaxHealth);
+    value += map.matchesTeam(unit, player) ? unitValue : -unitValue;
+  }
+
+  for (const [vector, building] of map.buildings) {
+    if (building.player === 0) {
+      continue;
+    }
+
+    const funds = building.info.configuration.funds || 0;
+    const production = building.canBuildUnits(map.getPlayer(building)) ? 700 : 0;
+    const hq = building.info.isHQ() ? 2500 : 0;
+    const buildingValue = funds * 8 + production + hq + building.health;
+    const unit = map.units.get(vector);
+    const capturePressure =
+      unit && unit.canCapture(map.getPlayer(unit)) && map.isOpponent(unit, building) ? 450 : 0;
+    value += map.matchesTeam(building, player)
+      ? buildingValue - capturePressure
+      : -buildingValue + capturePressure;
+  }
+
+  for (const currentPlayer of map.getPlayers()) {
+    value += map.matchesTeam(currentPlayer, player)
+      ? currentPlayer.funds / 4
+      : -currentPlayer.funds / 4;
+  }
+
+  return value;
+};
 
 const shouldBuildNavalUnits = (
   map: MapData,
