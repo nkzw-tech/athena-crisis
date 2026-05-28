@@ -1,4 +1,3 @@
-import { lazy } from 'react';
 import ClientComponent from '../../playground/ClientComponent.tsx';
 
 # The `MapData` Class
@@ -45,7 +44,7 @@ This creates a map with a 3x3 grid of plain fields (id `1`) and a Mountain in th
 
 We said "add some units", but in reality we created a completely new map with the units added. If we render this map, we see a Flamethrower on one side, and an Infantry on the other:
 
-<ClientComponent module={lazy(() => import('../../examples/map-data-examples.tsx'))} />
+<ClientComponent module="mapData" />
 
 ## Vectors & Positions
 

@@ -3,7 +3,6 @@ layout: landing
 ---
 
 import { css } from '@emotion/css';
-import { lazy } from 'react';
 import { HomePage } from 'vocs';
 import ClientComponent from '../playground/ClientComponent.tsx';
 
@@ -31,5 +30,5 @@ import ClientComponent from '../playground/ClientComponent.tsx';
     </HomePage.Button>
   </HomePage.Buttons>
   <HomePage.Tagline>Try a demo of Athena Crisis!</HomePage.Tagline>
-  <ClientComponent module={lazy(() => import('../playground/PlaygroundDemoGame.tsx'))} />
+  <ClientComponent module="playgroundDemoGame" />
 </HomePage.Root>

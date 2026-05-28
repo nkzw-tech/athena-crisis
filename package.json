@@ -55,6 +55,8 @@
     "@nkzw/pothos-locate": "^1.0.0",
     "@rolldown/plugin-babel": "^0.2.3",
     "@styled/typescript-styled-plugin": "^1.0.1",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
     "@swc/core": "1.15.40",
     "@types/node": "^25.9.1",
     "@typescript/native-preview": "7.0.0-dev.20260526.1",
