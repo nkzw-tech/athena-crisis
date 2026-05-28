@@ -277,7 +277,7 @@ const PlayerItem = ({
         }
       : null;
     return (
-      <Stack gap>
+      <Stack>
         <Component className={itemStyle} onClick={!bot ? onClick : undefined} {...props}>
           <PlayerIcon id={player.id} selected={player.id === viewerPlayerID} />
           <div
@@ -301,42 +301,44 @@ const PlayerItem = ({
             {bot && <Icon className={botIconStyle} icon={Android} />}
           </div>
         </Component>
-        {hasSkills ? (
-          (viewerPlayerID === player.id || onSelectSkills) &&
-          (onSelectSkill || onSelectSkills) &&
-          skillSlots &&
-          availableSkills?.size ? (
-            <PlayerSkillSelectors
-              availableSkills={availableSkills}
-              blocklistedSkills={blocklistedSkills}
-              favorites={favoriteSkills}
-              isFocused={isFocused}
-              onSelectSkill={onSelectSkill}
-              onSelectSkills={onSelectSkills}
-              player={player}
-              skillSlots={skillSlots}
-              toggleFavorite={toggleFavoriteSkill}
+        <Stack gap={16}>
+          {hasSkills ? (
+            (viewerPlayerID === player.id || onSelectSkills) &&
+            (onSelectSkill || onSelectSkills) &&
+            skillSlots &&
+            availableSkills?.size ? (
+              <PlayerSkillSelectors
+                availableSkills={availableSkills}
+                blocklistedSkills={blocklistedSkills}
+                favorites={favoriteSkills}
+                isFocused={isFocused}
+                onSelectSkill={onSelectSkill}
+                onSelectSkills={onSelectSkills}
+                player={player}
+                skillSlots={skillSlots}
+                toggleFavorite={toggleFavoriteSkill}
+              />
+            ) : (
+              <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
+                {[...player.skills].map((skill, index) =>
+                  // Skills in pending games are hidden.
+                  skill < 0 ? (
+                    <HiddenSkillIcon key={index} />
+                  ) : (
+                    <SkillIcon key={skill} skill={skill} />
+                  ),
+                )}
+              </Stack>
+            )
+          ) : null}
+          {aiRegistry && (
+            <AISelector
+              currentAI={player.ai != null ? player.ai : undefined}
+              registry={aiRegistry}
+              setAI={(id) => onSelectAI?.(player.id, id)}
             />
-          ) : (
-            <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
-              {[...player.skills].map((skill, index) =>
-                // Skills in pending games are hidden.
-                skill < 0 ? (
-                  <HiddenSkillIcon key={index} />
-                ) : (
-                  <SkillIcon key={skill} skill={skill} />
-                ),
-              )}
-            </Stack>
-          )
-        ) : null}
-        {aiRegistry && (
-          <AISelector
-            currentAI={player.ai != null ? player.ai : undefined}
-            registry={aiRegistry}
-            setAI={(id) => onSelectAI?.(player.id, id)}
-          />
-        )}
+          )}
+        </Stack>
       </Stack>
     );
   }

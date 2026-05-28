@@ -1,7 +1,6 @@
 import { AIRegistryT } from '@deities/apollo/actions/executeGameAction.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Select from '@deities/ui/Select.tsx';
-import { css } from '@emotion/css';
 import Stack from '@nkzw/stack';
 
 export default function AISelector({
@@ -15,7 +14,7 @@ export default function AISelector({
 }) {
   const currentEntry = (currentAI != null ? registry.get(currentAI) : registry.get(0))!;
   return (
-    <Stack alignCenter between className={boxStyle} gap={16}>
+    <Stack alignCenter between gap={16}>
       <fbt desc="Label to pick an AI">AI:</fbt>
       <Select selectedItem={currentEntry.name}>
         {[...registry].map(([id, { name }]) => (
@@ -27,7 +26,3 @@ export default function AISelector({
     </Stack>
   );
 }
-
-const boxStyle = css`
-  padding-left: 8px;
-`;
