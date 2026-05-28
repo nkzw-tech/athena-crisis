@@ -1,17 +1,13 @@
 import { readFileSync } from 'node:fs';
-import babelPluginEmotion from '@emotion/babel-plugin';
-import react from '@vitejs/plugin-react';
-import React from 'react';
 import { defineConfig } from 'vocs/config';
-import presets from '../infra/babelPresets.tsx';
-import createResolver from '../infra/createResolver.tsx';
 
 const Licht = JSON.parse(readFileSync('./node_modules/licht-theme/licht.json', 'utf8'));
 const Dunkel = JSON.parse(readFileSync('./node_modules/dunkel-theme/dunkel.json', 'utf8'));
 
 export default defineConfig({
-  basePath: '/open-source',
-  baseUrl: 'https://athenacrisis.com/open-source',
+  accentColor: '#c3217f',
+  basePath: '/open-source/',
+  baseUrl: 'https://athenacrisis.com',
   codeHighlight: {
     themes: {
       dark: Dunkel,
@@ -23,15 +19,8 @@ export default defineConfig({
     link: 'https://github.com/nkzw-tech/athena-crisis/tree/main/docs/content/pages/:path',
     text: 'Edit on GitHub',
   },
-  head: (
-    <>
-      <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
-      <link as="font" href="/fonts/AthenaNova.woff2" rel="preload" type="font/woff2" />
-    </>
-  ),
   iconUrl: '/favicon.png',
   ogImageUrl: 'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
-  rootDir: './content',
   sidebar: [
     {
       link: '/getting-started',
@@ -99,9 +88,7 @@ export default defineConfig({
       link: 'https://twitter.com/TheAthenaCrisis',
     },
   ],
-  theme: {
-    accentColor: '#c3217f',
-  },
+  srcDir: 'content',
   title: 'Athena Crisis',
   topNav: [
     { link: '/core-concepts/overview', match: '/core-concepts', text: 'Docs' },
@@ -119,23 +106,4 @@ export default defineConfig({
       text: 'More',
     },
   ],
-  vite: {
-    build: {
-      target: 'esnext',
-    },
-    define: {
-      'process.env.IS_LANDING_PAGE': `1`,
-    },
-    plugins: [
-      react({
-        babel: {
-          plugins: [babelPluginEmotion],
-          presets,
-        },
-      }),
-    ],
-    resolve: {
-      alias: [createResolver()],
-    },
-  },
 });

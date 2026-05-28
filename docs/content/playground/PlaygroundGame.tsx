@@ -1,3 +1,5 @@
+'use client';
+
 import { MapMetadata } from '@deities/apollo/MapMetadata.tsx';
 import { prepareSprites } from '@deities/art/Sprites.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -11,9 +13,7 @@ import MapInfo from '@deities/hera/ui/MapInfo.tsx';
 import { UndoType } from '@deities/hermes/game/undo.tsx';
 import useScale from '@deities/ui/hooks/useScale.tsx';
 import { useInView } from 'framer-motion';
-import { useCallback, useRef, useState } from 'react';
-
-prepareSprites();
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const startAction = {
   type: 'Start',
@@ -26,6 +26,10 @@ export default function PlaygroundGame({
   map: MapData;
   metadata?: MapMetadata;
 }) {
+  useEffect(() => {
+    prepareSprites().catch(() => {});
+  }, []);
+
   const [renderKey, setRenderKey] = useState(0);
   const zoom = useScale();
   const ref = useRef(null);

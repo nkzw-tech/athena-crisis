@@ -1,4 +1,5 @@
 import babelPluginEmotion from '@emotion/babel-plugin';
+import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import reactCompiler from 'babel-plugin-react-compiler';
 import presets from '../infra/babelPresets.tsx';
@@ -13,12 +14,11 @@ export default {
   },
   plugins: [
     pixelarticonsPlugin(),
-    react({
-      babel: {
-        plugins: [reactCompiler, babelPluginEmotion],
-        presets,
-      },
+    babel({
+      plugins: [reactCompiler, babelPluginEmotion],
+      presets,
     }),
+    react(),
   ],
   resolve: {
     alias: [createResolver()],

@@ -1,3 +1,5 @@
+'use client';
+
 import { encodeEffects } from '@deities/apollo/Effects.tsx';
 import toSlug from '@deities/apollo/lib/toSlug.tsx';
 import MapEditor from '@deities/hera/editor/MapEditor.tsx';

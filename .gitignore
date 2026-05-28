@@ -11,6 +11,8 @@ ares/vite.config.ts.timestamp-*
 artemis/prisma/athena-prisma-client
 artemis/prisma/pothos-types.ts
 coverage
+docs/content/pages.gen.ts
+docs/dist/
 docs/vocs.config.tsx.timestamp-*
 electron/demo
 electron/log-output

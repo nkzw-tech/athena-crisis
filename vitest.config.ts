@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { defineConfig } from 'vitest/config';
@@ -13,13 +14,7 @@ dotenv.config({
 });
 
 export default defineConfig({
-  plugins: [
-    react({
-      babel: {
-        presets,
-      },
-    }),
-  ],
+  plugins: [babel({ presets }), react()],
   resolve: {
     alias: [createResolver()],
   },

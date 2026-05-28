@@ -24,7 +24,7 @@ export default defineConfig({
     'artemis/prisma/athena-prisma-client/*',
     'artemis/prisma/pothos-types.ts',
     'dist/',
-    'docs/vocs.config.tsx.timestamp-*',
+    'docs/vite.config.ts.timestamp-*',
     'electron/out/',
     'hera/i18n/CampaignMap.tsx',
     'mobile/android',
@@ -147,13 +147,12 @@ export default defineConfig({
       'error',
       {
         devDependencies: [
-          './{ares,artemis,deimos,offline}/vite.config.ts',
+          './{ares,artemis,deimos,docs,offline}/vite.config.ts',
           './{ares,artemis}/scripts/**/*.{js,cjs,tsx}',
           './ares/ares.tsx',
           './artemis/prisma/seed.tsx',
           './artemis/prisma.config.ts',
           './codegen/**',
-          './docs/vocs.config.tsx',
           './electron/**',
           './infra/**',
           './mobile/capacitor.config.ts',
