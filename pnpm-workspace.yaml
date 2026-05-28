@@ -27,6 +27,7 @@ allowBuilds:
   '@swc/core': true
   bufferutil: true
   canvas: false
+  es5-ext: false
   esbuild: true
   prisma: true
   protobufjs: true
@@ -34,6 +35,12 @@ allowBuilds:
   utf-8-validate: true
 
 ignorePatchFailures: false
+
+minimumReleaseAgeExclude:
+  - babel-plugin-relay@21.0.1
+  - react-relay@21.0.1
+  - relay-compiler@21.0.1
+  - relay-runtime@21.0.1
 
 overrides:
   react@^18.0.0: 19.0.0-rc.1
@@ -43,7 +50,6 @@ patchedDependencies:
   cordova-plugin-purchase: patches/cordova-plugin-purchase.patch
   howler: patches/howler.patch
   require-in-the-middle: patches/require-in-the-middle.patch
-  vocs: patches/vocs.patch
 
 peerDependencyRules:
   allowAny:

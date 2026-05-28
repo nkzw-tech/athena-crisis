@@ -21,15 +21,15 @@
     "@nkzw/stack": "^2.3.2",
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
-    "fbtee": "^1.7.5",
-    "framer-motion": "^12.38.0",
+    "fbtee": "^2.0.0",
+    "framer-motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-error-boundary": "^6.1.1"
+    "react-error-boundary": "^6.1.2"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3"
   }
 }

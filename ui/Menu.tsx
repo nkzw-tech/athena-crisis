@@ -31,6 +31,13 @@ import Portal from './Portal.tsx';
 
 export const MenuClassName = 'menu-button';
 
+const fullScreenListener = (event: KeyboardEvent) => {
+  if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
+    event.preventDefault();
+    App.toggleFullscreen();
+  }
+};
+
 export type MenuContext = RefObject<boolean>;
 
 const Context = createContext<MenuContext>({ current: false });
@@ -131,14 +138,8 @@ export default function Menu({
 
   useEffect(() => {
     if (canToggleFullScreen) {
-      const listener = (event: KeyboardEvent) => {
-        if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
-          event.preventDefault();
-          App.toggleFullscreen();
-        }
-      };
-      window.addEventListener('keydown', listener);
-      return () => window.removeEventListener('keydown', listener);
+      window.addEventListener('keydown', fullScreenListener);
+      return () => window.removeEventListener('keydown', fullScreenListener);
     }
   }, [canToggleFullScreen]);
 

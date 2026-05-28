@@ -17,18 +17,18 @@
     "@nkzw/create-context-hook": "^1.1.0",
     "@nkzw/joymap": "^4.0.2",
     "@nkzw/stack": "^2.3.2",
-    "fbtee": "^1.7.5",
-    "framer-motion": "^12.38.0",
+    "fbtee": "^2.0.0",
+    "framer-motion": "^12.40.0",
     "howler": "^2.2.4",
     "pixelarticons": "^2.1.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.0",
+    "react-router-dom": "^7.15.1",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
-    "@types/howler": "^2.2.12",
-    "@types/react": "^19.2.14",
+    "@types/howler": "^2.2.13",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3"
   }
 }

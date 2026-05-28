@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import babelPluginEmotion from '@emotion/babel-plugin';
 import react from '@vitejs/plugin-react';
 import React from 'react';
-import { defineConfig } from 'vocs';
+import { defineConfig } from 'vocs/config';
 import presets from '../infra/babelPresets.tsx';
 import createResolver from '../infra/createResolver.tsx';
 
@@ -12,15 +12,16 @@ const Dunkel = JSON.parse(readFileSync('./node_modules/dunkel-theme/dunkel.json'
 export default defineConfig({
   basePath: '/open-source',
   baseUrl: 'https://athenacrisis.com/open-source',
+  codeHighlight: {
+    themes: {
+      dark: Dunkel,
+      light: Licht,
+    },
+  },
   description: 'Open Source Docs & Playground',
   editLink: {
-    pattern: 'https://github.com/nkzw-tech/athena-crisis/tree/main/docs/content/pages/:path',
+    link: 'https://github.com/nkzw-tech/athena-crisis/tree/main/docs/content/pages/:path',
     text: 'Edit on GitHub',
-  },
-  font: {
-    mono: {
-      google: 'Fira Code',
-    },
   },
   head: (
     <>
@@ -29,14 +30,6 @@ export default defineConfig({
     </>
   ),
   iconUrl: '/favicon.png',
-  markdown: {
-    code: {
-      themes: {
-        dark: Dunkel,
-        light: Licht,
-      },
-    },
-  },
   ogImageUrl: 'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
   rootDir: './content',
   sidebar: [

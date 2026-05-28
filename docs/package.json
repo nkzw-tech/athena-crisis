@@ -26,13 +26,13 @@
     "@nkzw/core": "^1.3.1",
     "@nkzw/stack": "^2.3.2",
     "@nkzw/use-visibility-state": "^1.0.4",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "dunkel-theme": "^1.7.1",
-    "fbtee": "^1.7.5",
-    "framer-motion": "^12.38.0",
+    "fbtee": "^2.0.0",
+    "framer-motion": "^12.40.0",
     "licht-theme": "^1.7.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "vocs": "^1.4.1"
+    "vocs": "^2.0.0"
   }
 }
