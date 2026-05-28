@@ -14,10 +14,7 @@ dotenv.config({
 });
 
 export default defineConfig({
-  plugins: [babel({ presets }), react()],
-  resolve: {
-    alias: [createResolver()],
-  },
+  plugins: [createResolver(), babel({ presets }), react()],
   test: {
     globalSetup: ['./tests/viteServer', './tests/playwrightServer'],
     setupFiles: ['./tests/setup'],

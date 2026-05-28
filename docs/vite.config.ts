@@ -15,6 +15,7 @@ export default defineConfig(async () => ({
     'process.env.IS_LANDING_PAGE': `1`,
   },
   plugins: [
+    createResolver(),
     babel({
       plugins: [babelPluginEmotion],
       presets,
@@ -32,7 +33,6 @@ export default defineConfig(async () => ({
         find: 'vocs/waku/middleware',
         replacement: fileURLToPath(new URL('./wakuMiddleware.ts', import.meta.url)),
       },
-      createResolver(),
     ],
   },
 }));

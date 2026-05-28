@@ -13,6 +13,7 @@ export default {
     'process.env.IS_LANDING_PAGE': `0`,
   },
   plugins: [
+    createResolver(),
     pixelarticonsPlugin(),
     babel({
       plugins: [reactCompiler, babelPluginEmotion],
@@ -20,9 +21,6 @@ export default {
     }),
     react(),
   ],
-  resolve: {
-    alias: [createResolver()],
-  },
   root,
   server: {
     host: true,

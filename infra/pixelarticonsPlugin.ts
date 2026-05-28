@@ -12,9 +12,20 @@ const pixelarticonsRoot = dirname(
 );
 const importPattern = /^pixelarticons\/svg\/([a-z0-9-]+)\.svg$/;
 const virtualPrefix = '\0pixelarticons-svg-icon:';
+const virtualIdPattern = new RegExp(`^${virtualPrefix}`);
+const iconModuleCache = new Map<string, Promise<string>>();
+const attributeRegexCache = new Map<string, RegExp>();
 
-const getAttribute = (attributes: string, name: string) =>
-  attributes.match(new RegExp(`\\s${name}="([^"]+)"`))?.[1] || null;
+const getAttribute = (attributes: string, name: string) => {
+  let regex = attributeRegexCache.get(name);
+
+  if (!regex) {
+    regex = new RegExp(`\\s${name}="([^"]+)"`);
+    attributeRegexCache.set(name, regex);
+  }
+
+  return attributes.match(regex)?.[1] || null;
+};
 
 const getSize = (attributes: string, name: 'height' | 'width') => {
   const value = getAttribute(attributes, name);
@@ -51,24 +62,47 @@ const parseSvg = (svg: string) => {
   return { body, height, width };
 };
 
+const createIconModule = (icon: string) => {
+  const cached = iconModuleCache.get(icon);
+
+  if (cached) {
+    return cached;
+  }
+
+  const module = readFile(join(pixelarticonsRoot, 'svg', `${icon}.svg`), 'utf8').then(
+    (svg) => `const data = ${JSON.stringify(parseSvg(svg))};\nexport default data;\n`,
+  );
+  iconModuleCache.set(icon, module);
+  return module;
+};
+
 export default function pixelarticonsPlugin(): Plugin {
   return {
     enforce: 'pre',
-    load(id) {
-      if (!id.startsWith(virtualPrefix)) {
-        return null;
-      }
+    load: {
+      filter: {
+        id: virtualIdPattern,
+      },
+      async handler(id) {
+        if (!id.startsWith(virtualPrefix)) {
+          return null;
+        }
 
-      const icon = id.slice(virtualPrefix.length);
-
-      return readFile(join(pixelarticonsRoot, 'svg', `${icon}.svg`), 'utf8').then(
-        (svg) => `const data = ${JSON.stringify(parseSvg(svg))};\nexport default data;\n`,
-      );
+        return {
+          code: await createIconModule(id.slice(virtualPrefix.length)),
+          moduleType: 'js',
+        };
+      },
     },
     name: 'pixelarticons-svg-icon',
-    resolveId(source) {
-      const match = source.match(importPattern);
-      return match ? `${virtualPrefix}${match[1]}` : null;
+    resolveId: {
+      filter: {
+        id: importPattern,
+      },
+      handler(source) {
+        const match = source.match(importPattern);
+        return match ? `${virtualPrefix}${match[1]}` : null;
+      },
     },
   };
 }
