@@ -526,13 +526,13 @@ const UndoButton = ({
         <>
           <Icon
             button
-            className={cx(closeIconStyle, undoOptionIconStyle)}
+            className={cx(iconStyle, undoCloseIconStyle)}
             icon={Close}
             onClick={() => setIsExpanded(false)}
           />
           <Icon
             button
-            className={cx(undoTurnIconStyle, undoOptionIconStyle)}
+            className={cx(iconStyle, undoTurnIconStyle)}
             horizontalFlip
             icon={Undo}
             onClick={() => undo('Turn')}
@@ -829,32 +829,13 @@ const expandStyle = css`
   }
 `;
 
-const undoOptionIconStyle = css`
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 100ms ease 220ms;
-`;
-
-const undoTurnIconStyle = css`
-  box-sizing: content-box;
-  color: ${applyVar('text-color')};
-  height: ${size}px;
-  position: absolute;
-  right: ${size * 2}px;
-  top: 0;
-`;
-
 const undoExpandStyle = css`
   color: ${applyVar('text-color')};
+  will-change: all;
   transition:
     width 300ms ease,
     color 150ms ease 150ms;
   width: 148px;
-
-  .${undoOptionIconStyle} {
-    opacity: 1;
-    pointer-events: auto;
-  }
 `;
 
 const iconStyle = css`
@@ -877,6 +858,15 @@ const closeIconStyle = css`
   padding: 0;
   position: absolute;
   right: ${size}px;
+`;
+
+const undoCloseIconStyle = css`
+  ${closeIconStyle}
+  right: ${size * 2}px;
+`;
+
+const undoTurnIconStyle = css`
+  ${closeIconStyle}
 `;
 
 const disabledButtonStyle = css`
