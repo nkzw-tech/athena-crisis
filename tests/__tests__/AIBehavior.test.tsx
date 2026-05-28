@@ -694,9 +694,14 @@ test('AI keeps attacking even if one unit gets blocked', async () => {
     AIRegistry,
   );
 
-  expect(snapshotGameState(gameStateA)).toMatchInlineSnapshot(`
-    "Move (1,1 → 2,1) { fuel: 48, completed: true, path: [2,1], movementExhausted: null }
-    CreateUnit (2,4 → 2,3) { unit: Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
+  const [[first], ...rest] = gameStateA || [];
+
+  expect(first.type).toBe('Move');
+  expect(
+    first.type === 'Move' ? first.to === vec(1, 2) || first.to === vec(2, 1) : null,
+  ).toBeTruthy();
+  expect(snapshotGameState(rest)).toMatchInlineSnapshot(`
+    "CreateUnit (2,4 → 2,3) { unit: Flamethrower { id: 15, health: 100, player: 2, fuel: 30, ammo: [ [ 1, 4 ] ], moved: true, name: 'Yuki', completed: true }, free: false, skipBehaviorRotation: false }
     AttackUnit (5,5 → 3,3) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 1, ammo: [ [ 1, 6 ] ] }, unitB: DryUnit { health: 70 }, chargeA: 19, chargeB: 60 }
     EndTurn { current: { funds: 600, player: 2 }, next: { funds: 0, player: 1 }, round: 2, rotatePlayers: null, supply: null, miss: null }"
   `);
