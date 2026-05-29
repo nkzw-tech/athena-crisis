@@ -2,6 +2,7 @@ import { AttributeRange, AttributeRangeWithZero } from '@deities/athena/lib/getA
 import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Checkbox from '@deities/ui/Checkbox.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
@@ -25,6 +26,7 @@ export type UserNode = Readonly<{
 const emptySuggestions = [new TypeaheadDataSourceEntry('published', 'published', 'published')];
 
 export default function CampaignEditorSettingsPanel({
+  allowSuperHard,
   campaignExists,
   campaignName,
   description,
@@ -33,6 +35,7 @@ export default function CampaignEditorSettingsPanel({
   isAdmin,
   playStyle,
   saveCampaign,
+  setAllowSuperHard,
   setCampaignName,
   setDescription,
   setDifficulty,
@@ -43,6 +46,7 @@ export default function CampaignEditorSettingsPanel({
   userDataSource,
   users,
 }: {
+  allowSuperHard: boolean;
   campaignExists: boolean;
   campaignName: string;
   description: string;
@@ -51,6 +55,7 @@ export default function CampaignEditorSettingsPanel({
   isAdmin?: boolean;
   playStyle: PlayStyle | null;
   saveCampaign: (type?: 'Export') => void;
+  setAllowSuperHard: (allowSuperHard: boolean) => void;
   setCampaignName: (name: string) => void;
   setDescription: (description: string) => void;
   setDifficulty: (rating: AttributeRange) => void;
@@ -150,18 +155,41 @@ export default function CampaignEditorSettingsPanel({
             >
               <fbt desc="Button to allow the user to select their playstyle">User Selectable</fbt>
             </InlineLink>
-            {Object.values(PlayStyle).map((currentPlayStyle) => (
-              <InlineLink
-                className={buttonStyle}
-                key={currentPlayStyle}
-                onClick={() => setPlayStyle(currentPlayStyle)}
-                selected={currentPlayStyle === playStyle}
-              >
-                {getTranslatedPlayStyleName(currentPlayStyle)}
-              </InlineLink>
-            ))}
+            {Object.values(PlayStyle)
+              .filter(
+                (currentPlayStyle) => allowSuperHard || currentPlayStyle !== PlayStyle.SuperHard,
+              )
+              .map((currentPlayStyle) => (
+                <InlineLink
+                  className={buttonStyle}
+                  key={currentPlayStyle}
+                  onClick={() => setPlayStyle(currentPlayStyle)}
+                  selected={currentPlayStyle === playStyle}
+                >
+                  {getTranslatedPlayStyleName(currentPlayStyle)}
+                </InlineLink>
+              ))}
           </Stack>
         </Stack>
+        <label>
+          <Stack alignCenter between gap wrap>
+            <span>
+              <fbt desc="Label for allowing legendary campaign difficulty">
+                Allow Legendary Difficulty
+              </fbt>
+            </span>
+            <Checkbox
+              checked={allowSuperHard}
+              onChange={() => {
+                const nextAllowSuperHard = !allowSuperHard;
+                setAllowSuperHard(nextAllowSuperHard);
+                if (!nextAllowSuperHard && playStyle === PlayStyle.SuperHard) {
+                  setPlayStyle(null);
+                }
+              }}
+            />
+          </Stack>
+        </label>
         <Stack alignCenter between gap wrap>
           <span>
             <fbt desc="Label for campaign difficulty">Campaign Difficulty Rating</fbt>

@@ -1,8 +1,8 @@
-import { AIRegistryT } from '@deities/apollo/actions/executeGameAction.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import Player, { isBot, PlayerID } from '@deities/athena/map/Player.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
+import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuNavigation.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor, { playerToColor } from '@deities/ui/getColor.tsx';
@@ -33,9 +33,12 @@ type UserLike =
       username: string;
     };
 
+type AISelectorRegistry = ReadonlyMap<number, Readonly<{ description: string; name: string }>>;
+
 export default function PlayerSelector({
   activePlayer,
   aiRegistry,
+  allowDefaultAI,
   availableSkills,
   children,
   favoriteSkills,
@@ -56,7 +59,8 @@ export default function PlayerSelector({
   viewerPlayerID,
 }: {
   activePlayer?: PlayerID | null;
-  aiRegistry?: AIRegistryT | null;
+  aiRegistry?: AISelectorRegistry | null;
+  allowDefaultAI?: boolean;
   availableSkills?: ReadonlySet<Skill> | null;
   children?: ReactNode;
   favoriteSkills?: ReadonlySet<Skill>;
@@ -66,7 +70,7 @@ export default function PlayerSelector({
   map: MapData;
   onClick?: ((player: PlayerID) => void) | null;
   onSelect?: ((player: PlayerID) => void) | null;
-  onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
+  onSelectAI?: ((player: PlayerID, ai: number | null) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
   selectedPlayer?: PlayerID | null;
@@ -91,6 +95,7 @@ export default function PlayerSelector({
         .map((player: Player) => (
           <PlayerItem
             aiRegistry={aiRegistry}
+            allowDefaultAI={allowDefaultAI}
             availableSkills={availableSkills}
             blocklistedSkills={map.config.blocklistedSkills}
             favoriteSkills={favoriteSkills}
@@ -172,6 +177,7 @@ export const PlayerSkillSelectors = ({
   blocklistedSkills,
   disabledSkillSlots,
   favorites,
+  focusedSlot,
   isFocused,
   onSelectSkill,
   onSelectSkills,
@@ -183,6 +189,7 @@ export const PlayerSkillSelectors = ({
   blocklistedSkills?: ReadonlySet<Skill>;
   disabledSkillSlots?: number;
   favorites?: ReadonlySet<Skill>;
+  focusedSlot?: number | null;
   isFocused?: boolean;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
@@ -190,7 +197,13 @@ export const PlayerSkillSelectors = ({
   skillSlots: number;
   toggleFavorite?: (skill: Skill) => void;
 }) => {
-  const [focused] = useHorizontalMenuNavigation(isFocused ? skillSlots : 0, 'menu', false, 0);
+  const [focused] = useHorizontalMenuNavigation(
+    focusedSlot === undefined && isFocused ? skillSlots : 0,
+    'menu',
+    false,
+    0,
+  );
+  const currentFocusedSlot = focusedSlot === undefined ? focused : focusedSlot;
 
   return (
     <Stack between className={cx(nameStyle, skillStyle)} gap={16}>
@@ -209,7 +222,7 @@ export const PlayerSkillSelectors = ({
               currentSkill={currentSkill}
               disabled={disabledSkillSlots != null && id + 1 > skillSlots - disabledSkillSlots}
               favorites={favorites}
-              isFocused={isFocused && focused === id}
+              isFocused={isFocused && currentFocusedSlot === id}
               key={id}
               onSelect={(skill) => {
                 onSelectSkills?.(player.id, id, skill);
@@ -227,6 +240,7 @@ export const PlayerSkillSelectors = ({
 
 const PlayerItem = ({
   aiRegistry,
+  allowDefaultAI,
   availableSkills,
   blocklistedSkills,
   favoriteSkills,
@@ -246,7 +260,8 @@ const PlayerItem = ({
   user,
   viewerPlayerID,
 }: {
-  aiRegistry?: AIRegistryT | null;
+  aiRegistry?: AISelectorRegistry | null;
+  allowDefaultAI?: boolean;
   availableSkills?: ReadonlySet<Skill> | null;
   blocklistedSkills?: ReadonlySet<Skill>;
   favoriteSkills?: ReadonlySet<Skill>;
@@ -257,7 +272,7 @@ const PlayerItem = ({
   locked: boolean;
   onClick?: () => void;
   onSelect?: () => void;
-  onSelectAI?: ((player: PlayerID, ai: number) => void) | null;
+  onSelectAI?: ((player: PlayerID, ai: number | null) => void) | null;
   onSelectSkill?: ((slot: number, skill: Skill | null) => void) | null;
   onSelectSkills?: ((player: PlayerID, slot: number, skill: Skill | null) => void) | null;
   player: Player;
@@ -266,6 +281,27 @@ const PlayerItem = ({
   user: UserLike | undefined;
   viewerPlayerID?: PlayerID;
 }) => {
+  const hasSelectableAI = !!(aiRegistry && onSelectAI && player.id !== viewerPlayerID);
+  const hasSelectableSkills = !!(
+    !player.isPlaceholder() &&
+    hasSkills &&
+    (viewerPlayerID === player.id || onSelectSkills) &&
+    (onSelectSkill || onSelectSkills) &&
+    skillSlots &&
+    availableSkills?.size
+  );
+  const skillNavigationCount = hasSelectableSkills ? skillSlots || 0 : 0;
+  const [focusedControl] = useHorizontalMenuNavigation(
+    isFocused ? skillNavigationCount + (hasSelectableAI ? 1 : 0) : 0,
+    'menu',
+    false,
+    0,
+  );
+  const focusedSkillSlot =
+    hasSelectableSkills && focusedControl < skillNavigationCount ? focusedControl : null;
+  const isAISelectorFocused =
+    hasSelectableAI && focusedControl === skillNavigationCount && focusedControl !== -1;
+
   if (!player.isPlaceholder()) {
     const bot = !user || isBot(player);
     const isInteractive = onSelect || onSelectSkill || onSelectSkills || (onClick && !bot);
@@ -301,16 +337,14 @@ const PlayerItem = ({
             {bot && <Icon className={botIconStyle} icon={Android} />}
           </div>
         </Component>
-        <Stack gap={16}>
+        <Stack gap={16} wrap>
           {hasSkills ? (
-            (viewerPlayerID === player.id || onSelectSkills) &&
-            (onSelectSkill || onSelectSkills) &&
-            skillSlots &&
-            availableSkills?.size ? (
+            hasSelectableSkills && skillSlots && availableSkills?.size ? (
               <PlayerSkillSelectors
                 availableSkills={availableSkills}
                 blocklistedSkills={blocklistedSkills}
                 favorites={favoriteSkills}
+                focusedSlot={focusedSkillSlot}
                 isFocused={isFocused}
                 onSelectSkill={onSelectSkill}
                 onSelectSkills={onSelectSkills}
@@ -331,12 +365,16 @@ const PlayerItem = ({
               </Stack>
             )
           ) : null}
-          {aiRegistry && (
-            <AISelector
-              currentAI={player.ai != null ? player.ai : undefined}
-              registry={aiRegistry}
-              setAI={(id) => onSelectAI?.(player.id, id)}
-            />
+          {aiRegistry && player.id !== viewerPlayerID && (
+            <div className={aiSelectorStyle}>
+              <AISelector
+                allowDefaultAI={allowDefaultAI}
+                currentAI={player.ai != null ? player.ai : undefined}
+                isFocused={isAISelectorFocused}
+                registry={aiRegistry}
+                setAI={(id) => onSelectAI?.(player.id, id)}
+              />
+            </div>
           )}
         </Stack>
       </Stack>
@@ -344,25 +382,49 @@ const PlayerItem = ({
   }
 
   return locked && viewerPlayerID !== player.id ? (
-    <Stack between className={cx(itemStyle, lightStyle)}>
+    <Stack between className={cx(itemStyle, lightStyle)} gap={16} wrap>
       <PlayerIcon id={player.id} />
       <div className={nameStyle}>
         <fbt desc="Text when waiting for a player to join">Waiting for a player…</fbt>
       </div>
+      {aiRegistry && onSelectAI && (
+        <div className={aiSelectorStyle}>
+          <AISelector
+            allowDefaultAI={allowDefaultAI}
+            currentAI={player.ai != null ? player.ai : undefined}
+            isFocused={isAISelectorFocused}
+            registry={aiRegistry}
+            setAI={(id) => onSelectAI(player.id, id)}
+          />
+        </div>
+      )}
     </Stack>
   ) : (
-    <InlineLink
-      active={isActive}
-      className={itemStyle}
-      hover={isFocused}
-      onClick={onSelect}
-      pixelBorderSize={isActive ? 0 : 4}
-    >
-      <PlayerIcon id={player.id} />
-      <div className={selfCenterStyle}>
-        <PlayerPosition color={playerToColor(player.id)} hasPlayer={!!viewerPlayerID} />
-      </div>
-    </InlineLink>
+    <Stack gap={16} wrap>
+      <InlineLink
+        active={isActive}
+        className={itemStyle}
+        hover={isFocused}
+        onClick={onSelect}
+        pixelBorderSize={isActive ? 0 : 4}
+      >
+        <PlayerIcon id={player.id} />
+        <div className={selfCenterStyle}>
+          <PlayerPosition color={playerToColor(player.id)} hasPlayer={!!viewerPlayerID} />
+        </div>
+      </InlineLink>
+      {aiRegistry && onSelectAI && (
+        <div className={aiSelectorStyle}>
+          <AISelector
+            allowDefaultAI={allowDefaultAI}
+            currentAI={player.ai != null ? player.ai : undefined}
+            isFocused={isAISelectorFocused}
+            registry={aiRegistry}
+            setAI={(id) => onSelectAI(player.id, id)}
+          />
+        </div>
+      )}
+    </Stack>
   );
 };
 
@@ -385,6 +447,16 @@ const itemStyle = css`
 
 const playerImageStyle = css`
   margin-right: 12px;
+`;
+
+const aiSelectorStyle = css`
+  flex-basis: 100%;
+  width: 100%;
+
+  ${Breakpoints.sm} {
+    flex-basis: auto;
+    width: auto;
+  }
 `;
 
 const disabledStyle = css`

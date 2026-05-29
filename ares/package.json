@@ -22,6 +22,7 @@
     "@deities/apollo": "workspace:*",
     "@deities/art": "workspace:*",
     "@deities/athena": "workspace:*",
+    "@deities/dionysus": "workspace:*",
     "@deities/fixtures": "workspace:*",
     "@deities/hera": "workspace:*",
     "@deities/hermes": "workspace:*",

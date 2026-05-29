@@ -4,11 +4,32 @@ import DionysusAlpha from './DionysusAlpha.tsx';
 import OdysseusDelta from './OdysseusDelta.tsx';
 import PersephoneBeta from './PersephoneBeta.tsx';
 
+export const AIID = {
+  DiomedesEpsilon: 2,
+  DionysusAlpha: 0,
+  OdysseusDelta: 3,
+  PersephoneBeta: 1,
+} as const;
+
+export type AIID = (typeof AIID)[keyof typeof AIID];
+
 const AIRegistry: AIRegistryT = new Map([
-  [0, { class: DionysusAlpha, name: 'DionysusAlpha', published: true }],
-  [1, { class: PersephoneBeta, name: 'PersephoneBeta', published: false }],
-  [2, { class: DiomedesEpsilon, name: 'DiomedesEpsilon', published: false }],
-  [3, { class: OdysseusDelta, name: 'OdysseusDelta', published: false }],
+  [
+    AIID.DionysusAlpha,
+    { class: DionysusAlpha, description: 'Default', name: 'DionysusAlpha', published: true },
+  ],
+  [
+    AIID.PersephoneBeta,
+    { class: PersephoneBeta, description: 'Hard', name: 'PersephoneBeta', published: false },
+  ],
+  [
+    AIID.DiomedesEpsilon,
+    { class: DiomedesEpsilon, description: 'Internal', name: 'DiomedesEpsilon', published: false },
+  ],
+  [
+    AIID.OdysseusDelta,
+    { class: OdysseusDelta, description: 'Internal', name: 'OdysseusDelta', published: false },
+  ],
 ]);
 
 export default AIRegistry;

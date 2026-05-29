@@ -33,6 +33,7 @@ export type CampaignEditorState = Readonly<{
 export type SetCampaignEditorStateFunction = (state: Partial<CampaignEditorState>) => void;
 
 export type CampaignObject = Readonly<{
+  allowSuperHard: boolean;
   description: string;
   difficulty: number;
   id?: string;

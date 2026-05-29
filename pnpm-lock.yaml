@@ -146,6 +146,9 @@ importers:
       '@deities/athena':
         specifier: workspace:*
         version: link:../athena
+      '@deities/dionysus':
+        specifier: workspace:*
+        version: link:../dionysus
       '@deities/fixtures':
         specifier: workspace:*
         version: link:../fixtures

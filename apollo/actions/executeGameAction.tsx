@@ -18,6 +18,7 @@ export type AIRegistryEntry = Readonly<{
   class: {
     new (effects: Effects): AIType;
   };
+  description: string;
   name: string;
   published: boolean;
 }>;

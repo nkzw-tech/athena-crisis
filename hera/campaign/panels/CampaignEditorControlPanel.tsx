@@ -7,6 +7,7 @@ import { CampaignEditorState } from '../Types.tsx';
 import CampaignEditorSettingsPanel, { UserNode } from './CampaignEditorSettingsPanel.tsx';
 
 export default function CampaignEditorControlPanel({
+  allowSuperHard,
   campaignEditorState,
   campaignExists,
   campaignName,
@@ -16,6 +17,7 @@ export default function CampaignEditorControlPanel({
   isAdmin,
   playStyle,
   saveCampaign,
+  setAllowSuperHard,
   setCampaignName,
   setDescription,
   setDifficulty,
@@ -26,6 +28,7 @@ export default function CampaignEditorControlPanel({
   userDataSource,
   users,
 }: {
+  allowSuperHard: boolean;
   campaignEditorState: CampaignEditorState;
   campaignExists: boolean;
   campaignName: string;
@@ -35,6 +38,7 @@ export default function CampaignEditorControlPanel({
   isAdmin?: boolean;
   playStyle: PlayStyle | null;
   saveCampaign: (type?: 'Export') => void;
+  setAllowSuperHard: (allowSuperHard: boolean) => void;
   setCampaignName: (name: string) => void;
   setDescription: (description: string) => void;
   setDifficulty: (rating: AttributeRange) => void;
@@ -53,6 +57,7 @@ export default function CampaignEditorControlPanel({
           case 'settings':
             return (
               <CampaignEditorSettingsPanel
+                allowSuperHard={allowSuperHard}
                 campaignExists={campaignExists}
                 campaignName={campaignName}
                 description={description}
@@ -61,6 +66,7 @@ export default function CampaignEditorControlPanel({
                 isAdmin={isAdmin}
                 playStyle={playStyle}
                 saveCampaign={saveCampaign}
+                setAllowSuperHard={setAllowSuperHard}
                 setCampaignName={setCampaignName}
                 setDescription={setDescription}
                 setDifficulty={setDifficulty}

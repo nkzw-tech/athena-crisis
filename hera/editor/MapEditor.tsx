@@ -410,7 +410,11 @@ export default function MapEditor({
           effects || editor.effects,
         ]);
       }
-      setRenderKey((renderKey) => renderKey + 1);
+      if (type === 'teams' && actionsRef.current) {
+        actionsRef.current.update({ map });
+      } else {
+        setRenderKey((renderKey) => renderKey + 1);
+      }
     },
     [editor.effects],
   );

@@ -199,12 +199,14 @@ export default function CampaignEditor({
 
   const showMapEditor = !!(campaignEditorState.map || campaignEditorState.createMap);
 
+  const [allowSuperHard, setAllowSuperHard] = useState(!!data.allowSuperHard);
   const [playStyle, setPlayStyle] = useState<PlayStyle | null>(data?.playStyle || null);
 
   const saveCampaign = useCallback(
     (type?: 'Export') => {
       updateCampaign(
         {
+          allowSuperHard,
           description,
           difficulty,
           id: data.id,
@@ -220,6 +222,7 @@ export default function CampaignEditor({
       );
     },
     [
+      allowSuperHard,
       campaign,
       campaignName,
       data.id,
@@ -530,6 +533,7 @@ export default function CampaignEditor({
           <Icon button icon={DialogueIcon} />
         </MenuButton>
         <CampaignEditorPanel
+          allowSuperHard={allowSuperHard}
           campaignEditorState={campaignEditorState}
           campaignExists={!!data.id}
           campaignName={campaignName}
@@ -539,6 +543,7 @@ export default function CampaignEditor({
           isAdmin={isAdmin}
           playStyle={playStyle}
           saveCampaign={saveCampaign}
+          setAllowSuperHard={setAllowSuperHard}
           setCampaignName={setCampaignName}
           setDescription={setDescription}
           setDifficulty={setDifficulty}

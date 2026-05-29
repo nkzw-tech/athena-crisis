@@ -55,7 +55,7 @@ export default function MapEditorSetupPanel({
   );
 
   const onSelectAI = useCallback(
-    (playerID: PlayerID, ai: number) => {
+    (playerID: PlayerID, ai: number | null) => {
       const player = map.getPlayer(playerID);
       setMap(
         'teams',
@@ -137,6 +137,7 @@ export default function MapEditorSetupPanel({
       </Box>
       <PlayerSelector
         aiRegistry={aiRegistry.size > 1 ? aiRegistry : null}
+        allowDefaultAI
         availableSkills={Skills}
         hasSkills
         map={mapWithPlayers}

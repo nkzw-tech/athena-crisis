@@ -305,6 +305,7 @@ test('does not invoke AI after onEndTurn ends the game', async () => {
       0,
       {
         class: TestAI,
+        description: 'Test',
         name: 'TestAI',
         published: true,
       },

@@ -9,5 +9,7 @@ export default function getTranslatedPlayStyleName(playStyle: PlayStyle) {
       return fbt('Intermediate', 'PlayStyle name');
     case PlayStyle.Hard:
       return fbt('Hard', 'PlayStyle name');
+    case PlayStyle.SuperHard:
+      return fbt('Legendary', 'PlayStyle name');
   }
 }
