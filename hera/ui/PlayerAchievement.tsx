@@ -14,6 +14,9 @@ export default function PlayerAchievement({
 }) {
   const [playerPerformance, count] = usePlayerAchievement(result);
   const performance = usePerformanceResult(playerPerformance);
+  const displayedStars = stars + (legendary ? 1 : 0);
+  const displayedCount = count === '?' ? count : Number(count) + (legendary ? 1 : 0);
+
   return (
     <Stack alignCenter center className={nowrapStyle} gap wrap>
       <Stack gap={4}>
@@ -23,7 +26,7 @@ export default function PlayerAchievement({
         {legendary && <StarIcon key="legendary" size="small" type="chaos" />}
       </Stack>
       <div className={countStyle}>
-        {stars} <span className={lightStyle}>/ {count}</span>
+        {displayedStars} <span className={lightStyle}>/ {displayedCount}</span>
       </div>
     </Stack>
   );
