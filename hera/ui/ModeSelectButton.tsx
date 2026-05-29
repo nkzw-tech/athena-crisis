@@ -122,6 +122,7 @@ const style = css`
     color 300ms ease;
   text-align: center;
   text-wrap: balance;
+  will-change: transform;
   z-index: 0;
 
   ${pixelBorder(undefined, 2)}

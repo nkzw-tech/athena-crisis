@@ -99,6 +99,7 @@ export const SquareButtonStyle = css`
   transition:
     color 150ms ease,
     transform 150ms ease;
+  will-change: transform;
 
   &:not(.disabled).hover,
   &:not(.disabled):hover {
@@ -125,6 +126,7 @@ export const ButtonStyle = css`
     box-shadow 150ms ease,
     color 150ms ease,
     transform 150ms ease;
+  will-change: transform;
 
   &:not(.disabled).hover,
   &:not(.disabled):hover {
