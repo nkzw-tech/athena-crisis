@@ -17,6 +17,7 @@ import {
   Sniper,
   TransportHelicopter,
 } from '@deities/athena/info/Unit.tsx';
+import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import updateSeen from '@deities/athena/lib/updateSeen.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Fog } from '@deities/athena/map/PlainMap.tsx';
@@ -25,10 +26,11 @@ import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
-import { moveable } from '@deities/athena/Radius.tsx';
+import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
 import { StandardFog, Visibility, type VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
+import crisis from '../../fixtures/map/crisis.tsx';
 import getMoveableFields from '../../hera/behavior/move/getMoveableFields.tsx';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -494,6 +496,225 @@ test('exploration fog keeps move-and-act units available after a valid move into
   expect(actionResponse).not.toHaveProperty('completed');
   expect(newMap.units.get(to)?.hasMoved()).toBe(true);
   expect(newMap.units.get(to)?.isCompleted()).toBe(false);
+});
+
+test('exploration fog stops explicit paths exhausted by unseen terrain before a visible target', () => {
+  const from = vec(1, 1);
+  const exhaustedAt = vec(3, 1);
+  const to = vec(4, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        buildings: [[5, 1, House.create(1).toJSON()]],
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Mountain.id, Mountain.id, Plain.id, Plain.id],
+        size: { height: 1, width: 5 },
+        units: [[1, 1, Sniper.create(1).toJSON()]],
+      }),
+    ),
+  );
+  const vision = initialMap.createVisionObject(1);
+  const result = execute(initialMap, vision, MoveAction(from, to, [vec(2, 1), exhaustedAt, to]));
+
+  expect(vision.getVisibility(initialMap, exhaustedAt)).toBe(Visibility.Unexplored);
+  expect(vision.getVisibility(initialMap, to)).toBe(Visibility.Visible);
+  expect(result).not.toBeNull();
+  const [actionResponse, newMap] = result!;
+  expect(actionResponse).toMatchObject({
+    fuel: Sniper.configuration.fuel - Sniper.getRadiusFor(initialMap.getPlayer(1)),
+    movementExhausted: true,
+    path: [vec(2, 1), exhaustedAt],
+    to: exhaustedAt,
+    type: 'Move',
+  });
+  expect(newMap.units.get(exhaustedAt)?.info).toBe(Sniper);
+});
+
+test('exploration fog stops exhausted explicit paths before occupied same-team tiles', () => {
+  const from = vec(1, 1);
+  const expectedTo = vec(2, 1);
+  const teammate = vec(3, 1);
+  const to = vec(4, 1);
+  const initialMap = withModifiers(
+    MapData.createMap({
+      config: {
+        fog: Fog.Exploration,
+      },
+      map: [Plain.id, Mountain.id, Mountain.id, Plain.id],
+      size: { height: 1, width: 4 },
+      units: [
+        [1, 1, Sniper.create(1).toJSON()],
+        [3, 1, Infantry.create(1).toJSON()],
+      ],
+    }),
+  );
+  const vision: VisionT = {
+    apply: (map) => map,
+    currentViewer: 1,
+    getVisibility: (_map, vector) =>
+      vector.equals(expectedTo) ? Visibility.Unexplored : Visibility.Visible,
+    isExplored: (_map, vector) => !vector.equals(expectedTo),
+    isVisible: (_map, vector) => !vector.equals(expectedTo),
+  };
+  const result = execute(initialMap, vision, MoveAction(from, to, [expectedTo, teammate, to]));
+
+  expect(result).not.toBeNull();
+  const [actionResponse, newMap] = result!;
+  expect(actionResponse).toMatchObject({
+    fuel: Sniper.configuration.fuel - 2,
+    movementExhausted: true,
+    path: [expectedTo],
+    to: expectedTo,
+    type: 'Move',
+  });
+  expect(newMap.units.get(expectedTo)?.info).toBe(Sniper);
+  expect(newMap.units.get(teammate)?.info).toBe(Infantry);
+});
+
+test('exploration fog accepts paths through visible friendly units', async () => {
+  const map = updateSeen(crisis.copy({ config: crisis.config.copy({ fog: Fog.Exploration }) }));
+  const [gameState] = await executeGameActions(map, [MoveAction(vec(4, 7), vec(5, 9))]);
+  const afterPioneerMap = gameState.at(-1)![1];
+  const vision = afterPioneerMap.createVisionObject(1);
+  const sniperPosition = vec(2, 5);
+  const sniper = afterPioneerMap.units.get(sniperPosition)!;
+  const fields = getMoveableFields(afterPioneerMap, vision, sniper, sniperPosition);
+  const path = getMovementPath(vision.apply(afterPioneerMap), vec(4, 7), fields, null).path;
+
+  expect(afterPioneerMap.units.get(vec(3, 5))?.info.name).toBe('Saboteur');
+  expect(afterPioneerMap.units.get(vec(4, 6))?.info.name).toBe('Flamethrower');
+  expect(path).toMatchInlineSnapshot(`
+    [
+      [
+        3,
+        5,
+      ],
+      [
+        3,
+        6,
+      ],
+      [
+        4,
+        6,
+      ],
+      [
+        4,
+        7,
+      ],
+    ]
+  `);
+  expect(getPathCost(vision.apply(afterPioneerMap), sniper, sniperPosition, path)).toBe(4);
+
+  const [uiGameState] = await executeGameActions(afterPioneerMap, [
+    MoveAction(sniperPosition, vec(4, 7), path),
+  ]);
+  expect(uiGameState.at(-1)![1].units.get(vec(4, 7))?.info.name).toBe('Sniper');
+});
+
+test('exploration fog rejects paths through visible opponent units', () => {
+  const from = vec(1, 1);
+  const opponent = vec(2, 1);
+  const to = vec(3, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Plain.id, Plain.id],
+        size: { height: 1, width: 3 },
+        teams: [
+          {
+            id: 1,
+            name: '',
+            players: [{ funds: 0, id: 1, userId: '1' }],
+          },
+          {
+            id: 2,
+            name: '',
+            players: [{ funds: 0, id: 2, userId: '2' }],
+          },
+        ],
+        units: [
+          [1, 1, Pioneer.create(1).toJSON()],
+          [2, 1, Pioneer.create(2).toJSON()],
+        ],
+      }),
+    ),
+  );
+
+  expect(
+    execute(initialMap, initialMap.createVisionObject(1), MoveAction(from, to, [opponent, to])),
+  ).toBeNull();
+});
+
+test('exploration fog rejects paths through visible neutral units', () => {
+  const from = vec(1, 1);
+  const neutral = vec(2, 1);
+  const to = vec(3, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Plain.id, Plain.id],
+        size: { height: 1, width: 3 },
+        units: [
+          [1, 1, Pioneer.create(1).toJSON()],
+          [2, 1, Pioneer.create(0).toJSON()],
+        ],
+      }),
+    ),
+  );
+
+  expect(
+    execute(initialMap, initialMap.createVisionObject(1), MoveAction(from, to, [neutral, to])),
+  ).toBeNull();
+});
+
+test('exploration fog accepts paths through visible same-team units from another player', () => {
+  const from = vec(1, 1);
+  const teammate = vec(2, 1);
+  const to = vec(3, 1);
+  const initialMap = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [Plain.id, Plain.id, Plain.id],
+        size: { height: 1, width: 3 },
+        teams: [
+          {
+            id: 1,
+            name: '',
+            players: [
+              { funds: 0, id: 1, userId: '1' },
+              { funds: 0, id: 3, userId: '3' },
+            ],
+          },
+        ],
+        units: [
+          [1, 1, Pioneer.create(1).toJSON()],
+          [2, 1, Pioneer.create(3).toJSON()],
+        ],
+      }),
+    ),
+  );
+
+  const result = execute(
+    initialMap,
+    initialMap.createVisionObject(1),
+    MoveAction(from, to, [teammate, to]),
+  );
+  expect(result).not.toBeNull();
+  expect(result![1].units.get(to)?.info.name).toBe('Pioneer');
+  expect(
+    execute(initialMap, initialMap.createVisionObject(1), MoveAction(from, teammate, [teammate])),
+  ).toBeNull();
 });
 
 test('exploration fog stops a theoretical move at hidden terrain blockers', () => {

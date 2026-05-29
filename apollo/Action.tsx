@@ -238,10 +238,33 @@ function followExplorationMovementPath(
   path: ReadonlyArray<Vector>;
 } | null {
   const validPath: Array<Vector> = [];
+  const getExhaustedPath = () => {
+    let index = validPath.length;
+    while (index > 0) {
+      const vector = validPath[index - 1]!;
+      const unitB = mapWithVision.units.get(vector);
+      if (!unitB || canLoad(mapWithVision, unitB, unit, vector)) {
+        break;
+      }
+      index--;
+    }
+    return validPath.slice(0, index);
+  };
   const ignoreMovementBudget = {
     ...MoveConfiguration,
     getResourceValue: () => Number.POSITIVE_INFINITY,
   };
+  const mapForPathCost = mapWithVision.copy({
+    units: mapWithVision.units.filter(
+      (unitB, vector) =>
+        !path.some(
+          (pathVector, index) =>
+            index < path.length - 1 &&
+            vector.equals(pathVector) &&
+            mapWithVision.matchesTeam(unitB, unit),
+        ),
+    ),
+  });
 
   for (const vector of path) {
     const isHidden = !vision.isVisible(map, vector);
@@ -250,25 +273,32 @@ function followExplorationMovementPath(
     }
 
     const nextPath = [...validPath, vector];
-    if (getPathCost(mapWithVision, unit, from, nextPath) === -1) {
-      const isUnexplored = vision.getVisibility(map, vector) === Visibility.Unexplored;
-      if (!isUnexplored) {
-        return null;
-      }
-
+    if (getPathCost(mapForPathCost, unit, from, nextPath) === -1) {
       const pathCostIgnoringMovementBudget = getPathCost(
-        mapWithVision,
+        mapForPathCost,
         unit,
         from,
         nextPath,
         Number.POSITIVE_INFINITY,
         ignoreMovementBudget,
       );
+      if (
+        nextPath.some((vector) => vision.getVisibility(map, vector) === Visibility.Unexplored) &&
+        pathCostIgnoringMovementBudget !== -1 &&
+        pathCostIgnoringMovementBudget !== Number.POSITIVE_INFINITY
+      ) {
+        return { blockedBy: null, movementExhausted: true, path: getExhaustedPath() };
+      }
+
+      const isUnexplored = vision.getVisibility(map, vector) === Visibility.Unexplored;
+      if (!isUnexplored) {
+        return null;
+      }
 
       return pathCostIgnoringMovementBudget === -1 ||
         pathCostIgnoringMovementBudget === Number.POSITIVE_INFINITY
         ? { blockedBy: vector, path: validPath }
-        : { blockedBy: null, movementExhausted: true, path: validPath };
+        : { blockedBy: null, movementExhausted: true, path: getExhaustedPath() };
     }
 
     validPath.push(vector);
