@@ -13,6 +13,7 @@ import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import getWinningInvaders from '@deities/athena/lib/getWinningInvaders.tsx';
 import refillUnits from '@deities/athena/lib/refillUnits.tsx';
 import spawnBuildings from '@deities/athena/lib/spawnBuildings.tsx';
+import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { isHumanPlayer, PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -95,7 +96,7 @@ async function processActionResponse(
   },
   playerHasReward: PlayerHasRewardFunction,
 ): Promise<State | null> {
-  const { map, playerDetails, skipDialogue, vision } = state;
+  const { map, playerDetails, skipActions, vision } = state;
   const { requestFrame, scrollIntoView, update } = actions;
   const { type } = actionResponse;
   let newState: State;
@@ -108,7 +109,7 @@ async function processActionResponse(
     return null;
   };
 
-  if (type === 'CharacterMessage' && skipDialogue) {
+  if (type === 'CharacterMessage' && skipActions) {
     requestFrame(() => resolve(null));
     return null;
   }
@@ -698,10 +699,7 @@ export default async function processActionResponses(
   while (responses.length) {
     const response = responses.shift();
     if (response) {
-      if (
-        lastActionResponse &&
-        !(state.skipDialogue && lastActionResponse.type === 'CharacterMessage')
-      ) {
+      if (lastActionResponse && !state.skipActions) {
         await sleep(
           actions.scheduleTimer,
           state.animationConfig,
@@ -716,6 +714,25 @@ export default async function processActionResponses(
       }
 
       lastActionResponse = response.actionResponse;
+      if (
+        state.skipActions &&
+        lastActionResponse.type === 'EndTurn' &&
+        lastActionResponse.next.player === state.currentViewer
+      ) {
+        state = await actions.update({
+          animationConfig: getCurrentAnimationConfig(
+            state.map.getPlayer(lastActionResponse.next.player),
+            animationSpeed,
+          ),
+          showSkipActions: false,
+          skipActions: false,
+        });
+      } else if (state.skipActions && !state.animationConfig.Instant) {
+        state = await actions.update({
+          animationConfig: InstantAnimationConfig,
+        });
+      }
+
       const newState = {
         ...(await processActionResponse(
           state,
@@ -734,6 +751,13 @@ export default async function processActionResponses(
       };
       const nextResponse = responses[0]?.actionResponse;
       const isLive = state.currentViewer !== (newState.map || state.map).getCurrentPlayer().id;
+      const nextAnimationConfig =
+        nextResponse?.type === 'EndTurn'
+          ? getCurrentAnimationConfig(
+              (newState.map || state.map).getPlayer(nextResponse.next.player),
+              animationSpeed,
+            )
+          : null;
 
       state = await actions.update({
         ...newState,
@@ -745,16 +769,19 @@ export default async function processActionResponses(
         ...(newState.map
           ? { map: updateVisibleEntities(newState.map, state.vision, response) }
           : null),
-        ...(nextResponse?.type === 'EndTurn'
+        ...(state.skipActions
           ? {
-              animationConfig: getCurrentAnimationConfig(
-                (newState.map || state.map).getPlayer(nextResponse.next.player),
-                animationSpeed,
-              ),
-              selectedPosition: null,
-              selectedUnit: null,
+              animationConfig: InstantAnimationConfig,
+              ...(nextAnimationConfig ? { selectedPosition: null, selectedUnit: null } : null),
+              showSkipActions: false,
             }
-          : null),
+          : nextAnimationConfig
+            ? {
+                animationConfig: nextAnimationConfig,
+                selectedPosition: null,
+                selectedUnit: null,
+              }
+            : null),
       });
 
       events?.dispatchEvent(new CustomEvent('actionProcessed'));

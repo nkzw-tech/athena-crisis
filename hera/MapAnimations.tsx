@@ -428,7 +428,9 @@ const MapAnimation = ({
       animationConfig,
       clearTimer,
       onComplete,
-      rate: AnimationConfig.AnimationDuration / animationConfig.AnimationDuration,
+      rate: animationConfig.AnimationDuration
+        ? AnimationConfig.AnimationDuration / animationConfig.AnimationDuration
+        : 1,
       scheduleTimer,
       zIndex,
     };

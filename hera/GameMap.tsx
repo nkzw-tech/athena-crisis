@@ -13,6 +13,7 @@ import {
   AnimationConfig,
   DoubleSize,
   FastAnimationConfig,
+  InstantAnimationConfig,
   MaxHealth,
   MaxSize,
   TileSize,
@@ -82,7 +83,7 @@ import GameDialog from './ui/GameDialog.tsx';
 import MapPerformanceMetrics from './ui/MapPerformanceMetrics.tsx';
 import NamedPosition from './ui/NamedPosition.tsx';
 import PositionHint from './ui/PositionHint.tsx';
-import SkipMessages, { MessageSkipDuration } from './ui/SkipMessages.tsx';
+import SkipMessages, { MessageSkipDuration as ActionSkipDuration } from './ui/SkipMessages.tsx';
 
 setBaseClass(BaseBehavior);
 
@@ -268,8 +269,8 @@ const getInitialState = (props: Props) => {
     selectedPosition: null,
     selectedUnit: null,
     showCursor: props.showCursor,
-    showSkipDialogue: false,
-    skipDialogue: false,
+    showSkipActions: false,
+    skipActions: false,
     tileSize,
     timeout: timeout || null,
     timer: timer || null,
@@ -307,7 +308,7 @@ export default class GameMap extends Component<Props, State> {
   private _isTouch = { current: false };
   private _lastEnteredPosition: Vector | null = null;
   private _liveTimer: NativeTimeout = null;
-  private _skipDialogueTimer: NativeTimeout = null;
+  private _skipActionsTimer: NativeTimeout = null;
   private _maskRef = createRef<HTMLDivElement>();
   private _pointerEnabled = true;
   private _pointerLock = { current: false };
@@ -472,7 +473,7 @@ export default class GameMap extends Component<Props, State> {
       Input.register('navigate', this._navigate),
       Input.register('point', this._enablePointer),
       Input.register('accept', async () => {
-        this.maybeSkipDialogue();
+        this.maybeSkipActions();
 
         const { editor } = this.props;
         const { position, selectedPosition } = this.state;
@@ -497,7 +498,7 @@ export default class GameMap extends Component<Props, State> {
           this._select(vector);
         }
       }),
-      Input.register('accept:released', this.resetDialogueSkip),
+      Input.register('accept:released', this.resetActionSkip),
       Input.register(
         'cancel',
         (event) =>
@@ -541,6 +542,10 @@ export default class GameMap extends Component<Props, State> {
     for (const remove of this._controlListeners) {
       remove();
     }
+    if (this._skipActionsTimer != null) {
+      clearTimeout(this._skipActionsTimer);
+      this._skipActionsTimer = null;
+    }
 
     document.removeEventListener('pointermove', this._pointerMove);
     document.removeEventListener('mousedown', this._mouseDown);
@@ -552,51 +557,208 @@ export default class GameMap extends Component<Props, State> {
     behavior?.deactivate?.(this._actions);
   }
 
-  private maybeSkipDialogue = () => {
-    const { animations, behavior, lastActionResponse, preventRemoteActions, skipDialogue } =
-      this.state;
+  private maybeSkipActions = () => {
+    const {
+      animations,
+      behavior,
+      currentViewer,
+      lastActionResponse,
+      map,
+      preventRemoteActions,
+      skipActions,
+    } = this.state;
+    const isCurrentViewerTurn = currentViewer != null && map.isCurrentPlayer(currentViewer);
+    const hasActionAnimation = hasMapMessageBlockingAnimation(animations);
     if (
       behavior?.type === 'null' &&
-      this._skipDialogueTimer == null &&
-      !skipDialogue &&
-      ((!lastActionResponse && preventRemoteActions) ||
+      this._skipActionsTimer == null &&
+      !skipActions &&
+      (((preventRemoteActions || hasActionAnimation) && !isCurrentViewerTurn) ||
         lastActionResponse?.type === 'Start' ||
         lastActionResponse?.type === 'CharacterMessage' ||
         lastActionResponse?.type === 'SetPlayer' ||
         hasCharacterMessage(animations))
     ) {
-      this.setState({ showSkipDialogue: true });
+      this.setState({ showSkipActions: true });
 
-      this._skipDialogueTimer = setTimeout(() => {
-        this._skipDialogueTimer = null;
-        if (!this.state.skipDialogue) {
-          let hasMessage = false;
-          for (const [vector, animation] of this.state.animations) {
-            if (animation.type === 'characterMessage' && !animation.completed) {
-              hasMessage = true;
-              this._requestFrame(() => this._animationComplete(vector, animation));
-            }
+      this._skipActionsTimer = setTimeout(() => {
+        this._skipActionsTimer = null;
+        if (!this.state.skipActions) {
+          const isCurrentViewerTurn =
+            this.state.currentViewer != null &&
+            this.state.map.isCurrentPlayer(this.state.currentViewer);
+          const skipActionAnimations =
+            (this.state.preventRemoteActions ||
+              hasMapMessageBlockingAnimation(this.state.animations)) &&
+            !isCurrentViewerTurn;
+          const hasSkippedAnimation = this._hasSkippableAnimations(skipActionAnimations);
+          if (!skipActionAnimations && !hasSkippedAnimation) {
+            this.setState({ showSkipActions: false });
+            return;
           }
-          if (hasMessage) {
+
+          this.setState(
+            {
+              animationConfig: skipActionAnimations
+                ? InstantAnimationConfig
+                : this.state.animationConfig,
+              showSkipActions: false,
+              skipActions: true,
+            },
+            () => {
+              this._completeCharacterMessageAnimations();
+              this._completeSkippedAnimations();
+              if (skipActionAnimations) {
+                this._flushActionTimers();
+              }
+            },
+          );
+
+          if (hasSkippedAnimation || skipActionAnimations) {
             rumbleEffect('accept');
             AudioPlayer.playSound('UI/Skip');
           }
-
-          this.setState({ showSkipDialogue: false, skipDialogue: true });
         }
-      }, MessageSkipDuration);
+      }, ActionSkipDuration);
     }
   };
 
-  private resetDialogueSkip = () => {
-    if (this._skipDialogueTimer != null) {
-      clearTimeout(this._skipDialogueTimer);
-      this._skipDialogueTimer = null;
-    }
-    if (this.state.showSkipDialogue) {
-      this.setState({ showSkipDialogue: false });
+  private _hasSkippableAnimations = (includeActionAnimations: boolean): boolean =>
+    this.state.animations.some(
+      (animation) =>
+        !animation.completed &&
+        (animation.type === 'characterMessage' ||
+          (includeActionAnimations &&
+            (animation.type === 'banner' ||
+              animation.type === 'message' ||
+              animation.type === 'notice'))),
+    );
+
+  private _completeCharacterMessageAnimations = () => {
+    for (const [vector, animation] of this.state.animations) {
+      if (animation.type === 'characterMessage' && !animation.completed) {
+        this._requestFrame(() => this._animationComplete(vector, animation));
+      }
     }
   };
+
+  private _completeSkippedAnimations = () => {
+    if (this._shouldSkipActionAnimations()) {
+      this._update((state) => this._completeSkippedAnimationsInState(state));
+    }
+  };
+
+  private resetActionSkip = () => {
+    if (this._skipActionsTimer != null) {
+      clearTimeout(this._skipActionsTimer);
+      this._skipActionsTimer = null;
+    }
+    if (this.state.showSkipActions) {
+      this.setState({ showSkipActions: false });
+    }
+  };
+
+  private _flushActionTimers = () => {
+    if (!this._shouldSkipActionAnimations()) {
+      return;
+    }
+
+    const timers = this._timers;
+    this._timers = new Set();
+    for (const timer of timers) {
+      clearTimeout(timer.timer);
+      timer.fn();
+    }
+  };
+
+  private _shouldSkipActionAnimations = () => this._shouldSkipActionAnimationsForState(this.state);
+
+  private _shouldSkipActionAnimationsForState = (state: State) => {
+    const isCurrentViewerTurn =
+      state.currentViewer != null && state.map.isCurrentPlayer(state.currentViewer);
+    return (
+      state.skipActions &&
+      !isCurrentViewerTurn &&
+      (state.preventRemoteActions || hasMapMessageBlockingAnimation(state.animations)) &&
+      !state.replayState.isPaused
+    );
+  };
+
+  private _completeSkippedAnimationsInState = (state: State): State => {
+    let nextState = state;
+    let iterations = 0;
+    while (this._shouldSkipActionAnimationsForState(nextState) && nextState.animations.size) {
+      if (iterations++ > 1000) {
+        this._throwError(new Error('Could not complete skipped animations.'));
+        break;
+      }
+
+      const [position, animation] = nextState.animations.entries().next().value!;
+      nextState = {
+        ...nextState,
+        animations: nextState.animations.delete(position),
+      };
+
+      if (animation.completed) {
+        continue;
+      }
+
+      animation.completed = true;
+      nextState = this._applyAnimationProgressCallbacks(nextState, animation);
+      if ('onComplete' in animation && animation.onComplete) {
+        nextState = this._applyStateLike(nextState, animation.onComplete(nextState));
+      }
+    }
+    return nextState;
+  };
+
+  private _applyAnimationProgressCallbacks = (state: State, animation: Animation): State => {
+    switch (animation.type) {
+      case 'createBuilding':
+        return this._applyStateLike(state, animation.onCreate?.(state));
+      case 'crystal':
+        return this._applyStateLike(state, animation.onConvert(state));
+      case 'damage':
+        return this._applyStateLike(state, animation.onDamage?.(state));
+      case 'despawn':
+      case 'spawn':
+        return this._applyStateLike(state, animation.onSpawn?.(state));
+      case 'explosion':
+        return this._applyStateLike(state, animation.onExplode?.(state));
+      case 'rescue':
+        return this._applyStateLike(state, animation.onRescue?.(state));
+      case 'upgrade':
+        return this._applyStateLike(state, animation.onUpgrade(state));
+      case 'attack':
+      case 'attackBuildingFlash':
+      case 'attackUnitFlash':
+      case 'banner':
+      case 'capture':
+      case 'characterMessage':
+      case 'fireworks':
+      case 'flash':
+      case 'fold':
+      case 'heal':
+      case 'health':
+      case 'message':
+      case 'move':
+      case 'new-message':
+      case 'notice':
+      case 'sabotage':
+      case 'scrollIntoView':
+      case 'shake':
+      case 'unfold':
+      case 'unitExplosion':
+      case 'unitHeal':
+        return state;
+      default:
+        animation satisfies never;
+        return state;
+    }
+  };
+
+  private _applyStateLike = (state: State, stateLike: StateLike | null | undefined): State =>
+    stateLike ? ({ ...state, ...stateLike } as State) : state;
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   private _resize = throttle(() => {
@@ -930,6 +1092,10 @@ export default class GameMap extends Component<Props, State> {
             };
           }
 
+          if (this._shouldSkipActionAnimationsForState(newState as State)) {
+            newState = this._completeSkippedAnimationsInState(newState as State);
+          }
+
           return newState as State;
         },
         () => resolve(this.state),
@@ -1168,9 +1334,15 @@ export default class GameMap extends Component<Props, State> {
       const { currentViewer, lastActionResponse, map } = this.state;
       const currentPlayer = map.getCurrentPlayer();
       const isLive = currentViewer !== currentPlayer.id;
+      const skipActions =
+        !lastActionResponse || lastActionResponse?.type === 'Start'
+          ? this.state.skipActions
+          : false;
       this.setState(
         {
-          animationConfig: getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
+          animationConfig: skipActions
+            ? InstantAnimationConfig
+            : getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
           highlightedPositions: null,
           preventRemoteActions: true,
           replayState: {
@@ -1180,10 +1352,7 @@ export default class GameMap extends Component<Props, State> {
             isWaiting: false,
             pauseStart: null,
           },
-          skipDialogue:
-            !lastActionResponse || lastActionResponse?.type === 'Start'
-              ? this.state.skipDialogue
-              : false,
+          skipActions,
         },
         async () => {
           const { currentViewer } = this.state;
@@ -1242,8 +1411,8 @@ export default class GameMap extends Component<Props, State> {
                 isWaiting: false,
                 pauseStart: null,
               },
-              showSkipDialogue: false,
-              skipDialogue: lastActionResponse?.type === 'Start' ? this.state.skipDialogue : false,
+              showSkipActions: false,
+              skipActions: lastActionResponse?.type === 'Start' ? this.state.skipActions : false,
             },
             () => {
               if (isLive) {
@@ -1313,7 +1482,7 @@ export default class GameMap extends Component<Props, State> {
         await this._update({ timeout });
       }
 
-      if (animations.size) {
+      if (animations.size && !this.state.skipActions) {
         // Some animations like HealthAnimation do not have an `onComplete` callback.
         // This delay gives these animations a chance to finish before continuing to process the queue.
         await new Promise((resolve) => setTimeout(resolve, animationConfig.AnimationDuration * 3));
@@ -1324,6 +1493,10 @@ export default class GameMap extends Component<Props, State> {
 
   private _animationComplete = (position: Vector, animation: Animation) => {
     const currentAnimation = this.state.animations.get(position);
+    if (!currentAnimation) {
+      return;
+    }
+
     // When activating a power we explode a unit while the damage animation is still ongoing.
     // Because animations cannot be canceled, we short-circuit here and ignore the `onComplete` callback of the `damage` animation.
     if (
@@ -1472,6 +1645,11 @@ export default class GameMap extends Component<Props, State> {
       return promise;
     }
 
+    if (this._shouldSkipActionAnimations()) {
+      fn();
+      return 0;
+    }
+
     const timer = window.setTimeout(() => {
       this._timers.delete(timerObject);
       fn();
@@ -1576,12 +1754,12 @@ export default class GameMap extends Component<Props, State> {
     });
 
   private _pointerDown = (event: ReactPointerEvent) => {
-    this.maybeSkipDialogue();
+    this.maybeSkipActions();
 
     this._isTouch.current = event.pointerType === 'touch';
   };
 
-  private _pointerUp = () => this.resetDialogueSkip();
+  private _pointerUp = () => this.resetActionSkip();
 
   private _pointerMove = (event: PointerEvent) => {
     this._enablePointer();
@@ -1715,6 +1893,10 @@ export default class GameMap extends Component<Props, State> {
     force?: boolean,
     direction?: VectorLike,
   ) => {
+    if (this._shouldSkipActionAnimations()) {
+      return;
+    }
+
     if (!force && !this.props.autoPanning) {
       return;
     }
@@ -1788,7 +1970,7 @@ export default class GameMap extends Component<Props, State> {
         selectedPosition,
         selectedUnit,
         showCursor,
-        showSkipDialogue,
+        showSkipActions,
         tileSize,
         vision,
         zIndex,
@@ -2047,9 +2229,7 @@ export default class GameMap extends Component<Props, State> {
         )}
         <Portal>
           <AnimatePresence>
-            {showSkipDialogue && (
-              <SkipMessages key={`messages-${String(this._skipDialogueTimer)}`} />
-            )}
+            {showSkipActions && <SkipMessages key={`messages-${String(this._skipActionsTimer)}`} />}
           </AnimatePresence>
           <AnimatePresence>
             {showMapMessages &&
