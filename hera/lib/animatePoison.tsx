@@ -25,17 +25,21 @@ export default function animatePoison(
               animations: addFlashAnimation(state.animations, {
                 children: String(fbt('Poison!', 'Text for poisoned units')),
                 color: 'green',
-                onComplete: (state) => ({
-                  // This is order dependent as the `onComplete` callback in the last iteration
-                  // might want to update the Map.
-                  map: state.map.copy({
-                    units: state.map.units.set(
-                      position,
-                      state.map.units.get(position)!.modifyHealth(-PoisonDamage),
-                    ),
-                  }),
-                  ...animatePoison(state, remainingItems, onComplete),
-                }),
+                onComplete: (state) => {
+                  const unit = state.map.units.get(position);
+                  const map = unit
+                    ? state.map.copy({
+                        units: state.map.units.set(position, unit.modifyHealth(-PoisonDamage)),
+                      })
+                    : state.map;
+
+                  return {
+                    // This is order dependent as the `onComplete` callback in the last iteration
+                    // might want to update the Map.
+                    map,
+                    ...animatePoison({ ...state, map }, remainingItems, onComplete),
+                  };
+                },
                 position,
                 sound: 'Unit/Supply',
               }),

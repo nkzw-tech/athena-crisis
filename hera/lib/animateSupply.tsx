@@ -23,14 +23,21 @@ export default function animateSupply(
             onComplete: (state) => ({
               animations: addFlashAnimation(state.animations, {
                 children: String(fbt('Supply!', 'Text for supplying units')),
-                onComplete: (state) => ({
-                  // This is order dependent as the `onComplete` callback in the last iteration
-                  // might want to update the Map.
-                  map: state.map.copy({
-                    units: state.map.units.set(position, state.map.units.get(position)!.refill()),
-                  }),
-                  ...animateSupply(state, remainingItems, onComplete),
-                }),
+                onComplete: (state) => {
+                  const unit = state.map.units.get(position);
+                  return {
+                    // This is order dependent as the `onComplete` callback in the last iteration
+                    // might want to update the Map.
+                    ...(unit
+                      ? {
+                          map: state.map.copy({
+                            units: state.map.units.set(position, unit.refill()),
+                          }),
+                        }
+                      : null),
+                    ...animateSupply(state, remainingItems, onComplete),
+                  };
+                },
                 position,
                 sound: 'Unit/Supply',
               }),
