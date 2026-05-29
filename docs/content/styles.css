@@ -35,16 +35,14 @@ pre[data-v] code,
   width: 100%;
 }
 
+.HomePageGettingStartedButton.HomePageGettingStartedButton.HomePageGettingStartedButton {
+  --vocs-color-accentInvert: #fff;
+
+  color: #fff !important;
+}
+
 div.vocs_HomePage_description {
   text-wrap: balance;
-}
-
-div.vocs_DocsLayout_gutterTop {
-  backdrop-filter: blur(2px);
-}
-
-div.vocs_HomePage {
-  padding-top: 0;
 }
 
 div[data-layout='minimal'] div#vocs-content,

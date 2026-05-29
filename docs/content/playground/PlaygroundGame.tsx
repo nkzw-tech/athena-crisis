@@ -82,7 +82,7 @@ export default function PlaygroundGame({
                 canUndoAction
                 fade={fade}
                 hide={hide}
-                state={props}
+                state={{ ...props, inlineUI: true }}
                 undo={onUndo}
                 zoom={zoom}
               />

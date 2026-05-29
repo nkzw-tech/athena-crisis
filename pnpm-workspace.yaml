@@ -41,7 +41,7 @@ minimumReleaseAgeExclude:
   - react-relay@21.0.1
   - relay-compiler@21.0.1
   - relay-runtime@21.0.1
-  - vocs@2.0.3
+  - vocs@2.0.4
 
 overrides:
   react@^18.0.0: 19.0.0-rc.1

@@ -6,6 +6,7 @@ import { defineConfig } from 'vite';
 import { vocs } from 'vocs/vite';
 import presets from '../infra/babelPresets.tsx';
 import createResolver from '../infra/createResolver.tsx';
+import pixelarticonsPlugin from '../infra/pixelarticonsPlugin.ts';
 
 export default defineConfig(async () => ({
   build: {
@@ -16,6 +17,7 @@ export default defineConfig(async () => ({
   },
   plugins: [
     createResolver(),
+    pixelarticonsPlugin(),
     babel({
       plugins: [babelPluginEmotion],
       presets,

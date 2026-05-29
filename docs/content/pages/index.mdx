@@ -1,8 +1,8 @@
 ---
-layout: landing
+layout: minimal
+showAskAi: false
 ---
 
-import { css } from '@emotion/css';
 import { HomePage } from 'vocs';
 import ClientComponent from '../playground/ClientComponent.tsx';
 
@@ -12,14 +12,17 @@ import ClientComponent from '../playground/ClientComponent.tsx';
   </a>
   <HomePage.Tagline>Open Source Docs & Playground</HomePage.Tagline>
   <HomePage.Description>
-    Athena Crisis is a modern retro turn-based strategy game built from scratch with JavaScript,
-    React and CSS.
-    <div style={{ marginTop: '1em' }}>
-      [Read the announcement](https://cpojer.net/posts/athena-crisis-open-source)
-    </div>
+    {
+      'Athena Crisis is a modern retro turn-based strategy game built from scratch with JavaScript, React and CSS.'
+    }
   </HomePage.Description>
+  <a href="https://cpojer.net/posts/athena-crisis-open-source">Read the announcement</a>
   <HomePage.Buttons>
-    <HomePage.Button href="/getting-started" variant="accent">
+    <HomePage.Button
+      className="vocs:text-white! HomePageGettingStartedButton"
+      href="/getting-started"
+      variant="accent"
+    >
       Getting Started
     </HomePage.Button>
     <HomePage.Button href="https://github.com/nkzw-tech/athena-crisis">

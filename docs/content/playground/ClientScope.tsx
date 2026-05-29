@@ -5,15 +5,21 @@ import setupGamePad from '@deities/ui/controls/setupGamePad.tsx';
 import setupHidePointer from '@deities/ui/controls/setupHidePointer.tsx';
 import setupKeyboard from '@deities/ui/controls/setupKeyboard.tsx';
 import { getScopedCSSDefinitions } from '@deities/ui/CSS.tsx';
-import { applyVar, initializeCSSVariables } from '@deities/ui/cssVar.tsx';
+import cssVar, { applyVar, initializeCSSVariables } from '@deities/ui/cssVar.tsx';
 import { AlertContext } from '@deities/ui/hooks/useAlert.tsx';
 import { ScaleContext } from '@deities/ui/hooks/useScale.tsx';
 import { setDefaultPortalContainer } from '@deities/ui/Portal.tsx';
-import { css } from '@emotion/css';
+import { css, injectGlobal } from '@emotion/css';
 import { VisibilityStateContext } from '@nkzw/use-visibility-state';
 import { ReactElement } from 'react';
 
 initializeCSSVariables();
+injectGlobal(`
+  :root {
+    ${cssVar('safe-area-bottom', 'env(safe-area-inset-bottom, 0px)')}
+    ${cssVar('safe-area-top', 'env(safe-area-inset-top, 0px)')}
+  }
+`);
 
 const clientScopeStyle = css`
   all: initial;
@@ -40,6 +46,8 @@ const clientScopeStyle = css`
 if (!document.querySelector('body > div.portal')) {
   const portal = document.createElement('div');
   portal.classList.add('portal', clientScopeStyle);
+  portal.style.position = 'relative';
+  portal.style.zIndex = '15';
   document.body.append(portal, document.body.childNodes[0]);
   setDefaultPortalContainer(portal);
 }

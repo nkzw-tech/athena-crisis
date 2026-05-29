@@ -1,3 +1,7 @@
+---
+showAskAi: false
+---
+
 # Immutable Data Structures
 
 All game related data structures and algorithms in Athena Crisis are "headless" and can run on the client, server, or during build time. Map and game state are represented using [_immutable persistent data structures_](https://roberterdin.github.io/2017/09/immutable-persistent-data-structures). Immutable means that instead of directly changing the game state, any action like moving or attacking a unit returns a new game state object. Persistent refers to reusing all data that doesn't change between two game states. These two concepts together make it easy to keep many game states around, make it fast to check whether changes happened between two states, and is memory efficient.
