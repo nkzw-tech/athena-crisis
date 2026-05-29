@@ -1,5 +1,5 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
@@ -7,7 +7,7 @@ import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import gradient from '@deities/ui/gradient.tsx';
 import Icon from '@deities/ui/Icon.tsx';
-import Forward from '@deities/ui/icons/Reply.tsx';
+import Down from '@deities/ui/icons/Down.tsx';
 import { MenuClassName } from '@deities/ui/Menu.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import Portal from '@deities/ui/Portal.tsx';
@@ -274,12 +274,12 @@ const MessageComponent = ({
               ])}
               {hasNext &&
                 (animationComplete ? (
-                  <span className={iconStyle} key={currentLine}>
-                    <Icon className={iconAnimationStyle} icon={Forward} />
+                  <span className={iconContainerStyle} key={currentLine}>
+                    <Icon className={iconStyle} icon={Down} />
                   </span>
                 ) : (
-                  <motion.div className={iconStyle} key={currentLine} variants={child}>
-                    <Icon className={iconAnimationStyle} icon={Forward} />
+                  <motion.div className={iconContainerStyle} key={currentLine} variants={child}>
+                    <Icon className={iconStyle} icon={Down} />
                   </motion.div>
                 ))}
             </motion.div>
@@ -381,18 +381,17 @@ const letterStyle = css`
   position: relative;
 `;
 
-const iconStyle = css`
-  bottom: 8px;
+const iconContainerStyle = css`
+  bottom: 0px;
   color: #fff;
-  filter: drop-shadow(0px -0.75px 0px #000) drop-shadow(-0.75px 0px 0px #000);
-  height: 16px;
   position: absolute;
-  right: 4px;
-  transform: scale(-1, 1) rotate(-90deg);
-  width: 16px;
+  right: 8px;
 `;
 
-const iconAnimationStyle = css`
+const iconStyle = css`
+  height: ${TileSize}px;
+  width: ${TileSize}px;
+  filter: drop-shadow(0px 1px 0px #000) drop-shadow(1px 0px 0px #000);
   animation: 2s infinite
     ${keyframes`
     0%, 30% {

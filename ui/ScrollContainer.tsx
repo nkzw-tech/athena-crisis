@@ -4,7 +4,7 @@ import { ReactNode, RefCallback, RefObject, useCallback, useRef, useState } from
 import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
-import Reply from './icons/Reply.tsx';
+import Down from './icons/Down.tsx';
 import { FadePulseStyle } from './PulseStyle.tsx';
 
 let currentScrollContainer: HTMLElement | null = null;
@@ -134,7 +134,7 @@ export function ScrollContainerWithNavigation({
       </ScrollContainer>
       <div className={cx(scrollDownStyle, scrollDownClassName, showArrow && arrowVisibleStyle)}>
         <div className={scrollDownIconStyle}>
-          <Icon className={FadePulseStyle} icon={Reply} />
+          <Icon className={FadePulseStyle} icon={Down} />
         </div>
       </div>
     </div>
@@ -157,11 +157,10 @@ const scrollDownStyle = css`
 `;
 
 const scrollDownIconStyle = css`
-  bottom: 4px;
+  bottom: 8px;
   color: ${applyVar('border-color')};
   position: absolute;
   right: 4px;
-  transform: rotate(-90deg);
 `;
 
 const arrowVisibleStyle = css`

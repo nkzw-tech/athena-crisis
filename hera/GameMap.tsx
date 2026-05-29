@@ -107,6 +107,11 @@ const getLayer: GetLayerFunction = (y, type) => baseZIndex + y * layerOffset + l
 
 const hasShake = (animations: Animations) => animations.some(({ type }) => type === 'shake');
 
+const hasMapMessageBlockingAnimation = (animations: Animations) =>
+  animations.some(
+    ({ type }) => type === 'banner' || type === 'characterMessage' || type === 'notice',
+  );
+
 const getVision = (
   map: MapData,
   currentViewer: PlayerID | null,
@@ -691,7 +696,15 @@ export default class GameMap extends Component<Props, State> {
     }
 
     this._update((actualState) => {
-      const { behavior, replayState } = actualState;
+      const { animations, behavior, preventRemoteActions, replayState } = actualState;
+      if (preventRemoteActions || hasMapMessageBlockingAnimation(animations)) {
+        return actualState.highlightedPositions?.some((position) =>
+          actualState.messages.has(position),
+        )
+          ? { highlightedPositions: null }
+          : null;
+      }
+
       if (!replayState.isReplaying) {
         const newState = behavior?.enter
           ? behavior.enter(vector, actualState, this._actions, this.props.editor, subVector)
@@ -1158,6 +1171,7 @@ export default class GameMap extends Component<Props, State> {
       this.setState(
         {
           animationConfig: getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
+          highlightedPositions: null,
           preventRemoteActions: true,
           replayState: {
             isLive,
@@ -1766,6 +1780,7 @@ export default class GameMap extends Component<Props, State> {
         paused,
         playerDetails,
         position,
+        preventRemoteActions,
         radius,
         replayState,
         selectedBuilding,
@@ -1785,6 +1800,8 @@ export default class GameMap extends Component<Props, State> {
       !behavior || behaviorWithHighlightedFields.has(behavior.type)
         ? this.state.highlightedPositions
         : null;
+    const showMapMessages =
+      hasMessages && !preventRemoteActions && !hasMapMessageBlockingAnimation(animations);
     const isFloating = this.props.style === 'floating';
     const StateComponent = behavior?.component;
     return (
@@ -2035,7 +2052,7 @@ export default class GameMap extends Component<Props, State> {
             )}
           </AnimatePresence>
           <AnimatePresence>
-            {hasMessages &&
+            {showMapMessages &&
               highlightedPositions?.map((vector) => {
                 const message = messages.get(vector);
                 return (
