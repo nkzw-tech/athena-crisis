@@ -137,7 +137,12 @@ const linkStyle = css`
   -webkit-user-drag: none;
   background: transparent;
   transform: scaleX(1) scaleY(1);
-  transition: transform 150ms ease;
+  transition:
+    background-color 75ms ease,
+    box-shadow 75ms ease,
+    color 75ms ease,
+    text-shadow 75ms ease,
+    transform 75ms ease;
   display: inline-flex;
   align-content: center;
 
@@ -154,6 +159,14 @@ const linkStyle = css`
   &:not(.disabled):active,
   &:not(.disabled).active {
     transform: scaleX(0.95) scaleY(0.98);
+  }
+
+  .${InlineLinkColor} {
+    transition: color 75ms ease;
+  }
+
+  svg {
+    transition: filter 75ms ease;
   }
 
   &:not(.disabled):not(.active):not(.selected-text).hover {
