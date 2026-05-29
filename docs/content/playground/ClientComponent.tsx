@@ -2,6 +2,7 @@
 
 import Spinner from '@deities/ui/Spinner.tsx';
 import Stack from '@nkzw/stack';
+// oxlint-disable-next-line @deities/no-lazy-import
 import { lazy, ReactElement, Suspense, useEffect, useState } from 'react';
 
 const modules = {

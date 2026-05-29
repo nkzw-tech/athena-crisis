@@ -8,7 +8,7 @@ import { PlayerAchievement as PlayerAchievementT } from '../Types.tsx';
 import StarIcon from './StarIcon.tsx';
 
 export default function PlayerAchievement({
-  achievement: { result, stars },
+  achievement: { legendary, result, stars },
 }: {
   achievement: PlayerAchievementT;
 }) {
@@ -20,6 +20,7 @@ export default function PlayerAchievement({
         {performance.map(([type, achieved]) => (
           <StarIcon key={type} size="small" type={achieved ? 'achieved' : 'missed'} />
         ))}
+        {legendary && <StarIcon key="legendary" size="small" type="chaos" />}
       </Stack>
       <div className={countStyle}>
         {stars} <span className={lightStyle}>/ {count}</span>

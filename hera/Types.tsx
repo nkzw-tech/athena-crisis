@@ -40,7 +40,7 @@ export type PlayerHasRewardFunction = (
   actionResponse: ReceiveRewardActionResponse,
 ) => boolean;
 
-export type PlayerAchievement = Readonly<{ result: string; stars: number }>;
+export type PlayerAchievement = Readonly<{ legendary: boolean; result: string; stars: number }>;
 
 export type PlayerDetail = Readonly<{
   displayName: string;
@@ -88,6 +88,7 @@ export type Props = Readonly<{
   inset?: number;
   lastActionResponse?: ActionResponse | null;
   lastActionTime?: number;
+  legendaryAchievement?: boolean;
   map: MapData;
   mapName?: string;
   margin?: 'minimal';

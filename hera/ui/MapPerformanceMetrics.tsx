@@ -170,12 +170,62 @@ const Card = ({
   );
 };
 
+const LegendaryCard = ({ onComplete }: { onComplete: () => void }) => {
+  const [isComplete, setIsComplete] = useState(false);
+  return (
+    <motion.div
+      animate={{
+        opacity: 1,
+        x: 0,
+      }}
+      className={fullStyle}
+      exit={{
+        opacity: 0,
+        x: '-100%',
+      }}
+      initial={{
+        opacity: 0,
+        x: '100%',
+      }}
+      onAnimationComplete={() => {
+        if (!isComplete) {
+          setTimeout(onComplete, starDuration);
+          setIsComplete(true);
+        }
+      }}
+      transition={{
+        delay: (cardDuration * (isComplete ? 1 : 1.5)) / 1000,
+        duration: cardDuration / 1000 / 2,
+        ease: [0.34, 1.26, 0.64, 1],
+      }}
+    >
+      <Stack alignCenter between className={cx(fullStyle, innerStyle)} gap={24} stretch>
+        <VStack between gap>
+          <h2 className={textStyle}>
+            <fbt desc="Legendary campaign clear reward headline">Legendary Clear</fbt>
+          </h2>
+          <div className={cx(fadeStyle, descriptionStyle, descriptionBonusStyle)}>
+            <fbt desc="Legendary campaign clear reward description">Chaos Star earned</fbt>
+          </div>
+        </VStack>
+        <StarIcon
+          className={achievedAnimationStyle}
+          starClassName={chaosStarAnimationStyle}
+          type="chaos"
+        />
+      </Stack>
+    </motion.div>
+  );
+};
+
 const SummaryCard = ({
   instant,
+  legendaryAchievement,
   onComplete,
   result,
 }: {
   instant: boolean;
+  legendaryAchievement?: boolean;
   onComplete: () => void;
   result: ReadonlyArray<readonly [PerformanceType, boolean]>;
 }) => {
@@ -211,7 +261,7 @@ const SummaryCard = ({
           className={summaryStyle}
           flex1
           style={{
-            [vars.set('results')]: result.length,
+            [vars.set('results')]: result.length + (legendaryAchievement ? 1 : 0),
           }}
         >
           {result.map(([type, achieved]) => (
@@ -221,6 +271,13 @@ const SummaryCard = ({
               type={achieved ? 'achieved' : 'missed'}
             />
           ))}
+          {legendaryAchievement && (
+            <StarIcon
+              className={cx(summaryStarStyle, instant && instantStyle)}
+              key="legendary"
+              type="chaos"
+            />
+          )}
         </Stack>
       </Stack>
     </motion.div>
@@ -228,12 +285,14 @@ const SummaryCard = ({
 };
 
 export default function MapPerformanceMetrics({
+  legendaryAchievement,
   map,
   mapName,
   player,
   playerAchievement,
   scrollIntoView,
 }: {
+  legendaryAchievement?: boolean;
   map: MapData;
   mapName: string | undefined;
   player: PlayerID;
@@ -266,15 +325,22 @@ export default function MapPerformanceMetrics({
       )),
     [map, player, result, showNextVisibleCard],
   );
+  const allCards = useMemo(
+    () =>
+      legendaryAchievement
+        ? [...cards, <LegendaryCard key="legendary" onComplete={showNextVisibleCard} />]
+        : cards,
+    [cards, legendaryAchievement, showNextVisibleCard],
+  );
 
   const center = vec(Math.floor(map.size.width / 2), Math.floor(map.size.height / 2));
   useEffect(() => {
-    if (cards.length) {
+    if (allCards.length) {
       scrollIntoView([center], true);
     }
-  }, [cards.length, center, scrollIntoView]);
+  }, [allCards.length, center, scrollIntoView]);
 
-  if (!cards.length) {
+  if (!allCards.length) {
     return null;
   }
 
@@ -328,9 +394,10 @@ export default function MapPerformanceMetrics({
           ) : (
             <>
               <AnimatePresence>
-                {cards[visibleCard] || (
+                {allCards[visibleCard] || (
                   <SummaryCard
                     instant={isDone}
+                    legendaryAchievement={legendaryAchievement}
                     onComplete={() => setIsDone(true)}
                     result={result}
                   />
@@ -494,6 +561,25 @@ const achievedStarAnimationStyle = css`
     ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms forwards;
 `;
 
+const chaosStarAnimationStyle = css`
+  color: ${applyVar('color-silver')};
+  animation: ${keyframes`
+    0% {
+      color: ${applyVar('color-silver')};
+    }
+    50% {
+      color: ${applyVar('color-silver')};
+    }
+    75% {
+      color: ${getColor('red')};
+    }
+    100% {
+      color: ${getColor('red')};
+    }
+  `}
+    ${starDuration}ms 1 cubic-bezier(0.34, 1.67, 0.63, 1.1) ${starDuration}ms forwards;
+`;
+
 const missedAnimationStyle = css`
   animation: ${keyframes`
     0% {
@@ -550,13 +636,20 @@ const summaryStarStyle = css`
     margin-left: -${DoubleSize}px;
     top: 36px;
   }
+
+  &:nth-child(5) {
+    animation-delay: ${starDuration * 1.8}ms;
+    margin-left: -${DoubleSize}px;
+    top: ${TileSize * 3}px;
+  }
 `;
 
 const instantStyle = css`
   &:nth-child(1),
   &:nth-child(2),
   &:nth-child(3),
-  &:nth-child(4) {
+  &:nth-child(4),
+  &:nth-child(5) {
     animation-delay: 0ms;
     animation-duration: 0ms;
   }

@@ -1740,6 +1740,7 @@ export default class GameMap extends Component<Props, State> {
         fogStyle,
         gameId,
         hasMessages,
+        legendaryAchievement,
         mapName,
         margin,
         playerAchievement,
@@ -2008,6 +2009,7 @@ export default class GameMap extends Component<Props, State> {
             map.matchesTeam(lastActionResponse.toPlayer, currentViewer) && (
               <MapPerformanceMetrics
                 key="performance-metrics"
+                legendaryAchievement={legendaryAchievement}
                 map={map}
                 mapName={mapName}
                 player={currentViewer}
