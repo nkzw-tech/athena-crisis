@@ -251,7 +251,7 @@ export default function MapEditorControlPanel({
               />
             );
           case 'setup':
-            return <SetupPanel setMap={setMap} state={state} />;
+            return <SetupPanel isAdmin={isAdmin} setMap={setMap} state={state} />;
           default: {
             mode satisfies never;
             throw new UnknownTypeError('MapEditorControlPanel', mode);

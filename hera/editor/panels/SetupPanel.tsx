@@ -20,15 +20,12 @@ import TeamSelector from '../../ui/TeamSelector.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
 import { SetMapFunction } from '../Types.tsx';
 
-const aiRegistry =
-  process.env.NODE_ENV === 'development'
-    ? AIRegistry
-    : new Map([...AIRegistry].filter(([, { published }]) => published));
-
-export default function MapEditorSetupPanel({
+export default function SetupPanel({
+  isAdmin,
   setMap,
   state,
 }: {
+  isAdmin: boolean | undefined;
   setMap: SetMapFunction;
   state: State;
 }) {
@@ -87,6 +84,12 @@ export default function MapEditorSetupPanel({
       );
     },
     [map, setMap],
+  );
+
+  const aiRegistry = useMemo(
+    () =>
+      isAdmin ? AIRegistry : new Map([...AIRegistry].filter(([, { published }]) => published)),
+    [isAdmin],
   );
 
   return (

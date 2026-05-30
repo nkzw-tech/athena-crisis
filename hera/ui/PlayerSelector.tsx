@@ -281,7 +281,7 @@ const PlayerItem = ({
   user: UserLike | undefined;
   viewerPlayerID?: PlayerID;
 }) => {
-  const hasSelectableAI = !!(aiRegistry && onSelectAI && player.id !== viewerPlayerID);
+  const hasSelectableAI = !!(aiRegistry?.size && onSelectAI && player.id !== viewerPlayerID);
   const hasSelectableSkills = !!(
     !player.isPlaceholder() &&
     hasSkills &&
@@ -365,7 +365,7 @@ const PlayerItem = ({
               </Stack>
             )
           ) : null}
-          {aiRegistry && player.id !== viewerPlayerID && (
+          {hasSelectableAI && player.id !== viewerPlayerID && (
             <div className={aiSelectorStyle}>
               <AISelector
                 allowDefaultAI={allowDefaultAI}
@@ -387,7 +387,7 @@ const PlayerItem = ({
       <div className={nameStyle}>
         <fbt desc="Text when waiting for a player to join">Waiting for a player…</fbt>
       </div>
-      {aiRegistry && onSelectAI && (
+      {hasSelectableAI && onSelectAI && (
         <div className={aiSelectorStyle}>
           <AISelector
             allowDefaultAI={allowDefaultAI}
@@ -413,7 +413,7 @@ const PlayerItem = ({
           <PlayerPosition color={playerToColor(player.id)} hasPlayer={!!viewerPlayerID} />
         </div>
       </InlineLink>
-      {aiRegistry && onSelectAI && (
+      {hasSelectableAI && onSelectAI && (
         <div className={aiSelectorStyle}>
           <AISelector
             allowDefaultAI={allowDefaultAI}

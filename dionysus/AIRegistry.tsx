@@ -20,7 +20,7 @@ const AIRegistry: AIRegistryT = new Map([
   ],
   [
     AIID.PersephoneBeta,
-    { class: PersephoneBeta, description: 'Hard', name: 'PersephoneBeta', published: false },
+    { class: PersephoneBeta, description: 'Hard', name: 'PersephoneBeta', published: true },
   ],
   [
     AIID.DiomedesEpsilon,
