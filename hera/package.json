@@ -27,7 +27,7 @@
     "array-shuffle": "^4.1.0",
     "fbtee": "^2.0.0",
     "framer-motion": "^12.40.0",
-    "pixelarticons": "^2.1.1",
+    "pixelarticons": "^2.1.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

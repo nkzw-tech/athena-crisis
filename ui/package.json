@@ -20,10 +20,10 @@
     "fbtee": "^2.0.0",
     "framer-motion": "^12.40.0",
     "howler": "^2.2.4",
-    "pixelarticons": "^2.1.1",
+    "pixelarticons": "^2.1.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.1",
+    "react-router-dom": "^7.16.0",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
