@@ -1646,7 +1646,8 @@ export default class GameMap extends Component<Props, State> {
     }
 
     if (this._shouldSkipActionAnimations()) {
-      fn();
+      // Skipped animations may schedule follow-up updates while another update is still applying.
+      queueMicrotask(fn);
       return 0;
     }
 
