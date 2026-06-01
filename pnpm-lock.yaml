@@ -123,8 +123,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
       array-shuffle:
         specifier: ^4.1.0
         version: 4.1.0
@@ -240,8 +240,8 @@ importers:
         specifier: ^4.8.3
         version: 4.8.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       tinybase:
-        specifier: ^8.4.1
-        version: 8.4.1(@sinclair/typebox@0.34.49)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.4.3)
+        specifier: ^8.4.2
+        version: 8.4.2(@sinclair/typebox@0.34.49)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.4.3)
       workbox-core:
         specifier: ^7.4.1
         version: 7.4.1
@@ -343,8 +343,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
       '@nkzw/safe-word-list':
         specifier: ^3.1.2
         version: 3.1.2
@@ -509,8 +509,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
       array-shuffle:
         specifier: ^4.1.0
         version: 4.1.0
@@ -638,8 +638,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
 
   docs:
     dependencies:
@@ -751,8 +751,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(react@19.2.6)
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
       '@nkzw/stack':
         specifier: ^2.3.2
         version: 2.3.2(react@19.2.6)
@@ -878,8 +878,8 @@ importers:
         specifier: ^11.13.5
         version: 11.13.5
       '@nkzw/immutable-map':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^2.1.0
+        version: 2.1.0
       '@playwright/browser-chromium':
         specifier: ^1.60.0
         version: 1.60.0
@@ -2299,14 +2299,14 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
-  '@iconify-json/lucide@1.2.110':
-    resolution: {integrity: sha512-rLeHqnZZBxZbprbVwf6uY7HB5GkGVgvT9VujhjvaUEqFDLKZON6zR8K1f8uD1brBwf5TJ0TIvvW8mz5u2XJU+w==}
+  '@iconify-json/lucide@1.2.111':
+    resolution: {integrity: sha512-S6oXom2YOKuXFxWofhHa2oq++Z3WeZ78dRFDA7aEEJqyNCJlQd1UGAfN8u2gD2NzvYotmm+j5kH678viWfZbGQ==}
 
   '@iconify-json/simple-icons@1.2.84':
     resolution: {integrity: sha512-v4JVu6xIewGoETD4mm2k6UAdFAbTlY1duw5ZNSxYORfs2yFsHDhoU9Omn/BgrV0nR/ptWkF3ZIr/ZHoYXI/6Jw==}
 
-  '@iconify-json/vscode-icons@1.2.52':
-    resolution: {integrity: sha512-vX4VmsMatZ39SyNtxsXxmE3FzYmRVBGDzkk5/M5bmVQO2CyZhwZwTUoNuCnU2pAjuLR+7aZdYRl3IFC/MOx/ZQ==}
+  '@iconify-json/vscode-icons@1.2.53':
+    resolution: {integrity: sha512-l7EU0XxVXufefqYg8gaBgsmM0Bk6Sg5EbF6JTnJ15YkRbC9eiDn5dtyV41IRpV/dabveEAl0iD7dQjv+A7fNLA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2465,8 +2465,8 @@ packages:
     resolution: {integrity: sha512-RApDTE1panuIwDS2XLTeBkbfylwZBMa+XXSzPAbOATEUly4tmWCm2NsT7hUnX+sVSf62rpKG9mEOe4cENFmbhA==}
     engines: {node: '>=18.0.0'}
 
-  '@nkzw/immutable-map@1.2.2':
-    resolution: {integrity: sha512-DmoDmO6e5kre79+F6i6+FK/BERO9BDHduUwIX//9vvbtwuN68P1T5tv9FN968x/H9X6pLFsUmYsnJnIPB63jqQ==}
+  '@nkzw/immutable-map@2.1.0':
+    resolution: {integrity: sha512-biyauRwx0lZo77wD5+Sz0Nm9YFQObJWqL+16Ksit1tDdtF7LEqdWw5LTVJjofHw36H0jVENSw08iMzno2QTTLA==}
 
   '@nkzw/joymap@4.0.2':
     resolution: {integrity: sha512-p0AIhs3B3tZBZ9480MnLsyTjMxoARkFW/apUfBBl0dPqsYuIzgTDuhnyf3fJ3P/poQHjDTBUJ41ibk9HOAsB1A==}
@@ -4764,8 +4764,8 @@ packages:
     resolution: {integrity: sha512-lGe34o6EHj9y3Kts9R4ZYs/Gr+6N7MCaMlIFA3F1R2O5/m7K06AxfSeO5530PEERE6/WyEg3lsuyw4GHlPZHog==}
     engines: {node: ^4.5.0 || >= 5.9}
 
-  baseline-browser-mapping@2.10.32:
-    resolution: {integrity: sha512-wbPvpyjJPC0zdfdKXxqEL3Ea+bOMD/87X4lftiJkkaBiuG6ALQy1SLmEd7BSmVCuwCQsBrCamgBoLyfFDD1EPg==}
+  baseline-browser-mapping@2.10.33:
+    resolution: {integrity: sha512-bA6+tcSLpz2tIEdDXZPpPTIuxBcC4+w6SieaYyfigIa4h8GlFxbA17v22Vx3JUtuZQj9SgOsnbK+aTBzyDyEuw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -7590,8 +7590,8 @@ packages:
     resolution: {integrity: sha512-AT+RJgD2sH8phPmCf7OUZR8xGdcJRga4+1cOaXJ64hvcSkVhNcRHOwIxUatPH15+nj59WAGTDv3LSGZPEQbJaQ==}
     engines: {node: '>=12.0.0'}
 
-  protobufjs@7.6.1:
-    resolution: {integrity: sha512-4K0myLaWL5EteuSAro91EGFgcfVgxb64Jx+7oDAY6GOkXD4M69yuSEljNcInGVCA5sOPxmZ/EqDLj2x0Q0+Ygg==}
+  protobufjs@7.6.2:
+    resolution: {integrity: sha512-N9EiLovGEQOJSPF26Ij7qUGvahfEnq0eeYZ02aigIedkmz1qZSwjnP9SBITHJuF/6MYbIW4HDN8zdYjsjqJKXQ==}
     engines: {node: '>=12.0.0'}
 
   proxy-addr@2.0.7:
@@ -8398,36 +8398,36 @@ packages:
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
 
-  tinybase@8.4.1:
-    resolution: {integrity: sha512-jJvT0wELbS4+g4pUUOv/Op8V/+JaiGtrp2h9SGAcszp7dpHCB1U/giW4TR9A2jbc1LS+KNucqP/WdFOCWwjqqw==}
+  tinybase@8.4.2:
+    resolution: {integrity: sha512-7XjkNodkU+qAyGG6i0PviS5xThURI6E1JBFAl2+fryDF+IGLQs8VvgNZfO7J6N9U4Fme22n1enIQheXxSuh14Q==}
     peerDependencies:
-      '@automerge/automerge-repo': ^2.5.5
-      '@cloudflare/workers-types': ^4.20260508.1
-      '@electric-sql/pglite': ^0.4.5
+      '@automerge/automerge-repo': ^2.5.6
+      '@cloudflare/workers-types': ^4.20260530.1
+      '@electric-sql/pglite': ^0.4.6
       '@libsql/client': ^0.17.3
-      '@powersync/common': ^1.52.0
+      '@powersync/common': ^1.53.2
       '@sinclair/typebox': ^0.34.49
       '@sqlite.org/sqlite-wasm': ^3.53.0-build1
       '@vlcn.io/crsqlite-wasm': ^0.16.0
       arktype: ^2.2.0
-      bun: ^1.3.13
+      bun: ^1.3.14
       effect: ^3.21.2
       electric-sql: ^0.12.1
-      expo: ^55.0.23
+      expo: ^56.0.8
       expo-sqlite: ^55.0.15
       partykit: ^0.0.115
-      partysocket: ^1.1.18
+      partysocket: ^1.1.19
       postgres: ^3.4.9
       react: ^19.2.6
       react-dom: ^19.2.6
       react-native-mmkv: 4.3.1
       react-native-sqlite-storage: ^6.0.1
-      solid-js: ^1.9.12
+      solid-js: ^1.9.13
       sqlite3: ^5.1.7
-      svelte: ^5.55.5
-      valibot: ^1.4.0
-      ws: ^8.20.0
-      yjs: ^13.6.30
+      svelte: ^5.56.0
+      valibot: ^1.4.1
+      ws: ^8.21.0
+      yjs: ^13.6.31
       zod: ^4.4.3
     peerDependenciesMeta:
       '@automerge/automerge-repo':
@@ -8494,8 +8494,8 @@ packages:
     resolution: {integrity: sha512-g62dB+w1/OEFnPvmX0yd/HnetYITOL+1nJW7kitOycOeAvmbWC/nu0fwmmQ/kupNojqExzyC/T++pST/jRJ2mQ==}
     engines: {node: '>=18'}
 
-  tinyglobby@0.2.16:
-    resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
+  tinyglobby@0.2.17:
+    resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
   tinypool@2.1.0:
@@ -10857,7 +10857,7 @@ snapshots:
       fast-deep-equal: 3.1.3
       functional-red-black-tree: 1.0.1
       google-gax: 3.6.1
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -10869,7 +10869,7 @@ snapshots:
       fast-deep-equal: 3.1.3
       functional-red-black-tree: 1.0.1
       google-gax: 4.6.1
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -11021,7 +11021,7 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
       yargs: 17.7.2
     optional: true
 
@@ -11029,7 +11029,7 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
       yargs: 17.7.2
     optional: true
 
@@ -11061,7 +11061,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@iconify-json/lucide@1.2.110':
+  '@iconify-json/lucide@1.2.111':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -11069,7 +11069,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/vscode-icons@1.2.52':
+  '@iconify-json/vscode-icons@1.2.53':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -11314,7 +11314,7 @@ snapshots:
 
   '@nkzw/histogram@1.1.0': {}
 
-  '@nkzw/immutable-map@1.2.2': {}
+  '@nkzw/immutable-map@2.1.0': {}
 
   '@nkzw/joymap@4.0.2': {}
 
@@ -12830,7 +12830,7 @@ snapshots:
       debug: 4.4.3(supports-color@5.5.0)
       minimatch: 10.2.5
       semver: 7.8.1
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -13375,7 +13375,7 @@ snapshots:
 
   base64id@2.0.0: {}
 
-  baseline-browser-mapping@2.10.32: {}
+  baseline-browser-mapping@2.10.33: {}
 
   better-result@2.9.2: {}
 
@@ -13426,7 +13426,7 @@ snapshots:
 
   browserslist@4.28.2:
     dependencies:
-      baseline-browser-mapping: 2.10.32
+      baseline-browser-mapping: 2.10.33
       caniuse-lite: 1.0.30001793
       electron-to-chromium: 1.5.364
       node-releases: 2.0.46
@@ -14152,7 +14152,7 @@ snapshots:
       get-tsconfig: 4.14.0
       is-bun-module: 2.0.0
       stable-hash-x: 0.2.0
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       unrs-resolver: 1.12.2
     optionalDependencies:
       eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.60.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))
@@ -14914,7 +14914,7 @@ snapshots:
       node-fetch: 2.7.0
       object-hash: 3.0.0
       proto3-json-serializer: 2.0.2
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
       retry-request: 7.0.2
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -16834,12 +16834,12 @@ snapshots:
 
   proto3-json-serializer@1.1.1:
     dependencies:
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
     optional: true
 
   proto3-json-serializer@2.0.2:
     dependencies:
-      protobufjs: 7.6.1
+      protobufjs: 7.6.2
     optional: true
 
   protobufjs-cli@1.1.1(protobufjs@7.2.4):
@@ -16873,7 +16873,7 @@ snapshots:
       long: 5.3.2
     optional: true
 
-  protobufjs@7.6.1:
+  protobufjs@7.6.2:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
       '@protobufjs/base64': 1.1.2
@@ -17760,7 +17760,7 @@ snapshots:
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.7
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       ts-interface-checker: 0.1.13
 
   supports-color@10.2.2: {}
@@ -17892,7 +17892,7 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
-  tinybase@8.4.1(@sinclair/typebox@0.34.49)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.4.3):
+  tinybase@8.4.2(@sinclair/typebox@0.34.49)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.4.3):
     optionalDependencies:
       '@sinclair/typebox': 0.34.49
       react: 19.2.6
@@ -17904,7 +17904,7 @@ snapshots:
 
   tinyexec@1.2.3: {}
 
-  tinyglobby@0.2.16:
+  tinyglobby@0.2.17:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
@@ -18282,7 +18282,7 @@ snapshots:
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       pretty-bytes: 6.1.1
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       vite: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
       workbox-build: 7.4.1(@types/babel__core@7.20.5)
       workbox-window: 7.4.1
@@ -18306,7 +18306,7 @@ snapshots:
       picomatch: 4.0.4
       postcss: 8.5.15
       rolldown: 1.0.2
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 25.9.1
       esbuild: 0.28.0
@@ -18338,7 +18338,7 @@ snapshots:
       std-env: 4.1.0
       tinybench: 2.9.0
       tinyexec: 1.2.3
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
       vite: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
       why-is-node-running: 2.3.0
@@ -18353,9 +18353,9 @@ snapshots:
       '@base-ui/react': 1.5.0(@types/react@19.2.15)(date-fns@4.4.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@codesandbox/sandpack-react': 2.20.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@hono/node-server': 2.0.4(hono@4.12.23)
-      '@iconify-json/lucide': 1.2.110
+      '@iconify-json/lucide': 1.2.111
       '@iconify-json/simple-icons': 1.2.84
-      '@iconify-json/vscode-icons': 1.2.52
+      '@iconify-json/vscode-icons': 1.2.53
       '@iconify/types': 2.0.0
       '@iconify/utils': 3.1.3
       '@mdx-js/mdx': 3.1.1

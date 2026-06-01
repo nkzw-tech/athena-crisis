@@ -24,7 +24,7 @@
     "@deities/ui": "workspace:*",
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/css": "^11.13.5",
-    "@nkzw/immutable-map": "^1.2.2",
+    "@nkzw/immutable-map": "^2.1.0",
     "@playwright/browser-chromium": "^1.60.0",
     "@types/jest-image-snapshot": "^6.4.1",
     "@types/object-inspect": "^1.13.0",

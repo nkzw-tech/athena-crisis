@@ -11,7 +11,7 @@
   "dependencies": {
     "@deities/athena": "workspace:*",
     "@nkzw/core": "^1.3.1",
-    "@nkzw/immutable-map": "^1.2.2",
+    "@nkzw/immutable-map": "^2.1.0",
     "array-shuffle": "^4.1.0"
   }
 }

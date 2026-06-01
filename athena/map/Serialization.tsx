@@ -135,7 +135,7 @@ export function encodeEntities<
   S extends T extends Unit ? PlainUnit : PlainBuilding,
 >(entities: ImmutableMap<Vector, T>): PlainEntitiesList<S> {
   return entities
-    .map((entity, { x, y }) => [x, y, entity.toJSON()])
+    .map((entity: T, { x, y }: Vector) => [x, y, entity.toJSON()])
     .toSetSeq()
-    .toJS() as PlainEntitiesList<S>;
+    .toJS() as unknown as PlainEntitiesList<S>;
 }
