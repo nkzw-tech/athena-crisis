@@ -19,6 +19,8 @@ export default function toFactionName(player: PlayerID) {
       return 'Red Ares';
     case 7:
       return 'Cyan Iris';
+    case 8:
+      return 'Dark Athena';
     default:
       player satisfies never;
       throw new UnknownTypeError('toFactionName', player);

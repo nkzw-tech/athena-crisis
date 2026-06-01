@@ -13,6 +13,7 @@ export default function getTranslatedColorName(player: PlayerID) {
       fbt.enum(capitalizedColor(player), [
         'Blue',
         'Cyan',
+        'Dark',
         'Green',
         'Neutral',
         'Orange',

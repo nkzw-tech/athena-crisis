@@ -19,6 +19,7 @@ type GlobalCSSVariableName =
   | 'color-black'
   | 'color-blue'
   | 'color-cyan'
+  | 'color-dark'
   | 'color-gray'
   | 'color-green'
   | 'color-neutral'
@@ -125,6 +126,7 @@ ${cssVar('text-color', '#111')}
 ${cssVar('color-black', '10, 10, 10')}
 ${cssVar('color-blue', '60, 157, 255')}
 ${cssVar('color-cyan', '33, 195, 155')}
+${cssVar('color-dark', '34, 39, 46')}
 ${cssVar('color-gray', '132, 132, 132')}
 ${cssVar('color-green', '94, 163, 24')}
 ${cssVar('color-neutral', '179, 160, 124')}
@@ -160,6 +162,7 @@ ${cssVar('text-color', '#f5f5f5')}
 ${cssVar('color-black', '10, 10, 10')}
 ${cssVar('color-blue', '60, 157, 235')}
 ${cssVar('color-cyan', '45, 197, 146')}
+${cssVar('color-dark', '100, 110, 124')}
 ${cssVar('color-gray', '132, 132, 132')}
 ${cssVar('color-green', '142, 169, 53')}
 ${cssVar('color-neutral', '204, 193, 155')}

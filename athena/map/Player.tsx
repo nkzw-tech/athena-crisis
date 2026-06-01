@@ -11,14 +11,14 @@ import {
 } from './PlayerStatistics.tsx';
 
 export type PlainPlayerID = number;
-export type PlayerID = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type PlayerID = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type PlayerIDs = ReadonlyArray<PlayerID>;
 export type PlayerIDSet = ReadonlySet<PlayerID>;
 export type DynamicPlayerID = PlayerID | 'self' | 'team' | 'opponent';
 export type PlainDynamicPlayerID = PlayerID | -1 | -2 | -3;
 
 // This tuple must start with `0`.
-export const PlayerIDs = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+export const PlayerIDs = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
 export const DynamicPlayerIDs = new Set(['self', 'team', 'opponent', ...PlayerIDs] as const);
 
 type BasePlainPlayerType = Readonly<{
@@ -463,6 +463,7 @@ export function toPlayerID(id: number): PlayerID {
     case 5:
     case 6:
     case 7:
+    case 8:
       return id;
     default: {
       throw new Error(`Invalid PlayerID '${id}'.`);

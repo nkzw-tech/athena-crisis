@@ -9,6 +9,7 @@ const NAMES = {
   5: 'Green',
   6: 'Red',
   7: 'Cyan',
+  8: 'Dark',
 } as const;
 
 export default function getColorName(player: PlayerID): string {

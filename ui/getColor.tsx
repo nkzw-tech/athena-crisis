@@ -5,6 +5,7 @@ import { applyVar } from './cssVar.tsx';
 const varBlack = applyVar('color-black');
 const varBlue = applyVar('color-blue');
 const varCyan = applyVar('color-cyan');
+const varDark = applyVar('color-dark');
 const varGray = applyVar('color-gray');
 const varGreen = applyVar('color-green');
 const varNeutral = applyVar('color-neutral');
@@ -16,6 +17,7 @@ const varRed = applyVar('color-red');
 const black = `rgb(${varBlack})`;
 const blue = `rgb(${varBlue})`;
 const cyan = `rgb(${varCyan})`;
+const dark = `rgb(${varDark})`;
 const green = `rgb(${varGreen})`;
 const neutral = `rgb(${varNeutral})`;
 const gray = `rgb(${varGray})`;
@@ -24,7 +26,16 @@ const pink = `rgb(${varPink})`;
 const purple = `rgb(${varPurple})`;
 const red = `rgb(${varRed})`;
 
-export type Color = 'blue' | 'cyan' | 'green' | 'neutral' | 'orange' | 'pink' | 'purple' | 'red';
+export type Color =
+  | 'blue'
+  | 'cyan'
+  | 'dark'
+  | 'green'
+  | 'neutral'
+  | 'orange'
+  | 'pink'
+  | 'purple'
+  | 'red';
 
 export type BaseColor = Color | DynamicPlayerID;
 
@@ -37,8 +48,10 @@ const COLORS = {
   5: green,
   6: red,
   7: cyan,
+  8: dark,
   blue,
   cyan,
+  dark,
   green,
   neutral,
   opponent: black,
@@ -77,6 +90,9 @@ const getColorWithAlpha = (color: BaseColor, alpha: number) => {
     case 7:
     case 'cyan':
       return `rgba(${varCyan}, ${alpha})`;
+    case 8:
+    case 'dark':
+      return `rgba(${varDark}, ${alpha})`;
     case 'team':
       return `rgba(${varGray}, ${alpha})`;
     case 'opponent':
@@ -106,6 +122,8 @@ export function playerToColor(player: PlayerID): Color {
       return `red`;
     case 7:
       return `cyan`;
+    case 8:
+      return `dark`;
     default: {
       player satisfies never;
       throw new UnknownTypeError('playerToColor', player);
