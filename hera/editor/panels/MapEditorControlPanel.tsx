@@ -158,6 +158,7 @@ export default function MapEditorControlPanel({
                 drawingMode={editor.drawingMode}
                 fillMap={fillMap}
                 hasContentRestrictions={!isAdmin}
+                isAdmin={isAdmin}
                 selected={editor.selected}
                 setEditorState={setEditorState}
                 user={user}
@@ -180,6 +181,7 @@ export default function MapEditorControlPanel({
                 actions={actions}
                 editor={editor}
                 editorHistory={editorHistory}
+                isAdmin={isAdmin}
                 key={String(state.selectedPosition)}
                 state={state}
               />

@@ -52,6 +52,7 @@ export default memo(function DesignPanel({
   drawingMode,
   fillMap,
   hasContentRestrictions,
+  isAdmin,
   selected,
   setEditorState,
   user,
@@ -62,6 +63,7 @@ export default memo(function DesignPanel({
   drawingMode: DrawingMode;
   fillMap: () => void;
   hasContentRestrictions: boolean;
+  isAdmin?: boolean;
   selected: EditorSelection | undefined;
   setEditorState: (setEditorState: Partial<EditorState>) => void;
   user: UserWithUnlocks;
@@ -411,6 +413,7 @@ export default memo(function DesignPanel({
             <EditorPlayerSelector
               actions={actions}
               currentPlayer={currentPlayer}
+              isAdmin={isAdmin}
               setEditorState={setEditorState}
               vertical
             />

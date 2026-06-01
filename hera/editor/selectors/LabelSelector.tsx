@@ -1,18 +1,21 @@
-import { PlayerID, PlayerIDs, PlayerIDSet } from '@deities/athena/map/Player.tsx';
+import { PlayerID, PlayerIDSet } from '@deities/athena/map/Player.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
 import { ReactNode } from 'react';
 import UILabel from '../../ui/UILabel.tsx';
+import getEditorPlayerIDs from '../lib/getEditorPlayerIDs.tsx';
 
 export default function LabelSelector({
   active,
+  isAdmin,
   onChange,
 }: {
   active?: PlayerID | null;
+  isAdmin?: boolean;
   onChange: (label: PlayerID | null) => void;
 }) {
-  return PlayerIDs.map((label) => (
+  return getEditorPlayerIDs(isAdmin).map((label) => (
     <SelectableLabel
       active={active === label}
       color={label}
@@ -25,15 +28,17 @@ export default function LabelSelector({
 export function ManyLabelSelector({
   active,
   children,
+  isAdmin,
   onChange,
 }: {
   active?: PlayerIDSet;
   children?: ReactNode;
+  isAdmin?: boolean;
   onChange: (labels: PlayerIDSet) => void;
 }) {
   return (
     <>
-      {PlayerIDs.map((label) => (
+      {getEditorPlayerIDs(isAdmin).map((label) => (
         <SelectableLabel
           active={!!active?.has(label)}
           color={label}

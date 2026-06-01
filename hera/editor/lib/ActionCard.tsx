@@ -61,17 +61,6 @@ type TopBarProps = Readonly<{
   onChange: ActionChangeFn | undefined;
 }>;
 
-const playerIDs = sortBy([...DynamicPlayerIDs], (id) => {
-  if (id === 0) {
-    return Number.POSITIVE_INFINITY;
-  }
-
-  const number = encodeDynamicPlayerID(id);
-  return number < 0 ? 1 / number : number;
-});
-
-const playerIDsWithoutNeutral = playerIDs.filter((id) => id !== 0);
-
 const biomes = Biomes.filter((biome) => biome !== Biome.Spaceship);
 
 const TopBarIcons = ({ first, index, last, onChange }: TopBarProps) =>
@@ -115,6 +104,7 @@ export default memo(function ActionCard({
   formatText,
   hasContentRestrictions,
   index,
+  isAdmin,
   last,
   map,
   onChange,
@@ -134,6 +124,7 @@ export default memo(function ActionCard({
   formatText?: true;
   hasContentRestrictions: boolean;
   index?: number;
+  isAdmin?: boolean;
   last?: boolean;
   map?: MapData;
   onChange?: ActionChangeFn;
@@ -153,6 +144,22 @@ export default memo(function ActionCard({
   const canChange = onChange && index != null;
   const shouldRenderControls = (!scrollRef || isVisible) && canChange;
   const [animate, setAnimate] = useState(false);
+  const playerIDs = useMemo(
+    () =>
+      sortBy(
+        [...DynamicPlayerIDs].filter((id) => isAdmin || id !== 8),
+        (id) => {
+          if (id === 0) {
+            return Number.POSITIVE_INFINITY;
+          }
+
+          const number = encodeDynamicPlayerID(id);
+          return number < 0 ? 1 / number : number;
+        },
+      ),
+    [isAdmin],
+  );
+  const playerIDsWithoutNeutral = playerIDs.filter((id) => id !== 0);
   const hasCurrentPlayer = map && currentPlayer != null;
 
   const gameEndNotice = useMemo(

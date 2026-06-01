@@ -7,7 +7,7 @@ import removeLeader from '@deities/athena/lib/removeLeader.tsx';
 import { AIBehaviors } from '@deities/athena/map/AIBehavior.tsx';
 import { AnimationConfig, MaxHealth, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Checkbox from '@deities/ui/Checkbox.tsx';
@@ -35,6 +35,7 @@ import { SkillSelector } from '../../ui/SkillDialog.tsx';
 import UnitTile from '../../Unit.tsx';
 import AIBehaviorLink from '../lib/AIBehaviorLink.tsx';
 import changePlayer from '../lib/changePlayer.tsx';
+import getEditorPlayerIDs, { isEditorPlayerID } from '../lib/getEditorPlayerIDs.tsx';
 import updateEditorHistory from '../lib/updateEditorHistory.tsx';
 import LabelSelector from '../selectors/LabelSelector.tsx';
 import { EditorHistory, EntityUndoKey } from '../Types.tsx';
@@ -47,10 +48,12 @@ export default function EntityPanel({
   actions,
   editor,
   editorHistory,
+  isAdmin,
   state,
 }: StateWithActions &
   Readonly<{
     editorHistory: RefObject<EditorHistory>;
+    isAdmin?: boolean;
   }>) {
   const { update } = actions;
   const {
@@ -65,6 +68,8 @@ export default function EntityPanel({
   const entity = selectedUnit || selectedBuilding;
   const entityIsBuilding = entity && isBuilding(entity);
   const isStructure = entityIsBuilding && entity.info.isStructure();
+  const playerIDs = getEditorPlayerIDs(isAdmin);
+  const playerIDsWithoutNeutral = playerIDs.filter((id) => id !== 0);
 
   const hasSprites = useSprites('all');
   const updateEntity = useCallback(
@@ -193,12 +198,12 @@ export default function EntityPanel({
 
       const key = event.code === 'Backquote' ? 0 : (parseInteger(event.key) as PlayerID | null);
       if (key != null) {
-        updatePlayer(entity, PlayerIDs.includes(key) ? key : null);
+        updatePlayer(entity, isEditorPlayerID(key, isAdmin) ? key : null);
       }
     };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
-  }, [editor, entity, isStructure, selectedPosition, updatePlayer]);
+  }, [editor, entity, isAdmin, isStructure, selectedPosition, updatePlayer]);
 
   const skills: ReadonlyArray<Skill | null> = useMemo(
     () => (entityIsBuilding ? [...(entity.skills || [])] : []),
@@ -428,16 +433,16 @@ export default function EntityPanel({
         ) : null}
         {!isStructure && (
           <Box gap={16} wrap>
-            {PlayerIDs.filter(
-              (id) => (entityIsBuilding && !entity.info.isHQ()) || isUnit(entity) || id > 0,
-            ).map((id) => (
-              <PlayerIcon
-                id={id}
-                key={id}
-                onClick={() => updatePlayer(entity, id)}
-                selected={entity.player === id}
-              />
-            ))}
+            {playerIDs
+              .filter((id) => (entityIsBuilding && !entity.info.isHQ()) || isUnit(entity) || id > 0)
+              .map((id) => (
+                <PlayerIcon
+                  id={id}
+                  key={id}
+                  onClick={() => updatePlayer(entity, id)}
+                  selected={entity.player === id}
+                />
+              ))}
           </Box>
         )}
         {isUnit(entity) && entity.player === 0 && (
@@ -447,7 +452,7 @@ export default function EntityPanel({
               <fbt desc="Label for rescued by <player>">Rescued By</fbt>
             </Stack>
             <Stack gap={16} wrap>
-              {PlayerIDs.slice(1).map((id) => (
+              {playerIDsWithoutNeutral.map((id) => (
                 <PlayerIcon
                   id={id}
                   key={id}
@@ -461,6 +466,7 @@ export default function EntityPanel({
         <Box wrap>
           <LabelSelector
             active={entity.label}
+            isAdmin={isAdmin}
             onChange={(label) => updateEntity(`label-${label}`, entity.copy({ label }))}
           />
         </Box>

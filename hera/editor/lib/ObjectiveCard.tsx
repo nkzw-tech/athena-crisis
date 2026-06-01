@@ -174,6 +174,7 @@ export default function ObjectiveCard({
               <Stack wrap>
                 <ManyLabelSelector
                   active={objective.label}
+                  isAdmin={isAdmin}
                   onChange={(label) =>
                     onChange({
                       ...objective,

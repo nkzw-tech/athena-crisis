@@ -233,6 +233,7 @@ export default function EffectsPanel({
           focused
           hasContentRestrictions={hasContentRestrictions}
           index={currentAction.actionId}
+          isAdmin={isAdmin}
           map={map}
           onChange={onChange}
           position={position}
@@ -271,6 +272,7 @@ export default function EffectsPanel({
               first={index === 0}
               hasContentRestrictions={hasContentRestrictions}
               index={index}
+              isAdmin={isAdmin}
               last={index === actions.length - 1}
               map={map}
               onChange={onChange}
