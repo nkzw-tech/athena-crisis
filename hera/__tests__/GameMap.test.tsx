@@ -200,3 +200,42 @@ test('skipped animation completion does not synchronously re-enter GameMap updat
 
   expect(followUpUpdateCompleted).toBe(true);
 });
+
+test('partial viewer updates do not require a map in the update payload', async () => {
+  vi.stubGlobal('window', {
+    innerHeight: 768,
+    innerWidth: 1024,
+  });
+
+  const [{ default: GameMap }, { default: NullBehavior }] = await Promise.all([
+    import('../GameMap.tsx'),
+    import('../behavior/NullBehavior.tsx'),
+  ]);
+  const gameMap = new GameMap({
+    animationSpeed: {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    autoPanning: false,
+    behavior: NullBehavior,
+    buildingSize: TileSize,
+    confirmActionStyle: 'never',
+    currentUserId: '2',
+    fogStyle: 'soft',
+    map,
+    playerAchievement: null,
+    playerDetails: new Map(),
+    scale: 1,
+    showCursor: false,
+    style: 'none',
+    tileSize: TileSize,
+    tilted: false,
+    unitSize: TileSize,
+  } satisfies Props) as unknown as TestGameMap;
+  installSynchronousSetState(gameMap);
+
+  await expect(gameMap._update({ currentViewer: 1 })).resolves.toMatchObject({
+    currentViewer: 1,
+    map,
+  });
+});

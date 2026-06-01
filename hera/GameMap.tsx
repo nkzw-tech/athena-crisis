@@ -1092,8 +1092,12 @@ export default class GameMap extends Component<Props, State> {
             };
           }
 
-          if (this._shouldSkipActionAnimationsForState(newState as State)) {
-            newState = this._completeSkippedAnimationsInState(newState as State);
+          const nextState = {
+            ...actualState,
+            ...newState,
+          } as State;
+          if (this._shouldSkipActionAnimationsForState(nextState)) {
+            newState = this._completeSkippedAnimationsInState(nextState);
           }
 
           return newState as State;
