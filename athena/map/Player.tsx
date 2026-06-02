@@ -19,6 +19,8 @@ export type PlainDynamicPlayerID = PlayerID | -1 | -2 | -3;
 
 // This tuple must start with `0`.
 export const PlayerIDs = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
+export const ReleasedPlayerIDs = [0, 1, 2, 3, 4, 5, 6, 7] as const satisfies PlayerIDs;
+const ReleasedPlayerIDSet: ReadonlySet<PlayerID> = new Set(ReleasedPlayerIDs);
 export const DynamicPlayerIDs = new Set(['self', 'team', 'opponent', ...PlayerIDs] as const);
 
 type BasePlainPlayerType = Readonly<{
@@ -558,6 +560,14 @@ export function toPlayerIDs(ids: ReadonlyArray<number>): PlayerIDs {
 
 export function numberToPlayerID(number: number): PlayerID {
   return toPlayerID((number % (PlayerIDs.length - 1)) + 1);
+}
+
+export function numberToReleasedPlayerID(number: number): PlayerID {
+  return toPlayerID((number % (ReleasedPlayerIDs.length - 1)) + 1);
+}
+
+export function isReleasedPlayerID(player: PlayerID): boolean {
+  return ReleasedPlayerIDSet.has(player);
 }
 
 export function isHumanPlayer(player: Player): player is HumanPlayer {

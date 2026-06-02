@@ -48,7 +48,7 @@ export default memo(function LevelDialogue({
     <>
       {effects && (
         <VStack between className={selectStyle} gap={16}>
-          <h2 style={{ color: getColor(getTagColor(node.name)) }}>{getMapName(node.name)}</h2>
+          <h2 style={{ color: getColor(getTagColor(node.name, 7)) }}>{getMapName(node.name)}</h2>
           {sortedEffects.map(([trigger, effectList]) =>
             [...effectList].map((effect, index) => (
               <VStack between gap={16} key={`${trigger}-${index}`} wrap>

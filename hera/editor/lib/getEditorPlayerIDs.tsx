@@ -1,9 +1,7 @@
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
-
-const DarkAthenaPlayerID: PlayerID = 8;
+import { PlayerID, PlayerIDs, ReleasedPlayerIDs } from '@deities/athena/map/Player.tsx';
 
 export default function getEditorPlayerIDs(isAdmin?: boolean): ReadonlyArray<PlayerID> {
-  return isAdmin ? PlayerIDs : PlayerIDs.filter((id) => id !== DarkAthenaPlayerID);
+  return isAdmin ? PlayerIDs : ReleasedPlayerIDs;
 }
 
 export function isEditorPlayerID(id: PlayerID, isAdmin?: boolean): boolean {

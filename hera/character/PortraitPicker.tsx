@@ -1,5 +1,10 @@
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
-import { numberToPlayerID, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import {
+  isReleasedPlayerID,
+  numberToReleasedPlayerID,
+  PlayerID,
+  ReleasedPlayerIDs,
+} from '@deities/athena/map/Player.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -65,7 +70,7 @@ export default memo(function PortraitPicker({
   portraits: ReadonlySet<UnitInfo>;
 }) {
   const [initialCharacter, setInitialCharacter] = useState<CharacterImage | null>(character);
-  const color = PlayerIDs.includes(character.color as PlayerID) ? (character.color as PlayerID) : 1;
+  const color = isReleasedPlayerID(character.color as PlayerID) ? (character.color as PlayerID) : 1;
 
   const [setRef, getColumns] = useColumns(':scope > a');
 
@@ -90,7 +95,7 @@ export default memo(function PortraitPicker({
     useCallback(() => {
       onSelect({
         ...character,
-        color: color === PlayerIDs.at(-1) ? 0 : numberToPlayerID(color),
+        color: color === ReleasedPlayerIDs.at(-1) ? 0 : numberToReleasedPlayerID(color),
       });
     }, [character, color, onSelect]),
   );
@@ -100,7 +105,12 @@ export default memo(function PortraitPicker({
     useCallback(() => {
       onSelect({
         ...character,
-        color: color === 0 ? PlayerIDs.at(-1)! : color === 1 ? 0 : numberToPlayerID(color - 2),
+        color:
+          color === 0
+            ? ReleasedPlayerIDs.at(-1)!
+            : color === 1
+              ? 0
+              : numberToReleasedPlayerID(color - 2),
       });
     }, [character, color, onSelect]),
   );
@@ -131,7 +141,7 @@ export default memo(function PortraitPicker({
   return (
     <>
       <Stack center gap={16} wrap>
-        {PlayerIDs.map((id) => (
+        {ReleasedPlayerIDs.map((id) => (
           <PlayerIcon
             id={id}
             key={id}

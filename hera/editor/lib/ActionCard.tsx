@@ -13,6 +13,7 @@ import {
 import {
   DynamicPlayerIDs,
   encodeDynamicPlayerID,
+  isReleasedPlayerID,
   PlayerID,
   resolveDynamicPlayerID,
 } from '@deities/athena/map/Player.tsx';
@@ -147,7 +148,9 @@ export default memo(function ActionCard({
   const playerIDs = useMemo(
     () =>
       sortBy(
-        [...DynamicPlayerIDs].filter((id) => isAdmin || id !== 8),
+        [...DynamicPlayerIDs].filter(
+          (id) => isAdmin || typeof id !== 'number' || isReleasedPlayerID(id),
+        ),
         (id) => {
           if (id === 0) {
             return Number.POSITIVE_INFINITY;

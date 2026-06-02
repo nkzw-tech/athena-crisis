@@ -25,7 +25,12 @@ import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { getDecoratorLimit } from '@deities/athena/map/Configuration.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
-import { PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
+import {
+  isReleasedPlayerID,
+  PlayerID,
+  PlayerIDs,
+  ReleasedPlayerIDs,
+} from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -230,7 +235,11 @@ export default class DesignBehavior {
     editor: EditorState,
   ): StateLike | null {
     let newState: StateLike | null = null;
-    const players = PlayerIDs.filter((id) => id !== 0);
+    const players: ReadonlyArray<PlayerID> = (
+      state.map.getPlayers().some(({ id }) => !isReleasedPlayerID(id))
+        ? PlayerIDs
+        : ReleasedPlayerIDs
+    ).filter((id) => id !== 0);
     const currentPlayerId = state.map.getCurrentPlayer().id;
     vectors.forEach((vector, index) => {
       const playerIndex = currentPlayerId != 0 ? players.indexOf(currentPlayerId) : -1;
