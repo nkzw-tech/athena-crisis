@@ -28,6 +28,7 @@ import {
   RescueActionResponse,
   SabotageActionResponse,
   SpawnActionResponse,
+  SwapActionResponse,
   SupplyActionResponse,
   ToggleLightningActionResponse,
 } from '../ActionResponse.tsx';
@@ -422,7 +423,26 @@ const VisibleActionModifiers: Record<ActionResponse['type'], VisibleModifier<nev
     Hidden: supplyActionWithDefault(() => null),
     Source: supplyActionWithDefault(completeUnit),
   },
-  Swap: true,
+  Swap: (
+    { source, sourceUnit, target, targetUnit, type }: SwapActionResponse,
+    map: MapData,
+    _: MapData,
+    vision: VisionT,
+  ): SwapActionResponse | null => {
+    const sourceIsVisible = vision.isVisible(map, source);
+    const targetIsVisible = vision.isVisible(map, target);
+    if (!sourceIsVisible && !targetIsVisible) {
+      return null;
+    }
+
+    return {
+      source,
+      sourceUnit,
+      target,
+      ...(sourceIsVisible ? { targetUnit } : null),
+      type,
+    };
+  },
   ToggleLightning: (
     { from, to, type, unit }: ToggleLightningActionResponse,
     map: MapData,

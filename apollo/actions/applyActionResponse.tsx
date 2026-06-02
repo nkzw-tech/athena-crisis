@@ -422,7 +422,10 @@ export default function applyActionResponse(
     case 'Rescue': {
       const { from, name, player, to } = actionResponse;
       const unitA = from && map.units.get(from)!;
-      const unitB = map.units.get(to)!;
+      const unitB = map.units.get(to);
+      if (!unitB) {
+        return map;
+      }
       const rescueFinished = unitB.isBeingRescuedBy(player);
       let newUnit = rescueFinished
         ? unitB.stopBeingRescued().setPlayer(player).setHealth(MaxHealth).recover()
@@ -441,7 +444,10 @@ export default function applyActionResponse(
     case 'Sabotage': {
       const { from, to } = actionResponse;
       const unitA = from && map.units.get(from)!;
-      const unitB = map.units.get(to)!;
+      const unitB = map.units.get(to);
+      if (!unitB) {
+        return map;
+      }
       const units = map.units.set(to, unitB.sabotage());
       return map.copy({
         units: unitA ? units.set(from, unitA.complete()) : units,

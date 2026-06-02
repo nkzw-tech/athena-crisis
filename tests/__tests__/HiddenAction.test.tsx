@@ -8,6 +8,7 @@ import {
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import executeGameAction from '@deities/apollo/actions/executeGameAction.tsx';
 import { UpAttackDirection } from '@deities/apollo/attack-direction/getAttackDirection.tsx';
+import computeVisibleActions from '@deities/apollo/lib/computeVisibleActions.tsx';
 import { House, VerticalBarrier } from '@deities/athena/info/Building.tsx';
 import { HeavyArtillery, Pioneer, SmallTank } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
@@ -233,6 +234,100 @@ test('destroying a hidden building also tracks unit losses on that field', () =>
   expect(resultMap.getPlayer(2).stats.lostBuildings).toBe(1);
   expect(resultMap.getPlayer(2).stats.lostUnits).toBe(1);
   expect(resultMap.getPlayer(2).charge).toBe(75);
+});
+
+test('target-only sabotage response does not crash without a local target unit', () => {
+  const to = vec(3, 3);
+  const newMap = map.copy({
+    units: map.units.delete(to),
+  });
+
+  expect(
+    applyActionResponse(newMap, newMap.createVisionObject(player1), {
+      to,
+      type: 'Sabotage',
+    }),
+  ).toBe(newMap);
+});
+
+test('target-only rescue response does not crash without a local target unit', () => {
+  const to = vec(3, 3);
+  const newMap = map.copy({
+    units: map.units.delete(to),
+  });
+
+  expect(
+    applyActionResponse(newMap, newMap.createVisionObject(player1), {
+      player: 1,
+      to,
+      type: 'Rescue',
+    }),
+  ).toBe(newMap);
+});
+
+test('fully hidden teleporter swap does not reveal unit payloads', () => {
+  const source = vec(5, 5);
+  const target = vec(5, 4);
+  const sourceUnit = Pioneer.create(2);
+  const targetUnit = SmallTank.create(2);
+  const previousMap = map.copy({
+    currentPlayer: 2,
+    units: map.units.set(source, sourceUnit).set(target, targetUnit),
+  });
+  const actionResponse = {
+    source,
+    sourceUnit,
+    target,
+    targetUnit,
+    type: 'Swap',
+  } as const;
+  const vision = previousMap.createVisionObject(player1);
+
+  expect(vision.isVisible(previousMap, source)).toBe(false);
+  expect(vision.isVisible(previousMap, target)).toBe(false);
+  expect(
+    computeVisibleActions(previousMap, vision, [
+      [
+        actionResponse,
+        applyActionResponse(previousMap, previousMap.createVisionObject(2), actionResponse),
+      ],
+    ]),
+  ).toEqual([]);
+});
+
+test('teleporter swap into a visible target does not reveal the target unit at a hidden source', () => {
+  const source = vec(5, 5);
+  const target = vec(2, 2);
+  const sourceUnit = Pioneer.create(2);
+  const targetUnit = SmallTank.create(2);
+  const previousMap = map.copy({
+    currentPlayer: 2,
+    units: map.units.set(source, sourceUnit).set(target, targetUnit),
+  });
+  const actionResponse = {
+    source,
+    sourceUnit,
+    target,
+    targetUnit,
+    type: 'Swap',
+  } as const;
+  const vision = previousMap.createVisionObject(player1);
+
+  expect(vision.isVisible(previousMap, source)).toBe(false);
+  expect(vision.isVisible(previousMap, target)).toBe(true);
+  expect(
+    computeVisibleActions(previousMap, vision, [
+      [
+        actionResponse,
+        applyActionResponse(previousMap, previousMap.createVisionObject(2), actionResponse),
+      ],
+    ]).at(0)?.[0],
+  ).toEqual({
+    source,
+    sourceUnit,
+    target,
+    type: 'Swap',
+  });
 });
 
 test('do not attempt attacking a building via long-range', async () => {
