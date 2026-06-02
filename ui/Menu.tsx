@@ -12,7 +12,6 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -21,7 +20,7 @@ import { rumbleEffect } from './controls/setupGamePad.tsx';
 import useBlockInput from './controls/useBlockInput.tsx';
 import useInput from './controls/useInput.tsx';
 import cssVar, { applyVar } from './cssVar.tsx';
-import { useFullscreen } from './hooks/useFullScreen.tsx';
+import { useFullscreenControls, useFullscreenKeyboardShortcut } from './hooks/useFullScreen.tsx';
 import Icon from './Icon.tsx';
 import ExitFullscreen from './icons/ExitFullscreen.tsx';
 import Fullscreen from './icons/Fullscreen.tsx';
@@ -30,13 +29,6 @@ import MenuButton from './MenuButton.tsx';
 import Portal from './Portal.tsx';
 
 export const MenuClassName = 'menu-button';
-
-const fullScreenListener = (event: KeyboardEvent) => {
-  if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
-    event.preventDefault();
-    App.toggleFullscreen();
-  }
-};
 
 export type MenuContext = RefObject<boolean>;
 
@@ -73,8 +65,7 @@ export default function Menu({
   const [isOpen, setIsOpen] = useState(false);
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-  const isFullScreen = useFullscreen();
-  const canToggleFullScreen = useMemo(() => App.canToggleFullScreen(), []);
+  const { canToggleFullscreen, isFullscreen, toggleFullscreen } = useFullscreenControls();
 
   const isHidden = hide && !isOpen;
 
@@ -113,13 +104,13 @@ export default function Menu({
     ),
   );
 
-  const toggleFullscreen = useCallback(() => {
+  const toggleFullscreenFromMenu = useCallback(() => {
     if (isOpen) {
-      App.toggleFullscreen();
+      toggleFullscreen();
     }
-  }, [isOpen]);
+  }, [isOpen, toggleFullscreen]);
 
-  useInput('zoom', toggleFullscreen, 'top');
+  useInput('zoom', toggleFullscreenFromMenu, 'top');
 
   useBlockInput('top', isOpen);
 
@@ -136,12 +127,7 @@ export default function Menu({
     );
   }, [isOpen]);
 
-  useEffect(() => {
-    if (canToggleFullScreen) {
-      window.addEventListener('keydown', fullScreenListener);
-      return () => window.removeEventListener('keydown', fullScreenListener);
-    }
-  }, [canToggleFullScreen]);
+  useFullscreenKeyboardShortcut(toggleFullscreen, canToggleFullscreen);
 
   return (
     <Portal>
@@ -177,10 +163,10 @@ export default function Menu({
           stretch
           wrap
         >
-          {canToggleFullScreen && (
+          {canToggleFullscreen && (
             <VStack between gap wrap>
-              <a onClick={toggleFullscreen}>
-                <Icon button icon={isFullScreen ? ExitFullscreen : Fullscreen} />
+              <a onClick={toggleFullscreenFromMenu}>
+                <Icon button icon={isFullscreen ? ExitFullscreen : Fullscreen} />
               </a>
             </VStack>
           )}
@@ -192,7 +178,7 @@ export default function Menu({
           wrap
         >
           {controls?.(isOpen)}
-          {isOpen && App.canQuit && !isFullScreen && canToggleFullScreen && (
+          {isOpen && App.canQuit && !isFullscreen && canToggleFullscreen && (
             <Stack className={dragStyle} end flex1 wrap>
               <Icon button icon={DragAndDrop} />
             </Stack>

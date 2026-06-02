@@ -4,6 +4,7 @@ import { Gap } from '@nkzw/stack';
 import {
   AnchorHTMLAttributes,
   CSSProperties,
+  KeyboardEvent,
   MouseEvent,
   RefCallback,
   RefObject,
@@ -94,15 +95,34 @@ export default function InlineLink({
   to,
   ...initialProps
 }: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick'> & InlineLinkProps) {
+  const { onKeyDown, role, tabIndex, ...linkProps } = initialProps;
   const element = useRef<HTMLAnchorElement | null>(null);
   const click = useCallback(
     (event?: MouseEvent) => {
-      if (!initialProps.disabled) {
+      if (!linkProps.disabled) {
         AudioPlayer.playSound('UI/Accept');
         onClick?.(event);
       }
     },
-    [initialProps.disabled, onClick],
+    [linkProps.disabled, onClick],
+  );
+  const keyDown = useCallback(
+    (event: KeyboardEvent<HTMLAnchorElement>) => {
+      onKeyDown?.(event);
+      if (
+        event.defaultPrevented ||
+        to ||
+        !onClick ||
+        linkProps.disabled ||
+        (event.key !== 'Enter' && event.key !== ' ')
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      click();
+    },
+    [click, linkProps.disabled, onClick, onKeyDown, to],
   );
 
   const setRefs = useCallback(
@@ -117,13 +137,21 @@ export default function InlineLink({
     [ref],
   );
 
-  useScrollIntoView(element, initialProps.hover);
-  useActive(initialProps.active, click, to);
-  const props = useInlineLink(initialProps);
+  useScrollIntoView(element, linkProps.hover);
+  useActive(linkProps.active, click, to);
+  const props = useInlineLink(linkProps);
+  const keyboardProps =
+    !to && onClick
+      ? {
+          onKeyDown: keyDown,
+          role: role ?? 'button',
+          tabIndex: linkProps.disabled ? -1 : (tabIndex ?? 0),
+        }
+      : { onKeyDown, role, tabIndex };
   return to ? (
-    <Link {...props} onClick={click} ref={setRefs} to={to} />
+    <Link {...keyboardProps} {...props} onClick={click} ref={setRefs} to={to} />
   ) : (
-    <a {...props} onClick={click} ref={setRefs} />
+    <a {...keyboardProps} {...props} onClick={click} ref={setRefs} />
   );
 }
 
