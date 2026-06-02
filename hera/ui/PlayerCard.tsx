@@ -8,7 +8,6 @@ import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import calculateUnitValue from '@deities/athena/lib/calculateUnitValue.tsx';
-import canActivatePower from '@deities/athena/lib/canActivatePower.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
 import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
@@ -37,7 +36,7 @@ import Chart from 'pixelarticons/svg/chart.svg';
 import Reload from 'pixelarticons/svg/reload.svg';
 import Android from 'pixelarticons/svg/robot.svg';
 import { memo, useCallback, useMemo } from 'react';
-import activateAction from '../behavior/activate/activateAction.tsx';
+import activateAction, { canActivate } from '../behavior/activate/activateAction.tsx';
 import { resetBehavior } from '../behavior/Behavior.tsx';
 import SelectTargetBehavior from '../behavior/SelectTargetBehavior.tsx';
 import MiniPortrait from '../character/MiniPortrait.tsx';
@@ -100,24 +99,22 @@ export default memo(function PlayerCard({
   const availableCharges = Math.floor(charge / Charge);
   const remainingCharge = charge % Charge;
   const maxCharge = (shouldShow && getMaxCharge(player)) || 0;
+  const isCurrentPlayer = map.getCurrentPlayer().id === player.id;
 
   const canAction = useCallback(
     (item: PlayerEffectItem) => {
       const itemType = item.type;
       switch (itemType) {
-        case 'Skill': {
-          const currentPlayer = map.getCurrentPlayer();
-          return !!(
-            currentPlayer.id === currentViewer &&
-            player.id === currentPlayer.id &&
-            canActivatePower(player, item.skill)
+        case 'Skill':
+          return (
+            isCurrentPlayer &&
+            canActivate({ currentViewer, map }, item, null, { allowMissingTarget: true })
           );
-        }
         case 'Crystal':
           return (
             canActivateCrystal &&
-            player.isHumanPlayer() &&
-            player.crystal === null &&
+            isCurrentPlayer &&
+            canActivate({ currentViewer, map }, item, null) &&
             powerCrystals > 0
           );
         default: {
@@ -126,7 +123,7 @@ export default memo(function PlayerCard({
         }
       }
     },
-    [canActivateCrystal, player, powerCrystals, map, currentViewer],
+    [canActivateCrystal, currentViewer, isCurrentPlayer, map, powerCrystals],
   );
 
   const showPlayerEffectDialog = useCallback(
@@ -371,8 +368,10 @@ export default memo(function PlayerCard({
                       active={isActive}
                       canActivate={
                         !isActive &&
-                        canActivatePower(player, skill) &&
-                        map.getCurrentPlayer().id === player.id
+                        isCurrentPlayer &&
+                        canActivate({ currentViewer, map }, { skill, type: 'Skill' }, null, {
+                          allowMissingTarget: true,
+                        })
                       }
                       hideDialog
                       skill={skill}
