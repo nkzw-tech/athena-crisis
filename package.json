@@ -17,7 +17,7 @@
     "build:client": "rm -rf ./dist/ares && pnpm fbtee && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
     "build:demo": "export IS_DEMO=1 && rm -rf ./dist/ares-demo && pnpm fbtee && pnpm vite build --outDir ../dist/ares-demo -c ./ares/vite.config.ts ./ares/",
     "build:docker-server": "RELEASE_ID=$(git rev-parse --short HEAD) docker buildx build --load -f Dockerfile --platform=linux/amd64 --tag athena-crisis --build-arg RELEASE_ID=$RELEASE_ID .",
-    "build:docs": "cd docs && pnpm build --outDir ../../dist/deimos/open-source",
+    "build:docs": "rm -rf ./dist/deimos/open-source && cd docs && pnpm build && cd .. && cp -R docs/dist/public ./dist/deimos/open-source",
     "build:offline": "rm -rf ./dist/offline && pnpm vite build --outDir ../dist/offline -c ./offline/vite.config.ts ./offline; rm -rf mobile/dist/offline; mkdir mobile/dist; cp -R dist/offline mobile/dist/offline; rm -rf electron/offline; cp -R dist/offline electron/offline",
     "build:server": "./build-server",
     "build:splash": "rm -rf ./dist/deimos && pnpm vite build --outDir ../dist/deimos -c ./deimos/vite.config.ts ./deimos/ && pnpm build:docs",

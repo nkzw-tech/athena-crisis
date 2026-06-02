@@ -6,7 +6,7 @@ const Dunkel = JSON.parse(readFileSync('./node_modules/dunkel-theme/dunkel.json'
 
 export default defineConfig({
   accentColor: '#c3217f',
-  basePath: '/open-source/',
+  basePath: '/open-source',
   baseUrl: 'https://athenacrisis.com',
   codeHighlight: {
     themes: {
@@ -21,6 +21,7 @@ export default defineConfig({
   },
   iconUrl: '/favicon.png',
   ogImageUrl: 'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
+  renderStrategy: 'full-static',
   sidebar: [
     {
       link: '/getting-started',
