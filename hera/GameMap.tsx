@@ -434,11 +434,11 @@ export default class GameMap extends Component<Props, State> {
       scrollToCenter(container);
     }
 
-    this._actionQueue = Promise.resolve().then(async () => {
+    this._enqueueActionResponse(async () => {
       if (!paused && !editor && onAction && behavior?.type === 'base') {
         if (!lastActionResponse) {
           await this._update(resetBehavior(NullBehavior));
-          await this.processGameActionResponse(await onAction({ type: 'Start' }));
+          await this._processGameActionResponse(await onAction({ type: 'Start' }));
         } else if (lastActionResponse.type === 'EndTurn') {
           await sleep(this._scheduleTimer, animationConfig, 'long');
           const { funds, id: player } = map.getCurrentPlayer();
@@ -1153,7 +1153,10 @@ export default class GameMap extends Component<Props, State> {
     return actionResponse;
   };
 
-  private processGameActionResponse = async (
+  private processGameActionResponse = (gameActionResponse: GameActionResponse): Promise<State> =>
+    this._enqueueActionResponse(() => this._processGameActionResponse(gameActionResponse));
+
+  private _processGameActionResponse = async (
     gameActionResponse: GameActionResponse,
   ): Promise<State> => {
     let { state } = this;
@@ -1326,6 +1329,15 @@ export default class GameMap extends Component<Props, State> {
     );
   };
 
+  private _enqueueActionResponse<T>(fn: () => Promise<T>): Promise<T> {
+    const result = (this._actionQueue || Promise.resolve()).then(fn);
+    this._actionQueue = result.then(
+      () => undefined,
+      () => undefined,
+    );
+    return result;
+  }
+
   private _processActionResponses = async (
     gameActionResponses: GameActionResponses,
   ): Promise<State> => {
@@ -1364,7 +1376,10 @@ export default class GameMap extends Component<Props, State> {
           try {
             await processActionResponses(
               this.state,
-              this._actions,
+              {
+                ...this._actions,
+                processGameActionResponse: this._processGameActionResponse,
+              },
               gameActionResponses,
               animationSpeed,
               playerHasReward || (() => false),
@@ -1477,9 +1492,9 @@ export default class GameMap extends Component<Props, State> {
     }
 
     const gameActionResponse = (event as CustomEvent<GameActionResponse>).detail;
-    const queue = (this._actionQueue = (this._actionQueue || Promise.resolve()).then(async () => {
+    return this._enqueueActionResponse(async () => {
       const { animationConfig, animations } =
-        await this.processGameActionResponse(gameActionResponse);
+        await this._processGameActionResponse(gameActionResponse);
 
       const { timeout } = gameActionResponse;
       if (timeout !== undefined) {
@@ -1491,8 +1506,7 @@ export default class GameMap extends Component<Props, State> {
         // This delay gives these animations a chance to finish before continuing to process the queue.
         await new Promise((resolve) => setTimeout(resolve, animationConfig.AnimationDuration * 3));
       }
-    }));
-    return queue;
+    });
   };
 
   private _animationComplete = (position: Vector, animation: Animation) => {

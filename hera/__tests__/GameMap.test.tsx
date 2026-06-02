@@ -1,3 +1,4 @@
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -98,6 +99,7 @@ const map = MapData.createMap({
 
 type TestGameMap = {
   _actions: {
+    processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
     scheduleTimer: (fn: () => void, delay: number) => Promise<number>;
     update: UpdateFunction;
   };
@@ -238,4 +240,83 @@ test('partial viewer updates do not require a map in the update payload', async 
     currentViewer: 1,
     map,
   });
+});
+
+test('game action responses are processed serially across direct entry points', async () => {
+  vi.stubGlobal('window', {
+    innerHeight: 768,
+    innerWidth: 1024,
+  });
+
+  const [{ default: GameMap }, { default: NullBehavior }, { default: processActionResponses }] =
+    await Promise.all([
+      import('../GameMap.tsx'),
+      import('../behavior/NullBehavior.tsx'),
+      import('../action-response/processActionResponse.tsx'),
+    ]);
+  const gameMap = new GameMap({
+    animationSpeed: {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    autoPanning: false,
+    behavior: NullBehavior,
+    buildingSize: TileSize,
+    confirmActionStyle: 'never',
+    currentUserId: '2',
+    fogStyle: 'soft',
+    map,
+    playerAchievement: null,
+    playerDetails: new Map(),
+    scale: 1,
+    showCursor: false,
+    style: 'none',
+    tileSize: TileSize,
+    tilted: false,
+    unitSize: TileSize,
+  } satisfies Props) as unknown as TestGameMap;
+  installSynchronousSetState(gameMap);
+
+  const processActionResponsesMock = vi.mocked(processActionResponses);
+  processActionResponsesMock.mockReset();
+
+  const processedRounds: Array<number> = [];
+  let releaseFirstResponse!: () => void;
+  const firstResponseStarted = new Promise<void>((resolve) => {
+    processActionResponsesMock.mockImplementationOnce(async (state, actions) => {
+      processedRounds.push(state.map.round);
+      resolve();
+      await new Promise<void>((release) => {
+        releaseFirstResponse = release;
+      });
+      await actions.update({ map: state.map.copy({ round: state.map.round + 1 }) });
+      return state;
+    });
+  });
+  processActionResponsesMock.mockImplementation(async (state, actions) => {
+    processedRounds.push(state.map.round);
+    await actions.update({ map: state.map.copy({ round: state.map.round + 1 }) });
+    return state;
+  });
+
+  const firstResponse = gameMap._actions.processGameActionResponse({
+    others: [{ actionResponse: { message: 'first', type: 'Message' } }],
+    self: null,
+  });
+
+  await firstResponseStarted;
+
+  const secondResponse = gameMap._actions.processGameActionResponse({
+    others: [{ actionResponse: { message: 'second', type: 'Message' } }],
+    self: null,
+  });
+
+  await Promise.resolve();
+
+  expect(processedRounds).toEqual([1]);
+
+  releaseFirstResponse();
+  await Promise.all([firstResponse, secondResponse]);
+
+  expect(processedRounds).toEqual([1, 2]);
 });
