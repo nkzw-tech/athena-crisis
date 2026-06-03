@@ -15,7 +15,6 @@
     "ai:benchmark:sea": "RUN_AI_BENCHMARK=1 vitest run zeus/ai/__tests__/AISeaBenchmark.eval.test.tsx",
     "build:assets": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm --loader ./scripts/variant-loader.js --loader ./scripts/image-loader.js ./scripts/build-assets.tsx",
     "build:client": "rm -rf ./dist/ares && pnpm fbtee && pnpm vite build --outDir ../dist/ares -c ./ares/vite.config.ts ./ares/",
-    "build:demo": "export IS_DEMO=1 && rm -rf ./dist/ares-demo && pnpm fbtee && pnpm vite build --outDir ../dist/ares-demo -c ./ares/vite.config.ts ./ares/",
     "build:docker-server": "RELEASE_ID=$(git rev-parse --short HEAD) docker buildx build --load -f Dockerfile --platform=linux/amd64 --tag athena-crisis --build-arg RELEASE_ID=$RELEASE_ID .",
     "build:docs": "rm -rf ./dist/deimos/open-source && cd docs && pnpm build && cd .. && cp -R docs/dist/public ./dist/deimos/open-source",
     "build:offline": "rm -rf ./dist/offline && pnpm vite build --outDir ../dist/offline -c ./offline/vite.config.ts ./offline; rm -rf mobile/dist/offline; mkdir mobile/dist; cp -R dist/offline mobile/dist/offline; rm -rf electron/offline; cp -R dist/offline electron/offline",

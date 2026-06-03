@@ -21,8 +21,7 @@ type Canvas = ReturnType<PaletteSwapFn> extends ReadonlyMap<unknown, infer V> ? 
 
 type CanvasToURLFn = (canvas: Canvas, name: string) => Promise<string>;
 
-const shouldSwap = () =>
-  process.env.NODE_ENV !== 'production' || process.env.IS_DEMO || !navigator.onLine;
+const shouldSwap = () => process.env.NODE_ENV !== 'production' || !navigator.onLine;
 
 // Keep remote images in memory forever.
 const imageCache = [];

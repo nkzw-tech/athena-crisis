@@ -317,25 +317,23 @@ export default memo(function UnitCard({
           vector={vector}
         />
         <UnitVulnerability biome={biome} map={map} player={player} unit={unit} vector={vector} />
-        {!process.env.IS_DEMO && (
-          <p className={lightColorStyle}>
-            <fbt desc="Explanation for damage information">
-              Note: Cover, status effects and unit defense affect the inflicted damage. See the{' '}
-              <fbt:param name="link">
-                {App.canQuit ? (
-                  <InlineLink to={damageChartRoute}>
-                    <fbt desc="Damage chart link name">Damage Chart</fbt>
-                  </InlineLink>
-                ) : (
-                  <InlineLink href={damageChartRoute} target="blank">
-                    <fbt desc="Damage chart link name">Damage Chart</fbt>
-                  </InlineLink>
-                )}
-              </fbt:param>{' '}
-              for more information.
-            </fbt>
-          </p>
-        )}
+        <p className={lightColorStyle}>
+          <fbt desc="Explanation for damage information">
+            Note: Cover, status effects and unit defense affect the inflicted damage. See the{' '}
+            <fbt:param name="link">
+              {App.canQuit ? (
+                <InlineLink to={damageChartRoute}>
+                  <fbt desc="Damage chart link name">Damage Chart</fbt>
+                </InlineLink>
+              ) : (
+                <InlineLink href={damageChartRoute} target="blank">
+                  <fbt desc="Damage chart link name">Damage Chart</fbt>
+                </InlineLink>
+              )}
+            </fbt:param>{' '}
+            for more information.
+          </fbt>
+        </p>
         <UnitMovement biome={biome} movementType={info.movementType} player={player} />
       </VStack>
     </>
