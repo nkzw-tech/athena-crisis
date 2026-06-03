@@ -3961,7 +3961,7 @@ export const SpecialUnits = new Set([
   InfernoJetpack,
 ]);
 
-export const SecretUnits = new Set([Truck, ArtilleryHumvee, ReconDrone, AIU, InfernoJetpack]);
+export const SecretUnits = new Set([Truck, ArtilleryHumvee, ReconDrone, AIU]);
 
 export const DefaultSupplyUnits = {
   air: TransportHelicopter,
