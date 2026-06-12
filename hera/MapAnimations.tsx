@@ -367,19 +367,31 @@ export function hasCharacterMessage(animations: Animations) {
 }
 
 const ScrollIntoViewEffect = ({
-  onComplete,
+  animation,
+  animationComplete,
+  position,
   positions,
   scrollIntoView,
-  update,
 }: {
-  onComplete: StateToStateLike;
+  animation: Animation;
+  animationComplete: (position: Vector, animation: Animation) => void;
+  position: Vector;
   positions: ReadonlyArray<Vector>;
   scrollIntoView: Actions['scrollIntoView'];
-  update: Actions['update'];
 }) => {
   useEffect(() => {
-    scrollIntoView(positions).then(async () => update(onComplete(await update(null))));
-  }, [onComplete, positions, scrollIntoView, update]);
+    let active = true;
+
+    scrollIntoView(positions).then(() => {
+      if (active) {
+        animationComplete(position, animation);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [animation, animationComplete, position, positions, scrollIntoView]);
 
   return null;
 };
@@ -668,7 +680,13 @@ const MapAnimation = ({
       }
       case 'scrollIntoView': {
         return (
-          <ScrollIntoViewEffect scrollIntoView={scrollIntoView} update={update} {...animation} />
+          <ScrollIntoViewEffect
+            animation={animation}
+            animationComplete={animationComplete}
+            position={position}
+            positions={animation.positions}
+            scrollIntoView={scrollIntoView}
+          />
         );
       }
       // Handled directly within Buildings/Units.
@@ -689,6 +707,7 @@ const MapAnimation = ({
     }
   }, [
     animation,
+    animationComplete,
     animationConfig,
     biome,
     clearTimer,

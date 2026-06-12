@@ -6,6 +6,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
 import LocaleContext from '@deities/hera/i18n/LocaleContext.tsx';
+import type { State } from '@deities/hera/Types.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
@@ -17,9 +18,14 @@ import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 
 declare global {
+  var GameMapStates: Record<string, GameMapState>;
   var MapHasRendered: Record<string, boolean>;
   var renderMap: (url: string) => void;
 }
+
+type GameMapState = Readonly<{
+  animations: ReadonlyArray<Readonly<{ type: string }>>;
+}>;
 
 initializeCSS();
 setAnimationSync(false);
@@ -29,6 +35,7 @@ AudioPlayer.pause();
 
 const root = createRoot(document.getElementById('app')!);
 window.renderMap = (url: string) => {
+  window.GameMapStates = Object.create(null);
   window.MapHasRendered = Object.create(null);
   root.render(<DisplayMap url={url} />);
 };
@@ -58,6 +65,16 @@ const ErrorComponent = ({ error }: { error: unknown }) => (
     })}
   </>
 );
+
+const GameMapState = ({ index, state }: { index: number; state: State }) => {
+  useEffect(() => {
+    window.GameMapStates[index] = {
+      animations: [...state.animations.values()].map(({ type }) => ({ type })),
+    };
+  }, [index, state]);
+
+  return null;
+};
 
 const DisplayMap = ({ url: initialURL }: { url: string }) => {
   const url = useMemo(() => new URL(initialURL), [initialURL]);
@@ -130,7 +147,9 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
                     showCursor={false}
                     style={style}
                     tilted={false}
-                  />
+                  >
+                    {(state) => <GameMapState index={index} state={state} />}
+                  </GameMap>
                 </div>
               </div>
             );

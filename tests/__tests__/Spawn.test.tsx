@@ -26,7 +26,11 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
-import { captureGameActionResponse, captureGameState } from '../screenshot.tsx';
+import {
+  captureGameActionResponse,
+  captureGameState,
+  getRenderedGameMapState,
+} from '../screenshot.tsx';
 import snapshotEncodedActionResponse from '../snapshotEncodedActionResponse.tsx';
 
 const map = withModifiers(
@@ -131,6 +135,29 @@ test('spawns units and adds new players', async () => {
   }
   printGameState('Client State', gameActionResponseScreenshot);
   expect(gameActionResponseScreenshot).toMatchImageSnapshot();
+});
+
+test('clears spawn scroll animations after client processing', async () => {
+  const vision = map.createVisionObject(player1);
+  const gameStateEntry = executeEffect(map, vision, {
+    type: 'SpawnEffect',
+    units: ImmutableMap([[vec(2, 2), FighterJet.create(1)]]),
+  } as const);
+  const encodedGameActionResponse = encodeGameActionResponse(
+    map,
+    map,
+    vision,
+    gameStateEntry ? [gameStateEntry] : [],
+    null,
+    null,
+    null,
+  );
+
+  await captureGameActionResponse(map, encodedGameActionResponse, player1.userId);
+
+  expect(await getRenderedGameMapState()).toEqual({
+    animations: [],
+  });
 });
 
 test('spawns non-production buildings as neutral without adding new owners', () => {

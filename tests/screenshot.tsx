@@ -141,6 +141,14 @@ export async function getMainFogCanvasAlphaSummary() {
   });
 }
 
+export async function getRenderedGameMapState(index = 0) {
+  if (!page) {
+    throw new Error('Cannot inspect map state before capturing a map.');
+  }
+
+  return page.evaluate((index) => window.GameMapStates?.[index] ?? null, index);
+}
+
 export async function captureGameActionResponse(
   map: MapData,
   gameActionResponse: EncodedGameActionResponse,
