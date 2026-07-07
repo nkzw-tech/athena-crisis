@@ -4,7 +4,7 @@ import { mapBuildings } from '../info/Building.tsx';
 import { Skills } from '../info/Skill.tsx';
 import { mapTiles } from '../info/Tile.tsx';
 import { mapUnits } from '../info/Unit.tsx';
-import { PlayerID, PlayerIDs, toPlayerID } from '../map/Player.tsx';
+import { isReleasedPlayerID, PlayerID, ReleasedPlayerIDs, toPlayerID } from '../map/Player.tsx';
 import Vector from '../map/Vector.tsx';
 
 export type MapMessageValue = readonly [tag: number, value: number, player?: PlayerID];
@@ -95,14 +95,23 @@ export function toPlainMapMessage(message: unknown): PlainMapMessage | null {
       return null;
     }
 
+    let valuePlayerID: PlayerID | undefined;
     if (playerID !== undefined) {
-      toPlayerID(playerID);
+      valuePlayerID = toPlayerID(playerID);
+      if (!isReleasedPlayerID(valuePlayerID)) {
+        return null;
+      }
+    }
+
+    const messagePlayer = toPlayerID(player);
+    if (!isReleasedPlayerID(messagePlayer)) {
+      return null;
     }
 
     return {
-      player: toPlayerID(player),
+      player: messagePlayer,
       template,
-      value: [tag, value, playerID],
+      value: [tag, value, valuePlayerID],
     };
   } catch {
     /* empty */
@@ -150,7 +159,7 @@ export const MessageVocabulary = new Map<MessageTag, ReadonlyMap<number, string>
   [MessageTag.Unit, new Map(mapUnits(({ id, name }) => [id, name]))],
   [MessageTag.Building, new Map(mapBuildings(({ id, name }) => [id, name]))],
   [MessageTag.Tile, tiles],
-  [MessageTag.Faction, new Map(PlayerIDs.slice(1).map((id) => [id, String(id)]))],
+  [MessageTag.Faction, new Map(ReleasedPlayerIDs.slice(1).map((id) => [id, String(id)]))],
   [MessageTag.Skill, new Map([...Skills].map((skill) => [skill, String(skill)]))],
   [
     MessageTag.Threat,
