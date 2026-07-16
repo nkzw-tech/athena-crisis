@@ -957,6 +957,19 @@ export default memo(function SkillDescription({
         ]
   ).filter(isPresent);
 
+  const chargeCost =
+    isPower && charges ? (
+      <fbt desc="Power charge cost">
+        <span className={typeStyle} style={{ color: getColor(color) }}>
+          Cost:
+        </span>{' '}
+        <fbt:param name="charges">{charges}</fbt:param>{' '}
+        <fbt:plural count={charges} many="charges" name="number of charges">
+          charge
+        </fbt:plural>
+      </fbt>
+    ) : null;
+
   const list = [
     !isPower && campaignOnly ? (
       <div className="paragraph" style={{ color: getColor('red') }}>
@@ -978,19 +991,9 @@ export default memo(function SkillDescription({
       </>
     ) : null,
     unitRange.size ? <UnitRange color={color} range={unitRange} /> : null,
-    isPower && charges ? (
+    chargeCost ? (
       <div className="paragraph">
-        <span>
-          <fbt desc="Power charge cost">
-            <span className={typeStyle} style={{ color: getColor(color) }}>
-              Cost:
-            </span>{' '}
-            <fbt:param name="charges">{charges}</fbt:param>{' '}
-            <fbt:plural count={charges} many="charges" name="number of charges">
-              charge
-            </fbt:plural>
-          </fbt>
-        </span>
+        <span>{chargeCost}</span>
       </div>
     ) : null,
     isPower && activateOnInvasion ? (

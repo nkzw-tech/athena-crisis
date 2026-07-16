@@ -37,7 +37,7 @@ export default function selectObjectiveEffect(
 
   const effects = effect
     ? editor.effects
-    : new Map([...editor.effects, [trigger, new Set([...(effectList || []), newEffect])] as const]);
+    : new Map(editor.effects).set(trigger, new Set([...(effectList || []), newEffect]));
 
   return {
     effects,

@@ -20,8 +20,8 @@ export type PreviousGameState<
 
 export default function getTurnState<
   M extends PlainMap | MapData,
-  TAction extends M extends MapData ? ActionResponse : EncodedActionResponse,
-  E extends M extends MapData ? Effects : EncodedEffects,
+  TAction extends (M extends MapData ? ActionResponse : EncodedActionResponse),
+  E extends (M extends MapData ? Effects : EncodedEffects),
 >(
   previousMap: MapData,
   activeMap: M,

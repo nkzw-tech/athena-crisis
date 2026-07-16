@@ -62,7 +62,8 @@ export const BorderRainbowAnimation = css`
       (color, index) =>
         `${Math.floor(((index + 1) / (colors.length + 1)) * 100)}% { ${pixelBorder(getColor(color), 2)} }`,
     )};
-  `} ${colors.length * 1.5}s infinite;
+  `}
+    ${colors.length * 1.5}s infinite;
 `;
 
 export const SquarePulseStyle = css`

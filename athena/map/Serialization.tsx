@@ -132,7 +132,7 @@ export function encodeDecorators(map: MapData): PlainEntitiesList<Decorator> {
 
 export function encodeEntities<
   T extends Unit | Building,
-  S extends T extends Unit ? PlainUnit : PlainBuilding,
+  S extends (T extends Unit ? PlainUnit : PlainBuilding),
 >(entities: ImmutableMap<Vector, T>): PlainEntitiesList<S> {
   return entities
     .map((entity: T, { x, y }: Vector) => [x, y, entity.toJSON()])

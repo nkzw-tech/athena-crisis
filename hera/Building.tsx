@@ -235,9 +235,8 @@ const baseBuildingStyle = css`
   ${vars.set('drop-shadow-size', '0.5px')}
   ${vars.set('saturation', 1)}
   ${vars.set('skew', '0deg')}
-  
-  filter: brightness(${vars.apply('brightness')})
-    saturate(${vars.apply('saturation')});
+
+  filter: brightness(${vars.apply('brightness')}) saturate(${vars.apply('saturation')});
   transform: translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) skewX(${vars.apply('skew')});
   transition:
     filter calc(${applyVar('animation-duration')} / 2) ease-in-out,

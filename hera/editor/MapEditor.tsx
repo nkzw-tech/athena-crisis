@@ -122,7 +122,7 @@ const getEditorBaseState = (
       ? decodeEffects(JSON.parse(mapObject.effects))
       : new Map([['Start', startScenario] as const]));
   if (!effects.has('Start')) {
-    effects = new Map([...effects, ['Start', startScenario] as const]);
+    effects = new Map(effects).set('Start', startScenario);
   }
 
   editorHistory.current = {

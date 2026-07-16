@@ -1153,7 +1153,7 @@ const healthStyle = css`
     ${vars.apply('health-color')} 0%,
     ${vars.apply('health-color')} ${vars.apply('health')},
     rgba(0, 0, 0, 0) calc(${vars.apply('health')} + 1%)
-    );
+  );
   bottom: 0px;
   height: 3px;
   left: 2px;

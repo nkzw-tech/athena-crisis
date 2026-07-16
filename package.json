@@ -56,27 +56,27 @@
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
-    "@swc/core": "1.15.40",
-    "@types/node": "^25.9.1",
-    "@typescript/native-preview": "7.0.0-dev.20260527.2",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@swc/core": "1.15.43",
+    "@types/node": "^26.1.1",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
     "chalk": "^5.6.2",
     "dotenv": "^17.4.2",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-no-only-tests": "^3.4.0",
-    "eslint-plugin-perfectionist": "^5.9.0",
+    "eslint-plugin-perfectionist": "^5.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-workspaces": "^0.12.1",
     "nodemon": "^3.1.14",
-    "npm-run-all2": "^9.0.1",
-    "oxfmt": "^0.52.0",
-    "oxlint": "1.67.0",
-    "portless": "^0.13.1",
+    "npm-run-all2": "^9.0.2",
+    "oxfmt": "^0.59.0",
+    "oxlint": "1.74.0",
+    "portless": "^0.15.3",
     "ts-node": "^10.9.2",
-    "vite": "^8.0.14",
-    "vitest": "^4.1.7"
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
   },
   "nodemonConfig": {
     "ext": "tsx",
@@ -89,6 +89,13 @@
       "i18n/",
       "zeus/"
     ]
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.13.1",
+      "onFail": "download"
+    }
   },
   "engines": {
     "node": ">=23.0.0",
