@@ -5,7 +5,12 @@ import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRe
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
-import { numberToPlayerID, PlayerID, PlayerIDs, toPlayerID } from '@deities/athena/map/Player.tsx';
+import {
+  numberToPlayerID,
+  PlayerID,
+  ReleasedPlayerIDs,
+  toPlayerID,
+} from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import {
   isEntityMessageTag,
@@ -273,7 +278,7 @@ const ComposeMessage = ({
         </VStack>
         {conjunction == null && tag && messageTagHasPlayerID(tag) && (
           <VStack gap wrap>
-            {PlayerIDs.map((id) => (
+            {ReleasedPlayerIDs.map((id) => (
               <PlayerIcon
                 id={id}
                 key={id}
