@@ -31,9 +31,11 @@ allowBuilds:
   esbuild: true
   prisma: true
   protobufjs: true
+  sharp: true
   unrs-resolver: true
   utf-8-validate: true
   vue-demi: false
+  workerd: true
 
 ignorePatchFailures: false
 

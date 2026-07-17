@@ -77,7 +77,8 @@
     "portless": "^0.15.3",
     "ts-node": "^10.9.2",
     "vite": "^8.1.4",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wrangler": "4.111.0"
   },
   "nodemonConfig": {
     "ext": "tsx",
