@@ -45,10 +45,11 @@
     "vitest:run-ci": "vitest run"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.1",
     "@deities/eslint-plugin": "workspace:*",
-    "@nkzw/babel-preset-fbtee": "^2.0.0",
+    "@nkzw/babel-preset-fbtee": "^3.0.0",
     "@nkzw/eslint-plugin": "^2.0.0",
-    "@nkzw/eslint-plugin-fbtee": "^2.0.0",
+    "@nkzw/eslint-plugin-fbtee": "^3.0.0",
     "@nkzw/find-workspaces": "^1.1.0",
     "@nkzw/oxlint-config": "^1.2.1",
     "@nkzw/pothos-locate": "^1.0.0",

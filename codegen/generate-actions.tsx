@@ -2,14 +2,13 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parse } from '@babel/parser';
-import { NodePath } from '@babel/traverse';
+import traverse, { type NodePath } from '@babel/traverse';
 import { TSType, TSTypeAliasDeclaration, TSTypeElement, TSTypeReference } from '@babel/types';
 import groupBy from '@nkzw/core/groupBy.js';
 import sortBy from '@nkzw/core/sortBy.js';
 import chalk from 'chalk';
 import { format } from 'oxfmt';
 import sign from './lib/sign.tsx';
-import traverse from './lib/traverse.tsx';
 
 console.log(chalk.bold('› Generating actions...'));
 
@@ -121,8 +120,8 @@ const getTypeAnnotation = (typeAnnotation: TSType) => {
   return typeAnnotation.type === 'TSTypeReference' &&
     typeAnnotation.typeName.type === 'Identifier' &&
     typeAnnotation.typeName.name === 'Readonly' &&
-    typeAnnotation.typeParameters?.params.length
-    ? typeAnnotation.typeParameters.params[0]
+    typeAnnotation.typeArguments?.params.length
+    ? typeAnnotation.typeArguments.params[0]
     : typeAnnotation;
 };
 
@@ -146,14 +145,14 @@ const resolveValueType = (node: TSType): ValueType => {
   if (node.type === 'TSTypeReference' && node.typeName.type === 'Identifier') {
     if (
       node.typeName.name === 'ImmutableMap' &&
-      node.typeParameters?.params.every(isAllowedReference) &&
-      node.typeParameters.params[0].typeName.type === 'Identifier' &&
-      node.typeParameters.params[0].typeName.name === 'Vector' &&
-      node.typeParameters.params[1].typeName.type === 'Identifier'
+      node.typeArguments?.params.every(isAllowedReference) &&
+      node.typeArguments.params[0].typeName.type === 'Identifier' &&
+      node.typeArguments.params[0].typeName.name === 'Vector' &&
+      node.typeArguments.params[1].typeName.type === 'Identifier'
     ) {
       return {
         type: 'entities',
-        value: node.typeParameters?.params[1].typeName.name,
+        value: node.typeArguments.params[1].typeName.name,
       };
     }
 
@@ -162,11 +161,11 @@ const resolveValueType = (node: TSType): ValueType => {
     }
 
     if (
-      node.typeParameters &&
-      node.typeParameters.type === 'TSTypeParameterInstantiation' &&
-      node.typeParameters.params.length === 1
+      node.typeArguments &&
+      node.typeArguments.type === 'TSTypeParameterInstantiation' &&
+      node.typeArguments.params.length === 1
     ) {
-      const parameter = node.typeParameters.params[0];
+      const parameter = node.typeArguments.params[0];
       const value =
         isAllowedReference(parameter) && parameter.typeName.type === 'Identifier'
           ? parameter.typeName.name

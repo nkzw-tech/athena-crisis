@@ -46,7 +46,7 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "google-auth-library": "^10.9.0",
-    "graphql": "^17.0.2",
+    "graphql": "^16.14.2",
     "graphql-yoga": "^5.21.2",
     "ioredis": "^5.11.1",
     "json-stable-stringify": "^1.3.0",
@@ -57,7 +57,7 @@
     "passport-local": "^1.0.0",
     "resend": "6.17.2",
     "socket.io": "^4.8.3",
-    "stripe": "^22.3.1",
+    "stripe": "^22.3.2",
     "ua-parser-js": "^2.0.10",
     "utf-8-validate": "^6.0.6"
   },

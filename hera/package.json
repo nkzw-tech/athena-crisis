@@ -25,7 +25,7 @@
     "@nkzw/use-relative-time": "^1.2.3",
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
-    "fbtee": "^2.0.0",
+    "fbtee": "^3.0.0",
     "framer-motion": "^12.42.2",
     "pixelarticons": "^2.2.0",
     "react": "^19.2.7",

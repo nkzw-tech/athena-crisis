@@ -39,12 +39,14 @@ ignorePatchFailures: false
 
 minimumReleaseAgeExclude:
   - '@nkzw/*'
+  - fbtee@3.0.0
 
 overrides:
   react@^18.0.0: 19.0.0-rc.1
   rollup@^2.0.0: ^4.16.4
 
 patchedDependencies:
+  babel-plugin-relay@21.0.1: patches/babel-plugin-relay@21.0.1.patch
   cordova-plugin-purchase: patches/cordova-plugin-purchase.patch
   howler: patches/howler.patch
   require-in-the-middle: patches/require-in-the-middle.patch

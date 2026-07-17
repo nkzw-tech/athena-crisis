@@ -2,13 +2,12 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from '@babel/parser';
-import { NodePath } from '@babel/traverse';
+import traverse, { type NodePath } from '@babel/traverse';
 import { JSXIdentifier } from '@babel/types';
 import chalk from 'chalk';
 import { format } from 'oxfmt';
 import isOpenSource from '../infra/isOpenSource.tsx';
 import sign from './lib/sign.tsx';
-import traverse from './lib/traverse.tsx';
 
 console.log(chalk.bold('› Generating routes...'));
 
@@ -51,21 +50,16 @@ const extract = (files: Array<string>): ReadonlySet<Route> => {
     });
     traverse(ast, {
       JSXIdentifier(path: NodePath<JSXIdentifier>) {
-        if (path.node.name === 'Route' && path.parentPath?.node?.type === 'JSXOpeningElement') {
-          const attribute = path.parentPath
-            .get('attributes')
-            .find(
-              (prop) =>
-                prop.node?.type === 'JSXAttribute' &&
-                prop.node.name.type === 'JSXIdentifier' &&
-                prop.node.name.name === 'path',
-            );
-          if (
-            attribute?.node &&
-            attribute.node.type === 'JSXAttribute' &&
-            attribute.node.value?.type === 'StringLiteral'
-          ) {
-            const routePath = attribute.node.value.value;
+        const parent = path.parentPath?.node;
+        if (path.node.name === 'Route' && parent?.type === 'JSXOpeningElement') {
+          const attribute = parent.attributes.find(
+            (attribute) =>
+              attribute.type === 'JSXAttribute' &&
+              attribute.name.type === 'JSXIdentifier' &&
+              attribute.name.name === 'path',
+          );
+          if (attribute?.type === 'JSXAttribute' && attribute.value?.type === 'StringLiteral') {
+            const routePath = attribute.value.value;
             if (routePath === '*') {
               return;
             }

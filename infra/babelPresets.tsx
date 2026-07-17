@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import type { PresetItem } from '@babel/core';
 import fbteePreset from '@nkzw/babel-preset-fbtee';
 import fbtCommon from '../i18n/Common.ts';
 import isOpenSource from './isOpenSource.tsx';
@@ -23,5 +24,5 @@ export default [
       fbtCommon,
       fbtEnumManifest: await getEnumManifest(),
     },
-  ],
+  ] satisfies PresetItem,
 ];

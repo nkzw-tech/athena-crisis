@@ -21,7 +21,7 @@
     "@nkzw/stack": "^2.3.2",
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
-    "fbtee": "^2.0.0",
+    "fbtee": "^3.0.0",
     "framer-motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

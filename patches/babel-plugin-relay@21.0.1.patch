@@ -1,0 +1,55 @@
+diff --git a/lib/compileGraphQLTag.js b/lib/compileGraphQLTag.js
+index ceb5080ea4bdece866819f6c644b8586409f4877..ad3b108f8a46a69fc89cc61105a4be1258f0ca6b 100644
+--- a/lib/compileGraphQLTag.js
++++ b/lib/compileGraphQLTag.js
+@@ -49,19 +49,19 @@ function createNode(t, state, path, graphqlDefinition, options) {
+     topScope = topScope.parent;
+   }
+   var id = topScope.generateUidIdentifier(definitionName);
+-  var expHash = t.MemberExpression(t.cloneNode(id), t.Identifier('hash'));
++  var expHash = t.memberExpression(t.cloneNode(id), t.identifier('hash'));
+   var expWarn = warnNeedsRebuild(t, definitionName, options.buildCommand);
+-  var expWarnIfOutdated = t.LogicalExpression('&&', t.cloneNode(expHash), t.LogicalExpression('&&', t.BinaryExpression('!==', expHash, t.StringLiteral(hash)), expWarn));
++  var expWarnIfOutdated = t.logicalExpression('&&', t.cloneNode(expHash), t.logicalExpression('&&', t.binaryExpression('!==', expHash, t.stringLiteral(hash)), expWarn));
+   if (options.eagerEsModules) {
+-    var importDeclaration = t.ImportDeclaration([t.ImportDefaultSpecifier(id)], t.StringLiteral(requiredPath));
++    var importDeclaration = t.importDeclaration([t.importDefaultSpecifier(id)], t.stringLiteral(requiredPath));
+     var program = path.findParent(function (parent) {
+       return parent.isProgram();
+     });
+     program.unshiftContainer('body', importDeclaration);
+-    var expAssignAndCheck = t.SequenceExpression([expWarnIfOutdated, t.cloneNode(id)]);
++    var expAssignAndCheck = t.sequenceExpression([expWarnIfOutdated, t.cloneNode(id)]);
+     var expAssign;
+     if (options.isDevVariable != null) {
+-      expAssign = t.ConditionalExpression(t.Identifier(options.isDevVariable), expAssignAndCheck, t.cloneNode(id));
++      expAssign = t.conditionalExpression(t.identifier(options.isDevVariable), expAssignAndCheck, t.cloneNode(id));
+     } else if (options.isDevelopment) {
+       expAssign = expAssignAndCheck;
+     } else {
+@@ -72,19 +72,19 @@ function createNode(t, state, path, graphqlDefinition, options) {
+     topScope.push({
+       id: t.cloneNode(id)
+     });
+-    var requireGraphQLModule = t.CallExpression(t.Identifier('require'), [t.StringLiteral(requiredPath)]);
+-    var expAssignProd = t.AssignmentExpression('=', t.cloneNode(id), requireGraphQLModule);
+-    var _expAssignAndCheck = t.SequenceExpression([expAssignProd, expWarnIfOutdated, t.cloneNode(id)]);
++    var requireGraphQLModule = t.callExpression(t.identifier('require'), [t.stringLiteral(requiredPath)]);
++    var expAssignProd = t.assignmentExpression('=', t.cloneNode(id), requireGraphQLModule);
++    var _expAssignAndCheck = t.sequenceExpression([expAssignProd, expWarnIfOutdated, t.cloneNode(id)]);
+     var _expAssign;
+     if (options.isDevVariable != null) {
+-      _expAssign = t.ConditionalExpression(t.Identifier(options.isDevVariable), _expAssignAndCheck, expAssignProd);
++      _expAssign = t.conditionalExpression(t.identifier(options.isDevVariable), _expAssignAndCheck, expAssignProd);
+     } else if (options.isDevelopment) {
+       _expAssign = _expAssignAndCheck;
+     } else {
+       _expAssign = expAssignProd;
+     }
+-    var expVoid0 = t.UnaryExpression('void', t.NumericLiteral(0));
+-    path.replaceWith(t.ConditionalExpression(t.BinaryExpression('!==', t.cloneNode(id), expVoid0), t.cloneNode(id), t.cloneNode(_expAssign)));
++    var expVoid0 = t.unaryExpression('void', t.numericLiteral(0));
++    path.replaceWith(t.conditionalExpression(t.binaryExpression('!==', t.cloneNode(id), expVoid0), t.cloneNode(id), t.cloneNode(_expAssign)));
+   }
+ }
+ function warnNeedsRebuild(t, definitionName, buildCommand) {
