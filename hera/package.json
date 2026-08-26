@@ -25,14 +25,14 @@
     "@nkzw/use-relative-time": "^1.2.3",
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
-    "fbtee": "^3.0.0",
-    "framer-motion": "^12.42.2",
-    "pixelarticons": "^2.2.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "fbtee": "^3.0.1",
+    "framer-motion": "^13.1.1",
+    "pixelarticons": "^2.4.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3"
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5"
   }
 }

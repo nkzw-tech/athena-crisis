@@ -1,7 +1,7 @@
 diff --git a/src/ts/store.ts b/src/ts/store.ts
 --- a/src/ts/store.ts
 +++ b/src/ts/store.ts
-@@ -962,7 +962,6 @@ else {
+@@ -965,7 +965,6 @@ else {
  
  /** @private */
  function initCDVPurchase() {
@@ -12,7 +12,7 @@ diff --git a/src/ts/store.ts b/src/ts/store.ts
 diff --git a/www/store.js b/www/store.js
 --- a/www/store.js
 +++ b/www/store.js
-@@ -2491,7 +2491,6 @@ else {
+@@ -2765,7 +2765,6 @@ else {
  /** @private */
  function initCDVPurchase() {
      var _a;
