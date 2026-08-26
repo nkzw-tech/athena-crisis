@@ -37,8 +37,6 @@ allowBuilds:
   vue-demi: false
   workerd: true
 
-ignorePatchFailures: false
-
 minimumReleaseAgeExclude:
   - '@nkzw/*'
   - fbtee@3.0.0
