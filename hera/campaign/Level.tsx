@@ -65,7 +65,8 @@ export default memo(function Level({
   objectiveId,
   objectives,
   parentLevel,
-  ...commonProps
+  updateLevel,
+  ...sharedProps
 }: {
   dataSource: TypeaheadDataSource<MapNode>;
   depth?: number;
@@ -93,9 +94,8 @@ export default memo(function Level({
     replaceFirstLevel,
     setMap,
     setSaveState,
-    updateLevel,
     zoom = 1,
-  } = commonProps;
+  } = sharedProps;
 
   const ref = useRef(null);
   const isInView = useInView(ref);
@@ -114,22 +114,25 @@ export default memo(function Level({
     trigger: 'Start',
   });
 
-  const updateObjective = (objectiveId: ObjectiveID | null) => {
-    if (parentLevel) {
-      updateLevel({
-        ...parentLevel,
-        next: [...(parentLevel.next || [])].map((entry) => {
-          const isArray = Array.isArray(entry);
-          const { mapId } = isArray ? entry[1] : entry;
-          // Only mutate if the level id matches.
-          if (mapId === level.mapId) {
-            return objectiveId != null ? [objectiveId, mapId] : mapId;
-          }
-          return isArray ? [entry[0], mapId] : mapId;
-        }),
-      });
-    }
-  };
+  const updateObjective = useCallback(
+    (objectiveId: ObjectiveID | null) => {
+      if (parentLevel) {
+        updateLevel({
+          ...parentLevel,
+          next: [...(parentLevel.next || [])].map((entry) => {
+            const isArray = Array.isArray(entry);
+            const { mapId } = isArray ? entry[1] : entry;
+            // Only mutate if the level id matches.
+            if (mapId === level.mapId) {
+              return objectiveId != null ? [objectiveId, mapId] : mapId;
+            }
+            return isArray ? [entry[0], mapId] : mapId;
+          }),
+        });
+      }
+    },
+    [level.mapId, parentLevel, updateLevel],
+  );
 
   const removeConnection = useCallback(
     (parentLevel: LevelT<ClientLevelID>) => {
@@ -420,7 +423,8 @@ export default memo(function Level({
                 key={(Array.isArray(entry) ? entry[1] : entry).mapId}
                 objectives={map.config.objectives}
                 parentLevel={level}
-                {...commonProps}
+                updateLevel={updateLevel}
+                {...sharedProps}
                 {...(Array.isArray(entry)
                   ? {
                       level: entry[1],
