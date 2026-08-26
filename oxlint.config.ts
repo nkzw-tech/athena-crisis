@@ -93,7 +93,7 @@ export default defineConfig({
     {
       files: ['tests/display.tsx', 'ares/src/entitlements/useIAPCheckout.tsx'],
       rules: {
-        'react-hooks-js/immutability': 'off',
+        'react/immutability': 'off',
       },
     },
     {

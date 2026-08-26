@@ -496,7 +496,7 @@ export default function Typeahead<T>({
           ))
         )(
           results,
-          // oxlint-disable-next-line react-hooks-js/refs
+          // oxlint-disable-next-line react/refs
           {
             isHighlighted: (index: number) => index === highlightedIndex,
             onSelect: handleSelection,

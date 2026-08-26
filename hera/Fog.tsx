@@ -748,11 +748,7 @@ export default memo(function CanvasFog({
   const darkRef = useRef<HTMLCanvasElement>(null);
   const mistLayerCacheRef = useRef<MistLayerCache | null>(null);
   const mistPhaseRef = useRef(pseudoRandom(size));
-  const mistStartRef = useRef(
-    typeof performance === 'undefined'
-      ? 0
-      : performance.now() - mistPhaseRef.current * MistAnimationDuration,
-  );
+  const mistStartRef = useRef(Number.NaN);
   const mistRef = useRef<HTMLCanvasElement>(null);
   const shroudRef = useRef<HTMLCanvasElement>(null);
   const bufferRef = useRef<HTMLCanvasElement>(null);
@@ -789,6 +785,9 @@ export default memo(function CanvasFog({
     const mistCache =
       mistLayerCache && mistMask ? { layers: mistLayerCache, maskCanvas: mistMask } : null;
     const now = performance.now();
+    if (Number.isNaN(mistStartRef.current)) {
+      mistStartRef.current = now - mistPhaseRef.current * MistAnimationDuration;
+    }
     const initialMistPhase = !paused
       ? getMistAnimationPhase(now, mistStartRef.current)
       : mistPhaseRef.current;

@@ -114,25 +114,22 @@ export default memo(function Level({
     trigger: 'Start',
   });
 
-  const updateObjective = useCallback(
-    (objectiveId: ObjectiveID | null) => {
-      if (parentLevel) {
-        updateLevel({
-          ...parentLevel,
-          next: [...(parentLevel.next || [])].map((entry) => {
-            const isArray = Array.isArray(entry);
-            const { mapId } = isArray ? entry[1] : entry;
-            // Only mutate if the level id matches.
-            if (mapId === level.mapId) {
-              return objectiveId != null ? [objectiveId, mapId] : mapId;
-            }
-            return isArray ? [entry[0], mapId] : mapId;
-          }),
-        });
-      }
-    },
-    [level.mapId, parentLevel, updateLevel],
-  );
+  const updateObjective = (objectiveId: ObjectiveID | null) => {
+    if (parentLevel) {
+      updateLevel({
+        ...parentLevel,
+        next: [...(parentLevel.next || [])].map((entry) => {
+          const isArray = Array.isArray(entry);
+          const { mapId } = isArray ? entry[1] : entry;
+          // Only mutate if the level id matches.
+          if (mapId === level.mapId) {
+            return objectiveId != null ? [objectiveId, mapId] : mapId;
+          }
+          return isArray ? [entry[0], mapId] : mapId;
+        }),
+      });
+    }
+  };
 
   const removeConnection = useCallback(
     (parentLevel: LevelT<ClientLevelID>) => {

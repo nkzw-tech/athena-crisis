@@ -8,13 +8,13 @@ import maybeFade from '../../ui/lib/maybeFade.tsx';
 const useFps = (windowWidth: number) => {
   const lastFpsValues = useRef<Array<number>>([]);
   const frames = useRef(0);
-  // oxlint-disable-next-line react-hooks-js/purity
+  // oxlint-disable-next-line react/purity
   const prevTime = useRef(performance.now());
   const animationRef = useRef(0);
   const [fps, setFps] = useState<Array<number>>([]);
 
   const calcFps = () => {
-    // oxlint-disable-next-line react-hooks-js/purity
+    // oxlint-disable-next-line react/purity
     const t = performance.now();
 
     frames.current += 1;
@@ -39,7 +39,7 @@ const useFps = (windowWidth: number) => {
       setFps(lastFpsValues.current);
 
       frames.current = 0;
-      // oxlint-disable-next-line react-hooks-js/purity
+      // oxlint-disable-next-line react/purity
       prevTime.current = performance.now();
     }
 

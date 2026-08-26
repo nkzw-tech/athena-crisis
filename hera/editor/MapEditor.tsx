@@ -299,7 +299,7 @@ export default function MapEditor({
     undoStackIndex: null,
   });
 
-  // oxlint-disable-next-line react-hooks-js/refs
+  // oxlint-disable-next-line react/refs
   const [editor, _setEditorState] = useState<EditorState>(() =>
     getEditorBaseState(map, mapObject, mode, editorHistory, initialEffects, initialScenario),
   );
@@ -483,7 +483,7 @@ export default function MapEditor({
   );
 
   const saveMap: SaveMapFunction = useCallback(
-    // oxlint-disable-next-line react-hooks-js/preserve-manual-memoization
+    // oxlint-disable-next-line react/preserve-manual-memoization
     (currentMap, type = 'Update') => {
       if (!mapName || !isValidName(mapName, "_ -!?'")) {
         setSaveState({
@@ -557,7 +557,7 @@ export default function MapEditor({
   );
 
   const { alert } = useAlert();
-  // oxlint-disable-next-line react-hooks-js/preserve-manual-memoization
+  // oxlint-disable-next-line react/preserve-manual-memoization
   const maybeKeepPlaytestMap = useCallback(() => {
     alert({
       onAccept: () => {
@@ -737,7 +737,7 @@ export default function MapEditor({
     updatePreviousMap();
   }, [getInitialMap, initialEffects, mapObject, mode, initialScenario, setMap, updatePreviousMap]);
 
-  // oxlint-disable-next-line react-hooks-js/preserve-manual-memoization
+  // oxlint-disable-next-line react/preserve-manual-memoization
   const fillMap = useCallback(() => {
     const fillTile = editor?.selected?.tile ? getTileInfo(editor.selected.tile) : null;
     const newMap = withModifiers(
@@ -776,7 +776,7 @@ export default function MapEditor({
   }, [editor.effects, editor.mode, editor.scenario, previousState, setMap]);
 
   const resize = useCallback(
-    // oxlint-disable-next-line react-hooks-js/preserve-manual-memoization
+    // oxlint-disable-next-line react/preserve-manual-memoization
     (size: SizeVector, origin: Set<ResizeOrigin>) => {
       const map = stateRef.current?.map;
       if (map && !size.equals(map.size)) {
