@@ -73,7 +73,7 @@
     "oxlint-tsgolint": "^7.0.2001",
     "portless": "^0.15.6",
     "ts-node": "^10.9.2",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "vite": "^8.2.2",
     "vitest": "^4.1.11",
     "wrangler": "4.125.0"
