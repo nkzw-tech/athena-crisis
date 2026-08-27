@@ -40,7 +40,7 @@
     "@stripe/react-stripe-js": "^6.8.2",
     "@stripe/stripe-js": "^9.14.0",
     "cordova-plugin-purchase": "^13.18.0",
-    "fbtee": "^3.0.1",
+    "fbtee": "^3.1.0",
     "framer-motion": "^13.1.1",
     "p-limit": "^7.3.1",
     "pixelarticons": "^2.4.1",
@@ -58,7 +58,6 @@
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.1",
     "@sentry/vite-plugin": "^5.4.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",

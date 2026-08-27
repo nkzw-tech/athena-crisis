@@ -1,7 +1,7 @@
-import babel from '@rolldown/plugin-babel';
+import fbtee from '@nkzw/vite-plugin-fbtee';
 import react from '@vitejs/plugin-react';
-import presets from '../infra/babelPresets.tsx';
 import createResolver from '../infra/createResolver.tsx';
+import fbteePluginOptions from '../infra/fbteePluginOptions.tsx';
 import pixelarticonsPlugin from '../infra/pixelarticonsPlugin.ts';
 
 const root = process.cwd();
@@ -13,9 +13,7 @@ export default {
   plugins: [
     createResolver(),
     pixelarticonsPlugin(),
-    babel({
-      presets,
-    }),
+    fbtee(fbteePluginOptions),
     react({ compiler: true }),
   ],
   root,

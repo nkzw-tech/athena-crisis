@@ -1,10 +1,10 @@
 import { join } from 'node:path';
-import babel from '@rolldown/plugin-babel';
+import fbtee from '@nkzw/vite-plugin-fbtee';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { defineConfig } from 'vitest/config';
-import presets from './infra/babelPresets.tsx';
 import createResolver from './infra/createResolver.tsx';
+import fbteePluginOptions from './infra/fbteePluginOptions.tsx';
 
 const root = process.cwd();
 
@@ -14,7 +14,7 @@ dotenv.config({
 });
 
 export default defineConfig({
-  plugins: [createResolver(), babel({ presets }), react()],
+  plugins: [createResolver(), fbtee(fbteePluginOptions), react()],
   test: {
     globalSetup: ['./tests/viteServer', './tests/playwrightServer'],
     setupFiles: ['./tests/setup'],
