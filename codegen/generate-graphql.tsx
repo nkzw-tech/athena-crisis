@@ -1,4 +1,4 @@
-#!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
+#!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --import @oxc-node/core/register
 import { writeFileSync } from 'node:fs';
 import { join, posix, relative, sep } from 'node:path';
 import chalk from 'chalk';

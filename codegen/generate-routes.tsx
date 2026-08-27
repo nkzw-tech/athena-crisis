@@ -1,4 +1,4 @@
-#!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm
+#!/usr/bin/env node --no-warnings --experimental-specifier-resolution=node --import @oxc-node/core/register
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from '@babel/parser';
