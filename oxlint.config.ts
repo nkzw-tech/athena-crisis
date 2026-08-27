@@ -1,15 +1,7 @@
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import deities from '@deities/eslint-plugin';
 import fbtee from '@nkzw/eslint-plugin-fbtee';
-import findWorkspaces from '@nkzw/find-workspaces';
 import nkzw from '@nkzw/oxlint-config';
 import { defineConfig } from 'oxlint';
-
-const packageDir = findWorkspaces(import.meta.dirname).concat(
-  existsSync(join(import.meta.dirname, './electron')) ? ['./electron'] : [],
-  existsSync(join(import.meta.dirname, './mobile')) ? ['./mobile'] : [],
-);
 
 export default defineConfig({
   env: {
@@ -30,12 +22,7 @@ export default defineConfig({
     'mobile/android',
     'mobile/ios',
   ],
-  jsPlugins: [
-    '@deities/eslint-plugin',
-    '@nkzw/eslint-plugin-fbtee',
-    'eslint-plugin-workspaces',
-    { name: 'import-x-js', specifier: 'eslint-plugin-import-x' },
-  ],
+  jsPlugins: ['@deities/eslint-plugin', '@nkzw/eslint-plugin-fbtee', 'eslint-plugin-workspaces'],
   overrides: [
     {
       files: ['**/__generated__/**/*.ts'],
@@ -143,52 +130,8 @@ export default defineConfig({
         ],
       },
     ],
-    'import-x-js/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: [
-          './{ares,artemis,deimos,docs,offline}/vite.config.ts',
-          './{ares,artemis}/scripts/**/*.{js,cjs,tsx}',
-          './ares/ares.tsx',
-          './artemis/prisma/seed.tsx',
-          './artemis/prisma.config.ts',
-          './codegen/**',
-          './electron/**',
-          './infra/**',
-          './mobile/capacitor.config.ts',
-          './scripts/**',
-          './tests/**',
-          './vitest.config.ts',
-          '**/__tests__/**',
-          'oxlint.config.ts',
-        ],
-        packageDir,
-      },
-    ],
-    'import-x-js/no-unresolved': [
-      'error',
-      {
-        ignore: [String.raw`\?worker`, 'athena-crisis:*', 'glob', 'virtual:*'],
-      },
-    ],
     'no-restricted-globals': ['error', 'alert', 'confirm'],
     'workspaces/no-absolute-imports': 'error',
     'workspaces/no-relative-imports': 'error',
-  },
-  settings: {
-    'import-x-js/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import-x-js/resolver': {
-      node: true,
-      typescript: true,
-    },
-    'import-x/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import-x/resolver': {
-      node: true,
-      typescript: true,
-    },
   },
 });

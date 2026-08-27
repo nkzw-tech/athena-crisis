@@ -232,9 +232,6 @@ importers:
       '@nkzw/eslint-plugin-fbtee':
         specifier: ^3.0.1
         version: 3.0.1(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
-      '@nkzw/find-workspaces':
-        specifier: ^1.1.0
-        version: 1.1.0
       '@nkzw/oxlint-config':
         specifier: ^1.3.0
         version: 1.3.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0)(typescript@6.0.3)
@@ -274,9 +271,6 @@ importers:
       eslint-import-resolver-typescript:
         specifier: ^4.4.5
         version: 4.4.5(eslint-plugin-import-x@4.17.1(@typescript-eslint/utils@8.68.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(supports-color@5.5.0))(eslint@10.4.0(jiti@2.7.0))(supports-color@5.5.0)
-      eslint-plugin-import-x:
-        specifier: ^4.17.1
-        version: 4.17.1(@typescript-eslint/utils@8.68.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(supports-color@5.5.0)
       eslint-plugin-no-only-tests:
         specifier: ^3.4.0
         version: 3.4.0
@@ -3134,9 +3128,6 @@ packages:
     resolution: {integrity: sha512-IoU8kOqHfnf7se2dGxMD/7RPm6WVjzjOjWSo7FulRx3lJzuZvXioSkT5Nd82l66DH3Pl2whw74lPT1di3KMwFA==}
     peerDependencies:
       eslint: '>= 9'
-
-  '@nkzw/find-workspaces@1.1.0':
-    resolution: {integrity: sha512-QcsK/u1SY4erdAUGopD3fa1S0VGhU7cL96pNNN+7/K7/jhdCTezwBY85GaNo4cS+9pgysmfDfPUChAK+U7QyDA==}
 
   '@nkzw/histogram@1.1.0':
     resolution: {integrity: sha512-RApDTE1panuIwDS2XLTeBkbfylwZBMa+XXSzPAbOATEUly4tmWCm2NsT7hUnX+sVSf62rpKG9mEOe4cENFmbhA==}
@@ -14064,10 +14055,6 @@ snapshots:
     dependencies:
       eslint: 10.4.0(jiti@2.7.0)
 
-  '@nkzw/find-workspaces@1.1.0':
-    dependencies:
-      yaml: 2.9.0
-
   '@nkzw/histogram@1.1.0': {}
 
   '@nkzw/immutable-map@2.1.0': {}
@@ -17913,7 +17900,8 @@ snapshots:
 
   commander@4.1.1: {}
 
-  comment-parser@1.4.8: {}
+  comment-parser@1.4.8:
+    optional: true
 
   common-tags@1.8.2: {}
 
@@ -18580,6 +18568,7 @@ snapshots:
       '@typescript-eslint/utils': 8.68.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   eslint-plugin-no-only-tests@3.4.0: {}
 
