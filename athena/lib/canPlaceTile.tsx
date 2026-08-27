@@ -66,7 +66,7 @@ export default function canPlaceTile(map: MapData, vector: Vector, tile: TileInf
     tile === Island ||
     tile === Iceberg ||
     tile === Weeds ||
-    tile == GasBubbles
+    tile === GasBubbles
   ) {
     if (tile === Island && map.getTileInfo(vector, 0).type & TileTypes.DeepSea) {
       return false;

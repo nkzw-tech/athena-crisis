@@ -242,7 +242,7 @@ export default class DesignBehavior {
     ).filter((id) => id !== 0);
     const currentPlayerId = state.map.getCurrentPlayer().id;
     vectors.forEach((vector, index) => {
-      const playerIndex = currentPlayerId != 0 ? players.indexOf(currentPlayerId) : -1;
+      const playerIndex = currentPlayerId !== 0 ? players.indexOf(currentPlayerId) : -1;
       const playerId = playerIndex === -1 ? 0 : players[(playerIndex + index) % players.length];
       newState = {
         ...newState,
@@ -728,7 +728,7 @@ export default class DesignBehavior {
           building.info.configuration.limit > 0 &&
           map.buildings.filter(
             (b) =>
-              b.id == building.id &&
+              b.id === building.id &&
               map.matchesPlayer(building.info.isStructure() ? 0 : map.getCurrentPlayer(), b),
           ).size >= building.info.configuration.limit) ||
         (decorator &&

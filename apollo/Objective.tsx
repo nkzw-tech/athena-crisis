@@ -230,7 +230,7 @@ export function checkGameEndCondition(
               new Vision(fromPlayer.id),
               EndTurnAction(),
             ) || [];
-          if (newMap && endTurnActionResponse && endTurnActionResponse.type == 'EndTurn') {
+          if (newMap && endTurnActionResponse && endTurnActionResponse.type === 'EndTurn') {
             map = newMap.copy({ active: map.active });
             gameState.push([endTurnActionResponse, map]);
           }

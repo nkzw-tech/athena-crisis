@@ -6,13 +6,15 @@ import pixelBorder from './pixelBorder.tsx';
 
 type FormButtonProps = Omit<
   DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
-  'ref'
+  'ref' | 'type'
 > & {
   ref?: RefCallback<HTMLButtonElement> | RefObject<HTMLButtonElement | null>;
+  type: NonNullable<ButtonHTMLAttributes<HTMLButtonElement>['type']>;
 };
 
-export default memo(function FormButton({ className, ref, ...props }: FormButtonProps) {
-  return <button {...props} className={cx(buttonStyle, className)} ref={ref} />;
+export default memo(function FormButton({ className, ref, type, ...props }: FormButtonProps) {
+  // oxlint-disable-next-line react/button-has-type -- The required TypeScript prop only permits valid button types.
+  return <button {...props} className={cx(buttonStyle, className)} ref={ref} type={type} />;
 });
 
 const buttonStyle = css`

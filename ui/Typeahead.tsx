@@ -189,8 +189,6 @@ export class TypeaheadDataSourceEntry<T> {
     public readonly value: string,
     public readonly data: T,
   ) {
-    this.text = text;
-    this.value = value;
     this.tokens = parseTokens(text);
   }
 }

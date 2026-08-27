@@ -33,7 +33,7 @@ export default function VolumeControl({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const audioPlayerIsPaused = AudioPlayer.isPaused();
-    if (isPaused != audioPlayerIsPaused) {
+    if (isPaused !== audioPlayerIsPaused) {
       (window.requestIdleCallback || requestAnimationFrame)(() => setPaused(audioPlayerIsPaused));
     }
   }, undefined);

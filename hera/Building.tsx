@@ -153,7 +153,7 @@ const BuildingTile = memo(function BuildingTile({
             ? alternateOutlineStyle
             : outlineStyle
           : null,
-        animation && animation.type == 'attackBuildingFlash' && attackFlashStyle,
+        animation && animation.type === 'attackBuildingFlash' && attackFlashStyle,
         fade && fadeStyle,
         animation?.type === 'capture' ? captureStyle : null,
       )}

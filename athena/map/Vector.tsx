@@ -90,7 +90,7 @@ export default abstract class Vector {
   }
 
   equals(vector: VectorLike | null) {
-    return !!vector && this.x == vector.x && this.y == vector.y;
+    return !!vector && this.x === vector.x && this.y === vector.y;
   }
 
   hashCode(): string | number {

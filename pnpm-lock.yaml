@@ -229,8 +229,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       '@nkzw/oxlint-config':
-        specifier: ^1.3.0
-        version: 1.3.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)
+        specifier: ^2.0.0
+        version: 2.0.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)
       '@nkzw/pothos-locate':
         specifier: ^1.0.0
         version: 1.0.0
@@ -3188,8 +3188,8 @@ packages:
     resolution: {integrity: sha512-m17PXKBGka1fftyilwlTR4B2hlSqRBWf9nwBfFifxWH74mK6IooCFVtvpe/nz+vkqxbER+HRIwtvjFWeZ8syrA==}
     engines: {node: '>=22.12.0'}
 
-  '@nkzw/oxlint-config@1.3.0':
-    resolution: {integrity: sha512-ibyyevSgtMwFJ36qP5SVHI86zLA3Zs3Z3e0j4c/69500G6pqe2GhYhEsYaKOxk2gGCXi0CLb1uyxd/xzbVx1OA==}
+  '@nkzw/oxlint-config@2.0.0':
+    resolution: {integrity: sha512-3d+V1gutK+TkbhsOGtaYfuL/3G2hbDYcR4DbIh7rdDLhdg7cmfFy59MWR4Q5poczgWoSXgGRJ9+Fk2C3DYj3oQ==}
     peerDependencies:
       oxlint: '>=1.79.0'
 
@@ -14366,7 +14366,7 @@ snapshots:
       '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc': 3.1.0
       '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc': 3.1.0
 
-  '@nkzw/oxlint-config@1.3.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)':
+  '@nkzw/oxlint-config@2.0.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)':
     dependencies:
       '@nkzw/eslint-plugin': 2.0.0(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-no-only-tests: 3.4.0

@@ -42,7 +42,7 @@ export default function canBuild(
     !map.config.blocklistedBuildings.has(info.id) &&
     (info.configuration.limit === 0 ||
       map.buildings.filter(
-        (building) => building.id == info.id && map.matchesPlayer(building, player),
+        (building) => building.id === info.id && map.matchesPlayer(building, player),
       ).size < info.configuration.limit) &&
     !getBiomeBuildingRestrictions(map.config.biome).has(info)
   );

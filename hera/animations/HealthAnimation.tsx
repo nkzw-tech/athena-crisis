@@ -67,7 +67,7 @@ export default function HealthAnimation({
       style={{
         color: color ? getColor(color === 'error' ? 'red' : color) : undefined,
         left: `${(position.x - 0.5) * tileSize}px`,
-        padding: change == 0 ? '1px 2.5px 2.5px' : '0 1.5px 1.5px',
+        padding: change === 0 ? '1px 2.5px 2.5px' : '0 1.5px 1.5px',
         textShadow: color ? '0.5px 0.5px 0 rgba(0, 0, 0, 0.4)' : undefined,
         top: `${(position.y - 1.6) * tileSize}px`,
         zIndex,
@@ -76,7 +76,7 @@ export default function HealthAnimation({
         duration: animationConfig.AnimationDuration / 2 / 1000,
       }}
     >
-      {change == 0 ? (
+      {change === 0 ? (
         <fbt desc="No damage label">No damage!</fbt>
       ) : (
         `${change < 0 ? '-' : '+'}${Math.abs(change)}`

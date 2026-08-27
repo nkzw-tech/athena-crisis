@@ -441,7 +441,7 @@ const Sidebar = ({
         )}
       </span>
     </InlineLink>,
-    previousState && previousState.map != state.map ? (
+    previousState && previousState.map !== state.map ? (
       <InlineLink className={linkStyle} key="restore" onClick={() => restorePreviousState()}>
         <span className={textStyle}>
           <fbt desc="Button to restore the map">Restore</fbt>

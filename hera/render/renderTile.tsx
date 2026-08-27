@@ -164,7 +164,7 @@ export default function renderTile(
         half,
         half,
       );
-    } else if (modifier[0] == RenderType.Horizontal) {
+    } else if (modifier[0] === RenderType.Horizontal) {
       context.drawImage(
         image,
         (x + modifier[1].x + offset.x) * size,
@@ -188,7 +188,7 @@ export default function renderTile(
         size,
         half,
       );
-    } else if (modifier[0] == RenderType.Vertical) {
+    } else if (modifier[0] === RenderType.Vertical) {
       context.drawImage(
         image,
         (x + modifier[1].x + offset.x) * size,
@@ -212,7 +212,7 @@ export default function renderTile(
         half,
         size,
       );
-    } else if (modifier[0] == RenderType.Composite) {
+    } else if (modifier[0] === RenderType.Composite) {
       context.drawImage(
         image,
         (x + modifier[1].x + offset.x) * size,

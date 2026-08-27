@@ -37,7 +37,7 @@ test('displays all units and all possible states correctly', async () => {
   let units = ImmutableMap<Vector, Unit>();
   let maxWidth = 1;
   let y = 1;
-  sortBy([...mapUnits((unit) => unit)], ({ id }) => id).map((unit) => {
+  for (const unit of sortBy([...mapUnits((unit) => unit)], ({ id }) => id)) {
     let x = 1;
     units = units.set(vec(x++, y), unit.create(1));
 
@@ -59,7 +59,7 @@ test('displays all units and all possible states correctly', async () => {
     }
 
     y++;
-  });
+  }
 
   const size = { height: y - 1, width: maxWidth };
   units = units.merge(

@@ -213,7 +213,7 @@ const extractProp = (node: TSTypeElement): Prop => {
 
 const extract = (files: ReadonlyArray<string>): ReadonlyArray<ExtractedType> => {
   const types: Array<ExtractedType> = [];
-  files.map((file) => {
+  for (const file of files) {
     const ast = parse(readFileSync(join(root, file), 'utf8'), {
       plugins: ['typescript', 'jsx'],
       sourceType: 'module',
@@ -275,7 +275,7 @@ const extract = (files: ReadonlyArray<string>): ReadonlyArray<ExtractedType> => 
         }
       },
     });
-  });
+  }
   return types;
 };
 

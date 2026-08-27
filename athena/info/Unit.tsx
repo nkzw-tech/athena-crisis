@@ -576,7 +576,7 @@ export class UnitInfo {
   }
 
   removeCustomCharacterName() {
-    if (Object.prototype.hasOwnProperty.call(this, 'characterName')) {
+    if (Object.hasOwn(this, 'characterName')) {
       // @ts-expect-error
       delete this.characterName;
     }

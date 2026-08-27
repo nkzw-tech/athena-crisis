@@ -242,7 +242,7 @@ export function generateBuildings(map: MapData, biomes: ReadonlyArray<Biome> = B
           }
           const building =
             buildingToBuild === 0 && factories <= maxFactories
-              ? factories == 0 || random(0, 1)
+              ? factories === 0 || random(0, 1)
                 ? Barracks
                 : Factory
               : House;

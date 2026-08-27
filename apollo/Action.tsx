@@ -490,7 +490,7 @@ function _counterAttack(
   const playerB = map.getPlayer(unitB);
   const weaponB = unitB.getAttackWeapon(unitA);
   if (
-    distance == 1 &&
+    distance === 1 &&
     !unitB.isDead() &&
     unitB.canAttackAt(distance, playerB) &&
     weaponB &&

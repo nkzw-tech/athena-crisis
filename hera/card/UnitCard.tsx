@@ -186,7 +186,7 @@ export default memo(function UnitCard({
           <CardTitle player={player}>{info.name}</CardTitle>
           {getTranslatedEntityName(info.type)},{' '}
           {getTranslatedEntityGroupName(getEntityGroup(entity))}
-          {player != 0 && (
+          {player !== 0 && (
             <div>
               <fbt desc="Unit character name">
                 Name:{' '}

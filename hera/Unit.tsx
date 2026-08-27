@@ -300,7 +300,7 @@ const getAnimationStyle = (animation: UnitAnimation | undefined, spriteDirection
 
 const getDirectionOffset = (info: UnitInfo, direction?: AnimationDirection) =>
   direction
-    ? (direction == 'down' ? 1 : direction == 'up' ? 2 : 0) * info.sprite.directionOffset
+    ? (direction === 'down' ? 1 : direction === 'up' ? 2 : 0) * info.sprite.directionOffset
     : 0;
 
 const isSpawnAnimation = (animation: UnitAnimation | undefined): animation is UnitAnimation => {

@@ -303,12 +303,12 @@ export default class MapData {
   }
 
   getPlayer(player: EntityOrPlayerID) {
-    const id = typeof player == 'number' ? player : player.player;
+    const id = typeof player === 'number' ? player : player.player;
     return id === 0 ? nullPlayer : this.players.get(id)!;
   }
 
   maybeGetPlayer(player: EntityOrPlayerID) {
-    const id = typeof player == 'number' ? player : player.player;
+    const id = typeof player === 'number' ? player : player.player;
     return id === 0 ? nullPlayer : this.players.get(id);
   }
 
