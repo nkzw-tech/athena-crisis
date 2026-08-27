@@ -23,6 +23,10 @@ export default defineConfig({
     'mobile/ios',
   ],
   jsPlugins: ['@deities/eslint-plugin', '@nkzw/eslint-plugin-fbtee', 'eslint-plugin-workspaces'],
+  options: {
+    typeAware: true,
+    typeCheck: true,
+  },
   overrides: [
     {
       files: ['**/__generated__/**/*.ts'],
