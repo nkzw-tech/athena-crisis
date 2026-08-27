@@ -28,7 +28,6 @@
     "react-error-boundary": "^6.1.3"
   },
   "devDependencies": {
-    "@emotion/babel-plugin": "^11.13.5",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5"
   }

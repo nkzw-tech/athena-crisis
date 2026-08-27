@@ -22,7 +22,6 @@
     "@deities/hera": "workspace:*",
     "@deities/hermes": "workspace:*",
     "@deities/ui": "workspace:*",
-    "@emotion/babel-plugin": "^11.13.5",
     "@emotion/css": "^11.13.5",
     "@nkzw/immutable-map": "^2.1.0",
     "@playwright/browser-chromium": "^1.62.1",

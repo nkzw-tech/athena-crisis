@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-import babelPluginEmotion from '@emotion/babel-plugin';
 import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -19,7 +18,6 @@ export default defineConfig(async () => ({
     createResolver(),
     pixelarticonsPlugin(),
     babel({
-      plugins: [babelPluginEmotion],
       presets,
     }),
     react(),
