@@ -223,11 +223,11 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(eslint@10.4.0(jiti@2.7.0))
       '@nkzw/eslint-plugin-fbtee':
-        specifier: ^3.1.0
-        version: 3.1.0(eslint@10.4.0(jiti@2.7.0))(typescript@7.0.2)
+        specifier: ^3.3.0
+        version: 3.3.0(eslint@10.4.0(jiti@2.7.0))(typescript@7.0.2)
       '@nkzw/fbtee-cli':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.3.0
+        version: 3.3.0
       '@nkzw/oxlint-config':
         specifier: ^2.0.0
         version: 2.0.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)
@@ -235,8 +235,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@nkzw/vite-plugin-fbtee':
-        specifier: ^3.1.0
-        version: 3.1.0(vite@8.2.2(@types/node@26.3.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
+        specifier: ^3.3.0
+        version: 3.3.0(vite@8.2.2(@types/node@26.3.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
       '@oxc-node/core':
         specifier: ^0.1.0
         version: 0.1.0
@@ -406,8 +406,8 @@ importers:
         specifier: ^13.18.0
         version: 13.18.0(patch_hash=3ca9ea77dd97765ba6b05da3793ffbc88162f9448b6952b2e112e08dd8332b48)
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       framer-motion:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -785,8 +785,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       framer-motion:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -864,8 +864,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       framer-motion:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -947,8 +947,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       framer-motion:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1077,8 +1077,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       jest-image-snapshot:
         specifier: ^6.5.2
         version: 6.5.2
@@ -1122,8 +1122,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(react@19.2.8)
       fbtee:
-        specifier: ^3.1.0
-        version: 3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8)
+        specifier: ^3.3.0
+        version: 3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8)
       framer-motion:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3092,11 +3092,11 @@ packages:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
-  '@nkzw/babel-plugin-fbtee-auto-import@3.1.0':
-    resolution: {integrity: sha512-tNk0Ly81umpPHZk1WDcJMNEFbr9qKIE7tLRrq7EQw8zESrD3T3dfEwiF+4hcGwSq2pGFP1z7qBeokJOE/mmnnQ==}
+  '@nkzw/babel-plugin-fbtee-auto-import@3.3.0':
+    resolution: {integrity: sha512-8MhAJTtEMxpShWRLOzpBewZrgh+NHkRLNpQgJefUaaOzcPdAlEXmjj2s8CaUbC25JNFhESpP9+sQ6kX3AbdzyQ==}
 
-  '@nkzw/babel-plugin-fbtee@3.1.0':
-    resolution: {integrity: sha512-l8c1L9NM+l11n6jx4Ub0hDADAVlgz0F2oW3nP/RKZHWTwNQgs6TImknX+TSPCvcc23FRmeowvBpQKIEbbjG/QA==}
+  '@nkzw/babel-plugin-fbtee@3.3.0':
+    resolution: {integrity: sha512-06IcFwOV739vPDHlDY/TXHq5j2tbmy/lVuz57Hl682kyNWxNs4Ij7/ATyrFaYhNjcg0fYngbNhh79V3VOv8Z5g==}
     hasBin: true
 
   '@nkzw/core@1.3.1':
@@ -3110,16 +3110,16 @@ packages:
   '@nkzw/define-env@1.1.0':
     resolution: {integrity: sha512-5R0K2HsCtfCWCSzcg8Zwe/+hb8C84aVj0yrtTMrkierV7jODMvhu3DeBCcaWF4apDWgRLWu1E7KdYO7cYkM0Zg==}
 
-  '@nkzw/eslint-plugin-fbtee@3.1.0':
-    resolution: {integrity: sha512-lFSfOsg0apdkaA0bqEfe2e4DNiaJZi014KNFsrmqKQzunOhPNfWas4Gw/GakI5J1Z/VYyqo9To4/Y9r/vcXOPQ==}
+  '@nkzw/eslint-plugin-fbtee@3.3.0':
+    resolution: {integrity: sha512-IDw6o2v1enel3EdYQ82TF8onrfUzOT3JDw//zwlSqakg8i0w7pl9U0LcUO80V16eckfulg4fmuLQ9kPCuvzDNw==}
 
   '@nkzw/eslint-plugin@2.0.0':
     resolution: {integrity: sha512-IoU8kOqHfnf7se2dGxMD/7RPm6WVjzjOjWSo7FulRx3lJzuZvXioSkT5Nd82l66DH3Pl2whw74lPT1di3KMwFA==}
     peerDependencies:
       eslint: '>= 9'
 
-  '@nkzw/fbtee-cli@3.1.0':
-    resolution: {integrity: sha512-YNnfEXCkmlvRuqXuWyYeplYYVmQu/NeOxV7N6STidNz0MV0WtvMoeSd22gRZJmuY6+knR8jVO+Pgb9oN4FTd2A==}
+  '@nkzw/fbtee-cli@3.3.0':
+    resolution: {integrity: sha512-IitdrZe0bP0BuwmngyHwShxSIfzUV/gZwdUETnOb/h5AbJvYlo2fN2cC0RyIcr88NOXvPMWmeoAOX/AAr8M+Ow==}
     hasBin: true
 
   '@nkzw/histogram@1.1.0':
@@ -3132,60 +3132,60 @@ packages:
   '@nkzw/joymap@4.0.2':
     resolution: {integrity: sha512-p0AIhs3B3tZBZ9480MnLsyTjMxoARkFW/apUfBBl0dPqsYuIzgTDuhnyf3fJ3P/poQHjDTBUJ41ibk9HOAsB1A==}
 
-  '@nkzw/oxc-transform-fbtee-binding-darwin-arm64@3.1.0':
-    resolution: {integrity: sha512-svIXQy1xCQtwDOrq5sdfL+VUzdKDmuwkPas9VeH9Y9MNE+LPrTZCnPdPwufDbhLz6dfWpb2RtcFFvdbWSTQ3sw==}
+  '@nkzw/oxc-transform-fbtee-binding-darwin-arm64@3.3.0':
+    resolution: {integrity: sha512-Jkto5t6TNebtRZN0lzCE8oCalWl+Ebw+aGjVg6eRb6QasI5vWPiJfQeTwFodBultRMXNRrB+QQG0yrrSD3gbjg==}
     engines: {node: '>=22.12.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@nkzw/oxc-transform-fbtee-binding-darwin-x64@3.1.0':
-    resolution: {integrity: sha512-00hqtSttJHj35qtae5x6fw/6tTAM3q+5p2Z/IpjiDquKnfu6FFvyoqOxOutmQkMMIwiPDbIA/qkgxRry5N11ag==}
+  '@nkzw/oxc-transform-fbtee-binding-darwin-x64@3.3.0':
+    resolution: {integrity: sha512-NBfKnOqV57QYulbnFXzcej6vX+bLCfzvsEKj0oVQElhS1F+dkXW4LxzUadL4Zc/GzjUaSPNa3HlOHkF+um9xgQ==}
     engines: {node: '>=22.12.0'}
     cpu: [x64]
     os: [darwin]
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu@3.1.0':
-    resolution: {integrity: sha512-6T9VBG+9ow/AWgxsOOH2G5QN3WR/EEe0ylF+SwbvAm00jJriyIfIS3S5CiuzRi0z4PC1XYje28JWzdOu+Ic3ig==}
+  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu@3.3.0':
+    resolution: {integrity: sha512-NNvcq+oe9YjgGvxJi6nwIp0BA8QeP99KGGHFrehoOQc+RERbeeiwBijH/C8HKMvjO4PJbf0rjRyo/k5bMbpeDQ==}
     engines: {node: '>=22.12.0'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl@3.1.0':
-    resolution: {integrity: sha512-6RnIIlgOkmTkNwbuhCf+/3snVM9WqddmYDjcU1ZhyiTdwUzePjqOLZNayumQ775GbuXLfREIzgQUQOnOuur5RQ==}
+  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl@3.3.0':
+    resolution: {integrity: sha512-7TY+Sk20lbIL+a43tf7jhnLO8gntvsNU/LZSAZdnBdM+rEvn/0tGI7w2fD+OJ2Jb9V5nQyBfFQqzV9Hi/0YSpg==}
     engines: {node: '>=22.12.0'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu@3.1.0':
-    resolution: {integrity: sha512-dj10Q1+3GdLfvq/pzOf5OUaFt9mqJoeCkD2QGo2xIIb6AGQtaH2MZ1ahxdTVDHVnQeBaiaPtI2Qo2iyKJ1BDIg==}
+  '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu@3.3.0':
+    resolution: {integrity: sha512-3KtHp4XNx+Yb1HZtO6ASJN+VWhrgdCGEyYVAEWt3LpEW7ADNMoCRky2mlbujhHZSVdj1A3RdRfdTDx8FE/g/BA==}
     engines: {node: '>=22.12.0'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl@3.1.0':
-    resolution: {integrity: sha512-KSlT8JQ88DjWLd9ejo9cqL5UCwbtXHWCqw17TLWc4kQ/lSPfBhicJ/fhwMc5BZkV9YiCyVlRaVGyHql/ncve0g==}
+  '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl@3.3.0':
+    resolution: {integrity: sha512-SkKbZMK7Ai8iiuPxf4i0mgXdqRkVrPTggM9fiEYXxYorp3+1QVndbdnrNwiqeoXKV4PrdTWC9WTwMZnxMGDJoA==}
     engines: {node: '>=22.12.0'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc@3.1.0':
-    resolution: {integrity: sha512-fQCZBlJPcB+t2EVz8antwwWicX8YJ/fUMx6vbmAtuf34UCd4VI8zow5BPVe79w5LWvxmIJcqGpVbL+DHgdg6Rw==}
+  '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc@3.3.0':
+    resolution: {integrity: sha512-WJyBW8RL8iadsiAcnw05R6ntjjX7mJWRhGUeNL1AiI9thxaGlCnI8V880qxxQGAZLBup0d224IP6+Fn2h51wzg==}
     engines: {node: '>=22.12.0'}
     cpu: [arm64]
     os: [win32]
 
-  '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc@3.1.0':
-    resolution: {integrity: sha512-fXxa5FfpN/6hrVgtCpKJI4m8ruI61VHUg/vQhr4ELzljN3yL0b13JLZvbemdTfTCEdgXzJpWM5CP384ZiM+3Ig==}
+  '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc@3.3.0':
+    resolution: {integrity: sha512-jbK3Jn4R2Si4ylQ83WUWj22uSkHb0VktEYH9eTFmHfzg4efmdQJutUlRzpU1G5jS6/Sy7VkfkJ7UDlf0mzhLow==}
     engines: {node: '>=22.12.0'}
     cpu: [x64]
     os: [win32]
 
-  '@nkzw/oxc-transform-fbtee@3.1.0':
-    resolution: {integrity: sha512-m17PXKBGka1fftyilwlTR4B2hlSqRBWf9nwBfFifxWH74mK6IooCFVtvpe/nz+vkqxbER+HRIwtvjFWeZ8syrA==}
+  '@nkzw/oxc-transform-fbtee@3.3.0':
+    resolution: {integrity: sha512-QpzQiYPQLfD8f0r4F8otd0lzS1KCN6/BQkHARGl6mgEPETGL34g0nXmRG0dxPwkVfe6ANNp7XnGF56HWxE9w+Q==}
     engines: {node: '>=22.12.0'}
 
   '@nkzw/oxlint-config@2.0.0':
@@ -3236,8 +3236,8 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
-  '@nkzw/vite-plugin-fbtee@3.1.0':
-    resolution: {integrity: sha512-Lj0/g9rcyVfIe4DDHBj3q9+XMs0SKJJZALE6KNUzj3X//6gykPS1ZVPrdhr9+Kv7idVtiqG6ZcIcla53pddevA==}
+  '@nkzw/vite-plugin-fbtee@3.3.0':
+    resolution: {integrity: sha512-5LF1zfPhHpLjzxG/30Aof4jTktFK7n8w9JA1FzwfZA3W+9U4kK4NRitAuPujj/nTyjhxQF6ZQEV3/rpReNKijQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       vite: '>=6.3.0'
@@ -7984,10 +7984,10 @@ packages:
   fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
 
-  fbtee@3.1.0:
-    resolution: {integrity: sha512-BgntHoYVbpss5GXWdnXF6Lzvygi1hhJUwh7WRm6ojJX/NFvB5qiwvH/x1Ymo+xSEBPZWXIUPXQpl9ytCk/exnA==}
+  fbtee@3.3.0:
+    resolution: {integrity: sha512-A4TsfqDjY/LvLYuHzZwh6in/DZhH5SXEzvyl6NFIcuIQJyospGtF77FJfRXDvFhiRJ4ycbMQW5o8ubebU9f8cA==}
     peerDependencies:
-      '@nkzw/babel-plugin-fbtee': ^3.1.0
+      '@nkzw/babel-plugin-fbtee': ^3.3.0
       react: ^19.0.0
     peerDependenciesMeta:
       '@nkzw/babel-plugin-fbtee':
@@ -14281,13 +14281,13 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@nkzw/babel-plugin-fbtee-auto-import@3.1.0':
+  '@nkzw/babel-plugin-fbtee-auto-import@3.3.0':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/types': 8.0.4
-      '@nkzw/babel-plugin-fbtee': 3.1.0
+      '@nkzw/babel-plugin-fbtee': 3.3.0
 
-  '@nkzw/babel-plugin-fbtee@3.1.0':
+  '@nkzw/babel-plugin-fbtee@3.3.0':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/generator': 8.0.0
@@ -14295,7 +14295,7 @@ snapshots:
       '@babel/preset-react': 8.0.1(@babel/core@8.0.1)
       '@babel/preset-typescript': 8.0.1(@babel/core@8.0.1)
       '@babel/types': 8.0.4
-      '@nkzw/babel-plugin-fbtee-auto-import': 3.1.0
+      '@nkzw/babel-plugin-fbtee-auto-import': 3.3.0
       invariant: 2.2.4
       jest-docblock: 30.4.0
       nullthrows: 1.1.1
@@ -14309,7 +14309,7 @@ snapshots:
 
   '@nkzw/define-env@1.1.0': {}
 
-  '@nkzw/eslint-plugin-fbtee@3.1.0(eslint@10.4.0(jiti@2.7.0))(typescript@7.0.2)':
+  '@nkzw/eslint-plugin-fbtee@3.3.0(eslint@10.4.0(jiti@2.7.0))(typescript@7.0.2)':
     dependencies:
       '@typescript-eslint/utils': 8.68.0(eslint@10.4.0(jiti@2.7.0))(typescript@7.0.2)
     transitivePeerDependencies:
@@ -14321,9 +14321,11 @@ snapshots:
     dependencies:
       eslint: 10.4.0(jiti@2.7.0)
 
-  '@nkzw/fbtee-cli@3.1.0':
+  '@nkzw/fbtee-cli@3.3.0':
     dependencies:
-      '@nkzw/babel-plugin-fbtee': 3.1.0
+      '@nkzw/babel-plugin-fbtee': 3.3.0
+      '@nkzw/oxc-transform-fbtee': 3.3.0
+      yargs: 18.0.0
 
   '@nkzw/histogram@1.1.0': {}
 
@@ -14331,40 +14333,40 @@ snapshots:
 
   '@nkzw/joymap@4.0.2': {}
 
-  '@nkzw/oxc-transform-fbtee-binding-darwin-arm64@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-darwin-arm64@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-darwin-x64@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-darwin-x64@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc@3.1.0':
+  '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc@3.3.0':
     optional: true
 
-  '@nkzw/oxc-transform-fbtee@3.1.0':
+  '@nkzw/oxc-transform-fbtee@3.3.0':
     optionalDependencies:
-      '@nkzw/oxc-transform-fbtee-binding-darwin-arm64': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-darwin-x64': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc': 3.1.0
-      '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc': 3.1.0
+      '@nkzw/oxc-transform-fbtee-binding-darwin-arm64': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-darwin-x64': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-linux-arm64-gnu': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-linux-arm64-musl': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-linux-x64-gnu': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-linux-x64-musl': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-win32-arm64-msvc': 3.3.0
+      '@nkzw/oxc-transform-fbtee-binding-win32-x64-msvc': 3.3.0
 
   '@nkzw/oxlint-config@2.0.0(eslint@10.4.0(jiti@2.7.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))(typescript@7.0.2)':
     dependencies:
@@ -14413,9 +14415,9 @@ snapshots:
       '@nkzw/create-context-hook': 1.1.0(react@19.2.8)
       react: 19.2.8
 
-  '@nkzw/vite-plugin-fbtee@3.1.0(vite@8.2.2(@types/node@26.3.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))':
+  '@nkzw/vite-plugin-fbtee@3.3.0(vite@8.2.2(@types/node@26.3.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))':
     dependencies:
-      '@nkzw/oxc-transform-fbtee': 3.1.0
+      '@nkzw/oxc-transform-fbtee': 3.3.0
       vite: 8.2.2(@types/node@26.3.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0)
 
   '@noble/hashes@1.8.0': {}
@@ -19304,12 +19306,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  fbtee@3.1.0(@nkzw/babel-plugin-fbtee@3.1.0)(react@19.2.8):
+  fbtee@3.3.0(@nkzw/babel-plugin-fbtee@3.3.0)(react@19.2.8):
     dependencies:
       invariant: 2.2.4
       react: 19.2.8
     optionalDependencies:
-      '@nkzw/babel-plugin-fbtee': 3.1.0
+      '@nkzw/babel-plugin-fbtee': 3.3.0
 
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
