@@ -19,7 +19,7 @@ jobs:
       deployments: write
     strategy:
       matrix:
-        node-version: [24]
+        node-version: [26]
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +40,7 @@ jobs:
 
       - name: Use Git Bash
         if: matrix.os == 'windows-latest'
-        run: pnpm config set --global script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+        run: pnpm config set --location=global script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 
       - name: Get pnpm store directory
         id: pnpm-cache
