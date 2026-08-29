@@ -1,15 +1,19 @@
-import isPresent from '@nkzw/core/isPresent.js';
-import { ButtonResult, createJoymap, createQueryModule, Joymap, QueryModule } from '@nkzw/joymap';
+import {
+  createJoymap,
+  isJustPressed,
+  type ButtonResult,
+  type Controller,
+  type Joymap,
+} from '@nkzw/joymap';
 import { getCurrentScrollContainer } from '../ScrollContainer.tsx';
+import createActiveGamepadControllerManager from './activeGamepadController.tsx';
 import dynamicThrottle from './dynamicThrottle.tsx';
 import Input, { NavigationDirection } from './Input.tsx';
 import throttle from './throttle.tsx';
 
-const singlePress = (button?: ButtonResult) => !!(button?.pressed && button.justChanged);
-
 const pressed = (button?: ButtonResult) => !!button?.pressed;
-const controller1 = createQueryModule();
-const controller2 = createQueryModule();
+
+let activeController: Controller | null = null;
 let useSecondaryNavigation = false;
 let joymap: Joymap | null = null;
 
@@ -53,16 +57,11 @@ const isSwitch = (() => {
 })();
 
 export function getGamepadType(): GamepadType | null {
-  const gamepads =
-    joymap &&
-    joymap
-      .getGamepads()
-      .filter(isPresent)
-      .map((gamepad) => gamepad.id);
-  return gamepads?.length
-    ? gamepads.some(isPlayStation)
+  const name = activeController?.getGamepad()?.id ?? null;
+  return name
+    ? isPlayStation(name)
       ? 'playstation'
-      : gamepads.some(isSwitch)
+      : isSwitch(name)
         ? 'switch'
         : 'generic'
     : null;
@@ -89,7 +88,21 @@ export default function setupGamePad() {
   let detailPressed = false;
   let acceptPressed = false;
 
-  const handleInputs = (controller: QueryModule) => {
+  const resetInputState = () => {
+    navigate.reset();
+    needsThrottleReset = false;
+    useSecondaryNavigation = false;
+    if (acceptPressed) {
+      acceptPressed = false;
+      Input.fire('accept:released');
+    }
+    if (detailPressed) {
+      detailPressed = false;
+      Input.fire('detail:released');
+    }
+  };
+
+  const handleInputs = (controller: Controller) => {
     const stickLeft = controller.getStick('L');
     const buttons = controller.getAllButtons();
     const {
@@ -110,7 +123,9 @@ export default function setupGamePad() {
       Y,
     } = buttons;
 
-    const { A, B } = isSwitch(controller.getPadId()) ? { A: buttons.B, B: buttons.A } : buttons;
+    const { A, B } = isSwitch(controller.getGamepad()?.id ?? null)
+      ? { A: buttons.B, B: buttons.A }
+      : buttons;
 
     if (needsThrottleReset) {
       if (
@@ -168,11 +183,11 @@ export default function setupGamePad() {
       Input.fireWithPointerLock('point');
     }
 
-    if (singlePress(start) || singlePress(home)) {
+    if (isJustPressed(start) || isJustPressed(home)) {
       Input.fireWithPointerLock('menu');
     }
 
-    if (singlePress(A)) {
+    if (isJustPressed(A)) {
       acceptPressed = true;
       navigate.reset();
       Input.fireWithPointerLock('accept');
@@ -183,20 +198,20 @@ export default function setupGamePad() {
       Input.fire('accept:released');
     }
 
-    if (singlePress(select)) {
-      Input.fireWithPointerLock('select', { modifier: A?.pressed });
+    if (isJustPressed(select)) {
+      Input.fireWithPointerLock('select', { modifier: !!A?.pressed });
     }
 
-    if (singlePress(B)) {
+    if (isJustPressed(B)) {
       navigate.reset();
       Input.fireWithPointerLock('cancel', null);
     }
 
-    if (singlePress(X)) {
+    if (isJustPressed(X)) {
       Input.fireWithPointerLock('secondary');
     }
 
-    if (singlePress(Y)) {
+    if (isJustPressed(Y)) {
       Input.fireWithPointerLock('gamepad:tertiary');
     }
 
@@ -216,11 +231,11 @@ export default function setupGamePad() {
       useSecondaryNavigation = true;
     } else {
       useSecondaryNavigation = false;
-      if (singlePress(L2)) {
+      if (isJustPressed(L2)) {
         Input.fireWithPointerLock('info');
       }
 
-      if (singlePress(R2)) {
+      if (isJustPressed(R2)) {
         detailPressed = true;
         Input.fireWithPointerLock('detail');
       }
@@ -231,11 +246,11 @@ export default function setupGamePad() {
       }
     }
 
-    if (singlePress(R3)) {
+    if (isJustPressed(R3)) {
       Input.fireWithPointerLock('zoom');
     }
 
-    if (singlePress(L3)) {
+    if (isJustPressed(L3)) {
       Input.fireWithPointerLock('undo');
     }
 
@@ -244,32 +259,27 @@ export default function setupGamePad() {
     }
   };
 
-  joymap = createJoymap({
-    autoConnect: true,
+  const currentJoymap = createJoymap({
     onPoll: () => {
+      const selection = controllerManager.update(currentJoymap.getGamepads());
+      if (selection.changed) {
+        resetInputState();
+      }
+      activeController = selection.controller;
+
       if (document.visibilityState !== 'visible' || !document.hasFocus()) {
         return;
       }
 
-      const gamepads = joymap?.getGamepads();
-      if (!gamepads?.length) {
-        return;
-      }
-
-      handleInputs(controller1);
-      if (gamepads.length > 1) {
-        handleInputs(controller2);
+      if (activeController) {
+        handleInputs(activeController);
       }
     },
   });
+  const controllerManager = createActiveGamepadControllerManager(currentJoymap);
+  joymap = currentJoymap;
 
-  joymap.addModule(controller1);
-  joymap.addModule(controller2);
-  try {
-    joymap.start();
-  } catch {
-    // This might throw in browsers that don't support gamepads, specifically when calling `navigator.getGamepads()`.
-  }
+  joymap.start();
 
   if (import.meta.hot) {
     import.meta.hot.accept(() => {
@@ -300,6 +310,5 @@ export function rumbleEffect(type: Rumble, duration?: number) {
             weakMagnitude: 0.3,
           };
 
-  controller1.addRumble(effect, type);
-  controller2.addRumble(effect, type);
+  activeController?.addRumble(effect, type);
 }
