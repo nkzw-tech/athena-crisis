@@ -11,8 +11,8 @@
   "type": "module",
   "scripts": {
     "fbt": "pnpm fbtee:collect && pnpm fbtee:translate",
-    "fbtee:collect": "../node_modules/.bin/fbtee collect --oxc --common ../i18n/Common.ts --src src ../hera ../ui --out ../source_strings.json",
-    "fbtee:translate": "fbtee translate --oxc --source-strings ../source_strings.json --output-dir src/generated"
+    "fbtee:collect": "../node_modules/.bin/fbtee collect --common ../i18n/Common.ts --src src ../hera ../ui --out ../source_strings.json",
+    "fbtee:translate": "fbtee translate --source-strings ../source_strings.json --output-dir src/generated"
   },
   "dependencies": {
     "@capacitor/app": "^8.1.1",
@@ -40,7 +40,7 @@
     "@stripe/react-stripe-js": "^6.8.2",
     "@stripe/stripe-js": "^9.14.0",
     "cordova-plugin-purchase": "^13.18.0",
-    "fbtee": "^3.3.0",
+    "fbtee": "^4.0.0",
     "framer-motion": "^13.1.1",
     "p-limit": "^7.3.1",
     "pixelarticons": "^2.4.1",

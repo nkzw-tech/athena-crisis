@@ -39,7 +39,7 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - '@nkzw/*'
-  - fbtee@3.3.0
+  - fbtee@3.3.0 || 4.0.0
   - '@prisma/client-runtime-utils@7.10.0'
   - '@prisma/client@7.10.0'
   - '@prisma/config@7.10.0'
