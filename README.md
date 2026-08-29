@@ -23,10 +23,10 @@ Athena Crisis requires [Node.js](https://nodejs.org/en/download/package-manager)
 > [!NOTE]
 >
 > <details><summary>Windows Specific Config</summary>
-> Developers on Windows will want to ensure that they are using `bash` to run `package.json` scripts. You can configure npm to use git bash by default with the following:
+> Developers on Windows will want to ensure that they are using `bash` to run `package.json` scripts. You can configure pnpm to use git bash by default with the following:
 >
 > ```bash
-> npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+> pnpm config set --global script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 > ```
 >
 > </details>

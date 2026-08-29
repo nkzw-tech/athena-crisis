@@ -31,16 +31,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Use Git Bash
-        if: matrix.os == 'windows-latest'
-        run: npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
           version: 11.*
           run_install: false
+
+      - name: Use Git Bash
+        if: matrix.os == 'windows-latest'
+        run: pnpm config set --global script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 
       - name: Get pnpm store directory
         id: pnpm-cache
