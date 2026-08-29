@@ -7,13 +7,15 @@ import {
 import { execute } from '@deities/apollo/Action.tsx';
 import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import { House, HQ } from '@deities/athena/info/Building.tsx';
-import { Mountain, Plain, Sea } from '@deities/athena/info/Tile.tsx';
+import { Forest, Mountain, Plain, Sea } from '@deities/athena/info/Tile.tsx';
 import {
   APU,
   Artillery,
+  Flamethrower,
   Helicopter,
   Infantry,
   Pioneer,
+  Saboteur,
   Sniper,
   TransportHelicopter,
 } from '@deities/athena/info/Unit.tsx';
@@ -30,7 +32,6 @@ import { getPathCost, moveable } from '@deities/athena/Radius.tsx';
 import { StandardFog, Visibility, type VisionT } from '@deities/athena/Vision.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test } from 'vitest';
-import crisis from '../../fixtures/map/crisis.tsx';
 import getMoveableFields from '../../hera/behavior/move/getMoveableFields.tsx';
 import executeGameActions from '../executeGameActions.tsx';
 import { printGameState } from '../printGameState.tsx';
@@ -574,7 +575,23 @@ test('exploration fog stops exhausted explicit paths before occupied same-team t
 });
 
 test('exploration fog accepts paths through visible friendly units', async () => {
-  const map = updateSeen(crisis.copy({ config: crisis.config.copy({ fog: Fog.Exploration }) }));
+  const map = updateSeen(
+    withModifiers(
+      MapData.createMap({
+        config: {
+          fog: Fog.Exploration,
+        },
+        map: [...Array(44).fill(Plain.id), Forest.id],
+        size: { height: 9, width: 5 },
+        units: [
+          [2, 5, Sniper.create(1).toJSON()],
+          [3, 5, Saboteur.create(1).toJSON()],
+          [4, 6, Flamethrower.create(1).toJSON()],
+          [4, 7, Pioneer.create(1).toJSON()],
+        ],
+      }),
+    ),
+  );
   const [gameState] = await executeGameActions(map, [MoveAction(vec(4, 7), vec(5, 9))]);
   const afterPioneerMap = gameState.at(-1)![1];
   const vision = afterPioneerMap.createVisionObject(1);
@@ -585,6 +602,8 @@ test('exploration fog accepts paths through visible friendly units', async () =>
 
   expect(afterPioneerMap.units.get(vec(3, 5))?.info.name).toBe('Saboteur');
   expect(afterPioneerMap.units.get(vec(4, 6))?.info.name).toBe('Flamethrower');
+  // A path prefix cannot end on a friendly unit, but the unit may be an intermediate waypoint.
+  expect(getPathCost(vision.apply(afterPioneerMap), sniper, sniperPosition, [vec(3, 5)])).toBe(-1);
   expect(path).toMatchInlineSnapshot(`
     [
       [
