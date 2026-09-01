@@ -23,6 +23,7 @@ declare module 'athena-crisis:images' {
     MessageShadow: string;
     Noise: string;
     Poison: string;
+    Relics: string;
     Sabotage: string;
     Shield: string;
     Structures: string;

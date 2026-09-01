@@ -1,5 +1,6 @@
 import ImmutableMap from '@nkzw/immutable-map';
 import { Decorator } from '../info/Decorator.tsx';
+import { decodeRogueRelics } from '../info/RogueRelic.tsx';
 import getDecoratorIndex from '../lib/getDecoratorIndex.tsx';
 import MapData, { DecoratorMap, SizeVector } from '../MapData.tsx';
 import BitSet from './BitSet.tsx';
@@ -62,6 +63,7 @@ export function decodePlayers(
               player.crystal ?? null,
               player.time ?? null,
               BitSet.fromJSON(player.seen),
+              decodeRogueRelics(player.rogueRelics),
             )
           : 'name' in player
             ? new Bot(
@@ -76,6 +78,7 @@ export function decodePlayers(
                 decodePlayerStatistics(player.stats),
                 player.misses || 0,
                 BitSet.fromJSON(player.seen),
+                decodeRogueRelics(player.rogueRelics),
               )
             : new PlaceholderPlayer(
                 playerID,
@@ -84,6 +87,7 @@ export function decodePlayers(
                 player.ai,
                 skills,
                 BitSet.fromJSON(player.seen),
+                decodeRogueRelics(player.rogueRelics),
               ),
       );
     }),

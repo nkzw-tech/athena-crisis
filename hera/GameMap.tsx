@@ -2240,6 +2240,7 @@ export default class GameMap extends Component<Props, State> {
           <GameDialog
             endGame={this.props.endGame ? this._endGame : undefined}
             gameId={gameId}
+            isRogue={this.props.isRogue}
             onClose={this._hideGameInfo}
             playerAchievement={playerAchievement}
             spectatorCodes={this.props.spectatorCodes}

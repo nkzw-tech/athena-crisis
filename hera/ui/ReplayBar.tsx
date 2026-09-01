@@ -1,5 +1,9 @@
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
-import { GameTimerValue, isTimeBankTimer } from '@deities/apollo/lib/GameTimerValue.tsx';
+import {
+  GameTimerValue,
+  isFixedTimeTimer,
+  isTimeBankTimer,
+} from '@deities/apollo/lib/GameTimerValue.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -83,7 +87,7 @@ export default function ReplayBar({
     <ActionBar inlineUI={inlineUI} visible={replayIsVisible || (hasTimeout && !isBot)}>
       <VStack between flex1 gap wrap>
         {hasTimeout && !isBot ? (
-          isTimeBankTimer(timer) ? (
+          isTimeBankTimer(timer) || isFixedTimeTimer(timer) ? (
             <TimeBankRemainingTime player={currentPlayer} timeout={timeout} />
           ) : (
             <TurnTimer key={timeout} player={currentPlayer} timeout={timeout} />

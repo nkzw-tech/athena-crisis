@@ -1,4 +1,5 @@
 import FastPriorityQueue from 'fastpriorityqueue';
+import { getRogueVisionEffect } from './info/RogueRelic.tsx';
 import { Skill } from './info/Skill.tsx';
 import { Bridge, Space, TileInfo, TileTypes, TransitionCost } from './info/Tile.tsx';
 import { UnitInfo } from './info/Unit.tsx';
@@ -243,7 +244,8 @@ export function visible(
   map: MapData,
   unit: Unit,
   start: Vector,
-  radius: number = unit.info.configuration.vision,
+  radius: number = unit.info.configuration.vision +
+    getRogueVisionEffect(map.getPlayer(unit).rogueRelics),
 ): ReadonlyMap<Vector, RadiusItem> {
   const vision =
     radius +

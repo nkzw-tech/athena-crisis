@@ -87,8 +87,8 @@ type CreateUnitCombination = {
 type DiomedesStrategicSummary = Readonly<{
   airCounterDemand: boolean;
   capturableBuildings: number;
-  enemyAirUnits: ReadonlyArray<Unit>;
-  enemyAirValue: number;
+  opponentAirUnits: ReadonlyArray<Unit>;
+  opponentAirValue: number;
   ownAirCounterValue: number;
   ownTransportCapacity: number;
   transportDemand: number;
@@ -1424,16 +1424,18 @@ const createDiomedesStrategicSummary = (
   strategicPlan: DiomedesStrategicPlan,
 ): DiomedesStrategicSummary => {
   const ownUnits = [...map.units.filter((unit) => map.matchesPlayer(unit, currentPlayer)).values()];
-  const enemyUnits = [...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values()];
-  const enemyAirUnits = enemyUnits.filter((unit) => getEntityGroup(unit) === 'air');
-  const enemyAirValue = enemyAirUnits.reduce((sum, unit) => {
+  const opponentUnits = [
+    ...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values(),
+  ];
+  const opponentAirUnits = opponentUnits.filter((unit) => getEntityGroup(unit) === 'air');
+  const opponentAirValue = opponentAirUnits.reduce((sum, unit) => {
     const cost = unit.info.getCostFor(map.getPlayer(unit));
     return sum + (Number.isFinite(cost) ? cost : 500) * (unit.health / MaxHealth);
   }, 0);
   const ownAirCounterValue = ownUnits.reduce(
     (sum, unit) =>
       sum +
-      getDiomedesAirCounterScore(unit.info, currentPlayer, enemyAirUnits) *
+      getDiomedesAirCounterScore(unit.info, currentPlayer, opponentAirUnits) *
         (unit.health / MaxHealth),
     0,
   );
@@ -1448,15 +1450,15 @@ const createDiomedesStrategicSummary = (
   );
   const airCounterDemand =
     map.round <= 8 &&
-    ((enemyAirUnits.length >= 8 &&
-      enemyAirValue >= 6000 &&
-      enemyAirValue > Math.max(500, ownArmyValue * 3) &&
-      ownAirCounterValue < enemyAirValue * 0.2) ||
+    ((opponentAirUnits.length >= 8 &&
+      opponentAirValue >= 6000 &&
+      opponentAirValue > Math.max(500, ownArmyValue * 3) &&
+      ownAirCounterValue < opponentAirValue * 0.2) ||
       (!isFacingThanatos &&
-        enemyAirUnits.length >= 3 &&
-        enemyAirValue >= 900 &&
-        enemyAirValue > ownArmyValue * 0.25 &&
-        ownAirCounterValue < enemyAirValue * 0.35));
+        opponentAirUnits.length >= 3 &&
+        opponentAirValue >= 900 &&
+        opponentAirValue > ownArmyValue * 0.25 &&
+        ownAirCounterValue < opponentAirValue * 0.35));
   const transportDemand =
     map.round <= 8 &&
     map.buildings.size <= 12 &&
@@ -1471,8 +1473,8 @@ const createDiomedesStrategicSummary = (
   return {
     airCounterDemand,
     capturableBuildings: strategicPlan.capturableBuildings,
-    enemyAirUnits,
-    enemyAirValue,
+    opponentAirUnits,
+    opponentAirValue,
     ownAirCounterValue,
     ownTransportCapacity,
     transportDemand,
@@ -1579,7 +1581,7 @@ const includeDiomedesStrategicUnitInfos = (
     addUnitInfos(
       buildableUnitInfos.filter(
         (unitInfo) =>
-          getDiomedesAirCounterScore(unitInfo, currentPlayer, strategicSummary.enemyAirUnits) >=
+          getDiomedesAirCounterScore(unitInfo, currentPlayer, strategicSummary.opponentAirUnits) >=
           100,
       ),
     );
@@ -1618,7 +1620,7 @@ const getDiomedesProductionWeight = (
   const airCounterScore = getDiomedesAirCounterScore(
     unitInfo,
     currentPlayer,
-    strategicSummary.enemyAirUnits,
+    strategicSummary.opponentAirUnits,
   );
 
   if (strategicSummary.airCounterDemand) {
@@ -1650,18 +1652,18 @@ const getDiomedesProductionWeight = (
 const getDiomedesAirCounterScore = (
   unitInfo: UnitInfo,
   currentPlayer: Player,
-  enemyAirUnits: ReadonlyArray<Unit>,
+  opponentAirUnits: ReadonlyArray<Unit>,
 ) => {
-  if (!enemyAirUnits.length || !unitInfo.hasAttack()) {
+  if (!opponentAirUnits.length || !unitInfo.hasAttack()) {
     return 0;
   }
 
   const unit = unitInfo.create(currentPlayer);
   return (
-    enemyAirUnits.reduce((sum, enemy) => {
-      const weapon = unit.getAttackWeapon(enemy);
-      return sum + (weapon?.getDamage(enemy) || 0) * (enemy.health / MaxHealth);
-    }, 0) / enemyAirUnits.length
+    opponentAirUnits.reduce((sum, opponent) => {
+      const weapon = unit.getAttackWeapon(opponent);
+      return sum + (weapon?.getDamage(opponent) || 0) * (opponent.health / MaxHealth);
+    }, 0) / opponentAirUnits.length
   );
 };
 

@@ -861,7 +861,7 @@ export default function UnitTile({
   const completedStyles = cx(
     isCompleted && completedStyle,
     isCompleted &&
-      (player === 2 || player === 3 || player === 5 || player === 7) &&
+      (player === 2 || player === 3 || player === 5 || player === 7 || player === 8) &&
       darkCompletedStyle,
   );
 

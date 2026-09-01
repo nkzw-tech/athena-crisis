@@ -1,7 +1,7 @@
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { GameTimerValue } from './GameTimerValue.tsx';
+import { GameTimerValue, isFixedTimeTimer } from './GameTimerValue.tsx';
 
 export default function hasTimer<T>(
   game: T & {
@@ -16,6 +16,6 @@ export default function hasTimer<T>(
     !ended &&
     timer != null &&
     currentPlayer.isHumanPlayer() &&
-    (currentPlayer.crystal === Crystal.Power || isPvP(map))
+    (isFixedTimeTimer(timer) || currentPlayer.crystal === Crystal.Power || isPvP(map))
   );
 }

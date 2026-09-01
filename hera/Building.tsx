@@ -144,7 +144,7 @@ const BuildingTile = memo(function BuildingTile({
           sprite(info.sprite.name, info.isStructure() ? undefined : player),
         isCompleted && completedStyle,
         isCompleted &&
-          (player === 2 || player === 3 || player === 5 || player === 7) &&
+          (player === 2 || player === 3 || player === 5 || player === 7 || player === 8) &&
           darkCompletedStyle,
         showHighlight && brightStyle,
         (maybeOutline || showHighlight) && maybeOutlineStyle,

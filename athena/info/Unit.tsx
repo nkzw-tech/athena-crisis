@@ -10,6 +10,7 @@ import { ID } from '../MapData.tsx';
 import { AttackSprite } from './AttackSprite.tsx';
 import { MovementType, MovementTypes } from './MovementType.tsx';
 import { SoundName } from './Music.tsx';
+import { getRogueMovementEffect } from './RogueRelic.tsx';
 import { getUnitCost, getUnitRadius, getUnitRange, hasUnlockedUnit, Skill } from './Skill.tsx';
 import { SpriteVariant } from './SpriteVariants.tsx';
 import type { TileInfo } from './Tile.tsx';
@@ -615,11 +616,14 @@ export class UnitInfo {
   }
 
   getRadiusFor(player: Player | null) {
-    if (!player?.skills.size) {
+    if (!player) {
       return this.radius;
     }
 
-    return getUnitRadius(this, this.radius, player.skills, player.activeSkills);
+    return (
+      getUnitRadius(this, this.radius, player.skills, player.activeSkills) +
+      getRogueMovementEffect(player.rogueRelics)
+    );
   }
 
   getRangeFor(player: Player | null): [number, number] | null {

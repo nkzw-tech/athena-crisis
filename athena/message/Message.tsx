@@ -55,6 +55,30 @@ export enum MessageTag {
   Vibe = 16,
 }
 
+export const MessageConjunctionID = {
+  AndThen: 1,
+} as const;
+
+export const MessageResourceID = {
+  Reinforcements: 7,
+} as const;
+
+export const MessageStrategyID = {
+  Defending: 9,
+  Heal: 2,
+  Rescue: 3,
+  Scout: 10,
+} as const;
+
+export const MessageTemplateID = {
+  Attack: 1,
+  Capture: 3,
+  Destroy: 30,
+  Need: 6,
+  Try: 7,
+  VictoryThrough: 21,
+} as const;
+
 export type EntityMessageTag =
   | MessageTag.Building
   | MessageTag.Unit
@@ -129,7 +153,7 @@ export function isEntityMessageTag(tag: MessageTag): tag is EntityMessageTag {
 }
 
 export const MessageConjunctions = new Map([
-  [1, 'and then'],
+  [MessageConjunctionID.AndThen, 'and then'],
   [2, 'or'],
   [3, 'but'],
   [4, 'therefore'],
@@ -183,15 +207,15 @@ export const MessageVocabulary = new Map<MessageTag, ReadonlyMap<number, string>
     MessageTag.Strategy,
     new Map([
       [1, 'capture'],
-      [2, 'heal'],
-      [3, 'rescue'],
+      [MessageStrategyID.Heal, 'heal'],
+      [MessageStrategyID.Rescue, 'rescue'],
       [4, 'sabotage'],
       [5, 'poison'],
       [6, 'unfold'],
       [7, 'building'],
       [8, 'turtle'],
-      [9, 'defending'],
-      [10, 'scout'],
+      [MessageStrategyID.Defending, 'defending'],
+      [MessageStrategyID.Scout, 'scout'],
       [11, 'push'],
       [12, 'sneak'],
       [13, 'hold'],
@@ -232,7 +256,7 @@ export const MessageVocabulary = new Map<MessageTag, ReadonlyMap<number, string>
       [4, 'power'],
       [5, 'supplies'],
       [6, 'leader'],
-      [7, 'reinforcements'],
+      [MessageResourceID.Reinforcements, 'reinforcements'],
       [8, 'air support'],
       [9, 'nukes'],
     ]),
@@ -347,9 +371,12 @@ export const MessageVocabulary = new Map<MessageTag, ReadonlyMap<number, string>
 ]);
 
 export const MessageTemplate = new Map<number, MessageTemplateEntry>([
-  [1, ['Attack {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Faction], '!']],
+  [
+    MessageTemplateID.Attack,
+    ['Attack {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Faction], '!'],
+  ],
   [2, ['Defend {tag}', [MessageTag.Unit, MessageTag.Building, MessageTag.Faction], '!']],
-  [3, ['Capture {tag}', [MessageTag.Building], '!']],
+  [MessageTemplateID.Capture, ['Capture {tag}', [MessageTag.Building], '!']],
 
   [
     4,
@@ -375,7 +402,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     ],
   ],
   [
-    6,
+    MessageTemplateID.Need,
     [
       'Need {tag}',
       [
@@ -389,7 +416,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     ],
   ],
   [
-    7,
+    MessageTemplateID.Try,
     [
       'Try {tag}',
       [
@@ -498,7 +525,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
     ],
   ],
   [
-    21,
+    MessageTemplateID.VictoryThrough,
     [
       'Victory through {tag}',
       [
@@ -579,7 +606,7 @@ export const MessageTemplate = new Map<number, MessageTemplateEntry>([
   ],
   [28, ['Construct {tag}', [MessageTag.Building], '.']],
   [29, ['Move to {tag}', [MessageTag.Tile, MessageTag.Building], '.']],
-  [30, ['Destroy {tag}', [MessageTag.Building], '!']],
+  [MessageTemplateID.Destroy, ['Destroy {tag}', [MessageTag.Building], '!']],
   [31, ['Escort {tag}', [MessageTag.Unit], '!']],
   [
     32,

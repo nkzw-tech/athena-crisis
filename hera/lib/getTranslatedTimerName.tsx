@@ -5,6 +5,8 @@ export default function getTranslatedTimerName(timer: GameTimerValue) {
   switch (timer) {
     case null:
       return <fbt desc="Label for a game with no timer">No Timer</fbt>;
+    case -3:
+      return <fbt desc="Label for a fixed timer">Fixed Time</fbt>;
     case -2:
       return <fbt desc="Label for realtime timer">Time Bank</fbt>;
     case -1:

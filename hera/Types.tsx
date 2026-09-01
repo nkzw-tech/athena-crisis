@@ -86,6 +86,7 @@ export type Props = Readonly<{
   gameInfoPanels?: GameInfoPanels;
   hasMessages?: boolean;
   inset?: number;
+  isRogue?: boolean;
   lastActionResponse?: ActionResponse | null;
   lastActionTime?: number;
   legendaryAchievement?: boolean;

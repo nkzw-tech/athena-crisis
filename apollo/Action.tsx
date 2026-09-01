@@ -1,4 +1,5 @@
 import { Behavior, getBuildingInfo } from '@deities/athena/info/Building.tsx';
+import { getRogueCounterAttackEffect } from '@deities/athena/info/RogueRelic.tsx';
 import {
   ChargeSkillChargeMultiplier,
   getSkillConfig,
@@ -40,7 +41,6 @@ import Building from '@deities/athena/map/Building.tsx';
 import {
   BuildingCover,
   Charge,
-  CounterAttack,
   CreateTracksCost,
   MaxCharges,
   MinDamage,
@@ -501,7 +501,7 @@ function _counterAttack(
       ? 1
       : hasCounterAttackSkill(playerB.skills)
         ? RaisedCounterAttack
-        : CounterAttack;
+        : getRogueCounterAttackEffect(playerB.rogueRelics);
 
     const [a, b] = _attackUnit(
       map,

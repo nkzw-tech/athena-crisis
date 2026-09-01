@@ -1424,9 +1424,11 @@ const getOdysseusProductionWeight = (
   const ownUnits = Math.max(1, playerUnits.length);
   const sameTypeRatio = playerUnits.filter((unit) => unit.id === unitInfo.id).length / ownUnits;
   const ownLongRangeUnits = playerUnits.filter((unit) => unit.info.isLongRange()).length;
-  const enemyUnits = [...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values()];
-  const enemyLongRangeUnits = enemyUnits.filter((unit) => unit.info.isLongRange()).length;
-  const enemyTransports = enemyUnits.filter((unit) => unit.isTransportingUnits()).length;
+  const opponentUnits = [
+    ...map.units.filter((unit) => map.isOpponent(unit, currentPlayer)).values(),
+  ];
+  const opponentLongRangeUnits = opponentUnits.filter((unit) => unit.info.isLongRange()).length;
+  const opponentTransports = opponentUnits.filter((unit) => unit.isTransportingUnits()).length;
   const mapArea = map.size.width * map.size.height;
   const capturableBuildings = map.buildings.filter((building, vector) =>
     shouldCaptureBuilding(map, currentPlayer.id, building, vector),
@@ -1456,11 +1458,15 @@ const getOdysseusProductionWeight = (
     weight -= 3;
   }
 
-  if (enemyLongRangeUnits && unitInfo.isShortRange() && unitInfo.getRadiusFor(currentPlayer) >= 4) {
+  if (
+    opponentLongRangeUnits &&
+    unitInfo.isShortRange() &&
+    unitInfo.getRadiusFor(currentPlayer) >= 4
+  ) {
     weight -= 2;
   }
 
-  if (enemyTransports && unitInfo.hasAttack() && !unitInfo.isLongRange()) {
+  if (opponentTransports && unitInfo.hasAttack() && !unitInfo.isLongRange()) {
     weight -= 1;
   }
 
@@ -1526,22 +1532,22 @@ const getOdysseusMoveScore = (
 const getOdysseusThreat = (map: MapData, currentPlayer: Player, unit: Unit, vector: Vector) => {
   let threat = 0;
 
-  for (const [enemyVector, enemy] of map.units) {
-    if (!map.isOpponent(enemy, currentPlayer) || !enemy.info.hasAttack()) {
+  for (const [opponentVector, opponent] of map.units) {
+    if (!map.isOpponent(opponent, currentPlayer) || !opponent.info.hasAttack()) {
       continue;
     }
 
-    const enemyPlayer = map.getPlayer(enemy);
-    const radius = enemy.info.getRadiusFor(enemyPlayer);
-    const distance = enemyVector.distance(vector);
-    const range = enemy.info.getRangeFor(enemyPlayer);
-    const canThreaten = enemy.info.isShortRange()
+    const opponentPlayer = map.getPlayer(opponent);
+    const radius = opponent.info.getRadiusFor(opponentPlayer);
+    const distance = opponentVector.distance(vector);
+    const range = opponent.info.getRangeFor(opponentPlayer);
+    const canThreaten = opponent.info.isShortRange()
       ? distance <= radius + 1
       : !!range && distance <= radius + range[1] && distance >= Math.max(1, range[0] - radius);
 
     if (canThreaten) {
-      const cost = enemy.info.getCostFor(enemyPlayer);
-      threat += (Number.isFinite(cost) ? cost / 100 : 5) * (enemy.health / MaxHealth);
+      const cost = opponent.info.getCostFor(opponentPlayer);
+      threat += (Number.isFinite(cost) ? cost / 100 : 5) * (opponent.health / MaxHealth);
 
       if (unit.info.isLongRange() || unit.canCapture(currentPlayer)) {
         threat += 5;

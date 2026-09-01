@@ -1,3 +1,4 @@
+import { getRogueDefenseEffect } from '../info/RogueRelic.tsx';
 import { getSkillDefenseStatusEffects } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { LeaderStatusEffect } from '../map/Configuration.tsx';
@@ -14,6 +15,7 @@ export default function getDefenseStatusEffect(
     0,
     1 +
       (isUnit(entity) && entity.isLeader() ? LeaderStatusEffect : 0) +
+      getRogueDefenseEffect(player.rogueRelics) +
       getSkillDefenseStatusEffects(entity, tile, player.skills, player.activeSkills),
   );
 }

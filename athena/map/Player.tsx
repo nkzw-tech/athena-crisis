@@ -1,3 +1,4 @@
+import { encodeRogueRelics, PlainRogueRelics, RogueRelicsMap } from '../info/RogueRelic.tsx';
 import { Skill } from '../info/Skill.tsx';
 import { Crystal } from '../invasions/Crystal.tsx';
 import MapData from '../MapData.tsx';
@@ -30,6 +31,7 @@ type BasePlainPlayerType = Readonly<{
   funds: number;
   id: PlayerID;
   misses: number | undefined;
+  rogueRelics?: PlainRogueRelics;
   seen?: PlainBitSet;
   skills: ReadonlyArray<Skill> | undefined;
   stats: PlainPlayerStatistics | null;
@@ -52,6 +54,7 @@ type PlaceholderPlayerType = Readonly<{
   ai?: number;
   funds: number;
   id: PlayerID;
+  rogueRelics?: PlainRogueRelics;
   seen?: PlainBitSet;
   skills?: ReadonlyArray<Skill>;
 }>;
@@ -73,6 +76,7 @@ export default abstract class Player {
     stats: PlayerStatistics | null,
     public readonly misses: number,
     public readonly seen: BitSet,
+    public readonly rogueRelics: RogueRelicsMap = new Map(),
   ) {
     this.stats = stats || InitialPlayerStatistics;
   }
@@ -162,6 +166,7 @@ export default abstract class Player {
     funds?: number;
     id?: PlayerID;
     misses?: number;
+    rogueRelics?: RogueRelicsMap;
     seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
@@ -180,14 +185,16 @@ export class PlaceholderPlayer extends Player {
     ai: number | undefined,
     skills: ReadonlySet<Skill>,
     seen: BitSet = new BitSet(),
+    rogueRelics: RogueRelicsMap = new Map(),
   ) {
-    super(id, teamId, funds, ai, skills, new Set(), 0, null, 0, seen);
+    super(id, teamId, funds, ai, skills, new Set(), 0, null, 0, seen, rogueRelics);
   }
 
   copy({
     ai,
     funds,
     id,
+    rogueRelics,
     seen,
     skills,
     teamId,
@@ -195,6 +202,7 @@ export class PlaceholderPlayer extends Player {
     ai?: number | null;
     funds?: number;
     id?: PlayerID;
+    rogueRelics?: RogueRelicsMap;
     seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     teamId?: PlayerID;
@@ -206,12 +214,20 @@ export class PlaceholderPlayer extends Player {
       ai !== undefined ? (ai ?? undefined) : this.ai,
       skills ?? this.skills,
       seen ?? this.seen,
+      rogueRelics ?? this.rogueRelics,
     ) as this;
   }
 
   toJSON(): PlaceholderPlayerType {
-    const { ai, funds, id, seen, skills } = this;
-    return { ai, funds, id, ...(seen.size ? { seen: seen.toJSON() } : null), skills: [...skills] };
+    const { ai, funds, id, rogueRelics, seen, skills } = this;
+    return {
+      ai,
+      funds,
+      id,
+      ...(encodeRogueRelics(rogueRelics) ? { rogueRelics: encodeRogueRelics(rogueRelics) } : null),
+      ...(seen.size ? { seen: seen.toJSON() } : null),
+      skills: [...skills],
+    };
   }
 
   static from(player: Player): PlaceholderPlayer {
@@ -224,6 +240,7 @@ export class PlaceholderPlayer extends Player {
           player.isBot() ? player.ai : undefined,
           player.skills,
           player.seen,
+          player.rogueRelics,
         );
   }
 }
@@ -243,8 +260,9 @@ export class Bot extends Player {
     stats: PlayerStatistics | null,
     misses: number,
     seen: BitSet = new BitSet(),
+    rogueRelics: RogueRelicsMap = new Map(),
   ) {
-    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen, rogueRelics);
   }
 
   copy({
@@ -255,6 +273,7 @@ export class Bot extends Player {
     id,
     misses,
     name,
+    rogueRelics,
     seen,
     skills,
     stats,
@@ -267,6 +286,7 @@ export class Bot extends Player {
     id?: PlayerID;
     misses?: number;
     name?: string;
+    rogueRelics?: RogueRelicsMap;
     seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
@@ -284,11 +304,13 @@ export class Bot extends Player {
       stats ?? this.stats,
       misses ?? this.misses,
       seen ?? this.seen,
+      rogueRelics ?? this.rogueRelics,
     ) as this;
   }
 
   toJSON(): PlainBotType {
-    const { activeSkills, ai, charge, funds, id, misses, name, seen, skills, stats } = this;
+    const { activeSkills, ai, charge, funds, id, misses, name, rogueRelics, seen, skills, stats } =
+      this;
     return {
       activeSkills: [...activeSkills],
       ai,
@@ -297,6 +319,7 @@ export class Bot extends Player {
       id,
       misses,
       name,
+      ...(encodeRogueRelics(rogueRelics) ? { rogueRelics: encodeRogueRelics(rogueRelics) } : null),
       ...(seen.size ? { seen: seen.toJSON() } : null),
       skills: [...skills],
       stats: encodePlayerStatistics(stats),
@@ -318,6 +341,7 @@ export class Bot extends Player {
           player.stats,
           player.misses,
           player.seen,
+          player.rogueRelics,
         );
   }
 }
@@ -339,8 +363,9 @@ export class HumanPlayer extends Player {
     public readonly crystal: Crystal | null,
     public readonly time: number | null,
     seen: BitSet = new BitSet(),
+    rogueRelics: RogueRelicsMap = new Map(),
   ) {
-    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen);
+    super(id, teamId, funds, ai, skills, activeSkills, charge, stats, misses, seen, rogueRelics);
   }
 
   copy({
@@ -351,6 +376,7 @@ export class HumanPlayer extends Player {
     funds,
     id,
     misses,
+    rogueRelics,
     seen,
     skills,
     stats,
@@ -365,6 +391,7 @@ export class HumanPlayer extends Player {
     funds?: number;
     id?: PlayerID;
     misses?: number;
+    rogueRelics?: RogueRelicsMap;
     seen?: BitSet;
     skills?: ReadonlySet<Skill>;
     stats?: PlayerStatistics;
@@ -386,6 +413,7 @@ export class HumanPlayer extends Player {
       crystal !== undefined ? crystal : this.crystal,
       time !== undefined ? time : this.time,
       seen ?? this.seen,
+      rogueRelics ?? this.rogueRelics,
     ) as this;
   }
 
@@ -411,6 +439,7 @@ export class HumanPlayer extends Player {
       funds,
       id,
       misses,
+      rogueRelics,
       seen,
       skills,
       stats,
@@ -425,6 +454,7 @@ export class HumanPlayer extends Player {
       funds,
       id,
       misses,
+      ...(encodeRogueRelics(rogueRelics) ? { rogueRelics: encodeRogueRelics(rogueRelics) } : null),
       ...(seen.size ? { seen: seen.toJSON() } : null),
       skills: [...skills],
       stats: encodePlayerStatistics(stats),
@@ -451,6 +481,7 @@ export class HumanPlayer extends Player {
           isHumanPlayer ? player.crystal : null,
           isHumanPlayer ? player.time : null,
           player.seen,
+          player.rogueRelics,
         );
   }
 }

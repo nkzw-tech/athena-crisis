@@ -1,3 +1,4 @@
+import { getRogueAttackEffect } from '../info/RogueRelic.tsx';
 import { getSkillAttackStatusEffects, Skill } from '../info/Skill.tsx';
 import { TileInfo } from '../info/Tile.tsx';
 import { Ability } from '../info/Unit.tsx';
@@ -46,6 +47,7 @@ export default function getAttackStatusEffect(
         buildingEffect +
         unitEffect +
         (unit.isLeader() ? LeaderStatusEffect : 0) +
+        getRogueAttackEffect(player.rogueRelics) +
         getSkillAttackStatusEffects(unit, tile, player),
     ),
     flatDamageEffect,

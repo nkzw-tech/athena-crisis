@@ -365,6 +365,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   currentViewer,
   endGame,
   gameInfoState,
+  isRogue,
   lastActionResponse,
   map,
   playerAchievement,
@@ -373,6 +374,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
   currentViewer: PlayerID | null;
   endGame?: () => void;
   gameInfoState: CurrentGameInfoState;
+  isRogue?: boolean;
   lastActionResponse: ActionResponse | null;
   map: MapData;
   playerAchievement: PlayerAchievementT | null;
@@ -403,19 +405,25 @@ const GameInfoPanel = memo(function GameInfoPanel({
   const endGameText = useMemo(
     () => (
       <>
-        {canAbandon ? (
+        {isRogue ? (
+          <fbt desc="Button to abandon a Rogue run">Abandon Run</fbt>
+        ) : canAbandon ? (
           <fbt desc="Button to abandon (give up)">Abandon</fbt>
         ) : (
           <fbt desc="Button to give up">Give Up</fbt>
         )}
       </>
     ),
-    [canAbandon],
+    [canAbandon, isRogue],
   );
   const endGameExplanation = useMemo(
     () => (
       <>
-        {canAbandon ? (
+        {isRogue ? (
+          <fbt desc="Confirmation dialog to abandon a Rogue run.">
+            Are you sure you want to abandon this run? You will not receive any relics.
+          </fbt>
+        ) : canAbandon ? (
           <fbt desc="Confirmation dialog to abandon (give up) a map.">
             Are you sure you want to abandon this map? You will not receive any Chaos Stars.
           </fbt>
@@ -426,7 +434,7 @@ const GameInfoPanel = memo(function GameInfoPanel({
         )}
       </>
     ),
-    [canAbandon],
+    [canAbandon, isRogue],
   );
 
   const { alert } = useAlert();
@@ -571,6 +579,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
   endGame,
   gameId,
   gameInfoState,
+  isRogue,
   playerAchievement,
   spectatorCodes,
   state: { currentViewer, lastActionResponse, map, playerDetails },
@@ -578,6 +587,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
   endGame?: () => void;
   gameId?: string;
   gameInfoState: CurrentGameInfoState | LeaderInfoState | MapInfoState;
+  isRogue?: boolean;
   playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
   state: GameDialogState;
@@ -592,6 +602,7 @@ const GameDialogPanel = memo(function GameDialogPanel({
           currentViewer={getClientViewer(map, currentViewer, spectatorCodes)}
           endGame={endGame}
           gameInfoState={gameInfoState}
+          isRogue={isRogue}
           lastActionResponse={lastActionResponse || null}
           map={map}
           playerAchievement={playerAchievement}
@@ -918,6 +929,7 @@ const crystalSelectedBoxStyle = css`
 export default memo(function GameDialog({
   endGame,
   gameId,
+  isRogue,
   onClose,
   playerAchievement,
   spectatorCodes,
@@ -925,6 +937,7 @@ export default memo(function GameDialog({
 }: {
   endGame?: (type: 'Lose') => void;
   gameId?: string;
+  isRogue?: boolean;
   onClose: () => void | Promise<void>;
   playerAchievement: PlayerAchievementT | null;
   spectatorCodes?: ReadonlyArray<string>;
@@ -959,6 +972,7 @@ export default memo(function GameDialog({
                   }
                 : gameInfoState
             }
+            isRogue={isRogue}
             playerAchievement={playerAchievement}
             spectatorCodes={spectatorCodes}
             state={state}
