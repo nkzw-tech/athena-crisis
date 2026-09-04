@@ -1,6 +1,15 @@
-import type { ActionResponse, DropUnitActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import type {
+  ActionResponse,
+  DropUnitActionResponse,
+  HealActionResponse,
+  MoveActionResponse,
+  SabotageActionResponse,
+} from '@deities/apollo/ActionResponse.tsx';
+import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain, RailTrack } from '@deities/athena/info/Tile.tsx';
-import { Pioneer } from '@deities/athena/info/Unit.tsx';
+import { Artillery, Infantry, Jeep, Pioneer } from '@deities/athena/info/Unit.tsx';
 import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -8,9 +17,17 @@ import ImmutableMap from '@nkzw/immutable-map';
 import { setupLocaleContext } from 'fbtee';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { setBaseClass } from '../../behavior/Behavior.tsx';
+import buySkillAction from '../../behavior/buySkill/buySkillAction.tsx';
+import clientBuySkillAction from '../../behavior/buySkill/clientBuySkillAction.tsx';
+import completeUnitAction from '../../behavior/completeUnit/completeUnitAction.tsx';
 import createTracksAction from '../../behavior/createTracks/createTracksAction.tsx';
-import dropUnitAction from '../../behavior/drop/dropUnitAction.tsx';
-import NullBehavior from '../../behavior/NullBehavior.tsx';
+import dropUnitAction, { clientDropUnitAction } from '../../behavior/drop/dropUnitAction.tsx';
+import { clientHealAction } from '../../behavior/heal/healAction.tsx';
+import clientMoveAction from '../../behavior/move/clientMoveAction.tsx';
+import moveAction from '../../behavior/move/moveAction.tsx';
+import { clientSabotageAction } from '../../behavior/sabotage/sabotageAction.tsx';
+import supplyAction from '../../behavior/supply/supplyAction.tsx';
+import loadUnitAction from '../../behavior/transport/loadUnitAction.tsx';
 import unfoldAction from '../../behavior/unfold/unfoldAction.tsx';
 import type { Actions, State, StateLike } from '../../Types.tsx';
 
@@ -28,6 +45,10 @@ const position = vec(1, 1);
 const target = vec(2, 2);
 let processActionResponses: typeof import('../processActionResponse.tsx').default;
 
+class BaseBehavior {
+  public readonly type = 'base' as const;
+}
+
 setupLocaleContext({
   availableLanguages: new Map(),
   clientLocales: [],
@@ -36,7 +57,7 @@ setupLocaleContext({
 });
 
 beforeAll(async () => {
-  setBaseClass(NullBehavior);
+  setBaseClass(BaseBehavior);
   ({ default: processActionResponses } = await import('../processActionResponse.tsx'));
 });
 
@@ -85,7 +106,8 @@ const createTestGame = (map = createMap()) => {
   });
   const actions = {
     processGameActionResponse: vi.fn(async () => state),
-    requestFrame: (callback: Parameters<Actions['requestFrame']>[0]) => callback(0),
+    requestFrame: (callback: Parameters<Actions['requestFrame']>[0]) =>
+      queueMicrotask(() => callback(0)),
     scheduleTimer: (callback: Parameters<Actions['scheduleTimer']>[0]) => {
       callback();
       return Promise.resolve(1);
@@ -125,6 +147,17 @@ const completeAnimation = async (testGame: ReturnType<typeof createTestGame>) =>
     animations: testGame.getState().animations.delete(animationPosition),
   };
   await testGame.update(animation.onComplete?.(stateWithoutAnimation) || null);
+};
+
+const createRemoteAction = <T extends ActionResponse>(
+  actionResponse: T,
+  others?: GameActionResponse['others'],
+) => {
+  let resolve!: () => void;
+  const remoteAction = new Promise<GameActionResponse>((resolvePromise) => {
+    resolve = () => resolvePromise({ others, self: { actionResponse } });
+  });
+  return [remoteAction, resolve] as const;
 };
 
 describe.each([
@@ -177,15 +210,495 @@ test.each([
 
     await unfoldAction(
       testGame.actions,
+      Promise.resolve({ self: { actionResponse: { from: target, type } } }),
+      applyActionResponse(testGame.getState().map, testGame.getState().vision, {
+        from: target,
+        type,
+      }),
       { from: target, type },
       target,
       foldType,
       testGame.getState(),
     );
 
-    expect(testGame.update).toHaveBeenCalledOnce();
+    expect(testGame.getState().behavior?.type).toBe('base');
+    await vi.waitFor(() =>
+      expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce(),
+    );
   },
 );
+
+test('CompleteUnit restores behavior before processing the remote response', async () => {
+  const testGame = createTestGame(createMap(true));
+  const actionResponse = { from: position, type: 'CompleteUnit' } as const;
+  const newMap = applyActionResponse(
+    testGame.getState().map,
+    testGame.getState().vision,
+    actionResponse,
+  );
+  let resolveRemoteAction!: (response: { self: { actionResponse: typeof actionResponse } }) => void;
+  const remoteAction = new Promise<{ self: { actionResponse: typeof actionResponse } }>(
+    (resolve) => {
+      resolveRemoteAction = resolve;
+    },
+  );
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+  await expect(completeUnitAction(actions, testGame.getState(), position)).resolves.toEqual(
+    expect.objectContaining({ map: newMap }),
+  );
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction({ self: { actionResponse } });
+  await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('CompleteUnit reports a rejected remote response after restoring behavior', async () => {
+  const testGame = createTestGame(createMap(true));
+  const actionResponse = { from: position, type: 'CompleteUnit' } as const;
+  const newMap = applyActionResponse(
+    testGame.getState().map,
+    testGame.getState().vision,
+    actionResponse,
+  );
+  let rejectRemoteAction!: (error: Error) => void;
+  const remoteAction = new Promise<never>((_, reject) => {
+    rejectRemoteAction = reject;
+  });
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+  const error = new Error('Remote action failed.');
+
+  await completeUnitAction(actions, testGame.getState(), position);
+  expect(testGame.getState().behavior?.type).toBe('base');
+
+  rejectRemoteAction(error);
+  await vi.waitFor(() => expect(actions.throwError).toHaveBeenCalledWith(error));
+  expect(actions.throwError).toHaveBeenCalledOnce();
+});
+
+test('a completed Move restores behavior before processing its remote response', async () => {
+  const moveTarget = vec(1, 2);
+  const map = createMap(true);
+  const testGame = createTestGame(map);
+  const actionResponse: MoveActionResponse = {
+    completed: true,
+    from: position,
+    fuel: map.units.get(position)!.fuel - 1,
+    path: [moveTarget],
+    to: moveTarget,
+    type: 'Move',
+  };
+  const newMap = applyActionResponse(map, testGame.getState().vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse, [
+    { actionResponse: { player: 1, time: 30, type: 'SetPlayerTime' } },
+  ]);
+  const onComplete = vi.fn();
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+
+  await testGame.update(
+    moveAction(
+      actions,
+      position,
+      moveTarget,
+      new Map(),
+      testGame.getState(),
+      onComplete,
+      [moveTarget],
+      position,
+      undefined,
+      true,
+    ),
+  );
+
+  expect(testGame.getState().behavior?.type).toBe('null');
+  await completeAnimation(testGame);
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(testGame.getState().map).toBe(newMap);
+  expect(onComplete).not.toHaveBeenCalled();
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('an ordinary Move keeps behavior locked until its remote continuation is processed', async () => {
+  const moveTarget = vec(1, 2);
+  const map = createMap(true);
+  const testGame = createTestGame(map);
+  const actionResponse: MoveActionResponse = {
+    from: position,
+    fuel: map.units.get(position)!.fuel - 1,
+    path: [moveTarget],
+    to: moveTarget,
+    type: 'Move',
+  };
+  const newMap = applyActionResponse(map, testGame.getState().vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+  const onComplete = vi.fn(() => null);
+
+  await testGame.update(
+    clientMoveAction(
+      testGame.actions,
+      remoteAction,
+      newMap,
+      position,
+      moveTarget,
+      actionResponse.path,
+      new Map(),
+      testGame.getState(),
+      onComplete,
+    ),
+  );
+
+  await completeAnimation(testGame);
+  expect(testGame.getState().behavior?.type).toBe('null');
+  expect(onComplete).not.toHaveBeenCalled();
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => {
+    expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce();
+    expect(onComplete).toHaveBeenCalledOnce();
+  });
+});
+
+test('Unfold does not process its remote response before the animation completes', async () => {
+  const map = createMap().copy({
+    units: ImmutableMap([[position, Artillery.create(1)]]),
+  });
+  const testGame = createTestGame(map);
+  const actionResponse = { from: position, type: 'Unfold' } as const;
+  const newMap = applyActionResponse(map, testGame.getState().vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+  let settled = false;
+  const promise = unfoldAction(
+    testGame.actions,
+    remoteAction,
+    newMap,
+    actionResponse,
+    position,
+    'unfold',
+    testGame.getState(),
+  ).then((state) => {
+    settled = true;
+    return state;
+  });
+
+  await vi.waitFor(() => expect(testGame.getState().animations.has(position)).toBe(true));
+  expect(settled).toBe(false);
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  await completeAnimation(testGame);
+  await expect(promise).resolves.toEqual(expect.objectContaining({ map: newMap }));
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test.each([
+  ['Heal', clientHealAction],
+  ['Sabotage', clientSabotageAction],
+] as const)(
+  '%s waits for its animation before processing the remote response',
+  async (type, fn) => {
+    const map = createMap().copy({
+      units: ImmutableMap([
+        [position, Pioneer.create(1)],
+        [target, Pioneer.create(1)],
+      ]),
+    });
+    const testGame = createTestGame(map);
+    const actionResponse = { from: position, to: target, type };
+    const newMap = applyActionResponse(map, testGame.getState().vision, actionResponse);
+    const [remoteAction, resolveRemoteAction] = createRemoteAction(
+      actionResponse as HealActionResponse | SabotageActionResponse,
+    );
+
+    await testGame.update(
+      type === 'Heal'
+        ? fn(
+            testGame.actions,
+            remoteAction,
+            newMap,
+            actionResponse as HealActionResponse,
+            testGame.getState(),
+          )
+        : fn(
+            testGame.actions,
+            remoteAction,
+            newMap,
+            actionResponse as SabotageActionResponse,
+            testGame.getState(),
+          ),
+    );
+
+    expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+    expect(testGame.getState().behavior?.type).toBe('null');
+
+    await completeAnimation(testGame);
+    expect(testGame.getState().behavior?.type).toBe('base');
+    expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+
+    resolveRemoteAction();
+    await vi.waitFor(() => {
+      expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce();
+    });
+  },
+);
+
+test.each([
+  ['Heal', clientHealAction],
+  ['Sabotage', clientSabotageAction],
+] as const)('%s reconciles when its animation target is missing', async (type, fn) => {
+  const testGame = createTestGame();
+  const actionResponse = { from: position, to: target, type };
+
+  await testGame.update(
+    type === 'Heal'
+      ? fn(
+          testGame.actions,
+          Promise.resolve({ self: { actionResponse } }),
+          testGame.getState().map,
+          actionResponse as HealActionResponse,
+          testGame.getState(),
+        )
+      : fn(
+          testGame.actions,
+          Promise.resolve({ self: { actionResponse } }),
+          testGame.getState().map,
+          actionResponse as SabotageActionResponse,
+          testGame.getState(),
+        ),
+  );
+
+  await vi.waitFor(() => expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce());
+  expect(testGame.getState().behavior?.type).toBe('base');
+});
+
+test('Supply waits for all unit animations before processing the remote response', async () => {
+  const unitToRefill = Pioneer.create(1).modifyHealth(-10);
+  const map = createMap().copy({
+    units: ImmutableMap([
+      [position, Pioneer.create(1)],
+      [target, unitToRefill],
+    ]),
+  });
+  const testGame = createTestGame(map);
+  const state = {
+    ...testGame.getState(),
+    selectedPosition: position,
+    selectedUnit: map.units.get(position),
+  } as State;
+  const actionResponse = { from: position, player: 1, type: 'Supply' } as const;
+  const newMap = applyActionResponse(map, state.vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+
+  await testGame.update(supplyAction(actions, state, new Map([[target, unitToRefill]])));
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+  expect(testGame.getState().behavior?.type).toBe('null');
+
+  await completeAnimation(testGame);
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  await completeAnimation(testGame);
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('DropUnit waits for its movement animation before processing the remote response', async () => {
+  const transportedUnit = Infantry.create(1).transport();
+  const map = createMap().copy({
+    units: ImmutableMap([[position, Jeep.create(1).load(transportedUnit)]]),
+  });
+  const testGame = createTestGame(map);
+  const actionResponse: DropUnitActionResponse = {
+    from: position,
+    index: 0,
+    to: target,
+    type: 'DropUnit',
+  };
+  const newMap = applyActionResponse(map, testGame.getState().vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+
+  await testGame.update(
+    clientDropUnitAction(
+      testGame.actions,
+      remoteAction,
+      newMap,
+      actionResponse,
+      testGame.getState(),
+    ),
+  );
+
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+  expect(testGame.getState().behavior?.type).toBe('null');
+
+  await completeAnimation(testGame);
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('DropUnit reconciles when its animation prerequisites are missing', async () => {
+  const testGame = createTestGame();
+  const actionResponse: DropUnitActionResponse = {
+    from: position,
+    index: 0,
+    to: target,
+    type: 'DropUnit',
+  };
+
+  await testGame.update(
+    clientDropUnitAction(
+      testGame.actions,
+      Promise.resolve({ self: { actionResponse } }),
+      testGame.getState().map,
+      actionResponse,
+      testGame.getState(),
+    ),
+  );
+
+  await vi.waitFor(() => expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce());
+  expect(testGame.getState().behavior?.type).toBe('base');
+});
+
+test('transport loading waits for movement before processing the remote response', async () => {
+  const sourceUnit = Infantry.create(1);
+  const transport = Jeep.create(1);
+  const map = createMap().copy({
+    units: ImmutableMap([
+      [position, sourceUnit],
+      [target, transport],
+    ]),
+  });
+  const testGame = createTestGame(map);
+  const state = {
+    ...testGame.getState(),
+    selectedPosition: position,
+    selectedUnit: sourceUnit,
+  } as State;
+  const actionResponse = {
+    from: position,
+    fuel: sourceUnit.fuel - 1,
+    path: [target],
+    to: target,
+    type: 'Move',
+  } as const;
+  const newMap = applyActionResponse(map, state.vision, actionResponse);
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+  let settled = false;
+
+  const promise = loadUnitAction(
+    {
+      moveable: new Map(),
+      path: [target],
+      position: target,
+      unit: transport,
+    },
+    actions,
+    state,
+  ).then((state) => {
+    settled = true;
+    return state;
+  });
+
+  await vi.waitFor(() => expect(testGame.getState().animations.has(position)).toBe(true));
+  expect(settled).toBe(false);
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+  expect(testGame.getState().behavior?.type).toBe('null');
+
+  await completeAnimation(testGame);
+  await expect(promise).resolves.toEqual(expect.objectContaining({ map: expect.any(MapData) }));
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('BuySkill waits for its banner before processing the remote response', async () => {
+  const testGame = createTestGame();
+  const actionResponse = {
+    from: position,
+    player: 1,
+    skill: Skill.AttackIncreaseMinor,
+    type: 'BuySkill',
+  } as const;
+  const newMap = applyActionResponse(
+    testGame.getState().map,
+    testGame.getState().vision,
+    actionResponse,
+  );
+  const [remoteAction, resolveRemoteAction] = createRemoteAction(actionResponse);
+  const actions = {
+    ...testGame.actions,
+    action: vi.fn(() => [remoteAction, newMap, actionResponse]),
+  } as unknown as Actions;
+  let settled = false;
+
+  const promise = clientBuySkillAction(
+    actions,
+    testGame.getState(),
+    position,
+    Skill.AttackIncreaseMinor,
+  ).then((state) => {
+    settled = true;
+    return state;
+  });
+
+  await vi.waitFor(() => expect(testGame.getState().animations.size).toBe(1));
+  expect(testGame.getState().map.getPlayer(1).skills.has(Skill.AttackIncreaseMinor)).toBe(true);
+  expect(testGame.getState().behavior?.type).toBe('null');
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+  expect(settled).toBe(false);
+
+  await completeAnimation(testGame);
+  await expect(promise).resolves.toEqual(expect.objectContaining({ map: expect.any(MapData) }));
+  expect(testGame.getState().behavior?.type).toBe('base');
+  expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+  resolveRemoteAction();
+  await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+test('BuySkill rejects when its initial animation update fails', async () => {
+  const error = new Error('Update failed.');
+  const actionResponse = {
+    from: position,
+    player: 1,
+    skill: Skill.AttackIncreaseMinor,
+    type: 'BuySkill',
+  } as const;
+  const actions = {
+    update: vi.fn(() => Promise.reject(error)),
+  } as unknown as Actions;
+
+  await expect(buySkillAction(actions, actionResponse)).rejects.toBe(error);
+});
 
 test('CharacterMessage responses retain their placement, highlighting, and sequencing', async () => {
   const testGame = createTestGame(createMap(true));
@@ -238,13 +751,23 @@ test('CharacterMessage responses retain their placement, highlighting, and seque
 test('CreateTracks settles only after its animation completes', async () => {
   const testGame = createTestGame(createMap(true));
   const actionResponse = { from: position, type: 'CreateTracks' } as const;
+  let resolveRemoteAction!: (response: GameActionResponse) => void;
+  const remoteAction = new Promise<GameActionResponse>((resolve) => {
+    resolveRemoteAction = resolve;
+  });
   let settled = false;
-  const promise = createTracksAction(testGame.actions, actionResponse).then((state) => {
+  const promise = createTracksAction(
+    testGame.actions,
+    remoteAction,
+    applyActionResponse(testGame.getState().map, testGame.getState().vision, actionResponse),
+    actionResponse,
+  ).then((state) => {
     settled = true;
     return state;
   });
   await vi.waitFor(() => expect(testGame.getState().animations.has(position)).toBe(true));
   expect(settled).toBe(false);
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
 
   const animation = testGame.getState().animations.get(position)!;
   expect(animation.type).toBe('createBuilding');
@@ -259,6 +782,12 @@ test('CreateTracks settles only after its animation completes', async () => {
 
   await expect(promise).resolves.toEqual(expect.objectContaining({ map: testGame.getState().map }));
   expect(settled).toBe(true);
+  expect(testGame.actions.processGameActionResponse).not.toHaveBeenCalled();
+  expect(testGame.getState().behavior?.type).toBe('base');
+
+  resolveRemoteAction({ self: { actionResponse } });
+
+  await vi.waitFor(() => expect(testGame.actions.processGameActionResponse).toHaveBeenCalledOnce());
 });
 
 test('a draw settles when its banner completes', async () => {

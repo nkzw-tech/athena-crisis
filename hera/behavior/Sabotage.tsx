@@ -6,7 +6,7 @@ import getFirst from '@nkzw/core/getFirst.js';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike } from '../Types.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
-import sabotageAction from './sabotage/sabotageAction.tsx';
+import { clientSabotageAction } from './sabotage/sabotageAction.tsx';
 
 export default class Sabotage {
   public readonly type = 'sabotage' as const;
@@ -15,12 +15,12 @@ export default class Sabotage {
     const { map, radius, selectedPosition } = state;
     const unitB = radius?.fields.has(vector) && map.units.get(vector);
     if (selectedPosition && unitB) {
-      const actionResponse = actions.optimisticAction(
+      const [remoteAction, newMap, actionResponse] = actions.action(
         state,
         SabotageAction(selectedPosition, vector),
       );
       if (actionResponse.type === 'Sabotage') {
-        return sabotageAction(actionResponse, state);
+        return clientSabotageAction(actions, remoteAction, newMap, actionResponse, state);
       }
     }
     return selectFallback(vector, state, actions);

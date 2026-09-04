@@ -1,5 +1,4 @@
 import { DropUnitAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import canDeploy from '@deities/athena/lib/canDeploy.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import { TransportedUnit } from '@deities/athena/map/Unit.tsx';
@@ -15,7 +14,7 @@ import TransportedUnitTile from '../TransportedUnitTile.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import Flyout, { FlyoutItemWithHighlight } from '../ui/Flyout.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
-import dropUnitAction from './drop/dropUnitAction.tsx';
+import { clientDropUnitAction } from './drop/dropUnitAction.tsx';
 import TeleportIndicator from './swap/TeleportIndicator.tsx';
 
 const getRadius = (
@@ -82,17 +81,12 @@ export default class DropUnit {
   select(vector: Vector, state: State, actions: Actions) {
     const { radius, selectedPosition } = state;
     if (selectedPosition && this.dropUnit != null && radius && radius.fields.get(vector)) {
-      const actionResponse = actions.optimisticAction(
+      const [remoteAction, newMap, actionResponse] = actions.action(
         state,
         DropUnitAction(selectedPosition, this.dropUnit, vector),
       );
       if (actionResponse.type === 'DropUnit') {
-        return dropUnitAction(
-          applyActionResponse(state.map, state.vision, actionResponse),
-          actionResponse,
-          state,
-          (state) => state,
-        );
+        return clientDropUnitAction(actions, remoteAction, newMap, actionResponse, state);
       }
     }
     return selectFallback(vector, state, actions);

@@ -1,12 +1,36 @@
 import { HealActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import AnimationKey from '../../lib/AnimationKey.tsx';
 import getUnitDirection from '../../lib/getUnitDirection.tsx';
-import { State, StateLike, StateToStateLike } from '../../Types.tsx';
+import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
+
+export function clientHealAction(
+  actions: Actions,
+  remoteAction: Promise<GameActionResponse>,
+  newMap: MapData,
+  actionResponse: HealActionResponse,
+  state: State,
+): StateLike {
+  const complete = (state: State): StateLike => {
+    actions.requestFrame(
+      () =>
+        void handleRemoteAction(actions, remoteAction, 'Heal', {
+          restoreBehavior: false,
+        }).catch(actions.throwError),
+    );
+    return { ...state, ...resetBehavior() };
+  };
+  return (
+    addHealAnimation(newMap, actionResponse.from, actionResponse.to, state, complete) ||
+    complete({ ...state, map: newMap })
+  );
+}
 
 export default function healAction(
   actionResponse: HealActionResponse,

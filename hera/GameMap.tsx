@@ -333,7 +333,6 @@ export default class GameMap extends Component<Props, State> {
     this._actions = {
       action: this._action,
       clearTimer: this._clearTimer,
-      optimisticAction: this._optimisticAction,
       pauseReplay: this._pauseReplay,
       processGameActionResponse: this.processGameActionResponse,
       requestFrame: this._requestFrame,
@@ -1144,12 +1143,6 @@ export default class GameMap extends Component<Props, State> {
     }
 
     throw new Error(`Action: Unhandled error when executing action '${action.type}'.`);
-  };
-
-  private _optimisticAction = (state: State, action: Action): ActionResponse => {
-    const [remoteAction, , actionResponse] = this._action(state, action);
-    remoteAction.then(this.processGameActionResponse).catch(this._throwError);
-    return actionResponse;
   };
 
   private processGameActionResponse = (gameActionResponse: GameActionResponse): Promise<State> =>

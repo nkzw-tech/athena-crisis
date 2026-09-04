@@ -1,9 +1,12 @@
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
+import MapData from '@deities/athena/MapData.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 type FoldType = 'fold' | 'unfold';
@@ -46,6 +49,8 @@ const unfoldAnimation = async (
 
 export default async function unfoldAction(
   actions: Actions,
+  remoteAction: Promise<GameActionResponse>,
+  _newMap: MapData,
   actionResponse: ActionResponse,
   position: Vector,
   type: FoldType,
@@ -53,12 +58,21 @@ export default async function unfoldAction(
 ): Promise<State> {
   const { scheduleTimer, update } = actions;
   const { animationConfig } = state;
+  const expectedType = type === 'fold' ? 'Fold' : 'Unfold';
+  if (actionResponse.type !== expectedType) {
+    return update(null);
+  }
+
   const unit = state.map.units.get(position);
   if (!unit) {
-    return await update({
+    const newState = await update({
       map: applyActionResponse(state.map, state.vision, actionResponse),
       ...resetBehavior(),
     });
+    void handleRemoteAction(actions, remoteAction, expectedType, {
+      restoreBehavior: false,
+    }).catch(actions.throwError);
+    return newState;
   }
 
   state = await unfoldAnimation(actions, position, unit, type);
@@ -75,13 +89,16 @@ export default async function unfoldAction(
 
   return new Promise((resolve, reject) =>
     scheduleTimer(() => {
-      void update(null)
-        .then((state) =>
-          update({
-            map: applyActionResponse(state.map, state.vision, actionResponse),
-            ...resetBehavior(),
-          }),
-        )
+      void update((state) => ({
+        map: applyActionResponse(state.map, state.vision, actionResponse),
+        ...resetBehavior(),
+      }))
+        .then((state) => {
+          void handleRemoteAction(actions, remoteAction, expectedType, {
+            restoreBehavior: false,
+          }).catch(actions.throwError);
+          return state;
+        })
         .then(resolve, reject);
     }, animationConfig.AnimationDuration),
   );

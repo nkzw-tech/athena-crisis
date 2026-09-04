@@ -93,3 +93,33 @@ test('reports a rejected remote action once', async () => {
   expect(throwError).toHaveBeenCalledWith(error);
   expect(update).toHaveBeenCalledOnce();
 });
+
+test('does not reset behavior after reconciliation when behavior was already restored', async () => {
+  const state = {} as State;
+  const gameActionResponse: GameActionResponse = {
+    others: [{ actionResponse: { player: 1, time: 30, type: 'SetPlayerTime' } }],
+    self: {
+      actionResponse: {
+        from: vec(1, 1),
+        fuel: 10,
+        path: [vec(1, 2)],
+        to: vec(1, 2),
+        type: 'Move',
+      },
+    },
+  };
+  const update = vi.fn(async () => state);
+  const actions = {
+    processGameActionResponse: vi.fn(async () => state),
+    update,
+  } as unknown as Actions;
+
+  await expect(
+    handleRemoteAction(actions, Promise.resolve(gameActionResponse), 'Move', {
+      restoreBehavior: false,
+    }),
+  ).resolves.toBe(state);
+
+  expect(actions.processGameActionResponse).toHaveBeenCalledWith(gameActionResponse);
+  expect(update).toHaveBeenCalledOnce();
+});

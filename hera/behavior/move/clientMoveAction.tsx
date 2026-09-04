@@ -8,6 +8,8 @@ import MapData from '@deities/athena/MapData.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
+import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export type OnCompleteMoveAction = (
@@ -17,7 +19,7 @@ export type OnCompleteMoveAction = (
 ) => StateLike | null;
 
 export default function clientMoveAction(
-  { processGameActionResponse, throwError, update }: Actions,
+  actions: Actions,
   remoteAction: Promise<GameActionResponse>,
   newMap: MapData,
   from: Vector,
@@ -28,7 +30,9 @@ export default function clientMoveAction(
   onComplete: OnCompleteMoveAction,
   realPosition: Vector = from,
   partial?: boolean,
+  complete?: boolean,
 ): StateLike {
+  const { processGameActionResponse, requestFrame, throwError, update } = actions;
   const { animations, map, vision } = state;
   const path = initialPath || getMovementPath(map, to, fields, vision).path;
   return {
@@ -36,6 +40,20 @@ export default function clientMoveAction(
       endSound: map.units.get(to) ? 'Unit/Load' : undefined,
       from,
       onComplete: (state) => {
+        if (complete) {
+          requestFrame(
+            () =>
+              void handleRemoteAction(actions, remoteAction, 'Move', {
+                restoreBehavior: false,
+              }).catch(throwError),
+          );
+          return {
+            ...state,
+            map: newMap,
+            ...resetBehavior(),
+          };
+        }
+
         remoteAction
           .then(async (gameActionResponse) => {
             const actionResponse = expectSelfActionResponse(gameActionResponse, 'Move');

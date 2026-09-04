@@ -1,4 +1,3 @@
-import { BuySkillAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { getSkillConfig } from '@deities/athena/info/Skill.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
@@ -20,7 +19,7 @@ import ActionWheel, {
 } from '../ui/ActionWheel.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
-import buySkillAction from './buySkill/buySkillAction.tsx';
+import clientBuySkillAction from './buySkill/clientBuySkillAction.tsx';
 
 const MAX_SKILLS = 8;
 
@@ -46,7 +45,7 @@ export default class BuySkills {
   select = selectFallback;
 
   component = ({ actions, state }: StateWithActions) => {
-    const { showGameInfo, update } = actions;
+    const { showGameInfo } = actions;
     const [cursor, setCursor] = useState(0);
 
     const {
@@ -95,13 +94,7 @@ export default class BuySkills {
             const isDisabled = funds < cost || currentPlayer.skills.has(skill);
             const buy = async () => {
               if (!isDisabled && selectedPosition) {
-                const actionResponse = actions.optimisticAction(
-                  state,
-                  BuySkillAction(selectedPosition, skill),
-                );
-                if (actionResponse.type === 'BuySkill') {
-                  update(await buySkillAction(actions, actionResponse));
-                }
+                await clientBuySkillAction(actions, state, selectedPosition, skill);
               }
             };
 

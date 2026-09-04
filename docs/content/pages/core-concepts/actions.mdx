@@ -136,20 +136,25 @@ We are now ready to make our first change to the Athena Crisis game client. Most
 For our new action, we need to first implement the handler for what happens when another player or the AI execute this action. This code lives in [`processActionResponse`](https://github.com/nkzw-tech/athena-crisis/blob/main/hera/action-response/processActionResponse.tsx) which is a wrapper around `applyActionResponse` to animate game state and apply the ActionResponse at the right time. The client side Sleep Action could look something like this:
 
 ```tsx
-export function sleepAction({ optimisticAction, update }: Actions, state: State): Promise<State> {
-  const { map, selectedPosition, vision } = state;
-  if (selectedPosition) {
-    return update({
-      map: applyActionResponse(
-        map,
-        vision,
-        optimisticAction(state, SleepUnitAction(selectedPosition)),
-      ),
-      position: selectedPosition,
-      ...resetBehavior(),
-    });
+export async function sleepAction(actions: Actions, state: State): Promise<State> {
+  const { selectedPosition } = state;
+  if (!selectedPosition) {
+    return actions.update(null);
   }
-  return null;
+
+  const [remoteAction, newMap, actionResponse] = actions.action(
+    state,
+    SleepUnitAction(selectedPosition),
+  );
+  if (actionResponse.type !== 'Sleep') {
+    return actions.update(null);
+  }
+
+  await actions.update({
+    map: newMap,
+    ...resetBehavior(NullBehavior),
+  });
+  return handleRemoteAction(actions, remoteAction, 'Sleep');
 }
 ```
 
@@ -159,6 +164,10 @@ After following the above steps, Athena Crisis should now have a new "Sleep" fea
 
 ## Optimistic Updates
 
-In the above example we called `optimisticAction(state, SleepUnitAction(from))` to update the game state on the client optimistically. Due to the elegance of immutable data structures and the Athena Crisis architecture, we can apply an Action on the client while sending the same action to the server at the same time, executing it, and sending the (visible) ActionResponse to each other player.
+In the above example, `action(state, SleepUnitAction(from))` returns the remote request together with the locally computed map and ActionResponse. The client can display that result immediately while the server processes the same action.
 
-The architecture of the game ensures that the server always has the final say on the game state, and the client will be updated with the server's response. This is a powerful feature that allows the game to feel responsive and smooth, even on slow connections, and it also allows hiding secrets like hidden objectives from players.
+Keep the behavior locked until the primary animation has completed. For actions where a rejection would make the optimistic state unsafe to continue from, pass the remote request to `handleRemoteAction`, which validates the server's own ActionResponse, processes any additional effect responses, and finally restores the behavior.
+
+Actions that are safe to continue optimistically can restore the behavior as soon as their primary animation completes and reconcile the remote response afterward with `restoreBehavior: false`. This retains the fluid local interaction while still validating the server response and processing every effect. A rejected or contradictory response uses the normal error path to reload authoritative state.
+
+The server always has the final say on game state. In both variants, process the remote response only after the primary animation completes so effects cannot race the animation that triggered them.

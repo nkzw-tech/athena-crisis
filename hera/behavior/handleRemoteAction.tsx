@@ -9,6 +9,7 @@ export default async function handleRemoteAction<ExpectedType extends ActionResp
   { processGameActionResponse, throwError, update }: Actions,
   remoteAction: Promise<GameActionResponse>,
   expectedType: ExpectedType,
+  { restoreBehavior = true }: { restoreBehavior?: boolean } = {},
 ): Promise<State> {
   let gameActionResponse: GameActionResponse;
   try {
@@ -21,5 +22,5 @@ export default async function handleRemoteAction<ExpectedType extends ActionResp
 
   const hasEnded = gameHasEnded(gameActionResponse.others);
   const state = await update(await processGameActionResponse(gameActionResponse));
-  return !hasEnded ? await update(resetBehavior()) : state;
+  return restoreBehavior && !hasEnded ? await update(resetBehavior()) : state;
 }

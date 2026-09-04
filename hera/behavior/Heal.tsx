@@ -15,7 +15,7 @@ import FlashFlyout from '../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../ui/Flyout.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import ConfirmAction from './confirm/ConfirmAction.tsx';
-import healAction from './heal/healAction.tsx';
+import { clientHealAction } from './heal/healAction.tsx';
 
 export default class Heal {
   public readonly type = 'heal' as const;
@@ -42,13 +42,15 @@ export default class Heal {
       const cost = getHealCost(unitB, currentPlayer);
       if (map.getCurrentPlayer().funds >= cost) {
         const onAction = (state: State): StateLike | null => {
-          const actionResponse = actions.optimisticAction(
+          const [remoteAction, newMap, actionResponse] = actions.action(
             state,
             HealAction(selectedPosition, vector),
           );
           return {
             confirmAction: null,
-            ...(actionResponse.type === 'Heal' ? healAction(actionResponse, state) : null),
+            ...(actionResponse.type === 'Heal'
+              ? clientHealAction(actions, remoteAction, newMap, actionResponse, state)
+              : null),
           };
         };
 

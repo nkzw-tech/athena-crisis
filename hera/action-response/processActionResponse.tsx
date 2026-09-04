@@ -210,12 +210,12 @@ async function processActionResponse(
       );
       break;
     case 'CreateTracks':
-      return createTracksAction(actions, actionResponse);
+      return createTracksAction(actions, ...remoteActionResponse);
     case 'Fold':
     case 'Unfold':
       return unfoldAction(
         actions,
-        actionResponse,
+        ...remoteActionResponse,
         actionResponse.from,
         type === 'Unfold' ? 'unfold' : 'fold',
         state,

@@ -1,30 +1,26 @@
 import {
   CaptureAction,
-  CompleteUnitAction,
   CreateTracksAction,
   FoldAction,
-  SupplyAction,
   UnfoldAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
 import getAvailableUnitActions, {
   UnitActionTypes,
 } from '@deities/athena/lib/getAvailableUnitActions.tsx';
-import { UnitsWithPosition } from '@deities/athena/lib/getUnitsByPositions.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import { CreateTracksCost } from '@deities/athena/map/Configuration.tsx';
-import Vector, { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
+import Vector from '@deities/athena/map/Vector.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { fbt } from 'fbtee';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
-import animateSupply from '../lib/animateSupply.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
 import ActionWheel, { ActionButton } from '../ui/ActionWheel.tsx';
 import AttackBehavior from './Attack.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import captureAction from './capture/captureAction.tsx';
+import completeUnitAction from './completeUnit/completeUnitAction.tsx';
 import CreateBuildingBehavior from './CreateBuilding.tsx';
 import createTracksAction from './createTracks/createTracksAction.tsx';
 import DropUnit from './DropUnit.tsx';
@@ -33,20 +29,13 @@ import Move from './Move.tsx';
 import getMoveableFields from './move/getMoveableFields.tsx';
 import Rescue from './Rescue.tsx';
 import Sabotage from './Sabotage.tsx';
+import supplyAction from './supply/supplyAction.tsx';
 import unfoldAction from './unfold/unfoldAction.tsx';
 
-const completeAction = ({ optimisticAction, update }: Actions, state: State) => {
-  const { map, selectedPosition, vision } = state;
+const completeAction = (actions: Actions, state: State) => {
+  const { selectedPosition } = state;
   if (selectedPosition) {
-    update({
-      map: applyActionResponse(
-        map,
-        vision,
-        optimisticAction(state, CompleteUnitAction(selectedPosition)),
-      ),
-      position: selectedPosition,
-      ...resetBehavior(),
-    });
+    void completeUnitAction(actions, state, selectedPosition);
   }
 };
 
@@ -63,7 +52,7 @@ const UnfoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
       onClick={() =>
         unfoldAction(
           actions,
-          actions.optimisticAction(state, UnfoldAction(selectedPosition)),
+          ...actions.action(state, UnfoldAction(selectedPosition)),
           selectedPosition,
           'unfold',
           state,
@@ -83,7 +72,7 @@ const FoldButton = ({ actions, availableActions, state }: MenuItemProps) => {
       onClick={() =>
         unfoldAction(
           actions,
-          actions.optimisticAction(state, FoldAction(selectedPosition)),
+          ...actions.action(state, FoldAction(selectedPosition)),
           selectedPosition,
           'fold',
           state,
@@ -166,13 +155,10 @@ const BuildTracksButton = ({ actions, availableActions, state }: MenuItemProps) 
       navigationDirection={navigationDirection}
       onClick={() => {
         if (map.getPlayer(selectedUnit).funds >= CreateTracksCost) {
-          const actionResponse = actions.optimisticAction(
-            state,
-            CreateTracksAction(selectedPosition),
+          void createTracksAction(
+            actions,
+            ...actions.action(state, CreateTracksAction(selectedPosition)),
           );
-          if (actionResponse.type === 'CreateTracks') {
-            createTracksAction(actions, actionResponse);
-          }
         } else {
           actions.update({
             animations: addFlashAnimation(animations, {
@@ -209,25 +195,6 @@ const CaptureButton = ({ actions, availableActions, state }: MenuItemProps) => {
   ) : null;
 };
 
-const supplyAction = (
-  { optimisticAction, update }: Actions,
-  state: State,
-  unitsToRefill: UnitsWithPosition,
-) => {
-  const { selectedPosition } = state;
-  if (selectedPosition) {
-    const actionResponse = optimisticAction(state, SupplyAction(selectedPosition));
-    update({
-      ...resetBehavior(),
-      ...animateSupply(state, sortByVectorKey(unitsToRefill), (state) => ({
-        ...state,
-        map: applyActionResponse(state.map, state.vision, actionResponse),
-      })),
-      position: selectedPosition,
-    });
-  }
-};
-
 const SupplyButton = ({ actions, availableActions, state }: MenuItemProps) => {
   const { map, navigationDirection, selectedPosition, selectedUnit, vision } = state;
   return selectedPosition && selectedUnit && availableActions.has('supply') ? (
@@ -235,10 +202,12 @@ const SupplyButton = ({ actions, availableActions, state }: MenuItemProps) => {
       label={<fbt desc="Supply button label (as short as possible, ideally one word)">Supply</fbt>}
       navigationDirection={navigationDirection}
       onClick={() =>
-        supplyAction(
-          actions,
-          state,
-          getUnitsToRefill(map, vision, map.getPlayer(selectedUnit), selectedPosition),
+        actions.update(
+          supplyAction(
+            actions,
+            state,
+            getUnitsToRefill(map, vision, map.getPlayer(selectedUnit), selectedPosition),
+          ),
         )
       }
       shift={availableActions.has('attack')}

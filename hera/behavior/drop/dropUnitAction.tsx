@@ -1,10 +1,33 @@
 import { DropUnitActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
-import { State, StateLike, StateToStateLike } from '../../Types.tsx';
+import { Actions, State, StateLike, StateToStateLike } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
+import handleRemoteAction from '../handleRemoteAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
+
+export function clientDropUnitAction(
+  actions: Actions,
+  remoteAction: Promise<GameActionResponse>,
+  newMap: MapData,
+  actionResponse: DropUnitActionResponse,
+  state: State,
+): StateLike {
+  const complete = (state: State): StateLike => {
+    actions.requestFrame(
+      () =>
+        void handleRemoteAction(actions, remoteAction, 'DropUnit', {
+          restoreBehavior: false,
+        }).catch(actions.throwError),
+    );
+    return { ...state, ...resetBehavior() };
+  };
+  return (
+    dropUnitAction(newMap, actionResponse, state, complete) || complete({ ...state, map: newMap })
+  );
+}
 
 export default function dropUnitAction(
   map: MapData,

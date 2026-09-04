@@ -34,5 +34,6 @@ export default function moveAction(
     onComplete,
     realPosition,
     partial,
+    complete,
   );
 }

@@ -266,7 +266,6 @@ export type GameInfoState =
 export type Actions = Readonly<{
   action: (state: State, action: Action) => [Promise<GameActionResponse>, MapData, ActionResponse];
   clearTimer: ClearTimerFunction;
-  optimisticAction: (state: State, action: Action) => ActionResponse;
   pauseReplay: () => Promise<void>;
   processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
   requestFrame: RequestFrameFunction;

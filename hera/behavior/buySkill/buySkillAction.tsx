@@ -21,8 +21,8 @@ export default async function buySkillAction(
   const isPermanent = !isBuy && actionResponse.permanent;
 
   const { colors, name } = getSkillConfigForDisplay(skill);
-  return new Promise((resolve) =>
-    update((state) => ({
+  return new Promise((resolve, reject) => {
+    void update((state) => ({
       animations: state.animations.set(new AnimationKey(), {
         color: colors,
         direction: 'up',
@@ -68,6 +68,6 @@ export default async function buySkillAction(
       }),
       map: applyActionResponse(state.map, state.vision, actionResponse),
       ...resetBehavior(NullBehavior),
-    })),
-  );
+    })).catch(reject);
+  });
 }
