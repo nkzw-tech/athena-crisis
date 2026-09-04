@@ -2,6 +2,7 @@ import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.ts
 import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
+import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import addEndTurnAnimations from '../../lib/addEndTurnAnimations.tsx';
@@ -43,6 +44,7 @@ export default async function endTurnAction(actions: Actions, state: State) {
         ),
         (state) => {
           remoteAction.then(async (gameActionResponse) => {
+            const hasEnded = gameHasEnded(gameActionResponse.others);
             const endTurnActionResponse =
               getEndTurnActionResponse(gameActionResponse) || actionResponse;
             await update({
@@ -56,8 +58,8 @@ export default async function endTurnAction(actions: Actions, state: State) {
               ),
             });
 
-            const newState = await processGameActionResponse(gameActionResponse);
-            if (newState.lastActionResponse?.type !== 'GameEnd') {
+            await processGameActionResponse(gameActionResponse);
+            if (!hasEnded) {
               await update(resetBehavior());
             }
           });

@@ -86,8 +86,10 @@ export default function EvaluationPanel({
       onAction({ type: 'Start' })
         .then((gameActionResponse) => {
           const actions = gameActionResponse.others;
-          const actionResponse = actions?.at(-1)?.actionResponse;
-          if (actions && actionResponse?.type === 'GameEnd') {
+          const actionResponse = actions?.findLast(
+            ({ actionResponse }) => actionResponse.type === 'GameEnd',
+          )?.actionResponse;
+          if (actions?.length && actionResponse?.type === 'GameEnd') {
             const maybeEndTurnResponse = actions.findLast(
               ({ actionResponse }) => actionResponse.type === 'EndTurn',
             )?.actionResponse;

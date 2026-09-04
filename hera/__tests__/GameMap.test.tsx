@@ -320,3 +320,95 @@ test('game action responses are processed serially across direct entry points', 
 
   expect(processedRounds).toEqual([1, 2]);
 });
+
+test('an empty others array is treated as a self-only action response', async () => {
+  vi.stubGlobal('window', {
+    innerHeight: 768,
+    innerWidth: 1024,
+  });
+
+  const [{ default: GameMap }, { default: NullBehavior }] = await Promise.all([
+    import('../GameMap.tsx'),
+    import('../behavior/NullBehavior.tsx'),
+  ]);
+  const gameMap = new GameMap({
+    animationSpeed: {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    autoPanning: false,
+    behavior: NullBehavior,
+    buildingSize: TileSize,
+    confirmActionStyle: 'never',
+    currentUserId: '2',
+    fogStyle: 'soft',
+    map,
+    playerAchievement: null,
+    playerDetails: new Map(),
+    scale: 1,
+    showCursor: false,
+    style: 'none',
+    tileSize: TileSize,
+    tilted: false,
+    unitSize: TileSize,
+  } satisfies Props) as unknown as TestGameMap;
+  installSynchronousSetState(gameMap);
+
+  const actionResponse = { from: vec(1, 1), type: 'CompleteUnit' } as const;
+  await gameMap._actions.processGameActionResponse({
+    others: [],
+    self: { actionResponse },
+  });
+
+  expect(gameMap.state.lastActionResponse).toBe(actionResponse);
+});
+
+test('a GameEnd response remains terminal when another response follows it', async () => {
+  vi.stubGlobal('window', {
+    innerHeight: 768,
+    innerWidth: 1024,
+  });
+
+  const [{ default: GameMap }, { default: processActionResponses }] = await Promise.all([
+    import('../GameMap.tsx'),
+    import('../action-response/processActionResponse.tsx'),
+  ]);
+  const gameMap = new GameMap({
+    animationSpeed: {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    autoPanning: false,
+    buildingSize: TileSize,
+    confirmActionStyle: 'never',
+    currentUserId: '2',
+    fogStyle: 'soft',
+    map,
+    playerAchievement: null,
+    playerDetails: new Map(),
+    scale: 1,
+    showCursor: false,
+    style: 'none',
+    tileSize: TileSize,
+    tilted: false,
+    unitSize: TileSize,
+  } satisfies Props) as unknown as TestGameMap;
+  installSynchronousSetState(gameMap);
+
+  const processActionResponsesMock = vi.mocked(processActionResponses);
+  processActionResponsesMock.mockReset();
+  processActionResponsesMock.mockImplementation(async (state) => state);
+
+  const gameEndActionResponse = { toPlayer: 1, type: 'GameEnd' } as const;
+  await gameMap._actions.processGameActionResponse({
+    others: [
+      { actionResponse: gameEndActionResponse },
+      { actionResponse: { player: 1, time: 30, type: 'SetPlayerTime' } },
+    ],
+    self: null,
+  });
+
+  expect(gameMap.state.behavior?.type).toBe('null');
+  expect(gameMap.state.lastActionResponse).toBe(gameEndActionResponse);
+  expect(gameMap.state.replayState.isLive).toBe(false);
+});

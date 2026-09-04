@@ -91,7 +91,7 @@ export default function useReplayGameState(replayState: ReplayStateWithViewer | 
         case 'gameActions': {
           if (map && vision) {
             const gameActionResponse = decodeGameActionResponse(entry.gameAction);
-            if (gameActionResponse?.others) {
+            if (gameActionResponse?.others?.length) {
               for (const entry of gameActionResponse.others) {
                 const { actionResponse } = entry;
                 map = updateVisibleEntities(

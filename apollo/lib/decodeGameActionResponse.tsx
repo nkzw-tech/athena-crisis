@@ -9,7 +9,7 @@ export default function decodeGameActionResponse(
   if (!Array.isArray(response)) {
     const type = response?.n;
     if (type === 'p' || type === 'r' || type === 'q') {
-      return { others: [], self: null, timeout: undefined };
+      return { others: undefined, self: null, timeout: undefined };
     }
 
     if (type === 'm') {
@@ -28,13 +28,13 @@ export default function decodeGameActionResponse(
 
   const [self, others] = response;
   return {
-    others:
-      others &&
-      others.map((otherResponse) => ({
-        actionResponse: decodeActionResponse(otherResponse[0]),
-        buildings: otherResponse[1] && decodeBuildings(otherResponse[1]),
-        units: otherResponse[2] && decodeUnits(otherResponse[2]),
-      })),
+    others: others?.length
+      ? others.map((otherResponse) => ({
+          actionResponse: decodeActionResponse(otherResponse[0]),
+          buildings: otherResponse[1] && decodeBuildings(otherResponse[1]),
+          units: otherResponse[2] && decodeUnits(otherResponse[2]),
+        }))
+      : undefined,
     self: self
       ? {
           actionResponse: decodeActionResponse(self[0]),

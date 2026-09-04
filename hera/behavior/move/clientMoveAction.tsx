@@ -1,4 +1,5 @@
 import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -39,7 +40,7 @@ export default function clientMoveAction(
 
             update({
               ...onComplete(await processGameActionResponse(gameActionResponse), actionResponse),
-              ...(gameActionResponse.others?.at(-1)?.actionResponse.type === 'GameEnd'
+              ...(gameHasEnded(gameActionResponse.others)
                 ? {
                     behavior: new NullBehavior(),
                   }

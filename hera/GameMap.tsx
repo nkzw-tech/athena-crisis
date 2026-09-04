@@ -1262,7 +1262,7 @@ export default class GameMap extends Component<Props, State> {
       }
 
       // No need to keep processing if there are no other action responses.
-      if (!others) {
+      if (!others?.length) {
         state = await this._updateTimeout(timeout);
 
         return new Promise((resolve) => {
@@ -1398,10 +1398,16 @@ export default class GameMap extends Component<Props, State> {
           this._resolvers = [];
           this._timers = new Set();
 
-          const lastActionResponse = gameActionResponses.at(-1)!.actionResponse;
+          const gameEndActionResponse = gameActionResponses.findLast(
+            ({ actionResponse }) => actionResponse.type === 'GameEnd',
+          )?.actionResponse;
+          const hasEnded = gameEndActionResponse?.type === 'GameEnd';
+          const lastActionResponse = hasEnded
+            ? gameEndActionResponse
+            : gameActionResponses.at(-1)!.actionResponse;
           const currentPlayer = this.state.map.getCurrentPlayer();
           const isLive =
-            lastActionResponse.type !== 'GameEnd' &&
+            !hasEnded &&
             (lastActionResponse.type !== 'EndTurn' ||
               lastActionResponse.next.player !== currentViewer) &&
             currentViewer !== currentPlayer.id;
@@ -1414,12 +1420,11 @@ export default class GameMap extends Component<Props, State> {
                 : null),
               ...(resetBehavior(this.props.behavior) as State),
               animationConfig: getCurrentAnimationConfig(currentPlayer, this.props.animationSpeed),
-              behavior:
-                lastActionResponse.type === 'GameEnd'
-                  ? new NullBehavior()
-                  : behavior
-                    ? new behavior()
-                    : new BaseBehavior(),
+              behavior: hasEnded
+                ? new NullBehavior()
+                : behavior
+                  ? new behavior()
+                  : new BaseBehavior(),
               lastActionResponse,
               position: !this._pointerEnabled ? this.state.previousPosition : null,
               preventRemoteActions: false,

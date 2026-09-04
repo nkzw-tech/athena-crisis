@@ -1,9 +1,15 @@
 import { ActionResponse } from '../ActionResponse.tsx';
+import { GameActionResponses } from '../Types.tsx';
 
 export default function gameHasEnded(
-  gameState: ReadonlyArray<readonly [ActionResponse, ...Array<unknown>]> | null,
+  responses:
+    | GameActionResponses
+    | ReadonlyArray<readonly [ActionResponse, ...Array<unknown>]>
+    | null
+    | undefined,
 ) {
-  return !!(
-    gameState?.length && gameState.some(([actionResponse]) => actionResponse.type === 'GameEnd')
+  return !!responses?.some(
+    (response) =>
+      ('actionResponse' in response ? response.actionResponse : response[0]).type === 'GameEnd',
   );
 }
