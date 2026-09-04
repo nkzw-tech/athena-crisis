@@ -6,6 +6,7 @@ import { ActionResponse } from '../ActionResponse.tsx';
 import { Effects } from '../Effects.tsx';
 import applyConditions from '../lib/applyConditions.tsx';
 import gameHasEnded from '../lib/gameHasEnded.tsx';
+import createSkillActionResponseMutator from '../lib/skillActionResponseMutator.tsx';
 import { GameState } from '../Types.tsx';
 
 type AIType = {
@@ -16,7 +17,7 @@ type AIType = {
 
 export type AIRegistryEntry = Readonly<{
   class: {
-    new (effects: Effects): AIType;
+    new (effects: Effects, mutateAction?: MutateActionResponseFn): AIType;
   };
   description: string;
   name: string;
@@ -30,6 +31,7 @@ export function executeAIAction(
   AIRegistry: AIRegistryT,
   effects: Effects,
   gameState: GameState = [],
+  mutateAction: MutateActionResponseFn = createSkillActionResponseMutator(false),
 ): [GameState, Effects] {
   let iterations = 0;
   const maxIterations = 100 * (activeMap?.active.length || 1);
@@ -38,7 +40,7 @@ export function executeAIAction(
     const player = activeMap.getCurrentPlayer();
     const AIClass = ((player.ai != null && AIRegistry.get(player.ai)) || AIRegistry.get(0))!.class;
 
-    const ai = new AIClass(effects);
+    const ai = new AIClass(effects, mutateAction);
     while (activeMap) {
       activeMap = ai.act(activeMap);
     }
@@ -81,8 +83,10 @@ export default async function executeGameAction(
   AIRegistry: AIRegistryT | null,
   mutateAction?: MutateActionResponseFn,
   onEndTurn?: (map: MapData) => Promise<GameState | null>,
+  hasPlayerActed = false,
 ): Promise<[ActionResponse, MapData, GameState, Effects] | [null, null, null, null]> {
-  const actionResult = execute(map, vision, action, mutateAction);
+  const skillMutateAction = createSkillActionResponseMutator(hasPlayerActed, mutateAction);
+  const actionResult = execute(map, vision, action, skillMutateAction);
   if (!actionResult) {
     return [null, null, null, null];
   }
@@ -116,7 +120,8 @@ export default async function executeGameAction(
   return [
     actionResponse,
     visibleActiveMap,
-    ...((shouldInvokeAI && executeAIAction(lastMap, AIRegistry, newEffects, gameState)) || [
+    ...((shouldInvokeAI &&
+      executeAIAction(lastMap, AIRegistry, newEffects, gameState, skillMutateAction)) || [
       gameState,
       newEffects,
     ]),

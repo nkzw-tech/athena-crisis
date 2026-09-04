@@ -30,6 +30,7 @@ const shouldConsiderUnitRatio = (skill: Skill) => {
     case Skill.DecreaseUnitCostAttackAndDefenseDecreaseMinor:
     case Skill.HighTide:
     case Skill.Shield:
+    case Skill.SkipTurnGainFunds:
       return false;
 
     case Skill.ArtilleryRangeIncrease:

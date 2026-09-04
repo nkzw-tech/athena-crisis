@@ -1,10 +1,23 @@
+import {
+  CompleteUnitAction,
+  MessageAction,
+} from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import {
+  executeAIAction,
+  AIRegistryEntry,
+  AIRegistryT,
+} from '@deities/apollo/actions/executeGameAction.tsx';
+import { House } from '@deities/athena/info/Building.tsx';
+import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { Infantry } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
 import snapshotGameState from '../../tests/snapshotGameState.tsx';
+import BaseAI from '../BaseAI.tsx';
 import DionysusAlpha from '../DionysusAlpha.tsx';
 
 type PrivateDionysusAlphaAttack = {
@@ -49,4 +62,74 @@ test('DionysusAlpha skips stale attack candidates when another unit occupies the
     Move (1,1 → 2,1) { fuel: 49, completed: null, path: [2,1], movementExhausted: null }
     AttackUnit (2,1 → 2,2) { hasCounterAttack: false, playerA: 2, playerB: 1, unitA: DryUnit { health: 100 }, unitB: null, chargeA: 115, chargeB: 200 }"
   `);
+});
+
+const initialSkillMap = MapData.createMap({
+  buildings: [[1, 1, House.create(1).toJSON()]],
+  map: [Plain.id, Plain.id],
+  size: { height: 1, width: 2 },
+  teams: [
+    { id: 1, name: '', players: [{ ai: 0, funds: 500, id: 1, name: 'AI' }] },
+    { id: 2, name: '', players: [{ funds: 500, id: 2, userId: '2' }] },
+  ],
+  units: [[2, 1, Infantry.create(1).toJSON()]],
+});
+
+const skillMap = initialSkillMap.copy({
+  teams: updatePlayer(
+    initialSkillMap.teams,
+    initialSkillMap.getPlayer(1).copy({ skills: new Set([Skill.SkipTurnGainFunds]) }),
+  ),
+});
+
+class MessageOnlyAI extends BaseAI {
+  private hasSentMessage = false;
+
+  protected action(map: MapData): MapData | null {
+    if (!this.hasSentMessage) {
+      this.hasSentMessage = true;
+      return this.execute(map, MessageAction('Hello!'));
+    }
+    return this.endTurn(map);
+  }
+}
+
+class ActingAI extends BaseAI {
+  private hasActed = false;
+
+  protected action(map: MapData): MapData | null {
+    if (!this.hasActed) {
+      this.hasActed = true;
+      return this.execute(map, CompleteUnitAction(vec(2, 1)));
+    }
+    return this.endTurn(map);
+  }
+}
+
+const createAIRegistry = (AI: AIRegistryEntry['class']): AIRegistryT =>
+  new Map([[0, { class: AI, description: 'Test', name: 'Test', published: true }]]);
+
+test('AI message-only turns receive the skipped-turn bonus', () => {
+  const [gameState] = executeAIAction(skillMap, createAIRegistry(MessageOnlyAI), new Map());
+  const endTurn = gameState.findLast(([actionResponse]) => actionResponse.type === 'EndTurn')?.[0];
+
+  expect(gameState.map(([actionResponse]) => actionResponse.type)).toEqual(['Message', 'EndTurn']);
+  expect(endTurn).toMatchObject({
+    current: { funds: 550, player: 1 },
+    type: 'EndTurn',
+  });
+});
+
+test('AI gameplay actions prevent the skipped-turn bonus', () => {
+  const [gameState] = executeAIAction(skillMap, createAIRegistry(ActingAI), new Map());
+  const endTurn = gameState.findLast(([actionResponse]) => actionResponse.type === 'EndTurn')?.[0];
+
+  expect(gameState.map(([actionResponse]) => actionResponse.type)).toEqual([
+    'CompleteUnit',
+    'EndTurn',
+  ]);
+  expect(endTurn).toMatchObject({
+    current: { funds: 500, player: 1 },
+    type: 'EndTurn',
+  });
 });

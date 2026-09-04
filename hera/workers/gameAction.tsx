@@ -11,7 +11,7 @@ import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { ClientGameActionRequest, ClientGameActionResponse } from './Types.tsx';
 
 self.onmessage = async (event: MessageEvent<ClientGameActionRequest>) => {
-  const [plainMap, encodedEffects, action, mutateAction] = event.data;
+  const [plainMap, encodedEffects, action, mutateAction, hasPlayerActed] = event.data;
   const map = MapData.fromObject(plainMap);
   const vision = map.createVisionObject(map.getCurrentPlayer());
   const effects = decodeEffects(encodedEffects);
@@ -27,6 +27,8 @@ self.onmessage = async (event: MessageEvent<ClientGameActionRequest>) => {
     decodeAction(action),
     AIRegistry,
     mutateAction ? ActionResponseMutator[mutateAction] : undefined,
+    undefined,
+    hasPlayerActed,
   );
 
   const message: ClientGameActionResponse | null =

@@ -16,4 +16,5 @@ export type ClientGameActionRequest = [
   encodedEffects: EncodedEffects,
   action: EncodedAction,
   mutateAction: MutateActionResponseFnName | undefined | null,
+  hasPlayerActed: boolean,
 ];

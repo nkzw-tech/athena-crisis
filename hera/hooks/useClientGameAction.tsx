@@ -11,6 +11,7 @@ import dropLabelsFromActionResponse from '@deities/apollo/lib/dropLabelsFromActi
 import { GameActionResponse, GameState } from '@deities/apollo/Types.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { getHiddenLabels } from '@deities/athena/Objectives.tsx';
+import hasPlayerActedThisTurn from '@deities/hermes/game/hasPlayerActedThisTurn.tsx';
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import captureException from '@deities/ui/lib/captureException.tsx';
@@ -82,6 +83,7 @@ export default function useClientGameAction(
               encodeEffects(game.effects),
               encodeAction(action),
               mutateAction,
+              hasPlayerActedThisTurn(game.turnState),
             ];
 
             const [encodedActionResponse, plainMap, encodedGameState, encodedEffects] =

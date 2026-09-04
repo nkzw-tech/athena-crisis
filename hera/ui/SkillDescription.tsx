@@ -32,6 +32,7 @@ import {
   PoisonSkillPowerDamageMultiplier,
   PowerStationSkillMultiplier,
   Skill,
+  SkipTurnGainFundsSkillMultiplier,
   TileMovementMap,
   VampireSkillHeal,
   VampireSoldierMovementTypes,
@@ -591,6 +592,13 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
             <UnitName color={color} unit={Scientist} />
           </fbt:param>{' '}
           by 5 attack points.
+        </fbt>
+      );
+    case Skill.SkipTurnGainFunds:
+      return (
+        <fbt desc="Additional skill description">
+          Gain <fbt:param name="value">{SkipTurnGainFundsSkillMultiplier * 100}</fbt:param>% of your
+          income when you end your turn without taking any actions.
         </fbt>
       );
   }

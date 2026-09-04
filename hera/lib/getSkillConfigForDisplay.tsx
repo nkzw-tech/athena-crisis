@@ -18,6 +18,7 @@ import Glasses from '@deities/ui/icons/Glasses.tsx';
 import Heart from '@deities/ui/icons/Heart.tsx';
 import SuperTank from '@deities/ui/icons/LabelAltMultiple.tsx';
 import Medal from '@deities/ui/icons/Medal.tsx';
+import MilkCarton from '@deities/ui/icons/MilkCarton.tsx';
 import Octopus from '@deities/ui/icons/Octopus.tsx';
 import Ogre from '@deities/ui/icons/Ogre.tsx';
 import Paw from '@deities/ui/icons/Paw.tsx';
@@ -445,6 +446,14 @@ export default function getSkillConfigForDisplay(skill: Skill): SkillConfig {
         colors: 'orange',
         icon: RadioSignal,
         name: fbt('Drone Swarm', 'Skill name'),
+      };
+    case Skill.SkipTurnGainFunds:
+      return {
+        alpha: 0.3,
+        borderStyle: 'coin',
+        colors: 'orange',
+        icon: MilkCarton,
+        name: fbt('Free Lunch', 'Skill name'),
       };
     default: {
       skill satisfies never;

@@ -62,6 +62,7 @@ export enum Skill {
   UnlockScientist = 46,
   BuyUnitHumveeAvenger = 47,
   BuyUnitDroneBomber = 48,
+  SkipTurnGainFunds = 49,
 }
 
 export const Skills = new Set<Skill>([
@@ -113,6 +114,7 @@ export const Skills = new Set<Skill>([
   Skill.AttackAndDefenseIncreaseHard,
   Skill.NoUnitRestrictions,
   Skill.BuyUnitZombieDefenseDecreaseMajor,
+  Skill.SkipTurnGainFunds,
 ]);
 
 export enum SkillGroup {
@@ -300,6 +302,7 @@ const skillConfig: Record<
     cost: 1000,
     group: SkillGroup.Attack,
   },
+  [Skill.SkipTurnGainFunds]: { cost: 600, group: SkillGroup.Special },
   [Skill.SpawnUnitInfernoJetpack]: {
     activateOnInvasion,
     charges: 5,
@@ -370,6 +373,7 @@ export const LowHealthZombieSkillConversion = 10;
 export const VampireSkillHeal = 10;
 export const ChargeSkillCharges = 2;
 export const ChargeSkillChargeMultiplier = 0.1;
+export const SkipTurnGainFundsSkillMultiplier = 0.5;
 
 type ID = number;
 type Modifier = number;
@@ -1457,6 +1461,7 @@ export function shouldUpgradeUnit(unit: Unit, skill: Skill) {
     case Skill.VampireHeal:
     case Skill.XFighterAttackIncrase:
     case Skill.BuyUnitHumveeAvenger:
+    case Skill.SkipTurnGainFunds:
       return false;
     default: {
       skill satisfies never;

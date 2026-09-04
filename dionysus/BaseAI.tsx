@@ -1,5 +1,5 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { Action, execute, MoveAction } from '@deities/apollo/Action.tsx';
+import { Action, execute, MoveAction, MutateActionResponseFn } from '@deities/apollo/Action.tsx';
 import { ActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import { Effects } from '@deities/apollo/Effects.tsx';
 import applyConditions from '@deities/apollo/lib/applyConditions.tsx';
@@ -38,7 +38,10 @@ export default abstract class BaseAI {
 
   protected vision: VisionT | null = null;
 
-  public constructor(private effects: Effects) {}
+  public constructor(
+    private effects: Effects,
+    private mutateAction?: MutateActionResponseFn,
+  ) {}
 
   protected getVision(map: MapData) {
     return this.vision || (this.vision = map.createVisionObject(map.currentPlayer));
@@ -49,7 +52,7 @@ export default abstract class BaseAI {
   }
 
   protected execute(map: MapData, action: Action): MapData | null {
-    const response = execute(map, this.getVision(map), action);
+    const response = execute(map, this.getVision(map), action, this.mutateAction);
     if (response) {
       this.appendActionResponse(response[0], map, response[1]);
       return this.gameState.at(-1)?.[1] || null;
