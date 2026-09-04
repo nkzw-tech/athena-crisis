@@ -214,9 +214,8 @@ export default function validateMap(
       return [null, 'invalid-size'];
     }
 
-    let invalidReason: string | null = null;
-    map.forEachField((_, index) => {
-      const field = map.map[index];
+    let invalidReason: ErrorReason | null = null;
+    for (const [index, field] of map.map.entries()) {
       const modifierField = map.modifiers[index];
       if (typeof field === 'number' && typeof modifierField !== 'number') {
         invalidReason = 'invalid-tiles';
@@ -237,13 +236,17 @@ export default function validateMap(
       ) {
         invalidReason = 'invalid-tiles';
       }
-    });
+      if (invalidReason) {
+        break;
+      }
+    }
 
-    map.forEachTile((_, tile, layer) => {
+    for (const [, tile, layer] of map.tiles()) {
       if (tile.style.layer !== layer) {
         invalidReason = 'invalid-tiles';
+        break;
       }
-    });
+    }
 
     if (invalidReason) {
       return [null, invalidReason];
@@ -259,32 +262,25 @@ export default function validateMap(
     }),
   );
 
-  if (
-    map.reduceEachTile(
-      (invalid, vector, tile) => invalid || !canPlaceTile(map, vector, tile),
-      false,
-    )
-  ) {
-    return [null, 'invalid-tiles'];
+  for (const [vector, tile] of map.tiles()) {
+    if (!canPlaceTile(map, vector, tile)) {
+      return [null, 'invalid-tiles'];
+    }
   }
 
-  if (
-    map.reduceEachDecorator(
-      (success, decorator, subVector) =>
-        !canPlaceDecorator(
-          map,
-          vec(
-            Math.floor((subVector.x - 1) / DecoratorsPerSide) + 1,
-            Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
-          ),
-          decorator.id,
-        )
-          ? true
-          : success,
-      false,
-    )
-  ) {
-    return [null, 'invalid-decorators'];
+  for (const [subVector, decorator] of map.decoratorEntries()) {
+    if (
+      !canPlaceDecorator(
+        map,
+        vec(
+          Math.floor((subVector.x - 1) / DecoratorsPerSide) + 1,
+          Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
+        ),
+        decorator.id,
+      )
+    ) {
+      return [null, 'invalid-decorators'];
+    }
   }
 
   map = filterByBiomeRestriction(map, !!hasContentRestrictions, skills);

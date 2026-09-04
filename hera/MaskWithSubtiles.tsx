@@ -22,36 +22,34 @@ export default memo(function MaskWithSubtiles({
   return useMemo(
     () => (
       <div className={cx(maskStyle, MaskPointerClassName)} ref={ref}>
-        {map
-          .mapFields((vector) => {
-            const list = [];
-            for (let x = 1; x <= DecoratorsPerSide; x++) {
-              for (let y = 1; y <= DecoratorsPerSide; y++) {
-                const subVector = vec(
-                  (vector.x - 1) * DecoratorsPerSide + x,
-                  (vector.y - 1) * DecoratorsPerSide + y,
-                );
-                list.push(
-                  <div
-                    className={maskClassName(vector)}
-                    key={String(subVector)}
-                    onClick={() => select(vector, subVector)}
-                    onPointerEnter={() => enter(vector, subVector, 'pointer')}
-                    style={{
-                      height: decoratorSize,
-                      left: (subVector.x - 1) * decoratorSize,
-                      position: 'absolute',
-                      top: (subVector.y - 1) * decoratorSize,
-                      width: decoratorSize,
-                      zIndex,
-                    }}
-                  />,
-                );
-              }
+        {Array.from(map.fields(), (vector) => {
+          const list = [];
+          for (let x = 1; x <= DecoratorsPerSide; x++) {
+            for (let y = 1; y <= DecoratorsPerSide; y++) {
+              const subVector = vec(
+                (vector.x - 1) * DecoratorsPerSide + x,
+                (vector.y - 1) * DecoratorsPerSide + y,
+              );
+              list.push(
+                <div
+                  className={maskClassName(vector)}
+                  key={String(subVector)}
+                  onClick={() => select(vector, subVector)}
+                  onPointerEnter={() => enter(vector, subVector, 'pointer')}
+                  style={{
+                    height: decoratorSize,
+                    left: (subVector.x - 1) * decoratorSize,
+                    position: 'absolute',
+                    top: (subVector.y - 1) * decoratorSize,
+                    width: decoratorSize,
+                    zIndex,
+                  }}
+                />,
+              );
             }
-            return list;
-          })
-          .flat()}
+          }
+          return list;
+        }).flat()}
       </div>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps

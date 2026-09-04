@@ -2,6 +2,7 @@ import { getDecorator } from '../info/Decorator.tsx';
 import { getDecoratorLimit } from '../map/Configuration.tsx';
 import Vector from '../map/Vector.tsx';
 import MapData from '../MapData.tsx';
+import reduceIterable from './reduceIterable.tsx';
 
 export default function canPlaceDecorator(
   map: MapData,
@@ -11,6 +12,6 @@ export default function canPlaceDecorator(
 ): boolean {
   return !!(
     getDecorator(decorator)?.placeOn.has(map.getTileInfo(vector)) &&
-    map.reduceEachDecorator((sum) => sum + 1, 0) < _getDecoratorLimit(map.size)
+    reduceIterable(map.decoratorEntries(), (sum) => sum + 1, 0) < _getDecoratorLimit(map.size)
   );
 }

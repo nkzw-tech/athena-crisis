@@ -3,6 +3,7 @@ import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx
 import { generateRandomMap } from '@deities/athena/generator/MapGenerator.tsx';
 import { Plain, TileInfo } from '@deities/athena/info/Tile.tsx';
 import convertBiome from '@deities/athena/lib/convertBiome.tsx';
+import reduceIterable from '@deities/athena/lib/reduceIterable.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
@@ -34,7 +35,8 @@ export default async function receiveBiomeAnimation(
 
   const map = convertBiome(withModifiers(generateRandomMap(new SizeVector(5, 5))), biome);
   const tiles = [
-    ...map.reduceEachField(
+    ...reduceIterable(
+      map.fields(),
       (field, vector) => field.add(map.getTileInfo(vector)),
       new Set<TileInfo>(),
     ),

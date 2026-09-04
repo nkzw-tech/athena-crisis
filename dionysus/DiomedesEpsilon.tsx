@@ -509,19 +509,19 @@ export default class DiomedesEpsilon extends BaseAI {
         return false;
       };
 
-      this._canBuildFundsBuildings =
-        check(exampleVector) ||
-        map.reduceEachField((canBuildFundsBuilding, vector) => {
-          if (canBuildFundsBuilding) {
-            return true;
+      this._canBuildFundsBuildings = check(exampleVector);
+      if (!this._canBuildFundsBuildings) {
+        for (const vector of map.fields()) {
+          if (
+            BuildableTiles.has(map.getTileInfo(vector)) &&
+            !map.buildings.get(vector) &&
+            check(vector)
+          ) {
+            this._canBuildFundsBuildings = true;
+            break;
           }
-
-          if (!BuildableTiles.has(map.getTileInfo(vector)) || map.buildings.get(vector)) {
-            return false;
-          }
-
-          return check(vector);
-        }, false);
+        }
+      }
     }
     return this._canBuildFundsBuildings;
   }
@@ -612,14 +612,18 @@ export default class DiomedesEpsilon extends BaseAI {
               productionBuildings.length && fundBuildings.length / 3 < productionBuildings.length;
 
             const radarBuilding = buildingInfos.find((info) => info.hasBehavior(Behavior.Radar));
+            const hasLightning = () => {
+              for (const vector of map.fields()) {
+                if (map.getTileInfo(vector) === Lightning) {
+                  return true;
+                }
+              }
+              return false;
+            };
             const shouldBuildRadar =
               radarBuilding &&
               !userBuildings.some((building) => building.info.hasBehavior(Behavior.Radar)) &&
-              map.reduceEachField(
-                (hasLightning, vector) =>
-                  map.getTileInfo(vector) === Lightning ? true : hasLightning,
-                false,
-              );
+              hasLightning();
             const info = shouldBuildRadar
               ? radarBuilding
               : sortBy(
@@ -1249,18 +1253,17 @@ export default class DiomedesEpsilon extends BaseAI {
     }
 
     const mapWithvision = this.applyVision(map);
-    const fields = map.reduceEachField<{
+    const fields: {
       off: Array<Vector>;
       on: Array<Vector>;
-    }>(
-      (fields, vector) =>
-        map.getTileInfo(vector) === Lightning
-          ? { ...fields, off: [...fields.off, vector] }
-          : mapWithvision.units.has(vector) && canPlaceLightning(map, vector)
-            ? { ...fields, on: [...fields.on, vector] }
-            : fields,
-      { off: [], on: [] },
-    );
+    } = { off: [], on: [] };
+    for (const vector of map.fields()) {
+      if (map.getTileInfo(vector) === Lightning) {
+        fields.off.push(vector);
+      } else if (mapWithvision.units.has(vector) && canPlaceLightning(map, vector)) {
+        fields.on.push(vector);
+      }
+    }
 
     if (fields.on.length) {
       return this.execute(map, ToggleLightningAction(from, fields.on[0]));

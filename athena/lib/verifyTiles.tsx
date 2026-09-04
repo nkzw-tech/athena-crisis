@@ -105,7 +105,7 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
 
   const newDecorators = map.decorators.slice();
   const decoratorSize = map.size.toDecoratorSizeVector();
-  map.forEachField((vector) => {
+  for (const vector of map.fields()) {
     for (let x = 1; x <= DecoratorsPerSide; x++) {
       for (let y = 1; y <= DecoratorsPerSide; y++) {
         const subVector = vec(
@@ -122,7 +122,7 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
         }
       }
     }
-  });
+  }
 
   return map.copy({
     decorators: newDecorators.slice(),
@@ -130,5 +130,5 @@ export default function verifyTiles(map: MapData, vectors: Set<Vector>) {
 }
 
 export function verifyMap(map: MapData) {
-  return verifyTiles(map, new Set(map.mapFields((vector) => vector)));
+  return verifyTiles(map, new Set(map.fields()));
 }

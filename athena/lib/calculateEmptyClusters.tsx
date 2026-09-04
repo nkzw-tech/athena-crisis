@@ -11,14 +11,12 @@ export default function calculateEmptyClusters(map: MapData) {
   );
   return calculateClusters(
     map.size,
-    map
-      .mapFields((vector) => vector)
-      .filter(
-        (vector) =>
-          !occupied.has(vector) &&
-          movementTypes.some(
-            (movementType) => map.getTileInfo(vector).getMovementCost({ movementType }) !== -1,
-          ),
-      ),
+    [...map.fields()].filter(
+      (vector) =>
+        !occupied.has(vector) &&
+        movementTypes.some(
+          (movementType) => map.getTileInfo(vector).getMovementCost({ movementType }) !== -1,
+        ),
+    ),
   );
 }

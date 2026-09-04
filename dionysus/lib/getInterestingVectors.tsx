@@ -58,11 +58,11 @@ export default function getInterestingVectors(
   }
 
   if (info.hasAbility(Ability.CreateBuildings)) {
-    map.forEachField((vector) => {
+    for (const vector of map.fields()) {
       if (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)) {
         vectors.push(vector);
       }
-    });
+    }
   }
 
   if (isInDanger) {

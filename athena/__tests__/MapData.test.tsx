@@ -1,5 +1,7 @@
 import { expect, test } from 'vitest';
 import map from '../../hermes/map-fixtures/they-are-close-to-home.tsx';
+import { Bush } from '../info/Decorator.tsx';
+import { DeepSea, Plain, StormCloud } from '../info/Tile.tsx';
 import { Pioneer } from '../info/Unit.tsx';
 import canDeploy from '../lib/canDeploy.tsx';
 import updatePlayer from '../lib/updatePlayer.tsx';
@@ -10,6 +12,47 @@ import vec from './../map/vec.tsx';
 
 const player1 = map.getPlayer(1);
 const player2 = map.getPlayer(2);
+
+test('iterates over fields in row-major order', () => {
+  const map = MapData.createMap({
+    map: [Plain.id, Plain.id, Plain.id, Plain.id],
+    size: { height: 2, width: 2 },
+  });
+
+  expect([...map.fields()]).toEqual([vec(1, 1), vec(2, 1), vec(1, 2), vec(2, 2)]);
+});
+
+test('iterates over every tile and layer', () => {
+  const map = MapData.createMap({
+    map: [Plain.id, [DeepSea.id, StormCloud.id]],
+    modifiers: [1, [2, 3]],
+    size: { height: 1, width: 2 },
+  });
+
+  expect([...map.tiles()]).toEqual([
+    [vec(1, 1), Plain, 0, 1, 0],
+    [vec(2, 1), DeepSea, 0, 2, 1],
+    [vec(2, 1), StormCloud, 1, 3, 1],
+  ]);
+});
+
+test('iterates over sparse decorator entries in row-major order', () => {
+  const map = MapData.createMap({
+    decorators: [
+      [8, 8, Bush.id],
+      [1, 2, Bush.id],
+    ],
+    map: [Plain.id, Plain.id, Plain.id, Plain.id],
+    size: { height: 2, width: 2 },
+  });
+
+  expect(
+    [...map.decoratorEntries()].map(([vector, decorator]) => [vector.toJSON(), decorator]),
+  ).toEqual([
+    [[1, 2], Bush],
+    [[8, 8], Bush],
+  ]);
+});
 
 test('serializing to JSON', () => {
   const json = JSON.stringify(map);

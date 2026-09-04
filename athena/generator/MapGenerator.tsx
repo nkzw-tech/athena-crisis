@@ -268,8 +268,9 @@ export function generateSea(map: MapData): MapData {
   const tiles = map.map.slice();
   if (random(0, 1)) {
     const queue: Array<Vector> = [];
-    map.forEachField((vector, index) => {
+    for (const vector of map.fields()) {
       if (isEdge(vector, map.size) && !map.buildings.has(vector)) {
+        const index = map.getTileIndex(vector);
         tiles[index] = seaTile;
         queue.push(
           ...vector
@@ -281,7 +282,7 @@ export function generateSea(map: MapData): MapData {
             }),
         );
       }
-    });
+    }
 
     const seen = new Set();
     while (queue.length) {
@@ -296,15 +297,14 @@ export function generateSea(map: MapData): MapData {
       }
     }
   } else {
-    const clusters = calculateClusters(map.size, [
-      ...map.reduceEachField((set, vector) => {
-        const tile = map.getTileInfo(vector);
-        if (tile && tile.type & TileTypes.Plain && !map.buildings.has(vector)) {
-          return set.add(vector);
-        }
-        return set;
-      }, new Set<Vector>()),
-    ]);
+    const fields = new Set<Vector>();
+    for (const vector of map.fields()) {
+      const tile = map.getTileInfo(vector);
+      if (tile && tile.type & TileTypes.Plain && !map.buildings.has(vector)) {
+        fields.add(vector);
+      }
+    }
+    const clusters = calculateClusters(map.size, [...fields]);
 
     const initialVector = clusters[0];
     const queue = [initialVector];
@@ -342,22 +342,22 @@ export function generateSea(map: MapData): MapData {
   }
 
   map = copyMap(map, tiles);
-  map.forEachField((vector) => {
+  for (const vector of map.fields()) {
     const index = map.getTileIndex(vector);
     if (!random(0, 4) && !map.buildings.has(vector) && canPlaceTile(map, vector, Reef)) {
       tiles[index] = [getTileInfo(tiles[index], 0).id, Reef.id];
       map = copyMap(map, tiles);
     }
-  });
+  }
 
   // These should be separate loops.
-  map.forEachField((vector) => {
+  for (const vector of map.fields()) {
     const index = map.getTileIndex(vector);
     if (!random(0, 2) && !map.buildings.has(vector) && canPlaceTile(map, vector, Beach)) {
       tiles[index] = Beach.id;
       map = copyMap(map, tiles);
     }
-  });
+  }
 
   return map;
 }

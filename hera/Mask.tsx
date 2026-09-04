@@ -185,7 +185,7 @@ export default memo(function Mask({
 
   return useMemo(() => {
     const defaultOffsets: Offsets = [0, 0, 0, 0, Priority.None];
-    let fields = map.mapFields<[Vector, Offsets]>((vector) => [
+    let fields = Array.from(map.fields(), (vector): [Vector, Offsets] => [
       vector,
       (expand &&
         getOffsets(map, currentViewer, vector, radius, attackable, messages, selectedPosition)) ||

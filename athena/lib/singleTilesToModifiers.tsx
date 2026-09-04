@@ -4,8 +4,7 @@ import { Modifier } from './Modifier.tsx';
 
 export function singleTilesToModifiers(map: MapData) {
   return map.copy({
-    modifiers: map.mapFields((_, index) => {
-      const tile = map.map[index];
+    modifiers: map.map.map((tile, index) => {
       if (
         getTile(tile, Bridge.style.layer) === Bridge.id ||
         getTile(tile, RailBridge.style.layer) === RailBridge.id

@@ -87,7 +87,7 @@ test('displays all units and all possible states correctly', async () => {
 
   // Fix up the map with the proper tiles below units.
   const newMap = map.map.slice();
-  map.forEachField((vector: Vector) => {
+  for (const vector of map.fields()) {
     const unit = map.units.get(vector);
     if (unit) {
       newMap[map.getTileIndex(vector)] = findTile((tile) =>
@@ -96,7 +96,7 @@ test('displays all units and all possible states correctly', async () => {
         ),
       )!.id;
     }
-  });
+  }
 
   const finalMap = map.copy({ map: newMap });
 

@@ -5,7 +5,6 @@ import { verifyMap } from '@deities/athena/lib/verifyTiles.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
-import { PlainEntitiesList } from '@deities/athena/map/PlainMap.tsx';
 import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -40,25 +39,30 @@ export default function resizeMap(
     size,
     fillTile && fillTile.type & TileTypes.Area ? [fillTile] : null,
   );
-  const tiles = map.reduceEachField((tiles, vector, index) => {
-    vector = new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY);
-    if (randomMap.contains(vector)) {
-      tiles[randomMap.getTileIndex(vector)] = map.map[index];
+  const tiles = randomMap.map.slice();
+  for (const vector of map.fields()) {
+    const resizedVector = new SpriteVector(vector.x, vector.y).left(offsetX).up(offsetY);
+    if (randomMap.contains(resizedVector)) {
+      tiles[randomMap.getTileIndex(resizedVector)] = map.map[map.getTileIndex(vector)];
     }
-    return tiles;
-  }, randomMap.map.slice());
+  }
 
-  const decorators = map.reduceEachDecorator((decorators, decorator, subVector) => {
-    subVector = subVector.left(offsetX * DecoratorsPerSide).up(offsetY * DecoratorsPerSide);
-    return randomMap.contains(
-      new SpriteVector(
-        Math.floor((subVector.x - 1) / DecoratorsPerSide) + 1,
-        Math.floor((subVector.y - 1) / DecoratorsPerSide) + 1,
-      ),
-    )
-      ? [...decorators, [subVector.x, subVector.y, decorator.id] as const]
-      : decorators;
-  }, [] as PlainEntitiesList<Decorator>);
+  const decorators: Array<readonly [number, number, Decorator]> = [];
+  for (const [subVector, decorator] of map.decoratorEntries()) {
+    const resizedSubVector = subVector
+      .left(offsetX * DecoratorsPerSide)
+      .up(offsetY * DecoratorsPerSide);
+    if (
+      randomMap.contains(
+        new SpriteVector(
+          Math.floor((resizedSubVector.x - 1) / DecoratorsPerSide) + 1,
+          Math.floor((resizedSubVector.y - 1) / DecoratorsPerSide) + 1,
+        ),
+      )
+    ) {
+      decorators.push([resizedSubVector.x, resizedSubVector.y, decorator.id]);
+    }
+  }
 
   const objectives = map.config.objectives.map((objective) =>
     objectiveHasVectors(objective)

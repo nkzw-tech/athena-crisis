@@ -5,6 +5,7 @@ import { MovementType } from '@deities/athena/info/MovementType.tsx';
 import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo, Weapon } from '@deities/athena/info/Unit.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
+import reduceIterable from '@deities/athena/lib/reduceIterable.tsx';
 import BuildingT from '@deities/athena/map/Building.tsx';
 import type { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Entity from '@deities/athena/map/Entity.tsx';
@@ -136,192 +137,197 @@ const MapComponent = ({
       <Decorators map={map} paused={paused} tileSize={tileSize} />
       {renderEntities && (
         <Tick animationConfig={animationConfig} paused={paused}>
-          {map.reduceEachField<Array<ReactElement>>((list, vector) => {
-            const animation = animations?.get(vector);
-            const building = map.buildings.get(vector);
-            const message = messages?.get(vector);
-            const unit = map.units.get(vector);
-            const extraUnit = extraUnits?.get(vector);
-            const vectorKey = String(vector);
-            const isExplored = vision.isExplored(map, vector);
-            const isVisible = vision.isVisible(map, vector);
-            const isSelected = selectedPosition?.equals(vector);
-            const hasRadius = radius?.fields.has(vector);
-            const outline =
-              (unit || building || extraUnit) &&
-              !!(
-                radius &&
-                ((hasRadius &&
-                  (radius.type === RadiusType.Attackable ||
-                    radius.type === RadiusType.Sabotage ||
-                    radius.type === RadiusType.Defense ||
-                    radius.type === RadiusType.Rescue ||
-                    radius.type === RadiusType.Highlight)) ||
-                  (attackable?.has(vector) && !hasRadius))
-              );
+          {reduceIterable(
+            map.fields(),
+            (list: Array<ReactElement>, vector) => {
+              const animation = animations?.get(vector);
+              const building = map.buildings.get(vector);
+              const message = messages?.get(vector);
+              const unit = map.units.get(vector);
+              const extraUnit = extraUnits?.get(vector);
+              const vectorKey = String(vector);
+              const isExplored = vision.isExplored(map, vector);
+              const isVisible = vision.isVisible(map, vector);
+              const isSelected = selectedPosition?.equals(vector);
+              const hasRadius = radius?.fields.has(vector);
+              const outline =
+                (unit || building || extraUnit) &&
+                !!(
+                  radius &&
+                  ((hasRadius &&
+                    (radius.type === RadiusType.Attackable ||
+                      radius.type === RadiusType.Sabotage ||
+                      radius.type === RadiusType.Defense ||
+                      radius.type === RadiusType.Rescue ||
+                      radius.type === RadiusType.Highlight)) ||
+                    (attackable?.has(vector) && !hasRadius))
+                );
 
-            if (building && isExplored) {
-              const up = vector.up();
-              const hasUnitAbove =
-                (building.info.sprite.size === 'medium' || building.info.sprite.size === 'tall') &&
-                vision.isVisible(map, up) &&
-                (map.units.has(up) || extraUnits?.has(up));
-              list.push(
-                <Building
-                  absolute
-                  animation={isBuildingAnimation(animation) ? animation : undefined}
-                  animationConfig={animationConfig}
-                  biome={map.config.biome}
-                  building={building}
-                  fade={hasUnitAbove || (radius && hasRadius && radius.fields.has(up))}
-                  highlight={!!(isSelected && selectedBuilding)}
-                  isVisible={isVisible}
-                  key={`b${vectorKey}`}
-                  maybeOutline={outline || (hasRadius && radius?.type === RadiusType.Attackable)}
-                  outline={
-                    !!(
-                      outline &&
-                      (!radius.focus || radius.focus === 'building') &&
-                      (!selectedUnit || canAttackEntity(building))
-                    )
-                  }
-                  position={vector}
-                  requestFrame={requestFrame}
-                  scheduleTimer={scheduleTimer}
-                  size={tileSize}
-                  zIndex={getLayer(vector.y, 'building')}
-                />,
-              );
-            }
+              if (building && isExplored) {
+                const up = vector.up();
+                const hasUnitAbove =
+                  (building.info.sprite.size === 'medium' ||
+                    building.info.sprite.size === 'tall') &&
+                  vision.isVisible(map, up) &&
+                  (map.units.has(up) || extraUnits?.has(up));
+                list.push(
+                  <Building
+                    absolute
+                    animation={isBuildingAnimation(animation) ? animation : undefined}
+                    animationConfig={animationConfig}
+                    biome={map.config.biome}
+                    building={building}
+                    fade={hasUnitAbove || (radius && hasRadius && radius.fields.has(up))}
+                    highlight={!!(isSelected && selectedBuilding)}
+                    isVisible={isVisible}
+                    key={`b${vectorKey}`}
+                    maybeOutline={outline || (hasRadius && radius?.type === RadiusType.Attackable)}
+                    outline={
+                      !!(
+                        outline &&
+                        (!radius.focus || radius.focus === 'building') &&
+                        (!selectedUnit || canAttackEntity(building))
+                      )
+                    }
+                    position={vector}
+                    requestFrame={requestFrame}
+                    scheduleTimer={scheduleTimer}
+                    size={tileSize}
+                    zIndex={getLayer(vector.y, 'building')}
+                  />,
+                );
+              }
 
-            if (isExplored) {
-              list.push(
-                <TileDecorators
-                  getLayer={getLayer}
-                  isVisible={isVisible}
-                  key={`d${vectorKey}`}
-                  map={map}
-                  radius={radius}
-                  tileSize={tileSize}
-                  vector={vector}
-                  vision={vision}
-                />,
-              );
-            }
+              if (isExplored) {
+                list.push(
+                  <TileDecorators
+                    getLayer={getLayer}
+                    isVisible={isVisible}
+                    key={`d${vectorKey}`}
+                    map={map}
+                    radius={radius}
+                    tileSize={tileSize}
+                    vector={vector}
+                    vision={vision}
+                  />,
+                );
+              }
 
-            if (message && isExplored) {
-              list.push(
-                <MessageTile
-                  absolute
-                  animation={animation?.type === 'new-message' ? animation : undefined}
-                  distance={position ? vector.distance(position) : null}
-                  isValuable={message.isValuable}
-                  key={`m-${vectorKey}`}
-                  onAnimationComplete={onAnimationComplete}
-                  player={
-                    playerDetails
-                      ? getMessagePlayer(message.user, message.player, playerDetails)
-                      : message.player
-                  }
-                  position={vector}
-                  scheduleTimer={scheduleTimer}
-                  size={tileSize}
-                  zIndex={getLayer(vector.y, 'message')}
-                />,
-              );
-            }
+              if (message && isExplored) {
+                list.push(
+                  <MessageTile
+                    absolute
+                    animation={animation?.type === 'new-message' ? animation : undefined}
+                    distance={position ? vector.distance(position) : null}
+                    isValuable={message.isValuable}
+                    key={`m-${vectorKey}`}
+                    onAnimationComplete={onAnimationComplete}
+                    player={
+                      playerDetails
+                        ? getMessagePlayer(message.user, message.player, playerDetails)
+                        : message.player
+                    }
+                    position={vector}
+                    scheduleTimer={scheduleTimer}
+                    size={tileSize}
+                    zIndex={getLayer(vector.y, 'message')}
+                  />,
+                );
+              }
 
-            if (extraUnit && isVisible) {
-              list.push(
-                <Unit
-                  absolute
-                  animationConfig={animationConfig}
-                  biome={biome}
-                  dim={unit ? 'flip' : 'dim'}
-                  firstPlayerID={map.getFirstPlayerID()}
-                  getLayer={getLayer}
-                  key={`eu${extraUnit.id}-${vectorKey}`}
-                  onAnimationComplete={onAnimationComplete}
-                  position={vector}
-                  requestFrame={requestFrame}
-                  scheduleTimer={scheduleTimer}
-                  size={tileSize}
-                  tile={map.getTileInfo(vector)}
-                  unit={extraUnit}
-                />,
-              );
-            }
+              if (extraUnit && isVisible) {
+                list.push(
+                  <Unit
+                    absolute
+                    animationConfig={animationConfig}
+                    biome={biome}
+                    dim={unit ? 'flip' : 'dim'}
+                    firstPlayerID={map.getFirstPlayerID()}
+                    getLayer={getLayer}
+                    key={`eu${extraUnit.id}-${vectorKey}`}
+                    onAnimationComplete={onAnimationComplete}
+                    position={vector}
+                    requestFrame={requestFrame}
+                    scheduleTimer={scheduleTimer}
+                    size={tileSize}
+                    tile={map.getTileInfo(vector)}
+                    unit={extraUnit}
+                  />,
+                );
+              }
 
-            if (
-              unit &&
-              (isVisible || animation?.type === 'move' || animation?.type === 'unitExplosion')
-            ) {
-              const outlineUnit = outline && (!radius.focus || radius.focus === 'unit');
-              const power = matchesActiveType(activeUnitTypes.get(unit.player), unit, vector);
-              list.push(
-                <Unit
-                  absolute
-                  animation={isUnitAnimation(animation) ? animation : undefined}
-                  animationConfig={animationConfig}
-                  animationKey={vector}
-                  biome={biome}
-                  customSprite={playerDetails
-                    ?.get(unit.player)
-                    ?.equippedUnitCustomizations.get(unit.id)}
-                  direction={animation?.type === 'explosion' ? animation.direction : undefined}
-                  firstPlayerID={map.getFirstPlayerID()}
-                  getLayer={getLayer}
-                  highlightStyle={
-                    isSelected && selectedUnit
-                      ? behavior?.type === 'menu' || behavior?.type === 'null'
-                        ? behavior?.type === 'null'
-                          ? 'idle-null'
-                          : 'idle'
-                        : 'move'
-                      : outlineUnit && radius.type === RadiusType.Highlight
-                        ? 'idle'
-                        : undefined
-                  }
-                  key={`u${unit.id}-${vectorKey}`}
-                  maybeOutline={
-                    !!(
-                      outline ||
-                      (hasRadius &&
-                        radius &&
-                        (radius.type === RadiusType.Defense ||
-                          radius.type === RadiusType.Rescue ||
-                          radius.type === RadiusType.Attackable ||
-                          radius.type === RadiusType.Sabotage))
-                    )
-                  }
-                  onAnimationComplete={onAnimationComplete}
-                  outline={
-                    outlineUnit
-                      ? radius.type === RadiusType.Defense
-                        ? 'defense'
-                        : radius.type === RadiusType.Rescue
-                          ? 'rescue'
-                          : radius.type === RadiusType.Sabotage
-                            ? 'sabotage'
-                            : radius.type !== RadiusType.Highlight
-                              ? canAttackEntity(unit)
-                                ? 'attack'
+              if (
+                unit &&
+                (isVisible || animation?.type === 'move' || animation?.type === 'unitExplosion')
+              ) {
+                const outlineUnit = outline && (!radius.focus || radius.focus === 'unit');
+                const power = matchesActiveType(activeUnitTypes.get(unit.player), unit, vector);
+                list.push(
+                  <Unit
+                    absolute
+                    animation={isUnitAnimation(animation) ? animation : undefined}
+                    animationConfig={animationConfig}
+                    animationKey={vector}
+                    biome={biome}
+                    customSprite={playerDetails
+                      ?.get(unit.player)
+                      ?.equippedUnitCustomizations.get(unit.id)}
+                    direction={animation?.type === 'explosion' ? animation.direction : undefined}
+                    firstPlayerID={map.getFirstPlayerID()}
+                    getLayer={getLayer}
+                    highlightStyle={
+                      isSelected && selectedUnit
+                        ? behavior?.type === 'menu' || behavior?.type === 'null'
+                          ? behavior?.type === 'null'
+                            ? 'idle-null'
+                            : 'idle'
+                          : 'move'
+                        : outlineUnit && radius.type === RadiusType.Highlight
+                          ? 'idle'
+                          : undefined
+                    }
+                    key={`u${unit.id}-${vectorKey}`}
+                    maybeOutline={
+                      !!(
+                        outline ||
+                        (hasRadius &&
+                          radius &&
+                          (radius.type === RadiusType.Defense ||
+                            radius.type === RadiusType.Rescue ||
+                            radius.type === RadiusType.Attackable ||
+                            radius.type === RadiusType.Sabotage))
+                      )
+                    }
+                    onAnimationComplete={onAnimationComplete}
+                    outline={
+                      outlineUnit
+                        ? radius.type === RadiusType.Defense
+                          ? 'defense'
+                          : radius.type === RadiusType.Rescue
+                            ? 'rescue'
+                            : radius.type === RadiusType.Sabotage
+                              ? 'sabotage'
+                              : radius.type !== RadiusType.Highlight
+                                ? canAttackEntity(unit)
+                                  ? 'attack'
+                                  : undefined
                                 : undefined
-                              : undefined
-                      : undefined
-                  }
-                  position={vector}
-                  power={power}
-                  requestFrame={requestFrame}
-                  scheduleTimer={scheduleTimer}
-                  size={tileSize}
-                  tile={map.getTileInfo(vector)}
-                  unit={unit}
-                />,
-              );
-            }
-            return list;
-          }, [])}
+                        : undefined
+                    }
+                    position={vector}
+                    power={power}
+                    requestFrame={requestFrame}
+                    scheduleTimer={scheduleTimer}
+                    size={tileSize}
+                    tile={map.getTileInfo(vector)}
+                    unit={unit}
+                  />,
+                );
+              }
+              return list;
+            },
+            [],
+          )}
         </Tick>
       )}
       <Fog

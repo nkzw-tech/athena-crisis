@@ -271,9 +271,9 @@ const drawVeilEdges = (
   const primaryEdgeSize = 1;
   const secondaryEdgeSize = 1;
 
-  map.forEachField((vector: Vector) => {
+  for (const vector of map.fields()) {
     if (vision.getVisibility(map, vector) !== Visibility.Unexplored) {
-      return;
+      continue;
     }
 
     const x = offset + (vector.x - 1) * size;
@@ -367,7 +367,7 @@ const drawVeilEdges = (
         context.fillRect(innerX, innerY, innerWidth, innerHeight);
       }
     }
-  });
+  }
 };
 
 const drawExplorationShroud = (
@@ -389,12 +389,12 @@ const drawExplorationShroud = (
 
   const path = new Path2D();
   let hasUnexploredFields = false;
-  map.forEachField((vector: Vector) => {
+  for (const vector of map.fields()) {
     if (vision.getVisibility(map, vector) === Visibility.Unexplored) {
       hasUnexploredFields = true;
       path.rect(offset + (vector.x - 1) * size, offset + (vector.y - 1) * size, size, size);
     }
-  });
+  }
 
   for (let x = 0; x <= map.size.width + 1; x++) {
     for (let y = 0; y <= map.size.height + 1; y++) {
@@ -466,12 +466,12 @@ const getMistPath = (map: MapData, offset: number, size: number, vision: VisionT
   const path = new Path2D();
   let hasFogFields = false;
 
-  map.forEachField((vector: Vector) => {
+  for (const vector of map.fields()) {
     if (getMistVisibility(map, vector, vision)) {
       hasFogFields = true;
       path.rect(offset + (vector.x - 1) * size, offset + (vector.y - 1) * size, size, size);
     }
-  });
+  }
 
   return hasFogFields ? path : null;
 };
@@ -673,7 +673,7 @@ const drawFog = (
 
   const scale = (value: number) => Math.round(value / SoftFogScale);
 
-  map.forEachField((vector: Vector) => {
+  for (const vector of map.fields()) {
     if (vision.getVisibility(map, vector) === Visibility.Visible) {
       const x = SoftFogPadding + scale(offset + (vector.x - 1) * size);
       const y = SoftFogPadding + scale(offset + (vector.y - 1) * size);
@@ -687,7 +687,7 @@ const drawFog = (
         0,
       );
     }
-  });
+  }
 
   const hardAlpha = fogStyle === 'hard' ? alpha.slice() : null;
   const blurredAlpha = blurAlpha(alpha, width, height, SoftFogBlurRadius, SoftFogBlurPasses);

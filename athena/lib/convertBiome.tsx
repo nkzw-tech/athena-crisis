@@ -27,13 +27,13 @@ export default function convertBiome(map: MapData, biome: Biome) {
   const newMap = map.map.slice();
   const newModifiers = map.modifiers.slice();
 
-  map.forEachTile((vector, tile, layer) => {
+  for (const [vector, tile, layer] of map.tiles()) {
     const reversedTile = reversedConversions.get(tile);
     let newTile = reversedTile || tile;
     const toTile = toBiome.tileConversions?.get(newTile);
     newTile = toTile || newTile;
     writeTile(newMap, newModifiers, map.getTileIndex(vector), newTile, layer);
-  });
+  }
 
   map = verifyMap(withModifiers(map.copy({ map: newMap, modifiers: newModifiers })));
 

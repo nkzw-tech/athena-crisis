@@ -1,12 +1,6 @@
 import { spriteImage } from '@deities/art/Sprites.tsx';
 import { Shelter } from '@deities/athena/info/Building.tsx';
-import {
-  Campsite,
-  getFloatingEdgeAnimation,
-  getTileInfo,
-  TileInfo,
-  TileLayer,
-} from '@deities/athena/info/Tile.tsx';
+import { Campsite, getFloatingEdgeAnimation, getTileInfo } from '@deities/athena/info/Tile.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getFloatingEdgeModifier from '@deities/athena/lib/getFloatingEdgeModifier.tsx';
 import indexToVector from '@deities/athena/lib/indexToVector.tsx';
@@ -93,7 +87,7 @@ export default memo(function Tiles({
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    map.forEachTile((vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number) => {
+    for (const [vector, tile, , modifier] of map.tiles()) {
       renderTile(
         context,
         tileset,
@@ -106,7 +100,7 @@ export default memo(function Tiles({
         size,
         renderEntities,
       );
-    });
+    }
 
     const floatingTiles = new Map<Vector, ModifierField>();
     if (style === 'floating') {

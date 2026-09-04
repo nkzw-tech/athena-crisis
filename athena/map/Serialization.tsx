@@ -128,10 +128,11 @@ export function encodeTeams(teams: Teams): ReadonlyArray<PlainTeam> {
 export const formatTeams = encodeTeams;
 
 export function encodeDecorators(map: MapData): PlainEntitiesList<Decorator> {
-  return map.reduceEachDecorator(
-    (list, decorator, vector) => [...list, [vector.x, vector.y, decorator.id]],
-    [] as PlainEntitiesList<Decorator>,
-  );
+  return Array.from(map.decoratorEntries(), ([vector, decorator]) => [
+    vector.x,
+    vector.y,
+    decorator.id,
+  ]);
 }
 
 export function encodeEntities<

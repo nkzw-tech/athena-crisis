@@ -521,10 +521,9 @@ export default function getModifier(
 
 export function getAllModifiers(map: MapData): ModifierMap {
   const modifiers = Array(map.map.length);
-  map.forEachTile((vector, tile, layer) => {
-    const index = map.getTileIndex(vector);
+  for (const [vector, tile, layer, , index] of map.tiles()) {
     const modifier = getModifier(map, vector, tile, layer);
     modifiers[index] = layer === 1 ? [modifiers[index], modifier] : modifier;
-  });
+  }
   return modifiers;
 }

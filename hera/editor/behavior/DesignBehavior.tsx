@@ -21,6 +21,7 @@ import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getDecoratorIndex from '@deities/athena/lib/getDecoratorIndex.tsx';
 import maybeCreatePlayers from '@deities/athena/lib/maybeCreatePlayers.tsx';
 import mergeTeams from '@deities/athena/lib/mergeTeams.tsx';
+import reduceIterable from '@deities/athena/lib/reduceIterable.tsx';
 import verifyTiles from '@deities/athena/lib/verifyTiles.tsx';
 import Building from '@deities/athena/map/Building.tsx';
 import { getDecoratorLimit } from '@deities/athena/map/Configuration.tsx';
@@ -733,7 +734,7 @@ export default class DesignBehavior {
           ).size >= building.info.configuration.limit) ||
         (decorator &&
           !decoratorCanBePlaced &&
-          map.reduceEachDecorator((sum) => sum + 1, 0) >= decoratorLimit);
+          reduceIterable(map.decoratorEntries(), (sum) => sum + 1, 0) >= decoratorLimit);
       const limit = building ? building.info.configuration.limit : decoratorLimit;
 
       return (

@@ -11,14 +11,13 @@ export default function getTeleportTarget(map: MapData, unit: Unit, to: Vector) 
     return null;
   }
 
-  const list = clockwiseSort(
-    map.reduceEachTile<Array<Vector>>((vectors, vector, tile) => {
-      if (tile === tileInfo) {
-        vectors.push(vector);
-      }
-      return vectors;
-    }, []),
-  ).toReversed();
+  const vectors: Array<Vector> = [];
+  for (const [vector, tile] of map.tiles()) {
+    if (tile === tileInfo) {
+      vectors.push(vector);
+    }
+  }
+  const list = clockwiseSort(vectors).toReversed();
 
   const index = list.findIndex((vector) => vector.equals(to));
   const nextTile = index === -1 ? null : index === list.length - 1 ? list[0] : list[index + 1];

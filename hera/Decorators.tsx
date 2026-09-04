@@ -69,7 +69,7 @@ export default memo(function Decorators({
     const currentTick = getTick();
     const animatedDecorators = new Map<Vector, DecoratorInfo>();
     const clearableVectors = new Set<Vector>();
-    map.forEachDecorator((decorator, vector) => {
+    for (const [vector, decorator] of map.decoratorEntries()) {
       renderDecorator(
         context,
         image,
@@ -87,7 +87,7 @@ export default memo(function Decorators({
           clearableVectors.add(vector);
         }
       }
-    });
+    }
 
     if (!paused && isVisible && animatedDecorators.size) {
       return tick((tick) => {
@@ -105,7 +105,9 @@ export default memo(function Decorators({
         };
 
         if (clearableVectors.size) {
-          map.forEachDecorator(render);
+          for (const [vector, decorator] of map.decoratorEntries()) {
+            render(decorator, vector);
+          }
         } else {
           animatedDecorators.forEach(render);
         }

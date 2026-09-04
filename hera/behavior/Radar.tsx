@@ -24,15 +24,16 @@ export default class Radar {
   activate(state: State) {
     if (this.radarType) {
       const { map } = state;
-      const fields = new Map(
-        map.reduceEachField<Array<[Vector, RadiusItem]>>((fields, vector) => {
-          const tile = map.getTileInfo(vector);
-          return (this.radarType === 'off' && tile === Lightning) ||
-            (this.radarType === 'on' && canPlaceLightning(map, vector))
-            ? [...fields, [vector, RadiusItem(vector)]]
-            : fields;
-        }, []),
-      );
+      const fields = new Map<Vector, RadiusItem>();
+      for (const vector of map.fields()) {
+        const tile = map.getTileInfo(vector);
+        if (
+          (this.radarType === 'off' && tile === Lightning) ||
+          (this.radarType === 'on' && canPlaceLightning(map, vector))
+        ) {
+          fields.set(vector, RadiusItem(vector));
+        }
+      }
 
       return {
         radius: {
@@ -65,14 +66,17 @@ export default class Radar {
       let canEnableLightning = false;
       let canDisableLightning = false;
 
-      map.forEachField((vector) => {
+      for (const vector of map.fields()) {
         const tile = map.getTileInfo(vector);
         if (tile === Lightning) {
           canDisableLightning = true;
         } else if (canPlaceLightning(map, vector)) {
           canEnableLightning = true;
         }
-      });
+        if (canDisableLightning && canEnableLightning) {
+          break;
+        }
+      }
 
       return (
         <ActionWheel

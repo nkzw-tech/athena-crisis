@@ -66,6 +66,14 @@ export type TileMap = ReadonlyArray<TileField>;
 export type ModifierField = Modifier | [Modifier, Modifier];
 export type ModifierMap = ReadonlyArray<ModifierField>;
 export type DecoratorMap = ReadonlyArray<Decorator>;
+export type TileEntry = readonly [
+  vector: Vector,
+  tile: TileInfo,
+  layer: TileLayer,
+  modifier: number,
+  index: number,
+];
+export type DecoratorEntry = readonly [vector: Vector, decorator: DecoratorInfo];
 
 const nullPlayer = new HumanPlayer(
   0,
@@ -379,107 +387,39 @@ export default class MapData {
     });
   }
 
-  mapFields<T>(fn: (vector: Vector, index: number) => T): Array<T> {
-    return this.reduceEachField<Array<T>>((array, vector, index) => {
-      array.push(fn(vector, index));
-      return array;
-    }, []);
-  }
-
-  forEachField(fn: (vector: Vector, index: number) => void) {
-    this.reduceEachField<void>((_, vector, index) => fn(vector, index), void 0);
-  }
-
-  reduceEachField<T>(fn: (value: T, vector: Vector, index: number) => T, value: T): T {
+  *fields(): IterableIterator<Vector> {
     const { map, size } = this;
-    for (let i = 0; i < map.length; i++) {
-      value = fn.call(this, value, indexToVector(i, size.width), i);
+    for (let index = 0; index < map.length; index++) {
+      yield indexToVector(index, size.width);
     }
-    return value;
   }
 
-  forEachTile(
-    fn: (vector: Vector, tile: TileInfo, layer: TileLayer, modifier: number, index: number) => void,
-  ) {
-    this.reduceEachTile<void>(
-      (_, vector, tile, layer, modifier, index) => fn(vector, tile, layer, modifier, index),
-      void 0,
-    );
-  }
-
-  reduceEachTile<T>(
-    fn: (
-      value: T,
-      vector: Vector,
-      tile: TileInfo,
-      layer: TileLayer,
-      modifier: number,
-      index: number,
-    ) => T,
-    value: T,
-  ): T {
+  *tiles(): IterableIterator<TileEntry> {
     const { map, modifiers, size } = this;
-    for (let i = 0; i < map.length; i++) {
-      const field = map[i];
+    for (let index = 0; index < map.length; index++) {
+      const field = map[index];
+      const vector = indexToVector(index, size.width);
       if (typeof field === 'number') {
-        value = fn.call(
-          this,
-          value,
-          indexToVector(i, size.width),
-          getTileInfo(field),
-          0,
-          modifiers[i] as number,
-          i,
-        );
+        yield [vector, getTileInfo(field), 0, modifiers[index] as number, index];
       } else {
-        const modifier = modifiers[i];
+        const modifier = modifiers[index];
         const [modifier0, modifier1] = (typeof modifier === 'number'
           ? [modifier, 0]
           : modifier) || [0, 0];
-        value = fn.call(
-          this,
-          value,
-          indexToVector(i, size.width),
-          getTileInfo(field[0]),
-          0,
-          modifier0,
-          i,
-        );
-        value = fn.call(
-          this,
-          value,
-          indexToVector(i, size.width),
-          getTileInfo(field[1]),
-          1,
-          modifier1,
-          i,
-        );
+        yield [vector, getTileInfo(field[0]), 0, modifier0, index];
+        yield [vector, getTileInfo(field[1]), 1, modifier1, index];
       }
     }
-    return value;
   }
 
-  forEachDecorator(fn: (decorator: DecoratorInfo, vector: Vector) => void) {
-    this.reduceEachDecorator<void>((_, decorator, vector) => fn(decorator, vector), void 0);
-  }
-
-  reduceEachDecorator<T>(
-    fn: (value: T, decorator: DecoratorInfo, vector: Vector) => T,
-    value: T,
-  ): T {
+  *decoratorEntries(): IterableIterator<DecoratorEntry> {
     const { decorators, size } = this;
-    for (let i = 0; i < decorators.length; i++) {
-      const decorator = getDecorator(decorators[i]);
+    for (let index = 0; index < decorators.length; index++) {
+      const decorator = getDecorator(decorators[index]);
       if (decorator) {
-        value = fn.call(
-          this,
-          value,
-          decorator,
-          indexToSpriteVector(i, size.width * DecoratorsPerSide),
-        );
+        yield [indexToSpriteVector(index, size.width * DecoratorsPerSide), decorator];
       }
     }
-    return value;
   }
 
   copy({

@@ -32,11 +32,11 @@ export default function getInterestingVectorsByAbilities(
   }
 
   if (canCreateBuildUnits) {
-    map.forEachField((vector) => {
+    for (const vector of map.fields()) {
       if (BuildableTiles.has(map.getTileInfo(vector)) && !map.buildings.has(vector)) {
         vectors.push(vector);
       }
-    });
+    }
   }
 
   for (const [, objective] of map.config.objectives) {
