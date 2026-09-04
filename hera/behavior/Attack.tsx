@@ -93,7 +93,7 @@ export default class Attack {
       const radius = {
         fields: attackable,
         locked: confirm,
-        path: first ? [first] : null,
+        path: null,
         type: RadiusType.Attackable,
       };
       return {
