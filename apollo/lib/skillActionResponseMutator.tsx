@@ -3,14 +3,15 @@ import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { MutateActionResponseFn } from '../Action.tsx';
 import { ActionResponse } from '../ActionResponse.tsx';
+import isPlayerAction from './isPlayerAction.tsx';
 
 const applySkipTurnGetFunds = (
   map: MapData,
   actionResponse: ActionResponse,
-  lastAction: ActionResponse | null,
+  hasPlayerActed: boolean,
 ): ActionResponse => {
   if (
-    (lastAction?.type !== 'EndTurn' && lastAction?.type !== 'Start') ||
+    hasPlayerActed ||
     actionResponse.type !== 'EndTurn' ||
     actionResponse.miss ||
     !map.getCurrentPlayer().skills.has(Skill.SkipTurnGainFunds)
@@ -27,23 +28,23 @@ const applySkipTurnGetFunds = (
         ...actionResponse,
         current: {
           ...actionResponse.current,
-          funds: actionResponse.current.funds + bonus,
+          funds: Math.min(Number.MAX_SAFE_INTEGER, actionResponse.current.funds + bonus),
         },
       }
     : actionResponse;
 };
 
 export default function createSkillActionResponseMutator(
-  hasPlayerActed: boolean,
+  hasCurrentPlayerActed: boolean,
   mutateAction?: MutateActionResponseFn,
 ): MutateActionResponseFn {
-  let lastAction: ActionResponse | null = hasPlayerActed ? null : { type: 'Start' };
+  let hasPlayerActed = hasCurrentPlayerActed;
   let lastPlayer: MapData['currentPlayer'] | null = null;
   let mutateNextAction = mutateAction;
 
   return (map, initialActionResponse) => {
     if (lastPlayer != null && lastPlayer !== map.currentPlayer) {
-      lastAction = { type: 'Start' };
+      hasPlayerActed = false;
     }
     lastPlayer = map.currentPlayer;
     const actionResponse = mutateNextAction
@@ -51,10 +52,10 @@ export default function createSkillActionResponseMutator(
       : initialActionResponse;
     mutateNextAction = undefined;
 
-    const result = applySkipTurnGetFunds(map, actionResponse, lastAction);
+    const result = applySkipTurnGetFunds(map, actionResponse, hasPlayerActed);
 
-    if (actionResponse.type !== 'Message') {
-      lastAction = actionResponse;
+    if (isPlayerAction(actionResponse)) {
+      hasPlayerActed = true;
     }
 
     return result;

@@ -20,6 +20,11 @@ const map = MapData.createMap({
 const effects: Effects = new Map();
 const message: ActionResponse = { message: 'Hello!', type: 'Message' };
 const automaticResponse: ActionResponse = { from: vec(1, 1), type: 'CompleteBuilding' };
+const generatedResponses: ReadonlyArray<ActionResponse> = [
+  { charges: 1, player: 1, type: 'IncreaseCharge' },
+  { funds: 100, player: 1, type: 'IncreaseFunds' },
+  { player: 1, time: 60, type: 'SetPlayerTime' },
+];
 const gameplayAction: ActionResponse = { from: vec(1, 1), type: 'CompleteUnit' };
 
 const createTurnState = (
@@ -32,6 +37,15 @@ test('a player has not acted when the turn has no actions', () => {
 
 test('messages and their automatic responses do not count as acting', () => {
   const turnState = createTurnState([[[message, automaticResponse], effects]]);
+
+  expect(hasPlayerActedThisTurn(turnState)).toBe(false);
+  expect(hasPlayerActedThisTurn(encodeTurnState(turnState))).toBe(false);
+});
+
+test('game-generated responses do not count as acting', () => {
+  const turnState = createTurnState(
+    generatedResponses.map((actionResponse) => [[actionResponse], effects]),
+  );
 
   expect(hasPlayerActedThisTurn(turnState)).toBe(false);
   expect(hasPlayerActedThisTurn(encodeTurnState(turnState))).toBe(false);

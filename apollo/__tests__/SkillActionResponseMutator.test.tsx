@@ -45,6 +45,20 @@ test('SkipTurnGetFunds does not grant funds after the player has acted', () => {
   );
 });
 
+test('SkipTurnGetFunds does not exceed the maximum safe fund amount', () => {
+  const maximumFundsMap = map.copy({
+    teams: updatePlayer(map.teams, map.getPlayer(1).copy({ funds: Number.MAX_SAFE_INTEGER })),
+  });
+  const maximumFundsEndTurnActionResponse: EndTurnActionResponse = {
+    ...endTurnActionResponse,
+    current: { funds: Number.MAX_SAFE_INTEGER, player: 1 },
+  };
+
+  expect(
+    createSkillActionResponseMutator(false)(maximumFundsMap, maximumFundsEndTurnActionResponse),
+  ).toEqual(maximumFundsEndTurnActionResponse);
+});
+
 test('SkipTurnGetFunds does not grant funds when a turn times out', () => {
   expect(
     createSkillActionResponseMutator(false, timeoutActionResponseMutator)(
