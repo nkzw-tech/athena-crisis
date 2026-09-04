@@ -17,7 +17,7 @@ import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { isHumanPlayer, PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
 import { sortByVectorKey } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
-import { moveable, RadiusItem } from '@deities/athena/Radius.tsx';
+import { moveable } from '@deities/athena/Radius.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import UnknownTypeError from '@nkzw/core/UnknownTypeError.js';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -43,6 +43,7 @@ import {
 } from '../behavior/attack/hiddenAttackActions.tsx';
 import buySkillAction from '../behavior/buySkill/buySkillAction.tsx';
 import captureAction from '../behavior/capture/captureAction.tsx';
+import characterMessageAction from '../behavior/characterMessage/characterMessageAction.tsx';
 import {
   addCreateBuildingAnimation,
   animateCreateBuilding,
@@ -58,7 +59,6 @@ import { toggleLightningAnimation } from '../behavior/radar/toggleLightningActio
 import rescueAction from '../behavior/rescue/rescueAction.tsx';
 import sabotageAction, { addSabotageAnimation } from '../behavior/sabotage/sabotageAction.tsx';
 import unfoldAction from '../behavior/unfold/unfoldAction.tsx';
-import translateMessage from '../i18n/translateMessage.tsx';
 import abandonInvasion from '../lib/abandonInvasion.tsx';
 import addEndTurnAnimations from '../lib/addEndTurnAnimations.tsx';
 import addPlayerLoseAnimation from '../lib/addPlayerLoseAnimation.tsx';
@@ -71,7 +71,6 @@ import isSkillRewardActionResponse from '../lib/isSkillRewardActionResponse.tsx'
 import sleep from '../lib/sleep.tsx';
 import spawn from '../lib/spawn.tsx';
 import startGameAnimation from '../lib/startGameAnimation.tsx';
-import { RadiusType } from '../Radius.tsx';
 import { Actions, AnimationSpeed, PlayerHasRewardFunction, State } from '../Types.tsx';
 import ActionResponseError from './ActionResponseError.tsx';
 
@@ -261,50 +260,19 @@ async function processActionResponse(
       }));
       break;
     case 'CharacterMessage': {
-      const { player: dynamicPlayer, silhouette, unitId, variant } = actionResponse;
-      const player = resolveDynamicPlayerID(map, dynamicPlayer);
-      if (player !== messageState.lastPlayerId || unitId !== messageState.lastUnitId) {
+      const { player, unitId } = actionResponse;
+      const resolvedPlayer = resolveDynamicPlayerID(map, player);
+      if (resolvedPlayer !== messageState.lastPlayerId || unitId !== messageState.lastUnitId) {
         messageState.count += 1;
       }
-      messageState.lastPlayerId = player;
+      messageState.lastPlayerId = resolvedPlayer;
       messageState.lastUnitId = unitId;
-
-      const position =
-        !silhouette &&
-        map.units.findKey(
-          (unit) =>
-            unit.id === unitId &&
-            (player === 0 || unit.isLeader()) &&
-            map.matchesPlayer(unit, player),
-        );
-
-      await update((state) => ({
-        animations: state.animations.set(new AnimationKey(), {
-          map,
-          onComplete: (state) => {
-            resolve({ ...state, highlightedPositions: null, radius: null });
-            return null;
-          },
-          player,
-          position: messageState.count % 2 ? 'top' : 'bottom',
-          silhouette: silhouette ?? false,
-          text: translateMessage(actionResponse),
-          type: 'characterMessage',
-          unitId,
-          variant,
-          viewer: state.currentViewer || undefined,
-        }),
-        highlightedPositions: position ? [position] : null,
-        radius: position
-          ? {
-              fields: new Map([[position, RadiusItem(position)]]),
-              focus: 'unit',
-              path: null,
-              type: RadiusType.Highlight,
-            }
-          : null,
-      }));
-      break;
+      return characterMessageAction(
+        actions,
+        state,
+        actionResponse,
+        messageState.count % 2 ? 'top' : 'bottom',
+      );
     }
     case 'Message':
       return { ...state, map: newMap };

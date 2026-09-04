@@ -51,7 +51,7 @@ const createMap = (withPioneer = false) =>
       { id: 1, name: 'One', players: [{ funds: 100, id: 1, userId: 'User-1' }] },
       { id: 2, name: 'Two', players: [{ funds: 100, id: 2, userId: 'User-2' }] },
     ],
-    units: withPioneer ? [[position.x, position.y, Pioneer.create(1).toJSON()]] : [],
+    units: withPioneer ? [[position.x, position.y, Pioneer.create(1).withName(-1).toJSON()]] : [],
   });
 
 const applyStateLike = (state: State, stateLike: StateLike | null): State =>
@@ -118,6 +118,15 @@ const process = (state: State, actions: Actions, actionResponse: ActionResponse)
     undefined,
   );
 
+const completeAnimation = async (testGame: ReturnType<typeof createTestGame>) => {
+  const [animationPosition, animation] = testGame.getState().animations.entries().next().value!;
+  const stateWithoutAnimation = {
+    ...testGame.getState(),
+    animations: testGame.getState().animations.delete(animationPosition),
+  };
+  await testGame.update(animation.onComplete?.(stateWithoutAnimation) || null);
+};
+
 describe.each([
   ['Rescue', { player: 1, to: target, type: 'Rescue' }],
   ['Heal with a source', { from: position, to: target, type: 'Heal' }],
@@ -178,6 +187,54 @@ test.each([
   },
 );
 
+test('CharacterMessage responses retain their placement, highlighting, and sequencing', async () => {
+  const testGame = createTestGame(createMap(true));
+  const responses = ['First message', 'Second message'].map((message, index) => ({
+    actionResponse: {
+      message,
+      player: 'self',
+      type: 'CharacterMessage',
+      unitId: Pioneer.id + index,
+      variant: 0,
+    } as const,
+  }));
+  const promise = processActionResponses(
+    testGame.getState(),
+    testGame.actions,
+    responses,
+    {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    () => false,
+    undefined,
+  );
+
+  await vi.waitFor(() => expect(testGame.getState().animations.size).toBe(1));
+  let animation = testGame.getState().animations.values().next().value!;
+  expect(animation).toMatchObject({
+    position: 'top',
+    text: 'First message',
+    type: 'characterMessage',
+  });
+  expect(testGame.getState().highlightedPositions).toEqual([position]);
+  await completeAnimation(testGame);
+
+  await vi.waitFor(() => {
+    animation = testGame.getState().animations.values().next().value!;
+    expect(animation).toMatchObject({
+      position: 'bottom',
+      text: 'Second message',
+      type: 'characterMessage',
+    });
+  });
+  await completeAnimation(testGame);
+
+  await expect(promise).resolves.toEqual(
+    expect.objectContaining({ highlightedPositions: null, radius: null }),
+  );
+});
+
 test('CreateTracks settles only after its animation completes', async () => {
   const testGame = createTestGame(createMap(true));
   const actionResponse = { from: position, type: 'CreateTracks' } as const;
@@ -198,11 +255,7 @@ test('CreateTracks settles only after its animation completes', async () => {
   expect(testGame.getState().map.getTileInfo(position)).toBe(RailTrack);
   expect(settled).toBe(false);
 
-  const stateWithoutAnimation = {
-    ...testGame.getState(),
-    animations: testGame.getState().animations.delete(position),
-  };
-  await testGame.update(animation.onComplete?.(stateWithoutAnimation) || null);
+  await completeAnimation(testGame);
 
   await expect(promise).resolves.toEqual(expect.objectContaining({ map: testGame.getState().map }));
   expect(settled).toBe(true);
@@ -220,16 +273,12 @@ test('a draw settles when its banner completes', async () => {
   await vi.waitFor(() => expect(testGame.getState().animations.size).toBe(1));
   expect(settled).toBe(false);
 
-  const [animationPosition, animation] = testGame.getState().animations.entries().next().value!;
+  const animation = testGame.getState().animations.values().next().value!;
   expect(animation.type).toBe('banner');
   if (animation.type !== 'banner') {
     throw new Error('Expected a banner animation.');
   }
-  const stateWithoutAnimation = {
-    ...testGame.getState(),
-    animations: testGame.getState().animations.delete(animationPosition),
-  };
-  await testGame.update(animation.onComplete?.(stateWithoutAnimation) || null);
+  await completeAnimation(testGame);
 
   await expect(promise).resolves.toEqual(expect.objectContaining({ map: testGame.getState().map }));
   expect(settled).toBe(true);
