@@ -1134,11 +1134,10 @@ export default class GameMap extends Component<Props, State> {
       }
 
       const [actionResponse, newMap] = actionResult;
-      const remoteAction =
-        onAction?.(action).catch((error) => {
-          this._throwError(error);
-          return { self: null };
-        }) || Promise.resolve({ self: { actionResponse } });
+      const remoteAction = onAction?.(action) || Promise.resolve({ self: { actionResponse } });
+      // Some behaviors wait for their animation to finish before awaiting the response.
+      // Mark an early rejection as handled while preserving it for the behavior's error handler.
+      void remoteAction.catch(() => {});
       return [remoteAction, newMap, actionResponse];
     } catch (error) {
       this._throwError(error as Error);
@@ -1149,7 +1148,7 @@ export default class GameMap extends Component<Props, State> {
 
   private _optimisticAction = (state: State, action: Action): ActionResponse => {
     const [remoteAction, , actionResponse] = this._action(state, action);
-    remoteAction.then(this.processGameActionResponse);
+    remoteAction.then(this.processGameActionResponse).catch(this._throwError);
     return actionResponse;
   };
 

@@ -41,7 +41,7 @@ export function addCreateBuildingAnimation(
   const { building, from } = actionResponse;
   if (state.vision.getVisibility(state.map, from) === Visibility.Unexplored) {
     actions.requestFrame(async () =>
-      actions.update(onComplete(await handleRemoteAction(actions, remoteAction))),
+      actions.update(onComplete(await handleRemoteAction(actions, remoteAction, 'CreateBuilding'))),
     );
 
     return {
@@ -55,7 +55,9 @@ export function addCreateBuildingAnimation(
     animations: state.animations.set(from, {
       onComplete: (state) => {
         actions.requestFrame(async () =>
-          actions.update(onComplete(await handleRemoteAction(actions, remoteAction))),
+          actions.update(
+            onComplete(await handleRemoteAction(actions, remoteAction, 'CreateBuilding')),
+          ),
         );
 
         return {

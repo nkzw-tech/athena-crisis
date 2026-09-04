@@ -1,9 +1,9 @@
 import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { RadiusItem } from '@deities/athena/Radius.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
 import clientMoveAction from './clientMoveAction.tsx';
+import type { OnCompleteMoveAction } from './clientMoveAction.tsx';
 
 export default function moveAction(
   actions: Actions,
@@ -11,7 +11,7 @@ export default function moveAction(
   to: Vector,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
+  onComplete: OnCompleteMoveAction,
   path: ReadonlyArray<Vector> | null,
   realPosition: Vector = from,
   partial?: boolean,

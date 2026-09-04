@@ -1,11 +1,13 @@
+import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
 import { expect, test, vi } from 'vitest';
+import handleRemoteAction from '../behavior/handleRemoteAction.tsx';
 import type { Animation, Animations } from '../MapAnimations.tsx';
-import type { Props, State, StateLike, UpdateFunction } from '../Types.tsx';
+import type { Actions, Props, State, StateLike, UpdateFunction } from '../Types.tsx';
 
 vi.mock('@deities/ui/AudioPlayer.tsx', () => ({
   default: {
@@ -99,6 +101,7 @@ const map = MapData.createMap({
 
 type TestGameMap = {
   _actions: {
+    action: Actions['action'];
     processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
     scheduleTimer: (fn: () => void, delay: number) => Promise<number>;
     update: UpdateFunction;
@@ -110,6 +113,52 @@ type TestGameMap = {
   ) => void;
   state: State;
 };
+
+test('a rejected action is reported once by its behavior', async () => {
+  vi.stubGlobal('window', {
+    innerHeight: 768,
+    innerWidth: 1024,
+  });
+
+  const [{ default: GameMap }, { default: NullBehavior }] = await Promise.all([
+    import('../GameMap.tsx'),
+    import('../behavior/NullBehavior.tsx'),
+  ]);
+  const error = new Error('Remote action failed.');
+  const onError = vi.fn();
+  const gameMap = new GameMap({
+    animationSpeed: {
+      human: InstantAnimationConfig,
+      regular: InstantAnimationConfig,
+    },
+    autoPanning: false,
+    behavior: NullBehavior,
+    buildingSize: TileSize,
+    confirmActionStyle: 'never',
+    currentUserId: '2',
+    fogStyle: 'soft',
+    map,
+    onAction: () => Promise.reject(error),
+    onError,
+    playerAchievement: null,
+    playerDetails: new Map(),
+    scale: 1,
+    showCursor: false,
+    style: 'none',
+    tileSize: TileSize,
+    tilted: false,
+    unitSize: TileSize,
+  } satisfies Props) as unknown as TestGameMap;
+  installSynchronousSetState(gameMap);
+
+  const [remoteAction] = gameMap._actions.action(gameMap.state, EndTurnAction());
+  await expect(
+    handleRemoteAction(gameMap._actions as unknown as Actions, remoteAction, 'EndTurn'),
+  ).resolves.toBe(gameMap.state);
+
+  expect(onError).toHaveBeenCalledOnce();
+  expect(onError).toHaveBeenCalledWith(error);
+});
 
 function installSynchronousSetState(gameMap: TestGameMap) {
   let isUpdating = false;

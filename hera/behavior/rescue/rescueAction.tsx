@@ -26,7 +26,9 @@ export default function rescueAction(
         ? {
             animations: state.animations.set(position, {
               onComplete: () => {
-                requestFrame(async () => resolve(await handleRemoteAction(actions, remoteAction)));
+                requestFrame(async () =>
+                  resolve(await handleRemoteAction(actions, remoteAction, 'Rescue')),
+                );
 
                 return {
                   map: newMap,

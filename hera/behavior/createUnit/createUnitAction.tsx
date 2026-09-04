@@ -23,7 +23,9 @@ export default async function createUnitAction(
         animations: addMoveAnimation(state.animations, {
           from: to.equals(from) ? new SpriteVector(from.x, from.y - 0.5) : from,
           onComplete: (state: State): StateLike => {
-            requestFrame(async () => resolve(await handleRemoteAction(actions, remoteAction)));
+            requestFrame(async () =>
+              resolve(await handleRemoteAction(actions, remoteAction, 'CreateUnit')),
+            );
             return {
               ...state,
               map: applyActionResponse(state.map, state.vision, actionResponse),

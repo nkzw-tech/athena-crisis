@@ -24,7 +24,9 @@ export default async function captureAction(
         animations: state.animations.set(position, {
           direction: UpAttackDirection,
           onComplete: (state) => {
-            requestFrame(async () => resolve(await handleRemoteAction(actions, remoteAction)));
+            requestFrame(async () =>
+              resolve(await handleRemoteAction(actions, remoteAction, 'Capture')),
+            );
             return {
               ...state,
               map: applyActionResponse(state.map, state.vision, actionResponse),

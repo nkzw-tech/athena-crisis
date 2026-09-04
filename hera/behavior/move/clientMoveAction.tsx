@@ -1,4 +1,5 @@
 import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
+import expectSelfActionResponse from '@deities/apollo/lib/expectSelfActionResponse.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
@@ -9,6 +10,12 @@ import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
+export type OnCompleteMoveAction = (
+  state: State,
+  actionResponse: MoveActionResponse,
+  gameActionResponse: GameActionResponse,
+) => StateLike | null;
+
 export default function clientMoveAction(
   { processGameActionResponse, throwError, update }: Actions,
   remoteAction: Promise<GameActionResponse>,
@@ -18,7 +25,7 @@ export default function clientMoveAction(
   initialPath: ReadonlyArray<Vector> | null | undefined,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
+  onComplete: OnCompleteMoveAction,
   realPosition: Vector = from,
   partial?: boolean,
 ): StateLike {
@@ -31,15 +38,14 @@ export default function clientMoveAction(
       onComplete: (state) => {
         remoteAction
           .then(async (gameActionResponse) => {
-            const actionResponse = gameActionResponse.self?.actionResponse;
-            if (actionResponse?.type !== 'Move') {
-              throw new Error(
-                `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
-              );
-            }
+            const actionResponse = expectSelfActionResponse(gameActionResponse, 'Move');
 
             update({
-              ...onComplete(await processGameActionResponse(gameActionResponse), actionResponse),
+              ...onComplete(
+                await processGameActionResponse(gameActionResponse),
+                actionResponse,
+                gameActionResponse,
+              ),
               ...(gameHasEnded(gameActionResponse.others)
                 ? {
                     behavior: new NullBehavior(),

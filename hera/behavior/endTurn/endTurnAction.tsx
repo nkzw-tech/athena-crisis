@@ -1,27 +1,28 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { EndTurnActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
+import expectSelfActionResponse from '@deities/apollo/lib/expectSelfActionResponse.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import getActionResponseVectors from '@deities/apollo/lib/getActionResponseVectors.tsx';
-import { GameActionResponse } from '@deities/apollo/Types.tsx';
 import addEndTurnAnimations from '../../lib/addEndTurnAnimations.tsx';
 import { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
-const getEndTurnActionResponse = (
-  gameActionResponse: GameActionResponse,
-): EndTurnActionResponse | null => {
-  const actionResponse = gameActionResponse.self?.actionResponse;
-  return actionResponse?.type === 'EndTurn' ? actionResponse : null;
-};
-
 export default async function endTurnAction(actions: Actions, state: State) {
-  const { action, processGameActionResponse, update } = actions;
+  const { action, processGameActionResponse, throwError, update } = actions;
   const { map } = state;
   const [remoteAction, newMap, actionResponse] = action(state, EndTurnAction());
   if (actionResponse.type === 'EndTurn') {
+    const remoteEndTurnAction = remoteAction
+      .then((gameActionResponse) => ({
+        actionResponse: expectSelfActionResponse(gameActionResponse, 'EndTurn'),
+        gameActionResponse,
+      }))
+      .catch((error) => {
+        throwError(error as Error);
+        return null;
+      });
     const { current, next } = actionResponse;
     // Use this map as the base for `applyActionResponse` so that mutations during the
     // end turn animations don't affect the final result.
@@ -39,14 +40,14 @@ export default async function endTurnAction(actions: Actions, state: State) {
         actions,
         actionResponse,
         state,
-        remoteAction.then(
-          (gameActionResponse) => getEndTurnActionResponse(gameActionResponse)?.supply || null,
-        ),
+        remoteEndTurnAction.then((result) => result?.actionResponse.supply || null),
         (state) => {
-          remoteAction.then(async (gameActionResponse) => {
+          remoteEndTurnAction.then(async (result) => {
+            if (!result) {
+              return;
+            }
+            const { actionResponse: endTurnActionResponse, gameActionResponse } = result;
             const hasEnded = gameHasEnded(gameActionResponse.others);
-            const endTurnActionResponse =
-              getEndTurnActionResponse(gameActionResponse) || actionResponse;
             await update({
               ...state,
               map: applyActionResponse(

@@ -1,8 +1,10 @@
+import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import getAttackableEntitiesInRange from '@deities/athena/lib/getAttackableEntitiesInRange.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import getParentToMoveTo from '@deities/athena/lib/getParentToMoveTo.tsx';
 import getPathFields from '@deities/athena/lib/getPathFields.tsx';
+import { isBuilding } from '@deities/athena/map/Entity.tsx';
 import type Entity from '@deities/athena/map/Entity.tsx';
 import isPlayable from '@deities/athena/map/isPlayable.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
@@ -79,12 +81,17 @@ const moveAndAttack = (
           target,
           fields,
           state,
-          (state, actionResponse) => {
+          (state, actionResponse, gameActionResponse) => {
+            const hasSwap = gameActionResponse.others?.some(
+              ({ actionResponse }) => actionResponse.type === 'Swap',
+            );
             // If the action was blocked by another unit, do not attempt an attack.
             if (
               actionResponse.completed ||
+              !actionResponse.from.equals(from) ||
               !actionResponse.to.equals(target) ||
-              state.lastActionResponse?.type !== 'Move'
+              hasSwap ||
+              gameHasEnded(gameActionResponse.others)
             ) {
               return {
                 ...state,
@@ -92,19 +99,37 @@ const moveAndAttack = (
               };
             }
 
-            const newUnit = state.map.units.get(target);
-            if (newUnit) {
+            const newUnit = state.map.units.get(actionResponse.to);
+            const entities = newUnit
+              ? getAttackableEntities(attackTarget, {
+                  ...state,
+                  attackable: getAttackableEntitiesInRange(
+                    state.map,
+                    actionResponse.to,
+                    state.vision,
+                  ),
+                  selectedPosition: actionResponse.to,
+                  selectedUnit: newUnit,
+                })
+              : null;
+            const finalTarget = isBuilding(entityB) ? entities?.building : entities?.unit;
+            if (newUnit && finalTarget) {
               Promise.resolve().then(async () => {
                 if (!unitA.info.sprite.attackStance) {
                   await sleep(actions.scheduleTimer, state.animationConfig, 'short');
                 }
-                attackAction(actions, target, newUnit, attackTarget, entityB, state);
+                attackAction(actions, actionResponse.to, newUnit, attackTarget, finalTarget, state);
               });
+              return {
+                ...state,
+                selectedPosition: actionResponse.to,
+                selectedUnit: newUnit,
+              };
             }
+
             return {
               ...state,
-              selectedPosition: actionResponse.to,
-              selectedUnit: state.map.units.get(actionResponse.to),
+              ...resetBehavior(),
             };
           },
           (shouldUseLastVector && path) || getMovementPath(map, target, fields, null).path,
@@ -355,13 +380,16 @@ export default class Move {
               vector,
               radius.fields,
               state,
-              (state, actionResponse) => {
-                const [target, newUnit] =
-                  state.lastActionResponse?.type === 'Swap'
-                    ? [state.lastActionResponse.target, state.lastActionResponse.sourceUnit]
-                    : [actionResponse.to, state.map.units.get(actionResponse.to)];
+              (state, actionResponse, gameActionResponse) => {
+                const hasSwap = gameActionResponse.others?.some(
+                  ({ actionResponse }) => actionResponse.type === 'Swap',
+                );
+                const target = actionResponse.to;
+                const newUnit = !hasSwap && state.map.units.get(target);
 
-                return newUnit &&
+                return actionResponse.from.equals(selectedPosition) &&
+                  !gameHasEnded(gameActionResponse.others) &&
+                  newUnit &&
                   !newUnit.isCompleted() &&
                   // Only select the unit if it is owned by the player.
                   // If there is a unit on that tile not owned by the player,

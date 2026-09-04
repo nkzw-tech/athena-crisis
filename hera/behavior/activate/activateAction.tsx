@@ -74,6 +74,6 @@ export default async function activateAction(
         ? clientActivatePowerAction(actions, state, actionResponse)
         : clientActivateCrystalAction(actions, actionResponse))),
     });
-    await handleRemoteAction(actions, remoteAction);
+    await handleRemoteAction(actions, remoteAction, actionResponse.type);
   }
 }

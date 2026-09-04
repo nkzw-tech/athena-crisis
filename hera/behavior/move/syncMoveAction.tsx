@@ -1,6 +1,6 @@
 import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { MoveActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import expectSelfActionResponse from '@deities/apollo/lib/expectSelfActionResponse.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -13,6 +13,7 @@ import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
 import { Actions, State, StateLike } from '../../Types.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 import clientMoveAction from './clientMoveAction.tsx';
+import type { OnCompleteMoveAction } from './clientMoveAction.tsx';
 import moveAction from './moveAction.tsx';
 
 const completeUnit = (map: MapData, vision: VisionT, from: Vector) =>
@@ -48,7 +49,7 @@ export default function syncMoveAction(
   to: Vector,
   fields: ReadonlyMap<Vector, RadiusItem>,
   state: State,
-  onComplete: (state: State, actionResponse: MoveActionResponse) => StateLike | null,
+  onComplete: OnCompleteMoveAction,
   _path: ReadonlyArray<Vector> | null,
   // Here for compatibility with `moveAction`.
   _?: unknown,
@@ -77,14 +78,15 @@ export default function syncMoveAction(
     const [remoteAction, newMap] = action(state, MoveAction(from, to, path, complete));
     remoteAction
       .then(async (gameActionResponse) => {
-        const actionResponse = gameActionResponse.self?.actionResponse;
-        if (actionResponse?.type !== 'Move') {
-          throw new Error(
-            `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
-          );
-        }
+        const actionResponse = expectSelfActionResponse(gameActionResponse, 'Move');
 
-        update(onComplete(await processGameActionResponse(gameActionResponse), actionResponse));
+        update(
+          onComplete(
+            await processGameActionResponse(gameActionResponse),
+            actionResponse,
+            gameActionResponse,
+          ),
+        );
       })
       .catch(throwError);
     return {
@@ -121,12 +123,7 @@ export default function syncMoveAction(
         // Only initiate the follow-up action after the partial move has completed.
         remoteAction
           .then(async (gameActionResponse) => {
-            const actionResponse = gameActionResponse.self?.actionResponse;
-            if (actionResponse?.type !== 'Move') {
-              throw new Error(
-                `Expected remote 'MoveActionResponse', received '${JSON.stringify(actionResponse)}'`,
-              );
-            }
+            const actionResponse = expectSelfActionResponse(gameActionResponse, 'Move');
 
             const remainingPath =
               actionResponse.path || getMovementPath(map, actionResponse.to, fields, null).path;
@@ -164,6 +161,7 @@ export default function syncMoveAction(
                             : null),
                         },
                         actionResponse,
+                        gameActionResponse,
                       ),
                     );
                   });
