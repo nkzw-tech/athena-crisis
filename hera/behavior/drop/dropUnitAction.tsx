@@ -11,17 +11,18 @@ export default function dropUnitAction(
   actionResponse: DropUnitActionResponse,
   state: State,
   onComplete: StateToStateLike,
-): StateLike {
+): StateLike | null {
   const { from, to } = actionResponse;
   const { vision } = state;
   const originalUnitA = state.map.units.get(from);
   const newUnitB = map.units.get(to);
   const unitB = originalUnitA?.getTransportedUnit(actionResponse.index);
   if (!originalUnitA || !unitB || !newUnitB) {
-    return {
+    return onComplete({
+      ...state,
       map,
       ...resetBehavior(),
-    };
+    });
   }
 
   return {

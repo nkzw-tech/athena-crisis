@@ -101,13 +101,17 @@ async function processActionResponse(
   const { type } = actionResponse;
   let newState: State;
   let resolve: (state: State | null) => void;
-  const promise = new Promise<State | null>((_resolve) => {
+  let reject: (error: unknown) => void;
+  const promise = new Promise<State | null>((_resolve, _reject) => {
     resolve = (state) => requestFrame(() => _resolve(state));
+    reject = _reject;
   });
   const resolveWithNull = (state: State) => {
     resolve(state);
     return null;
   };
+  const resolveAsync = (getState: () => Promise<State | null>) =>
+    requestFrame(() => void getState().then(resolve, reject));
 
   if (type === 'CharacterMessage' && skipActions) {
     requestFrame(() => resolve(null));
@@ -118,6 +122,11 @@ async function processActionResponse(
 
   const remoteActionResponse = applyRemoteActionResponse(map, vision, actionResponse);
   const [remoteAction, newMap] = remoteActionResponse;
+  const resolveWithMap = (state: State) => {
+    const newState = { ...state, map: newMap };
+    resolve(newState);
+    return newState;
+  };
 
   switch (type) {
     case 'Move': {
@@ -297,25 +306,8 @@ async function processActionResponse(
       }));
       break;
     }
-    case 'Message': {
-      const playerID = actionResponse.player ?? map.getCurrentPlayer().id;
-      messageState.lastPlayerId = null;
-      messageState.lastUnitId = null;
-      messageState.count += 1;
-      await update((state) => ({
-        animations: state.animations.set(new AnimationKey(), {
-          color: playerID,
-          onComplete: (state) => {
-            resolve(state);
-            return null;
-          },
-          position: messageState.count % 2 ? 'top' : 'bottom',
-          text: actionResponse.message,
-          type: 'message',
-        }),
-      }));
-      break;
-    }
+    case 'Message':
+      return { ...state, map: newMap };
     case 'MoveUnit': {
       requestFrame(() =>
         resolve({
@@ -335,11 +327,13 @@ async function processActionResponse(
     case 'Rescue':
       return rescueAction(actions, ...remoteActionResponse);
     case 'Sabotage': {
-      await update((state) =>
-        actionResponse.from
-          ? sabotageAction(actionResponse, state, resolveWithNull)
-          : addSabotageAnimation(newMap, actionResponse.to, state, resolveWithNull),
-      );
+      const animation = actionResponse.from
+        ? sabotageAction(actionResponse, state, resolveWithNull)
+        : addSabotageAnimation(newMap, actionResponse.to, state, resolveWithNull);
+      if (!animation) {
+        return update({ map: newMap });
+      }
+      await update(animation);
       break;
     }
     case 'Spawn': {
@@ -353,7 +347,7 @@ async function processActionResponse(
           units.size >= 5 ? 'fast' : 'slow',
           'spawn',
           (state) => {
-            requestFrame(async () => {
+            resolveAsync(async () => {
               state = await update(state);
 
               if (buildings) {
@@ -372,10 +366,10 @@ async function processActionResponse(
                 }
               }
 
-              resolve({
+              return {
                 ...state,
                 map: newMap,
-              });
+              };
             });
 
             return null;
@@ -400,18 +394,16 @@ async function processActionResponse(
         spawn(actions, state, despawns, null, 'fast', 'despawn', (state) => {
           requestFrame(() => {
             if (spawns) {
-              update(
+              void update(
                 spawn(actions, state, spawns, null, 'fast', 'spawn', (state) => {
-                  requestFrame(() =>
-                    resolve({
-                      ...state,
-                      map: newMap,
-                    }),
-                  );
+                  resolve({
+                    ...state,
+                    map: newMap,
+                  });
 
                   return null;
                 }),
-              );
+              ).catch(reject);
             } else {
               resolve({
                 ...state,
@@ -426,13 +418,16 @@ async function processActionResponse(
 
       break;
     }
-    case 'Heal':
-      await update((state) =>
-        actionResponse.from
-          ? healAction(actionResponse, state, resolveWithNull)
-          : addHealAnimation(newMap, null, actionResponse.to, state, resolveWithNull),
-      );
+    case 'Heal': {
+      const animation = actionResponse.from
+        ? healAction(actionResponse, state, resolveWithNull)
+        : addHealAnimation(newMap, null, actionResponse.to, state, resolveWithNull);
+      if (!animation) {
+        return update({ map: newMap });
+      }
+      await update(animation);
       break;
+    }
     case 'HiddenFundAdjustment':
       requestFrame(() =>
         resolve({
@@ -441,14 +436,17 @@ async function processActionResponse(
         }),
       );
       break;
-    case 'HiddenMove':
-      await update((state) =>
-        hiddenMoveAction(actions, state, actionResponse, vision, () => {
-          requestFrame(() => resolve(null));
-          return null;
-        }),
-      );
+    case 'HiddenMove': {
+      const animation = hiddenMoveAction(actions, state, actionResponse, vision, (state) => {
+        resolve(state);
+        return null;
+      });
+      if (!animation) {
+        return update({ map: newMap });
+      }
+      await update(animation);
       break;
+    }
     case 'HiddenSourceAttackBuilding':
     case 'HiddenSourceAttackUnit':
     case 'HiddenDestroyedBuilding':
@@ -497,6 +495,7 @@ async function processActionResponse(
           ...state,
           animations: currentState.animations.set(new AnimationKey(), {
             length: 'medium',
+            onComplete: resolveWithMap,
             player: 0,
             sound: null,
             text: String(fbt(`The game ended in a draw!`, 'Text for when a game ended in a draw.')),
@@ -535,16 +534,16 @@ async function processActionResponse(
                 fireworks,
               ),
               (state) => {
-                requestFrame(async () => {
+                resolveAsync(async () => {
                   state = await maybeReceiveChaosStarsAnimation(
                     actions,
                     state,
                     actionResponse.chaosStars,
                   );
-                  resolve({
+                  return {
                     ...state,
                     map: newMap,
-                  });
+                  };
                 });
                 return null;
               },

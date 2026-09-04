@@ -16,8 +16,8 @@ const unfoldAnimation = async (
 ): Promise<State> => {
   const sprite = unit.info.sprite.unfoldSprite;
   return sprite
-    ? new Promise((resolve) => {
-        update((state) => ({
+    ? new Promise((resolve, reject) => {
+        void update((state) => ({
           animations: state.animations.set(position, {
             ...sprite,
             onComplete: (state) => {
@@ -39,7 +39,7 @@ const unfoldAnimation = async (
           ...resetBehavior(NullBehavior),
           selectedPosition: state.selectedPosition,
           selectedUnit: state.selectedUnit,
-        }));
+        })).catch(reject);
       })
     : update(null);
 };
@@ -55,7 +55,10 @@ export default async function unfoldAction(
   const { animationConfig } = state;
   const unit = state.map.units.get(position);
   if (!unit) {
-    return state;
+    return await update({
+      map: applyActionResponse(state.map, state.vision, actionResponse),
+      ...resetBehavior(),
+    });
   }
 
   state = await unfoldAnimation(actions, position, unit, type);
@@ -70,15 +73,16 @@ export default async function unfoldAction(
     ...resetBehavior(NullBehavior),
   });
 
-  return new Promise((resolve) =>
-    scheduleTimer(async () => {
-      const state = await update(null);
-      resolve(
-        await update({
-          map: applyActionResponse(state.map, state.vision, actionResponse),
-          ...resetBehavior(),
-        }),
-      );
+  return new Promise((resolve, reject) =>
+    scheduleTimer(() => {
+      void update(null)
+        .then((state) =>
+          update({
+            map: applyActionResponse(state.map, state.vision, actionResponse),
+            ...resetBehavior(),
+          }),
+        )
+        .then(resolve, reject);
     }, animationConfig.AnimationDuration),
   );
 }

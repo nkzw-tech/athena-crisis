@@ -19,39 +19,48 @@ export default function rescueAction(
   }
 
   const { player, to: position } = actionResponse;
-  return new Promise((resolve) => {
-    update((state) => {
-      const unitB = state.map.units.get(position);
-      return unitB
-        ? {
-            animations: state.animations.set(position, {
-              onComplete: () => {
-                requestFrame(async () =>
-                  resolve(await handleRemoteAction(actions, remoteAction, 'Rescue')),
-                );
+  return new Promise((resolve, reject) => {
+    const complete = () =>
+      requestFrame(
+        () => void handleRemoteAction(actions, remoteAction, 'Rescue').then(resolve, reject),
+      );
 
-                return {
-                  map: newMap,
-                };
-              },
-              onRescue: unitB.isBeingRescuedBy(player)
-                ? (state: State) => ({
-                    ...state,
-                    map: state.map.copy({
-                      units: state.map.units.set(
-                        position,
-                        state.map.units.get(position)!.setPlayer(player),
-                      ),
-                    }),
-                  })
-                : undefined,
-              type: 'rescue',
-              unitDirection: getUnitDirection(newMap.getFirstPlayerID(), unitB),
-              variant: player,
-            }),
+    void update(null)
+      .then((state) => {
+        const unitB = state.map.units.get(position);
+        if (!unitB) {
+          return update({
+            map: newMap,
             ...resetBehavior(NullBehavior),
-          }
-        : null;
-    });
+          }).then(complete);
+        }
+
+        return update({
+          animations: state.animations.set(position, {
+            onComplete: () => {
+              complete();
+              return {
+                map: newMap,
+              };
+            },
+            onRescue: unitB.isBeingRescuedBy(player)
+              ? (state: State) => ({
+                  ...state,
+                  map: state.map.copy({
+                    units: state.map.units.set(
+                      position,
+                      state.map.units.get(position)!.setPlayer(player),
+                    ),
+                  }),
+                })
+              : undefined,
+            type: 'rescue',
+            unitDirection: getUnitDirection(newMap.getFirstPlayerID(), unitB),
+            variant: player,
+          }),
+          ...resetBehavior(NullBehavior),
+        }).then(() => undefined);
+      })
+      .catch(reject);
   });
 }

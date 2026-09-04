@@ -5,18 +5,24 @@ import { resetBehavior } from '../Behavior.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export default async function createTracksAction(
-  { update }: Actions,
+  { requestFrame, update }: Actions,
   actionResponse: CreateTracksActionResponse,
 ): Promise<State> {
-  return await update((state) => ({
-    animations: state.animations.set(actionResponse.from, {
-      onComplete: () => resetBehavior(),
-      onCreate: (state) => ({
-        map: applyActionResponse(state.map, state.vision, actionResponse),
+  return new Promise((resolve, reject) => {
+    void update((state) => ({
+      animations: state.animations.set(actionResponse.from, {
+        onComplete: (state) => {
+          const newState = { ...state, ...resetBehavior() };
+          requestFrame(() => resolve(newState));
+          return newState;
+        },
+        onCreate: (state) => ({
+          map: applyActionResponse(state.map, state.vision, actionResponse),
+        }),
+        type: 'createBuilding',
+        variant: 0,
       }),
-      type: 'createBuilding',
-      variant: 0,
-    }),
-    ...resetBehavior(NullBehavior),
-  }));
+      ...resetBehavior(NullBehavior),
+    })).catch(reject);
+  });
 }
