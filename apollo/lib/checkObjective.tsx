@@ -87,8 +87,19 @@ export function pickWinningPlayer(
   return activeMap.currentPlayer;
 }
 
-const count = (units: ImmutableMap<Vector, Unit>) =>
-  units.reduce((sum, unit) => sum + unit.count(), 0);
+const countMatchingUnits = (unit: Unit | TransportedUnit, label?: PlayerIDSet): number => {
+  if (!label?.size) {
+    return unit.count();
+  }
+
+  return (
+    (unit.label != null && label.has(unit.label) ? 1 : 0) +
+    (unit.transports?.reduce((sum, unit) => sum + countMatchingUnits(unit, label), 0) || 0)
+  );
+};
+
+const count = (units: ImmutableMap<Vector, Unit>, label?: PlayerIDSet) =>
+  units.reduce((sum, unit) => sum + countMatchingUnits(unit, label), 0);
 
 const filterByLabels = (label: PlayerIDSet) => (entity: Entity) =>
   entity.label != null && label.has(entity.label);
@@ -139,8 +150,7 @@ export function escortedByPlayer(
       return unit && map.matchesPlayer(unit, player) ? unit : null;
     })
     .filter(isPresent)
-    .filter(filterUnitsByLabels(label))
-    .reduce((sum, unit) => sum + unit.count(), 0);
+    .reduce((sum, unit) => sum + countMatchingUnits(unit, label), 0);
 }
 
 function checkObjective(
@@ -303,14 +313,8 @@ function checkObjective(
         !!objective.label?.size &&
         !matchesPlayer &&
         !ignoreIfOptional &&
-        count(
-          previousMap.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, player)),
-        ) > 0 &&
-        count(
-          map.units.filter(filterUnitsByLabels(objective.label)).filter(filterEnemies(map, player)),
-        ) < objective.amount) ||
+        count(previousMap.units.filter(filterEnemies(map, player)), objective.label) > 0 &&
+        count(map.units.filter(filterEnemies(map, player)), objective.label) < objective.amount) ||
       (isSurvivalAndEndTurn &&
         objective.rounds <= actionResponse.round &&
         matchesPlayerList(objective.players, targetPlayer))

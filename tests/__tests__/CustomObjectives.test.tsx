@@ -9,6 +9,7 @@ import {
   RescueAction,
 } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import { Effect } from '@deities/apollo/Effects.tsx';
+import { escortedByPlayer } from '@deities/apollo/lib/checkObjective.tsx';
 import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import { CrashedAirplane, Factory, House, HQ } from '@deities/athena/info/Building.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
@@ -1687,6 +1688,88 @@ test('escort units by amount (transport)', async () => {
     GameEnd { objective: { amount: 3, bonus: undefined, completed: Set(0) {}, hidden: false, label: [], optional: false, players: [ 1 ], reward: null, type: 6, vectors: [ '1,2' ] }, objectiveId: 0, toPlayer: 1, chaosStars: null }"
   `,
   );
+});
+
+test.each([
+  [
+    'unmarked transport with mixed passengers',
+    Jeep.create(player1)
+      .load(Pioneer.create(player1, { label: 1 }).transport())
+      .load(Pioneer.create(player1).transport()),
+  ],
+  [
+    'marked transport with unmarked passengers',
+    Jeep.create(player1, { label: 1 }).load(Pioneer.create(player1).transport()),
+  ],
+] as const)('escort amount counts marked units individually: %s', async (_, transport) => {
+  const from = vec(1, 1);
+  const to = vec(1, 2);
+  const secondFrom = vec(3, 1);
+  const secondTo = vec(2, 2);
+  const vectors = new Set([to, secondTo]);
+  const label = new Set<PlayerID>([1]);
+  const initialMap = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          amount: 2,
+          hidden: false,
+          label,
+          optional: false,
+          players: [1],
+          type: Criteria.EscortAmount,
+          vectors,
+        },
+      ]),
+    }),
+    units: map.units
+      .set(from, transport)
+      .set(secondFrom, Pioneer.create(player1, { label: 1 }))
+      .set(vec(3, 3), Pioneer.create(player2)),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [firstGameState] = await executeGameActions(initialMap, [MoveAction(from, to)]);
+  const firstMap = firstGameState.at(-1)![1];
+  expect(gameHasEnded(firstGameState)).toBe(false);
+  expect(escortedByPlayer(firstMap, player1.id, vectors, label)).toBe(1);
+
+  const [secondGameState] = await executeGameActions(firstMap, [MoveAction(secondFrom, secondTo)]);
+  expect(escortedByPlayer(secondGameState.at(-1)![1], player1.id, vectors, label)).toBe(2);
+  expect(secondGameState.at(-1)![0]).toMatchObject({ toPlayer: player1.id, type: 'GameEnd' });
+});
+
+test('escort amount fails when only one marked passenger remains in an unmarked transport', async () => {
+  const target = vec(1, 1);
+  const attacker = vec(1, 2);
+  const initialMap = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          amount: 2,
+          hidden: false,
+          label: new Set([1]),
+          optional: false,
+          players: [1],
+          type: Criteria.EscortAmount,
+          vectors: new Set([vec(3, 3)]),
+        },
+      ]),
+    }),
+    units: map.units
+      .set(target, Pioneer.create(player1, { label: 1 }).setHealth(1))
+      .set(attacker, Flamethrower.create(player2))
+      .set(vec(3, 1), Jeep.create(player1).load(Pioneer.create(player1, { label: 1 }).transport())),
+  });
+
+  expect(validateObjectives(initialMap)).toBe(true);
+
+  const [gameState] = await executeGameActions(initialMap, [
+    EndTurnAction(),
+    AttackUnitAction(attacker, target),
+  ]);
+  expect(gameState.at(-1)![0]).toMatchObject({ toPlayer: player2.id, type: 'GameEnd' });
 });
 
 test('escort units by drop (transport)', async () => {
