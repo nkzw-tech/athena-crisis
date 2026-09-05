@@ -1023,6 +1023,81 @@ test('defeat one with label', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test.each([
+  [
+    'marked passenger survives',
+    Jeep.create(player2).load(Pioneer.create(player2, { label: 1 }).transport()),
+    false,
+  ],
+  [
+    'marked passenger survives while unmarked passenger is lost',
+    Jeep.create(player2)
+      .load(Pioneer.create(player2, { label: 1 }).transport())
+      .load(Infantry.create(player2).transport()),
+    false,
+  ],
+  [
+    'marked transport is lost while marked passenger survives',
+    Jeep.create(player2, { label: 1 }).load(Pioneer.create(player2, { label: 1 }).transport()),
+    true,
+  ],
+  [
+    'unmarked passenger survives while marked passenger is lost',
+    Jeep.create(player2)
+      .load(Pioneer.create(player2).transport())
+      .load(Infantry.create(player2, { label: 1 }).transport()),
+    true,
+  ],
+] as const)('defeat one with label and Seatbelts On: %s', async (_, transport, shouldComplete) => {
+  const from = vec(1, 1);
+  const to = vec(1, 2);
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          hidden: false,
+          label: new Set([1]),
+          optional: false,
+          players: [1],
+          type: Criteria.DefeatOneLabel,
+        },
+      ]),
+    }),
+    teams: updatePlayer(map.teams, player2.copy({ skills: new Set([Skill.Jeep]) })),
+    units: map.units
+      .set(from, HeavyTank.create(player1))
+      .set(to, transport.setHealth(1))
+      .set(vec(3, 1), Infantry.create(player2)),
+  });
+
+  for (const isOptional of [false, true]) {
+    const initialMap = isOptional ? optional(mapA) : mapA;
+    expect(validateObjectives(initialMap)).toBe(true);
+
+    const [gameState] = await executeGameActions(initialMap, [AttackUnitAction(from, to)]);
+    const activeMap = gameState.at(-1)![1];
+    const survivor = activeMap.units.get(to);
+    const objectiveResponse = gameState.find(
+      ([{ type }]) => type === 'GameEnd' || type === 'OptionalObjective',
+    )?.[0];
+
+    expect(gameState[0][0].type).toBe('AttackUnit');
+    expect(survivor?.id).toBe(Pioneer.id);
+    expect(survivor?.label).toBe(transport.getTransportedUnit(0)!.label);
+    expect(gameHasEnded(gameState)).toBe(shouldComplete && !isOptional);
+
+    if (shouldComplete) {
+      expect(objectiveResponse).toMatchObject({
+        objective: { type: Criteria.DefeatOneLabel },
+        toPlayer: player1.id,
+        type: isOptional ? 'OptionalObjective' : 'GameEnd',
+      });
+    } else {
+      expect(objectiveResponse).toBeUndefined();
+    }
+  }
+});
+
 test('defeat by amount', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

@@ -211,15 +211,10 @@ function checkObjective(
         (objective.type === Criteria.DefeatOneLabel &&
           !ignoreIfOptional &&
           !matchesTargetPlayerList &&
-          count(
-            map.units
-              .filter(filterUnitsByLabels(objective.label))
-              .filter(filterSelf(map, targetPlayer)),
-          ) <
+          count(map.units.filter(filterSelf(map, targetPlayer)), objective.label) <
             count(
-              previousMap.units
-                .filter(filterUnitsByLabels(objective.label))
-                .filter(filterSelf(map, targetPlayer)),
+              previousMap.units.filter(filterSelf(previousMap, targetPlayer)),
+              objective.label,
             )) ||
         ((objective.type === Criteria.EscortLabel ||
           (objective.type === Criteria.EscortAmount &&
@@ -248,14 +243,8 @@ function checkObjective(
         ) > 0) ||
       (objective.type === Criteria.DefeatOneLabel &&
         matchesPlayer &&
-        count(
-          map.units.filter(filterUnitsByLabels(objective.label)).filter(filterEnemies(map, player)),
-        ) <
-          count(
-            previousMap.units
-              .filter(filterUnitsByLabels(objective.label))
-              .filter(filterEnemies(previousMap, player)),
-          )) ||
+        count(map.units.filter(filterEnemies(map, player)), objective.label) <
+          count(previousMap.units.filter(filterEnemies(previousMap, player)), objective.label)) ||
       (objective.type === Criteria.DefeatAmount &&
         matchesPlayer &&
         (objective.players?.length ? objective.players : map.active).some(
