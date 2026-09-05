@@ -1,9 +1,9 @@
 import { getSkillConfig, Skill } from '@deities/athena/info/Skill.tsx';
 import { RailBridge, RailTrack, River } from '@deities/athena/info/Tile.tsx';
-import { Jeep } from '@deities/athena/info/Unit.tsx';
 import canLoad from '@deities/athena/lib/canLoad.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import getHealCost from '@deities/athena/lib/getHealCost.tsx';
+import getSurvivingPassenger from '@deities/athena/lib/getSurvivingPassenger.tsx';
 import getUnitsToRefill from '@deities/athena/lib/getUnitsToRefill.tsx';
 import maybeConvertPlayer from '@deities/athena/lib/maybeConvertPlayer.tsx';
 import maybeRecoverUnitCost from '@deities/athena/lib/maybeRecoverUnitCost.tsx';
@@ -125,13 +125,9 @@ export default function applyActionResponse(
       const oneShotB = originalUnitB && originalUnitB.health >= MaxHealth && !unitB ? 1 : 0;
       const oneShotA = originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
 
-      if (
-        !unitB &&
-        actualPlayerB.skills.has(Skill.Jeep) &&
-        originalUnitB?.info === Jeep &&
-        originalUnitB.transports?.length
-      ) {
-        units = units.set(to, originalUnitB.transports[0].deploy());
+      const survivingUnitB = !unitB ? getSurvivingPassenger(map, originalUnitB) : null;
+      if (survivingUnitB) {
+        units = units.set(to, survivingUnitB);
         destroyedUnits = Math.max(0, destroyedUnits - 1);
       }
 
@@ -209,11 +205,15 @@ export default function applyActionResponse(
             : units;
 
       const lostUnitC = !!(originalUnitC && !building);
+      const survivingUnitC = lostUnitC ? getSurvivingPassenger(map, originalUnitC) : null;
+      if (survivingUnitC) {
+        units = units.set(to, survivingUnitC);
+      }
       const lostUnitsA =
         unitA && originalUnitA && units.get(from)?.player === originalUnitA?.player
           ? 0
           : originalUnitA?.count() || 1;
-      const lostUnitsC = lostUnitC ? originalUnitC.count() : 0;
+      const lostUnitsC = lostUnitC ? originalUnitC.count() - (survivingUnitC?.count() || 0) : 0;
       const oneShotC = lostUnitC && originalUnitC.health >= MaxHealth ? 1 : 0;
       const oneShotA = originalUnitA && originalUnitA.health >= MaxHealth && !unitA ? 1 : 0;
 

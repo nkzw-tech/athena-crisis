@@ -1,5 +1,4 @@
-import { Skill } from '@deities/athena/info/Skill.tsx';
-import { Jeep } from '@deities/athena/info/Unit.tsx';
+import getSurvivingPassenger from '@deities/athena/lib/getSurvivingPassenger.tsx';
 import maybeRecoverUnitCost from '@deities/athena/lib/maybeRecoverUnitCost.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import Building from '@deities/athena/map/Building.tsx';
@@ -148,13 +147,9 @@ function applyHiddenSourceAttackUnitAction(
   let actualPlayerB = map.getPlayer(originalUnitB);
   let lostUnits = unitB && newPlayerB == null ? 0 : originalUnitB.count();
 
-  if (
-    !unitB &&
-    actualPlayerB.skills.has(Skill.Jeep) &&
-    originalUnitB?.info === Jeep &&
-    originalUnitB.transports?.length
-  ) {
-    units = units.set(to, originalUnitB.transports[0].deploy());
+  const survivingUnitB = !unitB ? getSurvivingPassenger(map, originalUnitB) : null;
+  if (survivingUnitB) {
+    units = units.set(to, survivingUnitB);
     lostUnits = Math.max(0, lostUnits - 1);
   }
 
@@ -202,6 +197,7 @@ function applyHiddenSourceAttackBuildingAction(
 
   const existingUnit = map.units.get(to);
   if (!building) {
+    const survivingUnit = getSurvivingPassenger(map, existingUnit);
     return map.copy({
       buildings: map.buildings.delete(to),
       teams:
@@ -213,14 +209,14 @@ function applyHiddenSourceAttackBuildingAction(
                 map
                   .getPlayer(existingUnit)
                   .modifyStatistics({
-                    lostUnits: existingUnit.count(),
+                    lostUnits: existingUnit.count() - (survivingUnit?.count() || 0),
                   })
                   .maybeSetCharge(chargeC),
                 existingUnit,
               ),
             )
           : map.teams,
-      units: map.units.delete(to),
+      units: survivingUnit ? map.units.set(to, survivingUnit) : map.units.delete(to),
     });
   }
 
