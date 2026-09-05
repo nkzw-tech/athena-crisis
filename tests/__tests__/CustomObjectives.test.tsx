@@ -736,6 +736,64 @@ test('destroy label win criteria', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test.each([
+  [1, false],
+  [1, true],
+  [3, false],
+  [3, true],
+] as const)(
+  'destroy label respects eligible players (player %s, optional %s)',
+  async (currentPlayer, isOptional) => {
+    const from = vec(1, 1);
+    const to = vec(1, 2);
+    const player3 = player1.copy({ id: 3, teamId: 3, userId: '3' });
+    const mapA = map.copy({
+      active: [1, 2, 3],
+      buildings: map.buildings.set(to, House.create(player2, { label: 1 }).setHealth(1)),
+      config: map.config.copy({
+        objectives: defineObjectives([
+          {
+            hidden: false,
+            label: new Set([1]),
+            optional: isOptional,
+            players: [1],
+            type: Criteria.DestroyLabel,
+          },
+          defaultObjective,
+        ]),
+      }),
+      currentPlayer,
+      teams: map.teams.set(3, new Team(3, '', ImmutableMap([[3, player3]]))),
+      units: map.units
+        .set(from, HeavyTank.create(currentPlayer))
+        .set(vec(3, 1), Infantry.create(player1))
+        .set(vec(3, 2), Infantry.create(player2))
+        .set(vec(3, 3), Infantry.create(player3)),
+    });
+
+    expect(validateObjectives(mapA)).toBe(true);
+
+    const [gameState] = await executeGameActions(mapA, [AttackBuildingAction(from, to)]);
+    const completions = gameState
+      .map(([actionResponse]) => actionResponse)
+      .filter(({ type }) => type === 'GameEnd' || type === 'OptionalObjective');
+
+    expect(gameState.at(-1)![1].buildings.has(to)).toBe(false);
+    if (currentPlayer === 1) {
+      expect(completions).toMatchObject([
+        {
+          objectiveId: 0,
+          toPlayer: 1,
+          type: isOptional ? 'OptionalObjective' : 'GameEnd',
+        },
+      ]);
+    } else {
+      expect(completions).toEqual([]);
+    }
+    expect(gameHasEnded(gameState)).toBe(currentPlayer === 1 && !isOptional);
+  },
+);
+
 test('destroy label does not fire without label', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

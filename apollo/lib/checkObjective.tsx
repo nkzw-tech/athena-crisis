@@ -275,6 +275,7 @@ function checkObjective(
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
         objective.type === Criteria.DestroyLabel &&
+        matchesPlayer &&
         map.buildings.filter(filterByLabels(objective.label)).filter(filterEnemies(map, player))
           .size === 0 &&
         previousMap.buildings
