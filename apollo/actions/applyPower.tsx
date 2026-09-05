@@ -18,6 +18,7 @@ import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministi
 import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
 import getSurvivingPassenger from '@deities/athena/lib/getSurvivingPassenger.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
+import maybeRecoverUnitCost from '@deities/athena/lib/maybeRecoverUnitCost.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { Charge, HealAmount, MaxHealth, MinSize } from '@deities/athena/map/Configuration.tsx';
@@ -106,13 +107,13 @@ export function onPowerUnitDamageEffect(skill: Skill, map: MapData, vector: Vect
     const survivingUnit = isDead ? getSurvivingPassenger(map, unit) : null;
     const count = isDead ? newUnit.count() - (survivingUnit?.count() || 0) : 0;
     const currentPlayer = map.getCurrentPlayer();
-    const targetPlayer = map.getPlayer(unit);
+    const targetPlayer = maybeRecoverUnitCost(isDead, map.getPlayer(unit), unit);
     return map.copy({
       teams:
         currentPlayer.id === targetPlayer.id
           ? updatePlayer(
               map.teams,
-              currentPlayer.modifyStatistics({
+              targetPlayer.modifyStatistics({
                 damage: actualDamage,
                 destroyedUnits: count,
                 lostUnits: count,

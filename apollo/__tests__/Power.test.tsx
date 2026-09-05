@@ -1,4 +1,4 @@
-import { Skill } from '@deities/athena/info/Skill.tsx';
+import { CostRecoverySkillModifier, Skill } from '@deities/athena/info/Skill.tsx';
 import {
   Dragon,
   Infantry,
@@ -150,4 +150,90 @@ test('a Jeep hit by its owner’s Dinosaur power preserves its passenger and cas
   expect(result.units.get(position)).toEqual(unit.transports![0].deploy());
   expect(result.getPlayer(1).stats.destroyedUnits).toBe(1);
   expect(result.getPlayer(1).stats.lostUnits).toBe(1);
+});
+
+const withCostRecovery = (map: MapData, active = true) =>
+  map.copy({
+    teams: map.teams.map((team) =>
+      team.copy({
+        players: team.players.map((player) =>
+          player.copy({
+            activeSkills: new Set(active ? [Skill.CostRecovery] : []),
+            funds: 500,
+            skills: new Set([...player.skills, Skill.CostRecovery]),
+          }),
+        ),
+      }),
+    ),
+  });
+
+test.each([
+  { owner: 2, skill: Skill.BuyUnitDinosaur },
+  { owner: 2, skill: Skill.BuyUnitDragon },
+  { owner: 2, skill: Skill.BuyUnitOctopus },
+  { owner: 1, skill: Skill.BuyUnitDinosaur },
+] as const)(
+  'power kills refund the unit owner on server and client (skill: $skill, owner: $owner)',
+  ({ owner, skill }) => {
+    const unit = Infantry.create(owner).setHealth(1);
+    const map = withCostRecovery(createMap(unit, skill));
+    const vision = map.createVisionObject(owner);
+    const visibleMap = vision.apply(map);
+    const expectedFunds =
+      500 + Math.ceil(unit.info.getCostFor(map.getPlayer(owner)) * CostRecoverySkillModifier);
+
+    const [response, serverMap] = execute(
+      map,
+      map.createVisionObject(1),
+      ActivatePowerAction(skill, position),
+    )!;
+    expect(serverMap.units.has(position)).toBe(false);
+    expect(serverMap.getPlayer(owner).funds).toBe(expectedFunds);
+    expect(serverMap.getPlayer(owner === 1 ? 2 : 1).funds).toBe(500);
+    expect(serverMap.getPlayer(owner).stats.lostUnits).toBe(1);
+    expect(serverMap.getPlayer(1).stats.destroyedUnits).toBe(1);
+
+    const responses = computeVisibleActions(map, vision, [[response, serverMap]]);
+    expect(responses).toHaveLength(1);
+    const clientMap = applyActionResponse(visibleMap, vision, responses[0][0]);
+    expect(clientMap.getPlayer(owner).toJSON()).toEqual(serverMap.getPlayer(owner).toJSON());
+  },
+);
+
+test.each([
+  { active: false, health: 1, owner: 2, skill: Skill.BuyUnitDinosaur },
+  { active: true, health: 100, owner: 2, skill: Skill.BuyUnitDinosaur },
+  { active: true, health: 1, owner: 1, skill: Skill.VampireHeal },
+] as const)(
+  'power damage only refunds fatal hits with active Cost Recovery: %j',
+  ({ active, health, owner, skill }) => {
+    const map = withCostRecovery(
+      createMap(Infantry.create(owner).setHealth(health), skill),
+      active,
+    );
+    const [, result] = execute(
+      map,
+      map.createVisionObject(1),
+      ActivatePowerAction(skill, position),
+    )!;
+    expect(result.getPlayer(owner).funds).toBe(500);
+    expect(result.units.has(position)).toBe(health === 100 || skill === Skill.VampireHeal);
+  },
+);
+
+test('power refunds accumulate for destroyed Jeeps while their passengers survive', () => {
+  const secondPosition = vec(3, 2);
+  const initialMap = withCostRecovery(createMap(jeep, Skill.BuyUnitDinosaur));
+  const map = initialMap.copy({ units: initialMap.units.set(secondPosition, jeep) });
+  const [, result] = execute(
+    map,
+    map.createVisionObject(1),
+    ActivatePowerAction(Skill.BuyUnitDinosaur, position),
+  )!;
+  expect(result.units.get(position)).toEqual(passenger.deploy());
+  expect(result.units.get(secondPosition)).toEqual(passenger.deploy());
+  expect(result.getPlayer(2).funds).toBe(
+    500 + 2 * Math.ceil(Jeep.getCostFor(map.getPlayer(2)) * CostRecoverySkillModifier),
+  );
+  expect(result.getPlayer(2).stats.lostUnits).toBe(4);
 });
