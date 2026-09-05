@@ -1,6 +1,7 @@
 import { stripVTControlCharacters } from 'node:util';
 import { ToggleLightningAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
-import { RadarStation } from '@deities/athena/info/Building.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
+import { House, RadarStation } from '@deities/athena/info/Building.tsx';
 import { Lightning, StormCloud } from '@deities/athena/info/Tile.tsx';
 import { Helicopter, Pioneer } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
@@ -65,6 +66,21 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 const player2 = map.getPlayer(2);
+
+test.each([
+  ['on', vec(4, 3)],
+  ['off', vec(3, 2)],
+] as const)('cannot turn lightning barriers %s from a House', (_, to) => {
+  const from = vec(1, 1);
+  const initialMap = map.copy({
+    buildings: map.buildings.set(from, House.create(player1)),
+    units: map.units.set(vec(4, 3), Helicopter.create(player2)),
+  });
+
+  expect(
+    execute(initialMap, initialMap.createVisionObject(player1), ToggleLightningAction(from, to)),
+  ).toBeNull();
+});
 
 test('can turn lightning barriers on and off', async () => {
   const fromA = vec(1, 1);

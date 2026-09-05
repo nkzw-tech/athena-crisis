@@ -846,6 +846,7 @@ function toggleLightning(map: MapData, { from, to }: ToggleLightningAction) {
   if (
     from.equals(to) ||
     !building ||
+    !building.info.hasBehavior(Behavior.Radar) ||
     building.isCompleted() ||
     !map.isCurrentPlayer(building) ||
     map.getCurrentPlayer().charge < Charge
