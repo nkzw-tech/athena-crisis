@@ -18,17 +18,17 @@
     "@nkzw/joymap": "^5.0.0",
     "@nkzw/stack": "^2.3.2",
     "fbtee": "^4.0.0",
-    "framer-motion": "^13.1.1",
+    "framer-motion": "^13.2.0",
     "howler": "^2.2.4",
     "pixelarticons": "^2.4.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.2",
+    "react-router-dom": "^7.18.3",
     "use-long-press": "^3.3.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.13",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5"
+    "@types/react-dom": "^19.2.7"
   }
 }

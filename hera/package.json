@@ -26,13 +26,13 @@
     "@nkzw/use-visibility-state": "^1.0.4",
     "array-shuffle": "^4.1.0",
     "fbtee": "^4.0.0",
-    "framer-motion": "^13.1.1",
+    "framer-motion": "^13.2.0",
     "pixelarticons": "^2.4.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5"
+    "@types/react-dom": "^19.2.7"
   }
 }

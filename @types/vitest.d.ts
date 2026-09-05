@@ -1,10 +1,7 @@
-interface CustomMatchers<R = unknown> {
-  toMatchImageSnapshot(): R;
-}
+import 'vitest';
 
-declare namespace Vi {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface Assertion extends CustomMatchers {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface AsymmetricMatchersContaining extends CustomMatchers {}
+declare module 'vitest' {
+  interface Matchers<R, T> {
+    toMatchImageSnapshot(): R;
+  }
 }

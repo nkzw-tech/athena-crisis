@@ -70,8 +70,8 @@ jobs:
 
       - name: Run tests
         if: matrix.os != 'windows-latest'
-        run: pnpm test:ci
+        run: pnpm test
 
       - name: Run tests (Windows)
         if: matrix.os == 'windows-latest'
-        run: pnpm vitest:run-ci
+        run: pnpm vitest:run

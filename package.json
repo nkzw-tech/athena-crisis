@@ -39,9 +39,7 @@
     "prisma": "cd artemis && pnpm prisma",
     "relay": "node -e \"const fs=require('node:fs');const cp=require('node:child_process');fs.existsSync('ares/src')&&cp.execSync('pnpm relay-compiler',{cwd:'ares',stdio:'inherit'})\"",
     "test": "npm-run-all --parallel lint lint:format relay vitest:run",
-    "test:ci": "pnpm npm-run-all --parallel lint lint:format vitest:run-ci",
-    "vitest:run": "CPUS=$(if uname -s | grep -q Darwin; then sysctl -n hw.ncpu; else nproc --all; fi); export VITEST_MAX_THREADS=$(($CPUS - 2)); export VITEST_MIN_THREADS=$(($CPUS - 2)); vitest run",
-    "vitest:run-ci": "vitest run"
+    "vitest:run": "vitest run"
   },
   "devDependencies": {
     "@deities/eslint-plugin": "workspace:*",
@@ -56,22 +54,22 @@
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@swc/core": "1.16.1",
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "@vitejs/plugin-react": "^6.1.1",
     "chalk": "^6.0.0",
     "dotenv": "^17.4.2",
     "eslint-plugin-workspaces": "^0.12.1",
     "nodemon": "^3.1.14",
     "npm-run-all2": "^9.0.3",
-    "oxc-transform-react": "^0.147.0",
-    "oxfmt": "^0.65.0",
-    "oxlint": "1.80.0",
+    "oxc-transform-react": "^0.148.0",
+    "oxfmt": "^0.66.0",
+    "oxlint": "1.81.0",
     "oxlint-tsgolint": "^7.0.2001",
     "portless": "^0.15.6",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "vitest": "^4.1.11",
-    "wrangler": "4.127.0"
+    "vitest": "^5.0.0",
+    "wrangler": "4.129.0"
   },
   "nodemonConfig": {
     "ext": "tsx",

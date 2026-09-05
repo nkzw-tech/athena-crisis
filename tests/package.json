@@ -28,14 +28,14 @@
     "@types/jest-image-snapshot": "^6.4.1",
     "@types/object-inspect": "^1.13.0",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5",
+    "@types/react-dom": "^19.2.7",
     "chalk": "^6.0.0",
     "fbtee": "^4.0.0",
     "jest-image-snapshot": "^6.5.2",
     "playwright": "^1.62.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-error-boundary": "^6.1.3",
+    "react-error-boundary": "^6.1.4",
     "term-img": "^7.1.0"
   }
 }

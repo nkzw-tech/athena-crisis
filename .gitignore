@@ -1,5 +1,6 @@
 .pnpm-debug.log
 .pnpm-store/
+.vitest/
 **/node_modules/
 /dist/
 /node_modules/
