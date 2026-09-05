@@ -32,6 +32,15 @@ export const isSafari =
   ) ||
   isIOS;
 
+export const SafariVersion =
+  (isSafari && parseInteger(userAgent.match(/Version\/(\d+)/)?.[1] || '')) || 0;
+
+export const IOSVersion = (isIOS && parseInteger(userAgent.match(/\biOS\/(\d+)/)?.[1] || '')) || 0;
+
+// See https://bugs.webkit.org/show_bug.cgi?id=293617
+// Older app binaries have neither version. Retain their existing workaround.
+export const needsFontZoomCompensation = isIPhone && (IOSVersion || SafariVersion) < 27;
+
 export const isChrome = /Chrome/.test(userAgent);
 export const ChromeVersion =
   (isChrome && parseInteger(userAgent.match(/Chrome\/(\d+)/)?.[1] || '')) || 0;

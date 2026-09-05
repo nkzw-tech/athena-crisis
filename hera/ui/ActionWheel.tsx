@@ -3,7 +3,7 @@ import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
-import { isIPhone } from '@deities/ui/Browser.tsx';
+import { needsFontZoomCompensation } from '@deities/ui/Browser.tsx';
 import { NavigationDirection } from '@deities/ui/controls/Input.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -739,7 +739,7 @@ const radiusStyle = css`
 const entityStyle = css`
   ${vars.set('size', `${TileSize * 1.5}px`)}
 
-  font-size: calc(${isIPhone ? applyVar('scale') : 1} * 8px);
+  font-size: calc(${needsFontZoomCompensation ? applyVar('scale') : 1} * 8px);
 `;
 
 const bottomAlignedStyle = css`

@@ -1,6 +1,6 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
-import { isIPhone } from '@deities/ui/Browser.tsx';
+import { needsFontZoomCompensation } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import getColor, { BaseColor } from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -167,7 +167,7 @@ const baseStyle = css`
   display: flex;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
   flex-direction: column;
-  font-size: calc(${isIPhone ? applyVar('scale') : 1} * 8px);
+  font-size: calc(${needsFontZoomCompensation ? applyVar('scale') : 1} * 8px);
   line-height: 100%;
   gap: 2px;
   image-rendering: pixelated;

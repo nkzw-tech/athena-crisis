@@ -320,16 +320,16 @@ importers:
     dependencies:
       '@capacitor/app':
         specifier: ^8.1.1
-        version: 8.1.1(@capacitor/core@8.5.0)
+        version: 8.1.1(@capacitor/core@8.5.1)
       '@capacitor/core':
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       '@capacitor/push-notifications':
         specifier: ^8.1.2
-        version: 8.1.2(@capacitor/core@8.5.0)
+        version: 8.1.2(@capacitor/core@8.5.1)
       '@capacitor/status-bar':
         specifier: ^8.0.3
-        version: 8.0.3(@capacitor/core@8.5.0)
+        version: 8.0.3(@capacitor/core@8.5.1)
       '@deities/apollo':
         specifier: workspace:*
         version: link:../apollo
@@ -1866,6 +1866,9 @@ packages:
 
   '@capacitor/core@8.5.0':
     resolution: {integrity: sha512-Ca4krtqH1hothjtBIwf2J2TW7IhYq1ujp8QeItTiJohNsqij8ja2DYYH3DU0l8RmxCWaBAFTGA2TgOgOMCSNsQ==}
+
+  '@capacitor/core@8.5.1':
+    resolution: {integrity: sha512-IOQ7ynG1qgrJ/RLuCO3WgyRGmkmmG/cdStRR4ftU2dWEN1FdtLrnI/XpZmZuUsOEHEnzBRJY/PmRH8eTLiXfhA==}
 
   '@capacitor/push-notifications@8.1.2':
     resolution: {integrity: sha512-TQl4XxqJfNF+KbSYBFMXYYT5WXUaleVKXlByhh/8+KySMVNjp+l5OqAUoGe/sY1IAnGXEuUeCjA/WLZEVvGwrA==}
@@ -12572,21 +12575,25 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.18
 
-  '@capacitor/app@8.1.1(@capacitor/core@8.5.0)':
+  '@capacitor/app@8.1.1(@capacitor/core@8.5.1)':
     dependencies:
-      '@capacitor/core': 8.5.0
+      '@capacitor/core': 8.5.1
 
   '@capacitor/core@8.5.0':
     dependencies:
       tslib: 2.8.1
 
-  '@capacitor/push-notifications@8.1.2(@capacitor/core@8.5.0)':
+  '@capacitor/core@8.5.1':
     dependencies:
-      '@capacitor/core': 8.5.0
+      tslib: 2.8.1
 
-  '@capacitor/status-bar@8.0.3(@capacitor/core@8.5.0)':
+  '@capacitor/push-notifications@8.1.2(@capacitor/core@8.5.1)':
     dependencies:
-      '@capacitor/core': 8.5.0
+      '@capacitor/core': 8.5.1
+
+  '@capacitor/status-bar@8.0.3(@capacitor/core@8.5.1)':
+    dependencies:
+      '@capacitor/core': 8.5.1
 
   '@cloudflare/kv-asset-handler@0.5.0': {}
 
