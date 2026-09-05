@@ -3102,6 +3102,124 @@ test.each([
   },
 );
 
+test.each([
+  {
+    attacker: 1,
+    buildingHealth: 1,
+    ended: true,
+    occupant: 0,
+    optional: false,
+    remaining: 1,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: true,
+    occupant: 0,
+    optional: false,
+    remaining: 1,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 100,
+    ended: false,
+    occupant: 0,
+    optional: false,
+    remaining: 1,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: false,
+    occupant: 0,
+    optional: true,
+    remaining: 1,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: false,
+    occupant: 0,
+    optional: false,
+    remaining: 2,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: false,
+    occupant: 0,
+    optional: false,
+    remaining: 1,
+    rescued: 1,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: false,
+    occupant: 1,
+    optional: false,
+    remaining: 1,
+    rescued: 0,
+  },
+  {
+    attacker: 2,
+    buildingHealth: 1,
+    ended: false,
+    occupant: null,
+    optional: false,
+    remaining: 1,
+    rescued: 0,
+  },
+] as const)(
+  'checks rescue amount when a building attack kills its neutral occupant: %j',
+  async ({ attacker, buildingHealth, ended, occupant, optional, remaining, rescued }) => {
+    const from = vec(2, 2);
+    const to = vec(1, 2);
+    let units = map.units
+      .set(from, SmallTank.create(attacker))
+      .set(vec(3, 3), Pioneer.create(1))
+      .set(vec(3, 1), Pioneer.create(2))
+      .set(vec(1, 1), Pioneer.create(0));
+    if (occupant != null) {
+      units = units.set(to, Pioneer.create(occupant));
+    }
+    if (remaining === 2) {
+      units = units.set(vec(1, 3), Pioneer.create(0));
+    }
+    const initialMap = map.copy({
+      buildings: map.buildings.set(
+        to,
+        House.create(attacker === 1 ? 2 : 1).setHealth(buildingHealth),
+      ),
+      config: map.config.copy({
+        objectives: defineObjectives([
+          { amount: 2, hidden: false, optional, players: [1], type: Criteria.RescueAmount },
+          ...(optional ? [defaultObjective] : []),
+        ]),
+      }),
+      currentPlayer: attacker,
+      teams: updatePlayer(map.teams, player1.modifyStatistic('rescuedUnits', rescued)),
+      units,
+    });
+    expect(validateObjectives(initialMap)).toBe(true);
+
+    const [gameState] = await executeGameActions(initialMap, [AttackBuildingAction(from, to)]);
+    const activeMap = gameState[0][1];
+    expect(gameState[0][0].type).toBe('AttackBuilding');
+    expect(activeMap.buildings.has(to)).toBe(buildingHealth > 1);
+    expect(activeMap.units.has(to)).toBe(buildingHealth > 1 && occupant != null);
+    expect(gameHasEnded(gameState)).toBe(ended);
+    if (ended) {
+      expect(gameState.at(-1)?.[0]).toMatchObject({ toPlayer: 2, type: 'GameEnd' });
+    }
+  },
+);
+
 test('rescue amount win criteria loses when destroying the rescuable unit', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

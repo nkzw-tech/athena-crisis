@@ -272,7 +272,10 @@ function checkObjective(
         !ignoreIfOptional &&
         count(map.units.filter(filterNeutral).filter(filterByLabels(objective.label))) <
           count(previousMap.units.filter(filterNeutral).filter(filterByLabels(objective.label)))) ||
-      (actionResponse.type === 'AttackUnit' &&
+      ((actionResponse.type === 'AttackUnit' ||
+        (actionResponse.type === 'AttackBuilding' &&
+          !actionResponse.building &&
+          actionResponse.playerC === 0)) &&
         objective.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
         (objective.players?.length ? objective.players : map.active).every(
