@@ -1,0 +1,120 @@
+import { Helicopter, Infantry } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
+import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
+import { PlayerIDs } from '@deities/athena/map/Player.tsx';
+import vec from '@deities/athena/map/vec.tsx';
+import MapData from '@deities/athena/MapData.tsx';
+import {
+  Criteria,
+  decodeObjectives,
+  encodeObjectives,
+  Objective,
+  validateObjectives,
+} from '@deities/athena/Objectives.tsx';
+import ImmutableMap from '@nkzw/immutable-map';
+import { expect, test } from 'vitest';
+import { EndTurnAction } from '../action-mutators/ActionMutators.tsx';
+import { execute } from '../Action.tsx';
+import executeGameAction from '../actions/executeGameAction.tsx';
+import checkObjectives, { pickWinningPlayer } from '../lib/checkObjective.tsx';
+import timeoutActionResponseMutator from '../lib/timeoutActionResponseMutator.tsx';
+
+const createMap = (players: PlayerIDs) =>
+  withModifiers(
+    MapData.createMap({
+      map: Array(15).fill(1),
+      size: { height: 3, width: 5 },
+      teams: players.map((id) => ({
+        id,
+        name: '',
+        players: [{ funds: 0, id, userId: String(id) }],
+      })),
+      units: players.map((id) => [id, 1, Infantry.create(id).toJSON()]),
+    }),
+  );
+
+test.each([
+  [Criteria.DefeatLabel, [3]],
+  [Criteria.DefeatLabel, undefined],
+  [Criteria.DefeatOneLabel, [3]],
+  [Criteria.DefeatOneLabel, undefined],
+] as const)(
+  'awards optional defeat objective %s to the outgoing player (players: %s)',
+  async (type, players) => {
+    const initialMap = createMap([1, 2, 3]);
+    const objectives: ReadonlyArray<Objective> = [
+      { hidden: false, label: new Set([1]), optional: true, players, type },
+      { hidden: false, type: Criteria.Default },
+    ];
+    const map = initialMap.copy({
+      config: initialMap.config.copy({
+        objectives: decodeObjectives(
+          encodeObjectives(ImmutableMap(objectives.map((objective, id) => [id, objective]))),
+        ),
+      }),
+      currentPlayer: 3,
+      units: initialMap.units.set(vec(1, 1), Helicopter.create(1, { label: 1 }).setFuel(0)),
+    });
+    expect(validateObjectives(map)).toBe(true);
+
+    const [actionResponse, activeMap] = execute(map, map.createVisionObject(3), EndTurnAction())!;
+    const [, objective] = checkObjectives(map, activeMap, actionResponse)!;
+    // Check the winner before entering the objective loop so a regression fails instead of hanging.
+    expect(pickWinningPlayer(activeMap, actionResponse, objective)).toBe(3);
+
+    const [, , gameState] = await executeGameAction(
+      map,
+      map.createVisionObject(3),
+      new Map(),
+      EndTurnAction(),
+      null,
+    );
+    expect(gameState?.map(([action]) => action)).toEqual([
+      expect.objectContaining({
+        objective: expect.objectContaining({ completed: new Set([3]) }),
+        objectiveId: 0,
+        toPlayer: 3,
+        type: 'OptionalObjective',
+      }),
+      { fromPlayer: 1, type: 'BeginTurnGameOver' },
+      expect.objectContaining({ next: { funds: 0, player: 2 }, type: 'EndTurn' }),
+    ]);
+    expect(gameState?.at(-1)?.[1].active).toEqual([2, 3]);
+  },
+);
+
+test.each([[[1, 2]], [[1, 2, 3]], [[1, 2, 3, 4]]] as const)(
+  'handles simultaneous timeout and fuel eliminations with players %s',
+  async (players) => {
+    const initialMap = createMap(players);
+    const map = initialMap.copy({
+      teams: updatePlayer(
+        initialMap.teams,
+        initialMap.getPlayer(1).copy({ misses: AllowedMisses - 1 }),
+      ),
+      units: initialMap.units.set(vec(2, 1), Helicopter.create(2).setFuel(0)),
+    });
+    const [, , gameState] = await executeGameAction(
+      map,
+      map.createVisionObject(1),
+      new Map(),
+      EndTurnAction(),
+      null,
+      timeoutActionResponseMutator,
+    );
+    const actions = gameState?.map(([action]) => action);
+    expect(actions?.slice(0, 2)).toEqual([
+      { fromPlayer: 1, type: 'PreviousTurnGameOver' },
+      { fromPlayer: 2, type: 'BeginTurnGameOver' },
+    ]);
+    expect(gameState?.at(-1)?.[1].active).toEqual(players.slice(2));
+    expect(actions?.at(-1)).toEqual(
+      players.length === 2
+        ? { type: 'GameEnd' }
+        : players.length === 3
+          ? { toPlayer: 3, type: 'GameEnd' }
+          : expect.objectContaining({ next: { funds: 0, player: 3 }, type: 'EndTurn' }),
+    );
+  },
+);

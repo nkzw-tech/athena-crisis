@@ -71,7 +71,9 @@ export function pickWinningPlayer(
   if (actionResponse.type === 'EndTurn') {
     return objective.type === Criteria.Survival
       ? activeMap.currentPlayer
-      : resolveDynamicPlayerID(activeMap, 'opponent');
+      : objective.type !== Criteria.Default && objective.optional
+        ? actionResponse.current.player
+        : resolveDynamicPlayerID(activeMap, 'opponent');
   }
 
   if (

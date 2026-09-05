@@ -499,9 +499,10 @@ const checkDefaultObjectives = (
 };
 
 const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
+  const actionResponses: Array<ObjectiveActionResponse> = [];
   const previousPlayer = activeMap.getPlayer(previousMap.getCurrentPlayer().id);
   if (previousPlayer.isHumanPlayer() && previousPlayer.misses >= AllowedMisses) {
-    return [
+    actionResponses.push(
       previousPlayer.crystal === Crystal.Command
         ? ({
             fromPlayer: previousPlayer.id,
@@ -512,13 +513,14 @@ const checkEndTurn = (previousMap: MapData, activeMap: MapData) => {
             fromPlayer: previousPlayer.id,
             type: 'PreviousTurnGameOver',
           } as const),
-    ];
+    );
   }
 
   const currentPlayer = activeMap.getCurrentPlayer();
-  return hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer)
-    ? [{ fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' } as const]
-    : null;
+  if (hasUnits(previousMap, currentPlayer) && !hasUnits(activeMap, currentPlayer)) {
+    actionResponses.push({ fromPlayer: currentPlayer.id, type: 'BeginTurnGameOver' });
+  }
+  return actionResponses.length ? actionResponses : null;
 };
 
 const checkHasUnits = (map: MapData, fromPlayer: Player, toPlayer: Player) => {
@@ -539,6 +541,9 @@ const checkGameEnd = (map: MapData | undefined) => {
   }
 
   const teams = new Set(map.active.map((playerId) => map.getTeam(playerId)));
+  if (!teams.size) {
+    return { type: 'GameEnd' } as const;
+  }
   const firstTeam = getFirstOrThrow(teams);
   return teams.size === 1
     ? ({
