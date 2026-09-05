@@ -121,11 +121,15 @@ export default class Attack {
       [actions, state],
     );
 
-    const select = useCallback(() => {
-      if (position) {
-        actions.update(this.select(position, state, actions));
-      }
-    }, [actions, position, state]);
+    const select = useCallback(
+      (event: CustomEvent) => {
+        if (position) {
+          event.preventDefault();
+          actions.update(this.select(position, state, actions));
+        }
+      },
+      [actions, position, state],
+    );
 
     useInput('tertiary', select, 'menu');
     useInput('gamepad:tertiary', select, 'menu');

@@ -122,11 +122,15 @@ export default class CreateUnit {
       selectedBuilding &&
       selectedPosition;
 
-    const create = useCallback(() => {
-      if (position && radius?.fields.has(position) && !showActionWheel) {
-        actions.update(this.select(position, state, actions));
-      }
-    }, [actions, position, radius?.fields, showActionWheel, state]);
+    const create = useCallback(
+      (event: CustomEvent) => {
+        if (position && radius?.fields.has(position) && !showActionWheel) {
+          event.preventDefault();
+          actions.update(this.select(position, state, actions));
+        }
+      },
+      [actions, position, radius?.fields, showActionWheel, state],
+    );
 
     useInput('tertiary', create, 'menu');
     useInput('gamepad:tertiary', create, 'menu');
