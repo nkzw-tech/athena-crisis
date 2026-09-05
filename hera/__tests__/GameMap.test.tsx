@@ -104,6 +104,7 @@ type TestGameMap = {
     action: Actions['action'];
     pauseReplay: Actions['pauseReplay'];
     processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
+    requestFrame: Actions['requestFrame'];
     resumeReplay: Actions['resumeReplay'];
     scheduleTimer: (fn: () => void, delay: number) => Promise<number>;
     update: UpdateFunction;
@@ -244,6 +245,77 @@ test.each([{ elapsedTimes: [100] }, { elapsedTimes: [900] }, { elapsedTimes: [10
       vi.advanceTimersByTime(1);
       expect(onComplete).toHaveBeenCalledOnce();
       vi.advanceTimersByTime(1000);
+      expect(onComplete).toHaveBeenCalledOnce();
+    } finally {
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    }
+  },
+);
+
+test.each(['timer', 'frame'] as const)(
+  'a paused %s callback runs when playback resumes before the next animation frame',
+  async (type) => {
+    vi.useFakeTimers();
+    vi.stubGlobal('window', {
+      clearTimeout,
+      innerHeight: 768,
+      innerWidth: 1024,
+      setTimeout,
+    });
+    const frames: Array<FrameRequestCallback> = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) =>
+      frames.push(callback),
+    );
+
+    try {
+      const { default: GameMap } = await import('../GameMap.tsx');
+      const gameMap = new GameMap({
+        animationSpeed: {
+          human: InstantAnimationConfig,
+          regular: InstantAnimationConfig,
+        },
+        autoPanning: false,
+        buildingSize: TileSize,
+        confirmActionStyle: 'never',
+        currentUserId: '2',
+        fogStyle: 'soft',
+        map,
+        playerAchievement: null,
+        playerDetails: new Map(),
+        scale: 1,
+        showCursor: false,
+        style: 'none',
+        tileSize: TileSize,
+        tilted: false,
+        unitSize: TileSize,
+      } satisfies Props) as unknown as TestGameMap;
+      installSynchronousSetState(gameMap);
+
+      const onComplete = vi.fn();
+      const { pauseReplay, requestFrame, resumeReplay, scheduleTimer } = gameMap._actions;
+      await pauseReplay();
+      if (type === 'timer') {
+        void scheduleTimer(onComplete, 100);
+      } else {
+        requestFrame(onComplete);
+      }
+
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(onComplete).not.toHaveBeenCalled();
+
+      await resumeReplay();
+      frames.splice(0).forEach((callback) => callback(16));
+      await vi.advanceTimersByTimeAsync(99);
+      if (type === 'timer') {
+        expect(onComplete).not.toHaveBeenCalled();
+      }
+      await vi.advanceTimersByTimeAsync(1);
+      expect(onComplete).toHaveBeenCalledOnce();
+
+      await pauseReplay();
+      await resumeReplay();
+      await vi.advanceTimersByTimeAsync(100);
       expect(onComplete).toHaveBeenCalledOnce();
     } finally {
       vi.useRealTimers();

@@ -1652,12 +1652,9 @@ export default class GameMap extends Component<Props, State> {
   private _scheduleTimer = async (fn: () => void, delay: number): Promise<number> => {
     const { replayState } = this.state;
     if (replayState.isPaused) {
-      let _resolve: () => void;
-      const promise = new Promise<void>((resolve) => {
-        _resolve = resolve;
+      return new Promise<void>((resolve) => {
+        this._resolvers.push(resolve);
       }).then(() => this._scheduleTimer(fn, delay));
-      requestAnimationFrame(() => this._resolvers.push(_resolve));
-      return promise;
     }
 
     if (this._shouldSkipActionAnimations()) {
@@ -1683,11 +1680,9 @@ export default class GameMap extends Component<Props, State> {
   private _requestFrame = (fn: (timestamp: number) => void): number => {
     const { replayState } = this.state;
     if (replayState.isPaused) {
-      let _resolve: () => void;
       new Promise<void>((resolve) => {
-        _resolve = () => resolve();
+        this._resolvers.push(resolve);
       }).then(() => fn(dateNow() - replayState.pauseStart!));
-      requestAnimationFrame(() => this._resolvers.push(_resolve));
       return 0;
     }
     return requestAnimationFrame(fn);
