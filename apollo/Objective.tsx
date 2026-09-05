@@ -142,7 +142,7 @@ export function applyObjectives(
   const gameState: MutableGameState = [];
   let map = activeMap;
 
-  const player = objective && pickWinningPlayer(map, lastActionResponse, objective);
+  let player = objective && pickWinningPlayer(map, lastActionResponse, objective);
 
   let reevaluate = false;
   let optionalObjective = toOptionalObjective(objective, objectiveId, player);
@@ -164,6 +164,7 @@ export function applyObjectives(
 
   if (!actionResponses && reevaluate) {
     [objectiveId, objective] = checkObjectives(previousMap, map, lastActionResponse) || [];
+    player = objective && pickWinningPlayer(map, lastActionResponse, objective);
   }
 
   if (actionResponses) {

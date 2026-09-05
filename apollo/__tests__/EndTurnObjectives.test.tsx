@@ -34,6 +34,64 @@ const createMap = (players: PlayerIDs) =>
     }),
   );
 
+test.each([false, true])(
+  'loses a required escort objective with a simultaneous survival bonus: %s',
+  async (includeBonus) => {
+    const initialMap = createMap([1, 2]);
+    const objectives: ReadonlyArray<Objective> = [
+      { hidden: false, optional: true, players: [2], rounds: 1, type: Criteria.Survival },
+      {
+        hidden: false,
+        label: new Set([2]),
+        optional: false,
+        players: [2],
+        type: Criteria.EscortLabel,
+        vectors: new Set([vec(1, 3)]),
+      },
+    ];
+    const map = initialMap.copy({
+      config: initialMap.config.copy({
+        objectives: decodeObjectives(
+          encodeObjectives(
+            ImmutableMap(objectives.map((objective, id) => [id, objective])).filter(
+              (_, id) => includeBonus || id !== 0,
+            ),
+          ),
+        ),
+      }),
+      units: initialMap.units.set(vec(2, 2), Helicopter.create(2, { label: 2 }).setFuel(0)),
+    });
+    expect(validateObjectives(map)).toBe(true);
+
+    const [, activeMap, gameState] = await executeGameAction(
+      map,
+      map.createVisionObject(1),
+      new Map(),
+      EndTurnAction(),
+      null,
+    );
+    expect(activeMap?.units.has(vec(2, 2))).toBe(false);
+    expect(gameState?.map(([action]) => action)).toEqual([
+      ...(includeBonus
+        ? [
+            expect.objectContaining({
+              objective: expect.objectContaining({ completed: new Set([2]) }),
+              objectiveId: 0,
+              toPlayer: 2,
+              type: 'OptionalObjective',
+            }),
+          ]
+        : []),
+      expect.objectContaining({
+        objective: expect.objectContaining({ type: Criteria.EscortLabel }),
+        objectiveId: 1,
+        toPlayer: 1,
+        type: 'GameEnd',
+      }),
+    ]);
+  },
+);
+
 test.each([
   [Criteria.DefeatLabel, [3]],
   [Criteria.DefeatLabel, undefined],
