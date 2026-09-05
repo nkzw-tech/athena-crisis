@@ -148,11 +148,15 @@ export default class DropUnit {
       'menu',
     );
 
-    const drop = useCallback(() => {
-      if (hasUnit && position && radius?.fields.has(position)) {
-        actions.update(this.select(position, state, actions));
-      }
-    }, [actions, hasUnit, position, radius?.fields, state]);
+    const drop = useCallback(
+      (event: CustomEvent) => {
+        if (hasUnit && position && radius?.fields.has(position)) {
+          event.preventDefault();
+          actions.update(this.select(position, state, actions));
+        }
+      },
+      [actions, hasUnit, position, radius?.fields, state],
+    );
 
     useInput('tertiary', drop, 'menu');
     useInput('gamepad:tertiary', drop, 'menu');
