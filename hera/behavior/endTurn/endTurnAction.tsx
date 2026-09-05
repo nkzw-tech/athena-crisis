@@ -11,6 +11,7 @@ import NullBehavior from '../NullBehavior.tsx';
 
 export default async function endTurnAction(actions: Actions, state: State) {
   const { action, processGameActionResponse, throwError, update } = actions;
+  state = await update(resetBehavior(NullBehavior));
   const { map } = state;
   const [remoteAction, newMap, actionResponse] = action(state, EndTurnAction());
   if (actionResponse.type === 'EndTurn') {
