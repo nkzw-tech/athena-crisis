@@ -15,7 +15,7 @@ import hasPlayerActedThisTurn from '@deities/hermes/game/hasPlayerActedThisTurn.
 import onGameEnd from '@deities/hermes/game/onGameEnd.tsx';
 import toClientGame, { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import captureException from '@deities/ui/lib/captureException.tsx';
-import { useCallback, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import gameActionWorker from '../workers/gameAction.tsx?worker';
 import { ClientGameActionRequest, ClientGameActionResponse } from '../workers/Types.tsx';
 
@@ -37,6 +37,36 @@ const getWorker = () => {
   return worker;
 };
 
+class ClientGameActionQueue {
+  private game: ClientGame | null;
+  private pending: Promise<GameActionResponse> | undefined;
+  private readonly published = new WeakSet<ClientGame>();
+
+  constructor(game: ClientGame | null) {
+    this.game = game;
+    if (game) {
+      this.published.add(game);
+    }
+  }
+
+  has(game: ClientGame | null) {
+    return game === this.game || (game != null && this.published.has(game));
+  }
+
+  getGame() {
+    return this.game;
+  }
+
+  advance(game: ClientGame) {
+    this.game = game;
+    this.published.add(game);
+  }
+
+  enqueue(process: () => Promise<GameActionResponse>) {
+    return (this.pending = (this.pending || Promise.resolve(null)).then(process));
+  }
+}
+
 export default function useClientGameAction(
   game: ClientGame | null,
   setGame: (game: ClientGame) => void,
@@ -50,11 +80,25 @@ export default function useClientGameAction(
   onError?: ((error: Error) => void) | null,
   mutateAction?: MutateActionResponseFnName | null,
 ) {
-  const actionQueue = useRef<Promise<GameActionResponse>>(undefined);
+  const [queue, setQueue] = useState(() => new ClientGameActionQueue(game));
+  // Published snapshots may reach React after the queue has already advanced again.
+  // Only an external replacement (load, undo, or restart) starts a new queue.
+  if (!queue.has(game)) {
+    setQueue(new ClientGameActionQueue(game));
+  }
+  const activeQueue = useRef<ClientGameActionQueue | null>(null);
+  useLayoutEffect(() => {
+    activeQueue.current = queue;
+    return () => {
+      activeQueue.current = null;
+    };
+  }, [queue]);
+
   return useCallback(
     (action: Action): Promise<GameActionResponse> =>
-      (actionQueue.current = (actionQueue.current || Promise.resolve(null))
-        .then(async () => {
+      queue.enqueue(async () => {
+        try {
+          const game = queue.getGame();
           if (!game) {
             throw new Error('Client Game: Map state is missing.');
           }
@@ -112,11 +156,21 @@ export default function useClientGameAction(
           if (actionResponse && initialActiveMap && gameState) {
             const lastEntry = gameState?.at(-1) || [actionResponse, initialActiveMap];
 
-            if (onGameAction) {
+            if (onGameAction && activeQueue.current === queue) {
               gameState = (await onGameAction(gameState, lastEntry[1], lastEntry[0])) || gameState;
             }
 
-            setGame(toClientGame(game, initialActiveMap, gameState, newEffects, actionResponse));
+            const nextGame = toClientGame(
+              game,
+              initialActiveMap,
+              gameState,
+              newEffects,
+              actionResponse,
+            );
+            queue.advance(nextGame);
+            if (activeQueue.current === queue) {
+              setGame(nextGame);
+            }
 
             const hiddenLabels = getHiddenLabels(lastEntry[1].config.objectives);
             actionResponse = dropLabelsFromActionResponse(actionResponse, hiddenLabels);
@@ -142,12 +196,14 @@ export default function useClientGameAction(
           }
 
           throw ActionError(action, map);
-        })
-        .catch((error) => {
-          captureException(error);
-          onError?.(error);
+        } catch (error) {
+          if (activeQueue.current === queue) {
+            captureException(error);
+            onError?.(error as Error);
+          }
           return { self: null };
-        })),
-    [game, mutateAction, onError, onGameAction, setGame],
+        }
+      }),
+    [mutateAction, onError, onGameAction, queue, setGame],
   );
 }
