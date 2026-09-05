@@ -69,6 +69,18 @@ export function pickWinningPlayer(
   }
 
   if (actionResponse.type === 'EndTurn') {
+    if (
+      (objective.type === Criteria.DefeatLabel || objective.type === Criteria.DefeatOneLabel) &&
+      !objective.optional &&
+      objective.players?.length
+    ) {
+      return objective.players.find(
+        (playerID) =>
+          activeMap.active.includes(playerID) &&
+          activeMap.isOpponent(playerID, actionResponse.next.player),
+      );
+    }
+
     return objective.type === Criteria.Survival
       ? activeMap.currentPlayer
       : objective.type !== Criteria.Default && objective.optional

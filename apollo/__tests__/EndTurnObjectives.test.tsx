@@ -165,6 +165,51 @@ test.each([false, true])(
 );
 
 test.each([
+  [Criteria.DefeatLabel, 3, 1],
+  [Criteria.DefeatOneLabel, 3, 1],
+  [Criteria.DefeatLabel, 1, 2],
+  [Criteria.DefeatOneLabel, 1, 2],
+] as const)(
+  'awards required defeat objective %s to its eligible player when player %s ends their turn',
+  async (type, currentPlayer, targetPlayer) => {
+    const initialMap = createMap([1, 2, 3]);
+    const target = vec(targetPlayer, 2);
+    const map = initialMap.copy({
+      config: initialMap.config.copy({
+        objectives: ImmutableMap([
+          [
+            0,
+            {
+              hidden: false,
+              label: new Set([1]),
+              optional: false,
+              players: [3],
+              type,
+            },
+          ],
+        ]),
+      }),
+      currentPlayer,
+      units: initialMap.units.set(target, Helicopter.create(targetPlayer, { label: 1 }).setFuel(0)),
+    });
+    expect(validateObjectives(map)).toBe(true);
+
+    const [, activeMap, gameState] = await executeGameAction(
+      map,
+      map.createVisionObject(currentPlayer),
+      new Map(),
+      EndTurnAction(),
+      null,
+    );
+
+    expect(activeMap?.units.has(target)).toBe(false);
+    expect(gameState?.map(([action]) => action)).toEqual([
+      expect.objectContaining({ objectiveId: 0, toPlayer: 3, type: 'GameEnd' }),
+    ]);
+  },
+);
+
+test.each([
   [Criteria.DefeatLabel, [3]],
   [Criteria.DefeatLabel, undefined],
   [Criteria.DefeatOneLabel, [3]],
