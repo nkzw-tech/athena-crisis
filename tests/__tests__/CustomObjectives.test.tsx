@@ -1,4 +1,5 @@
 import {
+  ActivatePowerAction,
   AttackBuildingAction,
   AttackUnitAction,
   CaptureAction,
@@ -30,6 +31,7 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { Charge } from '@deities/athena/map/Configuration.tsx';
 import { Bot, HumanPlayer, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -2930,6 +2932,61 @@ test('rescue label win criteria loses when destroying the rescuable unit', async
 
   expect(gameHasEnded(gameStateD_2)).toBe(false);
 });
+
+test.each([
+  { amount: 1, ended: true, health: 1, optional: false, remaining: 0, rescued: 0 },
+  { amount: 1, ended: false, health: 1, optional: true, remaining: 0, rescued: 0 },
+  { amount: 1, ended: false, health: 100, optional: false, remaining: 0, rescued: 0 },
+  { amount: 1, ended: false, health: 1, optional: false, remaining: 1, rescued: 0 },
+  { amount: 2, ended: false, health: 1, optional: false, remaining: 1, rescued: 1 },
+  { amount: 2, ended: true, health: 1, optional: false, remaining: 1, rescued: 0 },
+])(
+  'checks rescue feasibility after a Dinosaur power: %j',
+  async ({ amount, ended, health, optional, remaining, rescued }) => {
+    for (const currentPlayer of [1, 2] as const) {
+      const target = vec(1, 1);
+      const survivor = vec(3, 2);
+      const initialMap = map.copy({
+        config: map.config.copy({
+          objectives: defineObjectives([
+            { amount, hidden: false, optional, players: [1], type: Criteria.RescueAmount },
+            ...(optional ? [defaultObjective] : []),
+          ]),
+        }),
+        currentPlayer,
+        teams: map.teams.map((team) =>
+          team.copy({
+            players: team.players.map((player) =>
+              player
+                .copy({ skills: new Set([Skill.BuyUnitDinosaur]) })
+                .setCharge(5 * Charge)
+                .modifyStatistic('rescuedUnits', player.id === 1 ? rescued : 0),
+            ),
+          }),
+        ),
+        units: ImmutableMap([
+          [vec(1, 3), Pioneer.create(player1)],
+          [vec(3, 3), Pioneer.create(player2)],
+          [target, Pioneer.create(0).setHealth(health)],
+          ...(remaining ? ([[survivor, Pioneer.create(0)]] as const) : []),
+        ]),
+      });
+      expect(validateObjectives(initialMap)).toBe(true);
+
+      const [gameState] = await executeGameActions(initialMap, [
+        ActivatePowerAction(Skill.BuyUnitDinosaur, target),
+      ]);
+
+      const nextMap = gameState.at(-1)![1];
+      expect(nextMap.units.has(target)).toBe(health > 50);
+      expect(nextMap.units.has(survivor)).toBe(remaining > 0);
+      expect(gameHasEnded(gameState)).toBe(ended);
+      if (ended) {
+        expect(gameState.at(-1)?.[0]).toMatchObject({ toPlayer: 2, type: 'GameEnd' });
+      }
+    }
+  },
+);
 
 test('rescue amount win criteria', async () => {
   const v1 = vec(1, 1);

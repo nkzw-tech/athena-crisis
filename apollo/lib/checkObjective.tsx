@@ -285,6 +285,7 @@ function checkObjective(
         count(map.units.filter(filterNeutral).filter(filterByLabels(objective.label))) <
           count(previousMap.units.filter(filterNeutral).filter(filterByLabels(objective.label)))) ||
       ((actionResponse.type === 'AttackUnit' ||
+        actionResponse.type === 'ActivatePower' ||
         (actionResponse.type === 'AttackBuilding' &&
           !actionResponse.building &&
           actionResponse.playerC === 0)) &&
