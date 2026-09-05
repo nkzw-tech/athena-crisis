@@ -28,6 +28,7 @@ import {
   SuperTank,
   Zombie,
 } from '@deities/athena/info/Unit.tsx';
+import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Bot, HumanPlayer, PlayerID, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Team from '@deities/athena/map/Team.tsx';
@@ -2049,6 +2050,81 @@ test('escort units by label fails (transport)', async () => {
   `);
 
   expect(gameHasEnded(gameStateB)).toBe(false);
+});
+
+test.each([
+  [
+    'marked passenger survives',
+    Jeep.create(player1).load(Pioneer.create(player1, { label: 1 }).transport()),
+    false,
+  ],
+  [
+    'marked passenger survives while unmarked passenger is lost',
+    Jeep.create(player1)
+      .load(Pioneer.create(player1, { label: 1 }).transport())
+      .load(Infantry.create(player1).transport()),
+    false,
+  ],
+  [
+    'marked transport is lost while marked passenger survives',
+    Jeep.create(player1, { label: 1 }).load(Pioneer.create(player1, { label: 1 }).transport()),
+    true,
+  ],
+  [
+    'unmarked passenger survives while marked passenger is lost',
+    Jeep.create(player1)
+      .load(Pioneer.create(player1).transport())
+      .load(Infantry.create(player1, { label: 1 }).transport()),
+    true,
+  ],
+] as const)('escort label with Seatbelts On: %s', async (_, transport, shouldLose) => {
+  const from = vec(1, 1);
+  const to = vec(1, 2);
+  const destination = vec(3, 3);
+  const mapA = map.copy({
+    config: map.config.copy({
+      objectives: defineObjectives([
+        {
+          hidden: false,
+          label: new Set([1]),
+          optional: false,
+          players: [1],
+          type: Criteria.EscortLabel,
+          vectors: new Set([destination]),
+        },
+      ]),
+    }),
+    currentPlayer: 2,
+    teams: updatePlayer(map.teams, player1.copy({ skills: new Set([Skill.Jeep]) })),
+    units: map.units
+      .set(from, HeavyTank.create(player2))
+      .set(to, transport.setHealth(1))
+      .set(vec(3, 1), Infantry.create(player1)),
+  });
+
+  expect(validateObjectives(mapA)).toBe(true);
+
+  const [gameState] = await executeGameActions(mapA, [AttackUnitAction(from, to)]);
+  const activeMap = gameState.at(-1)![1];
+  const survivor = activeMap.units.get(to);
+
+  expect(gameState[0][0].type).toBe('AttackUnit');
+  expect(survivor?.id).toBe(Pioneer.id);
+  expect(survivor?.label).toBe(transport.getTransportedUnit(0)!.label);
+  expect(gameHasEnded(gameState)).toBe(shouldLose);
+
+  if (shouldLose) {
+    expect(gameState.at(-1)![0]).toMatchObject({ toPlayer: player2.id, type: 'GameEnd' });
+  } else {
+    // Deployed passengers must recover before moving.
+    const [completedGameState] = await executeGameActions(activeMap, [
+      EndTurnAction(),
+      EndTurnAction(),
+      EndTurnAction(),
+      MoveAction(to, destination),
+    ]);
+    expect(completedGameState.at(-1)![0]).toMatchObject({ toPlayer: player1.id, type: 'GameEnd' });
+  }
 });
 
 test('escort units by amount', async () => {

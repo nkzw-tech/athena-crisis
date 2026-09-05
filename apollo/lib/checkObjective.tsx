@@ -224,16 +224,8 @@ function checkObjective(
         (objective.type === Criteria.EscortLabel &&
           !ignoreIfOptional &&
           matchesTargetPlayerList &&
-          count(
-            map.units
-              .filter(filterUnitsByLabels(objective.label))
-              .filter(filterSelf(map, targetPlayer)),
-          ) <
-            count(
-              previousMap.units
-                .filter(filterUnitsByLabels(objective.label))
-                .filter(filterSelf(map, targetPlayer)),
-            ))
+          count(map.units.filter(filterSelf(map, targetPlayer)), objective.label) <
+            count(previousMap.units.filter(filterSelf(previousMap, targetPlayer)), objective.label))
       ) {
         return true;
       }
@@ -299,15 +291,10 @@ function checkObjective(
         objective.type === Criteria.EscortLabel &&
         !matchesPlayer &&
         !ignoreIfOptional &&
-        count(
-          map.units
-            .filter(filterUnitsByLabels(objective.label))
-            .filter(filterEnemies(map, targetPlayer)),
-        ) <
+        count(map.units.filter(filterEnemies(map, targetPlayer)), objective.label) <
           count(
-            previousMap.units
-              .filter(filterUnitsByLabels(objective.label))
-              .filter(filterEnemies(map, targetPlayer)),
+            previousMap.units.filter(filterEnemies(previousMap, targetPlayer)),
+            objective.label,
           )) ||
       (!isEndTurn &&
         objective.type === Criteria.EscortAmount &&
