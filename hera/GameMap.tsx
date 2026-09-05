@@ -1588,7 +1588,7 @@ export default class GameMap extends Component<Props, State> {
       clearTimeout(timer.timer);
       timers.add({
         ...timer,
-        delay: pauseStart - timer.start,
+        delay: Math.max(0, timer.delay - (pauseStart - timer.start)),
       });
     }
     this._timers = timers;

@@ -102,7 +102,9 @@ const map = MapData.createMap({
 type TestGameMap = {
   _actions: {
     action: Actions['action'];
+    pauseReplay: Actions['pauseReplay'];
     processGameActionResponse: (gameActionResponse: GameActionResponse) => Promise<State>;
+    resumeReplay: Actions['resumeReplay'];
     scheduleTimer: (fn: () => void, delay: number) => Promise<number>;
     update: UpdateFunction;
   };
@@ -187,6 +189,68 @@ function installSynchronousSetState(gameMap: TestGameMap) {
     callback?.();
   };
 }
+
+test.each([{ elapsedTimes: [100] }, { elapsedTimes: [900] }, { elapsedTimes: [100, 300] }])(
+  'animation timers preserve their remaining delay across pauses after $elapsedTimes ms',
+  async ({ elapsedTimes }) => {
+    vi.useFakeTimers();
+    vi.stubGlobal('window', {
+      clearTimeout,
+      innerHeight: 768,
+      innerWidth: 1024,
+      setTimeout,
+    });
+
+    try {
+      const { default: GameMap } = await import('../GameMap.tsx');
+      const gameMap = new GameMap({
+        animationSpeed: {
+          human: InstantAnimationConfig,
+          regular: InstantAnimationConfig,
+        },
+        autoPanning: false,
+        buildingSize: TileSize,
+        confirmActionStyle: 'never',
+        currentUserId: '2',
+        fogStyle: 'soft',
+        map,
+        playerAchievement: null,
+        playerDetails: new Map(),
+        scale: 1,
+        showCursor: false,
+        style: 'none',
+        tileSize: TileSize,
+        tilted: false,
+        unitSize: TileSize,
+      } satisfies Props) as unknown as TestGameMap;
+      installSynchronousSetState(gameMap);
+
+      const onComplete = vi.fn();
+      const { pauseReplay, resumeReplay, scheduleTimer } = gameMap._actions;
+      let remaining = 1000;
+      await scheduleTimer(onComplete, remaining);
+
+      for (const elapsed of elapsedTimes) {
+        vi.advanceTimersByTime(elapsed);
+        remaining -= elapsed;
+        await pauseReplay();
+        vi.advanceTimersByTime(5000);
+        expect(onComplete).not.toHaveBeenCalled();
+        await resumeReplay();
+      }
+
+      vi.advanceTimersByTime(remaining - 1);
+      expect(onComplete).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1);
+      expect(onComplete).toHaveBeenCalledOnce();
+      vi.advanceTimersByTime(1000);
+      expect(onComplete).toHaveBeenCalledOnce();
+    } finally {
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    }
+  },
+);
 
 test('skipped animation completion does not synchronously re-enter GameMap updates', async () => {
   vi.stubGlobal('window', {
