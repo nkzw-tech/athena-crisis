@@ -32,6 +32,30 @@ const map = withModifiers(
 );
 const player1 = HumanPlayer.from(map.getPlayer(1), '1');
 
+test.each([0, 2] as const)(
+  'neutral units do not counterattack when a building owned by player %s is attacked',
+  (buildingPlayer) => {
+    const from = vec(2, 1);
+    const to = vec(1, 1);
+    const defender = HeavyTank.create(0);
+    const initialMap = map.copy({
+      buildings: map.buildings.set(to, House.create(buildingPlayer)),
+      units: map.units.clear().set(from, HeavyTank.create(1).setHealth(1)).set(to, defender),
+    });
+    const [actionResponse, resultMap] = execute(
+      initialMap,
+      initialMap.createVisionObject(player1),
+      AttackBuildingAction(from, to),
+    )!;
+
+    expect(resultMap.buildings.get(to)?.health).toBeGreaterThan(0);
+    expect(resultMap.buildings.get(to)?.health).toBeLessThan(100);
+    expect(actionResponse).toMatchObject({ hasCounterAttack: false, type: 'AttackBuilding' });
+    expect(resultMap.units.get(from)?.health).toBe(1);
+    expect(resultMap.units.get(to)).toEqual(defender);
+  },
+);
+
 test('units do not disappear when a building is attacked and there is no counter attack', async () => {
   const to = vec(1, 1);
   const vision = map.createVisionObject(player1);

@@ -595,7 +595,7 @@ function attackBuilding(map: MapData, vision: VisionT, { from, to }: AttackBuild
     let a = result[0];
     const b = result[1];
     let c: Unit | null = null;
-    if (!b.isDead() && unitC) {
+    if (!b.isDead() && unitC && unitC.player > 0) {
       const counter = _counterAttack(map, a, unitC, from, to);
       if (counter) {
         [a, c] = counter;
