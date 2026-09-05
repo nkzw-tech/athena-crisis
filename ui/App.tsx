@@ -5,6 +5,7 @@ import {
   GamepadTextInputMode,
 } from './controls/GamepadTextInput.tsx';
 import captureException from './lib/captureException.tsx';
+import waitForAppInitialization from './lib/waitForAppInitialization.tsx';
 
 export type NativeApp = Readonly<{
   canToggleFullScreen: () => boolean;
@@ -34,6 +35,7 @@ export type NativeApp = Readonly<{
     existingText?: string | undefined | null,
   ) => Promise<boolean>;
   toggleFullscreen: () => void;
+  whenReady: () => Promise<void>;
 }>;
 
 type Navigate = (url: Route) => void;
@@ -163,6 +165,7 @@ export const App: App = {
         document.documentElement.requestFullscreen();
       }
     }),
+  whenReady: () => waitForAppInitialization(app),
   writeToClipboard: async (text: string | (() => Promise<string>)) => {
     try {
       const value = typeof text === 'string' ? text : await text();
