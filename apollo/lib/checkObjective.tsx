@@ -275,8 +275,11 @@ function checkObjective(
       (actionResponse.type === 'AttackUnit' &&
         objective.type === Criteria.RescueAmount &&
         !ignoreIfOptional &&
-        count(map.units.filter(filterNeutral)) + rescuedUnitsByPlayer(map, player) <
-          objective.amount) ||
+        (objective.players?.length ? objective.players : map.active).every(
+          (playerID) =>
+            count(map.units.filter(filterNeutral)) + rescuedUnitsByPlayer(map, playerID) <
+            objective.amount,
+        )) ||
       (actionResponse.type === 'AttackBuilding' &&
         !actionResponse.building &&
         objective.type === Criteria.DestroyAmount &&

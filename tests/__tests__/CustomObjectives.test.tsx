@@ -3011,6 +3011,97 @@ test('rescue amount win criteria', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test.each([{ players: [1] }, { players: [] }, { players: undefined }] as const)(
+  'rescue amount remains winnable after an opponent destroys a neutral (players: $players)',
+  async ({ players }) => {
+    const rescuer = vec(1, 2);
+    const firstRescue = vec(1, 1);
+    const lastRescue = vec(1, 3);
+    const target = vec(2, 3);
+    const attacker = vec(3, 3);
+    const initialMap = map.copy({
+      config: map.config.copy({
+        objectives: defineObjectives([
+          { amount: 2, hidden: false, optional: false, players, type: Criteria.RescueAmount },
+        ]),
+      }),
+      units: map.units
+        .set(rescuer, Pioneer.create(player1))
+        .set(firstRescue, Pioneer.create(0))
+        .set(lastRescue, Pioneer.create(0))
+        .set(target, Pioneer.create(0).setHealth(1))
+        .set(attacker, SmallTank.create(player2)),
+    });
+    expect(validateObjectives(initialMap)).toBe(true);
+
+    const [gameState] = await executeGameActions(initialMap, [
+      RescueAction(rescuer, firstRescue),
+      EndTurnAction(),
+      EndTurnAction(),
+      RescueAction(rescuer, firstRescue),
+      EndTurnAction(),
+      AttackUnitAction(attacker, target),
+    ]);
+    const nextMap = gameState.at(-1)![1];
+    expect(nextMap.getPlayer(1).stats.rescuedUnits).toBe(1);
+    expect(nextMap.units.has(target)).toBe(false);
+    expect(nextMap.units.get(lastRescue)?.player).toBe(0);
+    expect(gameHasEnded(gameState)).toBe(false);
+
+    const [completedGameState] = await executeGameActions(nextMap, [
+      EndTurnAction(),
+      RescueAction(rescuer, lastRescue),
+      EndTurnAction(),
+      EndTurnAction(),
+      RescueAction(rescuer, lastRescue),
+    ]);
+    expect(completedGameState.at(-1)?.[1].getPlayer(1).stats.rescuedUnits).toBe(2);
+    expect(completedGameState.at(-1)?.[0]).toMatchObject({ toPlayer: 1, type: 'GameEnd' });
+  },
+);
+
+test.each([
+  { amount: 2, ended: true, optional: false, players: [1], rescues: [0, 1] },
+  { amount: 2, ended: false, optional: false, players: [1, 2], rescues: [1, 0] },
+  { amount: 2, ended: true, optional: false, players: [1, 2], rescues: [0, 0] },
+  { amount: 3, ended: true, optional: false, players: [1, 2], rescues: [1, 1] },
+  { amount: 2, ended: false, optional: true, players: [1], rescues: [0, 1] },
+] as const)(
+  'checks rescue feasibility per eligible player: %j',
+  async ({ amount, ended, optional, players, rescues }) => {
+    const from = vec(2, 2);
+    const to = vec(1, 2);
+    const initialMap = map.copy({
+      config: map.config.copy({
+        objectives: defineObjectives([
+          { amount, hidden: false, optional, players, type: Criteria.RescueAmount },
+          ...(optional ? [defaultObjective] : []),
+        ]),
+      }),
+      currentPlayer: 2,
+      teams: map.teams.map((team) =>
+        team.copy({
+          players: team.players.map((player) =>
+            player.modifyStatistic('rescuedUnits', rescues[player.id - 1]!),
+          ),
+        }),
+      ),
+      units: map.units
+        .set(from, SmallTank.create(player2))
+        .set(to, Pioneer.create(0).setHealth(1))
+        .set(vec(1, 1), Pioneer.create(0))
+        .set(vec(3, 3), Pioneer.create(player1)),
+    });
+    expect(validateObjectives(initialMap)).toBe(true);
+
+    const [gameState] = await executeGameActions(initialMap, [AttackUnitAction(from, to)]);
+    expect(gameHasEnded(gameState)).toBe(ended);
+    if (ended && players.length === 1) {
+      expect(gameState.at(-1)?.[0]).toMatchObject({ toPlayer: 2, type: 'GameEnd' });
+    }
+  },
+);
+
 test('rescue amount win criteria loses when destroying the rescuable unit', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);
