@@ -9,13 +9,10 @@ import sortBy from '@nkzw/core/sortBy.js';
 import BuildingTile from '../Building.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  actionWheelInfoIconStyle,
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import { actionWheelInfoIconStyle, LargeActionButton } from '../ui/ActionWheel.tsx';
 import FlashFlyout from '../ui/FlashFlyout.tsx';
 import { FlyoutItem } from '../ui/Flyout.tsx';
+import PaginatedActionWheel from '../ui/PaginatedActionWheel.tsx';
 import { selectFallback } from './Behavior.tsx';
 import createBuildingAction from './createBuilding/createBuildingAction.tsx';
 
@@ -48,19 +45,19 @@ export default class CreateBuilding {
         ),
         (info) => info.getCostFor(player),
       );
-      let position = 0;
       return (
-        <ActionWheel
+        <PaginatedActionWheel
           actions={actions}
           animationConfig={animationConfig}
           color={map.getCurrentPlayer().id}
-          entityCount={buildings.length}
+          funds={funds}
+          items={buildings}
+          navigationDirection={navigationDirection}
           position={selectedPosition}
           tileSize={tileSize}
           zIndex={zIndex}
         >
-          <ActionWheelFunds funds={funds} />
-          {buildings.map((building, id) => {
+          {(building, position, entityCount) => {
             const isAllowed = allowAnyBuilding || building.canBuildUnits();
             const cost = building.getCostFor(player);
             const hasFunds = funds >= cost;
@@ -88,7 +85,7 @@ export default class CreateBuilding {
               <LargeActionButton
                 detail={String(cost)}
                 disabled={isDisabled}
-                entityCount={buildings.length}
+                entityCount={entityCount}
                 icon={(highlight) => (
                   <>
                     <BuildingTile
@@ -126,16 +123,16 @@ export default class CreateBuilding {
                     )}
                   </>
                 )}
-                key={id}
+                key={building.id}
                 label={building.name}
                 navigationDirection={navigationDirection}
                 onClick={create}
                 onLongPress={showInfo}
-                position={position++}
+                position={position}
               />
             );
-          })}
-        </ActionWheel>
+          }}
+        </PaginatedActionWheel>
       );
     }
     return null;

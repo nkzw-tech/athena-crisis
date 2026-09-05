@@ -3,25 +3,18 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
-import More from '@deities/ui/icons/MoreHorizontal.tsx';
 import { css } from '@emotion/css';
 import sortBy from '@nkzw/core/sortBy.js';
 import { fbt } from 'fbtee';
-import { useState } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import getSkillConfigForDisplay from '../lib/getSkillConfigForDisplay.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  actionWheelInfoIconStyle,
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import { actionWheelInfoIconStyle, LargeActionButton } from '../ui/ActionWheel.tsx';
+import PaginatedActionWheel from '../ui/PaginatedActionWheel.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import clientBuySkillAction from './buySkill/clientBuySkillAction.tsx';
-
-const MAX_SKILLS = 8;
 
 export default class BuySkills {
   public readonly type = 'buySkills' as const;
@@ -46,7 +39,6 @@ export default class BuySkills {
 
   component = ({ actions, state }: StateWithActions) => {
     const { showGameInfo } = actions;
-    const [cursor, setCursor] = useState(0);
 
     const {
       animationConfig,
@@ -72,23 +64,19 @@ export default class BuySkills {
         (skill) => (skillCosts.get(skill) || Number.POSITIVE_INFINITY) < Number.POSITIVE_INFINITY,
       );
 
-      const skillsToDisplay =
-        skills.length > MAX_SKILLS ? skills.slice(cursor, cursor + MAX_SKILLS - 1) : skills;
-      const entityCount = skillsToDisplay.length + (skillsToDisplay.length < skills.length ? 1 : 0);
-      let position = 0;
-
       return (
-        <ActionWheel
+        <PaginatedActionWheel
           actions={actions}
           animationConfig={animationConfig}
           color={map.getCurrentPlayer().id}
-          entityCount={entityCount}
+          funds={funds}
+          items={skills}
+          navigationDirection={navigationDirection}
           position={selectedPosition}
           tileSize={tileSize}
           zIndex={zIndex}
         >
-          <ActionWheelFunds funds={funds} />
-          {skillsToDisplay.map((skill) => {
+          {(skill, position, entityCount) => {
             const cost = skillCosts.get(skill)!;
             const { name } = getSkillConfigForDisplay(skill);
             const isDisabled = funds < cost || currentPlayer.skills.has(skill);
@@ -136,26 +124,11 @@ export default class BuySkills {
                 navigationDirection={navigationDirection}
                 onClick={buy}
                 onLongPress={showInfo}
-                position={position++}
+                position={position}
               />
             );
-          })}
-          {skillsToDisplay.length < skills.length && (
-            <LargeActionButton
-              detail={
-                cursor === 0
-                  ? fbt('More', 'Button to show more menu items')
-                  : fbt('Back', 'Button to show previous menu items')
-              }
-              entityCount={entityCount}
-              icon={(highlight, props) => <Icon icon={More} {...props} />}
-              label={null}
-              navigationDirection={navigationDirection}
-              onClick={() => setCursor((cursor) => (cursor === 0 ? cursor + MAX_SKILLS - 1 : 0))}
-              position={position}
-            />
-          )}
-        </ActionWheel>
+          }}
+        </PaginatedActionWheel>
       );
     }
     return null;

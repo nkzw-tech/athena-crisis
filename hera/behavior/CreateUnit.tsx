@@ -14,7 +14,6 @@ import { applyVar } from '@deities/ui/cssVar.tsx';
 import { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
-import More from '@deities/ui/icons/MoreHorizontal.tsx';
 import Movement from '@deities/ui/icons/Movement.tsx';
 import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
@@ -24,23 +23,18 @@ import sortBy from '@nkzw/core/sortBy.js';
 import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import Visible from 'pixelarticons/svg/eye.svg';
-import { MouseEvent, useCallback, useState } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Medal from '../Medal.tsx';
 import { RadiusType } from '../Radius.tsx';
 import { Actions, State, StateLike, StateWithActions } from '../Types.tsx';
-import ActionWheel, {
-  actionWheelInfoIconStyle,
-  ActionWheelFunds,
-  LargeActionButton,
-} from '../ui/ActionWheel.tsx';
+import { actionWheelInfoIconStyle, LargeActionButton } from '../ui/ActionWheel.tsx';
+import PaginatedActionWheel from '../ui/PaginatedActionWheel.tsx';
 import UnitTile from '../Unit.tsx';
 import { resetBehavior, selectFallback } from './Behavior.tsx';
 import createUnitAction from './createUnit/createUnitAction.tsx';
 import TeleportIndicator from './swap/TeleportIndicator.tsx';
-
-const MAX_UNITS = 8;
 
 export default class CreateUnit {
   public readonly type = 'createUnit' as const;
@@ -105,7 +99,6 @@ export default class CreateUnit {
 
   component = ({ actions, state }: StateWithActions) => {
     const { showGameInfo, update } = actions;
-    const [cursor, setCursor] = useState(0);
 
     const {
       animationConfig,
@@ -145,22 +138,19 @@ export default class CreateUnit {
         unit.getCostFor(currentPlayer),
       );
       const { hasLeader } = getLeaders(map, selectedBuilding.player);
-      const unitsToDisplay =
-        units.length > MAX_UNITS ? units.slice(cursor, cursor + MAX_UNITS - 1) : units;
-      const entityCount = unitsToDisplay.length + (unitsToDisplay.length < units.length ? 1 : 0);
-      let position = 0;
       return (
-        <ActionWheel
+        <PaginatedActionWheel
           actions={actions}
           animationConfig={animationConfig}
           color={map.getCurrentPlayer().id}
-          entityCount={entityCount}
+          funds={funds}
+          items={units}
+          navigationDirection={navigationDirection}
           position={selectedPosition}
           tileSize={tileSize}
           zIndex={zIndex}
         >
-          <ActionWheelFunds funds={funds} />
-          {unitsToDisplay.map((unit) => {
+          {(unit, position, entityCount) => {
             const cost = unit.getCostFor(currentPlayer);
             const isDisabled =
               funds < cost ||
@@ -274,26 +264,11 @@ export default class CreateUnit {
                 navigationDirection={navigationDirection}
                 onClick={create}
                 onLongPress={showInfo}
-                position={position++}
+                position={position}
               />
             );
-          })}
-          {unitsToDisplay.length < units.length && (
-            <LargeActionButton
-              detail={
-                cursor === 0
-                  ? fbt('More', 'Button to show more menu items')
-                  : fbt('Back', 'Button to show previous menu items')
-              }
-              entityCount={entityCount}
-              icon={(highlight, props) => <Icon icon={More} {...props} />}
-              label={null}
-              navigationDirection={navigationDirection}
-              onClick={() => setCursor((cursor) => (cursor === 0 ? cursor + MAX_UNITS - 1 : 0))}
-              position={position}
-            />
-          )}
-        </ActionWheel>
+          }}
+        </PaginatedActionWheel>
       );
     }
 
