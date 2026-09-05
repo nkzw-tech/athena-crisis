@@ -16,6 +16,7 @@ import {
 } from '@deities/athena/info/Unit.tsx';
 import assignDeterministicUnitNames from '@deities/athena/lib/assignDeterministicUnitNames.tsx';
 import getAirUnitsToRecover from '@deities/athena/lib/getAirUnitsToRecover.tsx';
+import getSurvivingPassenger from '@deities/athena/lib/getSurvivingPassenger.tsx';
 import matchesActiveType from '@deities/athena/lib/matchesActiveType.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
@@ -102,7 +103,8 @@ export function onPowerUnitDamageEffect(skill: Skill, map: MapData, vector: Vect
     }
 
     const actualDamage = unit.health - newUnit.health;
-    const count = isDead ? newUnit.count() : 0;
+    const survivingUnit = isDead ? getSurvivingPassenger(map, unit) : null;
+    const count = isDead ? newUnit.count() - (survivingUnit?.count() || 0) : 0;
     const currentPlayer = map.getCurrentPlayer();
     const targetPlayer = map.getPlayer(unit);
     return map.copy({
@@ -120,7 +122,10 @@ export function onPowerUnitDamageEffect(skill: Skill, map: MapData, vector: Vect
               currentPlayer.modifyStatistics({ damage: actualDamage, destroyedUnits: count }),
               targetPlayer.modifyStatistics({ lostUnits: count }),
             ]),
-      units: isDead ? map.units.delete(vector) : map.units.set(vector, newUnit),
+      units:
+        isDead && !survivingUnit
+          ? map.units.delete(vector)
+          : map.units.set(vector, survivingUnit || newUnit),
     });
   }
 
