@@ -1,8 +1,9 @@
-import { Helicopter, Infantry } from '@deities/athena/info/Unit.tsx';
+import { Helicopter, Infantry, TransportHelicopter } from '@deities/athena/info/Unit.tsx';
 import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { AllowedMisses } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
+import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import {
@@ -33,6 +34,77 @@ const createMap = (players: PlayerIDs) =>
       units: players.map((id) => [id, 1, Infantry.create(id).toJSON()]),
     }),
   );
+
+test.each([
+  {
+    expectedLosses: 0,
+    name: 'automatic resupply',
+    supply: true,
+    unit: Helicopter.create(2).setFuel(1),
+  },
+  {
+    expectedLosses: 1,
+    name: 'fuel starvation without supply',
+    supply: false,
+    unit: Helicopter.create(2).setFuel(1),
+  },
+  {
+    expectedLosses: 1,
+    name: 'fatal poison despite resupply',
+    supply: true,
+    unit: Helicopter.create(2).setFuel(1).setHealth(1).setStatusEffect(UnitStatusEffect.Poison),
+  },
+  {
+    expectedLosses: 2,
+    name: 'fuel starvation with a passenger',
+    supply: false,
+    unit: TransportHelicopter.create(2).setFuel(1).load(Infantry.create(2).transport()),
+  },
+])(
+  'counts actual turn-start casualties for defeat objectives: $name',
+  async ({ expectedLosses, supply, unit }) => {
+    const initialMap = createMap([1, 2]);
+    const position = vec(3, 2);
+    const map = initialMap.copy({
+      config: initialMap.config.copy({
+        objectives: ImmutableMap([
+          [
+            0,
+            {
+              amount: 1,
+              hidden: false,
+              optional: false,
+              players: [1],
+              type: Criteria.DefeatAmount,
+            },
+          ],
+        ]),
+      }),
+      units: initialMap.units
+        .set(position, unit)
+        .set(supply ? vec(3, 3) : vec(5, 3), TransportHelicopter.create(2)),
+    });
+    expect(validateObjectives(map)).toBe(true);
+
+    const [, activeMap, gameState] = await executeGameAction(
+      map,
+      map.createVisionObject(1),
+      new Map(),
+      EndTurnAction(),
+      null,
+    );
+
+    expect(activeMap?.getPlayer(1).stats.destroyedUnits).toBe(expectedLosses);
+    expect(activeMap?.getPlayer(2).stats.lostUnits).toBe(expectedLosses);
+    expect(activeMap?.units.has(position)).toBe(expectedLosses === 0);
+    if (expectedLosses === 0) {
+      expect(activeMap?.units.get(position)?.fuel).toBe(unit.info.configuration.fuel);
+      expect(gameState).toEqual([]);
+    } else {
+      expect(gameState?.at(-1)?.[0]).toMatchObject({ toPlayer: 1, type: 'GameEnd' });
+    }
+  },
+);
 
 test.each([false, true])(
   'loses a required escort objective with a simultaneous survival bonus: %s',

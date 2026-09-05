@@ -13,11 +13,14 @@ import {
   TransportHelicopter,
 } from '@deities/athena/info/Unit.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
+import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
-import { SupplyAction } from '../action-mutators/ActionMutators.tsx';
+import { EndTurnAction, SupplyAction } from '../action-mutators/ActionMutators.tsx';
 import { execute } from '../Action.tsx';
+import applyActionResponse from '../actions/applyActionResponse.tsx';
+import { computeVisibleEndTurnActionResponse } from '../lib/computeVisibleActions.tsx';
 
 const initialMap = withModifiers(
   MapData.createMap({
@@ -39,6 +42,47 @@ const initialMap = withModifiers(
 );
 const player1 = initialMap.getPlayer(1);
 const vision = initialMap.createVisionObject(player1);
+
+test.each([false, true])(
+  'hidden automatic supply keeps client and server casualties in sync (poison: %s)',
+  (poisoned) => {
+    const position = vec(3, 3);
+    const supplier = vec(4, 3);
+    const unit = Helicopter.create(2).setFuel(1).setHealth(10);
+    const map = withModifiers(
+      MapData.createMap({
+        config: { fog: true },
+        map: Array(25).fill(1),
+        size: { height: 5, width: 5 },
+        teams: initialMap.toJSON().teams,
+        units: [
+          [1, 3, Infantry.create(1).toJSON()],
+          [3, 3, (poisoned ? unit.setStatusEffect(UnitStatusEffect.Poison) : unit).toJSON()],
+          [4, 3, TransportHelicopter.create(2).toJSON()],
+        ],
+      }),
+    );
+    const vision = map.createVisionObject(1);
+    const visibleMap = vision.apply(map);
+    expect(visibleMap.units.has(position)).toBe(true);
+    expect(visibleMap.units.has(supplier)).toBe(false);
+
+    const [response, serverMap] = execute(map, vision, EndTurnAction())!;
+    if (response.type !== 'EndTurn') {
+      throw new Error('Expected an EndTurn response.');
+    }
+    const visibleResponse = computeVisibleEndTurnActionResponse(response, map, serverMap, vision);
+    expect(visibleResponse.supply).toContain(position);
+    const clientMap = applyActionResponse(visibleMap, vision, visibleResponse);
+
+    expect(clientMap.units.get(position)).toEqual(serverMap.units.get(position));
+    expect(clientMap.units.has(position)).toBe(!poisoned);
+    expect(clientMap.getPlayer(1).stats).toEqual(serverMap.getPlayer(1).stats);
+    expect(clientMap.getPlayer(2).stats).toEqual(serverMap.getPlayer(2).stats);
+    expect(serverMap.getPlayer(1).stats.destroyedUnits).toBe(poisoned ? 1 : 0);
+    expect(serverMap.getPlayer(2).stats.lostUnits).toBe(poisoned ? 1 : 0);
+  },
+);
 
 test('supply surrounding units with a Jeep', () => {
   const from = vec(2, 2);

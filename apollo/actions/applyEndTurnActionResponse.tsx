@@ -1,8 +1,5 @@
-import applyBeginTurnStatusEffects from '@deities/athena/lib/applyBeginTurnStatusEffects.tsx';
 import createBotWithName from '@deities/athena/lib/createBotWithName.tsx';
 import getUnitsToHeal from '@deities/athena/lib/getUnitsToHeal.tsx';
-import shouldRemoveUnit from '@deities/athena/lib/shouldRemoveUnit.tsx';
-import subtractFuel from '@deities/athena/lib/subtractFuel.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { HealAmount } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer, isHumanPlayer, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
@@ -32,31 +29,6 @@ export default function applyEndTurnActionResponse(
       return amount >= HealAmount ? unit.refill() : unit;
     }),
   );
-  const mapBeforeRemovingUnits = applyBeginTurnStatusEffects(
-    subtractFuel(map.copy({ units }), nextPlayer),
-    nextPlayer,
-  );
-  const destroyedUnits = mapBeforeRemovingUnits.units.reduce(
-    (sum, unit, vector) =>
-      sum +
-      (!supplyVectors.has(vector) &&
-      shouldRemoveUnit(mapBeforeRemovingUnits, vector, unit, nextPlayer.id)
-        ? unit.count()
-        : 0),
-    0,
-  );
-
-  if (destroyedUnits > 0) {
-    const mapB = map.copy({ teams });
-    teams = updatePlayers(teams, [
-      mapB.getPlayer(resolveDynamicPlayerID(map, 'opponent', nextPlayer.id)).modifyStatistics({
-        destroyedUnits,
-      }),
-      mapB.getPlayer(nextPlayer.id).modifyStatistics({
-        lostUnits: destroyedUnits,
-      }),
-    ]);
-  }
 
   if (rotatePlayers && isHumanPlayer(currentPlayer)) {
     const temporaryMap = map.copy({ teams });
@@ -70,7 +42,7 @@ export default function applyEndTurnActionResponse(
     ]);
   }
 
-  return map
+  const nextMap = map
     .copy({
       currentPlayer: nextPlayer.id,
       round,
@@ -79,4 +51,21 @@ export default function applyEndTurnActionResponse(
     })
     .recover(currentPlayer)
     .refill(nextPlayer, supplyVectors);
+
+  const destroyedUnits = map.units.reduce(
+    (sum, unit, vector) =>
+      sum + (map.matchesPlayer(unit, nextPlayer) && !nextMap.units.has(vector) ? unit.count() : 0),
+    0,
+  );
+
+  return destroyedUnits > 0
+    ? nextMap.copy({
+        teams: updatePlayers(nextMap.teams, [
+          nextMap
+            .getPlayer(resolveDynamicPlayerID(map, 'opponent', nextPlayer.id))
+            .modifyStatistics({ destroyedUnits }),
+          nextMap.getPlayer(nextPlayer.id).modifyStatistics({ lostUnits: destroyedUnits }),
+        ]),
+      })
+    : nextMap;
 }
