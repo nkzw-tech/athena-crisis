@@ -1,5 +1,6 @@
 import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import gameHasEnded from '@deities/apollo/lib/gameHasEnded.tsx';
 import getMovementPath from '@deities/athena/lib/getMovementPath.tsx';
 import type Unit from '@deities/athena/map/Unit.tsx';
 import type Vector from '@deities/athena/map/Vector.tsx';
@@ -8,6 +9,7 @@ import addMoveAnimation from '../../lib/addMoveAnimation.tsx';
 import type { Actions, State } from '../../Types.tsx';
 import { resetBehavior } from '../Behavior.tsx';
 import handleRemoteAction from '../handleRemoteAction.tsx';
+import syncMoveAction from '../move/syncMoveAction.tsx';
 import NullBehavior from '../NullBehavior.tsx';
 
 export type TransportData = Readonly<{
@@ -29,6 +31,23 @@ export default function loadUnitAction(
 
   const { moveable, path: initialPath, position } = transport;
   const path = initialPath || getMovementPath(map, position, moveable, null).path;
+  if (map.config.fog) {
+    return actions.update(
+      syncMoveAction(
+        actions,
+        selectedPosition,
+        position,
+        moveable,
+        state,
+        (state, _, gameActionResponse) => ({
+          ...state,
+          ...resetBehavior(gameHasEnded(gameActionResponse.others) ? NullBehavior : undefined),
+        }),
+        path,
+      ),
+    );
+  }
+
   const [remoteAction, , actionResponse] = actions.action(
     state,
     MoveAction(selectedPosition, position, path),

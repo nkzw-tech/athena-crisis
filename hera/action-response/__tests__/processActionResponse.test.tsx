@@ -1,3 +1,5 @@
+import { MoveAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
+import { execute } from '@deities/apollo/Action.tsx';
 import type {
   ActionResponse,
   DropUnitActionResponse,
@@ -6,11 +8,15 @@ import type {
   SabotageActionResponse,
 } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
+import encodeGameActionResponse from '@deities/apollo/actions/encodeGameActionResponse.tsx';
+import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
+import updateVisibleEntities from '@deities/apollo/lib/updateVisibleEntities.tsx';
 import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { Skill } from '@deities/athena/info/Skill.tsx';
 import { Plain, RailTrack } from '@deities/athena/info/Tile.tsx';
-import { Artillery, Infantry, Jeep, Pioneer } from '@deities/athena/info/Unit.tsx';
+import { Artillery, Infantry, Jeep, Pioneer, Saboteur } from '@deities/athena/info/Unit.tsx';
 import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -24,6 +30,7 @@ import createTracksAction from '../../behavior/createTracks/createTracksAction.t
 import dropUnitAction, { clientDropUnitAction } from '../../behavior/drop/dropUnitAction.tsx';
 import { clientHealAction } from '../../behavior/heal/healAction.tsx';
 import clientMoveAction from '../../behavior/move/clientMoveAction.tsx';
+import getMoveableFields from '../../behavior/move/getMoveableFields.tsx';
 import moveAction from '../../behavior/move/moveAction.tsx';
 import { clientSabotageAction } from '../../behavior/sabotage/sabotageAction.tsx';
 import supplyAction from '../../behavior/supply/supplyAction.tsx';
@@ -638,6 +645,115 @@ test('transport loading waits for movement before processing the remote response
 
   resolveRemoteAction();
   await vi.waitFor(() => expect(actions.processGameActionResponse).toHaveBeenCalledOnce());
+});
+
+describe.each([Fog.Standard, Fog.Exploration])('transport loading with fog %s', (fog) => {
+  test.each(['blocked', 'hidden', 'visible'])('reconciles a %s path', async (scenario) => {
+    const blocked = scenario === 'blocked';
+    const visible = scenario === 'visible';
+    const from = vec(1, 2);
+    const to = vec(visible ? 2 : 7, 2);
+    const blocker = vec(4, 2);
+    const serverMap = MapData.createMap({
+      config: { fog },
+      map: Array(9 * 3).fill(Plain.id),
+      size: { height: 3, width: 9 },
+      teams: createMap().toJSON().teams,
+      units: [
+        [from.x, from.y, Saboteur.create(1).toJSON()],
+        [to.x, to.y, Jeep.create(1).toJSON()],
+        [blocked ? blocker.x : 9, blocked ? blocker.y : 3, Infantry.create(2).toJSON()],
+      ],
+    });
+    const vision = serverMap.createVisionObject(1);
+    const clientMap = vision.apply(serverMap);
+    const unit = clientMap.units.get(from)!;
+    const path = (visible ? [2] : [2, 3, 4, 5, 6, 7]).map((x) => vec(x, 2));
+    const request = MoveAction(from, to, path);
+    const [serverResponse, serverResult] = execute(serverMap, vision, request)!;
+    const [optimisticResponse, optimisticMap] = execute(clientMap, vision, request)!;
+    const gameActionResponse = decodeGameActionResponse(
+      encodeGameActionResponse(
+        serverMap,
+        serverResult,
+        vision,
+        null,
+        undefined,
+        serverResponse,
+        null,
+      ),
+    );
+    expect(clientMap.units.has(blocker)).toBe(false);
+    expect(optimisticResponse).toMatchObject({ to });
+    expect(serverResponse).toMatchObject({ to: blocked ? vec(3, 2) : to });
+
+    let resolveRemoteAction!: (response: GameActionResponse) => void;
+    const remoteAction = new Promise<GameActionResponse>((resolve) => {
+      resolveRemoteAction = resolve;
+    });
+    const testGame = createTestGame(clientMap);
+    const actions = {
+      ...testGame.actions,
+      action: vi.fn(() => [remoteAction, optimisticMap, optimisticResponse]),
+      processGameActionResponse: vi.fn(async (response: GameActionResponse) =>
+        testGame.update((state) => ({
+          lastActionResponse: response.self!.actionResponse,
+          map: updateVisibleEntities(state.map, state.vision, response.self!),
+        })),
+      ),
+    } as unknown as Actions;
+    void loadUnitAction(
+      {
+        moveable: getMoveableFields(clientMap, vision, unit, from),
+        path,
+        position: to,
+        unit: clientMap.units.get(to)!,
+      },
+      actions,
+      { ...testGame.getState(), selectedPosition: from, selectedUnit: unit },
+    );
+
+    expect(testGame.getState().animations.get(from)).toMatchObject({
+      partial: !visible,
+      path: [vec(2, 2)],
+    });
+    await completeAnimation(testGame);
+    expect(testGame.getState().behavior?.type).toBe('null');
+    if (!visible) {
+      expect(testGame.getState().map.units.get(to)?.transports).toBeNull();
+    }
+    expect(actions.processGameActionResponse).not.toHaveBeenCalled();
+
+    resolveRemoteAction(gameActionResponse);
+    if (!visible) {
+      await vi.waitFor(() => expect(testGame.getState().animations.has(from)).toBe(true));
+      expect(testGame.getState().animations.get(from)).toMatchObject({
+        path: blocked ? [vec(3, 2)] : path.slice(1),
+      });
+      await completeAnimation(testGame);
+    }
+    await vi.waitFor(() => expect(testGame.getState().behavior?.type).toBe('base'));
+
+    const finalState = testGame.getState();
+    expect(finalState.map.units.filter((unit) => unit.player === 1).toJSON()).toEqual(
+      serverResult.units.filter((unit) => unit.player === 1).toJSON(),
+    );
+    expect(finalState.selectedPosition).toBeNull();
+    expect(finalState.selectedUnit).toBeNull();
+    expect(actions.processGameActionResponse).toHaveBeenCalledOnce();
+    expect(actions.throwError).not.toHaveBeenCalled();
+    if (blocked) {
+      expect(finalState.map.units.get(vec(3, 2))?.isCompleted()).toBe(true);
+      expect(finalState.map.units.get(to)?.transports).toBeNull();
+      expect(
+        finalState.animations.some(
+          (animation) => animation.type === 'flash' && animation.position.equals(blocker),
+        ),
+      ).toBe(true);
+    } else {
+      expect(finalState.map.units.get(to)?.transports?.[0].id).toBe(Saboteur.id);
+    }
+  });
 });
 
 test('BuySkill waits for its banner before processing the remote response', async () => {
