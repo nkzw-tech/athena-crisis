@@ -19,6 +19,7 @@ import {
   HealAmount,
   MaxHealth,
 } from '@deities/athena/map/Configuration.tsx';
+import { ShieldType } from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import toggleLightningTile from '@deities/athena/mutation/toggleLightningTile.tsx';
 import writeTile from '@deities/athena/mutation/writeTile.tsx';
@@ -400,7 +401,7 @@ export default function applyActionResponse(
       if (unitB) {
         const player = map.getPlayer(unitB);
         if (player.skills.has(Skill.Shield)) {
-          unitB = unitB.activateShield();
+          unitB = unitB.activateShield(ShieldType.Temporary);
         }
         const units = map.units.set(to, unitB.modifyHealth(HealAmount).removeStatusEffect());
         return map.copy({

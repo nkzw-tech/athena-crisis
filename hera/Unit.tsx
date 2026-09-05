@@ -9,7 +9,7 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import { AnimationConfig, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
-import Unit, { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
+import Unit, { ShieldType, UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -251,7 +251,15 @@ const Shield = ({
   unit: Unit;
 }) => {
   return shield ? (
-    <div className={cx(absoluteStyle, className, shieldStyle, hide && hideStyle)} />
+    <div
+      className={cx(
+        absoluteStyle,
+        className,
+        shieldStyle,
+        shield === ShieldType.Persistent && persistentShieldStyle,
+        hide && hideStyle,
+      )}
+    />
   ) : null;
 };
 
@@ -950,6 +958,7 @@ const vars = new CSSVariables<
   | 'health'
   | 'recoil-delay'
   | 'saturation'
+  | 'shield-hue'
   | 'status-1'
   | 'status-2'
   | 'transition-multiplier'
@@ -1350,6 +1359,7 @@ const poisonStyle = css`
 `;
 
 const shieldStyle = css`
+  ${vars.set('shield-hue', '0deg')}
   animation: ${keyframes`
     0% {
       background-position-y: 0;
@@ -1361,7 +1371,7 @@ const shieldStyle = css`
     6s steps(20) infinite;
 
   background-image: url(${Sprites.Shield});
-  filter: saturate(${vars.apply('saturation')});
+  filter: hue-rotate(${vars.apply('shield-hue')}) saturate(${vars.apply('saturation')});
   bottom: -1px;
   height: 32px;
   left: -5.5px;
@@ -1369,4 +1379,8 @@ const shieldStyle = css`
   pointer-events: none;
   right: -5.5px;
   transition: opacity 150ms ease-in-out;
+`;
+
+const persistentShieldStyle = css`
+  ${vars.set('shield-hue', '156deg')}
 `;

@@ -8,7 +8,7 @@ import { AIBehaviors } from '@deities/athena/map/AIBehavior.tsx';
 import { AnimationConfig, MaxHealth, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
-import Unit from '@deities/athena/map/Unit.tsx';
+import Unit, { ShieldType } from '@deities/athena/map/Unit.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Checkbox from '@deities/ui/Checkbox.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
@@ -17,7 +17,9 @@ import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Ammo from '@deities/ui/icons/Ammo.tsx';
 import Rescue from '@deities/ui/icons/Rescue.tsx';
+import ShieldSolid from '@deities/ui/icons/ShieldSolid.tsx';
 import Supply from '@deities/ui/icons/Supply.tsx';
+import InlineLink from '@deities/ui/InlineLink.tsx';
 import Slider from '@deities/ui/Slider.tsx';
 import { css } from '@emotion/css';
 import isPresent from '@nkzw/core/isPresent.js';
@@ -179,12 +181,6 @@ export default function EntityPanel({
       }
     }
   }, [alert, editor, entity, state, updateEntity]);
-
-  const toggleShield = useCallback(() => {
-    if (editor && entity && isUnit(entity)) {
-      updateEntity('leader', entity[entity.shield ? 'deactivateShield' : 'activateShield']());
-    }
-  }, [editor, entity, updateEntity]);
 
   useEffect(() => {
     if (!entity || !selectedPosition || !editor) {
@@ -357,27 +353,15 @@ export default function EntityPanel({
               </>
             )}
           </AttributeGrid>
-          {isUnit(entity) && (
-            <Stack gap={16} wrap>
-              {entity.player > 0 && (
-                <label>
-                  <Stack alignCenter gap wrap>
-                    <Checkbox checked={entity.isLeader()} onChange={toggleLeader} />
-                    <span>
-                      <fbt desc="Label for changing the leader unit">Leader</fbt>
-                    </span>
-                  </Stack>
-                </label>
-              )}
-              <label>
-                <Stack alignCenter gap wrap>
-                  <Checkbox checked={!!entity.shield} onChange={toggleShield} />
-                  <span>
-                    <fbt desc="Label for activating a shield">Shield</fbt>
-                  </span>
-                </Stack>
-              </label>
-            </Stack>
+          {isUnit(entity) && entity.player > 0 && (
+            <label>
+              <Stack alignCenter gap wrap>
+                <Checkbox checked={entity.isLeader()} onChange={toggleLeader} />
+                <span>
+                  <fbt desc="Label for changing the leader unit">Leader</fbt>
+                </span>
+              </Stack>
+            </label>
           )}
         </Box>
         {(isUnit(entity) ||
@@ -470,6 +454,36 @@ export default function EntityPanel({
             onChange={(label) => updateEntity(`label-${label}`, entity.copy({ label }))}
           />
         </Box>
+        {isUnit(entity) && (
+          <Box className={fitContentStyle} gap={16} vertical wrap>
+            <Stack alignCenter wrap>
+              <Icon className={iconStyle} icon={ShieldSolid} />
+              <fbt desc="Label for activating a shield">Shield</fbt>
+            </Stack>
+            <Stack gap={16} wrap>
+              <InlineLink
+                onClick={() => updateEntity('shield', entity.deactivateShield())}
+                selectedText={entity.shield === null}
+              >
+                <fbt desc="Label for no shield">None</fbt>
+              </InlineLink>
+              <InlineLink
+                onClick={() =>
+                  updateEntity('shield', entity.copy({ shield: ShieldType.Temporary }))
+                }
+                selectedText={entity.shield === ShieldType.Temporary}
+              >
+                <fbt desc="Label for a temporary shield">Temporary</fbt>
+              </InlineLink>
+              <InlineLink
+                onClick={() => updateEntity('shield', entity.activateShield(ShieldType.Persistent))}
+                selectedText={entity.shield === ShieldType.Persistent}
+              >
+                <fbt desc="Label for a persistent shield">Persistent</fbt>
+              </InlineLink>
+            </Stack>
+          </Box>
+        )}
       </Stack>
     </Stack>
   );

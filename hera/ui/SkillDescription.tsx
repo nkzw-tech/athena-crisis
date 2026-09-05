@@ -550,7 +550,8 @@ const getExtraDescription = (skill: Skill, color: BaseColor) => {
           <fbt:param name="unitNames">
             <UnitNames color={color} units={[Medic, SupportShip]} />
           </fbt:param>{' '}
-          receive a shield for one turn.
+          receive a temporary shield that expires at the start of their next turn or when consumed
+          in combat.
         </fbt>
       );
     case Skill.Charge:
@@ -786,8 +787,8 @@ const getExtraPowerDescription = (skill: Skill, color: BaseColor) => {
     case Skill.Shield:
       return (
         <fbt desc="Additional skill description">
-          Grants each unit a shield for one turn that absorbs nearly all damage from the next
-          attack.
+          Grants each unit a temporary shield that absorbs nearly all damage from the next attack or
+          counterattack. Expires at the start of the unit’s next turn.
         </fbt>
       );
     case Skill.Charge:

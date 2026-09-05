@@ -15,6 +15,7 @@ import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { ShieldType } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
@@ -96,7 +97,7 @@ test('crystals activate powers', async () => {
       ActivatePower () { skill: 38, units: null, free: true }"
     `);
 
-  expect(gameStateA.at(-1)?.[1].units.get(vecA)?.shield).toBe(true);
+  expect(gameStateA.at(-1)?.[1].units.get(vecA)?.shield).toBe(ShieldType.Temporary);
 
   // Powers are not activated when it is a regular crystal effect:
   const effects: Effects = new Map([

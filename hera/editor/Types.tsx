@@ -24,6 +24,7 @@ export type EntityUndoKey =
   | 'fuel'
   | 'health'
   | 'leader'
+  | 'shield'
   | `ammo-${string}`
   | `behavior-${string}`
   | `label-${string}`

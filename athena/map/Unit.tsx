@@ -39,6 +39,11 @@ export enum UnitStatusEffect {
   Poison = 1,
 }
 
+export enum ShieldType {
+  Temporary = 1,
+  Persistent = 2,
+}
+
 const formatStatusEffect = (statusEffect: UnitStatusEffect | null) => {
   if (statusEffect) {
     switch (statusEffect) {
@@ -71,7 +76,7 @@ export type PlainUnit = Readonly<
     a?: PlainAmmo | null;
     b?: AIBehavior | null;
     c?: 1 | null;
-    d?: 1 | null;
+    d?: ShieldType | null;
     g: number;
     l?: number;
     m?: 1 | null;
@@ -411,7 +416,7 @@ export default class Unit extends Entity {
     private readonly name: number | null,
     private readonly behavior: AIBehavior | null,
     public readonly statusEffect: UnitStatusEffect | null,
-    public readonly shield: true | null,
+    public readonly shield: ShieldType | null,
   ) {
     super(id, health, player, completed, label);
     const unitInfo = getUnitInfo(id);
@@ -445,7 +450,7 @@ export default class Unit extends Entity {
       n ?? null,
       b || null,
       s || null,
-      d === 1 ? true : null,
+      d === ShieldType.Temporary || d === ShieldType.Persistent ? d : null,
     );
   }
 
@@ -841,8 +846,10 @@ export default class Unit extends Entity {
     return unit.label != null && labels.has(unit.label) ? unit.copy({ label: null }) : unit;
   }
 
-  activateShield(): this {
-    return this.shield ? this : this.copy({ shield: true });
+  activateShield(type: ShieldType): this {
+    return this.shield === type || this.shield === ShieldType.Persistent
+      ? this
+      : this.copy({ shield: type });
   }
 
   deactivateShield(): this {
@@ -872,7 +879,7 @@ export default class Unit extends Entity {
       a: ammo?.size ? [...ammo] : null,
       b,
       c: capturing ? 1 : null,
-      d: d ? 1 : null,
+      d,
       f: completed ? 1 : null,
       g,
       h,
@@ -958,7 +965,7 @@ export default class Unit extends Entity {
     name?: number | null;
     player?: PlayerID;
     rescuing?: PlayerID | null;
-    shield?: true | null;
+    shield?: ShieldType | null;
     statusEffect?: UnitStatusEffect | null;
     transports?: ReadonlyArray<TransportedUnit> | null;
     unfolded?: true | null;

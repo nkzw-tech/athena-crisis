@@ -21,7 +21,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import { Charge, HealAmount, MaxHealth, MinSize } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
-import Unit, { UnitConversion } from '@deities/athena/map/Unit.tsx';
+import Unit, { ShieldType, UnitConversion } from '@deities/athena/map/Unit.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
@@ -80,7 +80,7 @@ export function onPowerUnitUpgrade(skill: Skill, unit: Unit) {
   }
 
   if (skill === Skill.Shield) {
-    return unit.activateShield();
+    return unit.activateShield(ShieldType.Temporary);
   }
 
   const conversion = conversions.get(skill);
@@ -180,7 +180,7 @@ export default function applyPower(skill: Skill, from: Vector | undefined, map: 
   if (skill === Skill.Shield) {
     map = map.copy({
       units: map.units.map((unit) =>
-        map.matchesPlayer(player, unit) ? unit.activateShield() : unit,
+        map.matchesPlayer(player, unit) ? unit.activateShield(ShieldType.Temporary) : unit,
       ),
     });
   }

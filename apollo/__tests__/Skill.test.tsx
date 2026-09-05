@@ -22,6 +22,7 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Charge, MaxCharges } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
+import { ShieldType } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
@@ -604,7 +605,13 @@ test('adds a shield when healing units with the shield skill', async () => {
     teams: updatePlayer(map.teams, map.getPlayer(1).copy({ skills })),
   });
   const [, resultMapB] = execute(mapB, vision, HealAction(fromA, toA))!;
-  expect(resultMapB.units.get(toA)!.shield).toBe(true);
+  expect(resultMapB.units.get(toA)!.shield).toBe(ShieldType.Temporary);
+
+  const mapC = mapB.copy({
+    units: mapB.units.set(toA, mapB.units.get(toA)!.activateShield(ShieldType.Persistent)),
+  });
+  const [, resultMapC] = execute(mapC, vision, HealAction(fromA, toA))!;
+  expect(resultMapC.units.get(toA)!.shield).toBe(ShieldType.Persistent);
 });
 
 test(`some skills require a target to be provided`, () => {

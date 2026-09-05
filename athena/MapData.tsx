@@ -40,7 +40,7 @@ import {
   encodeTeams,
 } from './map/Serialization.tsx';
 import Team, { Teams } from './map/Team.tsx';
-import Unit from './map/Unit.tsx';
+import Unit, { ShieldType } from './map/Unit.tsx';
 import Vector from './map/Vector.tsx';
 import {
   Criteria,
@@ -383,7 +383,11 @@ export default class MapData {
     return map.copy({
       units: map.units
         .filter((unit, vector) => !shouldRemoveUnit(map, vector, unit, player.id))
-        .map((unit) => (map.matchesPlayer(player, unit) ? unit.deactivateShield() : unit)),
+        .map((unit) =>
+          map.matchesPlayer(player, unit) && unit.shield === ShieldType.Temporary
+            ? unit.deactivateShield()
+            : unit,
+        ),
     });
   }
 

@@ -15,7 +15,7 @@ import {
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { MaxHealth, MinDamage } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer } from '@deities/athena/map/Player.tsx';
-import { UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
+import { ShieldType, UnitStatusEffect } from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { expect, test } from 'vitest';
@@ -132,22 +132,48 @@ test('poisoned units that heal at begin turn are not counted as destroyed', () =
   expect(stateA.getPlayer(2).stats.destroyedUnits).toBe(0);
 });
 
-test('shields absorb damage for one attack', async () => {
-  const vecA = vec(2, 1);
-  const vecB = vec(1, 1);
-  const mapA = map.copy({
-    units: map.units.map((unit) => unit.activateShield()),
+test.each([ShieldType.Temporary, ShieldType.Persistent])(
+  'shields of type %s absorb damage for one attack',
+  (type) => {
+    const vecA = vec(2, 1);
+    const vecB = vec(1, 1);
+    const mapA = map.copy({
+      units: map.units.map((unit) => unit.activateShield(type)),
+    });
+    const [, state1] = execute(mapA, vision, AttackUnitAction(vecA, vecB))!;
+
+    const unitA1 = state1.units.get(vecA)!;
+    const unitA2 = state1.units.get(vecB)!;
+
+    expect(unitA1.health).toBe(MaxHealth - MinDamage);
+    expect(unitA2.health).toBe(MaxHealth - MinDamage);
+
+    expect(unitA1.shield).toBe(null);
+    expect(unitA2.shield).toBe(null);
+  },
+);
+
+test('turn changes expire only the incoming player’s temporary shields', () => {
+  const temporary = vec(2, 1);
+  const persistent = vec(3, 1);
+  const opponent = vec(1, 1);
+  const shielded = map.copy({
+    units: map.units
+      .map((unit) => unit.activateShield(ShieldType.Temporary))
+      .set(persistent, map.units.get(persistent)!.activateShield(ShieldType.Persistent)),
   });
-  const [, state1] = execute(mapA, vision, AttackUnitAction(vecA, vecB))!;
+  const [, opponentTurn] = execute(shielded, vision, EndTurnAction())!;
+  expect(opponentTurn.units.get(opponent)!.shield).toBeNull();
+  expect(opponentTurn.units.get(temporary)!.shield).toBe(ShieldType.Temporary);
+  expect(opponentTurn.units.get(persistent)!.shield).toBe(ShieldType.Persistent);
 
-  const unitA1 = state1.units.get(vecA)!;
-  const unitA2 = state1.units.get(vecB)!;
-
-  expect(unitA1.health).toBe(MaxHealth - MinDamage);
-  expect(unitA2.health).toBe(MaxHealth - MinDamage);
-
-  expect(unitA1.shield).toBe(null);
-  expect(unitA2.shield).toBe(null);
+  const [, playerTurn] = execute(
+    opponentTurn,
+    opponentTurn.createVisionObject(2),
+    EndTurnAction(),
+  )!;
+  expect(playerTurn.units.get(temporary)!.shield).toBeNull();
+  expect(playerTurn.units.get(persistent)!.shield).toBe(ShieldType.Persistent);
 });
 
 test('Scientist units do flat damage to any unit', async () => {
