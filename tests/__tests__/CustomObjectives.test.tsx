@@ -2367,6 +2367,64 @@ test('escort units by amount with label fails', async () => {
   expect(gameHasEnded(gameStateB)).toBe(false);
 });
 
+test.each([
+  ['required escorts are lost', 2, 1, false, true],
+  ['enough escorts remain', 1, 1, false, false],
+  ['the objective is optional', 2, 1, true, false],
+  ['the objective has no labels', 2, undefined, false, false],
+  ['matching escorts have not spawned', 2, 2, false, false],
+] as const)(
+  'escort amount after fuel exhaustion: %s',
+  async (_, amount, label, isOptional, shouldLose) => {
+    const helicopterPosition = vec(1, 1);
+    const pioneerPosition = vec(1, 2);
+    const mapA = map.copy({
+      config: map.config.copy({
+        objectives: defineObjectives([
+          {
+            amount,
+            hidden: false,
+            label: label != null ? new Set([label]) : undefined,
+            optional: false,
+            players: [1],
+            type: Criteria.EscortAmount,
+            vectors: new Set([vec(3, 3), vec(3, 2)]),
+          },
+        ]),
+      }),
+      currentPlayer: 2,
+      units: map.units
+        .set(helicopterPosition, Helicopter.create(player1, { label: 1 }).setFuel(1))
+        .set(pioneerPosition, Pioneer.create(player1, { label: 1 }))
+        .set(vec(3, 1), Infantry.create(player2)),
+    });
+    const initialMap = isOptional ? optional(mapA) : mapA;
+
+    expect(validateObjectives(initialMap)).toBe(true);
+
+    const [gameState] = await executeGameActions(initialMap, [EndTurnAction()]);
+    const activeMap = gameState.at(-1)![1];
+
+    expect(gameState[0][0]).toMatchObject({
+      current: { player: player2.id },
+      next: { player: player1.id },
+      type: 'EndTurn',
+    });
+    expect(activeMap.units.has(helicopterPosition)).toBe(false);
+    expect(activeMap.units.get(pioneerPosition)?.label).toBe(1);
+    expect(activeMap.units.filter((unit) => activeMap.matchesPlayer(unit, player1)).size).toBe(1);
+    expect(gameHasEnded(gameState)).toBe(shouldLose);
+
+    if (shouldLose) {
+      expect(gameState.at(-1)![0]).toMatchObject({
+        objective: { type: Criteria.EscortAmount },
+        toPlayer: player2.id,
+        type: 'GameEnd',
+      });
+    }
+  },
+);
+
 test('escort units by amount with label does not fail if there are no labeled units', async () => {
   const v1 = vec(1, 1);
   const v2 = vec(1, 2);

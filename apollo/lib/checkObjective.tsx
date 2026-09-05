@@ -221,7 +221,11 @@ function checkObjective(
                 .filter(filterUnitsByLabels(objective.label))
                 .filter(filterSelf(map, targetPlayer)),
             )) ||
-        (objective.type === Criteria.EscortLabel &&
+        ((objective.type === Criteria.EscortLabel ||
+          (objective.type === Criteria.EscortAmount &&
+            !!objective.label?.size &&
+            count(map.units.filter(filterSelf(map, targetPlayer)), objective.label) <
+              objective.amount)) &&
           !ignoreIfOptional &&
           matchesTargetPlayerList &&
           count(map.units.filter(filterSelf(map, targetPlayer)), objective.label) <
