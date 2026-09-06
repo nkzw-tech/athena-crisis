@@ -4,10 +4,9 @@ import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { css, cx } from '@emotion/css';
-import { Sprites } from 'athena-crisis:images';
 import { memo } from 'react';
-import { TileDecoratorSpriteLayout } from './render/MapSpriteLayout.tsx';
 import Tick from './Tick.tsx';
+import type { TileDecoratorSprite } from './Tiles.tsx';
 
 const defaultPosition = vec(1, 1);
 
@@ -17,6 +16,7 @@ export default memo(function TileDecorator({
   fade,
   modifier,
   position,
+  sprite,
   tile,
   tileSize,
   zIndex,
@@ -26,11 +26,12 @@ export default memo(function TileDecorator({
   fade?: boolean;
   modifier: Modifier;
   position?: Vector;
+  sprite: TileDecoratorSprite;
   tile: TileInfo;
   tileSize: number;
   zIndex?: number;
 }) {
-  const { anchor, frameSize, overlap } = TileDecoratorSpriteLayout;
+  const { anchor, frameSize, image, overlap } = sprite;
   const { decorator } = tile.style;
   if (!decorator) {
     return null;
@@ -49,7 +50,7 @@ export default memo(function TileDecorator({
     <div
       className={cx(absolute && absoluteStyle, fade && fadeStyle)}
       style={{
-        backgroundImage: `url('${Sprites.TileDecorators}')`,
+        backgroundImage: `url('${image}')`,
         backgroundPositionX: -positionX * frameSize + 'px',
         backgroundPositionY: decorator.animation
           ? `calc(${Tick.vars.apply('tile-decorator')} * ${-frameSize}px)`

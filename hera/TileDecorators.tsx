@@ -4,6 +4,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import { RadiusInfo } from './Radius.tsx';
 import TileDecorator from './TileDecorator.tsx';
+import { getTileDecoratorSprite } from './Tiles.tsx';
 import { GetLayerFunction } from './Types.tsx';
 
 export default function TileDecorators({
@@ -25,6 +26,7 @@ export default function TileDecorators({
   const {
     config: { biome },
   } = map;
+  const sprite = getTileDecoratorSprite(biome);
   const up = vector.up();
   const layer0Tile = map.getTileInfo(vector, 0);
   const layer1TileID = map.getTile(vector, 1);
@@ -47,6 +49,7 @@ export default function TileDecorators({
           key={`d0-${vector}`}
           modifier={map.getModifier(vector, 0)}
           position={up}
+          sprite={sprite}
           tile={layer0Tile}
           tileSize={tileSize}
           zIndex={getLayer(up.y, hasUnitAbove ? 'top' : 'decorator')}
@@ -62,6 +65,7 @@ export default function TileDecorators({
           key={`d1-${vector}`}
           modifier={map.getModifier(vector, 1)}
           position={up}
+          sprite={sprite}
           tile={layer1Tile}
           tileSize={tileSize}
           zIndex={getLayer(up.y, hasUnitAbove ? 'top' : 'decorator')}

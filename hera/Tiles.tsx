@@ -10,7 +10,16 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import useVisibilityState from '@nkzw/use-visibility-state';
-import { Tiles0, Tiles1, Tiles2, Tiles3, Tiles4, Tiles5, Tiles6 } from 'athena-crisis:images';
+import {
+  Sprites,
+  Tiles0,
+  Tiles1,
+  Tiles2,
+  Tiles3,
+  Tiles4,
+  Tiles5,
+  Tiles6,
+} from 'athena-crisis:images';
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
@@ -39,15 +48,32 @@ const clip = (context: CanvasRenderingContext2D, size: number, map: MapData) => 
   }
 };
 
+export type TileDecoratorSprite = Readonly<{
+  anchor: Readonly<{ x: number; y: number }>;
+  frameSize: number;
+  image: string;
+  overlap: number;
+}>;
+
+const defaultTileDecorators: TileDecoratorSprite = {
+  anchor: { x: 12, y: 24 },
+  frameSize: 24,
+  image: Sprites.TileDecorators,
+  overlap: 3,
+};
+
 const sprites = {
-  [Biome.Desert]: { image: Tiles1, tileSize: 24 },
-  [Biome.Grassland]: { image: Tiles0, tileSize: 24 },
-  [Biome.Luna]: { image: Tiles6, tileSize: 24 },
-  [Biome.Snow]: { image: Tiles2, tileSize: 24 },
-  [Biome.Spaceship]: { image: Tiles4, tileSize: 24 },
-  [Biome.Swamp]: { image: Tiles3, tileSize: 24 },
-  [Biome.Volcano]: { image: Tiles5, tileSize: 24 },
+  [Biome.Desert]: { image: Tiles1, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Grassland]: { image: Tiles0, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Luna]: { image: Tiles6, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Snow]: { image: Tiles2, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Spaceship]: { image: Tiles4, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Swamp]: { image: Tiles3, tileDecorators: defaultTileDecorators, tileSize: 24 },
+  [Biome.Volcano]: { image: Tiles5, tileDecorators: defaultTileDecorators, tileSize: 24 },
 } as const;
+
+export const getTileDecoratorSprite = (biome: Biome): TileDecoratorSprite =>
+  sprites[biome].tileDecorators;
 
 export const getTileSize = (biome: Biome = Biome.Grassland): number => sprites[biome].tileSize;
 
