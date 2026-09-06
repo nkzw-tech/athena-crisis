@@ -1,7 +1,7 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import type { GameActionResponse } from '@deities/apollo/Types.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { InstantAnimationConfig, DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import ImmutableMap from '@nkzw/immutable-map';
@@ -140,7 +140,7 @@ test('a rejected action is reported once by its behavior', async () => {
     },
     autoPanning: false,
     behavior: NullBehavior,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -152,9 +152,9 @@ test('a rejected action is reported once by its behavior', async () => {
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 
@@ -214,7 +214,7 @@ test.each([{ elapsedTimes: [100] }, { elapsedTimes: [900] }, { elapsedTimes: [10
           regular: InstantAnimationConfig,
         },
         autoPanning: false,
-        buildingSize: TileSize,
+        buildingSize: DefaultTileSize,
         confirmActionStyle: 'never',
         currentUserId: '2',
         fogStyle: 'soft',
@@ -224,9 +224,9 @@ test.each([{ elapsedTimes: [100] }, { elapsedTimes: [900] }, { elapsedTimes: [10
         scale: 1,
         showCursor: false,
         style: 'none',
-        tileSize: TileSize,
+        tileSize: DefaultTileSize,
         tilted: false,
-        unitSize: TileSize,
+        unitSize: DefaultTileSize,
       } satisfies Props) as unknown as TestGameMap;
       installSynchronousSetState(gameMap);
 
@@ -280,7 +280,7 @@ test.each(['timer', 'frame'] as const)(
           regular: InstantAnimationConfig,
         },
         autoPanning: false,
-        buildingSize: TileSize,
+        buildingSize: DefaultTileSize,
         confirmActionStyle: 'never',
         currentUserId: '2',
         fogStyle: 'soft',
@@ -290,9 +290,9 @@ test.each(['timer', 'frame'] as const)(
         scale: 1,
         showCursor: false,
         style: 'none',
-        tileSize: TileSize,
+        tileSize: DefaultTileSize,
         tilted: false,
-        unitSize: TileSize,
+        unitSize: DefaultTileSize,
       } satisfies Props) as unknown as TestGameMap;
       installSynchronousSetState(gameMap);
 
@@ -346,7 +346,7 @@ test('skipped animation completion does not synchronously re-enter GameMap updat
     },
     autoPanning: false,
     behavior: NullBehavior,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -356,9 +356,9 @@ test('skipped animation completion does not synchronously re-enter GameMap updat
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 
@@ -409,7 +409,7 @@ test('partial viewer updates do not require a map in the update payload', async 
     },
     autoPanning: false,
     behavior: NullBehavior,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -419,9 +419,9 @@ test('partial viewer updates do not require a map in the update payload', async 
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 
@@ -450,7 +450,7 @@ test('game action responses are processed serially across direct entry points', 
     },
     autoPanning: false,
     behavior: NullBehavior,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -460,9 +460,9 @@ test('game action responses are processed serially across direct entry points', 
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 
@@ -527,7 +527,7 @@ test('an empty others array is treated as a self-only action response', async ()
     },
     autoPanning: false,
     behavior: NullBehavior,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -537,9 +537,9 @@ test('an empty others array is treated as a self-only action response', async ()
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 
@@ -568,7 +568,7 @@ test('a GameEnd response remains terminal when another response follows it', asy
       regular: InstantAnimationConfig,
     },
     autoPanning: false,
-    buildingSize: TileSize,
+    buildingSize: DefaultTileSize,
     confirmActionStyle: 'never',
     currentUserId: '2',
     fogStyle: 'soft',
@@ -578,9 +578,9 @@ test('a GameEnd response remains terminal when another response follows it', asy
     scale: 1,
     showCursor: false,
     style: 'none',
-    tileSize: TileSize,
+    tileSize: DefaultTileSize,
     tilted: false,
-    unitSize: TileSize,
+    unitSize: DefaultTileSize,
   } satisfies Props) as unknown as TestGameMap;
   installSynchronousSetState(gameMap);
 

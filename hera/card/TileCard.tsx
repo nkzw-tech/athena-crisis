@@ -11,7 +11,7 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import {
   AnimationConfig,
   DecoratorsPerSide,
-  TileSize,
+  DefaultTileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import { numberToPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
@@ -279,7 +279,7 @@ const TileDecorators = memo(function TileDecorators({
 const tagStyle = css`
   ${clipBorder(2)}
 
-  height: ${TileSize + 8}px;
+  height: ${DefaultTileSize + 8}px;
   image-rendering: pixelated;
   padding: 3px 6px 4px;
   position: relative;
@@ -287,7 +287,7 @@ const tagStyle = css`
 `;
 
 const textStyle = css`
-  margin-left: ${TileSize + 4}px;
+  margin-left: ${DefaultTileSize + 4}px;
 `;
 
 const smallCoverStyle = css`

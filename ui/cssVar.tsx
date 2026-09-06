@@ -1,4 +1,4 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import { DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import { injectGlobal } from '@emotion/css';
 import { isFirefox, isSafari } from './Browser.tsx';
 import { getScale } from './hooks/useScale.tsx';
@@ -195,7 +195,7 @@ export function initializeCSSVariables() {
   ${cssVar('inset', '0px')}
   ${cssVar('mouse-position-left', '0px')}
   ${cssVar('mouse-position-right', 'auto')}
-  ${cssVar('scale', getScale(TileSize))}
+  ${cssVar('scale', getScale(DefaultTileSize))}
   ${cssVar('transform-origin', 'center center')}
   ${cssVar('ui-scale', 1)}
   ${cssVar('perspective-height', 0)}

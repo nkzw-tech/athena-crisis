@@ -1,4 +1,4 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import { DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import { ReactNode, useEffect, useSyncExternalStore } from 'react';
 import { isIOS } from '../Browser.tsx';
 import cssVar, { applyVar } from '../cssVar.tsx';
@@ -57,7 +57,7 @@ export default function useScale(tileSize: number) {
 }
 
 export function ScaleContext({ children }: { children: ReactNode }) {
-  const scale = useScale(TileSize);
+  const scale = useScale(DefaultTileSize);
 
   useEffect(() => {
     document.documentElement.style.setProperty(cssVar('scale'), String(scale));

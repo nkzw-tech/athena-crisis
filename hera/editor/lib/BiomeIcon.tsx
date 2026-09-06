@@ -1,6 +1,6 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import { DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import { css } from '@emotion/css';
@@ -35,9 +35,9 @@ export default memo(function BiomeIcons({ biome }: { biome: Biome }) {
 
 const biomeIconStyle = css`
   flex-shrink: 0;
-  height: ${TileSize}px;
+  height: ${DefaultTileSize}px;
   image-rendering: pixelated;
   position: relative;
-  width: ${TileSize}px;
+  width: ${DefaultTileSize}px;
   zoom: 1.5;
 `;

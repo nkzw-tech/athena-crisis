@@ -1,5 +1,5 @@
 import { BuildingHeight } from '@deities/athena/info/Building.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
@@ -50,10 +50,10 @@ export default function TilePreview({
 }
 
 const mapContainerStyle = css`
-  height: ${TileSize}px;
+  height: ${DefaultTileSize}px;
   position: relative;
   zoom: 2;
-  width: ${TileSize}px;
+  width: ${DefaultTileSize}px;
 
   ${Breakpoints.sm} {
     margin: unset;
@@ -74,22 +74,22 @@ const mapContainerStyle = css`
 `;
 
 const mapStyle = css`
-  height: ${TileSize}px;
-  width: ${TileSize}px;
+  height: ${DefaultTileSize}px;
+  width: ${DefaultTileSize}px;
 `;
 
 const mediumContainerStyle = css`
-  margin-top: ${TileSize / 2}px;
+  margin-top: ${DefaultTileSize / 2}px;
 
   ${Breakpoints.sm} {
-    top: ${TileSize}px;
+    top: ${DefaultTileSize}px;
   }
 `;
 
 const tallContainerStyle = css`
-  margin-top: ${TileSize / 1.25}px;
+  margin-top: ${DefaultTileSize / 1.25}px;
 
   ${Breakpoints.sm} {
-    top: ${TileSize * 1.2}px;
+    top: ${DefaultTileSize * 1.2}px;
   }
 `;

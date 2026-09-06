@@ -8,7 +8,7 @@ import Building from '@deities/athena/map/Building.tsx';
 import {
   AnimationConfig,
   DecoratorsPerSide,
-  TileSize,
+  DefaultTileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -393,10 +393,10 @@ const InlineUnitWithUnitState = ({
 };
 
 const tileInfoStyle = css`
-  height: ${TileSize}px;
+  height: ${DefaultTileSize}px;
   image-rendering: pixelated;
   position: relative;
-  width: ${TileSize}px;
+  width: ${DefaultTileSize}px;
 `;
 
 const cursorStyle = css`
@@ -404,11 +404,11 @@ const cursorStyle = css`
 `;
 
 const tallStyle = css`
-  margin-top: ${TileSize / 1.5}px;
+  margin-top: ${DefaultTileSize / 1.5}px;
 `;
 
 const mediumStyle = css`
-  margin-top: ${TileSize / 2}px;
+  margin-top: ${DefaultTileSize / 2}px;
 `;
 
 const customSquareButtonStyle = css`

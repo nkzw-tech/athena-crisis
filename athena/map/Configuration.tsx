@@ -36,7 +36,7 @@ export const getDecoratorLimit = (size: SizeVector) =>
   (size.width * size.height * DecoratorsPerSide) / 2;
 
 export const DecoratorsPerSide = 4;
-export const TileSize = 24;
+export const DefaultTileSize = 24;
 export const MaxHealth = 100;
 export const MinDamage = 5;
 export const HealAmount = 50;
