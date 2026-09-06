@@ -13,6 +13,8 @@ import getBuildingSpritePosition from './lib/getBuildingSpritePosition.tsx';
 import getFlashDelay from './lib/getFlashDelay.tsx';
 import sprite from './lib/sprite.tsx';
 import { BuildingAnimation } from './MapAnimations.tsx';
+import { BuildingSpriteLayout } from './render/EntitySpriteLayout.tsx';
+import getEntityPosition from './render/getEntityPosition.tsx';
 import Tick from './Tick.tsx';
 import { RequestFrameFunction, TimerFunction } from './Types.tsx';
 
@@ -26,6 +28,7 @@ const BuildingTile = memo(function BuildingTile({
   animationConfig,
   biome,
   building,
+  buildingSize = BuildingSpriteLayout.entitySize,
   fade,
   highlight,
   isVisible = true,
@@ -34,7 +37,7 @@ const BuildingTile = memo(function BuildingTile({
   position = defaultPosition,
   requestFrame,
   scheduleTimer,
-  size,
+  tileSize = buildingSize,
   zIndex,
 }: {
   absolute?: boolean;
@@ -42,6 +45,7 @@ const BuildingTile = memo(function BuildingTile({
   animationConfig?: AnimationConfig;
   biome: Biome;
   building: Building;
+  buildingSize?: number;
   fade?: boolean | null;
   highlight?: boolean;
   isVisible?: boolean;
@@ -50,15 +54,17 @@ const BuildingTile = memo(function BuildingTile({
   position?: Vector;
   requestFrame?: RequestFrameFunction;
   scheduleTimer?: TimerFunction;
-  size: number;
+  tileSize?: number;
   zIndex?: number;
 }) {
   if (isVisible === false) {
     building = building.hide(biome, true);
   }
 
-  const { x, y } = position;
   const { info, player } = building;
+  const { anchor, atlasCellSize, constructionRise, crane, frameHeight, frameWidth } =
+    BuildingSpriteLayout;
+  const origin = getEntityPosition(position, tileSize, buildingSize);
   const [spritePositionX, spritePositionY] = getBuildingSpritePosition(
     info,
     player,
@@ -66,9 +72,9 @@ const BuildingTile = memo(function BuildingTile({
     isVisible,
   );
   const isBeingCreated = animation?.type === 'createBuilding';
-  const positionX = (x - 1) * size;
-  const positionY = (y - 2) * size + (isBeingCreated ? size / 6 : 0);
-  const height = size * 2 - (isBeingCreated ? size / 3 : 0);
+  const positionX = origin.x - anchor.x;
+  const positionY = origin.y - anchor.y + (isBeingCreated ? constructionRise : 0);
+  const height = frameHeight - (isBeingCreated ? constructionRise * 2 : 0);
   const elementRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (isBeingCreated) {
@@ -84,7 +90,7 @@ const BuildingTile = memo(function BuildingTile({
           return;
         }
         const { style } = elementRef.current;
-        const pixelsPerStep = size / 6 / duration;
+        const pixelsPerStep = constructionRise / duration;
         let animateStart: number | null = null;
         let start: number | null = null;
 
@@ -128,7 +134,7 @@ const BuildingTile = memo(function BuildingTile({
     positionY,
     requestFrame,
     scheduleTimer,
-    size,
+    constructionRise,
   ]);
 
   const showHighlight = highlight && player > 0;
@@ -162,13 +168,13 @@ const BuildingTile = memo(function BuildingTile({
         ...(info.sprite.name === 'Structures'
           ? { backgroundImage: `url(${Sprites.Structures})` }
           : null),
-        backgroundPositionX: -spritePositionX * size + 'px',
-        backgroundPositionY: -spritePositionY * size + 'px',
+        backgroundPositionX: -spritePositionX * atlasCellSize + 'px',
+        backgroundPositionY: -spritePositionY * atlasCellSize + 'px',
         height,
         opacity: isBeingCreated ? 0 : 1,
         [vars.set('x')]: `${positionX}px`,
         [vars.set('y')]: `${positionY}px`,
-        width: `${size}px`,
+        width: `${frameWidth}px`,
         zIndex: zIndex ?? 0,
         ...(animationConfig && getFlashDelay(animation, animationConfig)),
       }}
@@ -178,10 +184,11 @@ const BuildingTile = memo(function BuildingTile({
           className={absoluteStyle}
           style={{
             backgroundImage: `url('${Sprites.Crane}')`,
-            backgroundPositionY: `calc(${Tick.vars.apply('building')} * ${-size}px)`,
-            height: size,
-            left: size / 2 + 'px',
-            width: size / 2 + 'px',
+            backgroundPositionY: `calc(${Tick.vars.apply('building')} * ${-crane.height}px)`,
+            height: crane.height,
+            left: crane.x,
+            top: crane.y,
+            width: crane.width,
           }}
         />
       )}
@@ -198,11 +205,11 @@ const BuildingTile = memo(function BuildingTile({
             height,
             [vars.set('x')]: `${positionX}px`,
             [vars.set('y')]: `${positionY}px`,
-            width: `${size}px`,
+            width: `${frameWidth}px`,
             zIndex: zIndex ?? 0,
           }}
         >
-          <Label entity={building} hide={!!animation} size={size} />
+          <Label entity={building} entitySize={buildingSize} hide={!!animation} />
         </div>
       )}
     </>

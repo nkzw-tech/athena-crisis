@@ -159,8 +159,8 @@ export default function AttackSelector({
                       <BuildingTile
                         biome={map.config.biome}
                         building={entities.building}
+                        buildingSize={MapUISize}
                         position={new SpriteVector(1, 1.5)}
-                        size={MapUISize}
                       />
                     )
                   }
@@ -190,9 +190,9 @@ export default function AttackSelector({
                           .get(entities.unit.player)
                           ?.equippedUnitCustomizations.get(entities.unit.id)}
                         firstPlayerID={map.getFirstPlayerID()}
-                        size={MapUISize}
                         tile={map.getTileInfo(position)}
                         unit={entities.unit}
+                        unitSize={MapUISize}
                       />
                     )
                   }
@@ -220,9 +220,9 @@ export default function AttackSelector({
                         .get(selectedUnit.player)
                         ?.equippedUnitCustomizations.get(selectedUnit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
-                      size={MapUISize}
                       tile={map.getTileInfo(selectedPosition)}
                       unit={selectedUnit}
+                      unitSize={MapUISize}
                     />
                   }
                   key="counter"

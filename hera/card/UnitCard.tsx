@@ -176,8 +176,8 @@ export default memo(function UnitCard({
             scheduleTimer={(fn, delay) =>
               Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
-            size={TileSize}
             tile={previewMap.getTileInfo(defaultVector)}
+            tileSize={TileSize}
             unit={entity}
             {...props}
           />

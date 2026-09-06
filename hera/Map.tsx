@@ -39,6 +39,7 @@ import { Animation, Animations, isBuildingAnimation, isUnitAnimation } from './M
 import { getMessagePlayer } from './message/MapMessageContainer.tsx';
 import MessageTile from './MessageTile.tsx';
 import { RadiusInfo, RadiusType } from './Radius.tsx';
+import { BuildingSpriteLayout, UnitSpriteLayout } from './render/EntitySpriteLayout.tsx';
 import Tick from './Tick.tsx';
 import TileDecorators from './TileDecorators.tsx';
 import Tiles, { TileStyle } from './Tiles.tsx';
@@ -72,6 +73,7 @@ const MapComponent = ({
   animations,
   attackable,
   behavior,
+  buildingSize = BuildingSpriteLayout.entitySize,
   className,
   extraUnits,
   fogStyle,
@@ -91,12 +93,14 @@ const MapComponent = ({
   selectedUnit,
   style = 'none',
   tileSize,
+  unitSize = UnitSpriteLayout.entitySize,
   vision,
 }: {
   animationConfig: AnimationConfig;
   animations?: Animations;
   attackable?: ReadonlyMap<Vector, RadiusItem> | null;
   behavior: MapBehavior | null;
+  buildingSize?: number;
   className?: string;
   extraUnits?: ImmutableMap<Vector, UnitT>;
   fogStyle?: 'soft' | 'hard';
@@ -116,6 +120,7 @@ const MapComponent = ({
   selectedUnit?: UnitT | null;
   style?: TileStyle;
   tileSize: number;
+  unitSize?: number;
   vision: VisionT;
 }) => {
   const { biome } = map.config;
@@ -127,6 +132,7 @@ const MapComponent = ({
   return (
     <div className={cx(pixelatedStyle, paused && pausedStyle, className)}>
       <Tiles
+        buildingSize={buildingSize}
         map={map}
         paused={paused}
         renderEntities={renderEntities}
@@ -177,6 +183,7 @@ const MapComponent = ({
                     animationConfig={animationConfig}
                     biome={map.config.biome}
                     building={building}
+                    buildingSize={buildingSize}
                     fade={hasUnitAbove || (radius && hasRadius && radius.fields.has(up))}
                     highlight={!!(isSelected && selectedBuilding)}
                     isVisible={isVisible}
@@ -192,7 +199,7 @@ const MapComponent = ({
                     position={vector}
                     requestFrame={requestFrame}
                     scheduleTimer={scheduleTimer}
-                    size={tileSize}
+                    tileSize={tileSize}
                     zIndex={getLayer(vector.y, 'building')}
                   />,
                 );
@@ -249,9 +256,10 @@ const MapComponent = ({
                     position={vector}
                     requestFrame={requestFrame}
                     scheduleTimer={scheduleTimer}
-                    size={tileSize}
                     tile={map.getTileInfo(vector)}
+                    tileSize={tileSize}
                     unit={extraUnit}
+                    unitSize={unitSize}
                   />,
                 );
               }
@@ -318,9 +326,10 @@ const MapComponent = ({
                     power={power}
                     requestFrame={requestFrame}
                     scheduleTimer={scheduleTimer}
-                    size={tileSize}
                     tile={map.getTileInfo(vector)}
+                    tileSize={tileSize}
                     unit={unit}
+                    unitSize={unitSize}
                   />,
                 );
               }

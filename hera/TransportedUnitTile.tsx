@@ -31,9 +31,9 @@ export default function TransportedUnitTile({
         customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
         firstPlayerID={map.getFirstPlayerID()}
         highlightStyle={highlight ? 'idle' : undefined}
-        size={MapUISize}
         tile={Plain}
         unit={deployedUnit}
+        unitSize={MapUISize}
       />
       {unit.isLeader() && (
         <div className={leaderIconStyle}>

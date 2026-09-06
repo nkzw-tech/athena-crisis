@@ -252,9 +252,9 @@ export default function EntityPanel({
                   animationConfig={AnimationConfig}
                   biome={biome}
                   firstPlayerID={1}
-                  size={MapUISize}
                   tile={Plain}
                   unit={entity}
+                  unitSize={MapUISize}
                 />
               )}
             </div>

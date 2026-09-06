@@ -129,9 +129,9 @@ const renderUnit = (
           biome={biome}
           customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
           firstPlayerID={firstPlayerID}
-          size={MapUISize}
           tile={tile}
           unit={unit}
+          unitSize={MapUISize}
         />
         <div className={textStyle}>
           <Stack between className={cx(ellipsis, overflowStyle)} gap stretch>
@@ -177,9 +177,9 @@ const renderBuilding = (building: Building | undefined, biome: Biome, isVisible:
         <BuildingTile
           biome={biome}
           building={building}
+          buildingSize={MapUISize}
           isVisible={isVisible}
           position={vec(1, 2)}
-          size={MapUISize}
         />
         <Stack alignCenter between className={cx(ellipsis, overflowStyle)} gap={4}>
           <div className={ellipsis}>{building.info.name}</div>

@@ -38,9 +38,9 @@ const UnitPreview = ({
         animationConfig={AnimationConfig}
         biome={Biome.Grassland}
         firstPlayerID={1}
-        size={MapUISize}
         tile={Plain}
         unit={unit}
+        unitSize={MapUISize}
       />
     </div>
   </div>

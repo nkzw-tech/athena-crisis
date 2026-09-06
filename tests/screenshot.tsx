@@ -9,8 +9,12 @@ const APP_PORT = 3001;
 const BASE_URL = `http://localhost:${APP_PORT}/display.html`;
 
 type CaptureOptions = {
+  animationSpeed?: 'fast' | 'instant';
+  buildingSize?: number;
   fogStyle?: 'hard' | 'soft';
   style?: 'floating' | 'none';
+  tileSize?: number;
+  unitSize?: number;
 };
 
 const getURL = (
@@ -27,9 +31,7 @@ const getURL = (
     gameActionResponse
       ?.map((response) => '&gameActionResponse[]=' + encodeURIComponent(JSON.stringify(response)))
       .join('') || ''
-  }${options?.fogStyle ? '&fogStyle=' + encodeURIComponent(options.fogStyle) : ''}${
-    options?.style ? '&style=' + encodeURIComponent(options.style) : ''
-  }`;
+  }${options ? '&' + new URLSearchParams(Object.entries(options).map(([key, value]) => [key, String(value)])) : ''}`;
 
 let instance: Browser | null;
 
@@ -153,8 +155,9 @@ export async function captureGameActionResponse(
   map: MapData,
   gameActionResponse: EncodedGameActionResponse,
   viewers: string,
+  options?: CaptureOptions,
 ) {
-  return (await capture([map], viewers, [gameActionResponse]))[0];
+  return (await capture([map], viewers, [gameActionResponse], options))[0];
 }
 
 export async function captureGameState(
@@ -167,4 +170,39 @@ export async function captureGameState(
   );
 
   return gameState.map((state, index) => [...state, screenshots[index]]);
+}
+
+export async function getRenderedEntityLayouts(index = 0) {
+  if (!page) {
+    throw new Error('Cannot inspect entities before capturing a map.');
+  }
+
+  return page.getByTestId(`map-${index}`).evaluate((map) =>
+    [...map.querySelectorAll<HTMLElement>('[style*="--u"], [style*="--b"]')].map((entity) => {
+      const style = getComputedStyle(entity);
+      const position = new DOMMatrixReadOnly(style.transform);
+      const origin = entity.getBoundingClientRect();
+      return {
+        backgroundX: style.backgroundPositionX,
+        backgroundY: style.backgroundPositionY,
+        height: entity.offsetHeight,
+        parts: [...entity.children].map((part) => {
+          const bounds = part.getBoundingClientRect();
+          const style = getComputedStyle(part);
+          return {
+            backgroundX: style.backgroundPositionX,
+            backgroundY: style.backgroundPositionY,
+            height: bounds.height,
+            width: bounds.width,
+            x: bounds.x - origin.x,
+            y: bounds.y - origin.y,
+          };
+        }),
+        type: entity.style.cssText.includes('--u') ? 'unit' : 'building',
+        width: entity.offsetWidth,
+        x: position.m41,
+        y: position.m42,
+      };
+    }),
+  );
 }

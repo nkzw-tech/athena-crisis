@@ -37,9 +37,9 @@ export const UnitName = ({
         animationConfig={AnimationConfig}
         biome={Biome.Grassland}
         firstPlayerID={1}
-        size={MapUISize}
         tile={Plain}
         unit={unit.create(unitColor)}
+        unitSize={MapUISize}
       />
     </span>
     <Tag color={color} size={size} tag={unit.name} {...props} />
@@ -64,8 +64,8 @@ export function BuildingName({
           animationConfig={AnimationConfig}
           biome={Biome.Grassland}
           building={building.create(buildingColor)}
+          buildingSize={MapUISize}
           position={new SpriteVector(1, 1.25)}
-          size={MapUISize}
         />
       </span>
       <Tag color={color} size={size} tag={building.name} {...props} />

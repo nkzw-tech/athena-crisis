@@ -92,9 +92,9 @@ export default class CreateBuilding {
                     <BuildingTile
                       biome={map.config.biome}
                       building={isDisabled || !isAllowed ? entity.complete() : entity}
+                      buildingSize={MapUISize}
                       highlight={highlight}
                       position={new SpriteVector(1, 2)}
-                      size={MapUISize}
                     />
                     <Icon
                       className={actionWheelInfoIconStyle}

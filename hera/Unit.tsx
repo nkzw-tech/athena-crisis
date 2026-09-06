@@ -32,6 +32,8 @@ import {
   UnitExplosionAnimation,
   UnitHealAnimation,
 } from './MapAnimations.tsx';
+import { UnitSpriteLayout } from './render/EntitySpriteLayout.tsx';
+import getEntityPosition from './render/getEntityPosition.tsx';
 import Tick from './Tick.tsx';
 import { GetLayerFunction, RequestFrameFunction, TimerFunction } from './Types.tsx';
 
@@ -334,8 +336,9 @@ export default function UnitTile({
   power,
   requestFrame,
   scheduleTimer,
-  size,
   tile,
+  unitSize = UnitSpriteLayout.entitySize,
+  tileSize = unitSize,
   unit,
 }: {
   absolute?: boolean;
@@ -356,15 +359,17 @@ export default function UnitTile({
   power?: boolean;
   requestFrame?: RequestFrameFunction;
   scheduleTimer?: TimerFunction;
-  size: number;
   tile: TileInfo;
+  tileSize?: number;
   unit: Unit;
+  unitSize?: number;
 }) {
   const elementRef = useRef<HTMLDivElement>(null);
   const innerElementRef = useRef<HTMLDivElement>(null);
   const shadowElementRef = useRef<HTMLDivElement>(null);
   const { info, player } = unit;
   const unitSprite = customSprite || info.sprite.name;
+  const { frameSize: spriteSize, spawnOffset } = UnitSpriteLayout;
   const isMoving = animation?.type === 'move';
   const isAttacking = animation?.type === 'attack';
   const hasAttackStance = isAttacking && info.sprite.attackStance;
@@ -410,7 +415,7 @@ export default function UnitTile({
       `calc(${hasAttackStance ? '1/1' : '1'} * ${
         animationIsLocked ? '' : `(${Tick.vars.apply('unit')} * ${-spriteSize}px) - `
       }${(spritePosition.x + animationOffset) * spriteSize}px)`,
-    [animationIsLocked, animationOffset, hasAttackStance, spritePosition.x],
+    [animationIsLocked, animationOffset, hasAttackStance, spritePosition.x, spriteSize],
   );
   const backgroundPositionY = -(spritePosition.y * spriteSize) + 'px';
   const positionOffset = (isAnimating && animation?.offset) || info.sprite.offset || {};
@@ -419,7 +424,7 @@ export default function UnitTile({
     (animation && 'direction' in animation && animation.direction) || direction || {};
 
   const style = useMemo(() => {
-    const { x, y } = isMoving ? animation.from : position;
+    const { x, y } = getEntityPosition(isMoving ? animation.from : position, tileSize, unitSize);
 
     const actualUnitDirection = currentDirection
       ? info.sprite.direction * (currentDirection === 'left' ? 1 : -1)
@@ -429,7 +434,7 @@ export default function UnitTile({
       'unit',
     );
     const style = {
-      height: size + 'px',
+      height: unitSize + 'px',
       [vars.set('direction')]: '' + actualUnitDirection,
       [vars.set('recoil-delay')]: `${
         animationConfig.ExplosionStep *
@@ -439,10 +444,10 @@ export default function UnitTile({
             ? animation.weapon.animation.recoilDelay
             : 4)
       }ms`,
-      [vars.set('x')]: `${(x - 1) * size + (positionOffset.x || 0) * actualUnitDirection}px`,
-      [vars.set('y')]: `${(y - 1) * size + (positionOffset.y || 0)}px`,
+      [vars.set('x')]: `${x + (positionOffset.x || 0) * actualUnitDirection}px`,
+      [vars.set('y')]: `${y + (positionOffset.y || 0)}px`,
       [vars.set('z-index')]: zIndex,
-      width: size + 'px',
+      width: unitSize + 'px',
       // Do not cut unit off during recoil animation.
       // Also use the "reset" hack because zIndex is set imperatively.
       zIndex: `calc(${isMoving ? '1/1' : '1'} * ${zIndex})`,
@@ -468,7 +473,8 @@ export default function UnitTile({
     position,
     positionOffset.x,
     positionOffset.y,
-    size,
+    tileSize,
+    unitSize,
     spawnAnimation,
     unit.health,
     unitDirection,
@@ -623,7 +629,7 @@ export default function UnitTile({
         const stepDuration = animationConfig.UnitMoveDuration * (info.sprite.slow ? 1.5 : 1);
         const third = stepDuration / 3;
         const quarter = stepDuration / 4;
-        const pixelsPerStep = size / stepDuration;
+        const pixelsPerStep = tileSize / stepDuration;
         let currentSpritePosition = spritePosition;
         let first = true;
         let isVisible: boolean | null;
@@ -730,8 +736,9 @@ export default function UnitTile({
             path = path.slice(1);
             tiles = tiles.slice(1);
             start = null;
-            posX = (position.x - 1) * size;
-            posY = (position.y - 1) * size;
+            const origin = getEntityPosition(position, tileSize, unitSize);
+            posX = origin.x;
+            posY = origin.y;
             toX = to.x - position.x;
             toY = to.y - position.y;
             setDirection();
@@ -778,11 +785,17 @@ export default function UnitTile({
       move(
         isSpawnAnimation(animation)
           ? {
-              from: isDespawn ? position : new SpriteVector(position.x, position.y + 1 / 12),
+              from: isDespawn
+                ? position
+                : new SpriteVector(position.x, position.y + spawnOffset / tileSize),
               // This will be handled through the <Spawn /> animation component.
               onComplete: () => null,
               partial: false,
-              path: [isDespawn ? new SpriteVector(position.x, position.y + 1 / 12) : position],
+              path: [
+                isDespawn
+                  ? new SpriteVector(position.x, position.y + spawnOffset / tileSize)
+                  : position,
+              ],
               pathVisibility: isDespawn ? [true, false] : null,
               tiles: [tile],
               type: 'move',
@@ -824,9 +837,12 @@ export default function UnitTile({
     positionOffset.y,
     requestFrame,
     scheduleTimer,
-    size,
+    tileSize,
+    unitSize,
     spawnAnimation,
+    spawnOffset,
     spritePosition,
+    spriteSize,
     tile,
     unit,
     unitDirection,
@@ -852,6 +868,10 @@ export default function UnitTile({
     backgroundPositionY: currentDirection
       ? -(spritePosition.y + getDirectionOffset(info, currentDirection)) * spriteSize + 'px'
       : backgroundPositionY,
+    height: spriteSize,
+    left: -UnitSpriteLayout.anchor.x,
+    top: -UnitSpriteLayout.anchor.y,
+    width: spriteSize,
     ...getFlashDelay(animation, animationConfig),
   };
 
@@ -920,7 +940,7 @@ export default function UnitTile({
 
   return (
     <div className={className} ref={elementRef} style={style}>
-      <Label entity={unit} hide={hide} size={size} />
+      <Label entity={unit} entitySize={unitSize} hide={hide} />
       {shadowImage && (
         <div
           className={cx(spriteStyle, shadowStyle, animationStyle)}
@@ -967,7 +987,6 @@ const vars = new CSSVariables<
   | 'z-index'
 >('u');
 
-const spriteSize = 32;
 const idleOffset = 8;
 // Apply `translateZ(0)` to get GPU acceleration and ensure
 // that `filter` works properly in Safari.
@@ -1027,13 +1046,9 @@ const neutralStyle = css`
 `;
 
 const spriteStyle = css`
-  height: ${spriteSize}px;
-  left: -4px;
   position: absolute;
-  top: -8px;
   transform: ${scale};
   transition: ${transition};
-  width: ${spriteSize}px;
 `;
 
 const baseUnitStyle = css`

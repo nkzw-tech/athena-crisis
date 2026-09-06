@@ -65,6 +65,7 @@ import MaskWithSubtiles from './MaskWithSubtiles.tsx';
 import CreateMapMessage from './message/CreateMapMessage.tsx';
 import MapMessage from './message/MapMessage.tsx';
 import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
+import { BuildingSpriteLayout, UnitSpriteLayout } from './render/EntitySpriteLayout.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
@@ -292,13 +293,13 @@ export default class GameMap extends Component<Props, State> {
       human: AnimationConfig,
       regular: AnimationConfig,
     },
-    buildingSize: TileSize,
+    buildingSize: BuildingSpriteLayout.entitySize,
     confirmActionStyle: 'touch',
     playerAchievement: null,
     scroll: true,
     showCursor: true,
     tileSize: TileSize,
-    unitSize: TileSize,
+    unitSize: UnitSpriteLayout.entitySize,
   };
 
   private _actionQueue: Promise<void> | null = null;
@@ -1939,6 +1940,7 @@ export default class GameMap extends Component<Props, State> {
     const {
       props: {
         animatedChildren,
+        buildingSize,
         children,
         className,
         createMessage,
@@ -1958,6 +1960,7 @@ export default class GameMap extends Component<Props, State> {
         skipBanners,
         tilted,
         toggleLikeMessage,
+        unitSize,
       },
       state: {
         additionalRadius,
@@ -2041,6 +2044,7 @@ export default class GameMap extends Component<Props, State> {
               animations={animations}
               attackable={attackable}
               behavior={behavior}
+              buildingSize={buildingSize}
               extraUnits={effectState?.extraUnits}
               fogStyle={fogStyle}
               getLayer={getLayer}
@@ -2058,6 +2062,7 @@ export default class GameMap extends Component<Props, State> {
               selectedUnit={selectedUnit}
               style={isFloating ? 'floating' : 'none'}
               tileSize={tileSize}
+              unitSize={unitSize}
               vision={vision}
             />
             {objectiveRadius?.map((radius, index) => (

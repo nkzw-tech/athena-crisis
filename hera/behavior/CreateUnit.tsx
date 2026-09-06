@@ -217,9 +217,9 @@ export default class CreateUnit {
                         ?.equippedUnitCustomizations.get(unit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
                       highlightStyle={highlight ? (entity.canMove() ? 'move' : 'idle') : undefined}
-                      size={MapUISize}
                       tile={Plain}
                       unit={isDisabled ? entity.complete() : entity}
+                      unitSize={MapUISize}
                     />
                     {entity.isLeader() && (
                       <div className={leaderIconStyle}>

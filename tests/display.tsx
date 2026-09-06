@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
-import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import { FastAnimationConfig, InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
@@ -48,9 +48,9 @@ const initializeHasRendered = (gameActionResponses: ReadonlyArray<string>) => {
   });
 };
 
-const animationSpeed = {
-  human: InstantAnimationConfig,
-  regular: InstantAnimationConfig,
+const animationSpeeds = {
+  fast: { human: FastAnimationConfig, regular: FastAnimationConfig },
+  instant: { human: InstantAnimationConfig, regular: InstantAnimationConfig },
 };
 
 const ErrorComponent = ({ error }: { error: unknown }) => (
@@ -83,6 +83,11 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
   const viewers = url.searchParams.getAll('viewer[]');
   const gameActionResponses = url.searchParams.getAll('gameActionResponse[]');
   const fogStyle = url.searchParams.get('fogStyle') === 'hard' ? 'hard' : 'soft';
+  const animationSpeed =
+    animationSpeeds[url.searchParams.get('animationSpeed') === 'fast' ? 'fast' : 'instant'];
+  const buildingSize = Number(url.searchParams.get('buildingSize')) || undefined;
+  const tileSize = Number(url.searchParams.get('tileSize')) || undefined;
+  const unitSize = Number(url.searchParams.get('unitSize')) || undefined;
   const style = url.searchParams.get('style') === 'floating' ? 'floating' : 'none';
   const eventEmitters = useMemo(() => maps.map(() => new EventTarget()), [maps]);
 
@@ -136,6 +141,7 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
                     animationSpeed={animationSpeed}
                     autoPanning={false}
                     behavior={NullBehavior}
+                    buildingSize={buildingSize}
                     confirmActionStyle="never"
                     currentUserId={viewers[index]}
                     events={eventEmitters?.[index]}
@@ -147,7 +153,9 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
                     scroll={false}
                     showCursor={false}
                     style={style}
+                    tileSize={tileSize}
                     tilted={false}
+                    unitSize={unitSize}
                   >
                     {(state) => <GameMapState index={index} state={state} />}
                   </GameMap>

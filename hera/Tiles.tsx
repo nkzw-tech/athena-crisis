@@ -14,6 +14,7 @@ import { Tiles0, Tiles1, Tiles2, Tiles3, Tiles4, Tiles5, Tiles6 } from 'athena-c
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
+import { BuildingSpriteLayout } from './render/EntitySpriteLayout.tsx';
 import renderFloatingTile from './render/renderFloatingTile.tsx';
 import renderTile from './render/renderTile.tsx';
 
@@ -49,6 +50,7 @@ const sprites = {
 } as const;
 
 export default memo(function Tiles({
+  buildingSize = BuildingSpriteLayout.entitySize,
   map,
   paused,
   renderEntities = true,
@@ -56,6 +58,7 @@ export default memo(function Tiles({
   tileSize: size,
   vision,
 }: {
+  buildingSize?: number;
   map: MapData;
   paused?: boolean;
   renderEntities?: boolean;
@@ -99,6 +102,7 @@ export default memo(function Tiles({
         modifier,
         size,
         renderEntities,
+        buildingSize,
       );
     }
 
@@ -159,6 +163,7 @@ export default memo(function Tiles({
               modifier,
               size,
               renderEntities,
+              buildingSize,
             );
           }
 
@@ -175,6 +180,7 @@ export default memo(function Tiles({
               layer1Modifier,
               size,
               renderEntities,
+              buildingSize,
             );
           }
         }
@@ -202,6 +208,7 @@ export default memo(function Tiles({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    buildingSize,
     biome,
     biomeStyle.palette,
     hasSprites,

@@ -93,9 +93,9 @@ export default function EntityPickerFlyout({
               <BuildingTile
                 biome={biome}
                 building={building}
+                buildingSize={MapUISize}
                 highlight={selected === 'building' || highlight}
                 position={new SpriteVector(1, 1.5)}
-                size={MapUISize}
               />
             )}
             key="building"
@@ -116,9 +116,9 @@ export default function EntityPickerFlyout({
                 highlightStyle={
                   selected === 'unit' || highlight ? (unit.canMove() ? 'move' : 'idle') : undefined
                 }
-                size={MapUISize}
                 tile={Plain}
                 unit={unit}
+                unitSize={MapUISize}
               />
             )}
             key="unit"

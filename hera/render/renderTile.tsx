@@ -17,6 +17,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { VisionT } from '@deities/athena/Vision.tsx';
 import getBuildingSpritePosition from '../lib/getBuildingSpritePosition.tsx';
+import { BuildingSpriteLayout } from './EntitySpriteLayout.tsx';
 
 export type TileSet = {
   buildings: CanvasImageSource;
@@ -34,19 +35,22 @@ const renderBuildingShadow = (
   isVisible: boolean,
   targetX: number,
   targetY: number,
-  size: number,
+  tileSize: number,
+  buildingSize: number,
 ) => {
   const [x, y] = getBuildingSpritePosition(building.info, building.player, biome, isVisible);
+  const { anchor, atlasCellSize, shadow } = BuildingSpriteLayout;
+  const inset = (tileSize - buildingSize) / 2;
   context.drawImage(
     building.info.sprite.name === 'Structures' ? tileset.structures : tileset.buildings,
-    x * size,
-    (y + 1) * size,
-    size,
-    size,
-    targetX,
-    targetY,
-    size,
-    size,
+    x * atlasCellSize + shadow.x,
+    y * atlasCellSize + shadow.y,
+    shadow.width,
+    shadow.height,
+    targetX + inset - anchor.x + shadow.x,
+    targetY + inset - anchor.y + shadow.y,
+    shadow.width,
+    shadow.height,
   );
 };
 
@@ -61,6 +65,7 @@ export default function renderTile(
   modifierId: number,
   size: number,
   renderEntities: boolean,
+  buildingSize: number = BuildingSpriteLayout.entitySize,
 ) {
   const half = size / 2;
   const building = map.buildings.get(vector);
@@ -260,6 +265,7 @@ export default function renderTile(
       targetX,
       targetY,
       size,
+      buildingSize,
     );
   }
 

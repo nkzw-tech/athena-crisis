@@ -285,7 +285,7 @@ const InlineTile = ({
             position={vector}
             requestFrame={requestAnimationFrame}
             scheduleTimer={scheduleTimer}
-            size={TileSize}
+            tileSize={TileSize}
           />
         )}
         {isVisible &&
@@ -349,8 +349,8 @@ const InlineUnit = ({
     position={vector}
     requestFrame={requestAnimationFrame}
     scheduleTimer={scheduleTimer}
-    size={TileSize}
     tile={tile}
+    tileSize={TileSize}
     unit={unit}
     {...props}
   />

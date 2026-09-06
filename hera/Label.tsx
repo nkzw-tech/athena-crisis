@@ -6,19 +6,21 @@ import Tick from './Tick.tsx';
 
 export default function Label({
   entity,
+  entitySize,
   hide,
-  size,
 }: {
   entity: Entity;
+  entitySize: number;
   hide: boolean;
-  size: number;
 }) {
   return entity.label !== null ? (
     <div
       className={cx(sprite('Label', entity.label), labelStyle, hide && hideStyle)}
       style={
         isBuilding(entity)
-          ? { top: size / 2 - (entity.info.sprite.size === 'tall' ? labelSize / 1.5 + 1 : 1) }
+          ? {
+              top: entitySize / 2 - (entity.info.sprite.size === 'tall' ? labelSize / 1.5 + 1 : 1),
+            }
           : undefined
       }
     />

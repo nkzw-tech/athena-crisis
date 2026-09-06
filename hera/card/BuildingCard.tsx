@@ -110,7 +110,7 @@ export default memo(function BuildingCard({
             scheduleTimer={(fn, delay) =>
               Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
-            size={TileSize}
+            tileSize={TileSize}
           />
         </TilePreview>
         <VStack gap wrap>
