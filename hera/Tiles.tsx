@@ -40,14 +40,16 @@ const clip = (context: CanvasRenderingContext2D, size: number, map: MapData) => 
 };
 
 const sprites = {
-  [Biome.Desert]: { frameSize: 24, image: Tiles1 },
-  [Biome.Grassland]: { frameSize: 24, image: Tiles0 },
-  [Biome.Luna]: { frameSize: 24, image: Tiles6 },
-  [Biome.Snow]: { frameSize: 24, image: Tiles2 },
-  [Biome.Spaceship]: { frameSize: 24, image: Tiles4 },
-  [Biome.Swamp]: { frameSize: 24, image: Tiles3 },
-  [Biome.Volcano]: { frameSize: 24, image: Tiles5 },
+  [Biome.Desert]: { image: Tiles1, tileSize: 24 },
+  [Biome.Grassland]: { image: Tiles0, tileSize: 24 },
+  [Biome.Luna]: { image: Tiles6, tileSize: 24 },
+  [Biome.Snow]: { image: Tiles2, tileSize: 24 },
+  [Biome.Spaceship]: { image: Tiles4, tileSize: 24 },
+  [Biome.Swamp]: { image: Tiles3, tileSize: 24 },
+  [Biome.Volcano]: { image: Tiles5, tileSize: 24 },
 } as const;
+
+export const getTileSize = (biome: Biome = Biome.Grassland): number => sprites[biome].tileSize;
 
 export default memo(function Tiles({
   buildingSize = BuildingSpriteLayout.entitySize,
@@ -81,7 +83,7 @@ export default memo(function Tiles({
     const tileset = {
       buildings: spriteImage('BuildingsShadow', biome),
       structures: spriteImage('StructuresShadow', biome),
-      tileFrameSize: sprites[biome].frameSize,
+      tileFrameSize: sprites[biome].tileSize,
       tiles: sprites[biome].image,
     };
 

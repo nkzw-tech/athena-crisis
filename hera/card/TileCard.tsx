@@ -35,6 +35,7 @@ import Decorators from '../Decorators.tsx';
 import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
 import getCoverName from '../lib/getCoverName.tsx';
 import Tick from '../Tick.tsx';
+import { getTileSize } from '../Tiles.tsx';
 import { AttributeGridBox } from './AttributeGrid.tsx';
 import CardTitle, { CardInfoHeading } from './CardTitle.tsx';
 import CoverRange from './lib/CoverRange.tsx';
@@ -226,6 +227,7 @@ const TileDecorators = memo(function TileDecorators({
     return null;
   }
 
+  const tileSize = getTileSize(map.config.biome);
   const decorators = [...decoratorMap.values()];
   const decoratorCount = new Map<number, number>();
   for (const decorator of decorators) {
@@ -260,7 +262,7 @@ const TileDecorators = memo(function TileDecorators({
                     [DecoratorsPerSide - 2, DecoratorsPerSide, decorator.id],
                   ]),
                 })}
-                tileSize={TileSize}
+                tileSize={tileSize}
               />
               <div className={textStyle}>
                 {decorator.name}

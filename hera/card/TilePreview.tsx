@@ -9,7 +9,7 @@ import { ReactNode } from 'react';
 import Decorators from '../Decorators.tsx';
 import Tick from '../Tick.tsx';
 import TileDecorators from '../TileDecorators.tsx';
-import Tiles from '../Tiles.tsx';
+import Tiles, { getTileSize } from '../Tiles.tsx';
 
 const vector = vec(1, 1);
 const vision = new Vision(1);
@@ -23,6 +23,7 @@ export default function TilePreview({
   map: MapData;
   size?: BuildingHeight;
 }) {
+  const tileSize = getTileSize(map.config.biome);
   return (
     <div
       className={cx(
@@ -32,13 +33,13 @@ export default function TilePreview({
       )}
     >
       <Tick animationConfig={AnimationConfig} className={mapStyle}>
-        <Tiles map={map} style="clip" tileSize={TileSize} vision={vision} />
-        <Decorators map={map} tileSize={TileSize} />
+        <Tiles map={map} style="clip" tileSize={tileSize} vision={vision} />
+        <Decorators map={map} tileSize={tileSize} />
         <TileDecorators
           getLayer={() => 0}
           isVisible
           map={map}
-          tileSize={TileSize}
+          tileSize={tileSize}
           vector={vector}
           vision={vision}
         />

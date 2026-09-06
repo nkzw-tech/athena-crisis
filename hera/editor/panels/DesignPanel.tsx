@@ -8,7 +8,7 @@ import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRe
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -39,6 +39,7 @@ import getAnyUnitTile from '../../lib/getAnyUnitTile.tsx';
 import navigate from '../../lib/navigate.tsx';
 import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
 import Tick from '../../Tick.tsx';
+import { getTileSize } from '../../Tiles.tsx';
 import { Actions } from '../../Types.tsx';
 import useColumns from '../hooks/useColumns.tsx';
 import canFillTile from '../lib/canFillTile.tsx';
@@ -70,6 +71,7 @@ export default memo(function DesignPanel({
   user: UserWithUnlocks;
 }) {
   const { biome, blocklistedBuildings, blocklistedUnits } = config;
+  const tileSize = getTileSize(biome);
   const tile = selected?.tile ? getTileInfo(selected?.tile) : null;
   const building = selected?.building || null;
   const unit = selected?.unit || null;
@@ -273,7 +275,7 @@ export default memo(function DesignPanel({
               active={selected?.eraseTiles}
               onClick={() => setEditorState({ selected: { eraseTiles: true } })}
               scale={2}
-              tileSize={TileSize}
+              tileSize={tileSize}
             />
             <InlineLink
               className={cx(fillStyle, ellipsis)}
@@ -311,7 +313,7 @@ export default memo(function DesignPanel({
               onClick={() => setEditorState({ selected: { eraseBuildings: true } })}
               scale={2}
               tall
-              tileSize={TileSize}
+              tileSize={tileSize}
             />
           </InlineTileList>
         </Box>
@@ -328,7 +330,7 @@ export default memo(function DesignPanel({
               active={selected?.eraseUnits}
               onClick={() => setEditorState({ selected: { eraseUnits: true } })}
               scale={2}
-              tileSize={TileSize}
+              tileSize={tileSize}
             />
           </InlineTileList>
         </Box>
@@ -351,6 +353,7 @@ export default memo(function DesignPanel({
       setRef,
       tile,
       tiles,
+      tileSize,
       unit,
       units,
     ],

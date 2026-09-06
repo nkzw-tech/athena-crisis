@@ -1,5 +1,6 @@
 import { EndTurnAction } from '@deities/apollo/action-mutators/ActionMutators.tsx';
 import type { GameActionResponse } from '@deities/apollo/Types.tsx';
+import { Biome } from '@deities/athena/map/Biome.tsx';
 import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -81,6 +82,9 @@ vi.mock('../Radius.tsx', async () => {
     default: () => null,
   };
 });
+vi.mock('../Tiles.tsx', () => ({
+  getTileSize: (biome: Biome) => (biome === Biome.Desert ? 32 : 24),
+}));
 vi.mock('../ui/GameDialog.tsx', () => ({ default: () => null }));
 vi.mock('../ui/MapPerformanceMetrics.tsx', () => ({ default: () => null }));
 vi.mock('../ui/NamedPosition.tsx', () => ({ default: () => null }));
@@ -596,4 +600,37 @@ test('a GameEnd response remains terminal when another response follows it', asy
   expect(gameMap.state.behavior?.type).toBe('null');
   expect(gameMap.state.lastActionResponse).toBe(gameEndActionResponse);
   expect(gameMap.state.replayState.isLive).toBe(false);
+});
+
+test('map sizing follows the selected terrain sheet and preserves explicit overrides', async () => {
+  vi.stubGlobal('window', { innerHeight: 150, innerWidth: 150 });
+  const { default: GameMap } = await import('../GameMap.tsx');
+  const props = {
+    ...GameMap.defaultProps,
+    autoPanning: false,
+    behavior: null,
+    confirmActionStyle: 'never',
+    currentUserId: '1',
+    fogStyle: 'soft',
+    map,
+    playerDetails: new Map(),
+    scale: 1,
+    style: 'none',
+    tilted: false,
+  } satisfies Props;
+  const gameMap = new GameMap(props);
+  expect(gameMap.state.tileSize).toBe(24);
+  expect(gameMap.state.inlineUI).toBe(true);
+
+  const desertMap = map.copy({ config: map.config.copy({ biome: Biome.Desert }) });
+  const desertProps = { ...props, dangerouslyApplyExternalState: true, map: desertMap };
+  const desertState = GameMap.getDerivedStateFromProps(desertProps, gameMap.state)!;
+  expect(desertState.tileSize).toBe(32);
+  expect(desertState.inlineUI).toBe(false);
+  expect(new GameMap(desertProps).state.tileSize).toBe(32);
+
+  const overrideProps = { ...desertProps, tileSize: 24 };
+  expect(new GameMap(overrideProps).state.tileSize).toBe(24);
+  expect(GameMap.getDerivedStateFromProps(overrideProps, desertState)!.tileSize).toBe(24);
+  expect(GameMap.getDerivedStateFromProps(props, { ...desertState, map })!.tileSize).toBe(24);
 });

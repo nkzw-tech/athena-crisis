@@ -109,7 +109,7 @@ export type Props = Readonly<{
   skipBanners?: boolean;
   spectatorCodes?: ReadonlyArray<string>;
   style: TileStyle;
-  tileSize: number;
+  tileSize?: number;
   tilted: boolean;
   timeout?: number | null;
   timer?: GameTimerValue;

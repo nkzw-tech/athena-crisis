@@ -7,6 +7,7 @@ import GameMap from '@deities/hera/GameMap.tsx';
 import useClientGame from '@deities/hera/hooks/useClientGame.tsx';
 import useClientGameAction from '@deities/hera/hooks/useClientGameAction.tsx';
 import useClientGamePlayerDetails from '@deities/hera/hooks/useClientGamePlayerDetails.tsx';
+import { getTileSize } from '@deities/hera/Tiles.tsx';
 import GameActions from '@deities/hera/ui/GameActions.tsx';
 import DemoViewer from '@deities/hera/ui/lib/DemoViewer.tsx';
 import MapInfo from '@deities/hera/ui/MapInfo.tsx';
@@ -31,7 +32,7 @@ export default function PlaygroundGame({
   }, []);
 
   const [renderKey, setRenderKey] = useState(0);
-  const zoom = useScale();
+  const zoom = useScale(getTileSize(map.config.biome));
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: '-20% 0px 6% 0px' });
 

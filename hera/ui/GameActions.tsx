@@ -628,7 +628,7 @@ export default function GameActions({
   } = state;
 
   const hasEnded = lastActionResponse?.type === 'GameEnd';
-  const maxZoom = useScale() + 1;
+  const maxZoom = useScale(state.tileSize) + 1;
   const playerCanEndTurn = !preventRemoteActions && !paused && canEndTurn(state);
   const viewerPlayer = currentViewer != null ? map.maybeGetPlayer(currentViewer) : null;
   const canUndo = !!(

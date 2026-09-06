@@ -1,6 +1,5 @@
 import { TileSize } from '@deities/athena/map/Configuration.tsx';
-import createContextHook from '@nkzw/create-context-hook';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useSyncExternalStore } from 'react';
 import { isIOS } from '../Browser.tsx';
 import cssVar, { applyVar } from '../cssVar.tsx';
 
@@ -44,23 +43,25 @@ export const getScale = (tileSize: number) => {
   return maxScale;
 };
 
-const [ScaleContext, useScale] = createContextHook(() => {
-  const [scale, setScale] = useState(() => getScale(TileSize));
+const subscribe = (listener: () => void) => {
+  window.addEventListener('resize', listener);
+  window.addEventListener('orientationchange', listener);
+  return () => {
+    window.removeEventListener('resize', listener);
+    window.removeEventListener('orientationchange', listener);
+  };
+};
+
+export default function useScale(tileSize: number) {
+  return useSyncExternalStore(subscribe, () => getScale(tileSize));
+}
+
+export function ScaleContext({ children }: { children: ReactNode }) {
+  const scale = useScale(TileSize);
 
   useEffect(() => {
     document.documentElement.style.setProperty(cssVar('scale'), String(scale));
-
-    const listener = () => setScale(getScale(TileSize));
-    window.addEventListener('resize', listener);
-    window.addEventListener('orientationchange', listener);
-    return () => {
-      window.removeEventListener('resize', listener);
-      window.removeEventListener('orientationchange', listener);
-    };
   }, [scale]);
 
-  return scale;
-});
-
-export default useScale;
-export { ScaleContext };
+  return children;
+}

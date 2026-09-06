@@ -5,7 +5,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import { css } from '@emotion/css';
 import { memo } from 'react';
-import Tiles from '../../Tiles.tsx';
+import Tiles, { getTileSize } from '../../Tiles.tsx';
 
 const vision = new Vision(1);
 
@@ -26,7 +26,7 @@ export default memo(function BiomeIcons({ biome }: { biome: Biome }) {
         map={map}
         paused
         style="clip"
-        tileSize={TileSize}
+        tileSize={getTileSize(biome)}
         vision={vision}
       />
     </div>

@@ -1,6 +1,5 @@
 import { DecoratorInfo, getAllDecorators } from '@deities/athena/info/Decorator.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
 import getFirstOrThrow from '@nkzw/core/getFirstOrThrow.js';
 import Stack from '@nkzw/stack';
@@ -94,7 +93,7 @@ export default function DecoratorPanel({
             active={selected?.eraseDecorators}
             onClick={() => setEditorState({ selected: { eraseDecorators: true } })}
             scale={2}
-            tileSize={TileSize}
+            tileSize={state.tileSize}
           />
         </InlineTileList>
       </Box>

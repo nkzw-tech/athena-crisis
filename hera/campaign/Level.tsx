@@ -2,7 +2,7 @@ import { Scenario } from '@deities/apollo/Effects.tsx';
 import getMapRoute from '@deities/apollo/routes/getMapRoute.tsx';
 import { getUnitInfoOrThrow } from '@deities/athena/info/Unit.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   hasPerformanceExpectation,
@@ -51,6 +51,7 @@ import getMapName from '../i18n/getMapName.tsx';
 import getTranslatedBiomeName from '../lib/getTranslatedBiomeName.tsx';
 import MapComponent from '../Map.tsx';
 import ObjectiveTitle from '../objectives/ObjectiveTitle.tsx';
+import { getTileSize } from '../Tiles.tsx';
 import Comparator from '../ui/Comparator.tsx';
 import CrystalIcon from '../ui/CrystalIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
@@ -458,13 +459,14 @@ const MiniMap = memo(function MiniMap({
   slug: string;
   zoom?: number;
 }) {
+  const tileSize = getTileSize(map.config.biome);
   return (
     <Link
       className={miniMapStyle}
       onClick={onClick}
       style={{
-        height: map.size.height * TileSize + 'px',
-        width: map.size.width * TileSize + 'px',
+        height: map.size.height * tileSize + 'px',
+        width: map.size.width * tileSize + 'px',
         zoom,
       }}
       to={getMapRoute(slug, 'edit')}
@@ -480,7 +482,7 @@ const MiniMap = memo(function MiniMap({
         position={null}
         renderEntities={renderEntities && isInView}
         style="floating"
-        tileSize={TileSize}
+        tileSize={tileSize}
         vision={map.createVisionObject(map.getCurrentPlayer())}
       />
     </Link>

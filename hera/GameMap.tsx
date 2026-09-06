@@ -15,7 +15,6 @@ import {
   InstantAnimationConfig,
   MaxHealth,
   MaxSize,
-  TileSize,
 } from '@deities/athena/map/Configuration.tsx';
 import { Fog as FogConfig } from '@deities/athena/map/PlainMap.tsx';
 import { PlayerID, resolveDynamicPlayerID } from '@deities/athena/map/Player.tsx';
@@ -66,6 +65,7 @@ import CreateMapMessage from './message/CreateMapMessage.tsx';
 import MapMessage from './message/MapMessage.tsx';
 import Radius, { RadiusInfo, RadiusType } from './Radius.tsx';
 import { BuildingSpriteLayout, UnitSpriteLayout } from './render/EntitySpriteLayout.tsx';
+import { getTileSize } from './Tiles.tsx';
 import {
   Actions,
   ActionsProcessedEventDetail,
@@ -210,7 +210,7 @@ const getInitialState = (props: Props) => {
     playerDetails,
     scale,
     spectatorCodes,
-    tileSize,
+    tileSize = getTileSize(map.config.biome),
     timeout,
     timer,
     unitSize,
@@ -298,7 +298,6 @@ export default class GameMap extends Component<Props, State> {
     playerAchievement: null,
     scroll: true,
     showCursor: true,
-    tileSize: TileSize,
     unitSize: UnitSpriteLayout.entitySize,
   };
 
@@ -412,6 +411,16 @@ export default class GameMap extends Component<Props, State> {
           props.spectatorCodes,
           !!props.editor,
         ),
+      };
+    }
+
+    const currentState = newState || state;
+    const tileSize = props.tileSize ?? getTileSize(currentState.map.config.biome);
+    if (tileSize !== currentState.tileSize) {
+      newState = {
+        ...currentState,
+        inlineUI: getInlineUIState(currentState.map, tileSize, props.scale),
+        tileSize,
       };
     }
 

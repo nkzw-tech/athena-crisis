@@ -23,11 +23,7 @@ import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import getDefenseStatusEffect from '@deities/athena/lib/getDefenseStatusEffect.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  MoraleStatusEffect,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, MoraleStatusEffect } from '@deities/athena/map/Configuration.tsx';
 import Entity, { EntityType, getEntityGroup } from '@deities/athena/map/Entity.tsx';
 import Player, {
   numberToPlayerID,
@@ -83,6 +79,7 @@ import getTranslatedEntityName, {
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Medal from '../Medal.tsx';
 import Tick from '../Tick.tsx';
+import { getTileSize } from '../Tiles.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import UILabel from '../ui/UILabel.tsx';
@@ -135,6 +132,7 @@ export default memo(function UnitCard({
     : `/damage-chart?back=${backURL}`;
 
   const { biome } = map.config;
+  const tileSize = getTileSize(biome);
   const { info, player } = unit;
   const {
     configuration: { fuel, vision },
@@ -177,7 +175,7 @@ export default memo(function UnitCard({
               Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
             tile={previewMap.getTileInfo(defaultVector)}
-            tileSize={TileSize}
+            tileSize={tileSize}
             unit={entity}
             {...props}
           />

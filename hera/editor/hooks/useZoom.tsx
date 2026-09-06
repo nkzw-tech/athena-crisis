@@ -9,11 +9,12 @@ const getKey = (key: string) => `::AC::zoom::${key}`;
 export type SetZoomFn = (value: number | ((value: number) => number)) => void;
 
 export default function useZoom(
+  tileSize: number,
   max?: number,
   key?: string,
   scrollIntoView: boolean = true,
 ): [zoom: number, setZoom: SetZoomFn] {
-  const scale = useScale();
+  const scale = useScale(tileSize);
 
   const [zoom, _setZoom] = useState(() => {
     if (key) {

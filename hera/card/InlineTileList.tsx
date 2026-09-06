@@ -38,7 +38,7 @@ import tileFieldHasAnimation from '../editor/lib/tileFieldHasAnimation.tsx';
 import { useSprites } from '../hooks/useSprites.tsx';
 import useUnitState from '../hooks/useUnitState.tsx';
 import TileDecorators from '../TileDecorators.tsx';
-import Tiles from '../Tiles.tsx';
+import Tiles, { getTileSize } from '../Tiles.tsx';
 import { TimerFunction } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
 
@@ -221,6 +221,7 @@ const InlineTile = ({
       ),
     );
   }, [biome, building, decorator, tileField, unit]);
+  const tileSize = getTileSize(biome);
 
   useScrollIntoView(ref, scrollIntoView ? isSelected : false);
 
@@ -260,17 +261,17 @@ const InlineTile = ({
           map={map}
           paused={!isVisible || !tileFieldHasAnimation(tileField)}
           style="clip"
-          tileSize={TileSize}
+          tileSize={tileSize}
           vision={vision}
         />
         {(!lazyDecorators || isVisible) && decorator && (
-          <Decorators map={map} paused={!isVisible || !decorator.animation} tileSize={TileSize} />
+          <Decorators map={map} paused={!isVisible || !decorator.animation} tileSize={tileSize} />
         )}
         <TileDecorators
           getLayer={() => 0}
           isVisible
           map={map}
-          tileSize={TileSize}
+          tileSize={tileSize}
           vector={vector}
           vision={vision}
         />
@@ -285,7 +286,7 @@ const InlineTile = ({
             position={vector}
             requestFrame={requestAnimationFrame}
             scheduleTimer={scheduleTimer}
-            tileSize={TileSize}
+            tileSize={tileSize}
           />
         )}
         {isVisible &&
@@ -315,7 +316,7 @@ const InlineTile = ({
           <Cursor
             color={isSelected ? 'red' : null}
             position={vector}
-            tileSize={TileSize}
+            tileSize={tileSize}
             zIndex={3}
           />
         ) : null}
@@ -355,7 +356,7 @@ const InlineUnit = ({
     requestFrame={requestAnimationFrame}
     scheduleTimer={scheduleTimer}
     tile={tile}
-    tileSize={TileSize}
+    tileSize={getTileSize(biome)}
     unit={unit}
     {...props}
   />

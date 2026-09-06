@@ -7,7 +7,7 @@ import getAttributeRange, {
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -35,6 +35,7 @@ import getAnyUnitTile from '../lib/getAnyUnitTile.tsx';
 import getTranslatedEntityName from '../lib/getTranslatedEntityName.tsx';
 import getTranslatedFactionName from '../lib/getTranslatedFactionName.tsx';
 import Tick from '../Tick.tsx';
+import { getTileSize } from '../Tiles.tsx';
 import { PlayerDetails } from '../Types.tsx';
 import MiniPlayerIcon from '../ui/MiniPlayerIcon.tsx';
 import { SkillIcon } from '../ui/SkillDialog.tsx';
@@ -71,6 +72,7 @@ export default memo(function BuildingCard({
   unit?: Unit | null;
 }) {
   const { biome } = map.config;
+  const tileSize = getTileSize(biome);
   const { info, player } = building;
   const {
     configuration: { canBeCreated, funds, isAccessible, limit },
@@ -110,7 +112,7 @@ export default memo(function BuildingCard({
             scheduleTimer={(fn, delay) =>
               Promise.resolve(setTimeout(fn, delay) as unknown as number)
             }
-            tileSize={TileSize}
+            tileSize={tileSize}
           />
         </TilePreview>
         <VStack gap wrap>

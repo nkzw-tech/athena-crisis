@@ -10,6 +10,7 @@ import useAnimationSpeed, { AnimationSpeed } from '../hooks/useAnimationSpeed.ts
 import useConfirmActionStyle, { ConfirmActionStyle } from '../hooks/useConfirmActionStyle.tsx';
 import useHide from '../hooks/useHide.tsx';
 import { UserLikeWithID } from '../hooks/useUserMap.tsx';
+import { getTileSize } from '../Tiles.tsx';
 import { PlayerDetail } from '../Types.tsx';
 import CurrentGameCard from '../ui/CurrentGameCard.tsx';
 import MapInfo from '../ui/MapInfo.tsx';
@@ -45,8 +46,9 @@ export default function ReplayMap({
   users: ReadonlyMap<string, PlayerDetail & UserLikeWithID>;
 }) {
   const hidden = useHide();
-  const maxZoom = useScale() + 1;
-  const [zoom, setZoom] = useZoom(maxZoom, 'replay', false);
+  const tileSize = getTileSize(map.config.biome);
+  const maxZoom = useScale(tileSize) + 1;
+  const [zoom, setZoom] = useZoom(tileSize, maxZoom, 'replay', false);
   const animationSpeed = useAnimationSpeed(initialAnimationSpeed);
   const confirmActionStyle = useConfirmActionStyle(initialConfirmActionStyle);
   const playerDetails = useReplayPlayerDetails(map, users);
