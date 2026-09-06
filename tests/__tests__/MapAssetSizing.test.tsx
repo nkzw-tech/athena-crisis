@@ -126,7 +126,7 @@ test.each([16, 24, 32, 64])(
   },
 );
 
-test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
+test.each([16, 24, 25, 32, 40, 48])('the cursor surrounds a %ipx cell', async (tileSize) => {
   await captureOne(map, '1', { showCursor: true, tileSize });
   const rendered = getRenderedMap();
   await rendered.evaluate(async () => {
@@ -135,14 +135,19 @@ test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
       showCursor: true,
     }));
   });
-  const cursor = await rendered.evaluate((root) => {
+  const cursor = await rendered.evaluate((root, tileSize) => {
     const frame = [...root.querySelectorAll<HTMLElement>('div')].find((element) =>
       getComputedStyle(element).backgroundImage.includes('Cursor'),
     )!;
-    const cursor = frame.parentElement!.parentElement!;
+    const cursor = tileSize === 24 ? frame : frame.parentElement!.parentElement!;
     cursor.dataset.testid = 'cursor-art';
     const position = new DOMMatrixReadOnly(getComputedStyle(cursor).transform);
     return {
+      animations: cursor
+        .getAnimations({ subtree: true })
+        .filter(({ effect }) =>
+          (effect as KeyframeEffect).getKeyframes().some((frame) => 'backgroundPositionX' in frame),
+        ).length,
       height: cursor.offsetHeight,
       parts: [...cursor.children].map((corner) => {
         const element = corner as HTMLElement;
@@ -157,15 +162,19 @@ test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
       x: position.m41,
       y: position.m42,
     };
-  });
+  }, tileSize);
   expect(cursor).toEqual({
+    animations: tileSize === 24 ? 1 : 4,
     height: tileSize + 2,
-    parts: [
-      { height: 13, width: 13, x: 0, y: 0 },
-      { height: 13, width: 13, x: tileSize - 11, y: 0 },
-      { height: 13, width: 13, x: 0, y: tileSize - 11 },
-      { height: 13, width: 13, x: tileSize - 11, y: tileSize - 11 },
-    ],
+    parts:
+      tileSize === 24
+        ? []
+        : [
+            { height: 13, width: 13, x: 0, y: 0 },
+            { height: 13, width: 13, x: tileSize - 11, y: 0 },
+            { height: 13, width: 13, x: 0, y: tileSize - 11 },
+            { height: 13, width: 13, x: tileSize - 11, y: tileSize - 11 },
+          ],
     width: tileSize + 2,
     x: tileSize - 1,
     y: tileSize * 2 - 1,
@@ -181,11 +190,9 @@ test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
       reference.dataset.testid = 'cursor-reference';
       Object.assign(reference.style, {
         backgroundColor: 'white',
-        backgroundImage: getComputedStyle(element.firstElementChild!.firstElementChild!)
-          .backgroundImage,
+        backgroundImage: getComputedStyle(element).backgroundImage,
         height: '26px',
-        imageRendering: getComputedStyle(element.firstElementChild!.firstElementChild!)
-          .imageRendering,
+        imageRendering: getComputedStyle(element).imageRendering,
         left: '0px',
         position: 'fixed',
         top: '0px',
@@ -199,12 +206,10 @@ test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
       for (const frame of [0, 1, 2, 3]) {
         await cursor.evaluate(
           (element, { frame, row }) => {
-            for (const corner of element.children) {
-              Object.assign((corner.firstElementChild as HTMLElement).style, {
-                animation: 'none',
-                backgroundPosition: `${-frame * 26}px ${-row}px`,
-              });
-            }
+            Object.assign(element.style, {
+              animation: 'none',
+              backgroundPosition: `${-frame * 26}px ${-row}px`,
+            });
             document.querySelector<HTMLElement>(
               '[data-testid="cursor-reference"]',
             )!.style.backgroundPosition = `${-frame * 26}px ${-row}px`;
@@ -216,4 +221,36 @@ test.each([24, 32])('cursor corners surround a %ipx cell', async (tileSize) => {
     }
     await reference.evaluate((element) => element.remove());
   }
+});
+
+test.each([24, 32])('a %ipx cursor retains its position while fading out', async (tileSize) => {
+  await captureOne(map, '1', { showCursor: true, tileSize });
+  const rendered = getRenderedMap();
+  await rendered.evaluate(async () => {
+    await window.GameMapActions[0].update((state) => ({
+      position: state.map.units.keys().next().value!,
+      showCursor: true,
+    }));
+  });
+  const getCursorStyle = () =>
+    rendered.evaluate((root, tileSize) => {
+      const frame = [...root.querySelectorAll<HTMLElement>('div')].find((element) =>
+        getComputedStyle(element).backgroundImage.includes('Cursor'),
+      )!;
+      const cursor = tileSize === 24 ? frame : frame.parentElement!.parentElement!;
+      return { opacity: cursor.style.opacity, transform: cursor.style.transform };
+    }, tileSize);
+  const initial = await getCursorStyle();
+  expect(initial.opacity).toBe('1');
+  await rendered.evaluate(async () => {
+    await window.GameMapActions[0].update({ position: null, showCursor: true });
+  });
+  expect(await getCursorStyle()).toEqual({ ...initial, opacity: '0' });
+  await rendered.evaluate(async () => {
+    await window.GameMapActions[0].update((state) => ({
+      position: state.map.units.keys().next().value!,
+      showCursor: true,
+    }));
+  });
+  expect(await getCursorStyle()).toEqual(initial);
 });
