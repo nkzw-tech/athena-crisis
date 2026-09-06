@@ -6,6 +6,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import { css, cx } from '@emotion/css';
 import { Sprites } from 'athena-crisis:images';
 import { memo } from 'react';
+import { TileDecoratorSpriteLayout } from './render/MapSpriteLayout.tsx';
 import Tick from './Tick.tsx';
 
 const defaultPosition = vec(1, 1);
@@ -16,8 +17,8 @@ export default memo(function TileDecorator({
   fade,
   modifier,
   position,
-  size,
   tile,
+  tileSize,
   zIndex,
 }: {
   absolute?: boolean;
@@ -25,10 +26,11 @@ export default memo(function TileDecorator({
   fade?: boolean;
   modifier: Modifier;
   position?: Vector;
-  size: number;
   tile: TileInfo;
+  tileSize: number;
   zIndex?: number;
 }) {
+  const { anchor, frameSize, overlap } = TileDecoratorSpriteLayout;
   const { decorator } = tile.style;
   if (!decorator) {
     return null;
@@ -48,16 +50,16 @@ export default memo(function TileDecorator({
       className={cx(absolute && absoluteStyle, fade && fadeStyle)}
       style={{
         backgroundImage: `url('${Sprites.TileDecorators}')`,
-        backgroundPositionX: -positionX * size + 'px',
+        backgroundPositionX: -positionX * frameSize + 'px',
         backgroundPositionY: decorator.animation
-          ? `calc(${Tick.vars.apply('tile-decorator')} * ${-size}px)`
-          : -positionY * size + 'px',
-        height: size + 3 + 'px',
+          ? `calc(${Tick.vars.apply('tile-decorator')} * ${-frameSize}px)`
+          : -positionY * frameSize + 'px',
+        height: frameSize + overlap + 'px',
         opacity: dim ? 0.65 : 1,
         pointerEvents: 'none',
-        transform: `translate3d(${(x - 1) * size}px, ${(y - 1) * size}px, 0)`,
+        transform: `translate3d(${(x - 0.5) * tileSize - anchor.x}px, ${y * tileSize - anchor.y}px, 0)`,
         transition: `opacity ${dim ? 200 : 0}ms ease-in-out`,
-        width: size + 'px',
+        width: frameSize + 'px',
         zIndex: zIndex ?? 0,
       }}
     />

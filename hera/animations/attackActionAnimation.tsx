@@ -59,6 +59,7 @@ export default function attackActionAnimation(
                   to && damage != null
                     ? animations.set(new AnimationKey(), {
                         change: -damage,
+                        entity: isBuilding ? 'building' : 'unit',
                         position: to,
                         previousHealth: originalEntityB?.health || 0,
                         type: 'health',

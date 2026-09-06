@@ -1,14 +1,16 @@
-import { AttackSprite } from '@deities/athena/info/AttackSprite.tsx';
 import { SoundName } from '@deities/athena/info/Music.tsx';
-import { AttackSpriteWithVariants, WeaponAnimation } from '@deities/athena/info/Unit.tsx';
+import { WeaponAnimation } from '@deities/athena/info/Unit.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { AttackSprites } from 'athena-crisis:images';
 import { CSSProperties } from 'react';
 import attackSpriteHasVariants from '../lib/attackSpriteHasVariants.tsx';
-import Animation, { AnimationDirection, AnimationProps } from './Animation.tsx';
+import getEntityPosition from '../render/getEntityPosition.tsx';
+import Animation, { AnimationDirection, MapAnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
+
+const WeaponSpriteLayout = { offsetSize: 24 } as const;
 
 const actualDirections: Record<AnimationDirection, AnimationDirection> = {
   down: 'down',
@@ -17,16 +19,15 @@ const actualDirections: Record<AnimationDirection, AnimationDirection> = {
   up: 'up',
 };
 
-const frameCache = new Map<AttackSprite | AttackSpriteWithVariants, ReadonlyArray<CSSProperties>>();
+const frameCache = new WeakMap<WeaponAnimation, ReadonlyArray<CSSProperties>>();
 const getFrames = (animation: WeaponAnimation) => {
-  const { sprite } = animation;
-  const frames = frameCache.get(sprite);
+  const frames = frameCache.get(animation);
   if (frames) {
     return frames;
   }
 
   const newFrames = generateFrames(animation.size, animation.frames, 'vertical');
-  frameCache.set(sprite, newFrames);
+  frameCache.set(animation, newFrames);
   return newFrames;
 };
 
@@ -34,6 +35,7 @@ export default function AttackAnimation({
   animation,
   delay,
   direction,
+  entitySize,
   initialDelay,
   mirror,
   onComplete,
@@ -42,12 +44,12 @@ export default function AttackAnimation({
   rate,
   requestFrame,
   scheduleTimer,
-  size: tileSize,
   sound,
   style,
+  tileSize,
   variant,
   zIndex,
-}: Omit<AnimationProps, 'delay' | 'leadingDelay' | 'trailingDelay'> & {
+}: Omit<MapAnimationProps, 'delay' | 'leadingDelay' | 'trailingDelay'> & {
   animation: WeaponAnimation;
   delay: number;
   direction: AnimationDirection;
@@ -60,7 +62,8 @@ export default function AttackAnimation({
 }) {
   const hasVariants = attackSpriteHasVariants(animation.sprite);
   const frames = getFrames(animation);
-  const spriteOffset = Math.abs(animation.size - tileSize);
+  const spriteOffset = animation.size - WeaponSpriteLayout.offsetSize;
+  const origin = getEntityPosition(position, tileSize, entitySize);
   const offset = animation.getPosition(style, direction, mirror);
 
   // Resetting the direction after receiving offsets allows them
@@ -71,8 +74,10 @@ export default function AttackAnimation({
     direction = 'right';
   }
 
-  const x = position.x + (offset?.x || 0) * (direction === 'left' || mirror ? 1 : -1);
-  const y = position.y + (offset?.y || 0);
+  const x =
+    origin.x +
+    (offset?.x || 0) * WeaponSpriteLayout.offsetSize * (direction === 'left' || mirror ? 1 : -1);
+  const y = origin.y + (offset?.y || 0) * WeaponSpriteLayout.offsetSize;
 
   return (
     <Animation
@@ -80,17 +85,15 @@ export default function AttackAnimation({
       delay={delay}
       direction={actualDirections[direction] || direction}
       frames={frames}
+      frameSize={animation.size}
       initialDelay={(initialDelay || 0) + animation.leadingFrames * delay}
       onComplete={onComplete}
       onStep={onStep}
-      position={
-        new SpriteVector((x - 1) * tileSize - spriteOffset / 2, (y - 1) * tileSize - spriteOffset)
-      }
+      position={new SpriteVector(x - spriteOffset / 2, y - spriteOffset)}
       rate={rate}
       repeat={animation.repeat}
       requestFrame={requestFrame}
       scheduleTimer={scheduleTimer}
-      size={animation.size}
       sound={sound}
       source={!hasVariants ? AttackSprites[animation.sprite] : undefined}
       sprite={hasVariants ? animation.sprite : undefined}

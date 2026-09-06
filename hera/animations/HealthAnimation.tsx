@@ -8,12 +8,16 @@ import { css } from '@emotion/css';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import getDamageColor from '../behavior/attack/getDamageColor.tsx';
+import getEntityPosition from '../render/getEntityPosition.tsx';
 import { ClearTimerFunction, TimerFunction } from '../Types.tsx';
+
+const anchor = { x: -12, y: 14.4 } as const;
 
 export default function HealthAnimation({
   animationConfig,
   change,
   clearTimer,
+  entitySize,
   onComplete,
   position,
   previousHealth,
@@ -24,6 +28,7 @@ export default function HealthAnimation({
   animationConfig: AnimationConfig;
   change: number;
   clearTimer: ClearTimerFunction;
+  entitySize: number;
   onComplete?: () => void;
   position: Vector;
   previousHealth: number;
@@ -42,6 +47,7 @@ export default function HealthAnimation({
     return null;
   }
 
+  const origin = getEntityPosition(position, tileSize, entitySize);
   const color =
     change === 0
       ? 'error'
@@ -66,10 +72,10 @@ export default function HealthAnimation({
       key={`damage-${position}`}
       style={{
         color: color ? getColor(color === 'error' ? 'red' : color) : undefined,
-        left: `${(position.x - 0.5) * tileSize}px`,
+        left: `${origin.x - anchor.x}px`,
         padding: change === 0 ? '1px 2.5px 2.5px' : '0 1.5px 1.5px',
         textShadow: color ? '0.5px 0.5px 0 rgba(0, 0, 0, 0.4)' : undefined,
-        top: `${(position.y - 1.6) * tileSize}px`,
+        top: `${origin.y - anchor.y}px`,
         zIndex,
       }}
       transition={{

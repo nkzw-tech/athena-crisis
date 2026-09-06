@@ -5,8 +5,9 @@ import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
 import { CSSProperties, useCallback } from 'react';
+import getEntityPosition from '../render/getEntityPosition.tsx';
 import { StateToStateLike, UpdateFunction } from '../Types.tsx';
-import Animation, { AnimationProps } from './Animation.tsx';
+import Animation, { MapAnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
 export type ExplosionStyle = 'normal' | 'building' | 'land' | 'air' | 'naval' | 'naval-death';
@@ -16,10 +17,10 @@ const frameCount = 20;
 const frames = generateFrames(spriteSize, frameCount, 'vertical');
 
 type ExplosionConfiguration = Readonly<{
+  anchor: Readonly<{ x: number; y: number }>;
   cel: number;
   explode: number | null;
   frames: ReadonlyArray<CSSProperties>;
-  offset: number;
   sound: SoundName;
   source?: string;
   sprite?: SpriteVariant;
@@ -27,42 +28,42 @@ type ExplosionConfiguration = Readonly<{
 
 const animationStyle: Record<Exclude<ExplosionStyle, 'building'>, ExplosionConfiguration> = {
   air: {
+    anchor: { x: 24, y: 33.6 },
     cel: 2,
     explode: 3,
     frames: frames.slice(0, 15),
-    offset: 2.4,
     sound: 'Explosion/Air',
     source: Sprites.Explosion,
   },
   land: {
+    anchor: { x: 24, y: 45.6 },
     cel: 1,
     explode: 3,
     frames: frames.slice(0, 16),
-    offset: 2.9,
     sound: 'Explosion/Ground',
     source: Sprites.Explosion,
   },
   naval: {
+    anchor: { x: 24, y: 44.4 },
     cel: 0,
     explode: 4,
     frames: frames.slice(0, 17),
-    offset: 2.85,
     sound: 'Explosion/Naval',
     sprite: 'NavalExplosion',
   },
   'naval-death': {
+    anchor: { x: 24, y: 44.4 },
     cel: 1,
     explode: null,
     frames,
-    offset: 2.85,
     sound: 'Explosion/Naval',
     sprite: 'NavalExplosion',
   },
   normal: {
+    anchor: { x: 24, y: 37.92 },
     cel: 0,
     explode: 10,
     frames,
-    offset: 2.58,
     sound: 'Explosion/Building',
     source: Sprites.Explosion,
   },
@@ -70,13 +71,14 @@ const animationStyle: Record<Exclude<ExplosionStyle, 'building'>, ExplosionConfi
 
 export default function Explosion({
   biome,
+  entitySize,
   onExplode,
-  position: { x, y },
-  size,
+  position,
   style,
+  tileSize,
   update,
   ...props
-}: Omit<AnimationProps, 'delay' | 'sound'> & {
+}: Omit<MapAnimationProps, 'delay' | 'sound'> & {
   biome: Biome;
   delay: number;
   onExplode?: StateToStateLike;
@@ -84,13 +86,16 @@ export default function Explosion({
   style: ExplosionStyle;
   update: UpdateFunction;
 }) {
-  const { cel, explode, frames, offset, sound, source, sprite } =
+  const { anchor, cel, explode, frames, sound, source, sprite } =
     animationStyle[style === 'building' ? 'normal' : style];
+
+  const { x, y } = getEntityPosition(position, tileSize, entitySize);
 
   return (
     <Animation
       cell={cel}
       frames={frames}
+      frameSize={spriteSize}
       onStep={useCallback(
         (step: number) => {
           if (onExplode && step === explode) {
@@ -99,10 +104,9 @@ export default function Explosion({
         },
         [explode, onExplode, update],
       )}
-      position={new SpriteVector((x - 1) * size - (spriteSize - size) / 2, (y - offset) * size)}
+      position={new SpriteVector(x - anchor.x, y - anchor.y)}
       rumble="explosion"
       rumbleDuration={frames.length * 0.5 * props.delay}
-      size={spriteSize}
       sound={sound}
       source={source}
       sprite={sprite}

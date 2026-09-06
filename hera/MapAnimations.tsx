@@ -137,6 +137,7 @@ export type ScrollIntoView = Readonly<{
 
 export type HealthAnimation = Readonly<{
   change: number;
+  entity?: 'unit' | 'building';
   position: Vector;
   previousHealth: number;
   type: 'health';
@@ -402,12 +403,14 @@ const MapAnimation = ({
   animationComplete,
   animationConfig: initialAnimationConfig,
   biome,
+  buildingSize,
   getLayer,
   playerDetails: initialPlayerDetails,
   position,
   scale,
   skipBanners,
   tileSize,
+  unitSize,
   width,
   zIndex,
 }: {
@@ -416,12 +419,14 @@ const MapAnimation = ({
   animationComplete: (position: Vector, animation: Animation) => void;
   animationConfig: AnimationConfig;
   biome: Biome;
+  buildingSize: number;
   getLayer: GetLayerFunction;
   playerDetails: PlayerDetails;
   position: Vector;
   scale: number;
   skipBanners?: boolean;
   tileSize: number;
+  unitSize: number;
   width: number;
   zIndex: number;
 }) => {
@@ -459,11 +464,12 @@ const MapAnimation = ({
           <Explosion
             biome={biome}
             delay={animationConfig.ExplosionStep}
+            entitySize={animation.style === 'building' ? buildingSize : unitSize}
             onExplode={animation.onExplode}
             position={animation.position || position}
             requestFrame={requestFrame}
-            size={tileSize}
             style={animation.style}
+            tileSize={tileSize}
             update={update}
             {...props}
             zIndex={getLayer((animation.position || position).y, 'animation')}
@@ -474,10 +480,11 @@ const MapAnimation = ({
         return (
           <Spawn
             delay={animationConfig.ExplosionStep / (animation.speed === 'fast' ? 2 : 1)}
+            entitySize={unitSize}
             onSpawn={animation.onSpawn}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             type={animation.type}
             unitDirection={animation.unitDirection}
             update={update}
@@ -491,10 +498,11 @@ const MapAnimation = ({
         return (
           <BuildingCreate
             delay={animationConfig.ExplosionStep}
+            entitySize={buildingSize}
             onCreate={animation.onCreate}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             update={update}
             variant={animation.variant}
             {...props}
@@ -506,7 +514,7 @@ const MapAnimation = ({
             delay={animationConfig.ExplosionStep}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             {...props}
           />
         );
@@ -514,9 +522,10 @@ const MapAnimation = ({
         return (
           <DamageAnimation
             delay={animationConfig.ExplosionStep}
+            entitySize={unitSize}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             update={update}
             {...animation}
             {...props}
@@ -525,9 +534,10 @@ const MapAnimation = ({
       case 'upgrade':
         return (
           <UpgradeAnimation
+            entitySize={unitSize}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             update={update}
             {...animation}
             {...props}
@@ -537,9 +547,10 @@ const MapAnimation = ({
         return (
           <Heal
             delay={animationConfig.ExplosionStep}
+            entitySize={unitSize}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             unitDirection={animation.unitDirection}
             {...props}
             zIndex={getLayer(position.y, 'animation')}
@@ -549,10 +560,11 @@ const MapAnimation = ({
         return (
           <Rescue
             delay={animationConfig.ExplosionStep}
+            entitySize={unitSize}
             onRescue={animation.onRescue}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             unitDirection={animation.unitDirection}
             update={update}
             variant={animation.variant}
@@ -564,9 +576,10 @@ const MapAnimation = ({
         return (
           <Sabotage
             delay={animationConfig.ExplosionStep}
+            entitySize={unitSize}
             position={position}
             requestFrame={requestFrame}
-            size={tileSize}
+            tileSize={tileSize}
             unitDirection={animation.unitDirection}
             {...props}
             zIndex={getLayer(position.y, 'animation')}
@@ -615,13 +628,16 @@ const MapAnimation = ({
                       ? 'right'
                       : direction
                   }
+                  entitySize={
+                    type === 'attackBuildingFlash' || type === 'capture' ? buildingSize : unitSize
+                  }
                   initialDelay={initialDelay}
                   mirror
                   position={position}
                   requestFrame={requestFrame}
-                  size={tileSize}
                   sound={null}
                   style={style}
+                  tileSize={tileSize}
                   variant={animation.variant}
                   {...props}
                   onComplete={undefined}
@@ -631,12 +647,15 @@ const MapAnimation = ({
                 animation={weaponAnimation}
                 delay={animationConfig.ExplosionStep}
                 direction={isFlash && isVertical && !positions?.[direction] ? 'left' : direction}
+                entitySize={
+                  type === 'attackBuildingFlash' || type === 'capture' ? buildingSize : unitSize
+                }
                 initialDelay={initialDelay}
                 position={position}
                 requestFrame={requestFrame}
-                size={tileSize}
                 sound={weaponAnimation.sound}
                 style={style}
+                tileSize={tileSize}
                 variant={animation.variant}
                 {...props}
                 onComplete={isFlash ? undefined : props.onComplete}
@@ -662,7 +681,14 @@ const MapAnimation = ({
           />
         );
       case 'health':
-        return <HealthAnimation tileSize={tileSize} {...animation} {...props} />;
+        return (
+          <HealthAnimation
+            entitySize={animation.entity === 'building' ? buildingSize : unitSize}
+            tileSize={tileSize}
+            {...animation}
+            {...props}
+          />
+        );
       case 'banner':
         return (
           <Banner
@@ -710,6 +736,7 @@ const MapAnimation = ({
     animationComplete,
     animationConfig,
     biome,
+    buildingSize,
     clearTimer,
     completed,
     getLayer,
@@ -722,6 +749,7 @@ const MapAnimation = ({
     scrollIntoView,
     skipBanners,
     tileSize,
+    unitSize,
     update,
     width,
     zIndex,
@@ -731,17 +759,21 @@ const MapAnimation = ({
 export function MapAnimations({
   actions,
   animationComplete,
+  buildingSize,
   getLayer,
   scale,
   skipBanners,
   state: { animationConfig, animations, map, playerDetails, tileSize, vision, zIndex },
+  unitSize,
 }: {
   actions: Actions;
   animationComplete: (position: Vector, animation: Animation) => void;
+  buildingSize: number;
   getLayer: GetLayerFunction;
   scale: number;
   skipBanners?: boolean;
   state: State;
+  unitSize: number;
 }) {
   const animationsWithTransitions: Array<ReactElement> = [];
   const mainAnimations: Array<ReactElement> = [];
@@ -768,6 +800,7 @@ export function MapAnimations({
         animationComplete={animationComplete}
         animationConfig={animationConfig}
         biome={biome}
+        buildingSize={buildingSize}
         getLayer={getLayer}
         key={String(position)}
         playerDetails={playerDetails}
@@ -775,6 +808,7 @@ export function MapAnimations({
         scale={scale}
         skipBanners={skipBanners}
         tileSize={tileSize}
+        unitSize={unitSize}
         width={width}
         zIndex={zIndex}
       />,

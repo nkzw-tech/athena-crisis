@@ -12,6 +12,7 @@ type CaptureOptions = {
   animationSpeed?: 'fast' | 'instant';
   buildingSize?: number;
   fogStyle?: 'hard' | 'soft';
+  showCursor?: boolean;
   style?: 'floating' | 'none';
   tileSize?: number;
   unitSize?: number;
@@ -205,4 +206,11 @@ export async function getRenderedEntityLayouts(index = 0) {
       };
     }),
   );
+}
+
+export function getRenderedMap(index = 0) {
+  if (!page) {
+    throw new Error('Cannot inspect a map before capturing it.');
+  }
+  return page.getByTestId(`map-${index}`);
 }

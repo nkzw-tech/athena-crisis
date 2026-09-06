@@ -23,7 +23,7 @@ test.each([
     const buildings = {} as HTMLImageElement;
     renderTile(
       context,
-      { buildings, structures: buildings, tiles },
+      { buildings, structures: buildings, tileFrameSize: 24, tiles },
       map,
       new Vision(1),
       0,
@@ -39,3 +39,38 @@ test.each([
     expect([origin.x + tileSize, origin.y + tileSize]).toEqual([target, target]);
   },
 );
+
+test.each([24, 32])('samples %ipx terrain frames independently of buildings', (tileFrameSize) => {
+  const base = MapData.createMap({ map: Array(9).fill(Plain.id), size: { height: 3, width: 3 } });
+  const position = vec(2, 2);
+  const map = base.copy({ buildings: base.buildings.set(position, House.create(1)) });
+  const drawImage = vi.fn();
+  const context = { drawImage } as unknown as CanvasRenderingContext2D;
+  const tiles = {} as HTMLImageElement;
+  const buildings = {} as HTMLImageElement;
+  renderTile(
+    context,
+    { buildings, structures: buildings, tileFrameSize, tiles },
+    map,
+    new Vision(1),
+    0,
+    position,
+    Plain,
+    0,
+    32,
+    true,
+  );
+  expect(drawImage).toHaveBeenNthCalledWith(
+    1,
+    tiles,
+    Plain.sprite.position.x * tileFrameSize,
+    Plain.sprite.position.y * tileFrameSize,
+    tileFrameSize,
+    tileFrameSize,
+    64,
+    64,
+    32,
+    32,
+  );
+  expect(drawImage).toHaveBeenLastCalledWith(buildings, 120, 24, 24, 24, 68, 68, 24, 24);
+});

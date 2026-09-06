@@ -40,13 +40,13 @@ const clip = (context: CanvasRenderingContext2D, size: number, map: MapData) => 
 };
 
 const sprites = {
-  [Biome.Desert]: Tiles1,
-  [Biome.Grassland]: Tiles0,
-  [Biome.Luna]: Tiles6,
-  [Biome.Snow]: Tiles2,
-  [Biome.Spaceship]: Tiles4,
-  [Biome.Swamp]: Tiles3,
-  [Biome.Volcano]: Tiles5,
+  [Biome.Desert]: { frameSize: 24, image: Tiles1 },
+  [Biome.Grassland]: { frameSize: 24, image: Tiles0 },
+  [Biome.Luna]: { frameSize: 24, image: Tiles6 },
+  [Biome.Snow]: { frameSize: 24, image: Tiles2 },
+  [Biome.Spaceship]: { frameSize: 24, image: Tiles4 },
+  [Biome.Swamp]: { frameSize: 24, image: Tiles3 },
+  [Biome.Volcano]: { frameSize: 24, image: Tiles5 },
 } as const;
 
 export default memo(function Tiles({
@@ -81,11 +81,13 @@ export default memo(function Tiles({
     const tileset = {
       buildings: spriteImage('BuildingsShadow', biome),
       structures: spriteImage('StructuresShadow', biome),
-      tiles: sprites[biome],
+      tileFrameSize: sprites[biome].frameSize,
+      tiles: sprites[biome].image,
     };
 
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d')!;
+    context.imageSmoothingEnabled = false;
     const currentTick = getTick();
 
     context.clearRect(0, 0, canvas.width, canvas.height);

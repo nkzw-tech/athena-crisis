@@ -52,6 +52,7 @@ export async function hiddenSourceAttackAction(
       ...state,
       animations: state.animations.set(new AnimationKey(), {
         change: (entityB.health - (newEntityB?.health || 0)) * -1,
+        entity: isBuilding ? 'building' : 'unit',
         position: to,
         previousHealth: entityB.health,
         type: 'health',

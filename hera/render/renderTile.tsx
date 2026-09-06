@@ -22,6 +22,7 @@ import { BuildingSpriteLayout } from './EntitySpriteLayout.tsx';
 export type TileSet = {
   buildings: CanvasImageSource;
   structures: CanvasImageSource;
+  tileFrameSize: number;
   tiles: CanvasImageSource;
 };
 
@@ -63,11 +64,13 @@ export default function renderTile(
   vector: Vector,
   info: TileInfo,
   modifierId: number,
-  size: number,
+  tileSize: number,
   renderEntities: boolean,
   buildingSize: number = BuildingSpriteLayout.entitySize,
 ) {
-  const half = size / 2;
+  const half = tileSize / 2;
+  const { tileFrameSize } = tileset;
+  const sourceHalf = tileFrameSize / 2;
   const building = map.buildings.get(vector);
   if (building) {
     if (building.info === Airbase) {
@@ -82,8 +85,8 @@ export default function renderTile(
     }
   }
 
-  const targetX = vector.x * size;
-  const targetY = vector.y * size;
+  const targetX = vector.x * tileSize;
+  const targetY = vector.y * tileSize;
   const isPlain = info === Plain;
   const image = tileset.tiles;
   const { sprite } = info;
@@ -103,14 +106,14 @@ export default function renderTile(
   ) {
     context.drawImage(
       image,
-      Plain.sprite.position.x * size,
-      Plain.sprite.position.y * size,
-      size,
-      size,
+      Plain.sprite.position.x * tileFrameSize,
+      Plain.sprite.position.y * tileFrameSize,
+      tileFrameSize,
+      tileFrameSize,
       targetX,
       targetY,
-      size,
-      size,
+      tileSize,
+      tileSize,
     );
   }
 
@@ -127,10 +130,10 @@ export default function renderTile(
     if (modifier[0] === RenderType.Quarter) {
       context.drawImage(
         image,
-        (x + modifier[1].x + offset.x) * size,
-        (y + modifier[1].y + offset.y) * size,
-        half,
-        half,
+        (x + modifier[1].x + offset.x) * tileFrameSize,
+        (y + modifier[1].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        sourceHalf,
         targetX,
         targetY,
         half,
@@ -138,10 +141,10 @@ export default function renderTile(
       );
       context.drawImage(
         image,
-        (x + modifier[2].x + offset.x) * size,
-        (y + modifier[2].y + offset.y) * size,
-        half,
-        half,
+        (x + modifier[2].x + offset.x) * tileFrameSize,
+        (y + modifier[2].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        sourceHalf,
         targetX + half,
         targetY,
         half,
@@ -149,10 +152,10 @@ export default function renderTile(
       );
       context.drawImage(
         image,
-        (x + modifier[3].x + offset.x) * size,
-        (y + modifier[3].y + offset.y) * size,
-        half,
-        half,
+        (x + modifier[3].x + offset.x) * tileFrameSize,
+        (y + modifier[3].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        sourceHalf,
         targetX,
         targetY + half,
         half,
@@ -160,10 +163,10 @@ export default function renderTile(
       );
       context.drawImage(
         image,
-        (x + modifier[4].x + offset.x) * size,
-        (y + modifier[4].y + offset.y) * size,
-        half,
-        half,
+        (x + modifier[4].x + offset.x) * tileFrameSize,
+        (y + modifier[4].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        sourceHalf,
         targetX + half,
         targetY + half,
         half,
@@ -172,86 +175,86 @@ export default function renderTile(
     } else if (modifier[0] === RenderType.Horizontal) {
       context.drawImage(
         image,
-        (x + modifier[1].x + offset.x) * size,
-        (y + modifier[1].y + offset.y) * size,
-        size,
-        half,
+        (x + modifier[1].x + offset.x) * tileFrameSize,
+        (y + modifier[1].y + offset.y) * tileFrameSize,
+        tileFrameSize,
+        sourceHalf,
         targetX,
         targetY,
-        size,
+        tileSize,
         half,
       );
 
       context.drawImage(
         image,
-        (x + modifier[2].x + offset.x) * size,
-        (y + modifier[2].y + offset.y) * size,
-        size,
-        half,
+        (x + modifier[2].x + offset.x) * tileFrameSize,
+        (y + modifier[2].y + offset.y) * tileFrameSize,
+        tileFrameSize,
+        sourceHalf,
         targetX,
         targetY + half,
-        size,
+        tileSize,
         half,
       );
     } else if (modifier[0] === RenderType.Vertical) {
       context.drawImage(
         image,
-        (x + modifier[1].x + offset.x) * size,
-        (y + modifier[1].y + offset.y) * size,
-        half,
-        size,
+        (x + modifier[1].x + offset.x) * tileFrameSize,
+        (y + modifier[1].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        tileFrameSize,
         targetX,
         targetY,
         half,
-        size,
+        tileSize,
       );
 
       context.drawImage(
         image,
-        (x + modifier[2].x + offset.x) * size,
-        (y + modifier[2].y + offset.y) * size,
-        half,
-        size,
+        (x + modifier[2].x + offset.x) * tileFrameSize,
+        (y + modifier[2].y + offset.y) * tileFrameSize,
+        sourceHalf,
+        tileFrameSize,
         targetX + half,
         targetY,
         half,
-        size,
+        tileSize,
       );
     } else if (modifier[0] === RenderType.Composite) {
       context.drawImage(
         image,
-        (x + modifier[1].x + offset.x) * size,
-        (y + modifier[1].y + offset.y) * size,
-        size,
-        size,
+        (x + modifier[1].x + offset.x) * tileFrameSize,
+        (y + modifier[1].y + offset.y) * tileFrameSize,
+        tileFrameSize,
+        tileFrameSize,
         targetX,
         targetY,
-        size,
-        size,
+        tileSize,
+        tileSize,
       );
       context.drawImage(
         image,
-        (x + modifier[2].x + offset.x) * size,
-        (y + modifier[2].y + offset.y) * size,
-        size,
-        size,
+        (x + modifier[2].x + offset.x) * tileFrameSize,
+        (y + modifier[2].y + offset.y) * tileFrameSize,
+        tileFrameSize,
+        tileFrameSize,
         targetX,
         targetY,
-        size,
-        size,
+        tileSize,
+        tileSize,
       );
     }
   } else {
     context.drawImage(
       image,
-      (x + modifier.x + offset.x) * size,
-      (y + modifier.y + offset.y) * size,
-      size,
-      size,
+      (x + modifier.x + offset.x) * tileFrameSize,
+      (y + modifier.y + offset.y) * tileFrameSize,
+      tileFrameSize,
+      tileFrameSize,
       targetX,
       targetY,
-      size,
-      size,
+      tileSize,
+      tileSize,
     );
   }
 
@@ -264,7 +267,7 @@ export default function renderTile(
       vision.isVisible(map, vector),
       targetX,
       targetY,
-      size,
+      tileSize,
       buildingSize,
     );
   }
@@ -277,17 +280,17 @@ export default function renderTile(
           (x +
             StormCloudLightningConnectors[index].x +
             offset.x / StormCloud.sprite.animation!.offset) *
-            size,
+            tileFrameSize,
           (y +
             StormCloudLightningConnectors[index].y +
             offset.y / StormCloud.sprite.animation!.offset) *
-            size,
-          size,
-          size,
+            tileFrameSize,
+          tileFrameSize,
+          tileFrameSize,
           targetX,
           targetY,
-          size,
-          size,
+          tileSize,
+          tileSize,
         );
       }
     });

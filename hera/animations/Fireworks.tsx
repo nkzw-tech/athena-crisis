@@ -5,17 +5,18 @@ import { useMemo } from 'react';
 import Animation, { AnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
-const spriteSize = 64;
-const frames = generateFrames(spriteSize, 10, 'horizontal');
+const layout = { anchor: { x: 48, y: 48 }, frameSize: 64 } as const;
+const frames = generateFrames(layout.frameSize, 10, 'horizontal');
 
 export default function Fireworks({
   delay,
   position: { x, y },
-  size,
+  tileSize,
   ...props
-}: Omit<AnimationProps, 'sound'> & {
+}: Omit<AnimationProps, 'sound' | 'frameSize'> & {
   delay: number;
   position: Vector;
+  tileSize: number;
 }) {
   return (
     <Animation
@@ -24,8 +25,13 @@ export default function Fireworks({
         [delay],
       )}
       frames={frames}
-      position={new SpriteVector((x - 2.5) * size, (y - 2.5) * size)}
-      size={spriteSize}
+      frameSize={layout.frameSize}
+      position={
+        new SpriteVector(
+          (x - 0.5) * tileSize - layout.anchor.x,
+          (y - 0.5) * tileSize - layout.anchor.y,
+        )
+      }
       sound="Fireworks"
       source={Sprites.Fireworks}
       {...props}

@@ -236,7 +236,7 @@ const MapComponent = ({
                     }
                     position={vector}
                     scheduleTimer={scheduleTimer}
-                    size={tileSize}
+                    tileSize={tileSize}
                     zIndex={getLayer(vector.y, 'message')}
                   />,
                 );

@@ -4,7 +4,6 @@ import { TransportedUnit } from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { css } from '@emotion/css';
 import { useMemo } from 'react';
-import { MapUISize } from './Configuration.tsx';
 import Medal from './Medal.tsx';
 import { PlayerDetails } from './Types.tsx';
 import UnitTile from './Unit.tsx';
@@ -33,7 +32,6 @@ export default function TransportedUnitTile({
         highlightStyle={highlight ? 'idle' : undefined}
         tile={Plain}
         unit={deployedUnit}
-        unitSize={MapUISize}
       />
       {unit.isLeader() && (
         <div className={leaderIconStyle}>

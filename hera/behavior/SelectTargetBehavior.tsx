@@ -29,7 +29,7 @@ export default class SelectTarget {
             color="red"
             key={String(vector)}
             position={vector}
-            size={tileSize}
+            tileSize={tileSize}
             zIndex={zIndex}
           />
         ));

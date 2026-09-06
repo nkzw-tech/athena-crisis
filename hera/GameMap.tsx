@@ -2125,7 +2125,7 @@ export default class GameMap extends Component<Props, State> {
                         : undefined
                     }
                     position={position}
-                    size={tileSize}
+                    tileSize={tileSize}
                     zIndex={zIndex - 4}
                   />
                   {editor?.mode === 'design' && (
@@ -2134,7 +2134,7 @@ export default class GameMap extends Component<Props, State> {
                       drawingMode={editor?.drawingMode}
                       mapSize={map.size}
                       origin={position}
-                      size={tileSize}
+                      tileSize={tileSize}
                       zIndex={zIndex}
                     />
                   )}
@@ -2143,10 +2143,12 @@ export default class GameMap extends Component<Props, State> {
             <MapAnimations
               actions={this._actions}
               animationComplete={this._animationComplete}
+              buildingSize={buildingSize}
               getLayer={getLayer}
               scale={scale}
               skipBanners={skipBanners}
               state={this.state}
+              unitSize={unitSize}
             />
             {editor?.selected?.decorator || editor?.selected?.eraseDecorators ? (
               <MaskWithSubtiles

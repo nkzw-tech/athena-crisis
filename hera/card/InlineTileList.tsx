@@ -312,7 +312,12 @@ const InlineTile = ({
             />
           ))}
         {isHighlighted || isSelected ? (
-          <Cursor color={isSelected ? 'red' : null} position={vector} size={TileSize} zIndex={3} />
+          <Cursor
+            color={isSelected ? 'red' : null}
+            position={vector}
+            tileSize={TileSize}
+            zIndex={3}
+          />
         ) : null}
       </div>
       {extraInfo != null && <div className={extraInfoStyle}>{extraInfo}</div>}

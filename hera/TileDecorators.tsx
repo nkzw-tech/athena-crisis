@@ -47,8 +47,8 @@ export default function TileDecorators({
           key={`d0-${vector}`}
           modifier={map.getModifier(vector, 0)}
           position={up}
-          size={tileSize}
           tile={layer0Tile}
+          tileSize={tileSize}
           zIndex={getLayer(up.y, hasUnitAbove ? 'top' : 'decorator')}
         />,
       );
@@ -62,8 +62,8 @@ export default function TileDecorators({
           key={`d1-${vector}`}
           modifier={map.getModifier(vector, 1)}
           position={up}
-          size={tileSize}
           tile={layer1Tile}
+          tileSize={tileSize}
           zIndex={getLayer(up.y, hasUnitAbove ? 'top' : 'decorator')}
         />,
       );

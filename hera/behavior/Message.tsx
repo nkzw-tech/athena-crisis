@@ -66,7 +66,7 @@ export default class Message {
           position={vector}
           press={!!selectedMessagePosition}
           pulse
-          size={tileSize}
+          tileSize={tileSize}
           zIndex={zIndex}
         />
       </Tick>

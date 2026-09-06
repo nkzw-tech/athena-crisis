@@ -10,6 +10,12 @@ import useVisibilityState from '@nkzw/use-visibility-state';
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
+import { DecoratorSpriteLayout } from './render/MapSpriteLayout.tsx';
+
+const getDecoratorPosition = (vector: Vector, tileSize: number) => ({
+  x: (vector.x * tileSize) / DecoratorsPerSide + tileSize - DecoratorSpriteLayout.anchor.x,
+  y: (vector.y * tileSize) / DecoratorsPerSide + tileSize - DecoratorSpriteLayout.anchor.y,
+});
 
 const renderDecorator = (
   context: CanvasRenderingContext2D,
@@ -20,20 +26,20 @@ const renderDecorator = (
   size: number,
   biome: Biome,
 ) => {
-  const targetX = (vector.x * size) / DecoratorsPerSide + size / 2 - 1;
-  const targetY = (vector.y * size) / DecoratorsPerSide;
+  const { x: targetX, y: targetY } = getDecoratorPosition(vector, size);
+  const { frameSize } = DecoratorSpriteLayout;
   const { x, y } = decorator.position;
   const biomeStyle = decorator.biomeStyle?.get(biome);
   context.drawImage(
     image,
-    (x + (biomeStyle?.x || 0) + frame) * size,
-    (y + (biomeStyle?.y || 0)) * size,
-    size,
-    size,
+    (x + (biomeStyle?.x || 0) + frame) * frameSize,
+    (y + (biomeStyle?.y || 0)) * frameSize,
+    frameSize,
+    frameSize,
     targetX,
     targetY,
-    size,
-    size,
+    frameSize,
+    frameSize,
   );
 };
 
@@ -92,9 +98,8 @@ export default memo(function Decorators({
     if (!paused && isVisible && animatedDecorators.size) {
       return tick((tick) => {
         for (const vector of clearableVectors) {
-          const targetX = (vector.x * size) / DecoratorsPerSide + size / 2 - 1;
-          const targetY = (vector.y * size) / DecoratorsPerSide;
-          context.clearRect(targetX, targetY, size, size);
+          const { x, y } = getDecoratorPosition(vector, size);
+          context.clearRect(x, y, DecoratorSpriteLayout.frameSize, DecoratorSpriteLayout.frameSize);
         }
 
         const render = (decorator: DecoratorInfo, vector: Vector) => {

@@ -13,24 +13,31 @@ export type AnimationDirection = 'left' | 'right' | 'up' | 'down';
 export type AnimationProps = Readonly<{
   delay: number | Array<number>;
   direction?: AnimationDirection;
+  frameSize: number;
   initialDelay?: number;
   onComplete?: () => void;
   onStep?: (step: number) => void;
   rate: number;
   requestFrame: RequestFrameFunction;
   scheduleTimer: TimerFunction;
-  size: number;
   sound: SoundName | null;
   trailingDelay?: number;
   variant?: PlayerID;
   zIndex: number;
 }>;
 
+export type MapAnimationProps = Omit<AnimationProps, 'frameSize'> &
+  Readonly<{
+    entitySize: number;
+    tileSize: number;
+  }>;
+
 export default function Animation({
   cell = 0,
   delay,
   direction = 'left',
   frames,
+  frameSize,
   initialDelay: _initialDelay,
   onComplete,
   onStep,
@@ -41,7 +48,6 @@ export default function Animation({
   rumble,
   rumbleDuration,
   scheduleTimer,
-  size,
   sound,
   trailingDelay,
   variant,
@@ -132,17 +138,17 @@ export default function Animation({
         ...('source' in props && props.source
           ? { backgroundImage: `url('${props.source}')` }
           : null),
-        backgroundPosition: `${-cell * size}px 0`,
+        backgroundPosition: `${-cell * frameSize}px 0`,
         backgroundRepeat: 'no-repeat',
         display: shouldHide ? 'none' : 'block',
-        height: size,
+        height: frameSize,
         imageRendering: 'pixelated',
         left: position.x,
         pointerEvents: 'none',
         position: 'absolute',
         top: position.y,
         transform: directions[direction],
-        width: size,
+        width: frameSize,
         zIndex,
         ...frames[0],
       }}

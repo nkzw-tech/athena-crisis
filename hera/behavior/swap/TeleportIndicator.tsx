@@ -26,7 +26,7 @@ export default function TeleportIndicator({
         color="red"
         key={String(teleportTile)}
         position={teleportTile}
-        size={tileSize}
+        tileSize={tileSize}
         zIndex={zIndex}
       />
     )

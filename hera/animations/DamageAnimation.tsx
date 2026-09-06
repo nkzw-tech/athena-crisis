@@ -3,32 +3,35 @@ import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
 import React, { useCallback } from 'react';
+import getEntityPosition from '../render/getEntityPosition.tsx';
 import { StateToStateLike, UpdateFunction } from '../Types.tsx';
-import Animation, { AnimationProps } from './Animation.tsx';
+import Animation, { MapAnimationProps } from './Animation.tsx';
 import AttackAnimation from './AttackAnimation.tsx';
 import generateFrames from './generateFrames.tsx';
 
-const spriteSize = 48;
+const layout = { anchor: { x: 12, y: 15.6 }, frameSize: 48 } as const;
 const frameCount = 18;
-const frames = generateFrames(spriteSize, frameCount, 'vertical');
+const frames = generateFrames(layout.frameSize, frameCount, 'vertical');
 
 const maybeAnimation = Weapons.Flamethrower.hitAnimation;
 const fireAnimation = Array.isArray(maybeAnimation) ? maybeAnimation[0] : maybeAnimation;
 
 export default function DamageAnimation({
   animation,
+  entitySize,
   onDamage,
-  position: { x, y },
-  size,
+  position,
+  tileSize,
   update,
   ...props
-}: Omit<AnimationProps, 'sound'> & {
+}: Omit<MapAnimationProps, 'sound'> & {
   animation: 'fire' | 'power';
   delay: number;
   onDamage?: StateToStateLike;
   position: Vector;
   update: UpdateFunction;
 }) {
+  const { x, y } = getEntityPosition(position, tileSize, entitySize);
   const onStep = useCallback(
     (step: number) => {
       if (onDamage && step === 5) {
@@ -43,11 +46,12 @@ export default function DamageAnimation({
       <AttackAnimation
         animation={fireAnimation}
         direction="left"
+        entitySize={entitySize}
         onStep={onStep}
-        position={new SpriteVector(x, y)}
-        size={size}
+        position={position}
         sound={null}
         style={null}
+        tileSize={tileSize}
         variant={0}
         {...props}
       />
@@ -57,9 +61,9 @@ export default function DamageAnimation({
   return (
     <Animation
       frames={frames}
+      frameSize={layout.frameSize}
       onStep={onStep}
-      position={new SpriteVector((x - 1) * size - (spriteSize - size) / 2, (y - 1.65) * size)}
-      size={spriteSize}
+      position={new SpriteVector(x - layout.anchor.x, y - layout.anchor.y)}
       sound="Unit/Spawn"
       source={Sprites.Damage}
       {...props}

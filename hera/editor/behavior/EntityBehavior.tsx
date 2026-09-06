@@ -182,7 +182,7 @@ export default class EntityBehavior extends AbstractSelectBehavior {
           <Cursor
             color="red"
             position={selectedPosition}
-            size={state.tileSize}
+            tileSize={state.tileSize}
             zIndex={state.zIndex}
           />
         </>

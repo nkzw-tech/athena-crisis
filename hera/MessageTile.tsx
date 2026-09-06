@@ -9,6 +9,7 @@ import { Sprites } from 'athena-crisis:images';
 import { memo, useEffect, useRef } from 'react';
 import sprite from './lib/sprite.tsx';
 import { NewMapMessageAnimation } from './MapAnimations.tsx';
+import { MessageSpriteLayout } from './render/MapSpriteLayout.tsx';
 import Tick from './Tick.tsx';
 import { TimerFunction } from './Types.tsx';
 
@@ -26,7 +27,7 @@ export default memo(function MessageTile({
   press,
   pulse,
   scheduleTimer,
-  size,
+  tileSize,
   zIndex,
 }: {
   absolute?: boolean;
@@ -40,13 +41,14 @@ export default memo(function MessageTile({
   press?: boolean;
   pulse?: boolean;
   scheduleTimer?: TimerFunction;
-  size: number;
+  tileSize: number;
   zIndex?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y } = position;
-  const positionX = (x - 1) * size;
-  const positionY = (y - 1) * size + 2;
+  const { anchor, frameSize } = MessageSpriteLayout;
+  const positionX = (x - 0.5) * tileSize - anchor.x;
+  const positionY = (y - 0.5) * tileSize - anchor.y;
 
   useEffect(() => {
     const element = ref.current;
@@ -74,7 +76,7 @@ export default memo(function MessageTile({
       className={cx(baseStyle, absolute && absoluteStyle)}
       ref={ref}
       style={{
-        height: size,
+        height: frameSize,
         opacity: 1 - (Math.min(Math.max(distance ?? 5, 2), 5) - 2) / 6,
         [vars.set('brightness')]:
           distance === 0
@@ -86,7 +88,7 @@ export default memo(function MessageTile({
               : 1.05,
         [vars.set('x')]: `${positionX}px`,
         [vars.set('y')]: `${positionY}px`,
-        width: size,
+        width: frameSize,
         zIndex: zIndex ?? 0,
       }}
     >
@@ -99,11 +101,11 @@ export default memo(function MessageTile({
         )}
         style={{
           backgroundImage: `url(${Sprites.MessageShadow})`,
-          backgroundPositionX: `calc(${Tick.vars.apply('unit')} * ${-size}px)`,
-          backgroundPositionY: isValuable ? -size : '0px',
-          height: size,
+          backgroundPositionX: `calc(${Tick.vars.apply('unit')} * ${-frameSize}px)`,
+          backgroundPositionY: isValuable ? -frameSize : '0px',
+          height: frameSize,
           opacity: isValuable ? 0.66 : 0.33,
-          width: size,
+          width: frameSize,
         }}
       />
       <div
@@ -114,10 +116,10 @@ export default memo(function MessageTile({
           press && pressStyle,
         )}
         style={{
-          backgroundPositionX: `calc(${Tick.vars.apply('unit')} * ${-size}px)`,
+          backgroundPositionX: `calc(${Tick.vars.apply('unit')} * ${-frameSize}px)`,
           backgroundPositionY: '0px',
-          height: size,
-          width: size,
+          height: frameSize,
+          width: frameSize,
         }}
       />
     </div>

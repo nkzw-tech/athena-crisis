@@ -1,32 +1,30 @@
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
-import Animation, { AnimationProps } from './Animation.tsx';
+import getEntityPosition from '../render/getEntityPosition.tsx';
+import Animation, { MapAnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
-const spriteSize = 36;
-const frames = generateFrames(spriteSize, 18, 'vertical');
+const layout = { anchor: { x: 6, y: 10 }, frameSize: 36 } as const;
+const frames = generateFrames(layout.frameSize, 18, 'vertical');
 
 export default function Heal({
-  position: { x, y },
-  size,
+  entitySize,
+  position,
+  tileSize,
   unitDirection,
   ...props
-}: Omit<AnimationProps, 'sound'> & {
+}: Omit<MapAnimationProps, 'sound'> & {
   position: Vector;
   unitDirection: 'left' | 'right';
 }) {
+  const { x, y } = getEntityPosition(position, tileSize, entitySize);
   return (
     <Animation
       direction={unitDirection}
       frames={frames}
-      position={
-        new SpriteVector(
-          (x - 1) * size - (spriteSize - size) / 2,
-          (y - 1) * size - (spriteSize - size - 2),
-        )
-      }
-      size={spriteSize}
+      frameSize={layout.frameSize}
+      position={new SpriteVector(x - layout.anchor.x, y - layout.anchor.y)}
       sound="Unit/Heal"
       source={Sprites.Heal}
       {...props}

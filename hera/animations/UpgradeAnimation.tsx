@@ -3,30 +3,34 @@ import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { Sprites } from 'athena-crisis:images';
 import { useCallback } from 'react';
+import getEntityPosition from '../render/getEntityPosition.tsx';
 import { StateToStateLike, UpdateFunction } from '../Types.tsx';
-import Animation, { AnimationProps } from './Animation.tsx';
+import Animation, { MapAnimationProps } from './Animation.tsx';
 import generateFrames from './generateFrames.tsx';
 
-const spriteSize = 80;
+const layout = { anchor: { x: 23.2, y: 36 }, frameSize: 80 } as const;
 const frameCount = 23;
 const upgrade = 2;
-const frames = generateFrames(spriteSize, frameCount, 'vertical');
+const frames = generateFrames(layout.frameSize, frameCount, 'vertical');
 
 export default function UpgradeAnimation({
+  entitySize,
   onUpgrade,
-  position: { x, y },
-  size,
+  position,
+  tileSize,
   update,
   ...props
-}: Omit<AnimationProps, 'sound' | 'delay'> & {
+}: Omit<MapAnimationProps, 'sound' | 'delay'> & {
   onUpgrade: StateToStateLike;
   position: Vector;
   update: UpdateFunction;
 }) {
+  const { x, y } = getEntityPosition(position, tileSize, entitySize);
   return (
     <Animation
       delay={FastAnimationConfig.ExplosionStep}
       frames={frames}
+      frameSize={layout.frameSize}
       onStep={useCallback(
         (step: number) => {
           if (onUpgrade && step === upgrade) {
@@ -35,8 +39,7 @@ export default function UpgradeAnimation({
         },
         [onUpgrade, update],
       )}
-      position={new SpriteVector((x - 0.8) * size - (spriteSize - size) / 2, (y - 2.5) * size)}
-      size={spriteSize}
+      position={new SpriteVector(x - layout.anchor.x, y - layout.anchor.y)}
       sound="Unit/Spawn"
       source={Sprites.Upgrade}
       {...props}
