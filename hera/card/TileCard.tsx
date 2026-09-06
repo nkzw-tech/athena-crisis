@@ -8,11 +8,7 @@ import getAttributeRange, {
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import {
-  AnimationConfig,
-  DecoratorsPerSide,
-  DefaultTileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
 import { numberToPlayerID, PlayerID } from '@deities/athena/map/Player.tsx';
 import { decodeDecorators } from '@deities/athena/map/Serialization.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
@@ -20,6 +16,7 @@ import MapData, { ModifierField } from '@deities/athena/MapData.tsx';
 import AdaptiveStack from '@deities/ui/AdaptiveStack.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import Hidden from '@deities/ui/icons/Hidden.tsx';
@@ -253,6 +250,7 @@ const TileDecorators = memo(function TileDecorators({
               style={{
                 backgroundColor: getColor(decoratorColor, 0.2),
                 color: getColor(decoratorColor),
+                [vars.set('tile-size')]: tileSize + 'px',
               }}
               wrap
             >
@@ -276,10 +274,12 @@ const TileDecorators = memo(function TileDecorators({
   );
 });
 
+const vars = new CSSVariables<'tile-size'>('tile-card');
+
 const tagStyle = css`
   ${clipBorder(2)}
 
-  height: ${DefaultTileSize + 8}px;
+  height: calc(${vars.apply('tile-size')} + 8px);
   image-rendering: pixelated;
   padding: 3px 6px 4px;
   position: relative;
@@ -287,7 +287,7 @@ const tagStyle = css`
 `;
 
 const textStyle = css`
-  margin-left: ${DefaultTileSize + 4}px;
+  margin-left: calc(${vars.apply('tile-size')} + 4px);
 `;
 
 const smallCoverStyle = css`

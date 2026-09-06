@@ -1,6 +1,5 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import { css } from '@emotion/css';
@@ -10,6 +9,7 @@ import Tiles, { getTileSize } from '../../Tiles.tsx';
 const vision = new Vision(1);
 
 export default memo(function BiomeIcons({ biome }: { biome: Biome }) {
+  const tileSize = getTileSize(biome);
   const map = MapData.createMap({
     config: { biome },
     map: [Plain.id],
@@ -20,13 +20,13 @@ export default memo(function BiomeIcons({ biome }: { biome: Biome }) {
     },
   });
   return (
-    <div className={biomeIconStyle}>
+    <div className={biomeIconStyle} style={{ height: tileSize, width: tileSize }}>
       <Tiles
         key={map.config.biome}
         map={map}
         paused
         style="clip"
-        tileSize={getTileSize(biome)}
+        tileSize={tileSize}
         vision={vision}
       />
     </div>
@@ -35,9 +35,7 @@ export default memo(function BiomeIcons({ biome }: { biome: Biome }) {
 
 const biomeIconStyle = css`
   flex-shrink: 0;
-  height: ${DefaultTileSize}px;
   image-rendering: pixelated;
   position: relative;
-  width: ${DefaultTileSize}px;
   zoom: 1.5;
 `;

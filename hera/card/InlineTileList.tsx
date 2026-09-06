@@ -5,16 +5,13 @@ import { singleTilesToModifiers } from '@deities/athena/lib/singleTilesToModifie
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import {
-  AnimationConfig,
-  DecoratorsPerSide,
-  DefaultTileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, DecoratorsPerSide } from '@deities/athena/map/Configuration.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
+import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import usePress, { LongPressReactEvents } from '@deities/ui/hooks/usePress.tsx';
 import useScrollIntoView from '@deities/ui/hooks/useScrollIntoView.tsx';
 import { css, cx } from '@emotion/css';
@@ -255,7 +252,7 @@ const InlineTile = ({
         onMouseLeave={onSelect && isHighlighted ? hideCursor : undefined}
         {...props()}
         ref={ref}
-        style={{ zoom: scale }}
+        style={{ [vars.set('tile-size')]: tileSize + 'px', zoom: scale }}
       >
         <Tiles
           map={map}
@@ -392,11 +389,13 @@ const InlineUnitWithUnitState = ({
   );
 };
 
+const vars = new CSSVariables<'tile-size'>('inline-tile');
+
 const tileInfoStyle = css`
-  height: ${DefaultTileSize}px;
+  height: ${vars.apply('tile-size')};
   image-rendering: pixelated;
   position: relative;
-  width: ${DefaultTileSize}px;
+  width: ${vars.apply('tile-size')};
 `;
 
 const cursorStyle = css`
@@ -404,11 +403,11 @@ const cursorStyle = css`
 `;
 
 const tallStyle = css`
-  margin-top: ${DefaultTileSize / 1.5}px;
+  margin-top: calc(${vars.apply('tile-size')} / 1.5);
 `;
 
 const mediumStyle = css`
-  margin-top: ${DefaultTileSize / 2}px;
+  margin-top: calc(${vars.apply('tile-size')} / 2);
 `;
 
 const customSquareButtonStyle = css`

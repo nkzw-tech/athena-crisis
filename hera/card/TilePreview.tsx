@@ -1,9 +1,10 @@
 import { BuildingHeight } from '@deities/athena/info/Building.tsx';
-import { AnimationConfig, DefaultTileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Vision from '@deities/athena/Vision.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import { ReactNode } from 'react';
 import Decorators from '../Decorators.tsx';
@@ -31,6 +32,7 @@ export default function TilePreview({
         size === 'medium' && mediumContainerStyle,
         size === 'tall' && tallContainerStyle,
       )}
+      style={{ [vars.set('tile-size')]: tileSize + 'px' }}
     >
       <Tick animationConfig={AnimationConfig} className={mapStyle}>
         <Tiles map={map} style="clip" tileSize={tileSize} vision={vision} />
@@ -49,11 +51,13 @@ export default function TilePreview({
   );
 }
 
+const vars = new CSSVariables<'tile-size'>('tile-preview');
+
 const mapContainerStyle = css`
-  height: ${DefaultTileSize}px;
+  height: ${vars.apply('tile-size')};
   position: relative;
   zoom: 2;
-  width: ${DefaultTileSize}px;
+  width: ${vars.apply('tile-size')};
 
   ${Breakpoints.sm} {
     margin: unset;
@@ -74,22 +78,22 @@ const mapContainerStyle = css`
 `;
 
 const mapStyle = css`
-  height: ${DefaultTileSize}px;
-  width: ${DefaultTileSize}px;
+  height: ${vars.apply('tile-size')};
+  width: ${vars.apply('tile-size')};
 `;
 
 const mediumContainerStyle = css`
-  margin-top: ${DefaultTileSize / 2}px;
+  margin-top: calc(${vars.apply('tile-size')} / 2);
 
   ${Breakpoints.sm} {
-    top: ${DefaultTileSize}px;
+    top: ${vars.apply('tile-size')};
   }
 `;
 
 const tallContainerStyle = css`
-  margin-top: ${DefaultTileSize / 1.25}px;
+  margin-top: calc(${vars.apply('tile-size')} / 1.25);
 
   ${Breakpoints.sm} {
-    top: ${DefaultTileSize * 1.2}px;
+    top: calc(${vars.apply('tile-size')} * 1.2);
   }
 `;
