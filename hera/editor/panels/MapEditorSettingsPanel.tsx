@@ -2,13 +2,7 @@ import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
 import getUserRoute from '@deities/apollo/routes/getUserRoute.tsx';
 import getActivePlayers from '@deities/athena/lib/getActivePlayers.tsx';
 import hasBonusObjective from '@deities/athena/lib/hasBonusObjective.tsx';
-import {
-  DoubleSize,
-  MaxCharges,
-  MaxSize,
-  MinSize,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { MaxCharges, MaxSize, MinSize } from '@deities/athena/map/Configuration.tsx';
 import { Fog } from '@deities/athena/map/PlainMap.tsx';
 import {
   PerformanceStyle,
@@ -20,6 +14,7 @@ import { SizeVector } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Checkbox from '@deities/ui/Checkbox.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
 import FormButton from '@deities/ui/FormButton.tsx';
@@ -668,7 +663,7 @@ const inputStyle = css`
 `;
 
 const marginStyle = css`
-  margin-bottom: ${DoubleSize * 1.5}px;
+  margin-bottom: ${UISize * 3}px;
 `;
 
 const performanceMetricsStyle = css`
@@ -685,7 +680,7 @@ const performanceMetricsOverlayBackgroundStyle = css`
 `;
 const performanceMetricsOverlayStyle = css`
   position: absolute;
-  inset: ${TileSize}px;
+  inset: ${UISize}px;
 `;
 
 const disabledStyle = css`

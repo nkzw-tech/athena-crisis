@@ -1,5 +1,5 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import Box from '@deities/ui/Box.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import { ComponentProps } from 'react';
@@ -36,7 +36,7 @@ const actionBarStyle = css`
   pointer-events: none;
   position: fixed;
   right: 0;
-  top: calc(${applyVar('safe-area-top')} + ${DoubleSize * 1.3}px);
+  top: calc(${applyVar('safe-area-top')} + ${UISize * 2.6}px);
   transform: translate3d(${vars.apply('x')}, -100%, 0) scale(0.9);
   transition:
     opacity 150ms ease,

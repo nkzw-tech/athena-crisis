@@ -1,7 +1,7 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import { ComponentProps } from 'react';
 import Breakpoints from './Breakpoints.tsx';
+import { UISize } from './Configuration.tsx';
 import { applyVar, insetStyle } from './cssVar.tsx';
 import ExpandableMenuButton from './ExpandableMenuButton.tsx';
 
@@ -33,7 +33,7 @@ export default function PrimaryExpandableMenuButton({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 const style = css`
   font-size: 0.9em;
   left: calc(env(safe-area-inset-left) + ${size * 1.5}px);

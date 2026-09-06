@@ -1,7 +1,7 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import { StackProps, VStack } from '@nkzw/stack';
 import { HTMLAttributes, memo } from 'react';
+import { UISize } from './Configuration.tsx';
 
 export default memo(function Container({
   className,
@@ -20,5 +20,5 @@ const containerStyle = css`
 `;
 
 const offsetStyle = css`
-  padding: ${DoubleSize * 1.25}px 0;
+  padding: ${UISize * 2.5}px 0;
 `;

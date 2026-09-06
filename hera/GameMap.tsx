@@ -11,7 +11,6 @@ import getDecoratorsAtField from '@deities/athena/lib/getDecoratorsAtField.tsx';
 import updatePlayers from '@deities/athena/lib/updatePlayers.tsx';
 import {
   AnimationConfig,
-  DoubleSize,
   FastAnimationConfig,
   InstantAnimationConfig,
   MaxHealth,
@@ -1923,7 +1922,10 @@ export default class GameMap extends Component<Props, State> {
       vectors.length === 1 ? [element] : [vectors[0], vectors.at(-1)!].map(this._getMaskElement);
 
     const scale = getScale(this.props.scale, mask);
-    if (element && !boundaries.some((element) => element && isInView(element, scale, DoubleSize))) {
+    if (
+      element &&
+      !boundaries.some((element) => element && isInView(element, scale, this.state.tileSize * 2))
+    ) {
       element.scrollIntoView({
         behavior: 'smooth',
         block: direction?.x && !direction.y ? 'nearest' : 'center',

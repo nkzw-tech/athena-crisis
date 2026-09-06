@@ -1,6 +1,6 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import { ReactNode } from 'react';
@@ -74,14 +74,14 @@ const boxStyle = css`
 
 const minHeightStyle = css`
   ${Breakpoints.sm} {
-    min-height: ${TileSize * 3}px;
+    min-height: ${UISize * 3}px;
   }
 
   ${Breakpoints.lg} {
-    min-height: ${TileSize * 7}px;
+    min-height: ${UISize * 7}px;
   }
 
   ${Breakpoints.xl} {
-    min-height: ${TileSize * 9}px;
+    min-height: ${UISize * 9}px;
   }
 `;

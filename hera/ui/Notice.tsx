@@ -1,4 +1,5 @@
-import { AnimationConfig, DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
@@ -62,7 +63,7 @@ const style = css`
   align-items: center;
   backdrop-filter: blur(4px);
   background: ${applyVar('background-color')};
-  bottom: ${DoubleSize + 16}px;
+  bottom: ${UISize * 2 + 16}px;
   color: ${applyVar('text-color-bright')};
   display: flex;
   flex-direction: row;

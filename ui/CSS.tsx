@@ -1,8 +1,8 @@
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { injectGlobal } from '@emotion/css';
 import Background from './assets/Background.png';
 import Breakpoints from './Breakpoints.tsx';
 import { isAndroid, isLinux } from './Browser.tsx';
+import { UISize } from './Configuration.tsx';
 import cssVar, { applyVar, initializeCSSVariables } from './cssVar.tsx';
 
 const koreanOrChinese = ['AthenaLatin', 'ui-sans-serif', 'system-ui', 'sans-serif'];
@@ -151,14 +151,14 @@ body .all-fonts {
 }
 
 :root {
-  ${cssVar('safe-area-top', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-top, 0)')}
-  ${cssVar('safe-area-bottom', isAndroid ? `${TileSize / 2}px` : 'env(safe-area-inset-bottom, 0)')}
+  ${cssVar('safe-area-top', isAndroid ? `${UISize / 2}px` : 'env(safe-area-inset-top, 0)')}
+  ${cssVar('safe-area-bottom', isAndroid ? `${UISize / 2}px` : 'env(safe-area-inset-bottom, 0)')}
 }
   
 @media (orientation: portrait) {
   :root {
-    ${cssVar('safe-area-top', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-top, 0)')}
-    ${cssVar('safe-area-bottom', isAndroid ? `${DoubleSize}px` : 'env(safe-area-inset-bottom, 0)')}
+    ${cssVar('safe-area-top', isAndroid ? `${UISize * 2}px` : 'env(safe-area-inset-top, 0)')}
+    ${cssVar('safe-area-bottom', isAndroid ? `${UISize * 2}px` : 'env(safe-area-inset-bottom, 0)')}
   }
 
   body {

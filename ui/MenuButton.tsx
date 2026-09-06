@@ -1,8 +1,8 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import { motion, MotionStyle } from 'framer-motion';
 import { memo, MouseEvent, ReactNode, RefObject } from 'react';
 import { BoxStyle } from './Box.tsx';
+import { UISize } from './Configuration.tsx';
 
 export default memo(function MenuButton({
   blur = true,
@@ -43,7 +43,7 @@ export default memo(function MenuButton({
   );
 });
 
-const size = DoubleSize;
+const size = UISize * 2;
 const buttonStyle = css`
   -webkit-user-drag: none;
   cursor: pointer;

@@ -4,7 +4,7 @@ import { getUnitInfoOrThrow, SecretUnits } from '@deities/athena/info/Unit.tsx';
 import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRestrictions.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import {
   numberToPlayerID,
   PlayerID,
@@ -27,6 +27,7 @@ import {
   toPlainMapMessage,
 } from '@deities/athena/message/Message.tsx';
 import { ButtonStyle } from '@deities/ui/Button.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Icon from '@deities/ui/Icon.tsx';
 import getTagColor from '@deities/ui/lib/getTagColor.tsx';
@@ -485,8 +486,8 @@ const messageStyle = css`
 `;
 
 const sendIconStyle = css`
-  height: ${TileSize}px;
-  width: ${TileSize}px;
+  height: ${UISize}px;
+  width: ${UISize}px;
 `;
 
 const absoluteIconStyle = css`

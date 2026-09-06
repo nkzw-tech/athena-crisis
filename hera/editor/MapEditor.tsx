@@ -22,7 +22,6 @@ import updatePlayer from '@deities/athena/lib/updatePlayer.tsx';
 import validateMap, { ErrorReason } from '@deities/athena/lib/validateMap.tsx';
 import withModifiers from '@deities/athena/lib/withModifiers.tsx';
 import { Biomes } from '@deities/athena/map/Biome.tsx';
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { HumanPlayer, PlayerID } from '@deities/athena/map/Player.tsx';
 import { toTeamArray } from '@deities/athena/map/Team.tsx';
 import MapData, { SizeVector } from '@deities/athena/MapData.tsx';
@@ -30,6 +29,7 @@ import AIRegistry from '@deities/dionysus/AIRegistry.tsx';
 import { ClientGame } from '@deities/hermes/game/toClientGame.tsx';
 import undo, { UndoType } from '@deities/hermes/game/undo.tsx';
 import { sm } from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import isControlElement from '@deities/ui/controls/isControlElement.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
@@ -1137,7 +1137,7 @@ export default function MapEditor({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 const menuButtonStyle = css`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1145,7 +1145,7 @@ const menuButtonStyle = css`
 `;
 
 const campaignListStyle = css`
-  margin-top: ${TileSize}px;
+  margin-top: ${UISize}px;
 `;
 
 const lightColorStyle = css`

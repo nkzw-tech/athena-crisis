@@ -4,7 +4,6 @@ import { TileInfo } from '@deities/athena/info/Tile.tsx';
 import { Crystal, CrystalMap } from '@deities/athena/invasions/Crystal.tsx';
 import isPvP from '@deities/athena/lib/isPvP.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   evaluatePlayerPerformance,
@@ -17,6 +16,7 @@ import MapData from '@deities/athena/MapData.tsx';
 import { Criteria } from '@deities/athena/Objectives.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import useActive from '@deities/ui/controls/useActive.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -1023,7 +1023,7 @@ const zapStyle = css`
 `;
 
 const shortStyle = css`
-  height: ${TileSize - 4}px;
+  height: ${UISize - 4}px;
 
   ${Breakpoints.sm} {
     display: none;

@@ -1,7 +1,7 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { css } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
@@ -34,12 +34,12 @@ export default async function receiveCrystalAnimation(
                 <motion.div
                   animate={{
                     opacity: isVisible ? 1 : 0,
-                    y: isVisible ? 0 : TileSize,
+                    y: isVisible ? 0 : UISize,
                   }}
                   className={crystalStyle}
                   initial={{
                     opacity: 0,
-                    y: TileSize,
+                    y: UISize,
                   }}
                   style={{ position: 'relative' }}
                   transition={{
@@ -86,9 +86,9 @@ export default async function receiveCrystalAnimation(
 const containerStyle = css`
   padding: 32px 0 12px;
 
-  gap: ${TileSize / 2}px;
+  gap: ${UISize / 2}px;
   ${Breakpoints.sm} {
-    gap: ${TileSize}px;
+    gap: ${UISize}px;
   }
 `;
 

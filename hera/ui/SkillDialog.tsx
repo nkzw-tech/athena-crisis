@@ -1,10 +1,10 @@
 import { getSkillConfig, Skill, SkillGroup } from '@deities/athena/info/Skill.tsx';
 import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
 import { SquareButtonStyle } from '@deities/ui/Button.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import useBlockInput from '@deities/ui/controls/useBlockInput.tsx';
 import useHorizontalMenuNavigation from '@deities/ui/controls/useHorizontalMenuNavigation.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
@@ -112,10 +112,10 @@ const containerStyle = css`
 const skillStyle = css`
   align-items: center;
   display: inline-flex;
-  height: ${TileSize}px;
+  height: ${UISize}px;
   justify-content: center;
   position: relative;
-  width: ${TileSize}px;
+  width: ${UISize}px;
 
   color: ${applyVar('text-color')};
   &:hover {

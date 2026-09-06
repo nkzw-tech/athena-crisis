@@ -1,7 +1,7 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Portal from '@deities/ui/Portal.tsx';
 import { css, cx } from '@emotion/css';
@@ -119,7 +119,7 @@ const baseStyle = {
   `,
 };
 
-const extension = DoubleSize * 8;
+const extension = UISize * 16;
 const clip = `calc(${extension + 4}px * (1 - ${applyVar('ui-is-scaled')}))`;
 
 const withoutInsetStyle = {
@@ -139,7 +139,7 @@ const withoutInsetStyle = {
       0 calc(100%)
     );
 
-    bottom: -${DoubleSize}px;
+    bottom: -${UISize * 2}px;
     left: calc(-${extension}px * ${applyVar('ui-scale')});
     right: calc(-${extension}px * ${applyVar('ui-scale')});
 
@@ -154,7 +154,7 @@ const withoutInsetStyle = {
 
   left: css`
     bottom: calc(-${extension}px * ${applyVar('ui-scale')});
-    left: -${DoubleSize * 2}px;
+    left: -${UISize * 4}px;
     top: calc(-${extension}px * ${applyVar('ui-scale')});
 
     transform-origin: center right;
@@ -178,60 +178,60 @@ const panelStyle = {
 
 const panelWithoutInsetStyle = {
   bottom: css`
-    margin: 0 ${extension}px ${DoubleSize}px;
+    margin: 0 ${extension}px ${UISize * 2}px;
   `,
   left: css`
-    margin: ${extension + DoubleSize}px 0 ${extension}px ${DoubleSize * 2}px;
+    margin: ${extension + UISize * 2}px 0 ${extension}px ${UISize * 4}px;
   `,
 };
 
 const expandStyle = {
   bottom: css`
-    height: max(calc(70vh - ${DoubleSize * 2}px), 340px);
+    height: max(calc(70vh - ${UISize * 4}px), 340px);
 
     ${Breakpoints.height.sm} {
-      height: min(calc(85vh - ${DoubleSize * 2}px), 720px);
+      height: min(calc(85vh - ${UISize * 4}px), 720px);
     }
   `,
   left: css`
-    width: max(calc(70vw - ${DoubleSize * 3}px), 640px);
+    width: max(calc(70vw - ${UISize * 6}px), 640px);
 
     ${Breakpoints.sm} {
-      width: min(calc(85vw - ${DoubleSize * 4}px), 1024px);
+      width: min(calc(85vw - ${UISize * 8}px), 1024px);
     }
   `,
 };
 
 const paddingStyles = {
   bottom: css`
-    padding-bottom: calc(${smallDrawerSize}px + ${DoubleSize}px);
+    padding-bottom: calc(${smallDrawerSize}px + ${UISize * 2}px);
 
     ${Breakpoints.height.sm} {
-      padding-bottom: calc(min(33vh, ${drawerSize}px) + ${DoubleSize}px);
+      padding-bottom: calc(min(33vh, ${drawerSize}px) + ${UISize * 2}px);
     }
   `,
   left: css`
-    padding-left: calc(${smallDrawerSize}px + ${DoubleSize}px);
+    padding-left: calc(${smallDrawerSize}px + ${UISize * 2}px);
 
     ${Breakpoints.sm} {
-      padding-left: calc(min(33vw, ${drawerSize}px) + ${DoubleSize * 1.5}px);
+      padding-left: calc(min(33vw, ${drawerSize}px) + ${UISize * 3}px);
     }
   `,
 };
 
 const expandedPaddingStyles = {
   bottom: css`
-    padding-bottom: calc(${drawerSize * 2} + ${DoubleSize}px);
+    padding-bottom: calc(${drawerSize * 2} + ${UISize * 2}px);
 
     ${Breakpoints.height.sm} {
-      padding-bottom: calc(min(90vh, 720px) + ${DoubleSize}px);
+      padding-bottom: calc(min(90vh, 720px) + ${UISize * 2}px);
     }
   `,
   left: css`
-    padding-left: calc(${smallDrawerSize}px + ${DoubleSize}px);
+    padding-left: calc(${smallDrawerSize}px + ${UISize * 2}px);
 
     ${Breakpoints.sm} {
-      padding-left: calc(min(33vw, 1024px) + ${DoubleSize * 1.5}px);
+      padding-left: calc(min(33vw, 1024px) + ${UISize * 3}px);
     }
   `,
 };

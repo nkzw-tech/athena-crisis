@@ -1,4 +1,3 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { motion } from 'framer-motion';
@@ -7,6 +6,7 @@ import { ComponentProps, ReactNode, useCallback } from 'react';
 import AudioPlayer from './AudioPlayer.tsx';
 import Breakpoints from './Breakpoints.tsx';
 import { isSafari } from './Browser.tsx';
+import { UISize } from './Configuration.tsx';
 import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
@@ -194,10 +194,10 @@ const containerStyle = css`
 
   background: ${applyVar('background-color-bright')};
   border-top: 4px solid ${applyVar('border-color-light')};
-  bottom: ${DoubleSize}px;
+  bottom: ${UISize * 2}px;
   pointer-events: all;
   position: fixed;
-  top: calc(${applyVar('safe-area-top')} + ${DoubleSize * 2.2}px);
+  top: calc(${applyVar('safe-area-top')} + ${UISize * 4.4}px);
   transform: ${isSafari ? '' : `scale(${applyVar('ui-scale')})`};
   transition: transform 300ms ease;
   width: 93vw;
@@ -236,7 +236,7 @@ const sizes = {
     ${Breakpoints.sm} {
       height: min(480px, 46vh);
       top: calc(
-        ${applyVar('safe-area-top')} + max(${DoubleSize * 2.2}px, calc(50vh - max(20vh, 210px)))
+        ${applyVar('safe-area-top')} + max(${UISize * 4.4}px, calc(50vh - max(20vh, 210px)))
       );
       width: min(90vw, 600px);
     }
@@ -269,8 +269,8 @@ const tabBarStyle = css`
   gap: 16px;
   padding-bottom: 8px;
   position: absolute;
-  top: -${DoubleSize}px;
-  width: calc(100% - ${DoubleSize + 16}px);
+  top: -${UISize * 2}px;
+  width: calc(100% - ${UISize * 2 + 16}px);
 `;
 
 const tabStyle = css`
@@ -352,10 +352,10 @@ const tabEndStyle = css`
 
 const closeButtonStyle = css`
   color: ${applyVar('text-color-bright')};
-  height: ${DoubleSize - 4}px;
+  height: ${UISize * 2 - 4}px;
   padding: 0;
   position: absolute;
   right: 0;
-  top: -${DoubleSize}px;
-  width: ${DoubleSize}px;
+  top: -${UISize * 2}px;
+  width: ${UISize * 2}px;
 `;

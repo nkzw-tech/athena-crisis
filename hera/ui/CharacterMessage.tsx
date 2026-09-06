@@ -1,7 +1,7 @@
 import { getUnitInfo } from '@deities/athena/info/Unit.tsx';
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import throttle from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import cssVar, { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -328,14 +328,14 @@ const innerStyle = css`
 
   ${Breakpoints.lg} {
     gap: 24px;
-    padding: ${DoubleSize * 2}px 0 0;
+    padding: ${UISize * 4}px 0 0;
     width: min(80vw, ${lg}px);
   }
 `;
 
 const innerBottomStyle = css`
   ${Breakpoints.lg} {
-    padding: 0 0 ${DoubleSize * 2}px;
+    padding: 0 0 ${UISize * 4}px;
   }
 `;
 
@@ -389,8 +389,8 @@ const iconContainerStyle = css`
 `;
 
 const iconStyle = css`
-  height: ${TileSize}px;
-  width: ${TileSize}px;
+  height: ${UISize}px;
+  width: ${UISize}px;
   filter: drop-shadow(0px 1px 0px #000) drop-shadow(1px 0px 0px #000);
   animation: 2s infinite
     ${keyframes`

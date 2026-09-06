@@ -2,7 +2,7 @@ import { getTileInfo, TileField, TileInfo } from '@deities/athena/info/Tile.tsx'
 import { getLargeAttributeRangeValue } from '@deities/athena/lib/getAttributeRange.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig, DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -11,6 +11,7 @@ import MapData, { ModifierField, SizeVector } from '@deities/athena/MapData.tsx'
 import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints, { lg } from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import cssVar, { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -230,7 +231,7 @@ export default memo(function MapInfo({
         );
         document.documentElement.style.setProperty(
           cssVar('mouse-position-right'),
-          left ? 'auto' : DoubleSize + 20 + 'px',
+          left ? 'auto' : UISize * 2 + 20 + 'px',
         );
       }
     };
@@ -262,7 +263,7 @@ export default memo(function MapInfo({
             : {
                 ...insetStyle(inset),
                 [vars.set('left-offset')]: leftOffset
-                  ? DoubleSize + 20 + 'px '
+                  ? UISize * 2 + 20 + 'px '
                   : 'env(safe-area-inset-left)',
               }
         }
@@ -299,7 +300,7 @@ const left = `calc(
   ${applyVar('inset')} + ${applyVar('mouse-position-left')} +
     ${vars.apply('left-offset')}
 );`;
-const textPosition = DoubleSize + 4;
+const textPosition = UISize * 2 + 4;
 
 const inlineStyle = css`
   inset: 0;
@@ -337,7 +338,7 @@ const boxStyle = css`
   ${vars.set('width', '240px')}
 
   font-size: 0.9em;
-  height: ${DoubleSize}px;
+  height: ${UISize * 2}px;
   line-height: 1.1em;
   padding: 0 4px;
   position: relative;

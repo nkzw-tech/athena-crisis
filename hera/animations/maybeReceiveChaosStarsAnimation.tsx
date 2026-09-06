@@ -1,6 +1,6 @@
 import { ChaosStars } from '@deities/apollo/invasions/ChaosStars.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { css } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { fbt } from 'fbtee';
@@ -35,12 +35,12 @@ export default async function maybeReceiveChaosStarsAnimation(
                 <motion.div
                   animate={{
                     opacity: isVisible ? 1 : 0,
-                    y: isVisible ? 0 : TileSize * 3,
+                    y: isVisible ? 0 : UISize * 3,
                   }}
                   className={starStyle}
                   initial={{
                     opacity: 0,
-                    y: TileSize * 3,
+                    y: UISize * 3,
                   }}
                   key={index}
                   style={{ position: 'relative' }}
@@ -92,7 +92,7 @@ export default async function maybeReceiveChaosStarsAnimation(
 
 const containerStyle = css`
   padding: 32px 0 12px;
-  gap: ${TileSize / 1.5}px;
+  gap: ${UISize / 1.5}px;
 `;
 
 const starStyle = css`

@@ -1,6 +1,5 @@
 import { Ability } from '@deities/athena/info/Unit.tsx';
 import getAvailableUnitActions from '@deities/athena/lib/getAvailableUnitActions.tsx';
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import Player, { PlayerID } from '@deities/athena/map/Player.tsx';
 import Vector, { sortVectors } from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
@@ -9,6 +8,7 @@ import { VisionT } from '@deities/athena/Vision.tsx';
 import { UndoType } from '@deities/hermes/game/undo.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { NativeTimeout } from '@deities/ui/controls/throttle.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, CSSVariables, insetStyle } from '@deities/ui/cssVar.tsx';
@@ -735,7 +735,7 @@ export default function GameActions({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 const vars = new CSSVariables<'multiplier' | 'bottom-offset'>('ga');
 
 const inlineContainerStyle = css`

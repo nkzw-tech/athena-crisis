@@ -1,11 +1,11 @@
 import dateNow from '@deities/apollo/lib/dateNow.tsx';
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { css } from '@emotion/css';
 import Stack from '@nkzw/stack';
 import { AnimatePresence } from 'framer-motion';
 // eslint-disable-next-line @deities/no-lazy-import
 import { lazy as _lazy, ComponentType } from 'react';
 import Box from '../Box.tsx';
+import { UISize } from '../Configuration.tsx';
 import PageTransition from '../PageTransition.tsx';
 import Portal from '../Portal.tsx';
 import Reload from '../Reload.tsx';
@@ -55,7 +55,7 @@ export function importErrorHandler(): { default: ComponentType<unknown> } {
 }
 
 const containerStyle = css`
-  min-height: calc(100svh - 2.5 * ${DoubleSize}px);
+  min-height: calc(100svh - ${UISize * 5}px);
 `;
 
 const errorStyle = css`

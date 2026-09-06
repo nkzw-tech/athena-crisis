@@ -1,4 +1,4 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import { css, cx } from '@emotion/css';
@@ -107,7 +107,7 @@ const dropZoneStyle = css`
   border: 3px dashed ${applyVar('text-color-light')};
   color: ${applyVar('text-color-light')};
   cursor: pointer;
-  padding: ${TileSize / 2}px;
+  padding: ${UISize / 2}px;
   text-align: center;
   transition:
     background 300ms ease,

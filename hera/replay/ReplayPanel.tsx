@@ -1,8 +1,8 @@
 import isVisibleActionResponse from '@deities/apollo/lib/isVisibleActionResponse.tsx';
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { BoxStyle } from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import NumberInput from '@deities/ui/form/NumberInput.tsx';
@@ -182,7 +182,7 @@ export default function ReplayPanel({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 
 const containerStyle = css`
   align-items: start;

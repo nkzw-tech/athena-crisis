@@ -1,6 +1,6 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import getColor from '@deities/ui/getColor.tsx';
 import { css, cx } from '@emotion/css';
 import { HTMLAttributes } from 'react';
@@ -31,7 +31,7 @@ export function CardInfoHeading({
 
 const h1Style = css`
   ${Breakpoints.sm} {
-    margin-right: ${TileSize * 5}px;
+    margin-right: ${UISize * 5}px;
   }
 `;
 

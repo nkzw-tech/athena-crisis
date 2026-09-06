@@ -1,9 +1,9 @@
 import { AttributeRange, AttributeRangeWithZero } from '@deities/athena/lib/getAttributeRange.tsx';
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Checkbox from '@deities/ui/Checkbox.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import InlineLink from '@deities/ui/InlineLink.tsx';
 import Input from '@deities/ui/Input.tsx';
@@ -229,7 +229,7 @@ const descriptionStyle = css`
 `;
 
 const marginStyle = css`
-  margin-bottom: ${DoubleSize * 1.5}px;
+  margin-bottom: ${UISize * 3}px;
 `;
 
 const buttonStyle = css`

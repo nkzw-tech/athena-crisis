@@ -16,6 +16,7 @@ import { ClientLevelID, Level as LevelT, PlainLevel } from '@deities/hermes/Type
 import Box from '@deities/ui/Box.tsx';
 import Button from '@deities/ui/Button.tsx';
 import Checkbox from '@deities/ui/Checkbox.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import Dropdown from '@deities/ui/Dropdown.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
@@ -535,7 +536,7 @@ const mapDetailStyle = css`
 `;
 
 const arrowStyle = css`
-  margin: 0 ${TileSize / 2}px;
+  margin: 0 ${UISize / 2}px;
 `;
 
 const tagListStyle = css`
@@ -572,7 +573,7 @@ const effectPanelStyle = css`
   max-height: min(480px, 90vh);
   overflow: scroll;
   overscroll-behavior: contain;
-  top: -${TileSize * 6}px;
+  top: -${UISize * 6}px;
   z-index: 102;
 `;
 

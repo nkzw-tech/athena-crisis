@@ -1,6 +1,6 @@
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import { ReactNode, RefCallback, RefObject, useCallback, useRef, useState } from 'react';
+import { UISize } from './Configuration.tsx';
 import useInput from './controls/useInput.tsx';
 import { applyVar } from './cssVar.tsx';
 import Icon from './Icon.tsx';
@@ -80,7 +80,7 @@ export function ScrollContainerWithNavigation({
 
       const onScroll = () => {
         const shouldShow =
-          element.scrollTop + element.clientHeight < element.scrollHeight - DoubleSize;
+          element.scrollTop + element.clientHeight < element.scrollHeight - UISize * 2;
         if (shouldShow !== showArrow) {
           setShowArrow(shouldShow);
         }
@@ -93,12 +93,12 @@ export function ScrollContainerWithNavigation({
         down: () =>
           element.scrollTo({
             behavior: 'smooth',
-            top: element.scrollTop + TileSize * 10,
+            top: element.scrollTop + UISize * 10,
           }),
         up: () =>
           element.scrollTo({
             behavior: 'smooth',
-            top: element.scrollTop - TileSize * 10,
+            top: element.scrollTop - UISize * 10,
           }),
       };
     },

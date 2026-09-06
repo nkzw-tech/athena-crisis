@@ -1,12 +1,8 @@
-import {
-  AnimationConfig,
-  DoubleSize,
-  LeaderStatusEffect,
-  TileSize,
-} from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, LeaderStatusEffect } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Stack, { VStack } from '@nkzw/stack';
 import { memo, useEffect, useState } from 'react';
@@ -75,12 +71,12 @@ const fullWidthStyle = css`
 
 const portraitContainerStyle = css`
   width: fit-content;
-  margin: -${DoubleSize * 2.15}px 0 ${TileSize}px ${TileSize}px;
+  margin: -${UISize * 4.3}px 0 ${UISize}px ${UISize}px;
   float: right;
 
   ${Breakpoints.sm} {
     float: right;
-    margin: -${DoubleSize * 2.5}px 0 ${TileSize}px ${TileSize}px;
+    margin: -${UISize * 5}px 0 ${UISize}px ${UISize}px;
     padding-right: 4px;
   }
 
@@ -98,5 +94,5 @@ const descriptionStyle = css`
 `;
 
 const portraitOffsetStyle = css`
-  margin-top: ${TileSize * 1.5}px;
+  margin-top: ${UISize * 1.5}px;
 `;

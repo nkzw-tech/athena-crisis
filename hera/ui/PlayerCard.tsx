@@ -9,12 +9,13 @@ import { Crystal } from '@deities/athena/invasions/Crystal.tsx';
 import calculateFunds from '@deities/athena/lib/calculateFunds.tsx';
 import calculateUnitValue from '@deities/athena/lib/calculateUnitValue.tsx';
 import matchesPlayerList from '@deities/athena/lib/matchesPlayerList.tsx';
-import { Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { Charge } from '@deities/athena/map/Configuration.tsx';
 import type Player from '@deities/athena/map/Player.tsx';
 import { isBot, PlayerIDs } from '@deities/athena/map/Player.tsx';
 import type MapData from '@deities/athena/MapData.tsx';
 import { Criteria, Objective, objectiveHasAmounts } from '@deities/athena/Objectives.tsx';
 import clipBorder from '@deities/ui/clipBorder.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
@@ -532,7 +533,7 @@ const rainbowStyle = css`
 `;
 
 const widePlayerInfoStyle = css`
-  width: calc(100% - ${TileSize * 2 + width + 8}px);
+  width: calc(100% - ${UISize * 2 + width + 8}px);
 `;
 
 const infoStyle = css`
@@ -544,7 +545,7 @@ const textStyle = css`
 `;
 
 const wideStyle = css`
-  max-width: calc(min(calc(440px - ${vars.apply('items')} * ${TileSize}px), 100vw) - 128px);
+  max-width: calc(min(calc(440px - ${vars.apply('items')} * ${UISize}px), 100vw) - 128px);
 `;
 
 const marginLeftStyle = css`

@@ -8,12 +8,13 @@ import getBiomeBuildingRestrictions from '@deities/athena/lib/getBiomeBuildingRe
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import getBiomeUnitRestrictions from '@deities/athena/lib/getBiomeUnitRestrictions.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig, DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
 import Player from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import { MapConfig } from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import useAlert from '@deities/ui/hooks/useAlert.tsx';
 import Icon from '@deities/ui/Icon.tsx';
@@ -427,12 +428,12 @@ export default memo(function DesignPanel({
 const fillStyle = css`
   align-items: center;
   display: inline-flex;
-  height: ${DoubleSize - 4}px;
+  height: ${UISize * 2 - 4}px;
   justify-content: center;
   margin: 2px;
-  width: ${DoubleSize - 4}px;
+  width: ${UISize * 2 - 4}px;
 `;
 
 const drawingModeContainerStyle = css`
-  margin-top: ${TileSize}px;
+  margin-top: ${UISize}px;
 `;

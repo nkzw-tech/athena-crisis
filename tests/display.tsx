@@ -1,13 +1,14 @@
 /// <reference types="vite/client" />
 
 import decodeGameActionResponse from '@deities/apollo/lib/decodeGameActionResponse.tsx';
-import { InstantAnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { InstantAnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import NullBehavior from '@deities/hera/behavior/NullBehavior.tsx';
 import GameMap from '@deities/hera/GameMap.tsx';
 import LocaleContext from '@deities/hera/i18n/LocaleContext.tsx';
 import type { State } from '@deities/hera/Types.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { setAnimationSync } from '@deities/ui/lib/syncAnimation.tsx';
@@ -176,7 +177,7 @@ const inlineStyle = css`
 `;
 
 const wrapperStyle = css`
-  padding-top: ${TileSize}px;
+  padding-top: ${UISize}px;
 `;
 
 document.body.style.background = '#fff';

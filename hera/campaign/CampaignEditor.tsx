@@ -4,7 +4,6 @@ import {
   AttributeRangeWithZero,
   validateAttributeRange,
 } from '@deities/athena/lib/getAttributeRange.tsx';
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import getCampaignLevelDepths from '@deities/hermes/getCampaignLevelDepths.tsx';
 import { PlayStyle } from '@deities/hermes/PlayStyle.tsx';
 import toCampaign from '@deities/hermes/toCampaign.tsx';
@@ -16,6 +15,7 @@ import validateCampaign from '@deities/hermes/validateCampaign.tsx';
 import { App } from '@deities/ui/App.tsx';
 import Breakpoints, { sm } from '@deities/ui/Breakpoints.tsx';
 import { isAndroid, isIOS } from '@deities/ui/Browser.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { applyVar, insetStyle } from '@deities/ui/cssVar.tsx';
 import Dialog, { DialogScrollContainer } from '@deities/ui/Dialog.tsx';
@@ -464,7 +464,7 @@ export default function CampaignEditor({
   }, [hasCopied]);
 
   const isLarge = useMedia(`(min-width: ${sm}px)`);
-  const inset = isLarge ? TileSize * 3 : TileSize;
+  const inset = isLarge ? UISize * 3 : UISize;
   const hasSaved = saveState && 'id' in saveState && saveState.id === 'saved';
   const hidden = useHide();
 
@@ -684,7 +684,7 @@ export default function CampaignEditor({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 const containerStyle = css`
   margin: ${size}px 0 0 ${size}px;
   padding-bottom: 440px;
@@ -702,9 +702,9 @@ const mapEditorContainerStyle = css`
   overflow: hidden;
   position: fixed;
 
-  inset: ${TileSize}px;
+  inset: ${UISize}px;
   ${Breakpoints.sm} {
-    inset: ${TileSize * 3}px;
+    inset: ${UISize * 3}px;
   }
 `;
 
@@ -720,7 +720,7 @@ const lightColorStyle = css`
 `;
 
 const mapCreateButtonStyle = css`
-  right: ${TileSize * 3}px;
+  right: ${UISize * 3}px;
   top: ${applyVar('safe-area-top')};
 `;
 
@@ -728,7 +728,7 @@ const dialogueButtonStyle = css`
   align-items: center;
   display: inline-flex;
   justify-content: center;
-  right: ${TileSize * 6}px;
+  right: ${UISize * 6}px;
   top: ${applyVar('safe-area-top')};
 
   > svg {
@@ -747,7 +747,7 @@ const closeButtonStyle = css`
 `;
 
 const primaryButtonStyle = css`
-  height: ${TileSize * 1.5}px;
+  height: ${UISize * 1.5}px;
 `;
 
 const smallTextStyle = css`

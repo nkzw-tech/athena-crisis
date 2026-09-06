@@ -1,4 +1,3 @@
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import {
   evaluatePlayerPerformance,
@@ -12,6 +11,7 @@ import Vector from '@deities/athena/map/Vector.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import Box from '@deities/ui/Box.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
 import ellipsis from '@deities/ui/ellipsis.tsx';
 import getColor from '@deities/ui/getColor.tsx';
@@ -486,7 +486,7 @@ const mapPerformanceStyle = css`
 `;
 
 const headlineStyle = css`
-  margin: 0 ${TileSize * 1.5}px;
+  margin: 0 ${UISize * 1.5}px;
   max-width: 86%;
 
   ${Breakpoints.sm} {
@@ -500,18 +500,18 @@ const fullStyle = css`
 `;
 
 const innerStyle = css`
-  padding: ${TileSize}px;
+  padding: ${UISize}px;
 
   ${Breakpoints.sm} {
-    padding: ${DoubleSize}px;
+    padding: ${UISize * 2}px;
   }
 `;
 
 const summaryInnerStyle = css`
-  padding: ${DoubleSize}px ${TileSize}px ${DoubleSize}px ${TileSize}px;
+  padding: ${UISize * 2}px ${UISize}px ${UISize * 2}px ${UISize}px;
 
   ${Breakpoints.sm} {
-    padding: ${DoubleSize}px 32px ${DoubleSize}px ${DoubleSize}px;
+    padding: ${UISize * 2}px 32px ${UISize * 2}px ${UISize * 2}px;
   }
 `;
 
@@ -621,26 +621,26 @@ const summaryStarStyle = css`
 
   &:nth-child(2) {
     animation-delay: ${starDuration * 1.2}ms;
-    margin-left: -${DoubleSize}px;
+    margin-left: -${UISize * 2}px;
     top: 12px;
   }
 
   &:nth-child(3) {
     animation-delay: ${starDuration * 1.4}ms;
-    margin-left: -${DoubleSize}px;
-    top: ${TileSize}px;
+    margin-left: -${UISize * 2}px;
+    top: ${UISize}px;
   }
 
   &:nth-child(4) {
     animation-delay: ${starDuration * 1.6}ms;
-    margin-left: -${DoubleSize}px;
+    margin-left: -${UISize * 2}px;
     top: 36px;
   }
 
   &:nth-child(5) {
     animation-delay: ${starDuration * 1.8}ms;
-    margin-left: -${DoubleSize}px;
-    top: ${TileSize * 3}px;
+    margin-left: -${UISize * 2}px;
+    top: ${UISize * 3}px;
   }
 `;
 

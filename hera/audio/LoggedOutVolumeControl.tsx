@@ -1,4 +1,4 @@
-import { DoubleSize } from '@deities/athena/map/Configuration.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import MenuButton from '@deities/ui/MenuButton.tsx';
 import { css, cx } from '@emotion/css';
 import { ComponentProps } from 'react';
@@ -15,7 +15,7 @@ export default function LoggedOutVolumeControl({
   );
 }
 
-const size = DoubleSize;
+const size = UISize * 2;
 const style = css`
   align-items: center;
   bottom: 0;

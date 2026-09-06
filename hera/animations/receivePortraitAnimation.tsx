@@ -1,8 +1,8 @@
 import { ReceiveRewardActionResponse } from '@deities/apollo/ActionResponse.tsx';
 import applyActionResponse from '@deities/apollo/actions/applyActionResponse.tsx';
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Breakpoints from '@deities/ui/Breakpoints.tsx';
+import { UISize } from '@deities/ui/Configuration.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css } from '@emotion/css';
@@ -100,9 +100,9 @@ export default async function receivePortraitAnimation(
 const portraitContainerStyle = css`
   padding: 32px 0 12px;
 
-  gap: ${TileSize}px;
+  gap: ${UISize}px;
   ${Breakpoints.sm} {
-    gap: ${TileSize * 1.5}px;
+    gap: ${UISize * 1.5}px;
   }
 `;
 

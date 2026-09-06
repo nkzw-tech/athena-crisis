@@ -1,4 +1,3 @@
-import { DoubleSize, TileSize } from '@deities/athena/map/Configuration.tsx';
 import { css, cx } from '@emotion/css';
 import Stack, { VStack } from '@nkzw/stack';
 import { motion } from 'framer-motion';
@@ -16,6 +15,7 @@ import {
   useState,
 } from 'react';
 import { App } from './App.tsx';
+import { UISize } from './Configuration.tsx';
 import { rumbleEffect } from './controls/setupGamePad.tsx';
 import useBlockInput from './controls/useBlockInput.tsx';
 import useInput from './controls/useInput.tsx';
@@ -201,8 +201,8 @@ export default function Menu({
   );
 }
 
-const size = DoubleSize;
-const fontSize = TileSize * 1.5;
+const size = UISize * 2;
+const fontSize = UISize * 1.5;
 const menuStyle = css`
   ${cssVar('text-color-active', applyVar('text-color-active-light'))}
   ${cssVar('highlight-color', applyVar('text-color-light'))}
