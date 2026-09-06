@@ -75,7 +75,6 @@ export default function NamedPosition({
                     key={index}
                     map={map}
                     playerDetails={playerDetails}
-                    tileSize={tileSize}
                     unit={transportedUnit}
                   />
                 ))}

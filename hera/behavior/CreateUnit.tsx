@@ -24,6 +24,7 @@ import Stack, { VStack } from '@nkzw/stack';
 import { fbt } from 'fbtee';
 import Visible from 'pixelarticons/svg/eye.svg';
 import { MouseEvent, useCallback } from 'react';
+import { MapUISize } from '../Configuration.tsx';
 import addFlashAnimation from '../lib/addFlashAnimation.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Medal from '../Medal.tsx';
@@ -216,7 +217,7 @@ export default class CreateUnit {
                         ?.equippedUnitCustomizations.get(unit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
                       highlightStyle={highlight ? (entity.canMove() ? 'move' : 'idle') : undefined}
-                      size={tileSize}
+                      size={MapUISize}
                       tile={Plain}
                       unit={isDisabled ? entity.complete() : entity}
                     />

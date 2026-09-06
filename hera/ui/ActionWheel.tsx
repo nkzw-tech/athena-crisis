@@ -1,4 +1,4 @@
-import { AnimationConfig, Charge, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, Charge } from '@deities/athena/map/Configuration.tsx';
 import vec from '@deities/athena/map/vec.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
@@ -34,6 +34,7 @@ import Unfold from 'pixelarticons/svg/flatten.svg';
 import Load from 'pixelarticons/svg/login.svg';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { resetBehavior } from '../behavior/Behavior.tsx';
+import { MapUISize } from '../Configuration.tsx';
 import { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import Tick from '../Tick.tsx';
 import { Actions } from '../Types.tsx';
@@ -49,7 +50,7 @@ export default function ActionWheel({
   tileSize,
   zIndex,
 }: {
-  actions: Actions;
+  actions: Pick<Actions, 'resetPosition' | 'scrollIntoView'>;
   animationConfig?: AnimationConfig;
   children: ReactNode;
   color: BaseColor;
@@ -70,6 +71,8 @@ export default function ActionWheel({
   }, [hasEntities, position, scrollIntoView]);
 
   const translate = hasEntities ? `translate3d(${vars.apply('x')}, ${vars.apply('y')}, 0) ` : '';
+  // Regular actions surround a map tile; entity rings use their own UI-sized radius.
+  const offset = hasEntities ? MapUISize * 1.5 : tileSize / 2 + MapUISize;
   return (
     <motion.div
       animate={{
@@ -88,13 +91,14 @@ export default function ActionWheel({
       style={
         {
           [cssVar('highlight-color')]: getColor(color),
-          left: (position.x - 2) * tileSize,
-          top: (position.y - 2) * tileSize,
+          left: (position.x - 0.5) * tileSize - offset,
+          top: (position.y - 0.5) * tileSize - offset,
           [vars.set('count')]: count,
           [vars.set('offset')]: count > 4 ? 2 : 1,
           [vars.set('tan')]: hasEntities
             ? Math.tan(Math.PI / Math.max(5, count)).toFixed(2)
             : undefined,
+          [vars.set('tile-size')]: tileSize + 'px',
           zIndex,
           ...(hasEntities
             ? {
@@ -467,21 +471,22 @@ const vars = new CSSVariables<
   | 'scale'
   | 'size'
   | 'tan'
+  | 'tile-size'
   | 'transform'
   | 'x'
   | 'y'
 >('w');
 
-const size = TileSize;
-const iconSize = (TileSize / 3) * 2 - 2;
+const size = MapUISize;
+const iconSize = (MapUISize / 3) * 2 - 2;
 const descriptionClassName = 'item-description';
 
 const actionWheelStyle = css`
-  height: ${size * 3}px;
+  height: calc(${vars.apply('tile-size')} + ${size * 2}px);
   line-height: 0;
   pointer-events: none;
   position: absolute;
-  width: ${size * 3}px;
+  width: calc(${vars.apply('tile-size')} + ${size * 2}px);
 `;
 
 const itemStyle = css`
@@ -608,7 +613,7 @@ const largeDescriptionBottomStyle = css`
 
 const leftStyle = css`
   left: 3px;
-  top: ${size}px;
+  top: calc(50% - ${size / 2}px);
   width: ${size - 3}px;
 `;
 
@@ -616,7 +621,7 @@ const bottomStyle = css`
   align-items: start;
   bottom: 3px;
   height: ${size - 3}px;
-  left: ${size}px;
+  left: calc(50% - ${size / 2}px);
 
   &.shift {
     ${vars.set('transform', `translate3d(0, 100%, 0)`)}
@@ -626,20 +631,20 @@ const bottomStyle = css`
 const topStyle = css`
   align-items: end;
   height: ${size - 3}px;
-  left: ${size}px;
+  left: calc(50% - ${size / 2}px);
   top: 3px;
 `;
 
 const rightStyle = css`
   right: 3px;
-  top: ${size}px;
+  top: calc(50% - ${size / 2}px);
   width: ${size - 3}px;
 `;
 
 const topRightStyle = css`
   animation: ${keyframes`
     0% {
-      right: ${size}px;
+      right: calc(50% - ${size / 2}px);
       top: 3px;
     }
     50% {
@@ -654,7 +659,7 @@ const topRightStyle = css`
 
   align-items: end;
   height: ${size - 3}px;
-  right: ${size}px;
+  right: calc(50% - ${size / 2}px);
   top: 3px;
 `;
 
@@ -712,7 +717,7 @@ const completeUnitStyle = css`
 `;
 
 const radiusStyle = css`
-  ${vars.set('item-size', TileSize * 1.5 + 'px')}
+  ${vars.set('item-size', MapUISize * 1.5 + 'px')}
   ${vars.set('radius-size', 1.6)}
   ${vars.set(
     'radius',
@@ -737,7 +742,7 @@ const radiusStyle = css`
 `;
 
 const entityStyle = css`
-  ${vars.set('size', `${TileSize * 1.5}px`)}
+  ${vars.set('size', `${MapUISize * 1.5}px`)}
 
   font-size: calc(${needsFontZoomCompensation ? applyVar('scale') : 1} * 8px);
 `;

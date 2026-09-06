@@ -2,7 +2,7 @@ import { getTileInfo, TileField, TileInfo } from '@deities/athena/info/Tile.tsx'
 import { getLargeAttributeRangeValue } from '@deities/athena/lib/getAttributeRange.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
 import Building from '@deities/athena/map/Building.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -26,6 +26,7 @@ import getHealthColor from '../behavior/attack/getHealthColor.tsx';
 import BuildingTile from '../Building.tsx';
 import CoverRange from '../card/lib/CoverRange.tsx';
 import { LargeRange } from '../card/Range.tsx';
+import { MapUISize } from '../Configuration.tsx';
 import Map from '../Map.tsx';
 import Tick from '../Tick.tsx';
 import { PlayerDetails, State } from '../Types.tsx';
@@ -110,7 +111,6 @@ const renderUnit = (
   tile: TileInfo,
   biome: Biome,
   firstPlayerID: PlayerID,
-  tileSize: number,
   animationConfig: AnimationConfig,
   playerDetails: PlayerDetails,
 ) => {
@@ -129,7 +129,7 @@ const renderUnit = (
           biome={biome}
           customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
           firstPlayerID={firstPlayerID}
-          size={tileSize}
+          size={MapUISize}
           tile={tile}
           unit={unit}
         />
@@ -165,12 +165,7 @@ const renderUnit = (
   }
 };
 
-const renderBuilding = (
-  building: Building | undefined,
-  biome: Biome,
-  tileSize: number,
-  isVisible: boolean,
-) => {
+const renderBuilding = (building: Building | undefined, biome: Biome, isVisible: boolean) => {
   if (building) {
     return (
       <Box
@@ -184,7 +179,7 @@ const renderBuilding = (
           building={building}
           isVisible={isVisible}
           position={vec(1, 2)}
-          size={tileSize}
+          size={MapUISize}
         />
         <Stack alignCenter between className={cx(ellipsis, overflowStyle)} gap={4}>
           <div className={ellipsis}>{building.info.name}</div>
@@ -277,14 +272,13 @@ export default memo(function MapInfo({
           vector={position}
           vision={vision}
         />
-        {renderBuilding(map.buildings.get(position), map.config.biome, tileSize, isVisible)}
+        {renderBuilding(map.buildings.get(position), map.config.biome, isVisible)}
         {isVisible &&
           renderUnit(
             map.units.get(position),
             map.getTileInfo(position),
             map.config.biome,
             map.getFirstPlayerID(),
-            tileSize,
             animationConfig,
             playerDetails,
           )}
@@ -364,14 +358,14 @@ const buildingStyle = css`
   align-content: center;
 
   > div:nth-child(1) {
-    margin-top: -${TileSize - 3}px;
+    margin-top: -${MapUISize - 3}px;
   }
 `;
 
 const buildingWithLabelStyle = css`
   > div:nth-child(1),
   > div:nth-child(2) {
-    margin-top: -${TileSize - 3}px;
+    margin-top: -${MapUISize - 3}px;
   }
 
   > div:nth-child(2) {

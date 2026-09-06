@@ -329,6 +329,7 @@ export default function CreateMapMessage({
   player,
   playerDetails,
   scale,
+  tileSize,
   update,
   user,
   vector,
@@ -341,6 +342,7 @@ export default function CreateMapMessage({
   player: PlayerID | null;
   playerDetails: PlayerDetails;
   scale: number;
+  tileSize: number;
   update: Actions['update'];
   user: GameUser;
   vector: Vector;
@@ -445,6 +447,7 @@ export default function CreateMapMessage({
       scale={scale}
       scroll
       shouldDelay={false}
+      tileSize={tileSize}
       user={user}
       vector={vector}
       zIndex={zIndex}

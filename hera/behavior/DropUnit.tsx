@@ -178,7 +178,6 @@ export default class DropUnit {
                       key={index}
                       map={map}
                       playerDetails={playerDetails}
-                      tileSize={tileSize}
                       unit={unit}
                     />
                   )}

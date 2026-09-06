@@ -1,4 +1,4 @@
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID, toPlayerID } from '@deities/athena/map/Player.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { isSafari } from '@deities/ui/Browser.tsx';
@@ -33,6 +33,7 @@ export default function MapMessageContainer({
   scale,
   scroll,
   shouldDelay,
+  tileSize,
   user,
   vector,
   zIndex,
@@ -47,6 +48,7 @@ export default function MapMessageContainer({
   scale: number;
   scroll?: true;
   shouldDelay: boolean;
+  tileSize: number;
   user: ClientMapMessage['user'];
   vector: Vector;
   zIndex: number;
@@ -63,14 +65,14 @@ export default function MapMessageContainer({
         const currentScale = isSafari ? scale : 1;
         const inverseScale = isSafari ? 1 : scale;
         const left = window.scrollX + position.width + position.x - 2;
-        const top = window.scrollY + position.y + position.height - (inverseScale / 4) * TileSize;
+        const top = window.scrollY + position.y + position.height - (inverseScale / 4) * tileSize;
 
         ref.current.style.left = `${left * currentScale}px`;
         ref.current.style.top = `${top * currentScale}px`;
         ref.current.style.opacity = '1';
       }
     }
-  }, [maskRef, scale, vector]);
+  }, [maskRef, scale, tileSize, vector]);
 
   const isPresent = !!(player && playerDetails.get(player)?.id === user.id);
   const playerID = isPresent ? player : toPlayerID(user.character.color);
@@ -80,9 +82,9 @@ export default function MapMessageContainer({
       <div
         className={maskStyle}
         style={{
-          bottom: -TileSize * 0.5,
-          height: scale * TileSize * 1.5,
-          width: TileSize * scale,
+          bottom: -tileSize * 0.5,
+          height: scale * tileSize * 1.5,
+          width: tileSize * scale,
         }}
       />
       <div

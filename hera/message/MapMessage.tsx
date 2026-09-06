@@ -89,6 +89,7 @@ export default function MapMessageComponent({
   playerDetails,
   scale,
   shouldDelay,
+  tileSize,
   toggleLikeMessage,
   update,
   vector,
@@ -103,6 +104,7 @@ export default function MapMessageComponent({
   playerDetails: PlayerDetails;
   scale: number;
   shouldDelay: boolean;
+  tileSize: number;
   toggleLikeMessage: ((id: string) => Promise<PartialClientMapMessage>) | undefined;
   update: Actions['update'];
   vector: Vector;
@@ -188,6 +190,7 @@ export default function MapMessageComponent({
       playerDetails={playerDetails}
       scale={scale}
       shouldDelay={shouldDelay}
+      tileSize={tileSize}
       user={user}
       vector={vector}
       zIndex={zIndex}

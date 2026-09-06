@@ -1014,11 +1014,12 @@ export default function MapEditor({
       </Portal>
       <div className={getDrawerPaddingStyle(drawerPosition, expand)}>
         <GameMap
-          animatedChildren={({ map, position, showCursor, zIndex }) => (
+          animatedChildren={({ map, position, showCursor, tileSize, zIndex }) => (
             <ResizeHandle
               isVisible={!!(showCursor && position)}
               onResize={resize}
               size={map.size}
+              tileSize={tileSize}
               zIndex={zIndex}
             />
           )}

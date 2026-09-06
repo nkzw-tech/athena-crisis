@@ -4,7 +4,7 @@ import { Plain, TileInfo, TileType } from '@deities/athena/info/Tile.tsx';
 import { UnitInfo } from '@deities/athena/info/Unit.tsx';
 import getBiomeStyle from '@deities/athena/lib/getBiomeStyle.tsx';
 import { Biome, Biomes } from '@deities/athena/map/Biome.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import SpriteVector from '@deities/athena/map/SpriteVector.tsx';
 import { BaseColor } from '@deities/ui/getColor.tsx';
@@ -14,6 +14,7 @@ import { List } from 'fbtee';
 import { ComponentProps } from 'react';
 import BuildingTile from '../Building.tsx';
 import InlineTileList from '../card/InlineTileList.tsx';
+import { MapUISize } from '../Configuration.tsx';
 import getTranslatedTileTypeName from '../lib/getTranslatedTileTypeName.tsx';
 import UnitTile from '../Unit.tsx';
 
@@ -36,7 +37,7 @@ export const UnitName = ({
         animationConfig={AnimationConfig}
         biome={Biome.Grassland}
         firstPlayerID={1}
-        size={TileSize}
+        size={MapUISize}
         tile={Plain}
         unit={unit.create(unitColor)}
       />
@@ -64,7 +65,7 @@ export function BuildingName({
           biome={Biome.Grassland}
           building={building.create(buildingColor)}
           position={new SpriteVector(1, 1.25)}
-          size={TileSize}
+          size={MapUISize}
         />
       </span>
       <Tag color={color} size={size} tag={building.name} {...props} />
@@ -157,5 +158,5 @@ const paddingStyle = css`
 `;
 
 const buildingStyle = css`
-  height: ${TileSize}px;
+  height: ${MapUISize}px;
 `;

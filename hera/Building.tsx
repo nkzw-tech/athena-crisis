@@ -202,7 +202,7 @@ const BuildingTile = memo(function BuildingTile({
             zIndex: zIndex ?? 0,
           }}
         >
-          <Label entity={building} hide={!!animation} />
+          <Label entity={building} hide={!!animation} size={size} />
         </div>
       )}
     </>

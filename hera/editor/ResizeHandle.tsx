@@ -1,5 +1,5 @@
 import { ResizeOrigin } from '@deities/apollo/lib/resizeMap.tsx';
-import { MaxSize, MinSize, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { MaxSize, MinSize } from '@deities/athena/map/Configuration.tsx';
 import { SizeVector } from '@deities/athena/MapData.tsx';
 import cssVar, { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
@@ -11,13 +11,13 @@ type Size = Readonly<{ x: number; y: number }>;
 const getSizeVectorPlusOne = (size: SizeVector) =>
   new SizeVector(Math.min(MaxSize, size.width + 1), Math.min(MaxSize, size.height + 1));
 
-const limit = (value: number, dimension: number) =>
-  Math.min(MaxSize, Math.max(MinSize, dimension + Math.round(value / TileSize)));
+const limit = (value: number, dimension: number, tileSize: number) =>
+  Math.min(MaxSize, Math.max(MinSize, dimension + Math.round(value / tileSize)));
 
-const limitSize = (delta: Size, size: SizeVector) => {
+const limitSize = (delta: Size, size: SizeVector, tileSize: number) => {
   return {
-    x: limit(delta.x, size.width) * TileSize,
-    y: limit(delta.y, size.height) * TileSize,
+    x: limit(delta.x, size.width, tileSize) * tileSize,
+    y: limit(delta.y, size.height, tileSize) * tileSize,
   };
 };
 
@@ -30,6 +30,7 @@ const getSize = (
   start: Size,
   event: MouseEvent,
   origin: Set<ResizeOrigin>,
+  tileSize: number,
 ) => {
   const scale = getScale(element);
   return limitSize(
@@ -38,6 +39,7 @@ const getSize = (
       y: ((event.pageY - start.y) / scale) * (origin.has('top') ? -1 : 1),
     },
     size,
+    tileSize,
   );
 };
 
@@ -45,11 +47,13 @@ export default function ResizeHandle({
   isVisible,
   onResize,
   size,
+  tileSize,
   zIndex,
 }: {
   isVisible: boolean;
   onResize: (size: SizeVector, origin: Set<ResizeOrigin>) => void;
   size: SizeVector;
+  tileSize: number;
   zIndex: number;
 }) {
   const [start, setStart] = useState<Size | null>(null);
@@ -60,10 +64,10 @@ export default function ResizeHandle({
   const resizeMap = useCallback(
     (event: MouseEvent) => {
       if (ref.current && start && origin) {
-        setCurrentSize(getSize(ref.current, size, start, event, origin));
+        setCurrentSize(getSize(ref.current, size, start, event, origin, tileSize));
       }
     },
-    [origin, size, start],
+    [origin, size, start, tileSize],
   );
 
   const resizeStart = useCallback(
@@ -82,13 +86,13 @@ export default function ResizeHandle({
   const resizeStop = useCallback(
     (event: MouseEvent) => {
       if (ref.current && start && origin) {
-        const { x, y } = getSize(ref.current, size, start, event, origin);
-        onResize(new SizeVector(x / TileSize, y / TileSize), origin);
+        const { x, y } = getSize(ref.current, size, start, event, origin, tileSize);
+        onResize(new SizeVector(x / tileSize, y / tileSize), origin);
         document.removeEventListener('mousemove', resizeMap);
         setStart(null);
       }
     },
-    [size, start, onResize, origin, resizeMap],
+    [size, start, onResize, origin, resizeMap, tileSize],
   );
 
   useEffect(() => {

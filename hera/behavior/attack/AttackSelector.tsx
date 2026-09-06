@@ -18,6 +18,7 @@ import { css } from '@emotion/css';
 import { fbt, TranslatedString } from 'fbtee';
 import { useCallback, useMemo } from 'react';
 import BuildingTile from '../../Building.tsx';
+import { MapUISize } from '../../Configuration.tsx';
 import Tick from '../../Tick.tsx';
 import { Actions, State } from '../../Types.tsx';
 import EntityPickerFlyout from '../../ui/EntityPickerFlyout.tsx';
@@ -159,7 +160,7 @@ export default function AttackSelector({
                         biome={map.config.biome}
                         building={entities.building}
                         position={new SpriteVector(1, 1.5)}
-                        size={tileSize}
+                        size={MapUISize}
                       />
                     )
                   }
@@ -189,7 +190,7 @@ export default function AttackSelector({
                           .get(entities.unit.player)
                           ?.equippedUnitCustomizations.get(entities.unit.id)}
                         firstPlayerID={map.getFirstPlayerID()}
-                        size={tileSize}
+                        size={MapUISize}
                         tile={map.getTileInfo(position)}
                         unit={entities.unit}
                       />
@@ -219,7 +220,7 @@ export default function AttackSelector({
                         .get(selectedUnit.player)
                         ?.equippedUnitCustomizations.get(selectedUnit.id)}
                       firstPlayerID={map.getFirstPlayerID()}
-                      size={tileSize}
+                      size={MapUISize}
                       tile={map.getTileInfo(selectedPosition)}
                       unit={selectedUnit}
                     />

@@ -7,6 +7,7 @@ import Icon from '@deities/ui/Icon.tsx';
 import Info from '@deities/ui/icons/Info.tsx';
 import sortBy from '@nkzw/core/sortBy.js';
 import BuildingTile from '../Building.tsx';
+import { MapUISize } from '../Configuration.tsx';
 import toTransformOrigin, { ClientCoordinates } from '../lib/toTransformOrigin.tsx';
 import { StateWithActions } from '../Types.tsx';
 import { actionWheelInfoIconStyle, LargeActionButton } from '../ui/ActionWheel.tsx';
@@ -93,7 +94,7 @@ export default class CreateBuilding {
                       building={isDisabled || !isAllowed ? entity.complete() : entity}
                       highlight={highlight}
                       position={new SpriteVector(1, 2)}
-                      size={tileSize}
+                      size={MapUISize}
                     />
                     <Icon
                       className={actionWheelInfoIconStyle}
@@ -116,7 +117,7 @@ export default class CreateBuilding {
                         ]}
                         key="info"
                         position={new SpriteVector(1, -0.5)}
-                        tileSize={tileSize}
+                        tileSize={MapUISize}
                         width={0}
                         zIndex={zIndex + 1}
                       />

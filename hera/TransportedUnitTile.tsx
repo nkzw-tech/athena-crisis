@@ -4,6 +4,7 @@ import { TransportedUnit } from '@deities/athena/map/Unit.tsx';
 import MapData from '@deities/athena/MapData.tsx';
 import { css } from '@emotion/css';
 import { useMemo } from 'react';
+import { MapUISize } from './Configuration.tsx';
 import Medal from './Medal.tsx';
 import { PlayerDetails } from './Types.tsx';
 import UnitTile from './Unit.tsx';
@@ -13,14 +14,12 @@ export default function TransportedUnitTile({
   highlight,
   map,
   playerDetails,
-  tileSize,
   unit,
 }: {
   animationConfig: AnimationConfig;
   highlight?: boolean;
   map: MapData;
   playerDetails: PlayerDetails;
-  tileSize: number;
   unit: TransportedUnit;
 }) {
   const deployedUnit = useMemo(() => unit.deploy(), [unit]);
@@ -32,7 +31,7 @@ export default function TransportedUnitTile({
         customSprite={playerDetails.get(unit.player)?.equippedUnitCustomizations.get(unit.id)}
         firstPlayerID={map.getFirstPlayerID()}
         highlightStyle={highlight ? 'idle' : undefined}
-        size={tileSize}
+        size={MapUISize}
         tile={Plain}
         unit={deployedUnit}
       />

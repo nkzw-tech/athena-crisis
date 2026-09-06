@@ -1,23 +1,26 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding } from '@deities/athena/map/Entity.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import sprite from './lib/sprite.tsx';
 import Tick from './Tick.tsx';
 
-export default function Label({ entity, hide }: { entity: Entity; hide: boolean }) {
+export default function Label({
+  entity,
+  hide,
+  size,
+}: {
+  entity: Entity;
+  hide: boolean;
+  size: number;
+}) {
   return entity.label !== null ? (
     <div
-      className={cx(
-        sprite('Label', entity.label),
-        labelStyle,
+      className={cx(sprite('Label', entity.label), labelStyle, hide && hideStyle)}
+      style={
         isBuilding(entity)
-          ? entity.info.sprite.size === 'tall'
-            ? tallBuildingOffsetStyle
-            : buildingOffsetStyle
-          : null,
-        hide && hideStyle,
-      )}
+          ? { top: size / 2 - (entity.info.sprite.size === 'tall' ? labelSize / 1.5 + 1 : 1) }
+          : undefined
+      }
     />
   ) : null;
 }
@@ -33,14 +36,6 @@ const labelStyle = css`
   top: -${labelSize / 2 - 1}px;
   transition: opacity ${applyVar('animation-duration-70')} ease-in-out;
   width: ${labelSize}px;
-`;
-
-const tallBuildingOffsetStyle = css`
-  top: ${TileSize / 2 - labelSize / 1.5 - 1}px;
-`;
-
-const buildingOffsetStyle = css`
-  top: ${TileSize / 2 - 1}px;
 `;
 
 const hideStyle = css`

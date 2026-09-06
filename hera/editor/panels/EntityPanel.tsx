@@ -5,7 +5,7 @@ import { generateUnitName } from '@deities/athena/info/UnitNames.tsx';
 import hasLeader from '@deities/athena/lib/hasLeader.tsx';
 import removeLeader from '@deities/athena/lib/removeLeader.tsx';
 import { AIBehaviors } from '@deities/athena/map/AIBehavior.tsx';
-import { AnimationConfig, MaxHealth, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig, MaxHealth } from '@deities/athena/map/Configuration.tsx';
 import Entity, { isBuilding, isUnit } from '@deities/athena/map/Entity.tsx';
 import { PlayerID } from '@deities/athena/map/Player.tsx';
 import Unit, { ShieldType } from '@deities/athena/map/Unit.tsx';
@@ -30,6 +30,7 @@ import CPU from 'pixelarticons/svg/cpu.svg';
 import Heart from 'pixelarticons/svg/heart.svg';
 import { ChangeEvent, Fragment, RefObject, useCallback, useEffect, useMemo } from 'react';
 import AttributeGrid from '../../card/AttributeGrid.tsx';
+import { MapUISize } from '../../Configuration.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import { StateWithActions } from '../../Types.tsx';
 import PlayerIcon from '../../ui/PlayerIcon.tsx';
@@ -251,7 +252,7 @@ export default function EntityPanel({
                   animationConfig={AnimationConfig}
                   biome={biome}
                   firstPlayerID={1}
-                  size={TileSize}
+                  size={MapUISize}
                   tile={Plain}
                   unit={entity}
                 />

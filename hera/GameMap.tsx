@@ -2262,6 +2262,7 @@ export default class GameMap extends Component<Props, State> {
                       playerDetails={playerDetails}
                       scale={scale}
                       shouldDelay={map.units.has(vector) || map.buildings.has(vector)}
+                      tileSize={tileSize}
                       toggleLikeMessage={toggleLikeMessage}
                       update={this._update}
                       vector={vector}
@@ -2283,6 +2284,7 @@ export default class GameMap extends Component<Props, State> {
                   player={currentViewer}
                   playerDetails={playerDetails}
                   scale={scale}
+                  tileSize={tileSize}
                   update={this._update}
                   user={currentUser}
                   vector={selectedMessagePosition}

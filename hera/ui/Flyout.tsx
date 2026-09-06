@@ -1,4 +1,3 @@
-import { TileSize } from '@deities/athena/map/Configuration.tsx';
 import Vector from '@deities/athena/map/Vector.tsx';
 import { needsFontZoomCompensation } from '@deities/ui/Browser.tsx';
 import { applyVar, CSSVariables } from '@deities/ui/cssVar.tsx';
@@ -7,6 +6,7 @@ import pixelBorder from '@deities/ui/pixelBorder.tsx';
 import { css, cx } from '@emotion/css';
 import isPresent from '@nkzw/core/isPresent.js';
 import { Fragment, ReactNode, useState } from 'react';
+import { MapUISize } from '../Configuration.tsx';
 import { Actions } from '../Types.tsx';
 
 export type FlyoutColor = BaseColor | null | 'error';
@@ -50,6 +50,7 @@ export default function Flyout({
       style={{
         left: (isTop ? position.x - 0.5 : position.x + 0.3) * tileSize,
         top: (position.y - 0.5) * tileSize,
+        [vars.set('tile-size')]: tileSize + 'px',
         zIndex: zIndex || 0,
       }}
     >
@@ -151,11 +152,11 @@ const FlyoutSeparator = () => (
   />
 );
 
-const vars = new CSSVariables<'size'>('f');
+const vars = new CSSVariables<'size' | 'tile-size'>('f');
 
-const mini = TileSize / 2;
-const regular = (TileSize / 3) * 2;
-const large = TileSize;
+const mini = MapUISize / 2;
+const regular = (MapUISize / 3) * 2;
+const large = MapUISize;
 
 const baseStyle = css`
   ${vars.set('size', regular + 'px')}
@@ -207,7 +208,7 @@ const largeStyle = css`
 `;
 
 const topStyle = css`
-  transform: translate3d(-50%, calc(-100% - ${TileSize}px), 0);
+  transform: translate3d(-50%, calc(-100% - ${vars.apply('tile-size')}), 0);
 
   &:after {
     border-top-color: ${applyVar('background-color')};
@@ -218,7 +219,7 @@ const topStyle = css`
 `;
 
 const topLowerStyle = css`
-  transform: translate3d(-50%, calc(-100% - ${TileSize * 0.8}px), 0);
+  transform: translate3d(-50%, calc(-100% - ${vars.apply('tile-size')} * 0.8), 0);
 `;
 
 const rightStyle = css`
@@ -229,7 +230,7 @@ const rightStyle = css`
 `;
 
 const leftStyle = css`
-  transform: translate3d(calc(-100% - ${TileSize * 1.7}px), -50%, 0);
+  transform: translate3d(calc(-100% - ${vars.apply('tile-size')} * 1.7), -50%, 0);
 
   &:after {
     border-left-color: ${applyVar('background-color')};

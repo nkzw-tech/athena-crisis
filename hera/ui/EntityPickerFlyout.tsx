@@ -9,6 +9,7 @@ import Vector, { VectorLike } from '@deities/athena/map/Vector.tsx';
 import useInput from '@deities/ui/controls/useInput.tsx';
 import { useCallback, useState } from 'react';
 import BuildingTile from '../Building.tsx';
+import { MapUISize } from '../Configuration.tsx';
 import Tick from '../Tick.tsx';
 import { Actions, PlayerDetails } from '../Types.tsx';
 import UnitTile from '../Unit.tsx';
@@ -94,7 +95,7 @@ export default function EntityPickerFlyout({
                 building={building}
                 highlight={selected === 'building' || highlight}
                 position={new SpriteVector(1, 1.5)}
-                size={tileSize}
+                size={MapUISize}
               />
             )}
             key="building"
@@ -115,7 +116,7 @@ export default function EntityPickerFlyout({
                 highlightStyle={
                   selected === 'unit' || highlight ? (unit.canMove() ? 'move' : 'idle') : undefined
                 }
-                size={tileSize}
+                size={MapUISize}
                 tile={Plain}
                 unit={unit}
               />

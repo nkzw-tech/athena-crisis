@@ -1,7 +1,7 @@
 import { Plain } from '@deities/athena/info/Tile.tsx';
 import { mapUnitsWithContentRestriction } from '@deities/athena/info/Unit.tsx';
 import { Biome } from '@deities/athena/map/Biome.tsx';
-import { AnimationConfig, TileSize } from '@deities/athena/map/Configuration.tsx';
+import { AnimationConfig } from '@deities/athena/map/Configuration.tsx';
 import { PlayerIDs } from '@deities/athena/map/Player.tsx';
 import Unit from '@deities/athena/map/Unit.tsx';
 import vec from '@deities/athena/map/vec.tsx';
@@ -13,6 +13,7 @@ import randomEntry from '@nkzw/core/randomEntry.js';
 import Stack from '@nkzw/stack';
 import { arrayToShuffled } from 'array-shuffle';
 import { MouseEvent, useCallback, useMemo, useState } from 'react';
+import { MapUISize } from '../../Configuration.tsx';
 import { useSprites } from '../../hooks/useSprites.tsx';
 import toTransformOrigin from '../../lib/toTransformOrigin.tsx';
 import Tick from '../../Tick.tsx';
@@ -37,7 +38,7 @@ const UnitPreview = ({
         animationConfig={AnimationConfig}
         biome={Biome.Grassland}
         firstPlayerID={1}
-        size={TileSize}
+        size={MapUISize}
         tile={Plain}
         unit={unit}
       />

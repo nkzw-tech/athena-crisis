@@ -920,7 +920,7 @@ export default function UnitTile({
 
   return (
     <div className={className} ref={elementRef} style={style}>
-      <Label entity={unit} hide={hide} />
+      <Label entity={unit} hide={hide} size={size} />
       {shadowImage && (
         <div
           className={cx(spriteStyle, shadowStyle, animationStyle)}
