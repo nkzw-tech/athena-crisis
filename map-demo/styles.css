@@ -1,0 +1,11 @@
+@font-face {
+  font-display: swap;
+  font-family: Athena;
+  src: url('../offline/fonts/AthenaNova.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: PressStart2P;
+  src: url('../offline/fonts/PressStart2P.woff2') format('woff2');
+}

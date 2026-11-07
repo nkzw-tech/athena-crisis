@@ -22,6 +22,7 @@ electron/log-output
 electron/offline
 electron/out
 halting-problem-failure.json
+map-demo/dist/
 mobile/dist/
 source_strings.json
 tests/testSetup

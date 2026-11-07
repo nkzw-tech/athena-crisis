@@ -13,6 +13,7 @@ packages:
   - hera
   - hermes
   - i18n
+  - map-demo
   - offline
   - scripts
   - tests

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Athena Crisis Map Demo</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { setupFbtee } from 'fbtee';
+
+      setupFbtee({
+        hooks: {
+          getViewerContext: () => ({
+            locale: 'en_US',
+          }),
+        },
+        translations: { en_US: {} },
+      });
+    </script>
+    <script src="/main.tsx" type="module"></script>
+  </body>
+</html>

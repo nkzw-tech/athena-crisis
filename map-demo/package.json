@@ -1,0 +1,27 @@
+{
+  "name": "@deities/map-demo",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Standalone Athena Crisis map demo.",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --port 3004",
+    "preview": "vite preview --port 3004"
+  },
+  "dependencies": {
+    "@deities/apollo": "workspace:*",
+    "@deities/art": "workspace:*",
+    "@deities/athena": "workspace:*",
+    "@deities/hera": "workspace:*",
+    "@deities/hermes": "workspace:*",
+    "@deities/ui": "workspace:*",
+    "@emotion/css": "^11.13.5",
+    "@nkzw/use-visibility-state": "^1.0.4",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "fbtee": "^4.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}

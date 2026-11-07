@@ -873,6 +873,48 @@ importers:
 
   i18n: {}
 
+  map-demo:
+    dependencies:
+      '@deities/apollo':
+        specifier: workspace:*
+        version: link:../apollo
+      '@deities/art':
+        specifier: workspace:*
+        version: link:../art
+      '@deities/athena':
+        specifier: workspace:*
+        version: link:../athena
+      '@deities/hera':
+        specifier: workspace:*
+        version: link:../hera
+      '@deities/hermes':
+        specifier: workspace:*
+        version: link:../hermes
+      '@deities/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@emotion/css':
+        specifier: ^11.13.5
+        version: 11.13.5(supports-color@10.2.2)
+      '@nkzw/use-visibility-state':
+        specifier: ^1.0.4
+        version: 1.0.4(react@19.2.8)
+      '@types/react':
+        specifier: ^19.2.18
+        version: 19.2.18
+      '@types/react-dom':
+        specifier: ^19.2.7
+        version: 19.2.7(@types/react@19.2.18)
+      fbtee:
+        specifier: ^4.0.0
+        version: 4.0.0(react@19.2.8)
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
+
   offline:
     devDependencies:
       '@capacitor/core':
