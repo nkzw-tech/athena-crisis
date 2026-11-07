@@ -5,6 +5,8 @@ import MapData from '@deities/athena/MapData.tsx';
 import { Visibility, VisionT } from '@deities/athena/Vision.tsx';
 import { css, cx } from '@emotion/css';
 import { memo, useLayoutEffect, useRef } from 'react';
+import useReleaseCanvasOnUnmount from './hooks/useReleaseCanvasOnUnmount.tsx';
+import releaseCanvas from './lib/releaseCanvas.tsx';
 import { TileStyle } from './Tiles.tsx';
 
 const SoftFogBlurPasses = 3;
@@ -21,6 +23,8 @@ const ShroudAnimationFrameInterval = 1000 / 12;
 const MistAnimationDuration = 30_000;
 const MistAnimationFrameInterval = 1000 / 12;
 const MistScale = 1;
+// Keeps the high density shroud canvas at low number of MB on large maps.
+const MaxShroudPixels = 2048 * 2048;
 
 type MistLayerCache = Readonly<{
   height: number;
@@ -33,8 +37,15 @@ type MistCache = Readonly<{
   maskCanvas: HTMLCanvasElement;
 }>;
 
-const getShroudScale = () =>
-  typeof window === 'undefined' ? 1 : Math.max(1, Math.ceil(window.devicePixelRatio || 1));
+const getShroudScale = (width: number, height: number) => {
+  if (typeof window === 'undefined') {
+    return 1;
+  }
+
+  const deviceScale = Math.ceil(window.devicePixelRatio || 1);
+  const maxScale = Math.floor(Math.sqrt(MaxShroudPixels / Math.max(1, width * height)));
+  return Math.max(1, Math.min(deviceScale, maxScale));
+};
 
 const getMistAnimationPhase = (time: number, start: number) =>
   (time - start) / MistAnimationDuration;
@@ -598,7 +609,8 @@ const createMistLayerCache = (
   return { height, layerCanvases, width };
 };
 
-const createMistMask = (
+const drawMistMask = (
+  maskCanvas: HTMLCanvasElement,
   map: MapData,
   offset: number,
   size: number,
@@ -612,11 +624,15 @@ const createMistMask = (
 
   const height = Math.ceil((map.size.height * size + offset * 2) * scale);
   const width = Math.ceil((map.size.width * size + offset * 2) * scale);
-  const maskCanvas = document.createElement('canvas');
-  maskCanvas.height = height;
-  maskCanvas.width = width;
-
   const maskContext = maskCanvas.getContext('2d')!;
+  if (maskCanvas.height !== height || maskCanvas.width !== width) {
+    maskCanvas.height = height;
+    maskCanvas.width = width;
+  } else {
+    maskContext.setTransform(1, 0, 0, 1, 0, 0);
+    maskContext.clearRect(0, 0, width, height);
+  }
+
   maskContext.imageSmoothingEnabled = true;
   maskContext.setTransform(scale, 0, 0, scale, 0, 0);
   maskContext.save();
@@ -752,7 +768,24 @@ export default memo(function CanvasFog({
   const mistRef = useRef<HTMLCanvasElement>(null);
   const shroudRef = useRef<HTMLCanvasElement>(null);
   const bufferRef = useRef<HTMLCanvasElement>(null);
-  const shroudScale = getShroudScale();
+  const mistMaskRef = useRef<HTMLCanvasElement>(null);
+  const canvasHeight = map.size.height * size + offset * 2;
+  const canvasWidth = map.size.width * size + offset * 2;
+  const shroudScale = getShroudScale(canvasWidth, canvasHeight);
+
+  useReleaseCanvasOnUnmount(mainRef, darkRef, mistRef, shroudRef);
+  // Offscreen canvas are never on the page, so free them
+  useLayoutEffect(
+    () => () => {
+      releaseCanvas(bufferRef.current);
+      releaseCanvas(mistMaskRef.current);
+      mistLayerCacheRef.current?.layerCanvases.forEach(releaseCanvas);
+      bufferRef.current = null;
+      mistMaskRef.current = null;
+      mistLayerCacheRef.current = null;
+    },
+    [],
+  );
   useLayoutEffect(() => {
     const canvas = mainRef.current;
     if (!canvas) {
@@ -775,13 +808,26 @@ export default memo(function CanvasFog({
     const mistCanvas = mistRef.current;
     const mistWidth = Math.ceil((map.size.width * size + offset * 2) * MistScale);
     const mistHeight = Math.ceil((map.size.height * size + offset * 2) * MistScale);
-    const mistLayerCache =
+    const needsMistLayers =
       mistCanvas &&
       (mistLayerCacheRef.current?.width !== mistWidth ||
-        mistLayerCacheRef.current.height !== mistHeight)
-        ? (mistLayerCacheRef.current = createMistLayerCache(map, offset, size, MistScale))
-        : mistLayerCacheRef.current;
-    const mistMask = mistCanvas ? createMistMask(map, offset, size, vision, MistScale) : null;
+        mistLayerCacheRef.current.height !== mistHeight);
+    if (needsMistLayers) {
+      mistLayerCacheRef.current?.layerCanvases.forEach(releaseCanvas);
+    }
+    const mistLayerCache = needsMistLayers
+      ? (mistLayerCacheRef.current = createMistLayerCache(map, offset, size, MistScale))
+      : mistLayerCacheRef.current;
+    const mistMask = mistCanvas
+      ? drawMistMask(
+          mistMaskRef.current || (mistMaskRef.current = document.createElement('canvas')),
+          map,
+          offset,
+          size,
+          vision,
+          MistScale,
+        )
+      : null;
     const mistCache =
       mistLayerCache && mistMask ? { layers: mistLayerCache, maskCanvas: mistMask } : null;
     const now = performance.now();
@@ -845,9 +891,6 @@ export default memo(function CanvasFog({
   if (!map.config.fog) {
     return null;
   }
-
-  const canvasHeight = map.size.height * size + offset * 2;
-  const canvasWidth = map.size.width * size + offset * 2;
 
   return (
     <div

@@ -17,6 +17,7 @@ export default defineConfig({
   plugins: [createResolver(), fbtee(fbteePluginOptions), react()],
   test: {
     globalSetup: ['./tests/viteServer', './tests/playwrightServer'],
+    maxWorkers: 4,
     setupFiles: ['./tests/setup'],
     testTimeout: (process.env.CI ? 2 : 1) * 25_000,
   },

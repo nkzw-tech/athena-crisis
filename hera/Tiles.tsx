@@ -21,6 +21,7 @@ import {
   Tiles6,
 } from 'athena-crisis:images';
 import { memo, useLayoutEffect, useRef } from 'react';
+import useReleaseCanvasOnUnmount from './hooks/useReleaseCanvasOnUnmount.tsx';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
 import { BuildingSpriteLayout } from './render/EntitySpriteLayout.tsx';
@@ -100,6 +101,7 @@ export default memo(function Tiles({
   const hasSprites = useSprites('all');
   const { biome } = map.config;
   const biomeStyle = getBiomeStyle(biome);
+  useReleaseCanvasOnUnmount(canvasRef);
 
   useLayoutEffect(() => {
     if (!hasSprites || !canvasRef.current) {

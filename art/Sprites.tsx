@@ -52,15 +52,20 @@ const loadImage = (url: string) =>
   });
 
 const _canvasToURL = (canvas: Canvas) =>
-  new Promise<string>((resolve, reject) =>
-    (canvas as unknown as HTMLCanvasElement).toBlob((blob) => {
+  new Promise<string>((resolve, reject) => {
+    const element = canvas as unknown as HTMLCanvasElement;
+    element.toBlob((blob) => {
+      // Hundreds of variants are generated at startup. Free each canvas
+      // so mobile version browsers don't hit their canvas memory limit.
+      element.width = 0;
+      element.height = 0;
       if (!blob) {
         reject('Oops.');
         return;
       }
       resolve(URL.createObjectURL(blob));
-    }, 'image/png'),
-  );
+    }, 'image/png');
+  });
 
 const imageIsDefined = (args: MaybePaletteSwapParameters): args is PaletteSwapParameters =>
   args[0] !== null;

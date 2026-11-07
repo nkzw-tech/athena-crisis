@@ -8,6 +8,7 @@ import { CSSVariables } from '@deities/ui/cssVar.tsx';
 import { css, cx } from '@emotion/css';
 import useVisibilityState from '@nkzw/use-visibility-state';
 import { memo, useLayoutEffect, useRef } from 'react';
+import useReleaseCanvasOnUnmount from './hooks/useReleaseCanvasOnUnmount.tsx';
 import { useSprites } from './hooks/useSprites.tsx';
 import tick, { getFrame, getTick } from './lib/tick.tsx';
 import { DecoratorSpriteLayout } from './render/MapSpriteLayout.tsx';
@@ -62,6 +63,7 @@ export default memo(function Decorators({
   const hasSprites = useSprites('all');
   const { biome } = map.config;
   const isVisible = useVisibilityState();
+  useReleaseCanvasOnUnmount(ref);
 
   useLayoutEffect(() => {
     if (!hasSprites || !isVisible || !ref.current) {

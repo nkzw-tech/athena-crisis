@@ -112,10 +112,14 @@ const tileDecoratorAnimation = keyframes`
   }
 `;
 
+// Each keyframe above is one sprite frame, and the timing function applies
+// between every pair of keyframes. `step-end` holds each frame until the next
+// one. Some browsers (mostly mobile) treat these variables as numbers and blend
+// them, so `steps(n)` here would slide the sprite sheet between frames.
 const animationStyle = css`
   animation:
-    ${unitAnimation} ${AnimationSpeed * 8}ms steps(8) infinite,
-    ${attackStanceAnimation} ${AnimationSpeed * 4}ms steps(4) infinite,
-    ${buildingAnimation} ${AnimationSpeed * 6 * 2}ms steps(4) infinite,
-    ${tileDecoratorAnimation} ${AnimationSpeed * 6 * 2}ms steps(4) infinite;
+    ${unitAnimation} ${AnimationSpeed * 8}ms step-end infinite,
+    ${attackStanceAnimation} ${AnimationSpeed * 4}ms step-end infinite,
+    ${buildingAnimation} ${AnimationSpeed * 6 * 2}ms step-end infinite,
+    ${tileDecoratorAnimation} ${AnimationSpeed * 6 * 2}ms step-end infinite;
 `;
